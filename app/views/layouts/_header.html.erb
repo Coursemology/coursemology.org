@@ -1,0 +1,18 @@
+<header class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <%= link_to "JEDI Academy", "/", id: "logo" %>
+      <nav>
+        <ul class="nav pull-right">
+          <% if current_user %>
+            <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+          <% else %>
+            <li><%= link_to "Sign up", new_user_registration_path %></li>
+            <li><%= link_to "Sign in", new_user_session_path %></li>
+          <% end %>
+          <li><%= link_to "About", about_path %></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>

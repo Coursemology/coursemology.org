@@ -1,4 +1,14 @@
 JfdiAcademy::Application.routes.draw do
+
+  authenticated :user do
+    root :to => "home#index"
+  end
+  root :to => "static_pages#welcome"
+
+  get "welcome" => "static_pages#welcome"
+
+  get "about" => "static_pages#about"
+
   devise_for :users
 
   # The priority is based upon order of creation:
