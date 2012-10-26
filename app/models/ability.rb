@@ -24,5 +24,16 @@ class Ability
     #   can :update, Article, :published => true
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
+    #
+
+    if user
+      if user.role.name == "superuser"
+        can :manage, :all
+      elsif user.role.name == "lecturer"
+        can :manage, Course, creator_id: user.id
+      end
+      can :manage, User, id: user.id
+    end
+    can :read, :all
   end
 end

@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 super_role = Role.create! name: "superuser", title: "Super User"
+Role.create! name: "normal", title: "User"
 Role.create! name: "lecturer", title: "Lecturer"
 Role.create! name: "ta", title: "Teaching Assistant"
 Role.create! name: "student", title: "Student"

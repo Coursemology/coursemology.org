@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  before_create :set_default_role
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -13,4 +15,11 @@ class User < ActiveRecord::Base
   has_many :courses, through: :user_courses
 
   belongs_to :role, class_name: "Role", foreign_key: "system_role_id"
+
+  private
+  def set_default_role
+    if !self.role
+      self.role = Role.find_by_name('normal')
+    end
+  end
 end
