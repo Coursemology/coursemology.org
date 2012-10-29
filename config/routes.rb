@@ -9,7 +9,11 @@ JfdiAcademy::Application.routes.draw do
 
   get "about" => "static_pages#about"
 
+  get "access_denied" => "static_pages#access_denied"
+
   devise_for :users
+
+  resources :courses
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
