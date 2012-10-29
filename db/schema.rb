@@ -11,7 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121026160233) do
+ActiveRecord::Schema.define(:version => 20121029114802) do
+
+  create_table "assignments", :force => true do |t|
+    t.integer  "class_id"
+    t.integer  "exp"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.datetime "deadline"
+    t.integer  "timelimit"
+    t.integer  "attempt_limit"
+    t.integer  "auto_graded"
+    t.integer  "order"
+    t.string   "description"
+    t.integer  "creator_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
 
   create_table "courses", :force => true do |t|
     t.string   "title"

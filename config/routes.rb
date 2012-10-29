@@ -1,5 +1,7 @@
 JfdiAcademy::Application.routes.draw do
 
+  resources :assignments
+
   authenticated :user do
     root :to => "home#index"
   end
