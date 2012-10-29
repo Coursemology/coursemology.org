@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121029114802) do
+ActiveRecord::Schema.define(:version => 20121029144458) do
+
+  create_table "answers", :force => true do |t|
+    t.integer  "credtor_id"
+    t.integer  "question_id"
+    t.string   "text"
+    t.string   "explanation"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "assignments", :force => true do |t|
     t.integer  "class_id"
@@ -45,12 +54,31 @@ ActiveRecord::Schema.define(:version => 20121029114802) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "mcqs", :force => true do |t|
+    t.integer  "creator_id"
+    t.integer  "assignment_id"
+    t.string   "description"
+    t.integer  "order"
+    t.integer  "correct_answer_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "title"
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "student_answers", :force => true do |t|
+    t.integer  "answer_id"
+    t.datetime "started_at"
+    t.datetime "submitted_at"
+    t.string   "note"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "user_courses", :force => true do |t|
@@ -83,5 +111,14 @@ ActiveRecord::Schema.define(:version => 20121029114802) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "written_questions", :force => true do |t|
+    t.integer  "creator_id"
+    t.integer  "assignment_id"
+    t.string   "description"
+    t.integer  "order"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
 
 end

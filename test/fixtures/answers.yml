@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  credtor_id: 1
+  question_id: 1
+  text: MyString
+  explanation: MyString
+
+two:
+  credtor_id: 1
+  question_id: 1
+  text: MyString
+  explanation: MyString
