@@ -2,13 +2,17 @@
 <html>
 <head>
   <title>Jfdi Academy</title>
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <%= render "layouts/header" %>
-  <div class="container">
+  <div class="container-fluid">
     <%= yield %>
   </div>
 </body>

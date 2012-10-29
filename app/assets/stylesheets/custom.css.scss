@@ -1,13 +1,14 @@
 @import "bootstrap";
+
+body {
+  padding-top: 60px;
+}
+
 @import "bootstrap-responsive";
 
 /* universal */
 html {
   overflow-y: scroll;
-}
-
-body {
-  padding-top: 60px;
 }
 
 section {
@@ -21,7 +22,8 @@ textarea {
 .center {
   text-align: center;
   h1 {
-    margin-bottom: 10px; }
+    margin-bottom: 10px;
+  }
 }
 
 #logo {
@@ -40,5 +42,4 @@ textarea {
   color: #fff;
   text-decoration: none;
 }
-
 
