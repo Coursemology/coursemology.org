@@ -1,8 +1,8 @@
-<%= form_for @assignment, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @assignment], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= f.label :class_id, :class => 'control-label' %>
+    <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :class_id, :class => 'number_field' %>
+      <%= f.text_area :description, :class => 'text_area', :rows => 10 %>
     </div>
   </div>
   <div class="control-group">
@@ -44,7 +44,7 @@
   <div class="control-group">
     <%= f.label :auto_graded, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :auto_graded, :class => 'number_field' %>
+      <%= f.check_box :auto_graded %>
     </div>
   </div>
   <div class="control-group">
@@ -53,22 +53,9 @@
       <%= f.number_field :order, :class => 'number_field' %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :description, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :creator_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :creator_id, :class => 'number_field' %>
-    </div>
-  </div>
-
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                assignments_path, :class => 'btn' %>
+                course_assignments_path, :class => 'btn' %>
   </div>
 <% end %>

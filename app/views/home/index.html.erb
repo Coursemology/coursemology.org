@@ -1,1 +1,4 @@
 Hello, <%= current_user.display_name || current_user.name %>!
+<%= link_to 'New Course',
+            new_course_path,
+            :class => 'btn btn-primary' %>

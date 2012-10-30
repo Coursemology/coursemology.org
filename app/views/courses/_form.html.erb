@@ -6,15 +6,9 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :creator_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :creator_id, :class => 'number_field' %>
-    </div>
-  </div>
-  <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :description, :class => 'text_field' %>
+      <%= f.text_area :description, :class => 'text_area', :rows => '10' %>
     </div>
   </div>
 
