@@ -1,10 +1,9 @@
 JfdiAcademy::Application.routes.draw do
 
-  resources :assignments
-
   authenticated :user do
     root :to => "home#index"
   end
+
   root :to => "static_pages#welcome"
 
   get "welcome" => "static_pages#welcome"
@@ -15,7 +14,9 @@ JfdiAcademy::Application.routes.draw do
 
   devise_for :users
 
-  resources :courses
+  resources :courses do
+    resources :assignments
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
