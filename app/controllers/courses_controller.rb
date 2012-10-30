@@ -5,8 +5,13 @@ class CoursesController < ApplicationController
     @course = Course.new(params[:course])
     @course.creator = current_user
 
+    user_course = @course.user_courses.build()
+    user_course.course = @course
+    user_course.user = current_user
+    user_course.role = Role.find_by_name(:lecturer)
+
     respond_to do |format|
-      if @course.save 
+      if @course.save  && user_course.save
         format.html { redirect_to @course, notice: "Course was successfully created." }
       else
         format.html { render action: "new" }
