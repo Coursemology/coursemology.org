@@ -43,3 +43,21 @@ textarea {
   text-decoration: none;
 }
 
+.sidebar {
+}
+
+.well {
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+}
+
+.navbar-bottom .nav {
+  display: block;
+}
+
+.navbar-bottom .nav li {
+  display: block;
+  float: left;
+  padding-left: 15px;
+}

@@ -5,12 +5,20 @@
       <nav>
         <ul class="nav pull-right">
           <% if current_user %>
-            <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+            <li class="dropdown">
+              <a id="usercontrol" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <%= current_user.name %><b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Setting</a></li>
+                <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+              </ul>
+            </li>
           <% else %>
             <li><%= link_to "Sign up", new_user_registration_path %></li>
             <li><%= link_to "Sign in", new_user_session_path %></li>
           <% end %>
-          <li><%= link_to "About", about_path %></li>
         </ul>
       </nav>
     </div>

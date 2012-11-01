@@ -1,16 +1,7 @@
-<%- model_class = Course -%>
+<%- model_class = Assignment -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human %></h1>
 </div>
-
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
-  <dd><%= @course.title %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:creator_id) %>:</strong></dt>
-  <dd><%= @course.creator_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
-  <dd><%= @course.description %></dd>
-</dl>
 
 <%= link_to "New Assignment",
             new_course_assignment_path(@course),
