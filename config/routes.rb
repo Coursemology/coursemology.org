@@ -15,7 +15,10 @@ JfdiAcademy::Application.routes.draw do
   devise_for :users
 
   resources :courses do
-    resources :assignments
+    resources :assignments do
+      resources :mcqs
+      resources :written_questions
+    end
   end
 
   # The priority is based upon order of creation:
