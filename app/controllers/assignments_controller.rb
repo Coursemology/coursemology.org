@@ -16,7 +16,8 @@ class AssignmentsController < ApplicationController
   def show
     @mcqs = @assignment.mcqs
     @mcq = Mcq.new
-    # @written_questions = @assignment.written_question
+    @written_questions = @assignment.written_questions
+    @written_question = WrittenQuestion.new
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
