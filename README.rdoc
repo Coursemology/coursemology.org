@@ -19,16 +19,18 @@ Heroku:
 == Checking available API / routes:
         $ rake routes
 
+== Testing
+
+There is one super user added through db:seed
+        username: jfdi@academy.com
+        pass: supersecretpass
+
 == Third party libraries
 
 You should skim through the README of these following gems to get a gist of how they works
 
-Authentication: Devise
-        https://github.com/plataformatec/devise
+* Authentication: Devise[https://github.com/plataformatec/devise]
 
-Authorization: CanCan
-        https://github.com/ryanb/cancan
+* Authorization: CanCan[https://github.com/ryanb/cancan]
 
-Front-end Framework: Bootstrap
-        http://twitter.github.com/bootstrap/
-        https://github.com/thomas-mcdonald/bootstrap-sass
+* Front-end Framework: Bootstrap[http://twitter.github.com/bootstrap/] and Bootstrap-sass[https://github.com/thomas-mcdonald/bootstrap-sass]
