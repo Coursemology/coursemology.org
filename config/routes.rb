@@ -16,6 +16,7 @@ JfdiAcademy::Application.routes.draw do
 
   resources :courses do
     resources :assignments
+    resources :announcements
   end
 
   # The priority is based upon order of creation:
