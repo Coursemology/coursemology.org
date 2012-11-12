@@ -78,7 +78,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @announcement.each do |announcement| %>
+    <% @announcements.each do |announcement| %>
       <tr>
         <td><%= link_to announcement.id, course_announcement_path(@course, announcement) %></td>
         <td><%= announcement.course_id %></td>

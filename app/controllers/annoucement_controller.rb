@@ -1,4 +1,4 @@
-class AnnouncementController < ApplicationController
+class AnnouncementsController < ApplicationController
   load_and_authorize_resource
 
   # GET /annoucements
