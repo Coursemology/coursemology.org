@@ -42,6 +42,7 @@ class CoursesController < ApplicationController
 
   def show
     @assignments = @course.assignments
+    @announcements = @course.announcements
     respond_to do |format|
       format.html
     end

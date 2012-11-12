@@ -19,6 +19,7 @@ JfdiAcademy::Application.routes.draw do
       resources :mcqs
       resources :written_questions
     end
+    resources :announcements
   end
 
   # The priority is based upon order of creation:
