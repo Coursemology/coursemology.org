@@ -14,18 +14,18 @@
     </tr>
   </thead>
   <tbody>
-    <% @annoucement.each do |announcement| %>
+    <% @announcement.each do |announcement| %>
       <tr>
-        <td><%= link_to annoucement.id, course_annoucement_path(@course, annoucement) %></td>
-        <td><%= annoucement.course_id %></td>
-        <td><%= annoucement.creator_id %></td>
-        <td><%=l annoucement.publish_at %></td>
-		<td><%= annoucement.important %></td>
+        <td><%= link_to announcement.id, course_announcement_path(@course, announcement) %></td>
+        <td><%= announcement.course_id %></td>
+        <td><%= announcement.creator_id %></td>
+        <td><%=l announcement.publish_at %></td>
+		<td><%= announcement.important %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_course_annoucement_path(@course, annoucement), :class => 'btn btn-mini' %>
+                      edit_course_announcement_path(@course, announcement), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      course_annoucement_path(@course, annoucement),
+                      course_announcement_path(@course, announcement),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-mini btn-danger' %>
@@ -36,5 +36,5 @@
 </table>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_annoucement_path(@course),
+            new_course_announcement_path(@course),
             :class => 'btn btn-primary' %>
