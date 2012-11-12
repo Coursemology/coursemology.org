@@ -1,5 +1,6 @@
 class AnnouncementsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :course
+  load_and_authorize_resource :announcement, through: :course
 
   # GET /announcements
   # GET /announcements.json
