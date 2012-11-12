@@ -1,11 +1,11 @@
 <%- model_class = Assignment -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+  <h1>Assignment <%= @assignment.order %>: <%= @assignment.title %></h1>
 </div>
 
+<p><%= @assignment.description %></p>
+
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:course_id) %>:</strong></dt>
-  <dd><%= @assignment.course_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:exp) %>:</strong></dt>
   <dd><%= @assignment.exp %></dd>
   <dt><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></dt>
@@ -18,16 +18,92 @@
   <dd><%= @assignment.timelimit %></dd>
   <dt><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></dt>
   <dd><%= @assignment.attempt_limit %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:auto_graded) %>:</strong></dt>
-  <dd><%= @assignment.auto_graded %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:order) %>:</strong></dt>
-  <dd><%= @assignment.order %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
-  <dd><%= @assignment.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:creator_id) %>:</strong></dt>
-  <dd><%= @assignment.creator_id %></dd>
 </dl>
 
+<% if @assignment.auto_graded > 0 %>
+  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_mcq_form">
+    Add MCQ
+  </button>
+  <div id="new_mcq_form" class="collapse out">
+    <div class="well">
+      <%= render "mcqs/form" %>
+    </div>
+  </div>
+  <h2>MCQ Questions</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:id) %></th>
+        <th><%= model_class.human_attribute_name(:creator_id) %></th>
+        <th><%= model_class.human_attribute_name(:description) %></th>
+        <th><%= model_class.human_attribute_name(:created_at) %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @mcqs.each do |q| %>
+        <tr>
+          <td><%= link_to q.id, course_assignment_mcq_path(@course, @assignment, q) %></td>
+          <td><%= q.creator_id %></td>
+          <td><%= q.description %></td>
+          <td><%= l q.created_at %></td>
+          <td>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_course_assignment_mcq_path(@course, @assignment, q), :class => 'btn btn-mini' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        course_assignment_mcq_path(@course, @assignment, q),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
+    Add Question
+  </button>
+  <div id="new_wquestion_form" class="collapse out">
+    <div class="well">
+      <%= render "written_questions/form" %>
+    </div>
+  </div>
+  <h2>Questions</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:id) %></th>
+        <th><%= model_class.human_attribute_name(:creator_id) %></th>
+        <th><%= model_class.human_attribute_name(:description) %></th>
+        <th><%= model_class.human_attribute_name(:created_at) %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @written_questions.each do |q| %>
+        <tr>
+          <td><%= link_to q.id, course_assignment_written_question_path(@course, @assignment, q) %></td>
+          <td><%= q.creator_id %></td>
+          <td><%= q.description %></td>
+          <td><%= l q.created_at %></td>
+          <td>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_course_assignment_written_question_path(@course, @assignment, q), :class => 'btn btn-mini' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        course_assignment_written_question_path(@course, @assignment, q),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% end %>
+
+<br/>
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               course_assignments_path(@course), :class => 'btn'  %>

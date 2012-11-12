@@ -5,6 +5,13 @@ Require: @course
 %>
 
 <header class="course_banner well">
-  <h1><%= @course.title %></h1>
-  <p><%= @course.description %></p>
+  <div class="row-fluid">
+    <div class="span2">
+      <img class="pull-left" src="<%= @course.logo_url %>" />
+    </div>
+    <div class="span10">
+      <h1><%= @course.title %></h1>
+      <p><%= @course.description %></p>
+    </div>
+</div>
 </header>

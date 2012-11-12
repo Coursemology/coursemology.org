@@ -14,6 +14,10 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1
   # GET /assignments/1.json
   def show
+    @mcqs = @assignment.mcqs
+    @mcq = Mcq.new
+    @written_questions = @assignment.written_questions
+    @written_question = WrittenQuestion.new
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
@@ -23,7 +27,6 @@ class AssignmentsController < ApplicationController
   # GET /assignments/new
   # GET /assignments/new.json
   def new
-    puts @assignment.to_json
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @assignment }
