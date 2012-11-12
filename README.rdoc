@@ -18,3 +18,17 @@ Heroku:
 
 == Checking available API / routes:
         $ rake routes
+
+== Third party libraries
+
+You should skim through the README of these following gems to get a gist of how they works
+
+Authentication: Devise
+        https://github.com/plataformatec/devise
+
+Authorization: CanCan
+        https://github.com/ryanb/cancan
+
+Front-end Framework: Bootstrap
+        http://twitter.github.com/bootstrap/
+        https://github.com/thomas-mcdonald/bootstrap-sass
