@@ -4,5 +4,6 @@ class Course < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :assignments
+  has_many :announcements
   has_many :user_courses
 end
