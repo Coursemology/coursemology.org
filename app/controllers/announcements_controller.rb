@@ -55,7 +55,8 @@ class AnnouncementsController < ApplicationController
   def update
     respond_to do |format|
       if @announcement.update_attributes(params[:announcement])
-        format.html { redirect_to @announcement, notice: 'announcement was successfully updated.' }
+        format.html { redirect_to course_announcement_url(@course, @announcement),
+                      notice: 'announcement was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -70,7 +71,7 @@ class AnnouncementsController < ApplicationController
     @announcement.destroy
 
     respond_to do |format|
-      format.html { redirect_to announcements_url }
+      format.html { redirect_to course_announcements_url }
       format.json { head :no_content }
     end
   end
