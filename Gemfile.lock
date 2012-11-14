@@ -34,6 +34,7 @@ GEM
     bootstrap-sass (2.0.0)
     builder (3.0.4)
     cancan (1.6.8)
+    cocaine (0.4.2)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -63,6 +64,12 @@ GEM
     mime-types (1.19)
     multi_json (1.3.6)
     orm_adapter (0.4.0)
+    paperclip (3.3.1)
+      activemodel (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      cocaine (~> 0.4.0)
+      mime-types
     pg (0.14.1)
     pg (0.14.1-x86-mingw32)
     polyglot (0.3.3)
@@ -124,6 +131,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   devise (= 2.1.2)
   jquery-rails (= 2.1.3)
+  paperclip (~> 3.0)
   pg
   rails (= 3.2.8)
   sass-rails (~> 3.2.3)
