@@ -11,8 +11,9 @@
 <ul class="thumbnails">
   <li class="span3">
     <% @courses.each do |course| %>
-      <div class="thumbnail">
+      <div class="thumbnail center">
         <img src="<%= course.logo_url %>" />
+        <hr/>
         <h3 class="media-heading">
           <a href="<%= course_path(course) %>"><%= course.title %></a>
         </h3>
