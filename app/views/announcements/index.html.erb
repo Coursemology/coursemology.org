@@ -2,38 +2,10 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:announcement_id) %></th>
-      <th><%= model_class.human_attribute_name(:course_id) %></th>
-      <th><%= model_class.human_attribute_name(:creator_id) %></th>
-      <th><%= model_class.human_attribute_name(:publish_at) %></th>
-	  <th><%= model_class.human_attribute_name(:important) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @announcements.each do |announcement| %>
-      <tr>
-        <td><%= link_to announcement.id, course_announcement_path(@course, announcement) %></td>
-        <td><%= announcement.course_id %></td>
-        <td><%= announcement.creator_id %></td>
-        <td><%=l announcement.publish_at %></td>
-		<td><%= announcement.important %></td>
-        <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_course_announcement_path(@course, announcement), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      course_announcement_path(@course, announcement),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+
+<% @announcements.each do |announcement| %>
+  <%= render :partial => "announcements/one", :locals => { :announcement => announcement } %>
+<% end %>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_course_announcement_path(@course),

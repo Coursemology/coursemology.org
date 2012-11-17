@@ -1,4 +1,5 @@
 @import "bootstrap";
+@import "font-awesome";
 
 body {
   padding-top: 60px;
@@ -48,6 +49,9 @@ h1 {
 }
 
 .sidebar {
+  i {
+    font-size: 1.5em;
+  }
 }
 
 .well {
