@@ -34,3 +34,5 @@ You should skim through the README of these following gems to get a gist of how 
 * Authorization: CanCan[https://github.com/ryanb/cancan]
 
 * Front-end Framework: Bootstrap[http://twitter.github.com/bootstrap/] and Bootstrap-sass[https://github.com/thomas-mcdonald/bootstrap-sass]
+
+* File upload: Paperclip[https://github.com/thoughtbot/paperclip]. (Very easy to use).

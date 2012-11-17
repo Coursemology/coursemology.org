@@ -11,15 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112101918) do
+ActiveRecord::Schema.define(:version => 20121117052103) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
     t.integer  "course_id"
     t.datetime "publish_at"
     t.integer  "important"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "title"
+    t.string   "description"
   end
 
   create_table "answers", :force => true do |t|

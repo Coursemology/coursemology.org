@@ -4,14 +4,17 @@ Require: @course
 =end
 %>
 
-<header class="course_banner well">
+<header class="course-banner">
   <div class="row-fluid">
-    <div class="span2">
-      <img class="pull-left" src="<%= @course.logo_url %>" />
-    </div>
-    <div class="span10">
-      <h1><%= @course.title %></h1>
-      <p><%= @course.description %></p>
-    </div>
+    <table>
+      <tr>
+        <td class="span2">
+          <img class="pull-left" src="<%= @course.logo_url %>" />
+        </td>
+        <td class="span10">
+          <h1 class="banner-text"><%= @course.title %></h1>
+        </td>
+      </tr>
+    </table>
 </div>
 </header>
