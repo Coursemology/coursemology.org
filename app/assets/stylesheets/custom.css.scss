@@ -43,6 +43,10 @@ textarea {
   text-decoration: none;
 }
 
+h1 {
+  margin-bottom: 20px;
+}
+
 .sidebar {
 }
 
@@ -60,4 +64,11 @@ textarea {
   display: block;
   float: left;
   padding-left: 15px;
+}
+
+.content {
+}
+
+.clearfix {
+  clear: both;
 }
