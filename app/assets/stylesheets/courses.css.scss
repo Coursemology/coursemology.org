@@ -1,3 +1,18 @@
 // Place all the styles related to the courses controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.course-logo {
+  height: 120px;
+  max-width: 100%;
+}
+
+.course-thumbnails .media-heading {
+  height: 80px;
+}
+
+.course-thumbnails {
+  margin-left: auto;
+  margin-right: auto;
+//  width: 90%;
+}

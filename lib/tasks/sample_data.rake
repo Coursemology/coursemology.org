@@ -3,6 +3,9 @@ namespace :db do
 
   task gen_fake_data: :environment do
     puts "Add fake lecturer & courses"
+
+    std_role = Role.find_by_name("student")
+
     students = []
     5.times do |n|
       lec = gen_user(Role.find_by_name("lecturer"))
@@ -49,8 +52,8 @@ namespace :db do
         uc = UserCourse.create!(
           course_id: course.id,
           user_id: std.id,
+          role_id: std_role.id
         )
-        uc.role = Role.find_by_name("student")
       end
     end
   end
@@ -79,18 +82,29 @@ namespace :db do
       'https://s3.amazonaws.com/coursera/topics/operations/small-icon.hover.png',
       'https://coursera-course-photos.s3.amazonaws.com/86/eff310c9f5ab16a770c3ca6c13bef3/green_courselogo.jpg'
     ]
-    return Course.create!(
-      title: Faker::Lorem.sentence(rand(2..4)),
-      description: Faker::Lorem.paragraphs(rand(1..3)).join('\n'),
+
+    lec_role = Role.find_by_name("lecturer")
+
+    course = Course.create!(
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       logo_url: logos.sample,
       creator_id: user.id
     )
+
+    UserCourse.create!(
+      course_id: course.id,
+      user_id: user.id,
+      role_id: lec_role.id
+    )
+
+    return course
   end
 
   def gen_announcement(user, course)
     return Announcement.create!(
-      title: Faker::Lorem.sentence(rand(3..5)),
-      description: Faker::Lorem.paragraphs(rand(1..3)).join('\n'),
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       creator_id: user.id,
       course_id: course.id
     )
@@ -109,8 +123,8 @@ namespace :db do
     end
 
     return Assignment.create!(
-      title: Faker::Lorem.sentence(rand(3..5)),
-      description: Faker::Lorem.paragraphs(rand(1..3)).join('\n'),
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       creator_id: user.id,
       course_id: course.id,
       attempt_limit: rand(5),
@@ -145,4 +159,5 @@ namespace :db do
       explanation: Faker::Lorem.paragraph()
     )
   end
+
 end
