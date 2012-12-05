@@ -1,0 +1,15 @@
+<div class="course-thumbnails">
+  <ul class="thumbnails">
+    <% courses.each do |course| %>
+    <li class="span2">
+      <div class="thumbnail center">
+        <img class="course-logo" src="<%= course.logo_url %>" />
+        <hr/>
+        <h3 class="media-heading">
+          <a href="<%= course_path(course) %>"><%= course.title %></a>
+        </h3>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>

@@ -8,15 +8,4 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
-<ul class="thumbnails">
-  <li class="span3">
-    <% @courses.each do |course| %>
-      <div class="thumbnail">
-        <img src="<%= course.logo_url %>" />
-        <h3 class="media-heading">
-          <a href="<%= course_path(course) %>"><%= course.title %></a>
-        </h3>
-      </div>
-    <% end %>
-  </li>
-</ul>
+<%= render :partial => "courses/thumbnails", :locals => { :courses => @courses } %>

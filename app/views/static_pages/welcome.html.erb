@@ -1,2 +1,9 @@
-<h1>StaticPages#welcome</h1>
-<p>Find me in app/views/static_pages/welcome.html.erb</p>
+<div class="row-fluid">
+  <div class="hero-unit">
+    <h1>JFDI Academy</h1>
+    <p>Learning is fun</p>
+  </div>
+  <div>
+    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses } %>
+  </div>
+</div>

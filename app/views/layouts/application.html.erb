@@ -12,13 +12,15 @@
 </head>
 <body>
   <%= render "layouts/header" %>
-  <div class="container-fluid">
-    <% if @course && @course.id %>
+  <% if @course && @course.id %>
+    <div class="container-fluid course-content">
       <%= render "layouts/course_layout" %>
-    <% else %>
+    </div>
+  <% else %>
+    <div class="container-fluid">
       <%= yield %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
   <hr/>
   <%= render "layouts/footer" %>
 </body>

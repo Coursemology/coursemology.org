@@ -1,7 +1,8 @@
 @import "bootstrap";
+@import "font-awesome";
 
 body {
-  padding-top: 60px;
+  padding-top: 40px;
 }
 
 @import "bootstrap-responsive";
@@ -48,6 +49,11 @@ h1 {
 }
 
 .sidebar {
+  min-height: 650px;
+
+  i {
+    font-size: 1.5em;
+  }
 }
 
 .well {
@@ -66,7 +72,13 @@ h1 {
   padding-left: 15px;
 }
 
-.content {
+.row-fluid .content {
+  padding-top: 20px;
+  margin-left: 20px;
+}
+
+.course-content {
+  padding: 0px;
 }
 
 .clearfix {

@@ -1,6 +1,5 @@
-<ul class="nav nav-list well">
-  <li><a href="#">Missions</a></li>
-  <li><a href="#">Achievements</a></li>
-  <li><a href="#">Leaderboard</a></li>
-  <li><a href="#">Students</a></li>
+<ul class="nav nav-list">
+  <li><a href="<%= course_path(@course) %>"><i class="icon-home"></i> Home</a></li>
+  <li><a href="<%= course_announcements_path(@course) %>"><i class="icon-star"></i> Announcements</a></li>
+  <li><a href="<%= course_assignments_path(@course) %>"><i class="icon-file"></i> Assignments</a></li>
 </ul>
