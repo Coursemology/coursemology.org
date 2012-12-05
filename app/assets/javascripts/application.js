@@ -16,3 +16,11 @@
 //= require bootstrap-dropdown
 //= require bootstrap-transition
 //= require bootstrap-collapse
+//= require bootstrap-datepicker
+
+$(document).ready(function() {
+  $(".datepicker").datepicker({
+    "format": "dd-mm-yyyy",
+    "autoclose": true
+  });
+});

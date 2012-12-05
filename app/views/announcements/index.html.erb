@@ -3,10 +3,10 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% @announcements.each do |announcement| %>
-  <%= render :partial => "announcements/one", :locals => { :announcement => announcement } %>
-<% end %>
-
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_course_announcement_path(@course),
             :class => 'btn btn-primary' %>
+
+<% @announcements.each do |announcement| %>
+  <%= render :partial => "announcements/one", :locals => { :announcement => announcement } %>
+<% end %>
