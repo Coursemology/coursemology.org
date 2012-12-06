@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206122108) do
+ActiveRecord::Schema.define(:version => 20121206123734) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -91,10 +91,12 @@ ActiveRecord::Schema.define(:version => 20121206122108) do
     t.datetime "started_at"
     t.datetime "submitted_at"
     t.string   "note"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "student_id"
     t.string   "text"
+    t.integer  "answerable_id"
+    t.string   "answerable_type"
   end
 
   create_table "user_courses", :force => true do |t|
