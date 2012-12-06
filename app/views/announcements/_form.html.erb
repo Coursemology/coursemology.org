@@ -14,7 +14,9 @@
   <div class="control-group">
     <%= f.label :publish_at, :class => 'control-label' %>
     <div class="controls">
-      <%= f.datetime_select :publish_at, :class => 'datetime_select' %>
+      <%= f.text_field :publish_at,
+          :value => date_mdY(@announcement.publish_at),
+          :class => 'datepicker' %>
     </div>
   </div>
   <div class="control-group">
