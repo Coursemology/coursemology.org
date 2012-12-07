@@ -49,7 +49,17 @@
     <tbody>
       <% @mcqs.each do |q| %>
         <tr>
-          <td><%= q.description %></td>
+          <td>
+            <span><%= q.description %></span>
+            <ul>
+            <% q.answers.each do |ans| %>
+              <li>
+                <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+                <span><%= ans.text %></span>
+              </li>
+            <% end %>
+            </ul>
+          </td>
           <td>
             <%= link_to edit_course_assignment_mcq_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
               <i class="icon-edit"></i>

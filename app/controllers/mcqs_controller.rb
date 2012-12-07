@@ -42,7 +42,7 @@ class McqsController < ApplicationController
 
     respond_to do |format|
       if updated
-        format.html { redirect_to course_assignment_mcq_url(@course, @assignment, @mcq),
+        format.html { redirect_to course_assignment_url(@course, @assignment),
                       notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
