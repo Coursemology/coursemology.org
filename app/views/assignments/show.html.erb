@@ -33,14 +33,11 @@
 </table>
 <hr/>
 <% if @assignment.auto_graded > 0 %>
-  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_mcq_form">
-    Add MCQ
-  </button>
-  <div id="new_mcq_form" class="collapse out">
-    <div class="well">
-      <%= render "mcqs/form" %>
-    </div>
-  </div>
+
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_assignment_mcq_path(@course, @assignment),
+              :class => 'btn btn-primary' %>
+
   <h2>MCQ Questions</h2>
   <table class="table table-striped">
     <thead>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121206123734) do
+ActiveRecord::Schema.define(:version => 20121206135541) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -29,8 +29,10 @@ ActiveRecord::Schema.define(:version => 20121206123734) do
     t.string   "text"
     t.integer  "creator_id"
     t.string   "explanation"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.boolean  "is_correct"
+    t.string   "question_type"
   end
 
   create_table "assignments", :force => true do |t|
