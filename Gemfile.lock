@@ -31,6 +31,8 @@ GEM
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     bcrypt-ruby (3.0.1-x86-mingw32)
+    bootstrap-datepicker-rails (0.6.32)
+      railties (>= 3.0)
     bootstrap-sass (2.0.0)
     builder (3.0.4)
     cancan (1.6.8)
@@ -131,6 +133,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  bootstrap-datepicker-rails
   bootstrap-sass (= 2.0.0)
   cancan
   coffee-rails (~> 3.2.1)

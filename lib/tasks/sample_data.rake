@@ -152,12 +152,11 @@ namespace :db do
   end
 
   def gen_answer(user, question)
-    return Answer.create!(
+    return question.answers.build(
       creator_id: user.id,
-      question_id: question.id,
       text: Faker::Lorem.sentence(),
       explanation: Faker::Lorem.paragraph()
-    )
+    ).save
   end
 
 end

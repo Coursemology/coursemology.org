@@ -5,56 +5,71 @@
 
 <p><%= @assignment.description %></p>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:exp) %>:</strong></dt>
-  <dd><%= @assignment.exp %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></dt>
-  <dd><%= @assignment.open_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></dt>
-  <dd><%= @assignment.close_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></dt>
-  <dd><%= @assignment.deadline %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></dt>
-  <dd><%= @assignment.timelimit %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></dt>
-  <dd><%= @assignment.attempt_limit %></dd>
-</dl>
-
+<table>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= @assignment.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= @assignment.open_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
+    <td><%= @assignment.close_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>
+    <td><%= @assignment.deadline %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>
+    <td><%= @assignment.timelimit %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
+    <td><%= @assignment.attempt_limit %></td>
+  </tr>
+</table>
+<hr/>
 <% if @assignment.auto_graded > 0 %>
-  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_mcq_form">
-    Add MCQ
-  </button>
-  <div id="new_mcq_form" class="collapse out">
-    <div class="well">
-      <%= render "mcqs/form" %>
-    </div>
-  </div>
+
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_assignment_mcq_path(@course, @assignment),
+              :class => 'btn btn-primary' %>
+
   <h2>MCQ Questions</h2>
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><%= model_class.human_attribute_name(:id) %></th>
-        <th><%= model_class.human_attribute_name(:creator_id) %></th>
         <th><%= model_class.human_attribute_name(:description) %></th>
-        <th><%= model_class.human_attribute_name(:created_at) %></th>
-        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% @mcqs.each do |q| %>
         <tr>
-          <td><%= link_to q.id, course_assignment_mcq_path(@course, @assignment, q) %></td>
-          <td><%= q.creator_id %></td>
-          <td><%= q.description %></td>
-          <td><%= l q.created_at %></td>
           <td>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_course_assignment_mcq_path(@course, @assignment, q), :class => 'btn btn-mini' %>
-            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                        course_assignment_mcq_path(@course, @assignment, q),
+            <span><%= q.description %></span>
+            <ul>
+            <% q.answers.each do |ans| %>
+              <li>
+                <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+                <span><%= ans.text %></span>
+              </li>
+            <% end %>
+            </ul>
+          </td>
+          <td>
+            <%= link_to edit_course_assignment_mcq_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_assignment_mcq_path(@course, @assignment, q),
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        :class => 'btn btn-mini btn-danger' %>
+                        :class => 'btn btn-mini btn-danger' do %>
+              <i class="icon-trash"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -73,28 +88,24 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><%= model_class.human_attribute_name(:id) %></th>
-        <th><%= model_class.human_attribute_name(:creator_id) %></th>
         <th><%= model_class.human_attribute_name(:description) %></th>
-        <th><%= model_class.human_attribute_name(:created_at) %></th>
-        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% @written_questions.each do |q| %>
         <tr>
-          <td><%= link_to q.id, course_assignment_written_question_path(@course, @assignment, q) %></td>
-          <td><%= q.creator_id %></td>
           <td><%= q.description %></td>
-          <td><%= l q.created_at %></td>
           <td>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_course_assignment_written_question_path(@course, @assignment, q), :class => 'btn btn-mini' %>
-            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                        course_assignment_written_question_path(@course, @assignment, q),
+            <%= link_to edit_course_assignment_written_question_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_assignment_written_question_path(@course, @assignment, q),
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        :class => 'btn btn-mini btn-danger' %>
+                        :class => 'btn btn-mini btn-danger' do %>
+              <i class="icon-trash"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

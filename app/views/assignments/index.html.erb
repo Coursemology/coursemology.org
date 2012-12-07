@@ -2,55 +2,45 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
-<table class="table table-striped">
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_course_assignment_path(@course),
+            :class => 'btn btn-primary' %>
+
+<table class="table table-striped assignments">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:course_id) %></th>
-      <th><%= model_class.human_attribute_name(:exp) %></th>
-      <th><%= model_class.human_attribute_name(:open_at) %></th>
-      <th><%= model_class.human_attribute_name(:close_at) %></th>
-      <th><%= model_class.human_attribute_name(:deadline) %></th>
-      <th><%= model_class.human_attribute_name(:timelimit) %></th>
-      <th><%= model_class.human_attribute_name(:attempt_limit) %></th>
-      <th><%= model_class.human_attribute_name(:auto_graded) %></th>
-      <th><%= model_class.human_attribute_name(:order) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:creator_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
+      <th width="10%"><%= model_class.human_attribute_name(:close_at) %></th>
+      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @assignments.each do |assignment| %>
       <tr>
-        <td><%= link_to assignment.id, course_assignment_path(@course, assignment) %></td>
-        <td><%= assignment.course_id %></td>
-        <td><%= assignment.exp %></td>
-        <td><%= assignment.open_at %></td>
-        <td><%= assignment.close_at %></td>
-        <td><%= assignment.deadline %></td>
-        <td><%= assignment.timelimit %></td>
-        <td><%= assignment.attempt_limit %></td>
-        <td><%= assignment.auto_graded %></td>
-        <td><%= assignment.order %></td>
-        <td><%= assignment.description %></td>
-        <td><%= assignment.creator_id %></td>
-        <td><%=l assignment.created_at %></td>
+        <td><%= assignment.id %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      course_assignment_path(@course, assignment),
+          <%= link_to course_assignment_path(@course, assignment) do %>
+            <h4><%= assignment.title %></h4>
+          <% end %>
+          <%= assignment.description %>
+        </td>
+        <td><%= assignment.exp %></td>
+        <td><%= assignment.close_at %></td>
+        <td>
+          <%= link_to edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to course_assignment_path(@course, assignment),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :class => 'btn btn-mini btn-danger' do %>
+             <i class="icon-trash"></i>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_assignment_path(@course),
-            :class => 'btn btn-primary' %>

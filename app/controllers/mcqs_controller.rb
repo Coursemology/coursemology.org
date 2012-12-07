@@ -25,9 +25,24 @@ class McqsController < ApplicationController
   end
 
   def update
+
+    updated = @mcq.update_attributes(params[:mcq])
+
+    params[:answers].each do |answer|
+      answer['is_correct'] = answer.has_key?('is_correct')
+      if answer.has_key?('id')
+        ans = Answer.find(answer['id'])
+        # TODO: check if this answer does belong to the current question
+        updated = updated && ans.update_attributes(answer)
+      else
+        ans = @mcq.answers.build(answer)
+        updated = updated && ans.save
+      end
+    end
+
     respond_to do |format|
-      if @mcq.update_attributes(params[:mcq])
-        format.html { redirect_to course_assignment_mcq_url(@course, @assignment, @mcq),
+      if updated
+        format.html { redirect_to course_assignment_url(@course, @assignment),
                       notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
       else
