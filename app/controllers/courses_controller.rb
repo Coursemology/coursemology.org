@@ -55,4 +55,27 @@ class CoursesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def students
+
+    # get lecturers and students
+    @lecturers = []
+    @students = []
+    puts @course.user_courses.to_json
+    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
+    puts uc_sorted.to_json
+    uc_sorted.each do |uc|
+      puts uc.user.name
+      if uc.is_student?
+        @students << uc.user
+      elsif uc.is_lecturer?
+        @lecturers << uc.user
+      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: {lecturers: @lecturers, students: @students }}
+    end
+  end
 end

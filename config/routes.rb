@@ -22,6 +22,8 @@ JfdiAcademy::Application.routes.draw do
     resources :announcements
   end
 
+  match "courses/:id/students" => "courses#students", :as => :course_students
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

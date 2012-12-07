@@ -47,8 +47,7 @@ namespace :db do
         end
       end
 
-      rand(20..30).times do
-        std = students.sample
+      students.shuffle.first(rand(20..30)).each do |std|
         uc = UserCourse.create!(
           course_id: course.id,
           user_id: std.id,

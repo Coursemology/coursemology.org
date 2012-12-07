@@ -1,0 +1,19 @@
+<h1>Lecturers:</h1>
+  <ul>
+  <% @lecturers.each do |lecturer| %>
+    <li>
+    <b><%= lecturer.name %></b>
+    <span><%= lecturer.email %></span>
+    </li>
+  <% end %>
+  </ul>
+<h1>Students:</h1>
+  <ul>
+  <% @students.each do |student| %>
+    <li>
+    <b><%= student.name %></b>
+    <span><<%= mail_to student.email %>></span>
+    </li>
+  <% end %>
+  </ul>
+</h1>
