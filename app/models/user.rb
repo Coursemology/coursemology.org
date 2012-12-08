@@ -16,6 +16,16 @@ class User < ActiveRecord::Base
 
   belongs_to :role, class_name: "Role", foreign_key: "system_role_id"
 
+  def is_lecturer?(course)
+    uc = UserCourse.find_by_user_id_and_course_id(self.id, course.id)
+    return uc.is_lecturer?
+  end
+
+  def is_student?(course)
+    uc = UserCourse.find_by_user_id_and_course_id(self.id, course.id)
+    return uc.is_student?
+  end
+
   private
   def set_default_role
     if !self.role

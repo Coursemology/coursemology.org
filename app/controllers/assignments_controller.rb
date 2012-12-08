@@ -78,4 +78,13 @@ class AssignmentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  def attempt
+    @mcqs = @assignment.mcqs
+    @written_questions = @assignment.written_questions
+    respond_to do |format|
+      format.html
+    end
+  end
 end

@@ -20,9 +20,10 @@ JfdiAcademy::Application.routes.draw do
       resources :written_questions
     end
     resources :announcements
+    match "assignments/:id/attempt" => "assignments#attempt", as: :assignment_attempt
   end
 
-  match "courses/:id/students" => "courses#students", :as => :course_students
+  match "courses/:id/students" => "courses#students", as: :course_students
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
