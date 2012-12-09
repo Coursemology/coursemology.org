@@ -6,6 +6,7 @@ class Assignment < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :mcqs
-  has_many :written_questions
+  has_many :questions
+  has_many :submissions
 
 end

@@ -47,8 +47,7 @@ namespace :db do
         end
       end
 
-      rand(20..30).times do
-        std = students.sample
+      students.shuffle.first(rand(20..30)).each do |std|
         uc = UserCourse.create!(
           course_id: course.id,
           user_id: std.id,
@@ -144,7 +143,7 @@ namespace :db do
   end
 
   def gen_wq(user, assignment)
-    return WrittenQuestion.create!(
+    return Question.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
       assignment_id: assignment.id

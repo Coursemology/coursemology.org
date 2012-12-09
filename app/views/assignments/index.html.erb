@@ -30,14 +30,20 @@
         <td><%= assignment.exp %></td>
         <td><%= assignment.close_at %></td>
         <td>
-          <%= link_to edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to course_assignment_path(@course, assignment),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' do %>
-             <i class="icon-trash"></i>
+          <% if current_user %>
+            <% if current_user.is_student?(@course) %>
+              <%= link_to 'Attempt', course_assignment_attempt_path(@course, assignment), :class => 'btn btn-mini' %>
+            <% elsif current_user.is_lecturer?(@course) %>
+              <%= link_to edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' do %>
+                <i class="icon-edit"></i>
+              <% end %>
+              <%= link_to course_assignment_path(@course, assignment),
+                          :method => :delete,
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-mini btn-danger' do %>
+                 <i class="icon-trash"></i>
+              <% end %>
+            <% end %>
           <% end %>
         </td>
       </tr>

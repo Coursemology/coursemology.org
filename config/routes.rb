@@ -17,10 +17,13 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     resources :assignments do
       resources :mcqs
-      resources :written_questions
+      resources :questions
+      resources :submissions
     end
     resources :announcements
   end
+
+  match "courses/:id/students" => "courses#students", as: :course_students
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

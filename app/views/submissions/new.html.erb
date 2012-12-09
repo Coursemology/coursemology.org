@@ -1,0 +1,68 @@
+<%- model_class = Assignment -%>
+<div class="page-header">
+  <h1>Assignment <%= @assignment.order %>: <%= @assignment.title %></h1>
+</div>
+
+<p><%= @assignment.description %></p>
+
+<table>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= @assignment.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= @assignment.open_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
+    <td><%= @assignment.close_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>
+    <td><%= @assignment.deadline %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>
+    <td><%= @assignment.timelimit %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
+    <td><%= @assignment.attempt_limit %></td>
+  </tr>
+</table>
+<hr/>
+
+<%= form_for [@course, @assignment, @submission], :html => { :class => 'form-horizontal' } do |f| %>
+  <% if @assignment.auto_graded > 0 %>
+    <% @mcqs.each_with_index do |q, i| %>
+      <h3>Question <%= i + 1 %>:</h3>
+      <span><%= q.description %></span>
+      <ul>
+      <% q.answers.each do |ans| %>
+        <li>
+          <input type="radio" name="<%= q.id %>" value="<%= ans.id %>" />
+          <span><%= ans.text %></span>
+        </li>
+      <% end %>
+      </ul>
+      <hr/>
+    <% end %>
+  <% else %>
+    <% @questions.each_with_index do |q, i| %>
+      <h3>Question <%= i + 1 %>:</h3>
+      <span><%= q.description %></span>
+      <br/><br/>
+      <label><strong>Your answer:</strong></label>
+      <textarea name="answers[<%= q.id %>]" class="span10" rows="8"/></textarea>
+      <hr/>
+    <% end %>
+  <% end %>
+
+  <br/>
+  <div class="form-actions">
+    <%= f.submit "Submit", :class => 'btn btn-primary' %>
+    <%= link_to t('.save', :default => t("helpers.links.save")),
+                edit_course_assignment_path(@course, @assignment), :class => 'btn' %>
+  </div>
+<% end %>

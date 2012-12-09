@@ -4,4 +4,12 @@ class UserCourse < ActiveRecord::Base
   belongs_to :role
   belongs_to :user
   belongs_to :course
+
+  def is_student?
+    return self.role.name == 'student'
+  end
+
+  def is_lecturer?
+    return self.role.name == 'lecturer'
+  end
 end

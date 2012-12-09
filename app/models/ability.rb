@@ -33,6 +33,7 @@ class Ability
         can :manage, Course, creator_id: user.id
       end
       can :manage, User, id: user.id
+      can :manage, Submission
     end
     can :read, :all
   end

@@ -81,7 +81,7 @@
   </button>
   <div id="new_wquestion_form" class="collapse out">
     <div class="well">
-      <%= render "written_questions/form" %>
+      <%= render "questions/form" %>
     </div>
   </div>
   <h2>Questions</h2>
@@ -93,14 +93,14 @@
       </tr>
     </thead>
     <tbody>
-      <% @written_questions.each do |q| %>
+      <% @questions.each do |q| %>
         <tr>
           <td><%= q.description %></td>
           <td>
-            <%= link_to edit_course_assignment_written_question_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
+            <%= link_to edit_course_assignment_question_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
               <i class="icon-edit"></i>
             <% end %>
-            <%= link_to course_assignment_written_question_path(@course, @assignment, q),
+            <%= link_to course_assignment_question_path(@course, @assignment, q),
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                         :class => 'btn btn-mini btn-danger' do %>
