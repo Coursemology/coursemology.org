@@ -21,12 +21,22 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission.student_id = current_user.id
-    params[:answers].each do |qid, ans|
-      @wq = Question.find(qid)
-      sa = @submission.student_answers.build({
-        text: ans,
-      })
-      sa.answerable = @wq
+    if params[:auto_graded]
+      params[:answers].each do |qid, ansid|
+        @mcq = Mcq.find(qid)
+        sa = @submission.student_answers.build({
+          answer_id: ansid
+        })
+        sa.answerable = @mcq
+      end
+    else
+      params[:answers].each do |qid, ans|
+        @wq = Question.find(qid)
+        sa = @submission.student_answers.build({
+          text: ans,
+        })
+        sa.answerable = @wq
+      end
     end
     if @submission.save
       respond_to do |format|

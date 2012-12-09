@@ -34,6 +34,7 @@
 <hr/>
 
 <%= form_for [@course, @assignment, @submission], :html => { :class => 'form-horizontal' } do |f| %>
+  <input type="hidden" name="auto_graded" value="<%= @assignment.auto_graded %>" />
   <% if @assignment.auto_graded > 0 %>
     <% @mcqs.each_with_index do |q, i| %>
       <h3>Question <%= i + 1 %>:</h3>
@@ -41,7 +42,7 @@
       <ul>
       <% q.answers.each do |ans| %>
         <li>
-          <input type="radio" name="<%= q.id %>" value="<%= ans.id %>" />
+          <input type="radio" name="answers[<%= q.id %>]" value="<%= ans.id %>" />
           <span><%= ans.text %></span>
         </li>
       <% end %>
