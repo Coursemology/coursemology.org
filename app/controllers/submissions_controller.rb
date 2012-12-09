@@ -3,12 +3,22 @@ class SubmissionsController < ApplicationController
   load_and_authorize_resource :assignment, through: :course
   load_and_authorize_resource :submission, through: :assignment
 
-  def index
+  skip_load_and_authorize_resource :submission, only: :listall
+  skip_load_and_authorize_resource :assignment, only: :listall
 
+  def index
+  end
+
+  def listall
+    if params.has_key?(:student_id)
+      @submissions = Submission.all_student(@course, current_user)
+    else
+      puts @course.to_json
+      @submissions = Submission.all_course(@course)
+    end
   end
 
   def show
-
   end
 
   def new
