@@ -49,7 +49,7 @@
       <hr/>
     <% end %>
   <% else %>
-    <% @written_questions.each_with_index do |q, i| %>
+    <% @questions.each_with_index do |q, i| %>
       <h3>Question <%= i + 1 %>:</h3>
       <span><%= q.description %></span>
       <br/><br/>

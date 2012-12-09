@@ -13,7 +13,7 @@ class SubmissionsController < ApplicationController
 
   def new
     @mcqs = @assignment.mcqs
-    @written_questions = @assignment.written_questions
+    @questions = @assignment.questions
     respond_to do |format|
       format.html
     end
@@ -22,7 +22,7 @@ class SubmissionsController < ApplicationController
   def create
     @submission.student_id = current_user.id
     params[:answers].each do |qid, ans|
-      @wq = WrittenQuestion.find(qid)
+      @wq = Question.find(qid)
       sa = @submission.student_answers.build({
         text: ans,
       })

@@ -1,4 +1,4 @@
-class WrittenQuestion < ActiveRecord::Base
+class Question < ActiveRecord::Base
   attr_accessible :assignment_id, :creator_id, :description, :order
 
   belongs_to :assignment

@@ -16,8 +16,8 @@ class AssignmentsController < ApplicationController
   def show
     @mcqs = @assignment.mcqs
     @mcq = Mcq.new
-    @written_questions = @assignment.written_questions
-    @written_question = WrittenQuestion.new
+    @questions = @assignment.questions
+    @question = Question.new
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @assignment }
@@ -76,15 +76,6 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_assignments_url }
       format.json { head :no_content }
-    end
-  end
-
-
-  def attempt
-    @mcqs = @assignment.mcqs
-    @written_questions = @assignment.written_questions
-    respond_to do |format|
-      format.html
     end
   end
 end

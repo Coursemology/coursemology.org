@@ -17,7 +17,7 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     resources :assignments do
       resources :mcqs
-      resources :written_questions
+      resources :questions
       resources :submissions
     end
     resources :announcements

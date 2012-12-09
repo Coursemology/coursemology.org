@@ -143,7 +143,7 @@ namespace :db do
   end
 
   def gen_wq(user, assignment)
-    return WrittenQuestion.create!(
+    return Question.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
       assignment_id: assignment.id
