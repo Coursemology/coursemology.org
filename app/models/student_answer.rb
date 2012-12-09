@@ -4,4 +4,5 @@ class StudentAnswer < ActiveRecord::Base
   belongs_to :answer
   belongs_to :answerable, polymorphic: true
   belongs_to :student, class_name: "User"
+  belongs_to :submission
 end

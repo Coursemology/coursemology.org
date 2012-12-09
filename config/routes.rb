@@ -18,9 +18,9 @@ JfdiAcademy::Application.routes.draw do
     resources :assignments do
       resources :mcqs
       resources :written_questions
+      resources :submissions
     end
     resources :announcements
-    match "assignments/:id/attempt" => "assignments#attempt", as: :assignment_attempt
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

@@ -7,5 +7,6 @@ class Assignment < ActiveRecord::Base
 
   has_many :mcqs
   has_many :written_questions
+  has_many :submissions
 
 end
