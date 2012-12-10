@@ -16,7 +16,8 @@
 //= require bootstrap-dropdown
 //= require bootstrap-transition
 //= require bootstrap-collapse
-//= require bootstrap-datepicker
+//= require bootstrap-datepicker/core
+//= require bootstrap-datepicker/locales/bootstrap-datepicker.en
 
 $(document).ready(function() {
   $(".datepicker").datepicker({

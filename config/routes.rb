@@ -15,6 +15,8 @@ JfdiAcademy::Application.routes.draw do
   devise_for :users
 
   resources :courses do
+    match "/submissions" => "submissions#listall", as: :submissions
+    match "/submissions/students/:student_id" => "submissions#listall", as: :submissions_student
     resources :assignments do
       resources :mcqs
       resources :questions

@@ -31,6 +31,7 @@
     <td><%= @assignment.attempt_limit %></td>
   </tr>
 </table>
+<a href="<%= course_assignment_submissions_path(@course, @assignment) %>">View submissions</a>
 <hr/>
 <% if @assignment.auto_graded > 0 %>
 
