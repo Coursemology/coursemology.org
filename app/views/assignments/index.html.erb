@@ -32,7 +32,7 @@
         <td>
           <% if current_user %>
             <% if current_user.is_student?(@course) %>
-              <%= link_to 'Attempt', course_assignment_attempt_path(@course, assignment), :class => 'btn btn-mini' %>
+              <%= link_to 'Attempt', new_course_assignment_submission_path(@course, assignment), :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer?(@course) %>
               <%= link_to edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>

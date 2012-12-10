@@ -1,0 +1,26 @@
+<div class="page-header">
+  <h1>Submission</h1>
+</div>
+
+<p class="well"><%= @assignment.description %></p>
+
+<% @qadata.each do |qid, qa| %>
+  <h4>Question:</h4>
+  <p><%= qa[:q].description %></p>
+  <h4>Answer:</h4>
+  <p><%= qa[:a].text %></p>
+  <!--
+  <table>
+    <tr>
+      <td><h4>Grade:</h4></td>
+      <td><input type="text" />
+    </tr>
+    <tr>
+      <td><h4>Comment:</h4></td>
+      <td><textarea></textarea>
+    </tr>
+  </table>
+  -->
+  <% # space for grading here %>
+  <hr/>
+<% end %>

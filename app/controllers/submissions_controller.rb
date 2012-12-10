@@ -19,6 +19,30 @@ class SubmissionsController < ApplicationController
   end
 
   def show
+    # has submission, has assignment, has student answers
+    @qadata = {}
+
+    if @assignment.auto_graded > 0
+      template = "submissions/show_mcq"
+      @assignment.mcqs.each do |mcq|
+        @qadata[mcq.id] = { q: mcq }
+      end
+    else
+      template = "submissions/show_question"
+      @assignment.questions.each do |q|
+        @qadata[q.id] = { q: q }
+      end
+    end
+
+    @submission.student_answers.each do |sa|
+      @qadata[sa.answerable_id][:a] = sa
+    end
+
+    puts @qadata
+
+    respond_to do |format|
+      format.html { render :template => template }
+    end
   end
 
   def new
@@ -31,7 +55,7 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission.student_id = current_user.id
-    if params[:auto_graded]
+    if params[:auto_graded].to_f > 0
       params[:answers].each do |qid, ansid|
         @mcq = Mcq.find(qid)
         sa = @submission.student_answers.build({
