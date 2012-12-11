@@ -4,6 +4,7 @@ class McqsController < ApplicationController
   load_and_authorize_resource :mcq, through: :assignment
 
   def new
+    @mcq.max_grade = 1
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @mcq }
@@ -12,10 +13,13 @@ class McqsController < ApplicationController
 
   def create
     @mcq.creator = current_user
+    # update max grade of the assignment it belongs to
     respond_to do |format|
       if @mcq.save
-        format.html { redirect_to course_assignment_mcq_url(@course, @assignment, @mcq),
-                      notice: 'Assignment was successfully created.' }
+        @assignment.max_grade += @mcq.max_grade
+        @assignment.save
+        format.html { redirect_to course_assignment_url(@course, @assignment),
+                      notice: 'Question successfully added.' }
         format.json { render json: @mcq, status: :created, location: @mcq }
       else
         format.html { render action: "new" }
@@ -25,9 +29,7 @@ class McqsController < ApplicationController
   end
 
   def update
-
     updated = @mcq.update_attributes(params[:mcq])
-
     params[:answers].each do |answer|
       answer['is_correct'] = answer.has_key?('is_correct')
       if answer.has_key?('id')
@@ -42,6 +44,7 @@ class McqsController < ApplicationController
 
     respond_to do |format|
       if updated
+        @mcq.assignment.update_grade
         format.html { redirect_to course_assignment_url(@course, @assignment),
                       notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
@@ -51,8 +54,6 @@ class McqsController < ApplicationController
       end
     end
   end
-
-
 
   def show
   end

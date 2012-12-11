@@ -2,9 +2,11 @@
   <thead>
     <tr>
       <th width="5%">ID</th>
-      <th width="20%">Student</th>
+      <th width="15%">Student</th>
       <th>Assignment</th>
       <th width="20%">Submit time</th>
+      <th width="15%">Grading</th>
+      <th width="5%">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +18,16 @@
         <td><%= link_to sub.assignment.title,
                         course_assignment_path(@course, sub.assignment.id) %></td>
         <td><%= sub.created_at %></td>
+        <td>
+          <% sub.submission_gradings.each do |sg| %>
+            <%= link_to sg.get_name, nil %><br/>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to "Evaluate",
+              new_course_assignment_submission_submission_grading_path(@course, sub.assignment.id, sub) ,
+              class: "btn" %>
+        </td>
       </tr>
     <% end %>
   </tbody>

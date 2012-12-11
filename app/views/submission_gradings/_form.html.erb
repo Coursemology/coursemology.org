@@ -1,0 +1,56 @@
+<table width="100%">
+  <col width="10%" />
+  <tr><td>Student: </td><td><%= @submission.student.name %></td></tr>
+  <tr><td>Submited at: </td><td><%= @submission.created_at %></td></tr>
+  <% if @submission_grading.id %>
+    <tr>
+      <td>Total grade: </td>
+      <td>
+        <%= @submission_grading.total_grade %> / <%= @assignment.max_grade %>
+      </td>
+    </tr>
+    <% if @submission_grading.grader %>
+      <tr><td>Grader: </td><td><%= @submission_grading.grader.name %></td></tr>
+    <% else %>
+      <tr><td>Grader: </td><td>Auto graded!</td></tr>
+    <% end %>
+  <% end %>
+</table>
+<hr/>
+
+<p class="well"><%= @assignment.description %></p>
+
+<%= form_for [@course, @assignment, @submission, @submission_grading],
+             html: { class: "form-horizontal" } do |f| %>
+  <input type="hidden" name="submission_id" value="<% @submission.id %>" />
+
+  <% @qadata.each do |qid, qa| %>
+    <hr/>
+    <h4>Question:</h4>
+    <p><%= qa[:q].description %></p>
+    <% if qa[:a] %>
+      <h4>Answer:</h4>
+      <p><%= qa[:a].text %></p>
+      <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
+      <div class="control-group">
+        <label class="control-label">Grade</label>
+        <div class="controls">
+          <input type="text" name="ags[<%= qa[:g].id if qa[:g] %>][grade]" value="<%= qa[:g].grade if qa[:g] %>" />
+          / <%= qa[:q].max_grade %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Comment</label>
+        <div class="controls">
+          <textarea name="ags[<%= qa[:g].id if qa[:g] %>][comment]" class="span9" rows="5"><%= qa[:g].comment if qa[:g] %></textarea>
+        </div>
+      </div>
+    <% else %>
+      <h4>No answer</h4>
+    <% end %>
+  <% end %>
+  <div class="form-actions">
+    <%= f.submit "Save Grading", :class => 'btn btn-primary' %>
+    <button type="button" class="btn">Cancel</button>
+  </div>
+<% end %>

@@ -2,6 +2,24 @@
   <h1>Submission</h1>
 </div>
 
+<table>
+  <tr><td>Student: </td><td><%= @submission.student.name %></td></tr>
+  <tr><td>Submited at: </td><td><%= @submission.created_at %></td></tr>
+  <% if @grading %>
+    <tr>
+      <td>Total grade: </td>
+      <td>
+        <%= @grading.total_grade %> / <%= @assignment.max_grade %>
+        <%= link_to "Update",
+            edit_course_assignment_submission_submission_grading_path(@course, @assignment, @submission, @grading)
+            %>
+      </td>
+    </tr>
+    <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+  <% end %>
+</table>
+<hr/>
+
 <p class="well"><%= @assignment.description %></p>
 
 <% @qadata.each do |qid, qa| %>
@@ -9,18 +27,13 @@
   <p><%= qa[:q].description %></p>
   <h4>Answer:</h4>
   <p><%= qa[:a].text %></p>
-  <!--
-  <table>
-    <tr>
-      <td><h4>Grade:</h4></td>
-      <td><input type="text" />
-    </tr>
-    <tr>
-      <td><h4>Comment:</h4></td>
-      <td><textarea></textarea>
-    </tr>
-  </table>
-  -->
-  <% # space for grading here %>
+  <% if @grading %>
+    <% if qa[:g] %>
+      <p><strong>Grade: </strong><%= qa[:g].grade %> / <%= qa[:q].max_grade %></p>
+      <% if qa[:g].comment %>
+        <strong>Comment:</strong><p><%= qa[:g].comment %></p>
+      <% end %>
+    <% end %>
+  <% end %>
   <hr/>
 <% end %>

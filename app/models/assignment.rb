@@ -9,4 +9,9 @@ class Assignment < ActiveRecord::Base
   has_many :questions
   has_many :submissions
 
+  def update_grade
+    self.max_grade = self.mcqs.sum(&:max_grade) + self.questions.sum(&:max_grade)
+    self.save
+  end
+
 end

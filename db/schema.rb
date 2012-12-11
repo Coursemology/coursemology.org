@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121209024203) do
+ActiveRecord::Schema.define(:version => 20121211095140) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(:version => 20121209024203) do
     t.datetime "updated_at",  :null => false
     t.string   "title"
     t.string   "description"
+  end
+
+  create_table "answer_gradings", :force => true do |t|
+    t.integer  "grader_id"
+    t.integer  "grade"
+    t.string   "comment"
+    t.integer  "student_answer_id"
+    t.integer  "submission_grading_id"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
   create_table "answers", :force => true do |t|
@@ -50,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20121209024203) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
     t.string   "title"
+    t.integer  "max_grade"
   end
 
   create_table "courses", :force => true do |t|
@@ -78,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20121209024203) do
     t.integer  "correct_answer_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.integer  "max_grade"
   end
 
   create_table "questions", :force => true do |t|
@@ -87,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20121209024203) do
     t.integer  "order"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "max_grade"
   end
 
   create_table "roles", :force => true do |t|
@@ -111,14 +124,25 @@ ActiveRecord::Schema.define(:version => 20121209024203) do
     t.integer  "submission_id"
   end
 
+  create_table "submission_gradings", :force => true do |t|
+    t.integer  "grader_id"
+    t.integer  "total_grade"
+    t.string   "comment"
+    t.integer  "submission_id"
+    t.datetime "publish_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "submissions", :force => true do |t|
     t.integer  "student_id"
     t.integer  "assignment_id"
     t.datetime "open_at"
     t.datetime "submit_at"
     t.integer  "attempt"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "final_grading_id"
   end
 
   create_table "user_courses", :force => true do |t|

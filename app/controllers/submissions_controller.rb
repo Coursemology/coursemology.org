@@ -20,6 +20,7 @@ class SubmissionsController < ApplicationController
 
   def show
     # has submission, has assignment, has student answers
+    # add grading report
     @qadata = {}
 
     if @assignment.auto_graded > 0
@@ -36,6 +37,18 @@ class SubmissionsController < ApplicationController
 
     @submission.student_answers.each do |sa|
       @qadata[sa.answerable_id][:a] = sa
+    end
+
+    if params[:grading_id]
+      @grading = SubmissionGrading.find(grading_id)
+    else
+      @grading = @submission.final_grading
+    end
+
+    if @grading
+      @grading.answer_gradings.each do |ag|
+        @qadata[ag.student_answer.answerable_id][:g] = ag
+      end
     end
 
     puts @qadata
@@ -56,13 +69,27 @@ class SubmissionsController < ApplicationController
   def create
     @submission.student_id = current_user.id
     if params[:auto_graded].to_f > 0
+      sg = @submission.submission_gradings.build({
+      })
+      total_grade = 0
       params[:answers].each do |qid, ansid|
         @mcq = Mcq.find(qid)
+        @answer = Answer.find(ansid)
+
         sa = @submission.student_answers.build({
           answer_id: ansid
         })
         sa.answerable = @mcq
+
+        grade = @answer.is_correct ? @mcq.max_grade : 0
+        ag = sg.answer_gradings.build({
+          grade: grade
+        })
+        ag.student_answer = sa
+        total_grade += grade
       end
+      sg.total_grade = total_grade
+      @submission.final_grading = sg
     else
       params[:answers].each do |qid, ans|
         @wq = Question.find(qid)
@@ -82,5 +109,4 @@ class SubmissionsController < ApplicationController
       end
     end
   end
-
 end

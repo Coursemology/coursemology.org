@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource :question, through: :assignment
 
   def new
+    @question.max_grade = 10
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @question }
@@ -14,8 +15,10 @@ class QuestionsController < ApplicationController
     @question.creator = current_user
     respond_to do |format|
       if @question.save
-        format.html { redirect_to course_assignment_question_url(@course, @assignment, @question),
-                      notice: 'Assignment was successfully created.' }
+        @question.assignment.max_grade += @question.max_grade
+        @question.assignment.save
+        format.html { redirect_to course_assignment_url(@course, @assignment),
+                      notice: 'Question successfully added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
         format.html { render action: "new" }
@@ -27,6 +30,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update_attributes(params[:question])
+        @question.assignment.update_grade
         format.html { redirect_to course_assignment_question_url(@course, @assignment, @question),
                       notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
@@ -39,5 +43,4 @@ class QuestionsController < ApplicationController
 
   def show
   end
-
 end
