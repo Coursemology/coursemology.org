@@ -33,10 +33,16 @@ namespace :db do
         10.times do |j|
           mcq = gen_mcq(admin, asm)
           mcq.order = j
-          4.times do
-            gen_answer(admin, mcq)
+          selected = false
+          5.times do |k|
+            is_correct = !selected && (rand(5 - k) == 0)
+            if is_correct
+              selected = true
+            end
+            gen_answer(admin, mcq, is_correct)
           end
         end
+        asm.update_grade
       end
       20.times do |i|
         asm = gen_assignment(admin, course, rand(-1..1), false)
@@ -45,6 +51,7 @@ namespace :db do
           wq = gen_wq(admin, asm)
           wq.order = j
         end
+        asm.update_grade
       end
 
       students.shuffle.first(rand(20..30)).each do |std|
@@ -138,7 +145,8 @@ namespace :db do
     return Mcq.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
-      assignment_id: assignment.id
+      assignment_id: assignment.id,
+      max_grade: 1
     )
   end
 
@@ -146,15 +154,17 @@ namespace :db do
     return Question.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
-      assignment_id: assignment.id
+      assignment_id: assignment.id,
+      max_grade: 10
     )
   end
 
-  def gen_answer(user, question)
+  def gen_answer(user, question, is_correct)
     return question.answers.build(
       creator_id: user.id,
       text: Faker::Lorem.sentence(),
-      explanation: Faker::Lorem.paragraph()
+      explanation: Faker::Lorem.paragraph(),
+      is_correct: is_correct
     ).save
   end
 

@@ -20,7 +20,9 @@ JfdiAcademy::Application.routes.draw do
     resources :assignments do
       resources :mcqs
       resources :questions
-      resources :submissions
+      resources :submissions do
+        resources :submission_gradings
+      end
     end
     resources :announcements
   end
