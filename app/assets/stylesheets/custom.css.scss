@@ -92,9 +92,15 @@ h1 {
 .mcq-right {
   border: 1px solid green;
   color: green;
+  padding-left: 15px;
 }
 
 .mcq-wrong {
   border: 1px solid red;
   color: red;
+  padding-left: 15px;
+}
+
+ul {
+  list-style: none;
 }
