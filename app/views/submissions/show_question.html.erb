@@ -6,7 +6,15 @@
   <tr><td>Student: </td><td><%= @submission.student.name %></td></tr>
   <tr><td>Submited at: </td><td><%= @submission.created_at %></td></tr>
   <% if @grading %>
-    <tr><td>Total grade: </td><td><%= @grading.total_grade %> / <%= @assignment.max_grade %></td></tr>
+    <tr>
+      <td>Total grade: </td>
+      <td>
+        <%= @grading.total_grade %> / <%= @assignment.max_grade %>
+        <%= link_to "Update",
+            edit_course_assignment_submission_submission_grading_path(@course, @assignment, @submission, @grading)
+            %>
+      </td>
+    </tr>
     <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
   <% end %>
 </table>

@@ -109,5 +109,4 @@ class SubmissionsController < ApplicationController
       end
     end
   end
-
 end

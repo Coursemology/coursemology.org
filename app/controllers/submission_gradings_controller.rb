@@ -56,5 +56,25 @@ class SubmissionGradingsController < ApplicationController
   end
 
   def update
+    @submission_grading.total_grade = 0
+    params[:ags].each do |agid, ag|
+      @ag = AnswerGrading.find(agid)
+      @ag.update_attributes(ag)
+      @ag.grader = current_user
+      @submission_grading.total_grade += ag[:grade].to_f
+    end
+    @submission_grading.grader = current_user
+
+    if @submission_grading.save
+      respond_to do |format|
+        format.html { redirect_to course_assignment_submission_path(@course, @assignment, @submission),
+                      notice: "Grading has been recorded." }
+      end
+    else
+      respond_to do |format|
+        format.html { render action: "new" }
+      end
+    end
+
   end
 end
