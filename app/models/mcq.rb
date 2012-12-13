@@ -3,7 +3,7 @@ class Mcq < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many :answers, as: :question
+  has_many :mcq_answers
   has_many :student_answers, as: :answerable
   has_many :asm_qns
 end

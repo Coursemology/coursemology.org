@@ -28,7 +28,7 @@ class McqsController < ApplicationController
         # TODO: check if this answer does belong to the current question
         updated = updated && ans.update_attributes(answer)
       else
-        ans = mcq.answers.build(answer)
+        ans = mcq.mcq_answers.build(answer)
         updated = updated && ans.save
       end
     end

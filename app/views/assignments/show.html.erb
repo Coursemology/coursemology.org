@@ -55,15 +55,7 @@
       <% @mcqs.each do |q| %>
         <tr>
           <td>
-            <span><%= q.description %></span>
-            <ul>
-            <% q.answers.each do |ans| %>
-              <li>
-                <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
-                <span><%= ans.text %></span>
-              </li>
-            <% end %>
-            </ul>
+            <%= render partial: "mcqs/one", locals: { q: q } %>
           </td>
           <td>
             <%= link_to edit_course_assignment_mcq_path(@course, @assignment, q), :class => 'btn btn-mini' do %>

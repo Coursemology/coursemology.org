@@ -1,13 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  question_id: 1
+  mcq_id: 1
   text: MyString
   creator_id: 1
   explanation: MyString
+  is_correct: false
 
 two:
-  question_id: 1
+  mcq_id: 1
   text: MyString
   creator_id: 1
   explanation: MyString
+  is_correct: false

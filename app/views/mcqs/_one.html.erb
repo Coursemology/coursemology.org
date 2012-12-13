@@ -1,0 +1,10 @@
+<span><%= q.description %></span>
+<ul>
+  <% q.mcq_answers.each do |ans| %>
+    <li>
+    <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+    <span><%= ans.text %></span>
+  </li>
+<% end %>
+</ul>
+

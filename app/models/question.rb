@@ -3,6 +3,4 @@ class Question < ActiveRecord::Base
 
   belongs_to :assignment
   belongs_to :creator, class_name: "User"
-
-  has_many :answers, as: :question
 end

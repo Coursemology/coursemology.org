@@ -177,7 +177,7 @@ namespace :db do
       if is_correct
         selected = true
       end
-      gen_answer(user, mcq, is_correct)
+      gen_mcq_answer(user, mcq, is_correct)
     end
 
     return mcq
@@ -191,8 +191,8 @@ namespace :db do
     )
   end
 
-  def gen_answer(user, question, is_correct)
-    return question.answers.build(
+  def gen_mcq_answer(user, mcq, is_correct)
+    return mcq.mcq_answers.build(
       creator_id: user.id,
       text: Faker::Lorem.sentence(),
       explanation: Faker::Lorem.paragraph(),
@@ -206,5 +206,4 @@ namespace :db do
     asm_qn.qn = qn
     return asm_qn.save!
   end
-
 end

@@ -22,7 +22,7 @@
     <%= f.label "Answers", :class => 'control-label' %>
     <div class="controls" id="mcq-answers">
       <table>
-        <% @mcq.answers.each do |answer| %>
+        <% @mcq.mcq_answers.each do |answer| %>
           <tr class="answer-row">
             <input type="hidden" name="answers[][id]" value="<%= answer.id %>" />
             <input type="hidden" name="answers[][text]" value="<%= answer.text %>">
