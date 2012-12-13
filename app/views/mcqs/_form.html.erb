@@ -1,4 +1,4 @@
-<%= form_for [@course, @assignment, @mcq], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @asm, @mcq], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
@@ -12,17 +12,10 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :order, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :order, :class => 'number_field' %>
-    </div>
-  </div>
-
-  <div class="control-group">
     <%= f.label "Answers", :class => 'control-label' %>
     <div class="controls" id="mcq-answers">
       <table>
-        <% @mcq.answers.each do |answer| %>
+        <% @mcq.mcq_answers.each do |answer| %>
           <tr class="answer-row">
             <input type="hidden" name="answers[][id]" value="<%= answer.id %>" />
             <input type="hidden" name="answers[][text]" value="<%= answer.text %>">
@@ -48,6 +41,6 @@
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_assignment_path(@course, @assignment), :class => 'btn' %>
+                nil, :class => 'btn' %>
   </div>
 <% end %>

@@ -40,7 +40,7 @@
       <h3>Question <%= i + 1 %>:</h3>
       <span><%= q.description %></span>
       <ul>
-      <% q.answers.each do |ans| %>
+      <% q.mcq_answers.each do |ans| %>
         <li>
           <input type="radio" name="answers[<%= q.id %>]" value="<%= ans.id %>" />
           <span><%= ans.text %></span>

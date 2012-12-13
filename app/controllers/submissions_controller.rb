@@ -23,31 +23,37 @@ class SubmissionsController < ApplicationController
     # add grading report
     @qadata = {}
 
-    if @assignment.auto_graded > 0
-      template = "submissions/show_mcq"
-      @assignment.mcqs.each do |mcq|
-        @qadata[mcq.id] = { q: mcq }
-      end
-    else
-      template = "submissions/show_question"
-      @assignment.questions.each do |q|
-        @qadata[q.id] = { q: q }
-      end
-    end
-
-    @submission.student_answers.each do |sa|
-      @qadata[sa.answerable_id][:a] = sa
-    end
-
     if params[:grading_id]
       @grading = SubmissionGrading.find(grading_id)
     else
       @grading = @submission.final_grading
     end
 
-    if @grading
-      @grading.answer_gradings.each do |ag|
-        @qadata[ag.student_answer.answerable_id][:g] = ag
+    if @assignment.auto_graded > 0
+      template = "submissions/show_mcq"
+      @assignment.mcqs.each do |mcq|
+        @qadata[mcq.id] = { q: mcq }
+      end
+      @submission.std_mcq_answers.each do |sma|
+        @qadata[sma.mcq.id][:a] = sma
+      end
+      if @grading
+        @grading.answer_gradings.each do |ag|
+          @qadata[ag.student_answer.mcq_id][:g] = ag
+        end
+      end
+    else
+      template = "submissions/show_question"
+      @assignment.questions.each do |q|
+        @qadata[q.id] = { q: q }
+      end
+      @submission.std_answers.each do |sa|
+        @qadata[sa.question.id][:a] = sa
+      end
+      if @grading
+        @grading.answer_gradings.each do |ag|
+          @qadata[ag.student_answer.question_id][:g] = ag
+        end
       end
     end
 
@@ -74,18 +80,18 @@ class SubmissionsController < ApplicationController
       total_grade = 0
       params[:answers].each do |qid, ansid|
         @mcq = Mcq.find(qid)
-        @answer = Answer.find(ansid)
+        @answer = McqAnswer.find(ansid)
 
-        sa = @submission.student_answers.build({
-          answer_id: ansid
+        sma = @submission.std_mcq_answers.build({
+          mcq_answer_id: ansid
         })
-        sa.answerable = @mcq
+        sma.mcq = @mcq
 
         grade = @answer.is_correct ? @mcq.max_grade : 0
         ag = sg.answer_gradings.build({
           grade: grade
         })
-        ag.student_answer = sa
+        ag.student_answer = sma
         total_grade += grade
       end
       sg.total_grade = total_grade
@@ -93,10 +99,10 @@ class SubmissionsController < ApplicationController
     else
       params[:answers].each do |qid, ans|
         @wq = Question.find(qid)
-        sa = @submission.student_answers.build({
+        sa = @submission.std_answers.build({
           text: ans,
         })
-        sa.answerable = @wq
+        sa.question = @wq
       end
     end
     if @submission.save

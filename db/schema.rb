@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121211095140) do
+ActiveRecord::Schema.define(:version => 20121213172612) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -32,17 +32,17 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.integer  "submission_grading_id"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
+    t.string   "student_answer_type"
   end
 
-  create_table "answers", :force => true do |t|
-    t.integer  "question_id"
-    t.string   "text"
-    t.integer  "creator_id"
-    t.string   "explanation"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.boolean  "is_correct"
-    t.string   "question_type"
+  create_table "asm_qns", :force => true do |t|
+    t.integer  "asm_id"
+    t.string   "asm_type"
+    t.integer  "qn_id"
+    t.string   "qn_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "order"
   end
 
   create_table "assignments", :force => true do |t|
@@ -81,11 +81,19 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "mcq_answers", :force => true do |t|
+    t.integer  "mcq_id"
+    t.string   "text"
+    t.integer  "creator_id"
+    t.string   "explanation"
+    t.boolean  "is_correct"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "mcqs", :force => true do |t|
     t.integer  "creator_id"
-    t.integer  "assignment_id"
     t.string   "description"
-    t.integer  "order"
     t.integer  "correct_answer_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
@@ -94,11 +102,9 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
-    t.integer  "assignment_id"
     t.string   "description"
-    t.integer  "order"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "max_grade"
   end
 
@@ -108,6 +114,33 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "sbm_answers", :force => true do |t|
+    t.integer  "sbm_id"
+    t.string   "sbm_type"
+    t.integer  "answer_id"
+    t.string   "answer_type"
+    t.boolean  "is_final"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "std_answers", :force => true do |t|
+    t.string   "text"
+    t.integer  "student_id"
+    t.integer  "question_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "std_mcq_answers", :force => true do |t|
+    t.integer  "mcq_answer_id"
+    t.string   "choices"
+    t.integer  "student_id"
+    t.integer  "mcq_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "student_answers", :force => true do |t|
@@ -143,6 +176,29 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+  end
+
+  create_table "training_submissions", :force => true do |t|
+    t.integer  "student_id"
+    t.integer  "training_id"
+    t.integer  "current_step"
+    t.datetime "open_at"
+    t.datetime "submit_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "trainings", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "exp"
+    t.datetime "open_at"
+    t.integer  "order"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "max_grade"
   end
 
   create_table "user_courses", :force => true do |t|

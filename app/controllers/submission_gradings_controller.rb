@@ -11,8 +11,8 @@ class SubmissionGradingsController < ApplicationController
       @qadata[q.id] = { q: q }
     end
 
-    @submission.student_answers.each do |sa|
-      @qadata[sa.answerable_id][:a] = sa
+    @submission.std_answers.each do |sa|
+      @qadata[sa.question_id][:a] = sa
     end
   end
 

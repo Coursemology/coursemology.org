@@ -5,8 +5,13 @@ class Submission < ActiveRecord::Base
   belongs_to :student, class_name: "User"
   belongs_to :final_grading, class_name: "SubmissionGrading"
 
-  has_many :student_answers
   has_many :submission_gradings
+
+  has_many :sbm_answers, as: :sbm
+  has_many :std_answers, through: :sbm_answers,
+      source: :answer, source_type: "StdAnswer"
+  has_many :std_mcq_answers, through: :sbm_answers,
+      source: :answer, source_type: "StdMcqAnswer"
 
   def self.all_course(course)
     puts 'all ', course.to_json

@@ -1,0 +1,69 @@
+<%- model_class = Training -%>
+<div class="page-header">
+  <h1>Training: <%= @training.title %></h1>
+</div>
+
+<p><%= @training.description %></p>
+
+<table>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= @training.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:max_grade) %>:</strong></td>
+    <td><%= @training.max_grade %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= @training.open_at %></td>
+  </tr>
+</table>
+<hr/>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_course_training_mcq_path(@course, @training),
+            :class => 'btn btn-primary' %>
+
+<h2>MCQ Questions</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @mcqs.each do |q| %>
+      <tr>
+        <td>
+          <%= render partial: "mcqs/one", locals: { q: q } %>
+        </td>
+        <td>
+          <%= link_to edit_course_training_mcq_path(@course, @training, q), :class => 'btn btn-mini' do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to course_training_mcq_path(@course, @training, q),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br/>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              course_trainings_path(@course), :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_course_training_path(@course, @training), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              course_training_path(@course, @training),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

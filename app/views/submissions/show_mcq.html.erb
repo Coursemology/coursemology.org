@@ -30,8 +30,8 @@
   <h4>Question:</h4>
   <p><%= qa[:q].description %></p>
   <ul>
-    <% qa[:q].answers.each do |ans| %>
-      <li class="<%= (qa[:a] && qa[:a].answer_id == ans.id) && (ans.is_correct ? "mcq-right" : "mcq-wrong") %>">
+    <% qa[:q].mcq_answers.each do |ans| %>
+      <li class="<%= (qa[:a] && qa[:a].mcq_answer_id == ans.id) && (ans.is_correct ? "mcq-right" : "mcq-wrong") %>">
         <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
         <span><%= ans.text %></span>
       </li>

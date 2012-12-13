@@ -13,10 +13,13 @@ class QuestionsController < ApplicationController
 
   def create
     @question.creator = current_user
+    @asm_qn = AsmQn.new
+    @asm_qn.asm = @assignment
+    @asm_qn.qn = @question
+
     respond_to do |format|
-      if @question.save
-        @question.assignment.max_grade += @question.max_grade
-        @question.assignment.save
+      if @question.save && @asm_qn.save
+        @assignment.update_grade
         format.html { redirect_to course_assignment_url(@course, @assignment),
                       notice: 'Question successfully added.' }
         format.json { render json: @question, status: :created, location: @question }
@@ -30,7 +33,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update_attributes(params[:question])
-        @question.assignment.update_grade
+        @assignment.update_grade
         format.html { redirect_to course_assignment_question_url(@course, @assignment, @question),
                       notice: 'Assignment was successfully updated.' }
         format.json { head :no_content }
