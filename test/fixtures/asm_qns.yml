@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  asm_id: 1
+  asm_type: MyString
+  qn_id: 1
+  qn_type: MyString
+
+two:
+  asm_id: 1
+  asm_type: MyString
+  qn_id: 1
+  qn_type: MyString

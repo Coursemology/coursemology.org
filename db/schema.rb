@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121211095140) do
+ActiveRecord::Schema.define(:version => 20121212174619) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.datetime "updated_at",    :null => false
     t.boolean  "is_correct"
     t.string   "question_type"
+  end
+
+  create_table "asm_qns", :force => true do |t|
+    t.integer  "asm_id"
+    t.string   "asm_type"
+    t.integer  "qn_id"
+    t.string   "qn_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "assignments", :force => true do |t|
@@ -143,6 +152,19 @@ ActiveRecord::Schema.define(:version => 20121211095140) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+  end
+
+  create_table "trainings", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "exp"
+    t.datetime "open_at"
+    t.integer  "order"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "max_grade"
   end
 
   create_table "user_courses", :force => true do |t|

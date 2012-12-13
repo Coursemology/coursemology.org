@@ -1,0 +1,33 @@
+<%= form_for [@course, @training], :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'text_area', :rows => 10 %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :exp, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :exp, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :open_at, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :open_at,
+          :value => date_mdY(@training.open_at),
+          :class => 'datepicker' %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                course_path(@course), :class => 'btn' %>
+  </div>
+<% end %>

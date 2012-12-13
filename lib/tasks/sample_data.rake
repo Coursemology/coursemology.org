@@ -24,27 +24,21 @@ namespace :db do
     puts "Gen admin's fake data"
     10.times do
       course = gen_course(admin)
-      20.times do
+      10.times do
         gen_announcement(admin, course)
       end
-      20.times do |i|
+      10.times do |i|
         asm = gen_assignment(admin, course, rand(-1..1), true)
         asm.order = i * 2
         10.times do |j|
-          mcq = gen_mcq(admin, asm)
+          mcq = gen_mcq(admin)
+          mcq.assignment = asm
           mcq.order = j
-          selected = false
-          5.times do |k|
-            is_correct = !selected && (rand(5 - k) == 0)
-            if is_correct
-              selected = true
-            end
-            gen_answer(admin, mcq, is_correct)
-          end
+          mcq.save
         end
         asm.update_grade
       end
-      20.times do |i|
+      10.times do |i|
         asm = gen_assignment(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
@@ -52,6 +46,16 @@ namespace :db do
           wq.order = j
         end
         asm.update_grade
+      end
+
+      10.times do |i|
+        training = gen_training(admin, course, rand(0..1))
+        training.order = i
+        rand(5..7).times do |j|
+          mcq = gen_mcq(admin)
+          mcq.order = j
+          link_asm_qn(training, mcq)
+        end
       end
 
       students.shuffle.first(rand(20..30)).each do |std|
@@ -120,7 +124,7 @@ namespace :db do
     if open_state == -1 # closed
       open_at = DateTime.now.prev_month
       close_at = DateTime.now.prev_day
-    elsif
+    elsif open_state == 0
       open_at = DateTime.now.prev_day
       close_at = DateTime.now.next_month
     elsif
@@ -141,13 +145,40 @@ namespace :db do
     )
   end
 
-  def gen_mcq(user, assignment)
-    return Mcq.create!(
+  def gen_training(user, course, open_state)
+    if open_state == 0 # opened
+      open_at = DateTime.now.prev_day
+    elsif
+      open_at = DateTime.now.next_month
+    end
+
+    return Training.create!(
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
+      creator_id: user.id,
+      course_id: course.id,
+      exp: rand(100) * 1000,
+      open_at: open_at,
+    )
+  end
+
+  def gen_mcq(user)
+    mcq = Mcq.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
-      assignment_id: assignment.id,
       max_grade: 1
     )
+
+    selected = false
+    5.times do |k|
+      is_correct = !selected && (rand(5 - k) == 0)
+      if is_correct
+        selected = true
+      end
+      gen_answer(user, mcq, is_correct)
+    end
+
+    return mcq
   end
 
   def gen_wq(user, assignment)
@@ -166,6 +197,13 @@ namespace :db do
       explanation: Faker::Lorem.paragraph(),
       is_correct: is_correct
     ).save
+  end
+
+  def link_asm_qn(asm, qn)
+    asm_qn = AsmQn.new
+    asm_qn.asm = asm
+    asm_qn.qn = qn
+    return asm_qn.save!
   end
 
 end

@@ -24,6 +24,9 @@ JfdiAcademy::Application.routes.draw do
         resources :submission_gradings
       end
     end
+    resources :trainings do
+      resources :mcqs
+    end
     resources :announcements
   end
 
