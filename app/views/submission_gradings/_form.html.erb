@@ -32,6 +32,7 @@
       <h4>Answer:</h4>
       <p><%= qa[:a].text %></p>
       <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
+      <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_type]" value="<%= qa[:a].class.name %>">
       <div class="control-group">
         <label class="control-label">Grade</label>
         <div class="controls">

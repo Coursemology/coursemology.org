@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121213095957) do
+ActiveRecord::Schema.define(:version => 20121213111700) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(:version => 20121213095957) do
     t.integer  "submission_grading_id"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
+    t.string   "student_answer_type"
   end
 
   create_table "asm_qns", :force => true do |t|
@@ -116,6 +117,33 @@ ActiveRecord::Schema.define(:version => 20121213095957) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "sbm_answers", :force => true do |t|
+    t.integer  "sbm_id"
+    t.string   "sbm_type"
+    t.integer  "answer_id"
+    t.string   "answer_type"
+    t.boolean  "is_final"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "std_answers", :force => true do |t|
+    t.string   "text"
+    t.integer  "student_id"
+    t.integer  "question_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "std_mcq_answers", :force => true do |t|
+    t.integer  "mcq_answer_id"
+    t.string   "choices"
+    t.integer  "student_id"
+    t.integer  "mcq_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "student_answers", :force => true do |t|
     t.integer  "answer_id"
     t.datetime "started_at"
@@ -149,6 +177,16 @@ ActiveRecord::Schema.define(:version => 20121213095957) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+  end
+
+  create_table "training_submissions", :force => true do |t|
+    t.integer  "student_id"
+    t.integer  "training_id"
+    t.integer  "current_step"
+    t.datetime "open_at"
+    t.datetime "submit_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "trainings", :force => true do |t|
