@@ -32,9 +32,8 @@ namespace :db do
         asm.order = i * 2
         10.times do |j|
           mcq = gen_mcq(admin)
-          mcq.order = j
           mcq.save
-          link_asm_qn(asm, mcq)
+          link_asm_qn(asm, mcq, j)
         end
         asm.update_grade
       end
@@ -43,9 +42,8 @@ namespace :db do
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
           wq = gen_wq(admin)
-          wq.order = j
           wq.save
-          link_asm_qn(asm, wq)
+          link_asm_qn(asm, wq, j)
         end
         asm.update_grade
       end
@@ -55,8 +53,7 @@ namespace :db do
         training.order = i
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
-          mcq.order = j
-          link_asm_qn(training, mcq)
+          link_asm_qn(training, mcq, j)
         end
       end
 
@@ -200,10 +197,11 @@ namespace :db do
     ).save
   end
 
-  def link_asm_qn(asm, qn)
+  def link_asm_qn(asm, qn, order)
     asm_qn = AsmQn.new
     asm_qn.asm = asm
     asm_qn.qn = qn
+    asm_qn.order = order
     return asm_qn.save!
   end
 end
