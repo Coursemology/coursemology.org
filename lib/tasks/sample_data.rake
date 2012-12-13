@@ -32,9 +32,9 @@ namespace :db do
         asm.order = i * 2
         10.times do |j|
           mcq = gen_mcq(admin)
-          mcq.assignment = asm
           mcq.order = j
           mcq.save
+          link_asm_qn(asm, mcq)
         end
         asm.update_grade
       end
@@ -42,8 +42,10 @@ namespace :db do
         asm = gen_assignment(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
-          wq = gen_wq(admin, asm)
+          wq = gen_wq(admin)
           wq.order = j
+          wq.save
+          link_asm_qn(asm, wq)
         end
         asm.update_grade
       end
@@ -181,11 +183,10 @@ namespace :db do
     return mcq
   end
 
-  def gen_wq(user, assignment)
+  def gen_wq(user)
     return Question.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
-      assignment_id: assignment.id,
       max_grade: 10
     )
   end

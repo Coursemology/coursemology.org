@@ -3,4 +3,11 @@ class Training < ActiveRecord::Base
 
   has_many :asm_qns, as: :asm
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
+
+  belongs_to :creator, class_name: "User"
+
+  def update_grade
+    self.max_grade = self.mcqs.sum(&:max_grade)
+    self.save
+  end
 end
