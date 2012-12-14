@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  student_id: 1
+  quiz_id: 1
+  open_at: 2012-12-14 01:57:07
+  submit_at: 2012-12-14 01:57:07
+  attempt: 1
+
+two:
+  student_id: 1
+  quiz_id: 1
+  open_at: 2012-12-14 01:57:07
+  submit_at: 2012-12-14 01:57:07
+  attempt: 1

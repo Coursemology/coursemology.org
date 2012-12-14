@@ -27,6 +27,9 @@ JfdiAcademy::Application.routes.draw do
     resources :trainings do
       resources :mcqs
     end
+    resources :quizzes do
+      resources :mcqs
+    end
     resources :announcements
   end
 

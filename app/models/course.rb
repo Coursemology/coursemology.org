@@ -7,4 +7,5 @@ class Course < ActiveRecord::Base
   has_many :announcements
   has_many :user_courses
   has_many :trainings
+  has_many :quizzes
 end

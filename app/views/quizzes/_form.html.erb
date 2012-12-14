@@ -1,4 +1,4 @@
-<%= form_for [@course, @assignment], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @quiz], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
@@ -21,7 +21,7 @@
     <%= f.label :open_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :open_at,
-          :value => date_mdY(@assignment.open_at),
+          :value => date_mdY(@quiz.open_at),
           :class => 'datepicker' %>
     </div>
   </div>
@@ -29,32 +29,14 @@
     <%= f.label :close_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :close_at,
-          :value => date_mdY(@assignment.close_at),
+          :value => date_mdY(@quiz.close_at),
           :class => 'datepicker' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :timelimit, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :timelimit, :class => 'number_field' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :attempt_limit, :class => 'control-label' %>
     <div class="controls">
       <%= f.number_field :attempt_limit, :class => 'number_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :auto_graded, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.check_box :auto_graded %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :order, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :order, :class => 'number_field' %>
     </div>
   </div>
   <div class="form-actions">

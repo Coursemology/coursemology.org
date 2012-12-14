@@ -57,6 +57,15 @@ namespace :db do
         end
       end
 
+      10.times do |i|
+        quiz = gen_quiz(admin, course, rand(0..1))
+        quiz.order = i
+        rand(5..7).times do |j|
+          mcq = gen_mcq(admin)
+          link_asm_qn(quiz, mcq, j)
+        end
+      end
+
       students.shuffle.first(rand(20..30)).each do |std|
         uc = UserCourse.create!(
           course_id: course.id,
@@ -143,6 +152,32 @@ namespace :db do
       auto_graded: is_mcq
     )
   end
+
+  def gen_quiz(user, course, open_state)
+    if open_state == -1 # closed
+      open_at = DateTime.now.prev_month
+      close_at = DateTime.now.prev_day
+    elsif open_state == 0
+      open_at = DateTime.now.prev_day
+      close_at = DateTime.now.next_month
+    elsif
+      open_at = DateTime.now.next_month
+      close_at = DateTime.now.next_month(2)
+    end
+
+    return Quiz.create!(
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
+      creator_id: user.id,
+      course_id: course.id,
+      attempt_limit: rand(5),
+      exp: rand(100) * 1000,
+      open_at: open_at,
+      close_at: close_at,
+    )
+  end
+
+
 
   def gen_training(user, course, open_state)
     if open_state == 0 # opened
