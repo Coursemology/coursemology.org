@@ -1,39 +1,39 @@
-<%- model_class = Assignment -%>
+<%- model_class = Mission -%>
 <div class="page-header">
-  <h1>Assignment <%= @assignment.order %>: <%= @assignment.title %></h1>
+  <h1>Mission <%= @mission.order %>: <%= @mission.title %></h1>
 </div>
 
-<p><%= @assignment.description %></p>
+<p><%= @mission.description %></p>
 
 <table>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
-    <td><%= @assignment.exp %></td>
+    <td><%= @mission.exp %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
-    <td><%= @assignment.open_at %></td>
+    <td><%= @mission.open_at %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
-    <td><%= @assignment.close_at %></td>
+    <td><%= @mission.close_at %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>
-    <td><%= @assignment.deadline %></td>
+    <td><%= @mission.deadline %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>
-    <td><%= @assignment.timelimit %></td>
+    <td><%= @mission.timelimit %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
-    <td><%= @assignment.attempt_limit %></td>
+    <td><%= @mission.attempt_limit %></td>
   </tr>
 </table>
 <hr/>
 
-<%= form_for [@course, @assignment, @submission], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @mission, @submission], :html => { :class => 'form-horizontal' } do |f| %>
 
   <% @questions.each_with_index do |q, i| %>
     <h3>Question <%= i + 1 %>:</h3>
@@ -48,6 +48,6 @@
   <div class="form-actions">
     <%= f.submit "Submit", :class => 'btn btn-primary' %>
     <%= link_to t('.save', :default => t("helpers.links.save")),
-                edit_course_assignment_path(@course, @assignment), :class => 'btn' %>
+                edit_course_mission_path(@course, @mission), :class => 'btn' %>
   </div>
 <% end %>

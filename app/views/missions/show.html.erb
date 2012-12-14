@@ -1,41 +1,41 @@
-<%- model_class = Assignment -%>
+<%- model_class = Mission -%>
 <div class="page-header">
-  <h1>Assignment <%= @assignment.order %>: <%= @assignment.title %></h1>
+  <h1>Mission <%= @mission.order %>: <%= @mission.title %></h1>
 </div>
 
-<p><%= @assignment.description %></p>
+<p><%= @mission.description %></p>
 
 <table>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
-    <td><%= @assignment.exp %></td>
+    <td><%= @mission.exp %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:max_grade) %>:</strong></td>
-    <td><%= @assignment.max_grade %></td>
+    <td><%= @mission.max_grade %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
-    <td><%= @assignment.open_at %></td>
+    <td><%= @mission.open_at %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
-    <td><%= @assignment.close_at %></td>
+    <td><%= @mission.close_at %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>
-    <td><%= @assignment.deadline %></td>
+    <td><%= @mission.deadline %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>
-    <td><%= @assignment.timelimit %></td>
+    <td><%= @mission.timelimit %></td>
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
-    <td><%= @assignment.attempt_limit %></td>
+    <td><%= @mission.attempt_limit %></td>
   </tr>
 </table>
-<a href="<%= course_assignment_submissions_path(@course, @assignment) %>">View submissions</a>
+<a href="<%= course_mission_submissions_path(@course, @mission) %>">View submissions</a>
 <hr/>
 
 <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
@@ -59,10 +59,10 @@
       <tr>
         <td><%= q.description %></td>
         <td>
-          <%= link_to edit_course_assignment_question_path(@course, @assignment, q), :class => 'btn btn-mini' do %>
+          <%= link_to edit_course_mission_question_path(@course, @mission, q), :class => 'btn btn-mini' do %>
             <i class="icon-edit"></i>
           <% end %>
-          <%= link_to course_assignment_question_path(@course, @assignment, q),
+          <%= link_to course_mission_question_path(@course, @mission, q),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-mini btn-danger' do %>
@@ -77,11 +77,11 @@
 <br/>
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              course_assignments_path(@course), :class => 'btn'  %>
+              course_missions_path(@course), :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_course_assignment_path(@course, @assignment), :class => 'btn' %>
+              edit_course_mission_path(@course, @mission), :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              course_assignment_path(@course, @assignment),
+              course_mission_path(@course, @mission),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>

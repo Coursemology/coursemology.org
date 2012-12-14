@@ -1,13 +1,13 @@
 class SubmissionGradingsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :assignment, through: :course
-  load_and_authorize_resource :submission, through: :assignment
+  load_and_authorize_resource :mission, through: :course
+  load_and_authorize_resource :submission, through: :mission
   load_and_authorize_resource :submission_grading, through: :submission
 
   def new
     @qadata = {}
 
-    @assignment.questions.each do |q|
+    @mission.questions.each do |q|
       @qadata[q.id] = { q: q }
     end
 
@@ -29,7 +29,7 @@ class SubmissionGradingsController < ApplicationController
       @submission.final_grading = @submission_grading
       @submission.save
       respond_to do |format|
-        format.html { redirect_to course_assignment_submission_path(@course, @assignment, @submission),
+        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                       notice: "Grading has been recorded." }
       end
     else
@@ -42,16 +42,17 @@ class SubmissionGradingsController < ApplicationController
   def edit
     @qadata = {}
 
-    @assignment.questions.each do |q|
+    @mission.questions.each do |q|
       @qadata[q.id] = { q: q }
     end
 
-    @submission.student_answers.each do |sa|
-      @qadata[sa.answerable_id][:a] = sa
+    @submission.std_answers.each do |sa|
+      @qadata[sa.question_id][:a] = sa
     end
 
+    # student answer must be a StdAnswer
     @submission_grading.answer_gradings.each do |ag|
-      @qadata[ag.student_answer.answerable_id][:g] = ag
+      @qadata[ag.student_answer.question_id][:g] = ag
     end
   end
 
@@ -67,7 +68,7 @@ class SubmissionGradingsController < ApplicationController
 
     if @submission_grading.save
       respond_to do |format|
-        format.html { redirect_to course_assignment_submission_path(@course, @assignment, @submission),
+        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                       notice: "Grading has been recorded." }
       end
     else

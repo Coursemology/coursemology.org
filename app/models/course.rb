@@ -3,7 +3,7 @@ class Course < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many :assignments
+  has_many :missions
   has_many :announcements
   has_many :user_courses
   has_many :trainings

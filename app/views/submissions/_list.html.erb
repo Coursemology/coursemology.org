@@ -3,7 +3,7 @@
     <tr>
       <th width="5%">ID</th>
       <th width="15%">Student</th>
-      <th>Assignment</th>
+      <th>Mission</th>
       <th width="20%">Submit time</th>
       <th width="15%">Grading</th>
       <th width="5%">Action</th>
@@ -13,10 +13,10 @@
     <% submissions.each do |sub| %>
       <tr>
         <td><%= link_to sub.id,
-                        course_assignment_submission_path(@course, sub.assignment.id, sub) %></td>
+                        course_mission_submission_path(@course, sub.mission.id, sub) %></td>
         <td><%= sub.student.name %></td>
-        <td><%= link_to sub.assignment.title,
-                        course_assignment_path(@course, sub.assignment.id) %></td>
+        <td><%= link_to sub.mission.title,
+                        course_mission_path(@course, sub.mission.id) %></td>
         <td><%= sub.created_at %></td>
         <td>
           <% sub.submission_gradings.each do |sg| %>
@@ -25,7 +25,7 @@
         </td>
         <td>
           <%= link_to "Evaluate",
-              new_course_assignment_submission_submission_grading_path(@course, sub.assignment.id, sub) ,
+              new_course_mission_submission_submission_grading_path(@course, sub.mission.id, sub) ,
               class: "btn" %>
         </td>
       </tr>

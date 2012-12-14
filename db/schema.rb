@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214173428) do
+ActiveRecord::Schema.define(:version => 20121214175026) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -43,24 +43,6 @@ ActiveRecord::Schema.define(:version => 20121214173428) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "order"
-  end
-
-  create_table "assignments", :force => true do |t|
-    t.integer  "course_id"
-    t.integer  "exp"
-    t.datetime "open_at"
-    t.datetime "close_at"
-    t.datetime "deadline"
-    t.integer  "timelimit"
-    t.integer  "attempt_limit"
-    t.integer  "auto_graded"
-    t.integer  "order"
-    t.string   "description"
-    t.integer  "creator_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.string   "title"
-    t.integer  "max_grade"
   end
 
   create_table "courses", :force => true do |t|
@@ -97,6 +79,24 @@ ActiveRecord::Schema.define(:version => 20121214173428) do
     t.integer  "correct_answer_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.integer  "max_grade"
+  end
+
+  create_table "missions", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "exp"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.datetime "deadline"
+    t.integer  "timelimit"
+    t.integer  "attempt_limit"
+    t.integer  "auto_graded"
+    t.integer  "order"
+    t.string   "description"
+    t.integer  "creator_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.string   "title"
     t.integer  "max_grade"
   end
 
@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(:version => 20121214173428) do
 
   create_table "submissions", :force => true do |t|
     t.integer  "student_id"
-    t.integer  "assignment_id"
+    t.integer  "mission_id"
     t.datetime "open_at"
     t.datetime "submit_at"
     t.integer  "attempt"

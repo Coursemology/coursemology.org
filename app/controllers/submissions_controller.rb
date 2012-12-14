@@ -1,10 +1,10 @@
 class SubmissionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :assignment, through: :course
-  load_and_authorize_resource :submission, through: :assignment
+  load_and_authorize_resource :mission, through: :course
+  load_and_authorize_resource :submission, through: :mission
 
   skip_load_and_authorize_resource :submission, only: :listall
-  skip_load_and_authorize_resource :assignment, only: :listall
+  skip_load_and_authorize_resource :mission, only: :listall
 
   def index
   end
@@ -27,7 +27,7 @@ class SubmissionsController < ApplicationController
       @grading = @submission.final_grading
     end
 
-    @assignment.questions.each do |q|
+    @mission.questions.each do |q|
       @qadata[q.id] = { q: q }
     end
 
@@ -49,7 +49,7 @@ class SubmissionsController < ApplicationController
   end
 
   def new
-    @questions = @assignment.questions
+    @questions = @mission.questions
     respond_to do |format|
       format.html
     end

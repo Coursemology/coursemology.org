@@ -9,9 +9,9 @@
     <tr>
       <td>Total grade: </td>
       <td>
-        <%= @grading.total_grade %> / <%= @assignment.max_grade %>
+        <%= @grading.total_grade %> / <%= @mission.max_grade %>
         <%= link_to "Update",
-            edit_course_assignment_submission_submission_grading_path(@course, @assignment, @submission, @grading)
+            edit_course_mission_submission_submission_grading_path(@course, @mission, @submission, @grading)
             %>
       </td>
     </tr>
@@ -20,7 +20,7 @@
 </table>
 <hr/>
 
-<p class="well"><%= @assignment.description %></p>
+<p class="well"><%= @mission.description %></p>
 
 <% @qadata.each do |qid, qa| %>
   <h4>Question:</h4>

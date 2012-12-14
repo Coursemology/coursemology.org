@@ -6,7 +6,7 @@
     <tr>
       <td>Total grade: </td>
       <td>
-        <%= @submission_grading.total_grade %> / <%= @assignment.max_grade %>
+        <%= @submission_grading.total_grade %> / <%= @mission.max_grade %>
       </td>
     </tr>
     <% if @submission_grading.grader %>
@@ -18,9 +18,9 @@
 </table>
 <hr/>
 
-<p class="well"><%= @assignment.description %></p>
+<p class="well"><%= @mission.description %></p>
 
-<%= form_for [@course, @assignment, @submission, @submission_grading],
+<%= form_for [@course, @mission, @submission, @submission_grading],
              html: { class: "form-horizontal" } do |f| %>
   <input type="hidden" name="submission_id" value="<% @submission.id %>" />
 

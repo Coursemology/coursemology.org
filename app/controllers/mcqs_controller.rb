@@ -1,15 +1,14 @@
 class McqsController < ApplicationController
   load_and_authorize_resource :course
-  load_resource :assignment, through: :course
   load_resource :training, through: :course
   load_resource :quiz, through: :course
-  load_and_authorize_resource :mcq, through: [:assignment, :training, :quiz]
-  # may need to authorize @assignment || @training separately
+  load_and_authorize_resource :mcq, through: [:training, :quiz]
+  # may need to authorize @quiz || @training separately
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter :init_asm
 
   def init_asm
-    @asm = @assignment || @training || @quiz
+    @asm = @training || @quiz
   end
 
   def new
@@ -42,7 +41,7 @@ class McqsController < ApplicationController
     @asm_qn.asm = @asm
     @asm_qn.qn = @mcq
 
-    # update max grade of the assignment it belongs to
+    # update max grade of the asm it belongs to
     respond_to do |format|
       if @mcq.save && @asm_qn.save
         update_answers(@mcq)

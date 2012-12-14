@@ -30,7 +30,7 @@ namespace :db do
       end
 
       15.times do |i|
-        asm = gen_assignment(admin, course, rand(-1..1), false)
+        asm = gen_mission(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
           wq = gen_wq(admin)
@@ -120,7 +120,7 @@ namespace :db do
     )
   end
 
-  def gen_assignment(user, course, open_state, is_mcq)
+  def gen_mission(user, course, open_state, is_mcq)
     if open_state == -1 # closed
       open_at = DateTime.now.prev_month
       close_at = DateTime.now.prev_day
@@ -132,7 +132,7 @@ namespace :db do
       close_at = DateTime.now.next_month(2)
     end
 
-    return Assignment.create!(
+    return Mission.create!(
       title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
       description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       creator_id: user.id,

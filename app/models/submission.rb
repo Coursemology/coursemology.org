@@ -1,11 +1,11 @@
 class Submission < ActiveRecord::Base
-  attr_accessible :assignment_id, :attempt, :final_grading_id, :open_at, :student_id, :submit_at
+  attr_accessible :attempt, :final_grading_id, :mission_id, :open_at, :student_id, :submit_at
 
-  belongs_to :assignment
+  belongs_to :mission
   belongs_to :student, class_name: "User"
   belongs_to :final_grading, class_name: "SubmissionGrading"
 
-  has_many :submission_gradings
+  has_many :submission_gradings, as: :sbm
 
   has_many :sbm_answers, as: :sbm
   has_many :std_answers, through: :sbm_answers,

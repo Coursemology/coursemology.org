@@ -1,4 +1,4 @@
-<%= form_for [@course, @assignment], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @mission], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
@@ -21,7 +21,7 @@
     <%= f.label :open_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :open_at,
-          :value => date_mdY(@assignment.open_at),
+          :value => date_mdY(@mission.open_at),
           :class => 'datepicker' %>
     </div>
   </div>
@@ -29,7 +29,7 @@
     <%= f.label :close_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :close_at,
-          :value => date_mdY(@assignment.close_at),
+          :value => date_mdY(@mission.close_at),
           :class => 'datepicker' %>
     </div>
   </div>
