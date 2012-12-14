@@ -14,8 +14,6 @@ class AssignmentsController < ApplicationController
   # GET /assignments/1
   # GET /assignments/1.json
   def show
-    @mcqs = @assignment.mcqs
-    @mcq = Mcq.new
     @questions = @assignment.questions
     @question = Question.new
     respond_to do |format|

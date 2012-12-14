@@ -45,18 +45,6 @@
       <%= f.number_field :attempt_limit, :class => 'number_field' %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :auto_graded, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.check_box :auto_graded %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :order, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :order, :class => 'number_field' %>
-    </div>
-  </div>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

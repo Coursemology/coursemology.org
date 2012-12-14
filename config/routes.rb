@@ -17,18 +17,25 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     match "/submissions" => "submissions#listall", as: :submissions
     match "/submissions/students/:student_id" => "submissions#listall", as: :submissions_student
+    match "/quiz_submissions" => "quiz_submissions#listall", as: :quiz_submissions
+    match "/quiz_submissions/students/:student_id" => "quiz_submissions#listall", as: :quiz_submissions_student
+
     resources :assignments do
-      resources :mcqs
       resources :questions
       resources :submissions do
         resources :submission_gradings
       end
     end
+
     resources :trainings do
       resources :mcqs
     end
+
     resources :quizzes do
       resources :mcqs
+      resources :quiz_submissions do
+        resources :submission_gradings
+      end
     end
     resources :announcements
   end

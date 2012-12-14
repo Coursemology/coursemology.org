@@ -29,7 +29,7 @@
         <td>
           <% if current_user %>
             <% if current_user.is_student?(@course) %>
-              <%= link_to 'Attempt', nil, :class => 'btn btn-mini' %>
+              <%= link_to 'Attempt', new_course_quiz_quiz_submission_path(@course, quiz), :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer?(@course) %>
               <%= link_to edit_course_quiz_path(@course, quiz), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>

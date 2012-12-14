@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121213175707) do
+ActiveRecord::Schema.define(:version => 20121214173428) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -114,8 +114,9 @@ ActiveRecord::Schema.define(:version => 20121213175707) do
     t.datetime "open_at"
     t.datetime "submit_at"
     t.integer  "attempt"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "final_grading_id"
   end
 
   create_table "quizzes", :force => true do |t|
@@ -186,10 +187,11 @@ ActiveRecord::Schema.define(:version => 20121213175707) do
     t.integer  "grader_id"
     t.integer  "total_grade"
     t.string   "comment"
-    t.integer  "submission_id"
+    t.integer  "sbm_id"
     t.datetime "publish_at"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "sbm_type"
   end
 
   create_table "submissions", :force => true do |t|

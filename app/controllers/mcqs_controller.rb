@@ -47,13 +47,10 @@ class McqsController < ApplicationController
       if @mcq.save && @asm_qn.save
         update_answers(@mcq)
         @asm.update_grade
-        if @asm.is_a?(Assignment)
-          format.html { redirect_to course_assignment_url(@course, @assignment),
-                        notice: 'Question successfully added.' }
-        elsif @asm.is_a?(Training)
+        if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
                         notice: 'Question successfully added.' }
-        else
+        elsif @asm.is_a?(Quiz)
           format.html { redirect_to course_quiz_url(@course, @quiz),
                         notice: 'Question successfully added.' }
         end
@@ -73,13 +70,10 @@ class McqsController < ApplicationController
     respond_to do |format|
       if updated
         @asm.update_grade
-        if @asm.is_a?(Assignment)
-          format.html { redirect_to course_assignment_url(@course, @assignment),
-                        notice: 'Question successfully updated.' }
-        elsif @asm.is_a?(Training)
+        if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
                         notice: 'Question successfully updated.' }
-        else
+        elsif @asm.is_a?(Quiz)
           format.html { redirect_to course_quiz_url(@course, @quiz),
                         notice: 'Question successfully updated.' }
         end

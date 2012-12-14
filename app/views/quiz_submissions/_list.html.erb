@@ -1,0 +1,34 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th width="5%">ID</th>
+      <th width="15%">Student</th>
+      <th>Assignment</th>
+      <th width="20%">Submit time</th>
+      <th width="15%">Grading</th>
+      <th width="5%">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @quiz_submissions.each do |sub| %>
+      <tr>
+        <td><%= link_to sub.id,
+                        course_quiz_quiz_submission_path(@course, sub.quiz.id, sub) %></td>
+        <td><%= sub.student.name %></td>
+        <td><%= link_to sub.quiz.title,
+                        course_quiz_path(@course, sub.quiz.id) %></td>
+        <td><%= sub.created_at %></td>
+        <td>
+          <% sub.submission_gradings.each do |sg| %>
+            <%= link_to sg.get_name, nil %><br/>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to "Evaluate",
+              new_course_quiz_quiz_submission_submission_grading_path(@course, sub.quiz.id, sub),
+              class: "btn" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>Submission</h1>
+</div>
+
+<table width="100%">
+  <col width="10%" />
+  <tr><td>Student: </td><td><%= @quiz_submission.student.name %></td></tr>
+  <tr><td>Submited at: </td><td><%= @quiz_submission.created_at %></td></tr>
+  <% if @grading %>
+    <tr>
+      <td>Total grade: </td>
+      <td>
+        <%= @grading.total_grade %> / <%= @quiz.max_grade %>
+        <%= link_to "Update",
+            edit_course_quiz_quiz_submission_submission_grading_path(@course, @quiz, @quiz_submission, @grading)
+            %>
+      </td>
+    </tr>
+    <% if @grading.grader %>
+      <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+    <% else %>
+      <tr><td>Grader: </td><td>Auto graded!</td></tr>
+    <% end %>
+  <% end %>
+</table>
+<hr/>
+
+<p class="well"><%= @quiz.description %></p>
+<% @qadata.each do |qid, qa| %>
+  <h4>Question:</h4>
+  <p><%= qa[:q].description %></p>
+  <ul>
+    <% qa[:q].mcq_answers.each do |ans| %>
+      <li class="<%= (qa[:a] && qa[:a].mcq_answer_id == ans.id) && (ans.is_correct ? "mcq-right" : "mcq-wrong") %>">
+        <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+        <span><%= ans.text %></span>
+      </li>
+    <% end %>
+  </ul>
+  <% if qa[:g] %>
+    <p><strong>Grade: </strong><%= qa[:g].grade %> / <%= qa[:q].max_grade %></p>
+  <% end %>
+  <hr />
+<% end %>
+

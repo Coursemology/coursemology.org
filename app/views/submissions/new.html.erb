@@ -34,30 +34,14 @@
 <hr/>
 
 <%= form_for [@course, @assignment, @submission], :html => { :class => 'form-horizontal' } do |f| %>
-  <input type="hidden" name="auto_graded" value="<%= @assignment.auto_graded %>" />
-  <% if @assignment.auto_graded > 0 %>
-    <% @mcqs.each_with_index do |q, i| %>
-      <h3>Question <%= i + 1 %>:</h3>
-      <span><%= q.description %></span>
-      <ul>
-      <% q.mcq_answers.each do |ans| %>
-        <li>
-          <input type="radio" name="answers[<%= q.id %>]" value="<%= ans.id %>" />
-          <span><%= ans.text %></span>
-        </li>
-      <% end %>
-      </ul>
-      <hr/>
-    <% end %>
-  <% else %>
-    <% @questions.each_with_index do |q, i| %>
-      <h3>Question <%= i + 1 %>:</h3>
-      <span><%= q.description %></span>
-      <br/><br/>
-      <label><strong>Your answer:</strong></label>
-      <textarea name="answers[<%= q.id %>]" class="span10" rows="8"/></textarea>
-      <hr/>
-    <% end %>
+
+  <% @questions.each_with_index do |q, i| %>
+    <h3>Question <%= i + 1 %>:</h3>
+    <span><%= q.description %></span>
+    <br/><br/>
+    <label><strong>Your answer:</strong></label>
+    <textarea name="answers[<%= q.id %>]" class="span10" rows="8"/></textarea>
+    <hr/>
   <% end %>
 
   <br/>

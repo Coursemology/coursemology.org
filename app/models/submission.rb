@@ -10,8 +10,6 @@ class Submission < ActiveRecord::Base
   has_many :sbm_answers, as: :sbm
   has_many :std_answers, through: :sbm_answers,
       source: :answer, source_type: "StdAnswer"
-  has_many :std_mcq_answers, through: :sbm_answers,
-      source: :answer, source_type: "StdMcqAnswer"
 
   def self.all_course(course)
     puts 'all ', course.to_json

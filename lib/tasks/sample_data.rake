@@ -24,20 +24,12 @@ namespace :db do
     puts "Gen admin's fake data"
     10.times do
       course = gen_course(admin)
+
       10.times do
         gen_announcement(admin, course)
       end
-      10.times do |i|
-        asm = gen_assignment(admin, course, rand(-1..1), true)
-        asm.order = i * 2
-        10.times do |j|
-          mcq = gen_mcq(admin)
-          mcq.save
-          link_asm_qn(asm, mcq, j)
-        end
-        asm.update_grade
-      end
-      10.times do |i|
+
+      15.times do |i|
         asm = gen_assignment(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
