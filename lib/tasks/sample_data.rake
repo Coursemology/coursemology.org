@@ -24,21 +24,13 @@ namespace :db do
     puts "Gen admin's fake data"
     10.times do
       course = gen_course(admin)
+
       10.times do
         gen_announcement(admin, course)
       end
-      10.times do |i|
-        asm = gen_assignment(admin, course, rand(-1..1), true)
-        asm.order = i * 2
-        10.times do |j|
-          mcq = gen_mcq(admin)
-          mcq.save
-          link_asm_qn(asm, mcq, j)
-        end
-        asm.update_grade
-      end
-      10.times do |i|
-        asm = gen_assignment(admin, course, rand(-1..1), false)
+
+      15.times do |i|
+        asm = gen_mission(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
         rand(1..5).times do |j|
           wq = gen_wq(admin)
@@ -54,6 +46,15 @@ namespace :db do
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
+        end
+      end
+
+      10.times do |i|
+        quiz = gen_quiz(admin, course, rand(0..1))
+        quiz.order = i
+        rand(5..7).times do |j|
+          mcq = gen_mcq(admin)
+          link_asm_qn(quiz, mcq, j)
         end
       end
 
@@ -119,7 +120,7 @@ namespace :db do
     )
   end
 
-  def gen_assignment(user, course, open_state, is_mcq)
+  def gen_mission(user, course, open_state, is_mcq)
     if open_state == -1 # closed
       open_at = DateTime.now.prev_month
       close_at = DateTime.now.prev_day
@@ -131,7 +132,7 @@ namespace :db do
       close_at = DateTime.now.next_month(2)
     end
 
-    return Assignment.create!(
+    return Mission.create!(
       title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
       description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       creator_id: user.id,
@@ -143,6 +144,32 @@ namespace :db do
       auto_graded: is_mcq
     )
   end
+
+  def gen_quiz(user, course, open_state)
+    if open_state == -1 # closed
+      open_at = DateTime.now.prev_month
+      close_at = DateTime.now.prev_day
+    elsif open_state == 0
+      open_at = DateTime.now.prev_day
+      close_at = DateTime.now.next_month
+    elsif
+      open_at = DateTime.now.next_month
+      close_at = DateTime.now.next_month(2)
+    end
+
+    return Quiz.create!(
+      title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
+      description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
+      creator_id: user.id,
+      course_id: course.id,
+      attempt_limit: rand(5),
+      exp: rand(100) * 1000,
+      open_at: open_at,
+      close_at: close_at,
+    )
+  end
+
+
 
   def gen_training(user, course, open_state)
     if open_state == 0 # opened

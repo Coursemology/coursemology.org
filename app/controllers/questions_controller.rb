@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :assignment, through: :course
-  load_and_authorize_resource :question, through: :assignment
+  load_and_authorize_resource :mission, through: :course
+  load_and_authorize_resource :question, through: :mission
 
   def new
     @question.max_grade = 10
@@ -14,13 +14,13 @@ class QuestionsController < ApplicationController
   def create
     @question.creator = current_user
     @asm_qn = AsmQn.new
-    @asm_qn.asm = @assignment
+    @asm_qn.asm = @mission
     @asm_qn.qn = @question
 
     respond_to do |format|
       if @question.save && @asm_qn.save
-        @assignment.update_grade
-        format.html { redirect_to course_assignment_url(@course, @assignment),
+        @mission.update_grade
+        format.html { redirect_to course_mission_url(@course, @mission),
                       notice: 'Question successfully added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
@@ -33,9 +33,9 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update_attributes(params[:question])
-        @assignment.update_grade
-        format.html { redirect_to course_assignment_question_url(@course, @assignment, @question),
-                      notice: 'Assignment was successfully updated.' }
+        @mission.update_grade
+        format.html { redirect_to course_mission_question_url(@course, @mission, @question),
+                      notice: 'Mission was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

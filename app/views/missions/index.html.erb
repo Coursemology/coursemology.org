@@ -1,10 +1,10 @@
-<%- model_class = Assignment -%>
+<%- model_class = Mission -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_assignment_path(@course),
+            new_course_mission_path(@course),
             :class => 'btn btn-primary' %>
 
 <table class="table table-striped assignments">
@@ -18,25 +18,25 @@
     </tr>
   </thead>
   <tbody>
-    <% @assignments.each do |assignment| %>
+    <% @missions.each do |mission| %>
       <tr>
-        <td><%= assignment.id %></td>
+        <td><%= mission.id %></td>
         <td>
-          <%= link_to course_assignment_path(@course, assignment) do %>
-            <h4><%= assignment.title %></h4>
+          <%= link_to course_mission_path(@course, mission) do %>
+            <h4><%= mission.title %></h4>
           <% end %>
         </td>
-        <td><%= assignment.exp %></td>
-        <td><%= assignment.close_at %></td>
+        <td><%= mission.exp %></td>
+        <td><%= mission.close_at %></td>
         <td>
           <% if current_user %>
             <% if current_user.is_student?(@course) %>
-              <%= link_to 'Attempt', new_course_assignment_submission_path(@course, assignment), :class => 'btn btn-mini' %>
+              <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer?(@course) %>
-              <%= link_to edit_course_assignment_path(@course, assignment), :class => 'btn btn-mini' do %>
+              <%= link_to edit_course_mission_path(@course, mission), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>
               <% end %>
-              <%= link_to course_assignment_path(@course, assignment),
+              <%= link_to course_mission_path(@course, mission),
                           :method => :delete,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                           :class => 'btn btn-mini btn-danger' do %>

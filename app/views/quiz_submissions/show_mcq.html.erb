@@ -4,15 +4,15 @@
 
 <table width="100%">
   <col width="10%" />
-  <tr><td>Student: </td><td><%= @submission.student.name %></td></tr>
-  <tr><td>Submited at: </td><td><%= @submission.created_at %></td></tr>
+  <tr><td>Student: </td><td><%= @quiz_submission.student.name %></td></tr>
+  <tr><td>Submited at: </td><td><%= @quiz_submission.created_at %></td></tr>
   <% if @grading %>
     <tr>
       <td>Total grade: </td>
       <td>
-        <%= @grading.total_grade %> / <%= @assignment.max_grade %>
+        <%= @grading.total_grade %> / <%= @quiz.max_grade %>
         <%= link_to "Update",
-            edit_course_assignment_submission_submission_grading_path(@course, @assignment, @submission, @grading)
+            edit_course_quiz_quiz_submission_submission_grading_path(@course, @quiz, @quiz_submission, @grading)
             %>
       </td>
     </tr>
@@ -25,7 +25,7 @@
 </table>
 <hr/>
 
-<p class="well"><%= @assignment.description %></p>
+<p class="well"><%= @quiz.description %></p>
 <% @qadata.each do |qid, qa| %>
   <h4>Question:</h4>
   <p><%= qa[:q].description %></p>

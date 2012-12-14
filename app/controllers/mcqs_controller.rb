@@ -1,14 +1,14 @@
 class McqsController < ApplicationController
   load_and_authorize_resource :course
-  load_resource :assignment, through: :course
   load_resource :training, through: :course
-  load_and_authorize_resource :mcq, through: [:assignment, :training]
-  # may need to authorize @assignment || @training separately
+  load_resource :quiz, through: :course
+  load_and_authorize_resource :mcq, through: [:training, :quiz]
+  # may need to authorize @quiz || @training separately
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter :init_asm
 
   def init_asm
-    @asm = @assignment || @training
+    @asm = @training || @quiz
   end
 
   def new
@@ -24,7 +24,7 @@ class McqsController < ApplicationController
     params[:answers].each do |answer|
       answer['is_correct'] = answer.has_key?('is_correct')
       if answer.has_key?('id')
-        ans = Answer.find(answer['id'])
+        ans = McqAnswer.find(answer['id'])
         # TODO: check if this answer does belong to the current question
         updated = updated && ans.update_attributes(answer)
       else
@@ -41,22 +41,25 @@ class McqsController < ApplicationController
     @asm_qn.asm = @asm
     @asm_qn.qn = @mcq
 
-    # update max grade of the assignment it belongs to
+    # update max grade of the asm it belongs to
     respond_to do |format|
       if @mcq.save && @asm_qn.save
         update_answers(@mcq)
         @asm.update_grade
-        if @assignment
-          format.html { redirect_to course_assignment_url(@course, @assignment),
-                        notice: 'Question successfully added.' }
-        else
+        if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
+                        notice: 'Question successfully added.' }
+        elsif @asm.is_a?(Quiz)
+          format.html { redirect_to course_quiz_url(@course, @quiz),
                         notice: 'Question successfully added.' }
         end
       else
         format.html { render action: "new" }
       end
     end
+  end
+
+  def edit
   end
 
   def update
@@ -66,13 +69,14 @@ class McqsController < ApplicationController
     respond_to do |format|
       if updated
         @asm.update_grade
-        if @assignment
-          format.html { redirect_to course_assignment_url(@course, @assignment),
-                        notice: 'Question successfully added.' }
-        else
+        if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
-                        notice: 'Question successfully added.' }
+                        notice: 'Question successfully updated.' }
+        elsif @asm.is_a?(Quiz)
+          format.html { redirect_to course_quiz_url(@course, @quiz),
+                        notice: 'Question successfully updated.' }
         end
+
       else
         format.html { render action: "edit" }
       end

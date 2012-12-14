@@ -1,0 +1,50 @@
+<%- model_class = Quiz -%>
+<div class="page-header">
+  <h1>Quiz <%= @quiz.order %>: <%= @quiz.title %></h1>
+</div>
+
+<p><%= @quiz.description %></p>
+
+<table>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= @quiz.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= @quiz.open_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
+    <td><%= @quiz.close_at %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
+    <td><%= @quiz.attempt_limit %></td>
+  </tr>
+</table>
+<hr/>
+
+<%= form_for [@course, @quiz, @quiz_submission], :html => { :class => 'form-horizontal' } do |f| %>
+
+  <% @mcqs.each_with_index do |q, i| %>
+    <h3>Question <%= i + 1 %>:</h3>
+    <span><%= q.description %></span>
+    <ul>
+    <% q.mcq_answers.each do |ans| %>
+      <li>
+        <input type="radio" name="answers[<%= q.id %>]" value="<%= ans.id %>" />
+        <span><%= ans.text %></span>
+      </li>
+    <% end %>
+    </ul>
+    <hr/>
+  <% end %>
+
+  <br/>
+  <div class="form-actions">
+    <%= f.submit "Submit", :class => 'btn btn-primary' %>
+    <%= link_to t('.save', :default => t("helpers.links.save")),
+                edit_course_quiz_path(@course, @quiz), :class => 'btn' %>
+  </div>
+<% end %>

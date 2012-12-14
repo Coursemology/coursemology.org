@@ -1,4 +1,4 @@
-<%= form_for [@course, @assignment, @question], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @mission, @question], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
@@ -14,6 +14,6 @@
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_assignment_path(@course, @assignment), :class => 'btn' %>
+                course_mission_path(@course, @mission), :class => 'btn' %>
   </div>
 <% end %>
