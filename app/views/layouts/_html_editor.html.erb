@@ -1,0 +1,28 @@
+<div id="image-upload-tab" style="display:none">
+  <li>
+  <div class="bootstrap-wysihtml5-insert-image-modal modal hide fade">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3>Insert image</h3>
+    </div>
+    <div class="modal-body">
+      <div id="file-upload-form"
+        data-url="<%= course_file_uploads_path(@course) %>">
+        <input type="hidden" class="bootstrap-wysihtml5-insert-image-url"/>
+        <h3 id="dropzone" class="drag-drop-area">DROP FILE HERE</h3>
+        <span class="fileinput-button">
+          <i class="icon-plus"></i>
+          <span>Upload from Computer</span>
+          <input type="file"/>
+        </span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      <a href="#" class="btn btn-primary insert-btn" data-dismiss="modal">Insert image</a>
+    </div>
+  </div>
+  <a class="btn" data-wysihtml5-command="insertImage"><i class="icon-picture"></i></a>
+  </li>
+</div>
+
