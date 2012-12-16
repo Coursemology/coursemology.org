@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214175026) do
+ActiveRecord::Schema.define(:version => 20121216073952) do
+
+  create_table "achievements", :force => true do |t|
+    t.string   "icon_url"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "creator_id"
+    t.integer  "course_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"
@@ -45,6 +55,14 @@ ActiveRecord::Schema.define(:version => 20121214175026) do
     t.integer  "order"
   end
 
+  create_table "asm_reqs", :force => true do |t|
+    t.integer  "asm_id"
+    t.string   "asm_type"
+    t.integer  "min_grade"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "courses", :force => true do |t|
     t.string   "title"
     t.integer  "creator_id"
@@ -61,6 +79,15 @@ ActiveRecord::Schema.define(:version => 20121214175026) do
     t.integer  "role_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "levels", :force => true do |t|
+    t.integer  "level"
+    t.integer  "exp_threshold"
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "mcq_answers", :force => true do |t|
@@ -134,6 +161,25 @@ ActiveRecord::Schema.define(:version => 20121214175026) do
     t.datetime "updated_at",    :null => false
   end
 
+  create_table "requirements", :force => true do |t|
+    t.integer  "req_id"
+    t.string   "req_type"
+    t.integer  "obj_id"
+    t.string   "obj_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "rewards", :force => true do |t|
+    t.string   "icon_url"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "creator_id"
+    t.integer  "course_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "title"
@@ -205,6 +251,15 @@ ActiveRecord::Schema.define(:version => 20121214175026) do
     t.integer  "final_grading_id"
   end
 
+  create_table "titles", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.integer  "creator_id"
+    t.integer  "course_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "training_submissions", :force => true do |t|
     t.integer  "student_id"
     t.integer  "training_id"
@@ -228,11 +283,34 @@ ActiveRecord::Schema.define(:version => 20121214175026) do
     t.integer  "max_grade"
   end
 
+  create_table "user_achievements", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "achievement_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "user_courses", :force => true do |t|
     t.integer  "user_id"
     t.integer  "course_id"
     t.integer  "exp"
     t.integer  "role_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "user_rewards", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "reward_id"
+    t.datetime "claimed_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "user_titles", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "title_id"
+    t.integer  "is_using"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
