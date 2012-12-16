@@ -35,6 +35,7 @@ class Ability
       can :manage, User, id: user.id
       can :manage, Submission
       can :manage, QuizSubmission
+      can :manage, TrainingSubmission
       can :listall, Submission # all is the method name
     end
     can :read, :all

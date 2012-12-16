@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>Training <%= @training.order %>: <%= @training.title %></h1>
+</div>
+<p class="well"><%= @training.description %></p>
+<hr/>
+
+<% if !@current_mcq %>
+  <h2>Congratulations, you're done!</h2>
+<% else %>
+  <h2>Step <%= @step %></h2>
+
+  <form id="training-step-form">
+    <input type="hidden" name="update_url"
+        value=<%= course_training_training_submission_submit_path(@course,
+                      @training, @training_submission) %> />
+    <input type="hidden" name="qid" value=<%= @current_mcq.id %> />
+    <p><%= @current_mcq.description %></p>
+    <ul>
+    <% @current_mcq.mcq_answers.each do |ans| %>
+      <li>
+        <input type="radio" name="answers" value="<%= ans.id %>" />
+        <span><%= ans.text %></span>
+      </li>
+    <% end %>
+    </ul>
+
+    <div id="explanation">
+      <h4 class="result"></h4>
+      <p class="reason"></p>
+    </div>
+
+    <div class="form-actions">
+      <%= link_to t('.submit', :default => t("helpers.links.submit")),
+                  '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
+      <%= link_to t('.save', :default => t("helpers.links.save")),
+                  '#', :class => 'btn' %>
+      <%= link_to t('.continue', :default => t("helpers.links.continue")),
+          nil, :class => 'btn disabled',
+          :id => 'continue-btn'%>
+    </div>
+  </form>
+<% end %>

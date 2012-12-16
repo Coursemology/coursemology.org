@@ -29,14 +29,16 @@
         <td>
           <% if current_user %>
             <% if current_user.is_student?(@course) %>
-              <%= link_to 'Attempt', nil, :class => 'btn btn-mini' %>
+              <%= link_to 'Start', new_course_training_training_submission_path(@course, training),
+                  :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer?(@course) %>
               <%= link_to edit_course_training_path(@course, training), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>
               <% end %>
               <%= link_to course_training_path(@course, training),
                           :method => :delete,
-                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm",
+                                                                             :default => 'Are you sure?')) },
                           :class => 'btn btn-mini btn-danger' do %>
                  <i class="icon-trash"></i>
               <% end %>

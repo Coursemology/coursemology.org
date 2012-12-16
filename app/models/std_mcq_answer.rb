@@ -3,4 +3,5 @@ class StdMcqAnswer < ActiveRecord::Base
 
   belongs_to :student, class_name: "User"
   belongs_to :mcq
+  belongs_to :mcq_answer
 end

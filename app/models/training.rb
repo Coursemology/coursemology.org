@@ -3,6 +3,7 @@ class Training < ActiveRecord::Base
 
   has_many :asm_qns, as: :asm
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
+  has_many :training_submissions
 
   belongs_to :creator, class_name: "User"
 
