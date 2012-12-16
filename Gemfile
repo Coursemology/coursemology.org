@@ -21,6 +21,8 @@ group :assets do
   gem 'bootstrap-sass', '2.0.0'
   gem 'font-awesome-sass-rails'
   gem 'bootstrap-datepicker-rails'
+  gem 'bootstrap-wysihtml5-rails'
+  gem 'jquery-fileupload-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby

@@ -104,3 +104,27 @@ h1 {
 ul {
   list-style: none;
 }
+
+#dropzone {
+  background: #D8EDE2;
+  text-align: center;
+  border: 3px dashed #aaa;
+  padding: 80px;
+}
+
+#dropzone.in {
+}
+
+#dropzone.hover {
+  border-color: #666;
+  background: palegreen;
+}
+
+#dropzone.fade {
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  opacity: 1;
+}

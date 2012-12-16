@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121216073952) do
+ActiveRecord::Schema.define(:version => 20121216162236) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -79,6 +79,17 @@ ActiveRecord::Schema.define(:version => 20121216073952) do
     t.integer  "role_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "file_uploads", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
   end
 
   create_table "levels", :force => true do |t|

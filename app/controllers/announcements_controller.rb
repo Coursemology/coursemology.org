@@ -23,7 +23,7 @@ class AnnouncementsController < ApplicationController
   # GET /announcements/new
   # GET /announcements/new.json
   def new
-    puts @announcement.to_json
+    @announcement.publish_at = DateTime.now
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @announcement }

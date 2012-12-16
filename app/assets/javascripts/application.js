@@ -13,10 +13,16 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+//
 //= require bootstrap-dropdown
 //= require bootstrap-transition
 //= require bootstrap-collapse
 //= require bootstrap-datepicker/core
+//= require bootstrap-button
+//
+//= require bootstrap-modal
+//= require bootstrap-wysihtml5
+//= require jquery-fileupload/basic
 
 $(document).ready(function() {
   $(".datepicker").datepicker({

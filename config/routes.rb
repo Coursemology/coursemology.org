@@ -41,6 +41,8 @@ JfdiAcademy::Application.routes.draw do
     end
 
     resources :announcements
+
+    resources :file_uploads
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
