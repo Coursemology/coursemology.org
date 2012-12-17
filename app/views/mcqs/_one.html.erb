@@ -1,4 +1,4 @@
-<span><%= q.description %></span>
+<span><%= q.description.html_safe %></span>
 <ul>
   <% q.mcq_answers.each do |ans| %>
     <li>

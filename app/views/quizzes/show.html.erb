@@ -3,7 +3,7 @@
   <h1>Quiz: <%= @quiz.title %></h1>
 </div>
 
-<p><%= @quiz.description %></p>
+<p><%= @quiz.description.html_safe %></p>
 
 <table>
   <tr>

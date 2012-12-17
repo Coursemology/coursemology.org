@@ -25,8 +25,17 @@
 //= require jquery-fileupload/basic
 
 $(document).ready(function() {
+
   $(".datepicker").datepicker({
     "format": "dd-mm-yyyy",
     "autoclose": true
   });
+
+  console.log($('.content').height(), $('.content').css('height'));
+});
+
+$(window).load(function() {
+  // set height of the sidebar after everything is loaded
+  $('.sidebar').css('height', $('.content').height());
+  console.log($('.content').height(), $('.content').css('height'));
 });

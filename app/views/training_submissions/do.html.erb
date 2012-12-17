@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1>Training <%= @training.order %>: <%= @training.title %></h1>
 </div>
-<p class="well"><%= @training.description %></p>
+<p class="well"><%= @training.description.html_safe %></p>
 <hr/>
 
 <% if !@current_mcq %>
@@ -14,7 +14,7 @@
         value=<%= course_training_training_submission_submit_path(@course,
                       @training, @training_submission) %> />
     <input type="hidden" name="qid" value=<%= @current_mcq.id %> />
-    <p><%= @current_mcq.description %></p>
+    <p><%= @current_mcq.description.html_safe %></p>
     <ul>
     <% @current_mcq.mcq_answers.each do |ans| %>
       <li>

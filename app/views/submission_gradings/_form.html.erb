@@ -18,7 +18,7 @@
 </table>
 <hr/>
 
-<p class="well"><%= @mission.description %></p>
+<p class="well"><%= @mission.description.html_safe %></p>
 
 <%= form_for [@course, @mission, @submission, @submission_grading],
              html: { class: "form-horizontal" } do |f| %>
@@ -27,7 +27,7 @@
   <% @qadata.each do |qid, qa| %>
     <hr/>
     <h4>Question:</h4>
-    <p><%= qa[:q].description %></p>
+    <p><%= qa[:q].description.html_safe %></p>
     <% if qa[:a] %>
       <h4>Answer:</h4>
       <p><%= qa[:a].text %></p>
