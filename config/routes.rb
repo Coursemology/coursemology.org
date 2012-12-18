@@ -30,7 +30,7 @@ JfdiAcademy::Application.routes.draw do
     resources :trainings do
       resources :mcqs
       resources :training_submissions
-      post "training_submissions/:id/submit" => "training_submissions#submit", as: :submit
+      post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
     end
 
     resources :quizzes do
