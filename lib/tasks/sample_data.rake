@@ -58,6 +58,11 @@ namespace :db do
         end
       end
 
+      20.times do |i|
+        lvl = i + 1
+        level = gen_level(course, lvl, lvl * lvl * 1000)
+      end
+
       students.shuffle.first(rand(20..30)).each do |std|
         uc = UserCourse.create!(
           course_id: course.id,
@@ -169,8 +174,6 @@ namespace :db do
     )
   end
 
-
-
   def gen_training(user, course, open_state)
     if open_state == 0 # opened
       open_at = DateTime.now.prev_day
@@ -230,5 +233,13 @@ namespace :db do
     asm_qn.qn = qn
     asm_qn.order = order
     return asm_qn.save!
+  end
+
+  def gen_level(course, num, exp)
+    return Level.create!({
+      level: num,
+      exp_threshold: exp,
+      course_id: course.id
+    })
   end
 end

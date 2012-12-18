@@ -42,6 +42,12 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
+    post "levels/populate" => "levels#populate", as: :levels_populate
+
+    resources :levels
+
+    resources :achievements
+
     resources :file_uploads
   end
 
