@@ -36,7 +36,9 @@ class Ability
       can :manage, Submission
       can :manage, QuizSubmission
       can :manage, TrainingSubmission
-      can :listall, Submission # all is the method name
+      can :listall, Submission
+      can :populate, Level
+      can :manage, EnrollRequest
     end
     can :read, :all
   end

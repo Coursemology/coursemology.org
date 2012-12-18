@@ -42,7 +42,15 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
+    post "levels/populate" => "levels#populate", as: :levels_populate
+
+    resources :levels
+
+    resources :achievements
+
     resources :file_uploads
+
+    resources :enroll_requests
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

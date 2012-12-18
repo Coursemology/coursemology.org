@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121216162236) do
+ActiveRecord::Schema.define(:version => 20121218092420) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -295,7 +295,7 @@ ActiveRecord::Schema.define(:version => 20121216162236) do
   end
 
   create_table "user_achievements", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_course_id"
     t.integer  "achievement_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
@@ -310,20 +310,28 @@ ActiveRecord::Schema.define(:version => 20121216162236) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "user_exps", :force => true do |t|
+    t.integer  "exp"
+    t.integer  "level_id"
+    t.integer  "user_course_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "user_rewards", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_course_id"
     t.integer  "reward_id"
     t.datetime "claimed_at"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "user_titles", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_course_id"
     t.integer  "title_id"
     t.integer  "is_using"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "users", :force => true do |t|

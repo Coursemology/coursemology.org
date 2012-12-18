@@ -1,0 +1,30 @@
+<table class="table table-striped enroll-requests">
+  <thead>
+    <tr>
+      <td>Id</td>
+      <td>Name</td>
+      <td>Email</td>
+      <td>Action</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% requests.each do |ec| %>
+    <tr>
+      <input type="hidden" class="destroy-url"
+          value=<%= course_enroll_request_path(@course, ec.id) %> />
+      <td><%= ec.id %></td>
+      <td><%= ec.user.name %></td>
+      <td><%= ec.user.email %></td>
+      <td>
+        <%= link_to '#', class: "btn btn-mini btn-primary" do %>
+          <i class="icon-ok enroll-request-approve"></i>
+          <input type="hidden" class="request-id" value=<%= ec.id %> />
+        <% end %>
+        <%= link_to '#', class: "btn btn-mini btn-danger" do %>
+          <i class="icon-remove enroll-request-del"></i>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
