@@ -16,12 +16,11 @@
       <td><%= ec.user.name %></td>
       <td><%= ec.user.email %></td>
       <td>
-        <%= link_to '#', class: "btn btn-mini btn-primary" do %>
-          <i class="icon-ok enroll-request-approve"></i>
-          <input type="hidden" class="request-id" value=<%= ec.id %> />
+        <%= link_to '#', class: "btn btn-mini btn-primary enroll-request-approve" do %>
+          <i class="icon-ok"></i>
         <% end %>
-        <%= link_to '#', class: "btn btn-mini btn-danger" do %>
-          <i class="icon-remove enroll-request-del"></i>
+        <%= link_to '#', class: "btn btn-mini btn-danger enroll-request-del" do %>
+          <i class="icon-remove"></i>
         <% end %>
       </td>
     </tr>
