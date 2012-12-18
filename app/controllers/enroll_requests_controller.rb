@@ -52,22 +52,12 @@ class EnrollRequestsController < ApplicationController
 
     if params[:approved]
       puts 'Request approved!'
-
       # create new UserCourse record
       uc = UserCourse.new
       uc.course = @enroll_request.course
       uc.user = @enroll_request.user
       uc.role = @enroll_request.role
-
-      std = Role.find_by_name('student')
-      if uc.role == std
-        # create UserExp record
-        ux = UserExp.new
-        ux.exp = 0
-        ux.user_course = uc
-        ux.save
-      end
-
+      uc.exp = 0
       uc.save
     end
 

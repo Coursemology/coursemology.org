@@ -67,7 +67,8 @@ namespace :db do
         uc = UserCourse.create!(
           course_id: course.id,
           user_id: std.id,
-          role_id: std_role.id
+          role_id: std_role.id,
+          exp: 0
         )
       end
     end
