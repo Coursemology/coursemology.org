@@ -5,6 +5,11 @@ class UserCourse < ActiveRecord::Base
   belongs_to :user
   belongs_to :course
 
+  has_one :user_exp
+  has_many :user_achievements
+  has_many :user_titles
+  has_many :user_rewards
+
   def is_student?
     return self.role.name == 'student'
   end

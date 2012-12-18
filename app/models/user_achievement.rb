@@ -1,6 +1,6 @@
 class UserAchievement < ActiveRecord::Base
-  attr_accessible :achievement_id, :user_id
+  attr_accessible :achievement_id, :user_course_id
 
-  belongs_to :user
+  belongs_to :user_course
   belongs_to :achievement
 end
