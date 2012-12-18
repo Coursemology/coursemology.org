@@ -3,7 +3,7 @@
   <h1>Quiz <%= @quiz.order %>: <%= @quiz.title %></h1>
 </div>
 
-<p class="well"><%= @quiz.description %></p>
+<p class="well"><%= @quiz.description.html_safe %></p>
 
 <table>
   <tr>
@@ -29,7 +29,7 @@
 
   <% @mcqs.each_with_index do |q, i| %>
     <h3>Question <%= i + 1 %>:</h3>
-    <span><%= q.description %></span>
+    <span><%= q.description.html_safe %></span>
     <ul>
     <% q.mcq_answers.each do |ans| %>
       <li>

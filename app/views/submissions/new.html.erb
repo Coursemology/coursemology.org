@@ -3,7 +3,7 @@
   <h1>Mission <%= @mission.order %>: <%= @mission.title %></h1>
 </div>
 
-<p><%= @mission.description %></p>
+<p><%= @mission.description.html_safe %></p>
 
 <table>
   <tr>
@@ -37,7 +37,7 @@
 
   <% @questions.each_with_index do |q, i| %>
     <h3>Question <%= i + 1 %>:</h3>
-    <span><%= q.description %></span>
+    <span><%= q.description.html_safe %></span>
     <br/><br/>
     <label><strong>Your answer:</strong></label>
     <textarea name="answers[<%= q.id %>]" class="span10" rows="8"/></textarea>

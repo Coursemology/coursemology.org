@@ -3,4 +3,4 @@
   <h1><%=t '.title', :default => "Question" %></h1>
 </div>
 
-<p><%= @question.description %></p>
+<p><%= @question.description.html_safe %></p>

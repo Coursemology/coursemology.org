@@ -3,7 +3,7 @@
   <h1>Mission <%= @mission.order %>: <%= @mission.title %></h1>
 </div>
 
-<p><%= @mission.description %></p>
+<p><%= @mission.description.html_safe %></p>
 
 <table>
   <tr>
