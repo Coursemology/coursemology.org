@@ -37,7 +37,8 @@ class Ability
       can :manage, QuizSubmission
       can :manage, TrainingSubmission
       can :listall, Submission
-      can :populate, Levels
+      can :populate, Level
+      can :manage, EnrollRequest
     end
     can :read, :all
   end

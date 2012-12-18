@@ -1,0 +1,17 @@
+<div class="page-header">
+  <h1>Enroll Requests</h1>
+</div>
+
+<% if @staff_requests.size > 0 %>
+  <h2>Staff Requests:</h2>
+  <%= render partial: "enroll_requests/list", locals: { requests: @staff_requests } %>
+<% end %>
+
+<% if @student_requests.size > 0 %>
+  <h2>Student Requests:</h2>
+  <%= render partial: "enroll_requests/list", locals: { requests: @student_requests } %>
+<% end %>
+
+<% if @staff_requests.size + @student_requests.size == 0 %>
+  <span>There is no outstanding request</span>
+<% end %>

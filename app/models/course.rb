@@ -11,4 +11,6 @@ class Course < ActiveRecord::Base
 
   has_many :levels
   has_many :achievements
+
+  has_many :enroll_requests
 end
