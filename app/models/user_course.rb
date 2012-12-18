@@ -1,11 +1,11 @@
 class UserCourse < ActiveRecord::Base
-  attr_accessible :course_id, :exp, :role_id, :user_id
+  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
 
   belongs_to :role
   belongs_to :user
   belongs_to :course
+  belongs_to :level
 
-  has_one :user_exp
   has_many :user_achievements
   has_many :user_titles
   has_many :user_rewards
