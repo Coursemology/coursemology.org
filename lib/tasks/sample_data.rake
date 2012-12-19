@@ -63,6 +63,10 @@ namespace :db do
         level = gen_level(course, lvl, lvl * lvl * 1000)
       end
 
+      20.times do |i|
+        gen_achievement(admin, course)
+      end
+
       students.shuffle.first(rand(20..30)).each do |std|
         uc = UserCourse.create!(
           course_id: course.id,
@@ -242,5 +246,26 @@ namespace :db do
       exp_threshold: exp,
       course_id: course.id
     })
+  end
+
+  def gen_achievement(admin, course)
+    icon_set = [
+      'http://geovengers.mrluo.per.sg/public/achievements/1_hawkeye_trainee.png',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4EsmTv-WgPcGprg6gg9K6KJn6axwVV4-aSiSF0YcC9Xfs0DBdw',
+      'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQLJvaL5dD9vFxIwgwuxsYgQeyIDR-STAQD1KO6ck219BkfGYOU_w',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_2OULDVHC81nt_INssf-gfzZRbvYsdp6sV7Wae13R9gB39SbNlQ',
+      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcStMlnNVORROfEX27WJyiycn8OGiLMYbqNgt6mlXGUzpLL2mChU',
+      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR8jcWw7Zd54m0V6RRgGkEdtyH98h-5DXWyHol0oWCW-sCTO7OX',
+      'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQPKsoMJ4SBaMmLrlA5HpkAPFoy5wXju6mDPs_jZM0IEUWnIbN8kw'
+    ]
+    ach = Achievement.create!({
+      icon_url: icon_set.sample,
+      title: Faker::Lorem.sentence(),
+      description: Faker::Lorem.paragraph(),
+      course_id: course.id,
+      creator_id: admin.id
+    })
+    # setup dependency
+    return ach
   end
 end

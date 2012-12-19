@@ -1,4 +1,4 @@
-<%= form_for @course, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @achievement], :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
@@ -7,18 +7,22 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :logo_url, :class => 'control-label' %>
+    <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :logo_url, :class => 'text_field span9' %>
+      <%= f.text_area :description, :class => 'text_area span9', :rows => '10' %>
     </div>
   </div>
 
+  <% # TODO Change photo upload to be more intuitive. Using the photo form. %>
+
   <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
+    <%= f.label :icon_url, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'text_area', :rows => '10' %>
+      <%= f.text_field :icon_url, :class => 'text_field span9' %>
     </div>
   </div>
+
+  <% # TODO Area for dependency %>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
