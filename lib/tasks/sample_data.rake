@@ -29,6 +29,8 @@ namespace :db do
         gen_announcement(admin, course)
       end
 
+      asms = []
+
       15.times do |i|
         asm = gen_mission(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
@@ -38,6 +40,7 @@ namespace :db do
           link_asm_qn(asm, wq, j)
         end
         asm.update_grade
+        asms << asm
       end
 
       10.times do |i|
@@ -47,6 +50,7 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
         end
+        asms << training
       end
 
       10.times do |i|
@@ -56,11 +60,33 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(quiz, mcq, j)
         end
+        asms << quiz
       end
 
+      levels = []
       20.times do |i|
         lvl = i + 1
         level = gen_level(course, lvl, lvl * lvl * 1000)
+        levels << level
+      end
+
+      achs = []
+      20.times do |i|
+        ach = gen_achievement(admin, course)
+        # if rand(3) == 0
+          link_requirement(ach, levels.sample)
+        # end
+        # if rand(2) == 0
+          rand(1..3).times do
+            link_requirement(ach, gen_asm_req(asms.sample))
+          end
+        # end
+        # if rand(4) == 0
+          rand(1..3).times do
+            link_requirement(ach, achs.sample)
+        #  end
+        end
+        achs << ach
       end
 
       students.shuffle.first(rand(20..30)).each do |std|
@@ -242,5 +268,42 @@ namespace :db do
       exp_threshold: exp,
       course_id: course.id
     })
+  end
+
+  def gen_achievement(admin, course)
+    icon_set = [
+      'http://geovengers.mrluo.per.sg/public/achievements/1_hawkeye_trainee.png',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC4EsmTv-WgPcGprg6gg9K6KJn6axwVV4-aSiSF0YcC9Xfs0DBdw',
+      'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQLJvaL5dD9vFxIwgwuxsYgQeyIDR-STAQD1KO6ck219BkfGYOU_w',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_2OULDVHC81nt_INssf-gfzZRbvYsdp6sV7Wae13R9gB39SbNlQ',
+      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcStMlnNVORROfEX27WJyiycn8OGiLMYbqNgt6mlXGUzpLL2mChU',
+      'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR8jcWw7Zd54m0V6RRgGkEdtyH98h-5DXWyHol0oWCW-sCTO7OX',
+      'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQPKsoMJ4SBaMmLrlA5HpkAPFoy5wXju6mDPs_jZM0IEUWnIbN8kw'
+    ]
+    ach = Achievement.create!({
+      icon_url: icon_set.sample,
+      title: Faker::Lorem.sentence(),
+      description: Faker::Lorem.paragraph(),
+      course_id: course.id,
+      creator_id: admin.id
+    })
+    # setup dependency
+    return ach
+  end
+
+  def gen_asm_req(asm)
+    asm_req = AsmReq.create!
+    asm_req.asm = asm
+    asm_req.min_grade = rand(50..100)
+    asm_req.save
+    return asm_req
+  end
+
+  def link_requirement(obj, dep)
+    req = Requirement.create!
+    req.obj = obj
+    req.req = dep
+    req.save
+    return req
   end
 end

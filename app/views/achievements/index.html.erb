@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1>Achievements</h1>
+</div>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_course_achievement_path(@course),
+            :class => 'btn btn-primary' %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th width="10%"></th>
+      <th width="50%">Description</th>
+      <th>Requirements</th>
+      <th width="10%">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @achievements.each do |ach| %>
+    <tr>
+      <td><img src=<%= ach.icon_url %> /></td>
+      <td>
+        <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
+        <p><%= ach.description %></p>
+      </td>
+      <td>Requirement goes here</td>
+      <td>
+        <% if current_user && current_user.is_lecturer?(@course) %>
+          <%= link_to edit_course_achievement_path(@course, ach), :class => 'btn btn-mini' do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to course_achievement_path(@course, ach),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' do %>
+             <i class="icon-trash"></i>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,14 @@
+<tr>
+  <input type="hidden" name="reqids[]" value="<%= asm_req.id %>" />
+  <td>
+    <p>Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
+    <%= link_to asm_req.req.asm.get_title, '#' %></p>
+  </td>
+  <td>
+    <%= link_to course_requirement_path(@course, asm_req),
+      class: 'btn btn-mini remove-req' do %>
+      <i class="icon-remove"></i>
+    <% end %>
+  </td>
+</tr>
+

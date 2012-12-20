@@ -48,6 +48,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :achievements
 
+    resources :requirements
+
     resources :file_uploads
 
     resources :enroll_requests

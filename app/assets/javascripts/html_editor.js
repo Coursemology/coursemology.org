@@ -9,7 +9,7 @@ $(document).ready(function() {
     }
   };
 
-  $('textarea').wysihtml5(options);
+  $('textarea.html-editor').wysihtml5(options);
 
   // setup fileuploader
   $('#file-upload-form').fileupload({

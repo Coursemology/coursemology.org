@@ -1,0 +1,98 @@
+<%= form_for [@course, @achievement], :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'text_field span9' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'text_area span9', :rows => '10' %>
+    </div>
+  </div>
+
+  <% # TODO Change photo upload to be more intuitive. Using the photo form. %>
+
+  <div class="control-group">
+    <%= f.label :icon_url, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :icon_url, :class => 'text_field span9' %>
+    </div>
+  </div>
+
+  <% # TODO Area for dependency %>
+  <hr/>
+  <h2>Requirements</h2><p>Student must fulfill all requirements. The requirements are optional, and you can have as
+  many requirements as you want.</p>
+  <br/>
+
+  <div class="control-group">
+    <label class="control-label">Level</label>
+    <div class="controls">
+      <input placeholder="Minimum level">
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Assignments</label>
+    <div class="controls">
+      <table>
+        <% @achievement.asm_reqs.each do |asm_req| %>
+          <%= render partial: "requirements/asm_req_row", locals: { asm_req: asm_req } %>
+        <% end %>
+        <tr>
+          <td>
+            Get more than <input class="asm-min-grade-input form-temp" placeholder="min %" value="60" />
+            % in
+            <select class="form-temp">
+              <% @all_asm.each do |asm| %>
+                <option value=<%= asm.id %> data-type=<%= asm.class.name %>>
+                  <%= asm.get_title %>
+                </option>
+              <% end %>
+            </select>
+          </td>
+          <td>
+            <%= link_to course_requirements_path(@course), class: "btn btn-mini add-asm-req" do %>
+              <i class="icon-plus"></i>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Achievements</label>
+    <div class="controls">
+      <table>
+      <% @achievement.ach_reqs.each do |ach_req| %>
+        <%= render partial: "requirements/ach_req_row", locals: { ach_req: ach_req } %>
+      <% end %>
+      <tr>
+        <td>
+          Earned
+          <select name="achievement" class="form-temp">
+            <% @all_ach.each do |ach| %>
+              <option value=<%= ach.id %>><%= ach.title %></option>
+          <% end %>
+          </select>
+        </td>
+        <td>
+          <%= link_to course_requirements_path(@course), class: "btn btn-mini add-ach-req" do %>
+            <i class="icon-plus"></i>
+          <% end %>
+        </td>
+      </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary form-submit' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                courses_path, :class => 'btn' %>
+  </div>
+<% end %>
