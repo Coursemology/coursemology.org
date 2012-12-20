@@ -1,0 +1,24 @@
+<tr>
+  <td>
+    <a href=<%= course_level_path(@course, lvl) %> class="lvl-url hidden"></a>
+    <%= lvl.level %>
+  </td>
+  <td>
+    <span class="lvl-threshold"><%= lvl.exp_threshold %></span>
+    <input value=<%= lvl.exp_threshold %> class="lvl-threshold-input hidden"/>
+  </td>
+  <td>
+    <%= link_to '#', class: 'btn btn-mini edit-lvl' do %>
+      <i class="icon-edit"></i>
+    <% end %>
+    <%= link_to '#', class: 'btn btn-mini edit-lvl-done hidden' do %>
+      <i class="icon-ok"></i>
+    <% end %>
+  </td>
+  <td>
+    <%= link_to '#', class: 'btn btn-mini remove-lvl hidden' do %>
+      <i class="icon-remove"></i>
+  <% end %>
+  </td>
+</tr>
+

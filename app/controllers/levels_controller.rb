@@ -23,6 +23,33 @@ class LevelsController < ApplicationController
     end
   end
 
-  def show
+  def create
+    @level.level = @course.levels.size + 1
+    @level.exp_threshold = params[:exp]
+    if @level.save
+      resp = render_to_string(
+        partial: "levels/level_row",
+        locals: { lvl: @level }
+      )
+      respond_to do |format|
+        format.html { render text: resp }
+      end
+    end
+  end
+
+  def update
+    @level.exp_threshold = params[:exp]
+    if @level.save
+      respond_to do |format|
+        format.html { render json: { status: 'OK' } }
+      end
+    end
+  end
+
+  def destroy
+    @level.destroy
+    respond_to do |format|
+      format.html { render json: { status: 'OK' } }
+    end
   end
 end
