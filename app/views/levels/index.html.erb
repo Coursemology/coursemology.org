@@ -20,12 +20,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @levels.each do |lvl| %>
-      <tr>
-        <td><%= lvl.level %></td>
-        <td><%= lvl.exp_threshold %></td>
-      </tr>
+      <% @levels.each_with_index do |lvl, k| %>
+        <%= render partial: "levels/level_row", locals: { lvl: lvl } %>
       <% end %>
     </tbody>
   </table>
+  <div>
+    <span>Add new level: </span>
+    <input class="new-lvl-exp"></input>
+    <%= link_to 'Add', course_levels_path(@course), class: 'btn btn-mini add-lvl' %>
+  </div>
+
 <% end %>
