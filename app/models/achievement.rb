@@ -5,7 +5,7 @@ class Achievement < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :requirements, as: :obj
-  has_many :asm_reqs, through: :requirements, source: :req, source_type: "AsmReq"
-  has_many :lvl_reqs, through: :requirements, source: :req, source_type: "Level"
-  has_many :ach_reqs, through: :requirements, source: :req, source_type: "Achievement"
+  has_many :ach_reqs, class_name: "Requirement", as: :obj, conditions: { req_type: "Achievement" }
+  has_many :asm_reqs, class_name: "Requirement", as: :obj, conditions: { req_type: "AsmReq" }
+  has_one  :lvl_req, class_name: "Requirement", as: :obj, conditions: { req_type: "Level" }
 end

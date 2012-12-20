@@ -1,4 +1,6 @@
 class Mission < ActiveRecord::Base
+  include Assignment
+
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
     :description, :exp, :open_at, :order, :timelimit, :title
 

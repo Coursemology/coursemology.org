@@ -1,4 +1,6 @@
 class Quiz < ActiveRecord::Base
+  include Assignment
+
   attr_accessible :attempt_limit, :close_at, :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :order, :title
 
   has_many :asm_qns, as: :asm

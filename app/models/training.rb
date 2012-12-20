@@ -1,4 +1,6 @@
 class Training < ActiveRecord::Base
+  include Assignment
+
   attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :order, :title
 
   has_many :asm_qns, as: :asm

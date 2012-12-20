@@ -29,6 +29,8 @@ namespace :db do
         gen_announcement(admin, course)
       end
 
+      asms = []
+
       15.times do |i|
         asm = gen_mission(admin, course, rand(-1..1), false)
         asm.order = i * 2 + 1
@@ -38,6 +40,7 @@ namespace :db do
           link_asm_qn(asm, wq, j)
         end
         asm.update_grade
+        asms << asm
       end
 
       10.times do |i|
@@ -47,6 +50,7 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
         end
+        asms << training
       end
 
       10.times do |i|
@@ -56,15 +60,33 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(quiz, mcq, j)
         end
+        asms << quiz
       end
 
+      levels = []
       20.times do |i|
         lvl = i + 1
         level = gen_level(course, lvl, lvl * lvl * 1000)
+        levels << level
       end
 
+      achs = []
       20.times do |i|
-        gen_achievement(admin, course)
+        ach = gen_achievement(admin, course)
+        # if rand(3) == 0
+          link_requirement(ach, levels.sample)
+        # end
+        # if rand(2) == 0
+          rand(1..3).times do
+            link_requirement(ach, gen_asm_req(asms.sample))
+          end
+        # end
+        # if rand(4) == 0
+          rand(1..3).times do
+            link_requirement(ach, achs.sample)
+        #  end
+        end
+        achs << ach
       end
 
       students.shuffle.first(rand(20..30)).each do |std|
@@ -267,5 +289,21 @@ namespace :db do
     })
     # setup dependency
     return ach
+  end
+
+  def gen_asm_req(asm)
+    asm_req = AsmReq.create!
+    asm_req.asm = asm
+    asm_req.min_grade = rand(50..100)
+    asm_req.save
+    return asm_req
+  end
+
+  def link_requirement(obj, dep)
+    req = Requirement.create!
+    req.obj = obj
+    req.req = dep
+    req.save
+    return req
   end
 end

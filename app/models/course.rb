@@ -13,4 +13,8 @@ class Course < ActiveRecord::Base
   has_many :achievements
 
   has_many :enroll_requests
+
+  def asms
+    return missions + quizzes + trainings
+  end
 end

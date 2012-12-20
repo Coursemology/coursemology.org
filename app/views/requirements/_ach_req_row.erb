@@ -1,0 +1,13 @@
+<tr>
+  <input type="hidden" name="reqids[]" value="<%= ach_req.id %>" />
+  <td><p>Earn
+    <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %></p>
+  </td>
+  <td>
+    <%= link_to course_requirement_path(@course, ach_req),
+      class: 'btn btn-mini remove-req' do %>
+      <i class="icon-remove"></i>
+    <% end %>
+  </td>
+</tr>
+
