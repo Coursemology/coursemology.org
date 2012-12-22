@@ -9,6 +9,7 @@ class UserCourse < ActiveRecord::Base
   has_many :user_achievements
   has_many :user_titles
   has_many :user_rewards
+  has_many :exp_transactions
 
   def is_student?
     return self.role.name == 'student'
@@ -16,5 +17,28 @@ class UserCourse < ActiveRecord::Base
 
   def is_lecturer?
     return self.role.name == 'lecturer'
+  end
+
+  def update_exp_and_level
+    # recalculate the EXP and level of the student (user)
+    # find all submission_grading and calculate the score
+    # get all (final grading)
+    puts "UPDATE EXP AND LEVEL OF STUDENT"
+    self.exp = 0
+
+    self.exp_transactions.each do |expt|
+      self.exp += expt.exp
+    end
+
+    self.course.levels.each do |lvl|
+      # now: level = first level that is beyonds user's exp
+      # how level is calculated must be given more thought
+      if lvl.exp_threshold > self.exp
+        self.level = lvl
+        break
+      end
+    end
+
+    self.save
   end
 end

@@ -23,4 +23,9 @@ class QuizSubmission < ActiveRecord::Base
     # TODO: filter by student and course
     return subs
   end
+
+  # implement method of the Sbm interface
+  def get_asm
+    return self.quiz
+  end
 end

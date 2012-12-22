@@ -8,6 +8,7 @@ class Training < ActiveRecord::Base
   has_many :training_submissions
 
   belongs_to :creator, class_name: "User"
+  belongs_to :course
 
   def update_grade
     self.max_grade = self.mcqs.sum(&:max_grade)

@@ -50,6 +50,7 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
         end
+        training.update_grade
         asms << training
       end
 
@@ -60,6 +61,7 @@ namespace :db do
           mcq = gen_mcq(admin)
           link_asm_qn(quiz, mcq, j)
         end
+        quiz.update_grade
         asms << quiz
       end
 

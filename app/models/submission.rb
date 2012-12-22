@@ -1,4 +1,6 @@
 class Submission < ActiveRecord::Base
+  include Sbm
+
   attr_accessible :attempt, :final_grading_id, :mission_id, :open_at, :student_id, :submit_at
 
   belongs_to :mission
@@ -22,5 +24,10 @@ class Submission < ActiveRecord::Base
     subs = Submission.all
     # TODO: filter by student and course
     return subs
+  end
+
+  # implement method of Sbm interface
+  def get_asm
+    return self.mission
   end
 end
