@@ -10,7 +10,7 @@
   <thead>
     <tr>
       <th width="10%"></th>
-      <th width="50%">Description</th>
+      <th width="40%">Description</th>
       <th>Requirements</th>
       <th width="10%">Actions</th>
     </tr>
@@ -23,7 +23,16 @@
         <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
         <p><%= ach.description %></p>
       </td>
-      <td>Requirement goes here</td>
+      <td>
+        <% ach.asm_reqs.each do |asm_req| %>
+          <p>Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
+          <%= link_to asm_req.req.asm.get_title, '#' %></p>
+        <% end %>
+        <% ach.ach_reqs.each do |ach_req| %>
+          <p>Earn
+          <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %></p>
+        <% end %>
+      </td>
       <td>
         <% if current_user && current_user.is_lecturer?(@course) %>
           <%= link_to edit_course_achievement_path(@course, ach), :class => 'btn btn-mini' do %>
