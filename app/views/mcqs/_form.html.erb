@@ -14,26 +14,27 @@
   <div class="control-group">
     <%= f.label "Answers", :class => 'control-label' %>
     <div class="controls" id="mcq-answers">
-      <table>
-        <% @mcq.mcq_answers.each do |answer| %>
-          <tr class="answer-row">
-            <input type="hidden" name="answers[][id]" value="<%= answer.id %>" />
-            <input type="hidden" name="answers[][text]" value="<%= answer.text %>">
-            <td><input type="checkbox" name="answers[][is_correct]" value="true"
-              <%= 'checked' if answer.is_correct %> />
-            </td>
-            <td class="ans-text"><%= answer.text %></td>
+      <table class="span9 table form-mcq-answer">
+        <thead>
+          <tr>
+            <th style="width: 8%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @mcq.mcq_answers.each do |answer| %>
+            <%= render partial: "mcq_answers/form_row", locals: { answer: answer } %>
+          <% end %>
+          <tr class="answer-new answer-row">
+            <td><input type="checkbox" /></td>
+            <td><input type="text" class="ans-text" placeholder="Answer..." /></td>
+            <td><input type="text" class="ans-expl" placeholder="Explanation..." /></td>
             <td>
-              <button type="button" class="btn btn-edit"><i class="icon-edit"></i></button>
-              <button type="button" class="btn btn-remove"><i class="icon-minus"></i></button>
+              <%= link_to course_mcq_answers_path(@course), class: "btn btn-mini add-mcq-answer" do %>
+                <i class="icon-plus"></i>
+              <% end %>
             </td>
           </tr>
-        <% end %>
-        <tr class="answer-new answer-row">
-          <td><input type="checkbox" /></td>
-          <td><input type="text" placeholder="Add new..." /></td>
-          <td><button type="button" class="btn btn-primary btn-add"><i class="icon-plus"></i></button></td>
-        </tr>
+        </tbody>
       </table>
     </div>
   </div>

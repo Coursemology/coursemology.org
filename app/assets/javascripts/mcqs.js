@@ -4,40 +4,53 @@
 //    extract information
 //    append before the new form
 $(document).ready(function() {
-  var row_template = [
-          '<tr class="answer-row">',
-          '  <input type="hidden" name="answers[][text]" value="<%= answer.text %>">',
-          '  <td><input type="checkbox" name="answers[][is_correct]" value="true" /></td>',
-          '  <td class="ans-text"></td>',
-          '  <td>',
-          '    <button class="btn btn-edit"><i class="icon-edit"></i></button>',
-          '    <button class="btn btn-remove"><i class="icon-minus"></i></button>',
-          '  </td>',
-          '</tr>'].join('\n');
-
-  $('#mcq-answers .btn-add').on('click', function(evt) {
+  $('#mcq-answers .add-mcq-answer').on('click', function(e) {
+    e.preventDefault();
     var form = $(this).parents('.answer-row');
     var cb = form.find('input[type=checkbox]');
-    var tb = form.find('input[type=text]');
+    var tb = form.find('input.ans-text');
+    var eb = form.find('input.ans-expl');
     // get value
+    var create_url = $(this).attr('href');
     var is_correct = cb.is(':checked');
     var text = tb.attr('value');
+    var expl = eb.attr('value');
     // reset
     cb.attr('checked', false);
     tb.attr('value', '');
+    eb.attr('value', '');
     // construct the new row
     if (text) {
-      var row = $(row_template);
-      row.find('input[name="answers[][text]"]').attr('value', text);
-      row.find('input[name="answers[][is_correct]"]').attr('checked', is_correct);
-      row.find('.ans-text').html(text);
-      row.insertBefore(form);
+      data = {
+        mcq_answer: {
+          is_correct: is_correct,
+          text: text,
+          explanation: expl
+        }
+      };
+      $.ajax({
+        url: create_url,
+        type: "POST",
+        data: data,
+        dataType: "html",
+        success: function(resp) {
+          form.before(resp);
+        }
+      });
     }
     return false;
   });
 
-  $(document).on('click', '#mcq-answers .btn-remove', function(evt) {
-    $(this).parents('.answer-row').remove();
-    return false;
+  $(document).on('click', '#mcq-answers .btn-remove', function(e) {
+    e.preventDefault();
+    var del_url = $(this).attr('href');
+    var el = this;
+    $.ajax({
+      url: del_url,
+      type: "DELETE",
+      success: function() {
+        $(el).parents('tr').remove();
+      }
+    });
   });
 });

@@ -40,6 +40,8 @@ JfdiAcademy::Application.routes.draw do
       end
     end
 
+    resources :mcq_answers
+
     resources :announcements
 
     post "levels/populate" => "levels#populate", as: :levels_populate
