@@ -44,12 +44,13 @@ class AchievementsController < ApplicationController
   end
 
   def update_requirement(ach, reqids)
-    puts reqids
-    reqids.each do |reqid|
-      req = Requirement.find(reqid.to_i)
-      req.obj = ach
-      req.save
-      puts req.to_json
+    if reqids
+      reqids.each do |reqid|
+        req = Requirement.find(reqid.to_i)
+        req.obj = ach
+        req.save
+        puts req.to_json
+      end
     end
   end
 
@@ -58,7 +59,7 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.save
         update_requirement(@achievement, params[:reqids])
-        format.html { redirect_to course_achievement_url(@course),
+        format.html { redirect_to course_achievements_url(@course),
                       notice: 'achievement was successfully created.' }
         format.json { render json: @achievement, status: :created, location: @achievement }
       else
