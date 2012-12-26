@@ -150,3 +150,24 @@ ul {
 .hidden {
   display: none;
 }
+
+.ach-won {
+  background-color: palegreen;
+}
+
+.ach-normal {
+  background-color: palered;
+}
+
+.ach-icon {
+  width: 100%;
+  max-height: 100%;
+}
+
+.achievement-list .icon-remove {
+  color: red;
+}
+
+.achievement-list .icon-ok {
+  color: green;
+}

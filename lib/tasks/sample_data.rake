@@ -33,7 +33,7 @@ namespace :db do
 
       15.times do |i|
         asm = gen_mission(admin, course, rand(-1..1), false)
-        asm.order = i * 2 + 1
+        asm.pos = i * 2 + 1
         rand(1..5).times do |j|
           wq = gen_wq(admin)
           wq.save
@@ -45,7 +45,7 @@ namespace :db do
 
       10.times do |i|
         training = gen_training(admin, course, rand(0..1))
-        training.order = i
+        training.pos = i
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
@@ -56,7 +56,7 @@ namespace :db do
 
       10.times do |i|
         quiz = gen_quiz(admin, course, rand(0..1))
-        quiz.order = i
+        quiz.pos = i
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
           link_asm_qn(quiz, mcq, j)
@@ -260,7 +260,7 @@ namespace :db do
     asm_qn = AsmQn.new
     asm_qn.asm = asm
     asm_qn.qn = qn
-    asm_qn.order = order
+    asm_qn.pos = order
     return asm_qn.save!
   end
 

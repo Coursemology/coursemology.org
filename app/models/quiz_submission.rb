@@ -1,5 +1,9 @@
 class QuizSubmission < ActiveRecord::Base
+  include Sbm
+
   attr_accessible :attempt, :open_at, :quiz_id, :student_id, :submit_at
+
+  scope :final, where(is_final: true)
 
   belongs_to :quiz
   belongs_to :student, class_name: "User"

@@ -15,4 +15,8 @@ class TrainingSubmission < ActiveRecord::Base
   def get_asm
     return self.training
   end
+
+  def get_final_grading
+    return self.submission_grading
+  end
 end

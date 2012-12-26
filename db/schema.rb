@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121222094359) do
+ActiveRecord::Schema.define(:version => 20121226084218) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(:version => 20121222094359) do
     t.string   "qn_type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.integer  "order"
+    t.integer  "pos"
   end
 
   create_table "asm_reqs", :force => true do |t|
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(:version => 20121222094359) do
     t.integer  "timelimit"
     t.integer  "attempt_limit"
     t.integer  "auto_graded"
-    t.integer  "order"
+    t.integer  "pos"
     t.string   "description"
     t.integer  "creator_id"
     t.datetime "created_at",    :null => false
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20121222094359) do
     t.integer  "max_grade"
     t.datetime "open_at"
     t.datetime "close_at"
-    t.integer  "order"
+    t.integer  "pos"
     t.integer  "attempt_limit"
     t.integer  "creator_id"
     t.datetime "created_at",    :null => false
@@ -285,7 +285,7 @@ ActiveRecord::Schema.define(:version => 20121222094359) do
     t.string   "description"
     t.integer  "exp"
     t.datetime "open_at"
-    t.integer  "order"
+    t.integer  "pos"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "max_grade"

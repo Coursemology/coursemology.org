@@ -7,6 +7,7 @@ class SubmissionGrading < ActiveRecord::Base
   belongs_to :exp_transaction
 
   def update_exp_transaction
+    puts 'update_exp'
     asm = self.sbm.get_asm
     if !self.exp_transaction
       self.exp_transaction = ExpTransaction.new
@@ -22,6 +23,7 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.exp = self.total_grade * asm.exp / asm.max_grade
     end
     self.save
+    self.exp_transaction.update_user_data
   end
 
   def get_name

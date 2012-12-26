@@ -17,6 +17,11 @@ class TrainingSubmissionsController < ApplicationController
     @training_submission.current_step = 1
     @training_submission.save
 
+    sg = SubmissionGrading.new
+    sg.sbm = @training_submission
+    sg.total_grade = 0
+    sg.save
+
     respond_to do |format|
       format.html do
         redirect_to edit_course_training_training_submission_path(@course,
@@ -30,6 +35,7 @@ class TrainingSubmissionsController < ApplicationController
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
+    puts @training.mcqs.to_json
     if @step <= @training.mcqs.size
       @current_mcq = @training.mcqs[@step - 1]
     end
@@ -47,25 +53,31 @@ class TrainingSubmissionsController < ApplicationController
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid])
     sma = StdMcqAnswer.new()
+    sma.student = current_user
     sma.mcq = mcq
     sma.mcq_answer = mcqa
-
     # TODO: record the choices
-    ag = AnswerGrading.new
+
+    sbm_ans = @training_submission.sbm_answers.build
+    sbm_ans.answer = sma
+
+    sg = @training_submission.submission_grading
+    ag = sg.answer_gradings.build
     ag.student_answer = sma
     ag.grade = mcqa.is_correct ? mcq.max_grade : 0
+    ag.submission_grading = sg
 
-    if mcqa.is_correct
-      mcq_pos = -1
-      @training.mcqs.each_with_index do |q, index|
-        puts q.to_json, mcq.id
-        if mcq.id == q.id
-          mcq_pos = index + 1
-        end
+    mcq_pos = @training.get_qn_pos(mcq)
+    puts mcq_pos, @training_submission.current_step
+    if @training_submission.current_step == mcq_pos
+      sbm_ans.is_final = true
+      if mcqa.is_correct
+        @training_submission.current_step = mcq_pos + 1
+        # only update the grade if this is the latest question in student's path
+        puts 'sub grading ', sg.to_json
+        sg.total_grade += ag.grade
+        sg.update_exp_transaction
       end
-      puts mcq_pos, @training_submission.current_step
-      @training_submission.current_step =
-          [@training_submission.current_step, mcq_pos + 1].max
     end
 
     resp = {

@@ -1,5 +1,5 @@
 class ExpTransaction < ActiveRecord::Base
-  after_save :update_user_data
+  # after_save :update_user_data
 
   attr_accessible :exp, :giver_id, :is_valid, :reason, :user_course_id
 
