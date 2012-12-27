@@ -24,8 +24,8 @@ class TrainingSubmissionsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to edit_course_training_training_submission_path(@course,
-            @training, @training_submission)
+        redirect_to edit_course_training_training_submission_path(
+            @course, @training, @training_submission)
       end
     end
   end
@@ -76,6 +76,7 @@ class TrainingSubmissionsController < ApplicationController
         # only update the grade if this is the latest question in student's path
         puts 'sub grading ', sg.to_json
         sg.total_grade += ag.grade
+        puts 'total grade ', sg.total_grade
         sg.update_exp_transaction
       end
     end

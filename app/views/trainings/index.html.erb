@@ -17,7 +17,9 @@
     </tr>
   </thead>
   <tbody>
-    <% @trainings.each do |training| %>
+    <% @trainings_with_sbm.each do |tws| %>
+      <% training = tws[:training] %>
+      <% submission = tws[:submission] %>
       <tr>
         <td><%= training.id %></td>
         <td>
@@ -29,8 +31,15 @@
         <td>
           <% if current_user %>
             <% if current_user.is_student?(@course) %>
-              <%= link_to 'Start', new_course_training_training_submission_path(@course, training),
-                  :class => 'btn btn-mini' %>
+              <% if submission %>
+                <%= link_to 'Continue',
+                        edit_course_training_training_submission_path(@course, training, submission),
+                        :class => 'btn btn-mini' %>
+              <% else %>
+                <%= link_to 'Start',
+                        new_course_training_training_submission_path(@course, training),
+                        :class => 'btn btn-mini' %>
+              <% end %>
             <% elsif current_user.is_lecturer?(@course) %>
               <%= link_to edit_course_training_path(@course, training), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>

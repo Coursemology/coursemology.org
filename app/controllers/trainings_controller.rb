@@ -3,6 +3,18 @@ class TrainingsController < ApplicationController
   load_and_authorize_resource :training, through: :course
 
   def index
+    # check if student has a training submission for each training
+    @trainings_with_sbm = []
+    @trainings.each do |training|
+      std_sbm = TrainingSubmission.find_by_student_id_and_training_id(
+        current_user.id,
+        training.id
+      )
+      @trainings_with_sbm << {
+        training: training,
+        submission: std_sbm
+      }
+    end
   end
 
   def show
