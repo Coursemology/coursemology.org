@@ -176,3 +176,21 @@ ul {
   text-align: left;
   vertical-align: top;
 }
+
+.user-short-stat td, .user-short-stat th {
+  text-align: center;
+}
+
+.user-short-stat td {
+  font-size: 2em;
+}
+
+#logo {
+  text-transform: none;
+  font-size: 2em;
+}
+
+.user-profile-pic {
+  max-width: 50px;
+  max-height: 50px;
+}

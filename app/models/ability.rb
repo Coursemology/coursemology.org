@@ -25,7 +25,7 @@ class Ability
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
     #
-
+    #
     if user
       if user.role.name == "superuser"
         can :manage, :all

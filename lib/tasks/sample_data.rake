@@ -106,12 +106,24 @@ namespace :db do
     name = Faker::Name.name
     email = Faker::Internet.safe_email
     password = "password"
+    profile_pics = [
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/370764_1022927516_41552926_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc7/371120_1306417170_2022571797_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/187476_1442212240_1916323545_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn1/48583_1340237231_4026_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/276182_1158560189_1708150089_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/369348_1515280928_871519003_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/260951_597532116_1714005609_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/371036_100002869350779_1623535236_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/275026_1472645898_1699627684_n.jpg'
+    ]
     return User.create!(
       name: name,
       email: email,
       password: password,
       password_confirmation: password,
-      system_role_id: role.id
+      system_role_id: role.id,
+      profile_photo_url: profile_pics.sample
     )
   end
 
