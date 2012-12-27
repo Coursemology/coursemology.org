@@ -74,10 +74,9 @@ class TrainingSubmissionsController < ApplicationController
       if mcqa.is_correct
         @training_submission.current_step = mcq_pos + 1
         # only update the grade if this is the latest question in student's path
-        puts 'sub grading ', sg.to_json
         sg.total_grade += ag.grade
-        puts 'total grade ', sg.total_grade
         sg.update_exp_transaction
+        sg.save
       end
     end
 

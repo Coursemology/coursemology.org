@@ -10,7 +10,6 @@ class Achievement < ActiveRecord::Base
   has_one  :lvl_req, class_name: "Requirement", as: :obj, conditions: { req_type: "Level" }
 
   def fulfilled_conditions?(user_course)
-    puts "#{id} Check fulfill all conditions", self.to_json
     satisfied = true
     requirements.each do |req|
       satisfied &&= req.satisfied?(user_course)
