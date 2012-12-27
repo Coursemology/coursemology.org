@@ -1,0 +1,17 @@
+<tr class="answer-row">
+  <input type="hidden" name="answers[][id]" value="<%= answer.id %>" />
+  <input type="hidden" name="answers[][text]" value="<%= answer.text %>">
+  <input type="hidden" name="answers[][explanation]" value="<%= answer.explanation %>">
+  <td><input type="checkbox" name="answers[][is_correct]" value="true"
+    <%= 'checked' if answer.is_correct %> />
+  </td>
+  <td class="ans-text"><%= answer.text %></td>
+  <td class="ans-text"><%= answer.explanation %></td>
+  <td>
+    <%= link_to course_mcq_answer_path(@course, answer),
+      class: 'btn btn-mini remove-req' do %>
+      <i class="icon-remove"></i>
+    <% end %>
+  </td>
+</tr>
+

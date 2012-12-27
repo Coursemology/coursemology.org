@@ -1,7 +1,9 @@
 <header class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <%= link_to "JEDI Academy", "/", id: "logo" %>
+      <%= link_to "/", id: "logo" do %>
+        course<span style="font-weight: normal">mology</span>
+      <% end %>
       <nav>
         <ul class="nav pull-right">
           <% if current_user %>

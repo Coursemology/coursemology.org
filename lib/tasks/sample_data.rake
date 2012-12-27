@@ -33,7 +33,7 @@ namespace :db do
 
       15.times do |i|
         asm = gen_mission(admin, course, rand(-1..1), false)
-        asm.order = i * 2 + 1
+        asm.pos = i * 2 + 1
         rand(1..5).times do |j|
           wq = gen_wq(admin)
           wq.save
@@ -45,21 +45,23 @@ namespace :db do
 
       10.times do |i|
         training = gen_training(admin, course, rand(0..1))
-        training.order = i
+        training.pos = i
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
           link_asm_qn(training, mcq, j)
         end
+        training.update_grade
         asms << training
       end
 
       10.times do |i|
         quiz = gen_quiz(admin, course, rand(0..1))
-        quiz.order = i
+        quiz.pos = i
         rand(5..7).times do |j|
           mcq = gen_mcq(admin)
           link_asm_qn(quiz, mcq, j)
         end
+        quiz.update_grade
         asms << quiz
       end
 
@@ -104,12 +106,24 @@ namespace :db do
     name = Faker::Name.name
     email = Faker::Internet.safe_email
     password = "password"
+    profile_pics = [
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/370764_1022927516_41552926_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc7/371120_1306417170_2022571797_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/187476_1442212240_1916323545_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn1/48583_1340237231_4026_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/276182_1158560189_1708150089_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/369348_1515280928_871519003_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc6/260951_597532116_1714005609_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/371036_100002869350779_1623535236_n.jpg',
+      'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/275026_1472645898_1699627684_n.jpg'
+    ]
     return User.create!(
       name: name,
       email: email,
       password: password,
       password_confirmation: password,
-      system_role_id: role.id
+      system_role_id: role.id,
+      profile_photo_url: profile_pics.sample
     )
   end
 
@@ -258,7 +272,7 @@ namespace :db do
     asm_qn = AsmQn.new
     asm_qn.asm = asm
     asm_qn.qn = qn
-    asm_qn.order = order
+    asm_qn.pos = order
     return asm_qn.save!
   end
 

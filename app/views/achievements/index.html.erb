@@ -6,24 +6,50 @@
             new_course_achievement_path(@course),
             :class => 'btn btn-primary' %>
 
-<table class="table">
+<table class="table achievement-list">
   <thead>
     <tr>
       <th width="10%"></th>
-      <th width="50%">Description</th>
+      <th width="40%">Description</th>
       <th>Requirements</th>
       <th width="10%">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <% @achievements.each do |ach| %>
-    <tr>
-      <td><img src=<%= ach.icon_url %> /></td>
+    <% @achievements_with_info.each do |ach_info| %>
+    <% ach = ach_info[:ach] %>
+    <tr class="<%= ach_info[:won] ? "ach-won" : "ach-normal" %>">
+      <td><img class="ach-icon" src=<%= ach.icon_url %> /></td>
       <td>
         <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
         <p><%= ach.description %></p>
       </td>
-      <td>Requirement goes here</td>
+      <td>
+        <ul>
+        <% ach.asm_reqs.each do |asm_req| %>
+          <li>
+            <% if ach_info[:req_check][asm_req.id] %>
+              <i class="icon-ok"></i>
+            <% else %>
+              <i class="icon-remove"></i>
+            <% end %>
+            Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
+            <%= link_to asm_req.req.asm.get_title, '#' %>
+          </li>
+        <% end %>
+        <% ach.ach_reqs.each do |ach_req| %>
+          <li>
+            <% if ach_info[:req_check][ach_req.id] %>
+              <i class="icon-ok"></i>
+            <% else %>
+              <i class="icon-remove"></i>
+            <% end %>
+            Earn
+            <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %>
+          </li>
+        <% end %>
+        </ul>
+      </td>
       <td>
         <% if current_user && current_user.is_lecturer?(@course) %>
           <%= link_to edit_course_achievement_path(@course, ach), :class => 'btn btn-mini' do %>

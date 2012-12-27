@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   before_create :set_default_role
+  before_create :set_default_profile_pic
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -30,6 +31,13 @@ class User < ActiveRecord::Base
   def set_default_role
     if !self.role
       self.role = Role.find_by_name('normal')
+    end
+  end
+
+  def set_default_profile_pic
+    if !self.profile_photo_url
+      self.profile_photo_url =
+        'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
     end
   end
 end

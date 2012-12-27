@@ -25,6 +25,7 @@ class McqsController < ApplicationController
       answer['is_correct'] = answer.has_key?('is_correct')
       if answer.has_key?('id')
         ans = McqAnswer.find(answer['id'])
+        ans.mcq = mcq
         # TODO: check if this answer does belong to the current question
         updated = updated && ans.update_attributes(answer)
       else

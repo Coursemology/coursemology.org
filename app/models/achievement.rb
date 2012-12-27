@@ -8,4 +8,16 @@ class Achievement < ActiveRecord::Base
   has_many :ach_reqs, class_name: "Requirement", as: :obj, conditions: { req_type: "Achievement" }
   has_many :asm_reqs, class_name: "Requirement", as: :obj, conditions: { req_type: "AsmReq" }
   has_one  :lvl_req, class_name: "Requirement", as: :obj, conditions: { req_type: "Level" }
+
+  def fulfilled_conditions?(user_course)
+    puts "#{id} Check fulfill all conditions", self.to_json
+    satisfied = true
+    requirements.each do |req|
+      satisfied &&= req.satisfied?(user_course)
+      if not satisfied
+        break
+      end
+    end
+    return satisfied
+  end
 end

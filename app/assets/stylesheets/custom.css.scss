@@ -150,3 +150,47 @@ ul {
 .hidden {
   display: none;
 }
+
+.ach-won {
+  background-color: palegreen;
+}
+
+.ach-normal {
+  background-color: palered;
+}
+
+.ach-icon {
+  width: 100%;
+  max-height: 100%;
+}
+
+.achievement-list .icon-remove {
+  color: red;
+}
+
+.achievement-list .icon-ok {
+  color: green;
+}
+
+.form-mcq-answer {
+  text-align: left;
+  vertical-align: top;
+}
+
+.user-short-stat td, .user-short-stat th {
+  text-align: center;
+}
+
+.user-short-stat td {
+  font-size: 2em;
+}
+
+#logo {
+  text-transform: none;
+  font-size: 2em;
+}
+
+.user-profile-pic {
+  max-width: 50px;
+  max-height: 50px;
+}

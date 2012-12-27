@@ -1,6 +1,6 @@
 <%- model_class = Quiz -%>
 <div class="page-header">
-  <h1>Quiz <%= @quiz.order %>: <%= @quiz.title %></h1>
+  <h1>Quiz <%= @quiz.pos + 1 %>: <%= @quiz.title %></h1>
 </div>
 
 <p class="well"><%= @quiz.description.html_safe %></p>

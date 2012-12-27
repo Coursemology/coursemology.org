@@ -14,7 +14,9 @@
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
       <th width="15%"><%= model_class.human_attribute_name(:close_at) %></th>
-      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% if current_user && current_user.is_lecturer?(@course) %>
+        <th width="10%"></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>

@@ -59,8 +59,9 @@ class QuizSubmissionsController < ApplicationController
   def create
     @quiz_submission.student_id = current_user.id
 
-    sg = @quiz_submission.submission_gradings.build({
-    })
+    sg = SubmissionGrading.new
+    sg.sbm = @quiz_submission
+    puts "build submission grading"
     total_grade = 0
     params[:answers].each do |qid, ansid|
       @mcq = Mcq.find(qid)
@@ -80,6 +81,7 @@ class QuizSubmissionsController < ApplicationController
     end
 
     sg.total_grade = total_grade
+    sg.update_exp_transaction # this is not triggered automatically on association
     @quiz_submission.final_grading = sg
 
     if @quiz_submission.save

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121218183832) do
+ActiveRecord::Schema.define(:version => 20121226084218) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.string   "qn_type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.integer  "order"
+    t.integer  "pos"
   end
 
   create_table "asm_reqs", :force => true do |t|
@@ -79,6 +79,16 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.integer  "role_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "exp_transactions", :force => true do |t|
+    t.integer  "exp"
+    t.string   "reason"
+    t.boolean  "is_valid"
+    t.integer  "user_course_id"
+    t.integer  "giver_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "file_uploads", :force => true do |t|
@@ -129,7 +139,7 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.integer  "timelimit"
     t.integer  "attempt_limit"
     t.integer  "auto_graded"
-    t.integer  "order"
+    t.integer  "pos"
     t.string   "description"
     t.integer  "creator_id"
     t.datetime "created_at",    :null => false
@@ -165,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.integer  "max_grade"
     t.datetime "open_at"
     t.datetime "close_at"
-    t.integer  "order"
+    t.integer  "pos"
     t.integer  "attempt_limit"
     t.integer  "creator_id"
     t.datetime "created_at",    :null => false
@@ -226,29 +236,16 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.datetime "updated_at",    :null => false
   end
 
-  create_table "student_answers", :force => true do |t|
-    t.integer  "answer_id"
-    t.datetime "started_at"
-    t.datetime "submitted_at"
-    t.string   "note"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-    t.integer  "student_id"
-    t.string   "text"
-    t.integer  "answerable_id"
-    t.string   "answerable_type"
-    t.integer  "submission_id"
-  end
-
   create_table "submission_gradings", :force => true do |t|
     t.integer  "grader_id"
     t.integer  "total_grade"
     t.string   "comment"
     t.integer  "sbm_id"
     t.datetime "publish_at"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.string   "sbm_type"
+    t.integer  "exp_transaction_id"
   end
 
   create_table "submissions", :force => true do |t|
@@ -288,7 +285,7 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.string   "description"
     t.integer  "exp"
     t.datetime "open_at"
-    t.integer  "order"
+    t.integer  "pos"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "max_grade"
@@ -309,14 +306,6 @@ ActiveRecord::Schema.define(:version => 20121218183832) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "level_id"
-  end
-
-  create_table "user_exps", :force => true do |t|
-    t.integer  "exp"
-    t.integer  "level_id"
-    t.integer  "user_course_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
   end
 
   create_table "user_rewards", :force => true do |t|
