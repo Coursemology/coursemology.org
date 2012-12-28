@@ -31,6 +31,7 @@ class Ability
         can :manage, :all
       elsif user.is_lecturer?
         can :manage, Course, creator_id: user.id
+        can :upload_file, Course, creator_id: user.id
       end
       can :manage, User, id: user.id
       can :manage, Submission

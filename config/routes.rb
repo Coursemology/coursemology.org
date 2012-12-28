@@ -59,6 +59,8 @@ JfdiAcademy::Application.routes.draw do
 
   match "courses/:id/students" => "courses#students", as: :course_students
 
+  resources :file_uploads
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

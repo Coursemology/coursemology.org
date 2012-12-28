@@ -13,6 +13,7 @@ class QuizzesController < ApplicationController
   end
 
   def create
+    @quiz.pos = @course.quizzes.size - 1
     @quiz.creator = current_user
     respond_to do |format|
       if @quiz.save

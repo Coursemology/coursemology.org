@@ -1,28 +1,37 @@
-<%= form_for @course, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for @course, html: { class: 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= f.label :title, :class => 'control-label' %>
+    <%= f.label "Give it an awesome name", class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :title, :class => 'text_field span9' %>
+      <%= f.text_field :title, class: 'text_field span6',
+          placeholder: "eg: Maths Universe, Geovengers" %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :logo_url, :class => 'control-label' %>
+    <%= f.label "Give it an awesome backstory", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :logo_url, :class => 'text_field span9' %>
+      <%= f.text_area :description, class: 'text_area span6', rows: '10',
+          placeholder: "eg: Darth Vader is taking over the universe. We need you to save the day!" %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
+    <%= f.label "Course Logo", class: 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'text_area', :rows => '10' %>
+      <img src="" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
+      <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
+      <br/>
+      <a href="#image-uploader-modal" data-toggle="modal">Upload logo</a>
+      <%= render partial: "layouts/image_uploader",
+        locals: { upload_to: file_uploads_url,
+                  container_class: '',
+                  image_url_class: '' } %>
     </div>
   </div>
 
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                courses_path, :class => 'btn' %>
+    <%= f.submit nil, class: 'btn btn-primary' %>
+    <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+                courses_path, class: 'btn' %>
   </div>
 <% end %>

@@ -1,16 +1,22 @@
 class FileUploadsController < ApplicationController
-  load_and_authorize_resource :course
 
   def create
+    if !current_user
+      respond_to do |format|
+        format.html { render text: "Unauthorized access!" }
+      end
+    end
+
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+      authorize! :upload_file, @course
+    end
+
     file_upload = FileUpload.create({
       creator: current_user,
       course: @course,
       file: params[:files].first
     })
-
-    puts request
-    puts request.scheme
-    puts request.host_with_port
 
     if file_upload.save
       resp = {
