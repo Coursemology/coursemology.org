@@ -1,7 +1,7 @@
 <%- model_class = Announcement -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
-  <% if current_uc.is_lecturer? %>
+  <% if current_uc && current_uc.is_lecturer? %>
     <%= link_to t('.new', :default => t("helpers.links.new")),
                 new_course_announcement_path(@course),
                 :class => 'btn btn-primary' %>
