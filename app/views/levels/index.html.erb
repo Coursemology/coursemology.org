@@ -2,7 +2,7 @@
   <h1><%=t '.title', :default => "Level Design"%></h1>
 </div>
 
-<% if @levels.size == 0 %>
+<% if @levels.size == 0 && current_uc && current_uc.is_lecturer? %>
   <form action=<%= course_levels_populate_path(@course) %> method="POST">
     <h2>Number of level:
       <input name="num_level" />
