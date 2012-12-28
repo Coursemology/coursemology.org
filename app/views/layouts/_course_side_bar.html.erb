@@ -52,7 +52,5 @@
   <li><a href="<%= course_levels_path(@course) %>"><i class="icon-list-ol"></i> Level</a></li>
   <li><a href="<%= course_achievements_path(@course) %>"><i class="icon-star"></i> Achievements</a></li>
   <li><a href="<%= course_students_path(@course) %>"><i class="icon-user"></i> Students</a></li>
-  <% if current_uc && current_uc.is_lecturer? %>
-    <li><a href="<%= course_enroll_requests_path(@course) %>"><i class="icon-bolt"></i> Enroll Requests</a></li>
-  <% end %>
+  <li><a href="<%= course_enroll_requests_path(@course) %>"><i class="icon-bolt"></i> Enroll Requests</a></li>
 </ul>
