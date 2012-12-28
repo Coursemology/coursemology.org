@@ -27,6 +27,7 @@ class TrainingsController < ApplicationController
   end
 
   def create
+    @training.pos = @course.trainings.size - 1
     @training.creator = current_user
     respond_to do |format|
       if @training.save

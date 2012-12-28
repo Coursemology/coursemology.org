@@ -1,0 +1,23 @@
+<div id="image-uploader-modal" class="modal hide fade <%= container_class %>">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Insert image</h3>
+  </div>
+  <div class="modal-body">
+    <div id="file-upload-form"
+      data-url="<%= upload_to %>">
+      <input type="hidden" class="image-uploader-input-url <%= image_url_class %>"/>
+      <h3 id="dropzone" class="drag-drop-area">DROP FILE HERE</h3>
+      <span class="fileinput-button">
+        <i class="icon-plus"></i>
+        <span>Upload from Computer</span>
+        <input type="file"/>
+      </span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    <a href="#" class="btn btn-primary image-uploader-insert-btn" data-dismiss="modal">Done</a>
+  </div>
+</div>
+
