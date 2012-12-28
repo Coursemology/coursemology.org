@@ -8,15 +8,12 @@ class Requirement < ActiveRecord::Base
     # depends on the kind of requirement
     # level
     # achievement
-    puts 'requirement obj ', req, req.to_json
     case req
     when Achievement
       return check_achievement(user_course)
     when AsmReq
-      puts "Check AsmReq"
       return req.satisfied?(user_course)
     else
-      puts "Check level"
       return true
     end
 

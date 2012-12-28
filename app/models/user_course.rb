@@ -45,13 +45,10 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_achievements
-    puts "UPDATE Achievement", self.course.achievements.size
     new_ach = false
     self.course.achievements.each do |ach|
       # verify if users will win achievement ach
-      puts 'Test achievement', ach
       uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-      puts 'UserAchievement', uach, uach.to_json
       if not uach
         # not earned yet, check this achievement
         if ach.fulfilled_conditions?(self)
@@ -59,7 +56,6 @@ class UserCourse < ActiveRecord::Base
           uach = self.user_achievements.build
           uach.achievement = ach
           new_ach = true
-          puts "#{self.user.name} earned #{ach.title}"
         end
       end
     end

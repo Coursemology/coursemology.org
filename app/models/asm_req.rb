@@ -9,7 +9,6 @@ class AsmReq < ActiveRecord::Base
     # satisfied this asm or not?
     # what's the highest grade achieved in this assignment
     # query in submission the last submission by this user that has assignment id like that
-    puts "#{id} check satisfy ASM REQ", self.to_json
     case asm
     when Training
       last_sbm = TrainingSubmission.find_by_student_id_and_training_id(user_course.user.id, asm_id)
@@ -19,14 +18,9 @@ class AsmReq < ActiveRecord::Base
       last_sbm = QuizSubmission.find_by_student_id_and_quiz_id(user_course.user.id, asm_id)
     end
 
-    puts 'last submission ', last_sbm.to_json
-
     if last_sbm
       final_grading = last_sbm.get_final_grading
-      puts 'final grading ', final_grading.to_json
       if final_grading
-        puts last_sbm.to_json
-        puts final_grading.to_json
         percent = final_grading.total_grade * 100 / asm.max_grade
         return percent >= min_grade - EPS
       end

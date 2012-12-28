@@ -22,7 +22,7 @@ class SubmissionGrading < ActiveRecord::Base
     else
       self.exp_transaction.exp = self.total_grade * asm.exp / asm.max_grade
     end
-    self.save
+    self.exp_transaction.save
     self.exp_transaction.update_user_data
   end
 
