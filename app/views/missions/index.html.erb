@@ -3,9 +3,11 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_mission_path(@course),
-            :class => 'btn btn-primary' %>
+<% if current_uc && current_uc.is_lecturer? %>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_mission_path(@course),
+              :class => 'btn btn-primary' %>
+<% end %>
 
 <table class="table table-striped assignments">
   <thead>
