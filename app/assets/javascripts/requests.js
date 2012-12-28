@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  $('.enroll-request-del').click(function(e){
+  $('.request-del').click(function(e){
     var tr = $(this).parents('tr');
     var url = tr.find('.destroy-url').val();
     console.log(url);
@@ -14,7 +14,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $('.enroll-request-approve').click(function(e){
+  $('.request-approve').click(function(e){
     var tr = $(this).parents('tr');
     var url = tr.find('.destroy-url').val();
     console.log(url);

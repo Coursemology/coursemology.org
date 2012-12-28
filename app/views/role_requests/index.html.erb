@@ -1,0 +1,37 @@
+<div class="page-header">
+  <h1>Lecturer Requests</h1>
+</div>
+
+<% if @lecturer_requests.size == 0 %>
+  There is no outstanding requests.
+<% else %>
+  <table class="table table-hover enroll-requests">
+    <thead>
+      <tr>
+        <td>Id</td>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Action</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% @lecturer_requests.each do |rq| %>
+        <tr>
+          <input type="hidden" class="destroy-url"
+              value=<%= role_request_path(rq.id) %> />
+          <td><%= rq.id %></td>
+          <td><%= rq.user.name %></td>
+          <td><%= rq.user.email %></td>
+          <td>
+            <%= link_to '#', class: "btn btn-mini btn-primary request-approve" do %>
+              <i class="icon-ok"></i>
+            <% end %>
+            <%= link_to '#', class: "btn btn-mini btn-danger request-del" do %>
+              <i class="icon-remove"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

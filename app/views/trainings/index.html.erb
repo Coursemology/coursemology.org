@@ -29,8 +29,8 @@
         </td>
         <td><%= training.exp %></td>
         <td>
-          <% if current_user %>
-            <% if current_user.is_student?(@course) %>
+          <% if current_uc %>
+            <% if current_uc.is_student? %>
               <% if submission %>
                 <%= link_to 'Continue',
                         edit_course_training_training_submission_path(@course, training, submission),
@@ -40,7 +40,7 @@
                         new_course_training_training_submission_path(@course, training),
                         :class => 'btn btn-mini' %>
               <% end %>
-            <% elsif current_user.is_lecturer?(@course) %>
+            <% elsif current_user.is_lecturer? %>
               <%= link_to edit_course_training_path(@course, training), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>
               <% end %>

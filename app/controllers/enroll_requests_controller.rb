@@ -9,9 +9,6 @@ class EnrollRequestsController < ApplicationController
     @student_requests = []
 
     std_role = Role.find_by_name("student")
-
-    puts @enroll_requests
-
     @enroll_requests.each do |er|
       if er.role == std_role
         @student_requests << er
@@ -25,13 +22,9 @@ class EnrollRequestsController < ApplicationController
   end
 
   def new
-    @uc = UserCourse.find_by_user_id_and_course_id(current_user.id, @course.id)
     @er = EnrollRequest.find_by_user_id_and_course_id(current_user.id, @course.id)
 
-    puts 'User course', @uc
-    puts 'Enroll Request', @er
-
-    if !@uc && !@er
+    if current_user && !current_uc && !@er
       if params[:role]
         role = Role.find_by_name(params[:role])
       else
@@ -43,13 +36,9 @@ class EnrollRequestsController < ApplicationController
       @enroll_request.save
       @er = @enroll_request
     end
-    puts 'er ', @er
-    # else, render the view
   end
 
   def destroy
-    puts params
-
     if params[:approved]
       puts 'Request approved!'
       # create new UserCourse record

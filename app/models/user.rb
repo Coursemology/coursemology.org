@@ -15,22 +15,20 @@ class User < ActiveRecord::Base
   has_many :user_courses
   has_many :courses, through: :user_courses
 
-  belongs_to :role, class_name: "Role", foreign_key: "system_role_id"
+  belongs_to :system_role, class_name: "Role"
 
-  def is_lecturer?(course)
-    uc = UserCourse.find_by_user_id_and_course_id(self.id, course.id)
-    return uc.is_lecturer?
+  def is_admin?
+    return self.system_role.name == 'superuser'
   end
 
-  def is_student?(course)
-    uc = UserCourse.find_by_user_id_and_course_id(self.id, course.id)
-    return uc.is_student?
+  def is_lecturer?
+    return self.is_admin? || self.system_role.name == 'lecturer'
   end
 
   private
   def set_default_role
-    if !self.role
-      self.role = Role.find_by_name('normal')
+    if !self.system_role
+      self.system_role = Role.find_by_name('normal')
     end
   end
 

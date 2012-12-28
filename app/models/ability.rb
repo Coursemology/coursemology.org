@@ -27,9 +27,9 @@ class Ability
     #
     #
     if user
-      if user.role.name == "superuser"
+      if user.is_admin?
         can :manage, :all
-      elsif user.role.name == "lecturer"
+      elsif user.is_lecturer?
         can :manage, Course, creator_id: user.id
       end
       can :manage, User, id: user.id
@@ -38,7 +38,8 @@ class Ability
       can :manage, TrainingSubmission
       can :listall, Submission
       can :populate, Level
-      can :manage, EnrollRequest
+      can :new, EnrollRequest
+      can :new, RoleRequest
     end
     can :read, :all
   end

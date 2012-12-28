@@ -5,14 +5,14 @@ JfdiAcademy::Application.routes.draw do
   end
 
   root :to => "static_pages#welcome"
-
   get "welcome" => "static_pages#welcome"
-
   get "about" => "static_pages#about"
-
   get "access_denied" => "static_pages#access_denied"
 
   devise_for :users
+
+  get "lecturers/request" => "role_requests#new"
+  resources :role_requests
 
   resources :courses do
     match "/submissions" => "submissions#listall", as: :submissions
