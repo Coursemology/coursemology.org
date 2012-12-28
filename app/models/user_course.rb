@@ -12,11 +12,18 @@ class UserCourse < ActiveRecord::Base
   has_many :exp_transactions
 
   def is_student?
-    return self.role.name == 'student'
+    return self.role == Role.find_by_name('student')
   end
 
   def is_lecturer?
-    return self.role.name == 'lecturer'
+    return self.role == Role.find_by_name('lecturer')
+  end
+
+  def level_percentage
+    if self.level
+      return self.exp * 100 / self.level.exp_threshold
+    end
+    return 0
   end
 
   def update_exp_and_level

@@ -25,10 +25,11 @@
       <% end %>
     </tbody>
   </table>
-  <div>
-    <span>Add new level: </span>
-    <input class="new-lvl-exp"></input>
-    <%= link_to 'Add', course_levels_path(@course), class: 'btn btn-mini add-lvl' %>
-  </div>
-
+  <% if current_uc && current_uc.is_lecturer? %>
+    <div>
+      <span>Add new level: </span>
+      <input class="new-lvl-exp"></input>
+      <%= link_to 'Add', course_levels_path(@course), class: 'btn btn-mini add-lvl' %>
+    </div>
+  <% end %>
 <% end %>

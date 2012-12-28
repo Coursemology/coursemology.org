@@ -12,7 +12,9 @@
       <th width="10%"></th>
       <th width="40%">Description</th>
       <th>Requirements</th>
-      <th width="10%">Actions</th>
+      <% if current_uc && current_uc.is_lecturer? %>
+        <th width="10%">Actions</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -50,8 +52,8 @@
         <% end %>
         </ul>
       </td>
-      <td>
-        <% if current_user && current_user.is_lecturer?(@course) %>
+      <% if current_uc && current_uc.is_lecturer? %>
+        <td>
           <%= link_to edit_course_achievement_path(@course, ach), :class => 'btn btn-mini' do %>
             <i class="icon-edit"></i>
           <% end %>
@@ -61,8 +63,8 @@
                       :class => 'btn btn-mini btn-danger' do %>
              <i class="icon-trash"></i>
           <% end %>
-        <% end %>
-      </td>
+        </td>
+      <% end %>
     </tr>
     <% end %>
   </tbody>

@@ -3,9 +3,11 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_quiz_path(@course),
-            :class => 'btn btn-primary' %>
+<% if current_uc && current_uc.is_lecturer? %>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_quiz_path(@course),
+              :class => 'btn btn-primary' %>
+<% end %>
 
 <table class="table table-striped assignments">
   <thead>
@@ -13,7 +15,9 @@
       <th width="3%"><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
-      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% if current_uc %>
+        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -26,8 +30,8 @@
           <% end %>
         </td>
         <td><%= quiz.exp %></td>
-        <td>
-          <% if current_uc %>
+        <% if current_uc %>
+          <td>
             <% if current_uc.is_student? %>
               <%= link_to 'Attempt', new_course_quiz_quiz_submission_path(@course, quiz), :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer? %>
@@ -41,8 +45,8 @@
                  <i class="icon-trash"></i>
               <% end %>
             <% end %>
-          <% end %>
-        </td>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -14,7 +14,7 @@
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
       <th width="15%"><%= model_class.human_attribute_name(:close_at) %></th>
-      <% if current_uc && current_uc.is_lecturer? %>
+      <% if current_uc %>
         <th width="10%"></th>
       <% end %>
     </tr>
@@ -30,8 +30,8 @@
         </td>
         <td><%= mission.exp %></td>
         <td><%= mission.close_at %></td>
-        <td>
-          <% if current_uc %>
+        <% if current_uc %>
+          <td>
             <% if current_uc.is_student? %>
               <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), :class => 'btn btn-mini' %>
             <% elsif current_uc.is_lecturer? %>
@@ -45,8 +45,8 @@
                  <i class="icon-trash"></i>
               <% end %>
             <% end %>
-          <% end %>
-        </td>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

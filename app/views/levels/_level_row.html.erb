@@ -7,18 +7,20 @@
     <span class="lvl-threshold"><%= lvl.exp_threshold %></span>
     <input value=<%= lvl.exp_threshold %> class="lvl-threshold-input hidden"/>
   </td>
-  <td>
-    <%= link_to '#', class: 'btn btn-mini edit-lvl' do %>
-      <i class="icon-edit"></i>
+  <% if current_uc && current_uc.is_lecturer? %>
+    <td>
+      <%= link_to '#', class: 'btn btn-mini edit-lvl' do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to '#', class: 'btn btn-mini edit-lvl-done hidden' do %>
+        <i class="icon-ok"></i>
+      <% end %>
+    </td>
+    <td>
+      <%= link_to '#', class: 'btn btn-mini remove-lvl hidden' do %>
+        <i class="icon-remove"></i>
     <% end %>
-    <%= link_to '#', class: 'btn btn-mini edit-lvl-done hidden' do %>
-      <i class="icon-ok"></i>
-    <% end %>
-  </td>
-  <td>
-    <%= link_to '#', class: 'btn btn-mini remove-lvl hidden' do %>
-      <i class="icon-remove"></i>
+    </td>
   <% end %>
-  </td>
 </tr>
 

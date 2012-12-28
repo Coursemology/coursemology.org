@@ -36,53 +36,55 @@
   </tr>
 </table>
 <a href="<%= course_mission_submissions_path(@course, @mission) %>">View submissions</a>
-<hr/>
 
-<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
-  Add Question
-</button>
-<div id="new_wquestion_form" class="collapse out">
-  <div class="well">
-    <%= render "questions/form" %>
+<% if current_uc && current_uc.is_lecturer? %>
+  <hr/>
+  <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
+    Add Question
+  </button>
+  <div id="new_wquestion_form" class="collapse out">
+    <div class="well">
+      <%= render "questions/form" %>
+    </div>
   </div>
-</div>
-<h2>Questions</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @questions.each do |q| %>
+  <h2>Questions</h2>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= q.description %></td>
-        <td>
-          <%= link_to edit_course_mission_question_path(@course, @mission, q), :class => 'btn btn-mini' do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to course_mission_question_path(@course, @mission, q),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <th><%= model_class.human_attribute_name(:description) %></th>
+        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @questions.each do |q| %>
+        <tr>
+          <td><%= q.description %></td>
+          <td>
+            <%= link_to edit_course_mission_question_path(@course, @mission, q), :class => 'btn btn-mini' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_mission_question_path(@course, @mission, q),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' do %>
+              <i class="icon-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<br/>
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              course_missions_path(@course), :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_course_mission_path(@course, @mission), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              course_mission_path(@course, @mission),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-</div>
+  <br/>
+  <div class="form-actions">
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                course_missions_path(@course), :class => 'btn'  %>
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                edit_course_mission_path(@course, @mission), :class => 'btn' %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                course_mission_path(@course, @mission),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-danger' %>
+  </div>
+<% end %>

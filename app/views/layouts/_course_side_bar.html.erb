@@ -11,33 +11,35 @@
       </td>
     </tr>
   </table>
-  <table class="table user-short-stat" style="text-align:center">
-    <thead>
-      <tr>
-        <% # <th>Ranking</th> %>
-        <th>Achievement</th>
-        <th>Level<th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <% # <td>10</td> %>
-        <td><%= current_uc.user_achievements.count() %></td>
-        <td><%= current_uc.level ? current_uc.level.level : 0 %></td>
-      </tr>
-    </tbody>
-  </table>
-  <div>
-    <div class="progress" style="margin-bottom: 3px">
-      <div class="bar bar-success" style="width: 
-        <%= current_uc.level ? 100 * current_uc.exp / current_uc.level.exp_threshold : 100 %>%"></div>
+  <% if current_uc.is_student? %>
+    <table class="table user-short-stat" style="text-align:center">
+      <thead>
+        <tr>
+          <% # <th>Ranking</th> %>
+          <th>Achievement</th>
+          <th>Level<th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <% # <td>10</td> %>
+          <td><%= current_uc.user_achievements.count() %></td>
+          <td><%= current_uc.level ? current_uc.level.level : 0 %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <div class="progress" style="margin-bottom: 3px">
+        <div class="bar bar-success" style="width: 
+          <%= current_uc.level_percentage %>%"></div>
+      </div>
+      <span class="pull-right">
+        <%= current_uc.exp %>
+        /
+        <%= current_uc.level ? current_uc.level.exp_threshold : 0 %> EXP</span>
+      <div class="clearfix"></div>
     </div>
-    <span class="pull-right">
-      <%= current_uc.exp %>
-      /
-      <%= current_uc.level ? current_uc.level.exp_threshold : 0 %> EXP</span>
-    <div class="clearfix"></div>
-  </div>
+  <% end %>
 </div>
 <hr/>
 <% end %>
@@ -47,8 +49,10 @@
   <li><a href="<%= course_missions_path(@course) %>"><i class="icon-envelope"></i> Missions</a></li>
   <li><a href="<%= course_trainings_path(@course) %>"><i class="icon-envelope"></i> Trainings</a></li>
   <li><a href="<%= course_submissions_path(@course) %>"><i class="icon-envelope-alt"></i> Submissions</a></li>
-  <li><a href="<%= course_levels_path(@course) %>"><i class="icon-list-ol"></i> Level Design</a></li>
+  <li><a href="<%= course_levels_path(@course) %>"><i class="icon-list-ol"></i> Level</a></li>
   <li><a href="<%= course_achievements_path(@course) %>"><i class="icon-star"></i> Achievements</a></li>
-  <li><a href="<%= course_enroll_requests_path(@course) %>"><i class="icon-bolt"></i> Enroll Requests</a></li>
   <li><a href="<%= course_students_path(@course) %>"><i class="icon-user"></i> Students</a></li>
+  <% if current_uc && current_uc.is_lecturer? %>
+    <li><a href="<%= course_enroll_requests_path(@course) %>"><i class="icon-bolt"></i> Enroll Requests</a></li>
+  <% end %>
 </ul>

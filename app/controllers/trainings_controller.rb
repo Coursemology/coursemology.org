@@ -6,10 +6,12 @@ class TrainingsController < ApplicationController
     # check if student has a training submission for each training
     @trainings_with_sbm = []
     @trainings.each do |training|
-      std_sbm = TrainingSubmission.find_by_student_id_and_training_id(
-        current_user.id,
-        training.id
-      )
+      if current_user
+        std_sbm = TrainingSubmission.find_by_student_id_and_training_id(
+          current_user.id,
+          training.id
+        )
+      end
       @trainings_with_sbm << {
         training: training,
         submission: std_sbm

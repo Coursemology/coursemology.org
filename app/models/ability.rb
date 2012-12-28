@@ -40,6 +40,7 @@ class Ability
       can :populate, Level
       can :new, EnrollRequest
       can :new, RoleRequest
+      can :students, Course
     end
     can :read, :all
   end
