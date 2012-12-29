@@ -1,8 +1,12 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :mission, through: :course
+  load_and_authorize_resource :mission, through: :course, except: [:index]
 
   def index
+    @missions = @course.missions.opened.still_open.order(:close_at) + @course.missions.closed
+    if current_uc && current_uc.is_lecturer?
+      @missions = @course.missions.future.order(:open_at) + @missions
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @missions }

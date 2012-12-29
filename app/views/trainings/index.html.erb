@@ -9,13 +9,15 @@
               :class => 'btn btn-primary' %>
 <% end %>
 
-<table class="table table-striped assignments">
+<table class="table table-hover assignments">
   <thead>
     <tr>
-      <th width="3%"><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
+      <th>Training</th>
+      <th width="5%">Max Exp</th>
       <% if current_uc %>
+        <% if current_uc.is_lecturer? %>
+          <th width="10%">Time till open</th>
+        <% end %>
         <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       <% end %>
     </tr>
@@ -25,7 +27,6 @@
       <% training = tws[:training] %>
       <% submission = tws[:submission] %>
       <tr>
-        <td><%= training.id %></td>
         <td>
           <%= link_to course_training_path(@course, training) do %>
             <h4><%= training.title %></h4>
@@ -33,6 +34,15 @@
         </td>
         <td><%= training.exp %></td>
         <% if current_uc %>
+          <% if current_uc.is_lecturer? %>
+            <td>
+              <% if training.open_at > Time.now %>
+                <%= time_ago_in_words(training.open_at) %>
+              <% else %>
+                ----
+              <% end %>
+            </td>
+          <% end %>
           <td>
             <% if current_uc.is_student? %>
               <% if submission %>

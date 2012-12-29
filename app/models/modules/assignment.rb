@@ -1,4 +1,14 @@
 module Assignment
+
+  def self.included(base)
+    base.class_eval do
+      scope :closed, lambda { where("close_at < ?", Time.now) }
+      scope :still_open, lambda { where("close_at >= ? ", Time.now) }
+      scope :opened, lambda { where("open_at <= ? ", Time.now) }
+      scope :future, lambda { where("open_at > ? ", Time.now) }
+    end
+  end
+
   def get_title
     return "#{self.class.name}: #{self.title}"
   end

@@ -3,5 +3,4 @@ class Announcement < ActiveRecord::Base
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
-
 end
