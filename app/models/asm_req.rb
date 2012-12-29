@@ -5,6 +5,8 @@ class AsmReq < ActiveRecord::Base
 
   belongs_to :asm, polymorphic: true
 
+  has_many :requirements, as: :req
+
   def satisfied?(user_course)
     # satisfied this asm or not?
     # what's the highest grade achieved in this assignment
