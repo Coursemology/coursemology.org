@@ -158,24 +158,26 @@ namespace :db do
   end
 
   def gen_announcement(user, course)
+    publish_at = DateTime.now + (rand(20) - 10)
     return Announcement.create!(
       title: Faker::Lorem.words(rand(3..4)).join(' ').capitalize + '.',
       description: Faker::Lorem.paragraphs(rand(1..3)).join('<br/>'),
       creator_id: user.id,
-      course_id: course.id
+      course_id: course.id,
+      publish_at: publish_at
     )
   end
 
   def gen_mission(user, course, open_state, is_mcq)
     if open_state == -1 # closed
       open_at = DateTime.now.prev_month
-      close_at = DateTime.now.prev_day
+      close_at = DateTime.now.prev_day - rand(10)
     elsif open_state == 0
       open_at = DateTime.now.prev_day
-      close_at = DateTime.now.next_month
+      close_at = DateTime.now.next_month + rand(10)
     elsif
-      open_at = DateTime.now.next_month
-      close_at = DateTime.now.next_month(2)
+      open_at = DateTime.now.next_month + rand(10)
+      close_at = DateTime.now.next_month(2) + rand(10)
     end
 
     return Mission.create!(

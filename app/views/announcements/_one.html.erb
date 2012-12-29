@@ -1,4 +1,6 @@
-<h3><%= announcement.title %></h3>
-<p><%= announcement.description.html_safe %></p>
-<i><%= announcement.created_at.to_formatted_s(:long) %></i>
-<hr/>
+<div class="announcement <%= 'future' if announcement.publish_at > DateTime.now %>">
+  <h3><%= announcement.title %></h3>
+  <p><%= announcement.description.html_safe %></p>
+  <i><%= announcement.publish_at.to_formatted_s(:long) %></i>
+  <hr/>
+</div>

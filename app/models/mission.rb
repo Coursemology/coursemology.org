@@ -11,9 +11,6 @@ class Mission < ActiveRecord::Base
   has_many :questions, through: :asm_qns, source: :qn, source_type: "Question"
   has_many :submissions
 
-  has_many :requirements, as: :obj
-  has_many :asm_reqs, through: :requirements, source: :req, source_type: "AsmReq"
-
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade)
     self.save

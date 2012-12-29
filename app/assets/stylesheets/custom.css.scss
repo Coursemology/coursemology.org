@@ -90,6 +90,10 @@ h1 {
   color: inherit;
 }
 
+.assignments tr {
+  min-height: 45px;
+}
+
 .mcq-right {
   border: 1px solid green;
   color: green;
@@ -199,4 +203,18 @@ ul {
 .course-logo, .course-logo-preview {
   width: 200px;
   max-height: 200px;
+}
+
+.asm-ach-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.future {
+  background-color: #eee;
+  opacity: 0.9;
+}
+
+.announcement {
+  padding-left: 8px;
 }

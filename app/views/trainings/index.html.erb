@@ -9,13 +9,16 @@
               :class => 'btn btn-primary' %>
 <% end %>
 
-<table class="table table-striped assignments">
+<table class="table table-hover assignments">
   <thead>
     <tr>
-      <th width="3%"><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
+      <th>Training</th>
+      <th width="5%">Max Exp</th>
+      <th width="10%">Requirement for</th>
       <% if current_uc %>
+        <% if current_uc.is_lecturer? %>
+          <th width="10%">Time till open</th>
+        <% end %>
         <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       <% end %>
     </tr>
@@ -24,15 +27,30 @@
     <% @trainings_with_sbm.each do |tws| %>
       <% training = tws[:training] %>
       <% submission = tws[:submission] %>
-      <tr>
-        <td><%= training.id %></td>
+      <tr class="<%= "future" if training.open_at > Time.now %>">
         <td>
           <%= link_to course_training_path(@course, training) do %>
             <h4><%= training.title %></h4>
           <% end %>
         </td>
         <td><%= training.exp %></td>
+        <td>
+          <% training.as_requirements.each do |req| %>
+            <a href='#' title="<%= req.obj.title %>">
+              <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
+            </a>
+          <% end %>
+        </td>
         <% if current_uc %>
+          <% if current_uc.is_lecturer? %>
+            <td>
+              <% if training.open_at > Time.now %>
+                <%= time_ago_in_words(training.open_at) %>
+              <% else %>
+                ----
+              <% end %>
+            </td>
+          <% end %>
           <td>
             <% if current_uc.is_student? %>
               <% if submission %>

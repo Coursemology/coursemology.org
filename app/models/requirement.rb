@@ -4,6 +4,8 @@ class Requirement < ActiveRecord::Base
   belongs_to :obj, polymorphic: true
   belongs_to :req, polymorphic: true
 
+  scope :ach_obj, where(obj_type: "Achievement")
+
   def satisfied?(user_course)
     # depends on the kind of requirement
     # level

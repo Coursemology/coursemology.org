@@ -9,13 +9,16 @@
               :class => 'btn btn-primary' %>
 <% end %>
 
-<table class="table table-striped assignments">
+<table class="table table-hover assignments">
   <thead>
     <tr>
-      <th width="3%"><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
-      <th width="15%"><%= model_class.human_attribute_name(:close_at) %></th>
+      <th>Mission</th>
+      <th width="5%">Max Exp</th>
+      <th width="10%">Requirement for</th>
+      <% if current_uc && current_uc.is_lecturer? %>
+        <th width="10%">Time till open</th>
+      <% end %>
+      <th width="10%">Time Left</th>
       <% if current_uc %>
         <th width="10%"></th>
       <% end %>
@@ -23,19 +26,42 @@
   </thead>
   <tbody>
     <% @missions.each do |mission| %>
-      <tr>
-        <td><%= mission.id %></td>
+      <tr class="<%= "future" if mission.open_at > Time.now %>">
         <td>
           <%= link_to course_mission_path(@course, mission) do %>
             <h4><%= mission.title %></h4>
           <% end %>
         </td>
         <td><%= mission.exp %></td>
-        <td><%= mission.close_at %></td>
+        <td>
+          <% mission.as_requirements.each do |req| %>
+            <a href='#' title="<%= req.obj.title %>">
+              <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
+            </a>
+          <% end %>
+        </td>
+        <% if current_uc && current_uc.is_lecturer? %>
+          <td>
+            <% if mission.open_at > Time.now %>
+              <%= time_ago_in_words(mission.open_at) %>
+            <% else %>
+              ----
+            <% end %>
+          </td>
+        <% end %>
+        <td>
+          <% if mission.close_at > Time.now %>
+            <%= time_ago_in_words(mission.close_at) %>
+          <% else %>
+            ----
+          <% end %>
+        </td>
         <% if current_uc %>
           <td>
             <% if current_uc.is_student? %>
-              <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), :class => 'btn btn-mini' %>
+              <% if mission.close_at > Time.now %>
+                <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), :class => 'btn btn-mini' %>
+             <% end %>
             <% elsif current_uc.is_lecturer? %>
               <%= link_to edit_course_mission_path(@course, mission), :class => 'btn btn-mini' do %>
                 <i class="icon-edit"></i>

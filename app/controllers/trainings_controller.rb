@@ -1,9 +1,13 @@
 class TrainingsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :training, through: :course
+  load_and_authorize_resource :training, through: :course, except: [:index]
 
   def index
     # check if student has a training submission for each training
+    @trainings = @course.trainings.opened.order("open_at DESC")
+    if current_uc && current_uc.is_lecturer?
+      @trainings = @course.trainings.future.order(:open_at) + @trainings
+    end
     @trainings_with_sbm = []
     @trainings.each do |training|
       if current_user
