@@ -26,7 +26,7 @@
   </thead>
   <tbody>
     <% @missions.each do |mission| %>
-      <tr>
+      <tr class="<%= "future" if mission.open_at > Time.now %>">
         <td>
           <%= link_to course_mission_path(@course, mission) do %>
             <h4><%= mission.title %></h4>

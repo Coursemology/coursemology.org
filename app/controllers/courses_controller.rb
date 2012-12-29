@@ -41,8 +41,6 @@ class CoursesController < ApplicationController
   end
 
   def show
-    @missions = @course.missions
-    @announcements = @course.announcements
     respond_to do |format|
       format.html
     end

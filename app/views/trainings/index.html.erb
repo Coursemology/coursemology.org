@@ -27,7 +27,7 @@
     <% @trainings_with_sbm.each do |tws| %>
       <% training = tws[:training] %>
       <% submission = tws[:submission] %>
-      <tr>
+      <tr class="<%= "future" if training.open_at > Time.now %>">
         <td>
           <%= link_to course_training_path(@course, training) do %>
             <h4><%= training.title %></h4>
