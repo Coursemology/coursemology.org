@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121228045425) do
+ActiveRecord::Schema.define(:version => 20121230070236) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -224,6 +224,14 @@ ActiveRecord::Schema.define(:version => 20121228045425) do
     t.boolean  "is_final"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "seen_by_users", :force => true do |t|
+    t.integer  "user_course_id"
+    t.integer  "obj_id"
+    t.string   "obj_type"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "std_answers", :force => true do |t|

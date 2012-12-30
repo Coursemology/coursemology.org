@@ -2,6 +2,8 @@ class EnrollRequestsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :enroll_request, through: :course
 
+  before_filter :load_sidebar_data, only: [:index, :new]
+
   def index
     # only staff should be able to access this page
     # here staff can approve student to enroll to a class

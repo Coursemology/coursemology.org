@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
+  before_filter :load_sidebar_data, only: [:show, :students]
 
   def create
     @course = Course.new(params[:course])
@@ -41,6 +42,8 @@ class CoursesController < ApplicationController
   end
 
   def show
+    puts 'SHOW'
+    puts @sidenav_count
     respond_to do |format|
       format.html
     end

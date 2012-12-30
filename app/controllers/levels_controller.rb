@@ -3,6 +3,8 @@ class LevelsController < ApplicationController
   load_resource :level, through: :course
   # load_and_authorize_resource :level, through: :course
 
+  before_filter :load_sidebar_data, only: [:index]
+
   def index
   end
 

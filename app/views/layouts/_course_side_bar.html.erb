@@ -43,20 +43,20 @@
 </div>
 <hr/>
 <% end %>
-<ul class="nav nav-list">
-  <li><a href="<%= course_path(@course) %>"><i class="icon-home"></i> Home</a></li>
-  <li><a href="<%= course_announcements_path(@course) %>"><i class="icon-bullhorn"></i> Announcements</a></li>
-  <li><a href="<%= course_missions_path(@course) %>"><i class="icon-envelope"></i> Missions</a></li>
-  <li><a href="<%= course_trainings_path(@course) %>"><i class="icon-envelope"></i> Trainings</a></li>
-  <li><a href="<%= course_submissions_path(@course) %>"><i class="icon-envelope-alt"></i> Submissions</a></li>
-  <li><a href="<%= course_levels_path(@course) %>"><i class="icon-list-ol"></i> Level</a></li>
-  <li><a href="<%= course_achievements_path(@course) %>"><i class="icon-star"></i> Achievements</a></li>
-  <li><a href="<%= course_students_path(@course) %>"><i class="icon-user"></i> Students</a></li>
-  <% if current_uc %>
-    <% if current_uc.is_lecturer? %>
-      <li><a href="<%= course_enroll_requests_path(@course) %>"><i class="icon-bolt"></i> Enroll Requests</a></li>
-    <% end %>
-  <% elsif current_user %>
-    <li><a href="<%= new_course_enroll_request_path(@course) %>"><i class="icon-bolt"></i> Request to Enroll</a></li>
+<ul class="nav nav-list sidenav">
+  <% @nav_items.each do |item| %>
+    <li>
+      <a href=<%= item[:url] %>>
+        <% if item.has_key?(:img) %>
+          <img src=<%= item[:img] %> />
+        <% else %>
+          <i class=<%= item[:icon] %>></i>
+        <% end %>
+        <%= item[:text] %>
+        <% if item.has_key?(:count) && item[:count] > 0 %>
+          <span class="sidenav-count pull-right"><%= item[:count] %></span>
+        <% end %>
+      </a>
+    </li>
   <% end %>
 </ul>
