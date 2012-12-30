@@ -17,12 +17,11 @@ class ApplicationController < ActionController::Base
   end
 
   def load_sidebar_data
-    sidenav_count = {}
+    counts = {}
     if current_uc
-      unseen_missions = current_uc.get_unseen_missions
-      if unseen_missions.count > 0
-        sidenav_count[:missions] = unseen_missions.count
-      end
+      counts[:missions] = current_uc.get_unseen_missions.count
+      counts[:announcements] = current_uc.get_unseen_announcements.count
+      counts[:trainings] = current_uc.get_unseen_trainings.count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
@@ -35,27 +34,27 @@ class ApplicationController < ActionController::Base
       text: "Announcements",
       url: course_announcements_url(@course),
       icon: "icon-bullhorn",
-      count: sidenav_count[:announcements] || 0
+      count: counts[:announcements] || 0
     }, {
       text: "Missions",
       url: course_missions_url(@course),
       icon: "icon-envelope",
-      count: sidenav_count[:missions] || 0
+      count: counts[:missions] || 0
     }, {
       text: "Trainings",
       url: course_trainings_url(@course),
       icon: "icon-envelope",
-      count: sidenav_count[:trainings] || 0
+      count: counts[:trainings] || 0
     }, {
       text: "Submissions",
       url: course_submissions_url(@course),
       icon: "icon-envelope-alt",
-      count: sidenav_count[:submissions] || 0
+      count: counts[:submissions] || 0
     }, {
       text: "Achievements",
       url: course_achievements_url(@course),
       icon: "icon-star",
-      count: sidenav_count[:achievements_url] || 0
+      count: counts[:achievements_url] || 0
     }, {
       text: "Students",
       url: course_students_url(@course),

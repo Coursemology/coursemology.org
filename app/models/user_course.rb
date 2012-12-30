@@ -13,6 +13,9 @@ class UserCourse < ActiveRecord::Base
   has_many :seen_stuff, class_name: "SeenByUser"
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
+  has_many :seen_quizzes, through: :seen_stuff, source: :obj, source_type: "Quiz"
+  has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
+  has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
 
   def is_student?
     return self.role == Role.find_by_name('student')
@@ -30,6 +33,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_missions
+    # sort by ones that is still open, the ones that is closed
     missions = course.missions.opened.still_open.order(:close_at) +
       course.missions.closed
     if self.is_lecturer?
@@ -39,8 +43,32 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_unseen_missions
-    all = self.get_missions
-    return all - self.seen_missions
+    return self.get_missions - self.seen_missions
+  end
+
+  def get_trainings
+    trainings = course.trainings.opened.order("open_at DESC")
+    if self.is_lecturer?
+      trainings = course.trainings.future.order(:open_at) + trainings
+    end
+    return trainings
+  end
+
+  def get_unseen_trainings
+    return self.get_trainings - self.seen_trainings
+  end
+
+  def get_announcements
+    if self.is_lecturer?
+      announcements = course.announcements.order("publish_at DESC")
+    else
+      announcements = course.announcements.published.order("publish_at DESC")
+    end
+    return announcements
+  end
+
+  def get_unseen_announcements
+    return self.get_announcements - self.seen_announcements
   end
 
   def mark_as_seen(obj)

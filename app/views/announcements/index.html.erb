@@ -10,5 +10,10 @@
 </div>
 
 <% @announcements.each do |announcement| %>
-  <%= render :partial => "announcements/one", :locals => { :announcement => announcement } %>
+  <div class="announcement <%= 'future' if announcement.publish_at > DateTime.now %> <%= 'new' if @is_new.has_key?(announcement.id) %>">
+    <h3><%= announcement.title %></h3>
+    <p><%= announcement.description.html_safe %></p>
+    <i><%= announcement.publish_at.to_formatted_s(:long) %></i>
+  </div>
+  <hr/>
 <% end %>

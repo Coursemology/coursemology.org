@@ -7,8 +7,8 @@ class MissionsController < ApplicationController
     @is_new = {}
     if current_uc
       @missions = current_uc.get_missions
-      unseen_missions = current_uc.get_unseen_missions
-      unseen_missions.each do |um|
+      unseen = current_uc.get_unseen_missions
+      unseen.each do |um|
         @is_new[um.id] = true
         current_uc.mark_as_seen(um)
       end
