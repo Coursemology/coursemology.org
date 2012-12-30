@@ -6,6 +6,8 @@ class SubmissionsController < ApplicationController
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
+  before_filter :load_sidebar_data, only: [:index, :listall, :show, :new]
+
   def index
   end
 

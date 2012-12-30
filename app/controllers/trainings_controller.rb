@@ -2,12 +2,21 @@ class TrainingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :training, through: :course, except: [:index]
 
+  before_filter :load_sidebar_data, only: [:show, :index, :edit, :new]
+
   def index
-    # check if student has a training submission for each training
-    @trainings = @course.trainings.opened.order("open_at DESC")
-    if current_uc && current_uc.is_lecturer?
-      @trainings = @course.trainings.future.order(:open_at) + @trainings
+    @is_new = {}
+    if current_uc
+      @trainings = current_uc.get_trainings
+      unseen = current_uc.get_unseen_trainings
+      unseen.each do |tn|
+        @is_new[tn.id] = true
+        current_uc.mark_as_seen(tn)
+      end
+    else
+      @trainings = @course.trainings.opened.order("open_at DESC")
     end
+    puts @is_new
     @trainings_with_sbm = []
     @trainings.each do |training|
       if current_user

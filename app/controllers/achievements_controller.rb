@@ -2,6 +2,8 @@ class AchievementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :achievement, through: :course
 
+  before_filter :load_sidebar_data, only: [:show, :index, :new, :edit]
+
   def index
     # need to know for each achievement:
     # - student has won it or not?

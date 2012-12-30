@@ -29,9 +29,14 @@
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <td>
           <%= link_to course_mission_path(@course, mission) do %>
-            <h4><%= mission.title %></h4>
+            <h4><%= mission.title %>
+              <% if @is_new[mission.id] %>
+                <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"
+              <% end %>
+            </h4>
           <% end %>
         </td>
+
         <td><%= mission.exp %></td>
         <td>
           <% mission.as_requirements.each do |req| %>
@@ -40,6 +45,7 @@
             </a>
           <% end %>
         </td>
+
         <% if current_uc && current_uc.is_lecturer? %>
           <td>
             <% if mission.open_at > Time.now %>
@@ -49,6 +55,7 @@
             <% end %>
           </td>
         <% end %>
+
         <td>
           <% if mission.close_at > Time.now %>
             <%= time_ago_in_words(mission.close_at) %>
@@ -56,6 +63,7 @@
             ----
           <% end %>
         </td>
+
         <% if current_uc %>
           <td>
             <% if current_uc.is_student? %>

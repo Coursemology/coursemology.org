@@ -30,7 +30,11 @@
       <tr class="<%= "future" if training.open_at > Time.now %>">
         <td>
           <%= link_to course_training_path(@course, training) do %>
-            <h4><%= training.title %></h4>
+            <h4><%= training.title %>
+              <% if @is_new[training.id] %>
+                <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"
+              <% end %>
+            </h4>
           <% end %>
         </td>
         <td><%= training.exp %></td>

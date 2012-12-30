@@ -1,15 +1,22 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course, except: [:index]
+  before_filter :load_sidebar_data, only: [:show, :index, :new, :edit]
 
   def index
-    @missions = @course.missions.opened.still_open.order(:close_at) + @course.missions.closed
-    if current_uc && current_uc.is_lecturer?
-      @missions = @course.missions.future.order(:open_at) + @missions
+    @is_new = {}
+    if current_uc
+      @missions = current_uc.get_missions
+      unseen = current_uc.get_unseen_missions
+      unseen.each do |um|
+        @is_new[um.id] = true
+        current_uc.mark_as_seen(um)
+      end
+    else
+      @missions = @course.missions.opened.still_open.order(:close_at) + @course.missions.closed
     end
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @missions }
     end
   end
 
@@ -18,14 +25,12 @@ class MissionsController < ApplicationController
     @question = Question.new
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @mission }
     end
   end
 
   def new
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @mission }
     end
   end
 
@@ -39,10 +44,8 @@ class MissionsController < ApplicationController
       if @mission.save
         format.html { redirect_to course_mission_url(@course, @mission),
                       notice: 'Mission was successfully created.' }
-        format.json { render json: @mission, status: :created, location: @mission }
       else
         format.html { render action: "new" }
-        format.json { render json: @mission.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -52,20 +55,16 @@ class MissionsController < ApplicationController
       if @mission.update_attributes(params[:mission])
         format.html { redirect_to course_mission_url(@course, @mission),
                       notice: 'Mission was successfully updated.' }
-        format.json { head :no_content }
       else
         format.html { render action: "edit" }
-        format.json { render json: @mission.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
     @mission.destroy
-
     respond_to do |format|
       format.html { redirect_to course_missions_url }
-      format.json { head :no_content }
     end
   end
 end

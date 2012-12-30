@@ -2,9 +2,17 @@ class AnnouncementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :announcement, through: :course, except: [:index]
 
+  before_filter :load_sidebar_data, only: [:show, :index, :edit, :new]
+
   def index
-    if current_uc && current_uc.is_lecturer?
-      @announcements = @course.announcements.order("publish_at DESC")
+    @is_new = {}
+    if current_uc
+      @announcements = current_uc.get_announcements
+      unseen = current_uc.get_unseen_announcements
+      unseen.each do |ann|
+        @is_new[ann.id] = true
+        current_uc.mark_as_seen(ann)
+      end
     else
       @announcements = @course.announcements.published.order("publish_at DESC")
     end
