@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121230070236) do
+ActiveRecord::Schema.define(:version => 20121230194838) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -21,6 +21,25 @@ ActiveRecord::Schema.define(:version => 20121230070236) do
     t.integer  "course_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "actions", :force => true do |t|
+    t.string   "text"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "activities", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "actor_id"
+    t.integer  "target_id"
+    t.integer  "action_id"
+    t.integer  "obj_id"
+    t.string   "obj_type"
+    t.string   "extra"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "announcements", :force => true do |t|
@@ -146,6 +165,17 @@ ActiveRecord::Schema.define(:version => 20121230070236) do
     t.datetime "updated_at",    :null => false
     t.string   "title"
     t.integer  "max_grade"
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "target_course_id"
+    t.integer  "actor_id"
+    t.integer  "action_id"
+    t.integer  "obj_id"
+    t.string   "obj_type"
+    t.string   "extra"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "questions", :force => true do |t|
