@@ -1,6 +1,33 @@
-<div class="page-header">
-  <h1>Updates</h1>
-</div>
+<% if !current_uc %>
+  <div class="page-header">
+    <h1><%= @course.title %></h1>
+    <% if current_user %>
+      <div class="pull-right">
+        <a href=<%= new_course_enroll_request_path(@course) %> class="btn btn-primary">Request to Enroll</a>
+      </div>
+    <% end %>
+    <div class="media">
+      <a class="pull-left" href="#">
+        <img class="media-object activity-icon"
+          src=<%= @course.creator.profile_photo_url %> >
+      </a>
+      <div class="media-body">
+        <%= @course.creator.name %>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <p><%= @course.description %></p>
+<% end %>
+
+<% if current_uc %>
+  <div class="page-header">
+    <h1>Updates</h1>
+  </div>
+<% else %>
+  <h2>Updates</h2>
+  <br/>
+<% end %>
 
 <ul class="activities">
 <% @activities.each do |act| %>
@@ -19,3 +46,4 @@
   </li>
 <% end %>
 </ul>
+
