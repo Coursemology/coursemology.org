@@ -16,6 +16,7 @@ class SubmissionGrading < ActiveRecord::Base
         UserCourse.find_by_user_id_and_course_id(self.sbm.student.id, asm.course.id)
       self.exp_transaction.reason = "Exp for #{asm.get_title}"
       self.exp_transaction.is_valid = true
+      self.save
     end
     if asm.max_grade == 0
       self.exp_transaction.exp = 0
