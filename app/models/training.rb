@@ -1,4 +1,6 @@
 class Training < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+  include ActivityObject
   include Assignment
 
   attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title
@@ -13,5 +15,9 @@ class Training < ActiveRecord::Base
   def update_grade
     self.max_grade = self.mcqs.sum(&:max_grade)
     self.save
+  end
+
+  def get_path
+    return course_training_path(course, self)
   end
 end

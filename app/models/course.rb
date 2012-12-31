@@ -9,6 +9,8 @@ class Course < ActiveRecord::Base
   has_many :trainings
   has_many :quizzes
 
+  has_many :activities
+
   has_many :levels
   has_many :achievements
 

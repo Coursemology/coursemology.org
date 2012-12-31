@@ -4,6 +4,8 @@ class SubmissionGradingsController < ApplicationController
   load_and_authorize_resource :submission, through: :mission
   load_and_authorize_resource :submission_grading, through: :submission
 
+  before_filter :load_sidebar_data, only: [:new, :edit]
+
   # note: it only handles view & grading of missions
   # checkout quiz_submission for quiz submission grading
 
@@ -28,10 +30,9 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.total_grade += @ag.grade
     end
     @submission_grading.grader = current_user
-    @submission_grading.update_exp_transaction
-
     if @submission_grading.save
       @submission.final_grading = @submission_grading
+      @submission_grading.update_exp_transaction
       @submission.save
       respond_to do |format|
         format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
@@ -70,8 +71,8 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.total_grade += ag[:grade].to_i
     end
     @submission_grading.grader = current_user
-    @submission_grading.update_exp_transaction
     if @submission_grading.save
+      @submission_grading.update_exp_transaction
       respond_to do |format|
         format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                       notice: "Grading has been recorded." }

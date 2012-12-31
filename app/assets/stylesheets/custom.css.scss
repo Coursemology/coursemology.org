@@ -177,6 +177,10 @@ ul {
   color: green;
 }
 
+.achievement-list ul {
+  margin-left: 0;
+}
+
 .form-mcq-answer {
   text-align: left;
   vertical-align: top;
@@ -237,4 +241,24 @@ ul.sidenav {
 
 .new {
   background-color: #D8DFEA;
+}
+
+.activity-icon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: -3px;
+}
+
+.activities {
+  margin-left: 0px;
+}
+
+.media-object {
+  margin-right: 5px;
+}
+
+.time-small {
+  color: gray;
+  font-size: 0.9em;
 }

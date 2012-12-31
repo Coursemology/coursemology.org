@@ -62,9 +62,9 @@ class ApplicationController < ActionController::Base
     }]
 
     if current_uc && current_uc.is_lecturer?
-      nav_items << {
+      @nav_items << {
         text: "Enroll Requests",
-        url: course_enroll_requests(@course),
+        url: course_enroll_requests_url(@course),
         icon: "icon-bolt"
       }
     end

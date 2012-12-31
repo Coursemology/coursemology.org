@@ -1,4 +1,7 @@
 class Achievement < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+  include ActivityObject
+
   attr_accessible :course_id, :creator_id, :description, :icon_url, :title
 
   belongs_to :course
@@ -18,5 +21,13 @@ class Achievement < ActiveRecord::Base
       end
     end
     return satisfied
+  end
+
+  def get_title
+    return "Achievement #{title}"
+  end
+
+  def get_path
+    return course_achievement_path(course, self)
   end
 end

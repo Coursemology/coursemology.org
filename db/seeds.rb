@@ -16,3 +16,11 @@ admin = User.create!(name: "Admin", email: "jfdi@academy.com",
                      password: "supersecretpass",
                      password_confirmation: "supersecretpass",
                      system_role_id: super_role.id)
+
+Action.create! text: "attempted", description: "actor attempted obj (assignment)"
+Action.create! text: "commented on", description: "actor commented on object"
+Action.create! text: "created", description: "actor created object (achievement, level)"
+Action.create! text: "earned", description: "actor earned object (achievement, title, level)"
+Action.create! text: "published", description: "actor published object"
+Action.create! text: "replied to", description: "actor replied object"
+Action.create! text: "started", description: "actor started obj (assignment, training)"

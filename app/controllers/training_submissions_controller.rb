@@ -3,6 +3,8 @@ class TrainingSubmissionsController < ApplicationController
   load_and_authorize_resource :training, through: :course
   load_and_authorize_resource :training_submission, through: :training
 
+  before_filter :load_sidebar_data, only: [:show, :index, :edit]
+
   def index
   end
 
@@ -16,6 +18,8 @@ class TrainingSubmissionsController < ApplicationController
     @training_submission.open_at = DateTime.now
     @training_submission.current_step = 1
     @training_submission.save
+
+    Activity.started_asm(current_uc, @training)
 
     sg = SubmissionGrading.new
     sg.sbm = @training_submission

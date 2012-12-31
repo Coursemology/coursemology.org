@@ -6,7 +6,7 @@ class SubmissionsController < ApplicationController
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
-  before_filter :load_sidebar_data, only: [:index, :listall, :show, :new]
+  before_filter :load_sidebar_data, only: [:index, :listall, :show, :new, :create]
 
   def index
   end
@@ -59,7 +59,6 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission.student_id = current_user.id
-
     params[:answers].each do |qid, ans|
       @wq = Question.find(qid)
       sa = @submission.std_answers.build({
@@ -68,6 +67,7 @@ class SubmissionsController < ApplicationController
       sa.question = @wq
     end
     if @submission.save
+      Activity.attempted_asm(current_uc, @mission)
       respond_to do |format|
         format.html
       end

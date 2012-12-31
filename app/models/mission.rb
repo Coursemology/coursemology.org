@@ -1,4 +1,6 @@
 class Mission < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+  include ActivityObject
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
@@ -14,5 +16,9 @@ class Mission < ActiveRecord::Base
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade)
     self.save
+  end
+
+  def get_path
+    return course_mission_path(course, self)
   end
 end

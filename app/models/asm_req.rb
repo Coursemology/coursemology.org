@@ -22,8 +22,10 @@ class AsmReq < ActiveRecord::Base
 
     if last_sbm
       final_grading = last_sbm.get_final_grading
+      puts "Final grading #{final_grading.to_json}"
       if final_grading
         percent = final_grading.total_grade * 100 / asm.max_grade
+        puts "Percent #{percent} vs #{min_grade}"
         return percent >= min_grade - EPS
       end
     end

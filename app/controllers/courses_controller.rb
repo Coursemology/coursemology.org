@@ -42,8 +42,7 @@ class CoursesController < ApplicationController
   end
 
   def show
-    puts 'SHOW'
-    puts @sidenav_count
+    @activities = @course.activities.order("created_at DESC")
     respond_to do |format|
       format.html
     end

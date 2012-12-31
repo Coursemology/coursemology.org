@@ -92,6 +92,9 @@ class UserCourse < ActiveRecord::Base
       # now: level = first level that is beyonds user's exp
       # how level is calculated must be given more thought
       if lvl.exp_threshold > self.exp
+        if self.level != lvl
+          Activity.earned_smt(self, lvl)
+        end
         self.level = lvl
         break
       end
@@ -101,17 +104,20 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_achievements
+    puts "CHECK ACHIEVEMENT ", self.to_json
     new_ach = false
     self.course.achievements.each do |ach|
       # verify if users will win achievement ach
       uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
       if not uach
         # not earned yet, check this achievement
+        puts "#{ach.fulfilled_conditions?(self)} #{ach.to_json}"
         if ach.fulfilled_conditions?(self)
           # assign the achievement to student
           uach = self.user_achievements.build
           uach.achievement = ach
           new_ach = true
+          Activity.earned_smt(self, ach)
         end
       end
     end
