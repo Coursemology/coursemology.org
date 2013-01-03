@@ -34,10 +34,10 @@
   <li class="media">
     <a class="pull-left" href="#">
       <img class="media-object activity-icon"
-        src=<%= act.actor.profile_photo_url %> >
+        src=<%= act.actor_course.user.profile_photo_url %> >
     </a>
     <div class="media-body">
-      <a href='#'><%= act.actor.name %></a> <%= act.action.text %>
+      <a href='#'><%= act.actor_course.user.name %></a> <%= act.action.text %>
       <a href=<%= act.obj.get_path %>><%= act.obj.get_title %></a>
       &middot;
       <span class="time-small"><%= time_ago_in_words(act.created_at) %>
