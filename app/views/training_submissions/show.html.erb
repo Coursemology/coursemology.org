@@ -31,7 +31,11 @@
   <ul>
     <% qa[:q].mcq_answers.each do |ans| %>
       <li>
-        <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+        <% if curr_user_course.is_lecturer? %>
+          <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+        <% else %>
+          <input type="checkbox" disabled />
+        <% end %>
         <span><%= ans.text %></span>
       </li>
     <% end %>

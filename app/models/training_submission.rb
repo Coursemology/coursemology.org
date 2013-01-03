@@ -2,6 +2,7 @@ class TrainingSubmission < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   include Sbm
 
+  # current_step starts from 1, not 0
   attr_accessible :current_step, :open_at, :std_course_id, :submit_at, :training_id
 
   belongs_to :std_course, class_name: "UserCourse"

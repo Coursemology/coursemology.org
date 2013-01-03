@@ -11,7 +11,8 @@ class TrainingSubmissionsController < ApplicationController
   def show
     @qadata = {}
     @grading = @training_submission.get_final_grading
-    @training.mcqs.each do |mcq|
+    @training.mcqs.each_with_index do |mcq, index|
+      break if @training_submission.current_step - 1 <= index
       @qadata[mcq.id] = { q: mcq }
     end
 
