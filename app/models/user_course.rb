@@ -20,6 +20,9 @@ class UserCourse < ActiveRecord::Base
   has_many :seen_quizzes, through: :seen_stuff, source: :obj, source_type: "Quiz"
   has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
+  has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
+  has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
+  has_many :seen_quiz_submissions, through: :seen_stuff, source: :obj, source_type: "QuizSubmission"
 
   def is_student?
     return self.role == Role.find_by_name('student')
@@ -73,6 +76,16 @@ class UserCourse < ActiveRecord::Base
 
   def get_unseen_announcements
     return self.get_announcements - self.seen_announcements
+  end
+
+  def get_unseen_sbms
+    if self.is_lecturer?
+      all_sbms = course.submissions + course.training_submissions +
+        course.quiz_submissions
+      seen_sbms = seen_submissions + seen_training_submissions + seen_quiz_submissions
+      return all_sbms - seen_sbms
+    end
+    return nil
   end
 
   def mark_as_seen(obj)

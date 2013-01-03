@@ -9,13 +9,19 @@ class SubmissionsController < ApplicationController
   before_filter :load_sidebar_data, only: [:index, :listall, :show, :new, :create]
 
   def listall
+    @unseen = []
+    @sbms = []
     if curr_user_course
-      if curr_user_course.is_student?
-        @sbms = curr_user_course.submissions + curr_user_course.training_submissions +
-            curr_user_course.quiz_submissions
-      else
+      if curr_user_course.is_lecturer?
         @sbms = @course.submissions + @course.training_submissions +
             @course.quiz_submissions
+        @unseen = curr_user_course.get_unseen_sbms
+        @unseen.each do |sbm|
+          curr_user_course.mark_as_seen(sbm)
+        end
+      else
+        @sbms = curr_user_course.submissions + curr_user_course.training_submissions +
+            curr_user_course.quiz_submissions
       end
       @sbms = @sbms.sort_by(&:created_at).reverse
     end

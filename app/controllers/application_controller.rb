@@ -22,6 +22,11 @@ class ApplicationController < ActionController::Base
       counts[:missions] = curr_user_course.get_unseen_missions.count
       counts[:announcements] = curr_user_course.get_unseen_announcements.count
       counts[:trainings] = curr_user_course.get_unseen_trainings.count
+      if curr_user_course.is_lecturer?
+        # lecturers see number of new submissions of all students in the course
+        counts[:submissions] = curr_user_course.get_unseen_sbms.count
+      end
+      # students see the number of new gradings
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
