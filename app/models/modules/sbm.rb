@@ -3,8 +3,16 @@ module Sbm
     raise NotImplementedError
   end
 
+  def get_path
+    throw NotImplementedError
+  end
+
+  def get_new_grading_path
+    throw NotImplementedError
+  end
+
   def get_final_grading
-    if self.submission_gradings
+    if self.submission_gradings.count > 0
       self.submission_gradings.order("created_at").last
     else
       return nil

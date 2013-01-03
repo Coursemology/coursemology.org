@@ -8,15 +8,16 @@ class SubmissionsController < ApplicationController
 
   before_filter :load_sidebar_data, only: [:index, :listall, :show, :new, :create]
 
-  def index
-  end
-
   def listall
-    if params.has_key?(:student_id)
-      @submissions = Submission.all_student(@course, current_user)
-    else
-      puts @course.to_json
-      @submissions = Submission.all_course(@course)
+    if current_uc
+      if current_uc.is_student?
+        @sbms = current_uc.submissions + current_uc.training_submissions +
+            current_uc.quiz_submissions
+      else
+        @sbms = @course.submissions + @course.training_submissions +
+            @course.quiz_submissions
+      end
+      @sbms = @sbms.sort_by(&:created_at).reverse
     end
   end
 
@@ -58,7 +59,7 @@ class SubmissionsController < ApplicationController
   end
 
   def create
-    @submission.student_id = current_user.id
+    @submission.std_course = current_uc
     params[:answers].each do |qid, ans|
       @wq = Question.find(qid)
       sa = @submission.std_answers.build({

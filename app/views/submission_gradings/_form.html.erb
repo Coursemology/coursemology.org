@@ -1,6 +1,6 @@
 <table width="100%">
   <col width="10%" />
-  <tr><td>Student: </td><td><%= @submission.student.name %></td></tr>
+  <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
   <tr><td>Submited at: </td><td><%= @submission.created_at %></td></tr>
   <% if @submission_grading.id %>
     <tr>

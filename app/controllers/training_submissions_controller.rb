@@ -13,7 +13,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def new
-    @training_submission.student = current_user
+    @training_submission.std_course = current_uc
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
     @training_submission.current_step = 1
@@ -65,7 +65,7 @@ class TrainingSubmissionsController < ApplicationController
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
 
-    sg = @training_submission.submission_grading
+    sg = @training_submission.submission_gradings.last
     ag = sg.answer_gradings.build
     ag.student_answer = sma
     ag.grade = mcqa.is_correct ? mcq.max_grade : 0

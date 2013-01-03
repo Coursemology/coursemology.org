@@ -57,7 +57,7 @@ class QuizSubmissionsController < ApplicationController
   end
 
   def create
-    @quiz_submission.student_id = current_user.id
+    @quiz_submission.std_course = current_uc
 
     sg = SubmissionGrading.new
     sg.sbm = @quiz_submission

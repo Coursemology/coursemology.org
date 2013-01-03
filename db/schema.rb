@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121230194838) do
+ActiveRecord::Schema.define(:version => 20130103031840) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -187,7 +187,7 @@ ActiveRecord::Schema.define(:version => 20121230194838) do
   end
 
   create_table "quiz_submissions", :force => true do |t|
-    t.integer  "student_id"
+    t.integer  "std_course_id"
     t.integer  "quiz_id"
     t.datetime "open_at"
     t.datetime "submit_at"
@@ -294,7 +294,7 @@ ActiveRecord::Schema.define(:version => 20121230194838) do
   end
 
   create_table "submissions", :force => true do |t|
-    t.integer  "student_id"
+    t.integer  "std_course_id"
     t.integer  "mission_id"
     t.datetime "open_at"
     t.datetime "submit_at"
@@ -314,13 +314,13 @@ ActiveRecord::Schema.define(:version => 20121230194838) do
   end
 
   create_table "training_submissions", :force => true do |t|
-    t.integer  "student_id"
+    t.integer  "std_course_id"
     t.integer  "training_id"
     t.integer  "current_step"
     t.datetime "open_at"
     t.datetime "submit_at"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "trainings", :force => true do |t|

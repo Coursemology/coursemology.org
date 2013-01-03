@@ -1,22 +1,28 @@
 class TrainingSubmission < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
   include Sbm
 
-  attr_accessible :current_step, :open_at, :student_id, :submit_at, :training_id
+  attr_accessible :current_step, :open_at, :std_course_id, :submit_at, :training_id
 
-  belongs_to :student, class_name: "User"
+  belongs_to :std_course, class_name: "UserCourse"
   belongs_to :training
 
   has_many :sbm_answers, as: :sbm
   has_many :std_mcq_anwers, through: :sbm_answers,
       source: :answer, source_type: "StdMcqAnswer"
 
-  has_one :submission_grading, as: :sbm
+  has_many :submission_gradings, as: :sbm
 
   def get_asm
     return self.training
   end
 
-  def get_final_grading
-    return self.submission_grading
+  def get_path
+    return course_training_training_submission_path(training.course, training, self)
+  end
+
+  def get_new_grading_path
+    return new_course_training_training_submission_submission_grading_path(
+      training.course, training, self)
   end
 end

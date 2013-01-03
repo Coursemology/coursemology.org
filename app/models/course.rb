@@ -9,6 +9,12 @@ class Course < ActiveRecord::Base
   has_many :trainings
   has_many :quizzes
 
+  has_many :users, through: :user_courses
+
+  has_many :submissions, through: :user_courses
+  has_many :training_submissions, through: :user_courses
+  has_many :quiz_submissions, through: :user_courses
+
   has_many :activities
 
   has_many :levels

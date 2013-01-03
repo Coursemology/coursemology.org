@@ -1,33 +1,51 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th width="5%">ID</th>
-      <th width="15%">Student</th>
+      <% if current_uc.is_lecturer? %>
+        <th width="15%">Student</th>
+      <% end %>
       <th>Mission</th>
-      <th width="20%">Submit time</th>
+      <th width="20%">Submitted at </th>
       <th width="15%">Grading</th>
-      <th width="5%">Action</th>
+      <th width="10%">Action</th>
     </tr>
   </thead>
   <tbody>
     <% submissions.each do |sub| %>
       <tr>
-        <td><%= link_to sub.id,
-                        course_mission_submission_path(@course, sub.mission.id, sub) %></td>
-        <td><%= sub.student.name %></td>
-        <td><%= link_to sub.mission.title,
-                        course_mission_path(@course, sub.mission.id) %></td>
-        <td><%= sub.created_at %></td>
-        <td>
-          <% sub.submission_gradings.each do |sg| %>
-            <%= link_to sg.get_name, nil %><br/>
+        <% if current_uc.is_lecturer? %>
+          <td><%= sub.std_course.user.name %></td>
+        <% end %>
+        <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
+        <td><%= time_ago_in_words(sub.created_at) %> ago</td>
+        <% if current_uc %>
+          <% if current_uc.is_lecturer? %>
+            <td>
+              <% sub.submission_gradings.each do |sg| %>
+                <%= link_to sg.get_name, sub.get_path %><br/>
+              <% end %>
+            </td>
+            <% if sub.submission_gradings.count == 0 %>
+              <td>
+                <%= link_to "Evaluate",
+                    sub.get_new_grading_path,
+                    class: "btn btn-primary" %>
+              </td>
+            <% else %>
+              <td>
+                <%= link_to "View", sub.get_path, class: "btn"%>
+              </td>
+            <% end %>
+          <% else %>
+            <td>
+              <%= "Graded" if sub.submission_gradings.count > 0 %>
+            </td>
+            <td>
+              <%= link_to "Review", sub.get_path,
+                class: sub.submission_gradings.count > 0 ? "btn btn-primary" : "btn" %>
+            </td>
           <% end %>
-        </td>
-        <td>
-          <%= link_to "Evaluate",
-              new_course_mission_submission_submission_grading_path(@course, sub.mission.id, sub) ,
-              class: "btn" %>
-        </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -19,9 +19,9 @@ class TrainingsController < ApplicationController
     puts @is_new
     @trainings_with_sbm = []
     @trainings.each do |training|
-      if current_user
-        std_sbm = TrainingSubmission.find_by_student_id_and_training_id(
-          current_user.id,
+      if current_uc
+        std_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(
+          current_uc.id,
           training.id
         )
       end

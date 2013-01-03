@@ -1,10 +1,11 @@
 class Submission < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
   include Sbm
 
-  attr_accessible :attempt, :final_grading_id, :mission_id, :open_at, :student_id, :submit_at
+  attr_accessible :attempt, :final_grading_id, :mission_id, :open_at, :std_course_id, :submit_at
 
   belongs_to :mission
-  belongs_to :student, class_name: "User"
+  belongs_to :std_course, class_name: "UserCourse"
   belongs_to :final_grading, class_name: "SubmissionGrading"
 
   has_many :submission_gradings, as: :sbm
@@ -13,21 +14,17 @@ class Submission < ActiveRecord::Base
   has_many :std_answers, through: :sbm_answers,
       source: :answer, source_type: "StdAnswer"
 
-  def self.all_course(course)
-    puts 'all ', course.to_json
-    subs = Submission.all
-    # TODO: filter by course
-    return subs
-  end
-
-  def self.all_student(course, student)
-    subs = Submission.all
-    # TODO: filter by student and course
-    return subs
-  end
-
   # implement method of Sbm interface
   def get_asm
     return self.mission
+  end
+
+  def get_path
+    return course_mission_submission_path(mission.course, mission, self)
+  end
+
+  def get_new_grading_path
+    return new_course_mission_submission_submission_grading_path(
+      mission.course, mission, self)
   end
 end
