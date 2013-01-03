@@ -6,19 +6,6 @@ class QuizSubmissionsController < ApplicationController
   skip_load_and_authorize_resource :quiz_submission, only: :listall
   skip_load_and_authorize_resource :quiz, only: :listall
 
-  def index
-  end
-
-  def listall
-    if params.has_key?(:student_id)
-      @quiz_submissions = QuizSubmission.all_student(@course, current_user)
-    else
-      puts @course.to_json
-      @quiz_submissions = QuizSubmission.all_course(@course)
-    end
-    puts @quiz_submissions.to_json
-  end
-
   def show
     @qadata = {}
 

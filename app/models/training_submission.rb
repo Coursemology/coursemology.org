@@ -8,7 +8,7 @@ class TrainingSubmission < ActiveRecord::Base
   belongs_to :training
 
   has_many :sbm_answers, as: :sbm
-  has_many :std_mcq_anwers, through: :sbm_answers,
+  has_many :std_mcq_answers, through: :sbm_answers,
       source: :answer, source_type: "StdMcqAnswer"
 
   has_many :submission_gradings, as: :sbm

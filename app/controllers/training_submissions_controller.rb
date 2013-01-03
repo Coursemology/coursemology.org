@@ -9,7 +9,38 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def show
-    # showing all the answers up to now, by question, in reverse order of time
+    @qadata = {}
+    @grading = @training_submission.get_final_grading
+    @training.mcqs.each do |mcq|
+      @qadata[mcq.id] = { q: mcq }
+    end
+
+    @std_answers_for_questions = {}
+    @training_submission.std_mcq_answers.each do |sma|
+      mcq_id = sma.mcq_id
+      if !@std_answers_for_questions.has_key?(mcq_id)
+        @std_answers_for_questions[mcq_id] = []
+      end
+      @std_answers_for_questions[mcq_id] << sma
+    end
+
+    # one question can have many answers.
+    # collect all answers of one question in a list
+    # sort by order of created time
+    @qadata.each do |qid, qa|
+      if @std_answers_for_questions.has_key?(qid)
+        @qadata[qid][:a] =
+          @std_answers_for_questions[qid].sort_by(&:created_at).reverse
+      end
+    end
+
+    if @grading
+      @grading.answer_gradings.each do |ag|
+        @qadata[ag.student_answer.mcq_id][:g] = ag
+      end
+    end
+
+    puts @qadata
   end
 
   def new
@@ -65,11 +96,25 @@ class TrainingSubmissionsController < ApplicationController
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
 
-    sg = @training_submission.submission_gradings.last
-    ag = sg.answer_gradings.build
-    ag.student_answer = sma
-    ag.grade = mcqa.is_correct ? mcq.max_grade : 0
-    ag.submission_grading = sg
+    sg = @training_submission.get_final_grading
+
+    # currently, there is one answer grading for each question
+    # when there are multiple answer for one question, it
+    ag = nil
+    sg.answer_gradings.each do |g|
+      if g.student_answer.mcq == mcq
+        ag = g
+        break
+      end
+    end
+    if !ag
+      ag = sg.answer_gradings.build
+    end
+    if !ag.grade || ag.grade == 0 || mcqa.is_correct
+      ag.student_answer = sma
+      ag.grade = mcqa.is_correct ? mcq.max_grade : 0
+      ag.save
+    end
 
     mcq_pos = @training.get_qn_pos(mcq)
     puts mcq_pos, @training_submission.current_step

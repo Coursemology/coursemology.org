@@ -16,7 +16,6 @@ class TrainingsController < ApplicationController
     else
       @trainings = @course.trainings.opened.order("open_at DESC")
     end
-    puts @is_new
     @trainings_with_sbm = []
     @trainings.each do |training|
       if current_uc

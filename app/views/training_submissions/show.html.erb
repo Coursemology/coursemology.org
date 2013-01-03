@@ -3,4 +3,69 @@
     Training submission
   </h1>
 </div>
-<%= @training_submission.to_json %>
+
+<table width="100%">
+  <col width="10%" />
+  <tr><td><strong>Student:</strong> </td><td><%= @training_submission.std_course.user.name %></td></tr>
+  <tr><td><strong>Submited at:</strong> </td><td><%= time_ago_in_words(@training_submission.created_at) %> ago</td></tr>
+  <% if @grading %>
+    <tr>
+      <td><strong>Total grade:</strong> </td>
+      <td>
+        <%= @grading.total_grade %> / <%= @training.max_grade %>
+      </td>
+    </tr>
+    <% if @grading.grader %>
+      <tr><td><strong>Grader:</strong> </td><td><%= @grading.grader.name %></td></tr>
+    <% else %>
+      <tr><td><strong>Grader:</strong> </td><td>Auto graded!</td></tr>
+    <% end %>
+  <% end %>
+</table>
+<hr/>
+
+<p class="well"><%= @training.description %></p>
+<% @qadata.each do |qid, qa| %>
+  <h4>Question:</h4>
+  <p><%= qa[:q].description %></p>
+  <ul>
+    <% qa[:q].mcq_answers.each do |ans| %>
+      <li>
+        <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
+        <span><%= ans.text %></span>
+      </li>
+    <% end %>
+  </ul>
+  <% if qa[:a] %>
+    <strong>Answer attempts (most recent first)</strong>
+    <table class="table">
+      <thead>
+        <tr>
+          <th width="2%"></th>
+          <th>Answer</th>
+          <th width="15%">Correct</th>
+          <th width="15%">Submitted at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% qa[:a].each do |ans| %>
+          <% puts ans.to_json %>
+          <tr class=<%= "training-final-answer" if qa[:g] && qa[:g].student_answer == ans %>>
+            <td></td>
+            <td><%= ans.mcq_answer.text %></td>
+            <td>
+               <input type="checkbox" disabled <%= "checked" if ans.mcq_answer.is_correct %> />
+            </td>
+            <td><%= time_ago_in_words(ans.created_at) %> ago</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if qa[:g] %>
+      <p><strong>Final Grade: </strong><%= qa[:g].grade %> / <%= qa[:q].max_grade %></p>
+    <% end %>
+  <% else %>
+    <strong>Not attempted.</strong>
+  <% end %>
+  <hr />
+<% end %>

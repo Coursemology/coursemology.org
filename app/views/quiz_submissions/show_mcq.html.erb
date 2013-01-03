@@ -4,7 +4,7 @@
 
 <table width="100%">
   <col width="10%" />
-  <tr><td>Student: </td><td><%= @quiz_submission.student.name %></td></tr>
+  <tr><td>Student: </td><td><%= @quiz_submission.std_course.user.name %></td></tr>
   <tr><td>Submited at: </td><td><%= @quiz_submission.created_at %></td></tr>
   <% if @grading %>
     <tr>
