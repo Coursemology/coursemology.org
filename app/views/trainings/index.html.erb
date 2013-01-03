@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% if current_uc && current_uc.is_lecturer? %>
+<% if curr_user_course && curr_user_course.is_lecturer? %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_training_path(@course),
               :class => 'btn btn-primary' %>
@@ -15,8 +15,8 @@
       <th>Training</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
-      <% if current_uc %>
-        <% if current_uc.is_lecturer? %>
+      <% if curr_user_course %>
+        <% if curr_user_course.is_lecturer? %>
           <th width="10%">Time till open</th>
         <% end %>
         <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -45,8 +45,8 @@
             </a>
           <% end %>
         </td>
-        <% if current_uc %>
-          <% if current_uc.is_lecturer? %>
+        <% if curr_user_course %>
+          <% if curr_user_course.is_lecturer? %>
             <td>
               <% if training.open_at > Time.now %>
                 <%= time_ago_in_words(training.open_at) %>
@@ -56,7 +56,7 @@
             </td>
           <% end %>
           <td>
-            <% if current_uc.is_student? %>
+            <% if curr_user_course.is_student? %>
               <% if submission %>
                 <%= link_to 'Continue',
                         edit_course_training_training_submission_path(@course, training, submission),

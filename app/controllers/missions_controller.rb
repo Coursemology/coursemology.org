@@ -5,12 +5,12 @@ class MissionsController < ApplicationController
 
   def index
     @is_new = {}
-    if current_uc
-      @missions = current_uc.get_missions
-      unseen = current_uc.get_unseen_missions
+    if curr_user_course
+      @missions = curr_user_course.get_missions
+      unseen = curr_user_course.get_unseen_missions
       unseen.each do |um|
         @is_new[um.id] = true
-        current_uc.mark_as_seen(um)
+        curr_user_course.mark_as_seen(um)
       end
     else
       @missions = @course.missions.opened.still_open.order(:close_at) + @course.missions.closed

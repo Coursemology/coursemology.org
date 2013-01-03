@@ -1,7 +1,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <% if current_uc.is_lecturer? %>
+      <% if curr_user_course.is_lecturer? %>
         <th width="15%">Student</th>
       <% end %>
       <th>Mission</th>
@@ -13,13 +13,13 @@
   <tbody>
     <% submissions.each do |sub| %>
       <tr>
-        <% if current_uc.is_lecturer? %>
+        <% if curr_user_course.is_lecturer? %>
           <td><%= sub.std_course.user.name %></td>
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.created_at) %> ago</td>
-        <% if current_uc %>
-          <% if current_uc.is_lecturer? %>
+        <% if curr_user_course %>
+          <% if curr_user_course.is_lecturer? %>
             <td>
               <% sub.submission_gradings.each do |sg| %>
                 <%= link_to sg.get_name, sub.get_path %><br/>

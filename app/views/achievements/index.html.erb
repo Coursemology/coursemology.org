@@ -12,7 +12,7 @@
       <th width="10%"></th>
       <th width="40%">Description</th>
       <th>Requirements</th>
-      <% if current_uc && current_uc.is_lecturer? %>
+      <% if curr_user_course && curr_user_course.is_lecturer? %>
         <th width="10%">Actions</th>
       <% end %>
     </tr>
@@ -52,7 +52,7 @@
         <% end %>
         </ul>
       </td>
-      <% if current_uc && current_uc.is_lecturer? %>
+      <% if curr_user_course && curr_user_course.is_lecturer? %>
         <td>
           <%= link_to edit_course_achievement_path(@course, ach), :class => 'btn btn-mini' do %>
             <i class="icon-edit"></i>

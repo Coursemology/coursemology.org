@@ -44,13 +44,13 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def new
-    @training_submission.std_course = current_uc
+    @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
     @training_submission.current_step = 1
     @training_submission.save
 
-    Activity.started_asm(current_uc, @training)
+    Activity.started_asm(curr_user_course, @training)
 
     sg = SubmissionGrading.new
     sg.sbm = @training_submission

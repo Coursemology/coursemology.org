@@ -6,21 +6,21 @@ class TrainingsController < ApplicationController
 
   def index
     @is_new = {}
-    if current_uc
-      @trainings = current_uc.get_trainings
-      unseen = current_uc.get_unseen_trainings
+    if curr_user_course
+      @trainings = curr_user_course.get_trainings
+      unseen = curr_user_course.get_unseen_trainings
       unseen.each do |tn|
         @is_new[tn.id] = true
-        current_uc.mark_as_seen(tn)
+        curr_user_course.mark_as_seen(tn)
       end
     else
       @trainings = @course.trainings.opened.order("open_at DESC")
     end
     @trainings_with_sbm = []
     @trainings.each do |training|
-      if current_uc
+      if curr_user_course
         std_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(
-          current_uc.id,
+          curr_user_course.id,
           training.id
         )
       end

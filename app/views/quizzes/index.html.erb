@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% if current_uc && current_uc.is_lecturer? %>
+<% if curr_user_course && curr_user_course.is_lecturer? %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_quiz_path(@course),
               :class => 'btn btn-primary' %>
@@ -15,7 +15,7 @@
       <th width="3%"><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th width="5%"><%= model_class.human_attribute_name(:exp) %></th>
-      <% if current_uc %>
+      <% if curr_user_course %>
         <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       <% end %>
     </tr>
@@ -30,9 +30,9 @@
           <% end %>
         </td>
         <td><%= quiz.exp %></td>
-        <% if current_uc %>
+        <% if curr_user_course %>
           <td>
-            <% if current_uc.is_student? %>
+            <% if curr_user_course.is_student? %>
               <%= link_to 'Attempt', new_course_quiz_quiz_submission_path(@course, quiz), :class => 'btn btn-mini' %>
             <% elsif current_user.is_lecturer? %>
               <%= link_to edit_course_quiz_path(@course, quiz), :class => 'btn btn-mini' do %>

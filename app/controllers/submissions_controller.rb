@@ -9,10 +9,10 @@ class SubmissionsController < ApplicationController
   before_filter :load_sidebar_data, only: [:index, :listall, :show, :new, :create]
 
   def listall
-    if current_uc
-      if current_uc.is_student?
-        @sbms = current_uc.submissions + current_uc.training_submissions +
-            current_uc.quiz_submissions
+    if curr_user_course
+      if curr_user_course.is_student?
+        @sbms = curr_user_course.submissions + curr_user_course.training_submissions +
+            curr_user_course.quiz_submissions
       else
         @sbms = @course.submissions + @course.training_submissions +
             @course.quiz_submissions
@@ -59,7 +59,7 @@ class SubmissionsController < ApplicationController
   end
 
   def create
-    @submission.std_course = current_uc
+    @submission.std_course = curr_user_course
     params[:answers].each do |qid, ans|
       @wq = Question.find(qid)
       sa = @submission.std_answers.build({
@@ -68,7 +68,7 @@ class SubmissionsController < ApplicationController
       sa.question = @wq
     end
     if @submission.save
-      Activity.attempted_asm(current_uc, @mission)
+      Activity.attempted_asm(curr_user_course, @mission)
       respond_to do |format|
         format.html
       end

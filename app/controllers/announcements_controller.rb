@@ -6,12 +6,12 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
-    if current_uc
-      @announcements = current_uc.get_announcements
-      unseen = current_uc.get_unseen_announcements
+    if curr_user_course
+      @announcements = curr_user_course.get_announcements
+      unseen = curr_user_course.get_unseen_announcements
       unseen.each do |ann|
         @is_new[ann.id] = true
-        current_uc.mark_as_seen(ann)
+        curr_user_course.mark_as_seen(ann)
       end
     else
       @announcements = @course.announcements.published.order("publish_at DESC")

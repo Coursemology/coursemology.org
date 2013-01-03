@@ -1,4 +1,4 @@
-<% if current_uc %>
+<% if curr_user_course %>
 <div class="user-short-profile">
   <table>
     <tr>
@@ -11,7 +11,7 @@
       </td>
     </tr>
   </table>
-  <% if current_uc.is_student? %>
+  <% if curr_user_course.is_student? %>
     <table class="table user-short-stat" style="text-align:center">
       <thead>
         <tr>
@@ -23,20 +23,20 @@
       <tbody>
         <tr>
           <% # <td>10</td> %>
-          <td><%= current_uc.user_achievements.count() %></td>
-          <td><%= current_uc.level ? current_uc.level.level : 0 %></td>
+          <td><%= curr_user_course.user_achievements.count() %></td>
+          <td><%= curr_user_course.level ? curr_user_course.level.level : 0 %></td>
         </tr>
       </tbody>
     </table>
     <div>
       <div class="progress" style="margin-bottom: 3px">
         <div class="bar bar-success" style="width: 
-          <%= current_uc.level_percentage %>%"></div>
+          <%= curr_user_course.level_percentage %>%"></div>
       </div>
       <span class="pull-right">
-        <%= current_uc.exp %>
+        <%= curr_user_course.exp %>
         /
-        <%= current_uc.level ? current_uc.level.exp_threshold : 0 %> EXP</span>
+        <%= curr_user_course.level ? curr_user_course.level.exp_threshold : 0 %> EXP</span>
       <div class="clearfix"></div>
     </div>
   <% end %>

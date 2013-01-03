@@ -6,22 +6,22 @@ class ApplicationController < ActionController::Base
     redirect_to access_denied_path, alert: exception.message
   end
 
-  def current_uc
+  def curr_user_course
     if current_user and @course
-      @current_uc ||= UserCourse.find_by_user_id_and_course_id(
+      @curr_user_course ||= UserCourse.find_by_user_id_and_course_id(
         current_user.id,
         @course.id
       )
     end
-    return @current_uc
+    return @curr_user_course
   end
 
   def load_sidebar_data
     counts = {}
-    if current_uc
-      counts[:missions] = current_uc.get_unseen_missions.count
-      counts[:announcements] = current_uc.get_unseen_announcements.count
-      counts[:trainings] = current_uc.get_unseen_trainings.count
+    if curr_user_course
+      counts[:missions] = curr_user_course.get_unseen_missions.count
+      counts[:announcements] = curr_user_course.get_unseen_announcements.count
+      counts[:trainings] = curr_user_course.get_unseen_trainings.count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
       icon: "icon-user",
     }]
 
-    if current_uc && current_uc.is_lecturer?
+    if curr_user_course && curr_user_course.is_lecturer?
       @nav_items << {
         text: "Enroll Requests",
         url: course_enroll_requests_url(@course),
@@ -70,5 +70,5 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  helper_method :current_uc
+  helper_method :curr_user_course
 end

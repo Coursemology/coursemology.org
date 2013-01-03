@@ -26,7 +26,7 @@ class EnrollRequestsController < ApplicationController
   def new
     @er = EnrollRequest.find_by_user_id_and_course_id(current_user.id, @course.id)
 
-    if current_user && !current_uc && !@er
+    if current_user && !curr_user_course && !@er
       if params[:role]
         role = Role.find_by_name(params[:role])
       else
