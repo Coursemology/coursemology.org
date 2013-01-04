@@ -1,4 +1,5 @@
 class QuizSubmission < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
   include Sbm
 
   attr_accessible :attempt, :open_at, :quiz_id, :std_course_id, :submit_at
@@ -19,4 +20,15 @@ class QuizSubmission < ActiveRecord::Base
   def get_asm
     return self.quiz
   end
+
+  def get_path
+    return course_quiz_quiz_submission_path(quiz.course, quiz, self)
+  end
+
+  def get_new_grading_path
+    return '#'
+    # return new_course_quiz_quiz_submission_submission_grading_path(
+    #  quiz.course, quiz, self)
+  end
+
 end

@@ -1,0 +1,31 @@
+<div class="page-header">
+  <table>
+    <tr>
+      <td>
+        <img class="user-profile-pic"
+          src=<%= @user_course.user.profile_photo_url %> />
+      </td>
+      <td style="padding-left: 10px">
+        <h3><%= @user_course.user.name %></h3>
+        <p><%= @user_course.level.get_title %></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<% if @user_course.user_achievements.count > 0 %>
+  <h3>Achievements</h3>
+  <br/>
+  <ul class="thumbnails">
+    <% @user_course.user_achievements.each do |uach| %>
+      <li class="profile-achievement-icon">
+        <a href=<%= course_achievement_path(@course, uach.achievement) %>
+            rel="tooltip"
+            title="<%= uach.achievement.title %>"
+            class="thumbnail">
+          <img src=<%= uach.achievement.icon_url %> />
+        </a>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

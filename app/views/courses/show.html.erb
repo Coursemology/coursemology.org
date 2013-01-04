@@ -32,12 +32,14 @@
 <ul class="activities">
 <% @activities.each do |act| %>
   <li class="media">
-    <a class="pull-left" href="#">
+    <a class="pull-left" href=<%= course_user_course_path(@course, act.actor_course) %>>
       <img class="media-object activity-icon"
         src=<%= act.actor_course.user.profile_photo_url %> >
     </a>
     <div class="media-body">
-      <a href='#'><%= act.actor_course.user.name %></a> <%= act.action.text %>
+      <a href=<%= course_user_course_path(@course, act.actor_course) %>>
+        <%= act.actor_course.user.name %>
+      </a> <%= act.action.text %>
       <a href=<%= act.obj.get_path %>><%= act.obj.get_title %></a>
       &middot;
       <span class="time-small"><%= time_ago_in_words(act.created_at) %>

@@ -19,6 +19,7 @@
 //= require bootstrap-collapse
 //= require bootstrap-datepicker/core
 //= require bootstrap-button
+//= require bootstrap-tooltip
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
@@ -31,11 +32,10 @@ $(document).ready(function() {
     "autoclose": true
   });
 
-  console.log($('.content').height(), $('.content').css('height'));
+  $('a[rel=tooltip]').tooltip();
 });
 
 $(window).load(function() {
   // set height of the sidebar after everything is loaded
   $('.sidebar').css('height', $('.content').height());
-  console.log($('.content').height(), $('.content').css('height'));
 });

@@ -21,49 +21,51 @@
 </table>
 <hr/>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_quiz_mcq_path(@course, @quiz),
-            :class => 'btn btn-primary' %>
+<% if curr_user_course.is_lecturer? %>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_quiz_mcq_path(@course, @quiz),
+              :class => 'btn btn-primary' %>
 
-<h2>MCQ Questions</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @mcqs.each do |q| %>
+  <h2>MCQ Questions</h2>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td>
-          <%= render partial: "mcqs/one", locals: { q: q } %>
-        </td>
-        <td>
-          <%= link_to edit_course_quiz_mcq_path(@course, @quiz, q), :class => 'btn btn-mini' do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to course_quiz_mcq_path(@course, @quiz, q),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <th><%= model_class.human_attribute_name(:description) %></th>
+        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-<br/>
+    </thead>
+    <tbody>
+      <% @mcqs.each do |q| %>
+        <tr>
+          <td>
+            <%= render partial: "mcqs/one", locals: { q: q } %>
+          </td>
+          <td>
+            <%= link_to edit_course_quiz_mcq_path(@course, @quiz, q), :class => 'btn btn-mini' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_quiz_mcq_path(@course, @quiz, q),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' do %>
+              <i class="icon-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br/>
 
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              course_quizzes_path(@course), :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_course_quiz_path(@course, @quiz), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              course_quiz_path(@course, @quiz),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-</div>
+  <div class="form-actions">
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                course_quizzes_path(@course), :class => 'btn'  %>
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                edit_course_quiz_path(@course, @quiz), :class => 'btn' %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                course_quiz_path(@course, @quiz),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-danger' %>
+  </div>
+<% end %>

@@ -36,7 +36,7 @@
               <i class="icon-remove"></i>
             <% end %>
             Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
-            <%= link_to asm_req.req.asm.get_title, '#' %>
+            <%= link_to asm_req.req.asm.get_title, asm_req.req.asm.get_path %>
           </li>
         <% end %>
         <% ach.ach_reqs.each do |ach_req| %>

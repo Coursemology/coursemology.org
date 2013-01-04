@@ -6,6 +6,8 @@ class QuizSubmissionsController < ApplicationController
   skip_load_and_authorize_resource :quiz_submission, only: :listall
   skip_load_and_authorize_resource :quiz, only: :listall
 
+  before_filter :load_sidebar_data, only: [:show, :index, :new, :edit, :create]
+
   def show
     @qadata = {}
 

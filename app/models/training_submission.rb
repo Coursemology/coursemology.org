@@ -23,7 +23,6 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def get_new_grading_path
-    return new_course_training_training_submission_submission_grading_path(
-      training.course, training, self)
+    return '#'
   end
 end
