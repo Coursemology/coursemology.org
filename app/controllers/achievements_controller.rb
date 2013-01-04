@@ -19,7 +19,7 @@ class AchievementsController < ApplicationController
         uach = UserAchievement.find_by_user_course_id_and_achievement_id(
           uc.id, ach.id)
         ach.requirements.each do |req|
-          req_check[req.id] = uach || req.satisfied?(uc)
+          req_check[req.id] = req.satisfied?(uc)
         end
       end
       @achievements_with_info << {
