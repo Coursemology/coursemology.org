@@ -25,4 +25,9 @@ class Course < ActiveRecord::Base
   def asms
     return missions + quizzes + trainings
   end
+
+  def student_courses
+    std = Role.find_by_name("student")
+    return self.user_courses.where(role_id: std.id)
+  end
 end

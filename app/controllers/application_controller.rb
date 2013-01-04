@@ -61,6 +61,10 @@ class ApplicationController < ActionController::Base
       icon: "icon-star",
       count: counts[:achievements_url] || 0
     }, {
+      text: "Leaderboards",
+      url: course_leaderboards_url(@course),
+      icon: "icon-star-empty"
+    }, {
       text: "Students",
       url: course_students_url(@course),
       icon: "icon-user",
