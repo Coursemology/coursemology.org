@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
       # for now all notifications are popup
       @popup_notifications = curr_user_course.get_unseen_notifications
       @popup_notifications.each do |popup|
-        # curr_user_course.mark_as_seen(popup)
+        curr_user_course.mark_as_seen(popup)
       end
     end
   end

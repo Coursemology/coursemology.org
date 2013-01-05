@@ -7,6 +7,8 @@ class McqsController < ApplicationController
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter :init_asm
 
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+
   def init_asm
     @asm = @training || @quiz
   end

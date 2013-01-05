@@ -44,19 +44,21 @@
 <hr/>
 <% end %>
 <ul class="nav nav-list sidenav">
-  <% @nav_items.each do |item| %>
-    <li>
-      <a href=<%= item[:url] %>>
-        <% if item.has_key?(:img) %>
-          <img src=<%= item[:img] %> />
-        <% else %>
-          <i class=<%= item[:icon] %>></i>
-        <% end %>
-        <%= item[:text] %>
-        <% if item.has_key?(:count) && item[:count] > 0 %>
-          <span class="sidenav-count pull-right"><%= item[:count] %></span>
-        <% end %>
-      </a>
-    </li>
+  <% if @nav_items %>
+    <% @nav_items.each do |item| %>
+      <li>
+        <a href=<%= item[:url] %>>
+          <% if item.has_key?(:img) %>
+            <img src=<%= item[:img] %> />
+          <% else %>
+            <i class=<%= item[:icon] %>></i>
+          <% end %>
+          <%= item[:text] %>
+          <% if item.has_key?(:count) && item[:count] > 0 %>
+            <span class="sidenav-count pull-right"><%= item[:count] %></span>
+          <% end %>
+        </a>
+      </li>
+    <% end %>
   <% end %>
 </ul>

@@ -1,15 +1,17 @@
 <div id="popups">
-  <% @popup_notifications.each do |popup| %>
-    <% case popup.obj
-       when Level %>
-     <%= render partial: "notifications/popup_level",
-       locals: { level: popup.obj } %>
-    <% when Achievement %>
-      <%= render partial: "notifications/popup_achievement",
-        locals: { achievement: popup.obj } %>
-    <% else %>
-      <%= render partial: "notifications/popup",
-        locals: { popup: popup} %>
+  <% if @popup_notifications %>
+    <% @popup_notifications.each do |popup| %>
+      <% case popup.obj
+         when Level %>
+       <%= render partial: "notifications/popup_level",
+         locals: { level: popup.obj } %>
+      <% when Achievement %>
+        <%= render partial: "notifications/popup_achievement",
+          locals: { achievement: popup.obj } %>
+      <% else %>
+        <%= render partial: "notifications/popup",
+          locals: { popup: popup} %>
+      <% end %>
     <% end %>
   <% end %>
 </div>
