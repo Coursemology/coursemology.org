@@ -2,7 +2,7 @@ class AnnouncementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :announcement, through: :course, except: [:index]
 
-  before_filter :load_sidebar_data, only: [:show, :index, :edit, :new]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new]
 
   def index
     @is_new = {}

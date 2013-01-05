@@ -23,6 +23,9 @@ class UserCourse < ActiveRecord::Base
   has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
   has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
   has_many :seen_quiz_submissions, through: :seen_stuff, source: :obj, source_type: "QuizSubmission"
+  has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
+
+  has_many :notifications, foreign_key: "target_course_id"
 
   def is_student?
     return self.role == Role.find_by_name('student')
@@ -88,6 +91,10 @@ class UserCourse < ActiveRecord::Base
     return nil
   end
 
+  def get_unseen_notifications
+    return self.notifications - self.seen_notifications
+  end
+
   def mark_as_seen(obj)
     s = self.seen_stuff.build()
     s.obj = obj
@@ -111,6 +118,7 @@ class UserCourse < ActiveRecord::Base
       if lvl.exp_threshold > self.exp
         if self.level != lvl
           Activity.earned_smt(self, lvl)
+          Notification.leveledup(self, lvl)
         end
         self.level = lvl
         break
@@ -135,6 +143,7 @@ class UserCourse < ActiveRecord::Base
           uach.achievement = ach
           new_ach = true
           Activity.earned_smt(self, ach)
+          Notification.earned_achievement(self, ach)
         end
       end
     end

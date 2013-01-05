@@ -79,5 +79,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def load_popup_notifications
+    if curr_user_course
+      # for now all notifications are popup
+      @popup_notifications = curr_user_course.get_unseen_notifications
+      @popup_notifications.each do |popup|
+        # curr_user_course.mark_as_seen(popup)
+      end
+    end
+  end
+
+  def load_general_course_data
+    load_sidebar_data
+    load_popup_notifications
+  end
+
   helper_method :curr_user_course
 end

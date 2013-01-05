@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_sidebar_data, only: [:show, :students]
+  before_filter :load_general_course_data, only: [:show, :students]
 
   def create
     @course = Course.new(params[:course])

@@ -4,7 +4,7 @@ class SubmissionGradingsController < ApplicationController
   load_and_authorize_resource :submission, through: :mission
   load_and_authorize_resource :submission_grading, through: :submission
 
-  before_filter :load_sidebar_data, only: [:new, :edit]
+  before_filter :load_general_course_data, only: [:new, :edit]
 
   # note: it only handles view & grading of missions
   # checkout quiz_submission for quiz submission grading

@@ -3,7 +3,7 @@ class TrainingSubmissionsController < ApplicationController
   load_and_authorize_resource :training, through: :course
   load_and_authorize_resource :training_submission, through: :training
 
-  before_filter :load_sidebar_data, only: [:show, :index, :edit]
+  before_filter :load_general_course_data, only: [:show, :index, :edit]
 
   def index
   end

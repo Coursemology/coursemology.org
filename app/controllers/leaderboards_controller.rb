@@ -1,7 +1,7 @@
 class LeaderboardsController < ApplicationController
   load_and_authorize_resource :course
 
-  before_filter :load_sidebar_data, only: [:show]
+  before_filter :load_general_course_data, only: [:show]
 
   def show
     # 1 list for top 10 by EXP
