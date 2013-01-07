@@ -1,0 +1,34 @@
+<div class="page-header">
+  <h1>Update Information:</h1>
+</div>
+
+<%= form_for(current_user, url: users_update_path,
+             html: { method: :put, class: "form-horizontal" } ) do |f| %>
+  <div class="control-group">
+    <%= f.label :name, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :name %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label "Profile picture", class: 'control-label' %>
+    <div class="controls">
+      <img src="<%= current_user.profile_photo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Photo Preview" />
+      <%= f.hidden_field :profile_photo_url, class: "image-uploader-input-url" %>
+      <br/>
+      <a href="#image-uploader-modal" data-toggle="modal">Upload new photo</a>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div><%= f.submit "Update", class: "btn btn-primary" %></div>
+  </div>
+<% end %>
+
+Click <%= link_to "here", edit_user_registration_path %> to update email and password
+
+<%= render partial: "layouts/image_uploader",
+      locals: { upload_to: file_uploads_path,
+                container_class: '',
+                image_url_class: '' } %>

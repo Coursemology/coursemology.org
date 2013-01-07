@@ -11,6 +11,9 @@ JfdiAcademy::Application.routes.draw do
 
   devise_for :users
 
+  get "users/settings" => "users#edit"
+  put "users/update" => "users#update"
+
   get "lecturers/request" => "role_requests#new"
   resources :role_requests
 
