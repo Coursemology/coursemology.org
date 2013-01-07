@@ -1,31 +1,38 @@
-<%= form_for [@course, @achievement], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @achievement], html: { class: 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= f.label :title, :class => 'control-label' %>
+    <%= f.label :title, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :title, :class => 'text_field span9' %>
+      <%= f.text_field :title, class: 'text_field span9',
+          placeholder: "Give it a cool name!" %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
+    <%= f.label :description, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'text_area span9', :rows => '10' %>
+      <%= f.text_area :description, class: 'text_area span9', rows: '10',
+          placeholder: "Give it a awesome back story."%>
     </div>
   </div>
-
-  <% # TODO Change photo upload to be more intuitive. Using the photo form. %>
 
   <div class="control-group">
-    <%= f.label :icon_url, :class => 'control-label' %>
+    <%= f.label :icon_url, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :icon_url, :class => 'text_field span9' %>
+      <img src="<%= @achievement.icon_url %>" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
+      <%= f.hidden_field :icon_url, class: "image-uploader-input-url" %>
+      <%= render partial: "layouts/image_uploader",
+            locals: { upload_to: course_file_uploads_path(@course),
+                      container_class: '',
+                      image_url_class: '' } %>
+
+      <br/>
+      <a href="#image-uploader-modal" data-toggle="modal">Upload new icon</a>
     </div>
   </div>
 
-  <% # TODO Area for dependency %>
   <hr/>
-  <h2>Requirements</h2><p>Student must fulfill all requirements. The requirements are optional, and you can have as
-  many requirements as you want.</p>
+  <h2>Requirements</h2><p>The requirements are optional, and you can have as
+  many requirements as you want. Student must fulfill all requirements.</p>
   <br/>
 
   <div class="control-group">
