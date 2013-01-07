@@ -22,17 +22,19 @@ class McqsController < ApplicationController
   end
 
   def update_answers(mcq)
-    updated = true
-    params[:answers].each do |answer|
-      answer['is_correct'] = answer.has_key?('is_correct')
-      if answer.has_key?('id')
-        ans = McqAnswer.find(answer['id'])
-        ans.mcq = mcq
-        # TODO: check if this answer does belong to the current question
-        updated = updated && ans.update_attributes(answer)
-      else
-        ans = mcq.mcq_answers.build(answer)
-        updated = updated && ans.save
+    if params[:answers]
+      updated = true
+      params[:answers].each do |answer|
+        answer['is_correct'] = answer.has_key?('is_correct')
+        if answer.has_key?('id')
+          ans = McqAnswer.find(answer['id'])
+          ans.mcq = mcq
+          # TODO: check if this answer does belong to the current question
+          updated = updated && ans.update_attributes(answer)
+        else
+          ans = mcq.mcq_answers.build(answer)
+          updated = updated && ans.save
+        end
       end
     end
     return updated
@@ -83,6 +85,13 @@ class McqsController < ApplicationController
       else
         format.html { render action: "edit" }
       end
+    end
+  end
+
+  def destroy
+    @mcq.destroy
+    respond_to do |format|
+      format.html { redirect_to @asm.get_path }
     end
   end
 end

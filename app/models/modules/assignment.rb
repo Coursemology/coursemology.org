@@ -8,10 +8,10 @@ module Assignment
       scope :future, lambda { where("open_at > ? ", Time.now) }
 
       # mission can have other assigments as requirement
-      has_many :requirements, as: :obj
+      has_many :requirements, as: :obj, dependent: :destroy
       has_many :asm_reqs, through: :requirements, source: :req, source_type: "AsmReq"
 
-      has_many :as_asm_reqs, class_name: "AsmReq", as: :asm
+      has_many :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
       has_many :as_requirements, through: :as_asm_reqs, source: :requirements
     end
   end

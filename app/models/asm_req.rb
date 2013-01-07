@@ -5,7 +5,7 @@ class AsmReq < ActiveRecord::Base
 
   belongs_to :asm, polymorphic: true
 
-  has_many :requirements, as: :req
+  has_many :requirements, as: :req, dependent: :destroy
 
   def satisfied?(user_course)
     # satisfied this asm or not?
