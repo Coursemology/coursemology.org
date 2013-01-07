@@ -6,6 +6,7 @@
   <div class="modal-body">
     <div id="file-upload-form"
       data-url="<%= upload_to %>">
+      <input type="hidden" name="_method" value="POST" />
       <input type="hidden" class="image-uploader-input-url <%= image_url_class %>"/>
       <h3 id="dropzone" class="drag-drop-area">DROP FILE HERE</h3>
       <span class="fileinput-button">

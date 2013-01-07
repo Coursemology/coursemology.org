@@ -15,19 +15,17 @@
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label "Course Logo", class: 'control-label' %>
-    <div class="controls">
-      <img src="" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
-      <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
-      <br/>
-      <a href="#image-uploader-modal" data-toggle="modal">Upload logo</a>
-      <%= render partial: "layouts/image_uploader",
-        locals: { upload_to: file_uploads_url,
-                  container_class: '',
-                  image_url_class: '' } %>
+  <% if @course.id %>
+    <div class="control-group">
+      <%= f.label "Course Logo", class: 'control-label' %>
+      <div class="controls">
+        <img src="<%= @course.logo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
+        <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
+        <br/>
+        <a href="#image-uploader-modal" data-toggle="modal">Upload logo</a>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="form-actions">
     <%= f.submit nil, class: 'btn btn-primary' %>
@@ -35,3 +33,11 @@
                 courses_path, class: 'btn' %>
   </div>
 <% end %>
+
+<% if @course.id %>
+<%= render partial: "layouts/image_uploader",
+      locals: { upload_to: course_file_uploads_path(@course),
+                container_class: '',
+                image_url_class: '' } %>
+<% end %>
+

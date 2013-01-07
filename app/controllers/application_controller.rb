@@ -76,6 +76,12 @@ class ApplicationController < ActionController::Base
         url: course_enroll_requests_url(@course),
         icon: "icon-bolt"
       }
+
+      @nav_items << {
+        text: "Settings",
+        url: edit_course_url(@course),
+        icon: "icon-cog"
+      }
     end
   end
 

@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students]
+  before_filter :load_general_course_data, only: [:show, :students, :edit]
 
   def create
     @course = Course.new(params[:course])
@@ -13,7 +13,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save  && user_course.save
-        format.html { redirect_to @course, notice: "Course was successfully created." }
+        format.html { redirect_to edit_course_path(@course), notice: "Course was successfully created." }
       else
         format.html { render action: "new" }
       end
@@ -70,7 +70,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render json: {lecturers: @lecturers, students: @students }}
+      format.json { render json: { lecturers: @lecturers, students: @students } }
     end
   end
 end
