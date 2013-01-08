@@ -14,7 +14,7 @@
               <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
                 <!-- <li><a href="#">Profile</a></li> -->
                 <li><%= link_to "Setting", users_settings_path %></a></li>
-                <li><%= link_to "Sign out", users_update_path, method: :delete %></li>
+                <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
               </ul>
             </li>
           <% else %>
