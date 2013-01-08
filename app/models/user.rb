@@ -18,11 +18,11 @@ class User < ActiveRecord::Base
   belongs_to :system_role, class_name: "Role"
 
   def is_admin?
-    return self.system_role.name == 'superuser'
+    return self.system_role == Role.find_by_name('superuser')
   end
 
   def is_lecturer?
-    return self.is_admin? || self.system_role.name == 'lecturer'
+    return self.is_admin? || self.system_role == Role.find_by_name('lecturer')
   end
 
   private
