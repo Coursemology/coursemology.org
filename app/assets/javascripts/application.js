@@ -21,6 +21,8 @@
 //= require bootstrap-button
 //= require bootstrap-tooltip
 //
+//= require bootstrap-colorpicker
+//
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
 //= require jquery-fileupload/basic
@@ -33,9 +35,6 @@ $(document).ready(function() {
   });
 
   $('a[rel=tooltip]').tooltip();
-});
 
-$(window).load(function() {
-  // set height of the sidebar after everything is loaded
-  $('.sidebar').css('height', $('.content').height());
+  $('.colorpicker').colorpicker();
 });

@@ -3,6 +3,8 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :question, through: :mission
 
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+
   def new
     @question.max_grade = 10
     respond_to do |format|

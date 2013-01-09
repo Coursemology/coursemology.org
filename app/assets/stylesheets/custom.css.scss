@@ -3,6 +3,7 @@
 
 body {
   padding-top: 60px;
+  background-color: whiteSmoke;
 }
 
 @import "bootstrap-responsive";
@@ -27,19 +28,22 @@ textarea {
   }
 }
 
-#logo {
+#site-logo {
+  font-size: 2em;
+}
+
+#site-logo {
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
   color: #fff;
-  text-transform: uppercase;
   letter-spacing: -1px;
   padding-top: 9px;
   font-weight: bold;
   line-height: 1;
 }
 
-#logo:hover {
+#site-logo:hover {
   color: #fff;
   text-decoration: none;
 }
@@ -49,10 +53,34 @@ h1 {
 }
 
 .sidebar {
-  min-height: 650px;
+  padding: 10px 15px;
 
   i {
     font-size: 1.5em;
+  }
+
+  a {
+    color: #0071BC;
+  }
+
+  li {
+    line-height: 30px;
+    border-bottom: 1px solid #ccc;
+    font-size: 1.2em;
+  }
+
+  li:first-child {
+    border-top: 1px solid #ccc;
+  }
+
+  hr {
+    border-top: 1px solid #ccc;
+    border-bottom: none;
+    margin: 10px 0;
+  }
+
+  .progress {
+    border: 1px solid #ccc;
   }
 }
 
@@ -72,9 +100,16 @@ h1 {
   padding-left: 15px;
 }
 
+.content {
+  padding: 0 20px;
+  background-color: white;
+  border: solid 1px #ccc;
+  min-height: 800px;
+}
+
 .row-fluid .content {
   padding-top: 20px;
-  margin-left: 20px;
+  margin-left: 0;
 }
 
 .course-content {
@@ -186,17 +221,26 @@ ul {
   vertical-align: top;
 }
 
+.user-short-stat, .user-short-profile {
+  width: 100%;
+}
+
 .user-short-stat td, .user-short-stat th {
+  padding-top: 0px;
+  padding-bottom: 0px;
   text-align: center;
+  text-transform: uppercase;
+  font-weight: normal;
 }
 
 .user-short-stat td {
-  font-size: 2em;
+  border: none;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
-#logo {
-  text-transform: none;
-  font-size: 2em;
+.sidebar-course-logo {
+  border: 1px solid #ccc;
 }
 
 .user-profile-pic {
@@ -226,6 +270,7 @@ ul {
 ul.sidenav {
   padding-left: 0px;
   padding-right: 0px;
+  margin-top: 10px;
 }
 
 .sidenav-count {

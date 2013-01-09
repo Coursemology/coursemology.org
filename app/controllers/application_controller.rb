@@ -56,11 +56,6 @@ class ApplicationController < ActionController::Base
       icon: "icon-envelope-alt",
       count: counts[:submissions] || 0
     }, {
-      text: "Achievements",
-      url: course_achievements_url(@course),
-      icon: "icon-star",
-      count: counts[:achievements_url] || 0
-    }, {
       text: "Leaderboards",
       url: course_leaderboards_url(@course),
       icon: "icon-star-empty"

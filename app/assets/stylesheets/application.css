@@ -12,4 +12,5 @@
  *= require_tree .
  *= require bootstrap-datepicker
  *= require bootstrap-wysihtml5
+ *= require bootstrap-colorpicker
  */

@@ -22,6 +22,7 @@ group :assets do
   gem 'bootstrap-datepicker-rails'
   gem 'bootstrap-wysihtml5-rails'
   gem 'jquery-fileupload-rails'
+  gem 'bootstrap-colorpicker-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby

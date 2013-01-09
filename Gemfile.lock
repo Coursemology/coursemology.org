@@ -31,6 +31,8 @@ GEM
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     bcrypt-ruby (3.0.1-x86-mingw32)
+    bootstrap-colorpicker-rails (0.1)
+      railties (>= 3.0)
     bootstrap-datepicker-rails (0.6.32)
       railties (>= 3.0)
     bootstrap-sass (2.0.0)
@@ -131,6 +133,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  bootstrap-colorpicker-rails
   bootstrap-datepicker-rails
   bootstrap-sass (= 2.0.0)
   bootstrap-wysihtml5-rails

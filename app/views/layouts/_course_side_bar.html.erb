@@ -1,23 +1,26 @@
+<img class="sidebar-course-logo" src="<%= @course.logo_url %>" />
+<h3 class="banner-text"><%= @course.title %></h3>
+<hr/>
 <% if curr_user_course %>
-<div class="user-short-profile">
-  <table>
-    <tr>
-      <td>
-        <img class="user-profile-pic"
-          src=<%= current_user.profile_photo_url %> />
-      </td>
-      <td style="padding-left: 10px">
-        <h3><%= current_user.name %></h3>
-      </td>
-    </tr>
-  </table>
-  <% if curr_user_course.is_student? %>
+  <div>
+    <table class="user-short-profile">
+      <tr>
+        <td>
+          <img class="user-profile-pic"
+            src=<%= current_user.profile_photo_url %> />
+        </td>
+        <td style="padding-left: 10px">
+          <h3><%= current_user.name %></h3>
+        </td>
+      </tr>
+    </table>
+    <hr>
     <table class="table user-short-stat" style="text-align:center">
       <thead>
         <tr>
           <% # <th>Ranking</th> %>
-          <th>Achievement</th>
-          <th>Level<th>
+          <th><%= link_to 'Achievement', course_achievements_path(@course) %></th>
+          <th><%= link_to 'Level', course_levels_path(@course) %><th>
         </tr>
       </thead>
       <tbody>
@@ -34,14 +37,12 @@
           <%= curr_user_course.level_percentage %>%"></div>
       </div>
       <span class="pull-right">
-        <%= curr_user_course.exp %>
+        <strong style="font-size: 1.2em"><%= curr_user_course.exp %></strong>
         /
         <%= curr_user_course.level ? curr_user_course.level.exp_threshold : 0 %> EXP</span>
       <div class="clearfix"></div>
     </div>
-  <% end %>
-</div>
-<hr/>
+  </div>
 <% end %>
 <ul class="nav nav-list sidenav">
   <% if @nav_items %>
