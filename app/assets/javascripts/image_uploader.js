@@ -1,5 +1,14 @@
 $(document).ready(function(){
   // setup the drag drop zone
+  var target_el = '';
+
+  $('.image-uploader-trigger').click(function() {
+    target_el = $(this).attr('data-target');
+    var modal = $(this).attr('href');
+    $(modal).modal('show');
+    return false;
+  });
+
   $(document).bind('dragover', function (e) {
       var dropZone = $('#dropzone'),
           timeout = window.dropZoneTimeout;
@@ -34,8 +43,10 @@ $(document).ready(function(){
                   value: 'POST ' } ],
     done: function(e, data) {
       console.log(data.result);
+      console.log(target_el);
       $('.image-uploader-input-url').val(data.result.url);
       $('.image-uploader-preview-img').attr('src', data.result.url);
+      $(target_el).attr('src', data.result.url);
       $('.image-uploader-insert-btn').click();
     }
   });

@@ -19,14 +19,18 @@
     <div class="control-group">
       <%= f.label "Course Logo", class: 'control-label' %>
       <div class="controls">
-        <img src="<%= @course.logo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
-        <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
+        <img src="<%= @course.logo_url %>" class="course-logo-preview course-logo-target" alt="Logo Preview" />
+        <%= f.hidden_field :logo_url, class: "course-logo-target" %>
         <br/>
-        <a href="#image-uploader-modal" data-toggle="modal">Upload new logo</a>
+        <a href="#image-uploader-modal"
+            class="image-uploader-trigger"
+            data-target=".course-logo-target"
+            data-toggle="modal">Upload new logo</a>
       </div>
     </div>
+
     <hr/>
-    <h2>Customize Theme</h2>
+    <h1>Customize Theme</h1>
     <div class="control-group">
       <label>Background Color</label>
       <div class="controls">
@@ -70,8 +74,18 @@
       </div>
     </div>
     <div class="control-group">
-      <label>Background Image</label>
+      <%= f.label "Background Image", class: 'control-label' %>
+      <div class="controls">
+        <img src="<%= @course.logo_url %>" class="course-logo-preview background-image-target" alt="Preview" />
+        <%= f.hidden_field :logo_url, class: "background-image-target" %>
+        <br/>
+        <a href="#image-uploader-modal"
+            class="image-uploader-trigger"
+            data-target=".background-image-target"
+            data-toggle="modal">Upload image</a>
+      </div>
     </div>
+
   <% end %>
 
   <div class="form-actions">
