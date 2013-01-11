@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130103163744) do
+ActiveRecord::Schema.define(:version => 20130111050334) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -80,6 +80,14 @@ ActiveRecord::Schema.define(:version => 20130103163744) do
     t.integer  "min_grade"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "course_theme_attributes", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "theme_attribute_id"
+    t.string   "value"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "courses", :force => true do |t|
@@ -302,6 +310,14 @@ ActiveRecord::Schema.define(:version => 20130103163744) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+  end
+
+  create_table "theme_attributes", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "value_type"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "titles", :force => true do |t|
