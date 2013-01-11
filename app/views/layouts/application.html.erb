@@ -9,6 +9,38 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <% if !@course %>
+    <style>
+      body {
+        background-color: white;
+      }
+    </style>
+  <% end %>
+  <% if @theme_settings %>
+    <style>
+      <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
+        body {
+          background-color: <%= @theme_settings['Background Color'] %>
+        }
+      <% end %>
+      <% if @theme_settings['Background Image'] && @theme_settings['Background Image'] != '' %>
+        body {
+          background-image: url(<%= @theme_settings['Background Image'] %>);
+          background-position: bottom left;
+          background-repeat: no-repeat;
+        }
+      <% end %>
+      <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
+        .sidebar a {
+          color: <%= @theme_settings['Sidebar Link Color'] %>;
+        }
+        .sidenav-count {
+          background-color: <%= @theme_settings['Sidebar Link Color'] %>;
+        }
+      <% end %>
+
+    </style>
+  <% end %>
 </head>
 <body>
   <%= render "layouts/header" %>
