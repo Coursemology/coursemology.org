@@ -15,79 +15,48 @@
     </div>
   </div>
 
-  <% if @course.id %>
-    <div class="control-group">
-      <%= f.label "Course Logo", class: 'control-label' %>
-      <div class="controls">
-        <img src="<%= @course.logo_url %>" class="course-logo-preview course-logo-target" alt="Logo Preview" />
-        <%= f.hidden_field :logo_url, class: "course-logo-target" %>
-        <br/>
-        <a href="#image-uploader-modal"
-            class="image-uploader-trigger"
-            data-target=".course-logo-target"
-            data-toggle="modal">Upload new logo</a>
-      </div>
+  <div class="control-group">
+    <%= f.label "Course Logo", class: 'control-label' %>
+    <div class="controls">
+      <img src="<%= @course.logo_url %>" class="course-logo-target-preview" alt="Logo Preview" />
+      <%= f.hidden_field :logo_url, class: "course-logo-target-input" %>
+      <br/>
+      <a href="#image-uploader-modal"
+          class="image-uploader-trigger"
+          data-target=".course-logo-target"
+          data-toggle="modal">Upload new logo</a>
     </div>
+  </div>
 
-    <hr/>
-    <h1>Customize Theme</h1>
+  <hr/>
+  <h1>Customize Theme</h1>
+  <% @course_atts.each do |ca| %>
     <div class="control-group">
-      <label>Background Color</label>
+      <label><%= ca.theme_attribute.name %></label>
       <div class="controls">
-        <div class="input-append color colorpicker" data-color="rgb(255, 146, 180)" data-color-format="hex" id="cp3">
-          <input type="text" class="span2" value="">
-          <span class="add-on"><i style="background-color: rgb(148, 108, 120);"></i></span>
-        </div>
+        <% case ca.theme_attribute.value_type
+        when "color" %>
+          <div class="input-append color colorpicker" data-color="rgb(255, 146, 180)" data-color-format="hex" id="cp3">
+            <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>" />
+            <span class="add-on"><i style="background-color: <%= ca.value %>;"></i></span>
+          </div>
+        <% when "image" %>
+          <img src="<%= ca.value %>" alt="Preview"
+              class="theme-attribute-<%= ca.theme_attribute.id %>-target-preview" />
+          <input type="hidden" name="course_atts[<%= ca.id %>]"
+              class="theme-attribute-<%= ca.theme_attribute.id %>-target-input"
+              value="<%= ca.value %>" />
+          <br/>
+          <a href="#image-uploader-modal"
+              class="image-uploader-trigger"
+              data-target=".theme-attribute-<%= ca.theme_attribute.id %>-target"
+              data-toggle="modal">Upload image</a>
+        <% else %>
+          <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>">
+        <% end %>
       </div>
     </div>
-    <div class="control-group">
-      <label>Sidebar Text Color</label>
-      <div class="controls">
-        <div class="input-append color colorpicker" data-color="rgb(255, 146, 180)" data-color-format="hex" id="cp3">
-          <input type="text" class="span2" value="">
-          <span class="add-on"><i style="background-color: rgb(148, 108, 120);"></i></span>
-        </div>
-      </div>
-    </div>
-    <div class="control-group">
-      <label>Feed Icon</label>
-      <div class="controls">
-        <i class="icon-home"></i>
-      </div>
-    </div>
-    <div class="control-group">
-      <label>Announcement Icon</label>
-      <div class="controls">
-        <i class="icon-bullhorn"></i>
-      </div>
-    </div>
-    <div class="control-group">
-      <label>Training Icon</label>
-      <div class="controls">
-        <i class="icon-envelope"></i>
-      </div>
-    </div>
-    <div class="control-group">
-      <label>Submission Icon</label>
-      <div class="controls">
-        <i class="icon-envelope-alt"></i>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= f.label "Background Image", class: 'control-label' %>
-      <div class="controls">
-        <img src="<%= @course.logo_url %>" class="course-logo-preview background-image-target" alt="Preview" />
-        <%= f.hidden_field :logo_url, class: "background-image-target" %>
-        <br/>
-        <a href="#image-uploader-modal"
-            class="image-uploader-trigger"
-            data-target=".background-image-target"
-            data-toggle="modal">Upload image</a>
-      </div>
-    </div>
-
   <% end %>
-
   <div class="form-actions">
     <%= f.submit nil, class: 'btn btn-primary' %>
     <%= link_to t('.cancel', default: t("helpers.links.cancel")),
@@ -95,10 +64,7 @@
   </div>
 <% end %>
 
-<% if @course.id %>
 <%= render partial: "layouts/image_uploader",
       locals: { upload_to: course_file_uploads_path(@course),
                 container_class: '',
                 image_url_class: '' } %>
-<% end %>
-

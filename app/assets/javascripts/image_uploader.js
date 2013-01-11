@@ -46,7 +46,8 @@ $(document).ready(function(){
       console.log(target_el);
       $('.image-uploader-input-url').val(data.result.url);
       $('.image-uploader-preview-img').attr('src', data.result.url);
-      $(target_el).attr('src', data.result.url);
+      $(target_el + '-preview').attr('src', data.result.url);
+      $(target_el + '-input').attr('value', data.result.url);
       $('.image-uploader-insert-btn').click();
     }
   });

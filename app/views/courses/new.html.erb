@@ -3,4 +3,28 @@
   <h1><%=t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
                                  :default => "New #{model_class.model_name.human}") %></h1>
 </div>
-<%= render :partial => 'form' %>
+
+<%= form_for @course, html: { class: 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label "Give it an awesome name", class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, class: 'text_field span6',
+          placeholder: "eg: Maths Universe, Geovengers" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label "Give it an awesome backstory", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, class: 'text_area span6', rows: '10',
+          placeholder: "eg: Darth Vader is taking over the universe. We need you to save the day!" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, class: 'btn btn-primary' %>
+    <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+                courses_path, class: 'btn' %>
+  </div>
+<% end %>
+

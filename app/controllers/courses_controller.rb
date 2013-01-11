@@ -21,6 +21,13 @@ class CoursesController < ApplicationController
   end
 
   def update
+    if params[:course_atts]
+      params[:course_atts].each do |id, val|
+        ca = CourseThemeAttribute.find(id)
+        ca.value = val
+        ca.save
+      end
+    end
     respond_to do |format|
       if @course.update_attributes(params[:course])
         format.html { redirect_to @course, notice: 'Course was successfully updated.' }
@@ -39,6 +46,22 @@ class CoursesController < ApplicationController
   end
 
   def edit
+    # prepare the customizable attributes
+    atts = []
+    atts << ThemeAttribute.find_by_name('Background Color')
+    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+    atts << ThemeAttribute.find_by_name('Announcements Icon')
+    atts << ThemeAttribute.find_by_name('Missions Icon')
+    atts << ThemeAttribute.find_by_name('Trainings Icon')
+    atts << ThemeAttribute.find_by_name('Submissions Icon')
+    atts << ThemeAttribute.find_by_name('Leaderboard Icon')
+    atts << ThemeAttribute.find_by_name('Background Image')
+
+    @course_atts = []
+    atts.each do |att|
+      @course_atts <<
+        CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+    end
   end
 
   def show
