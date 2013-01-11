@@ -16,6 +16,26 @@ class ApplicationController < ActionController::Base
     return @curr_user_course
   end
 
+  def load_theme_setting
+    atts = []
+    atts << ThemeAttribute.find_by_name('Background Color')
+    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+    atts << ThemeAttribute.find_by_name('Announcements Icon')
+    atts << ThemeAttribute.find_by_name('Missions Icon')
+    atts << ThemeAttribute.find_by_name('Trainings Icon')
+    atts << ThemeAttribute.find_by_name('Submissions Icon')
+    atts << ThemeAttribute.find_by_name('Leaderboard Icon')
+    atts << ThemeAttribute.find_by_name('Background Image')
+
+    @theme_settings = {}
+    atts.each do |att|
+      ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+      @theme_settings[att.name] = ca.value
+    end
+    puts @theme_settings.to_json
+
+  end
+
   def load_sidebar_data
     counts = {}
     if curr_user_course
@@ -38,26 +58,31 @@ class ApplicationController < ActionController::Base
     }, {
       text: "Announcements",
       url: course_announcements_url(@course),
+      img: @theme_settings["Announcements Icon"],
       icon: "icon-bullhorn",
       count: counts[:announcements] || 0
     }, {
       text: "Missions",
       url: course_missions_url(@course),
+      img: @theme_settings["Missions Icon"],
       icon: "icon-envelope",
       count: counts[:missions] || 0
     }, {
       text: "Trainings",
       url: course_trainings_url(@course),
+      img: @theme_settings["Trainings Icon"],
       icon: "icon-envelope",
       count: counts[:trainings] || 0
     }, {
       text: "Submissions",
       url: course_submissions_url(@course),
+      img: @theme_settings["Submissions Icon"],
       icon: "icon-envelope-alt",
       count: counts[:submissions] || 0
     }, {
       text: "Leaderboards",
       url: course_leaderboards_url(@course),
+      img: @theme_settings["Leaderboard Icon"],
       icon: "icon-star-empty"
     }, {
       text: "Students",
@@ -91,8 +116,11 @@ class ApplicationController < ActionController::Base
   end
 
   def load_general_course_data
-    load_sidebar_data
-    load_popup_notifications
+    if @course
+      load_theme_setting
+      load_sidebar_data
+      load_popup_notifications
+    end
   end
 
   helper_method :curr_user_course

@@ -49,11 +49,13 @@
     <% @nav_items.each do |item| %>
       <li>
         <a href=<%= item[:url] %>>
-          <% if item.has_key?(:img) %>
-            <img src=<%= item[:img] %> />
-          <% else %>
-            <i class=<%= item[:icon] %>></i>
-          <% end %>
+          <span class="nav-icon">
+            <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
+              <img src="<%= item[:img] %>" />
+            <% else %>
+              <i class="<%= item[:icon] %>"></i>
+            <% end %>
+          </span>
           <%= item[:text] %>
           <% if item.has_key?(:count) && item[:count] > 0 %>
             <span class="sidenav-count pull-right"><%= item[:count] %></span>
