@@ -1,1 +1,8 @@
-<%= render :partial => "one", :locals => { :announcement => @announcement } %>
+<div class="page-header">
+  <h1>Announcement</h1>
+</div>
+<div class="announcement">
+  <h3><%= @announcement.title %></h3>
+  <p><%= @announcement.description.html_safe %></p>
+  <i><%= @announcement.publish_at.to_formatted_s(:long) %></i>
+</div>

@@ -1,6 +1,6 @@
 class LevelsController < ApplicationController
   load_and_authorize_resource :course
-  load_resource :level, through: :course
+  load_and_authorize_resource :level, through: :course
   # load_and_authorize_resource :level, through: :course
 
   before_filter :load_general_course_data, only: [:index]

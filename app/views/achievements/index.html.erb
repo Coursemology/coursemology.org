@@ -2,9 +2,11 @@
   <h1>Achievements</h1>
 </div>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_achievement_path(@course),
-            :class => 'btn btn-primary' %>
+<% if curr_user_course && curr_user_course.is_lecturer? %>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_course_achievement_path(@course),
+              :class => 'btn btn-primary' %>
+<% end %>
 
 <table class="table achievement-list">
   <thead>

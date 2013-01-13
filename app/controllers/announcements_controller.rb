@@ -16,15 +16,11 @@ class AnnouncementsController < ApplicationController
     else
       @announcements = @course.announcements.published.order("publish_at DESC")
     end
-    authorize! :index, @announcements
+    @announcements.each do |ann|
+      authorize! :index, ann
+    end
     respond_to do |format|
       format.html # index.html.erb
-    end
-  end
-
-  def show
-    respond_to do |format|
-      format.html # show.html.erb
     end
   end
 

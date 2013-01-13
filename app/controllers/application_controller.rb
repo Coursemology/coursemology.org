@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   rescue_from CanCan::AccessDenied do |exception|
-    puts 'Access denied! Current user: ', current_user.to_json
+    Rails.logger.debug "Access denied on #{exception.action} #{exception.subject.inspect}"
     redirect_to access_denied_path, alert: exception.message
   end
 
@@ -120,6 +120,15 @@ class ApplicationController < ActionController::Base
       load_theme_setting
       load_sidebar_data
       load_popup_notifications
+    end
+  end
+
+  private
+  def current_ability
+    if @course
+      @current_ability ||= CourseAbility.new(curr_user_course)
+    else
+      @current_ability ||= Ability.new(current_user)
     end
   end
 

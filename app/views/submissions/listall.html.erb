@@ -5,7 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <% if curr_user_course.is_lecturer? %>
+      <% if curr_user_course && curr_user_course.is_lecturer? %>
         <th width="20%">Student</th>
       <% end %>
       <th>Mission</th>
@@ -17,7 +17,7 @@
   <tbody>
     <% @sbms.each do |sub| %>
       <tr>
-        <% if curr_user_course.is_lecturer? %>
+        <% if curr_user_course && curr_user_course.is_lecturer? %>
           <td>
             <%= sub.std_course.user.name %>
             <% if @unseen.include?(sub) %>
