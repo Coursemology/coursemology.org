@@ -45,6 +45,7 @@ class McqsController < ApplicationController
     @asm_qn = AsmQn.new
     @asm_qn.asm = @asm
     @asm_qn.qn = @mcq
+    @asm_qn.pos = @asm.asm_qns.count
 
     # update max grade of the asm it belongs to
     respond_to do |format|
