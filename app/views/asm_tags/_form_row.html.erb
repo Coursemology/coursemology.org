@@ -1,0 +1,17 @@
+<tr>
+  <% if local_assigns.has_key?(:asm_tag) %>
+    <% tag = asm_tag.tag %>
+    <input type="hidden" name="asm_tags[]" value="<%= asm_tag.id %>" />
+  <% else %>
+    <input type="hidden" name="tags[]" value="<%= tag.id %>" />
+  <% end %>
+  <td>
+    <%= tag.name %>
+  </td>
+  <td>
+    <a href="#" class= "btn btn-mini remove-tag">
+      <i class="icon-remove"></i>
+    </a>
+  </td>
+</tr>
+

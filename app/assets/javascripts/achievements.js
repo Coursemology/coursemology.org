@@ -27,6 +27,9 @@ $(document).ready(function() {
       success: function(resp) {
         selected.remove();
         form_row.before(resp);
+        selected.detach();
+        selected.prop('selected', false);
+        form_row.find('select').append(selected);
       }
     });
   });

@@ -1,0 +1,2 @@
+module AsmTagsHelper
+end

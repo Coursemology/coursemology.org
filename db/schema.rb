@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111050334) do
+ActiveRecord::Schema.define(:version => 20130115044758) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -78,6 +78,15 @@ ActiveRecord::Schema.define(:version => 20130111050334) do
     t.integer  "asm_id"
     t.string   "asm_type"
     t.integer  "min_grade"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "asm_tags", :force => true do |t|
+    t.integer  "asm_id"
+    t.string   "asm_type"
+    t.integer  "tag_id"
+    t.integer  "max_exp"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -289,6 +298,22 @@ ActiveRecord::Schema.define(:version => 20130111050334) do
     t.datetime "updated_at",    :null => false
   end
 
+  create_table "std_tags", :force => true do |t|
+    t.integer  "std_course_id"
+    t.integer  "tag_id"
+    t.integer  "exp"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "student_tags", :force => true do |t|
+    t.integer  "student_course_id"
+    t.integer  "tag_id"
+    t.integer  "exp"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
   create_table "submission_gradings", :force => true do |t|
     t.integer  "grader_id"
     t.integer  "total_grade"
@@ -310,6 +335,16 @@ ActiveRecord::Schema.define(:version => 20130111050334) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+  end
+
+  create_table "tags", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "course_id"
+    t.string   "icon_url"
+    t.integer  "max_exp"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "theme_attributes", :force => true do |t|

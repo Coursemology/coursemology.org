@@ -13,6 +13,8 @@ module Assignment
 
       has_many :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
       has_many :as_requirements, through: :as_asm_reqs, source: :requirements
+
+      has_many :asm_tags, as: :asm
     end
   end
 
@@ -33,5 +35,28 @@ module Assignment
       end
     end
     return -1
+  end
+
+  def add_tags(tags)
+    tags ||= []
+    tags.each do |tag_id|
+      self.asm_tags.build(
+        tag_id: tag_id,
+        max_exp: exp
+      )
+    end
+    self.save
+  end
+
+  def retain_asm_tags(asm_tags)
+    asm_tags ||= []
+    current_asm_tags = self.asm_tags.collect { |asm_tag| asm_tag.id }
+    removed_ids = current_asm_tags - asm_tags
+    AsmTag.delete(removed_ids)
+  end
+
+  def update_tags(remaining_asm_tags, new_tags)
+    self.retain_asm_tags(remaining_asm_tags)
+    self.add_tags(new_tags)
   end
 end

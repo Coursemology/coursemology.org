@@ -25,6 +25,30 @@
           :class => 'datepicker' %>
     </div>
   </div>
+  <div class="control-group">
+    <label>Topic</label>
+    <div class="controls">
+      <table>
+        <% @training.asm_tags.each do |asm_tag| %>
+          <%= render partial: "asm_tags/form_row", locals: { asm_tag: asm_tag } %>
+        <% end %>
+        <tr>
+          <td>
+            <select>
+              <% @tags.each do |tag| %>
+                <option value="<%= tag.id %>"><%= tag.name %></option>
+              <% end %>
+            </select>
+          </td>
+          <td>
+            <%= link_to course_asm_tags_render_form_row_path(@course), class: "btn btn-add-tag" do %>
+              <i class="icon-plus"></i>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

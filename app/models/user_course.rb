@@ -27,6 +27,8 @@ class UserCourse < ActiveRecord::Base
 
   has_many :notifications, foreign_key: "target_course_id"
 
+  has_many :std_tags, foreign_key: "std_course_id"
+
   def is_student?
     return self.role == Role.find_by_name('student')
   end

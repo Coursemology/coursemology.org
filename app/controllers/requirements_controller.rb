@@ -34,7 +34,7 @@ class RequirementsController < ApplicationController
   end
 
   def destroy
-    @requirement.destroy
+    @asm_tag.destroy
     respond_to do |format|
       format.json { render json: { status: "OK" } }
     end

@@ -36,11 +36,15 @@ class TrainingsController < ApplicationController
   end
 
   def new
+    @training.exp = 1000
+    @training.open_at = DateTime.now
+    @tags = @course.tags
   end
 
   def create
     @training.pos = @course.trainings.size - 1
     @training.creator = current_user
+    @training.update_tags(params[:asm_tags], params[:tags])
     respond_to do |format|
       if @training.save
         format.html { redirect_to course_training_url(@course, @training),
@@ -52,9 +56,11 @@ class TrainingsController < ApplicationController
   end
 
   def edit
+    @tags = @course.tags
   end
 
   def update
+    @training.update_tags(params[:asm_tags], params[:tags])
     respond_to do |format|
       if @training.update_attributes(params[:training])
         format.html { redirect_to course_training_url(@course, @training),
