@@ -28,4 +28,8 @@ class Requirement < ActiveRecord::Base
     )
     return !uach.nil?
   end
+
+  def as_json(options={})
+    super(options).reject { |k, v| v.nil? }
+  end
 end

@@ -58,6 +58,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :requirements
 
+    post "requirements/render_form_row" => "requirements#render_form_row"
+
     resources :file_uploads
 
     resources :enroll_requests

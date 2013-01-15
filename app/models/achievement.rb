@@ -31,4 +31,23 @@ class Achievement < ActiveRecord::Base
   def get_path
     return course_achievement_path(course, self)
   end
+
+  def update_requirement(remaining_reqs, new_reqs)
+    # cleanup existing requirement
+    remaining_reqs ||= []
+    remaining_reqs = remaining_reqs.collect { |id| id.to_i }
+    current_reqs = self.requirements.collect { |req| req.id }
+    removed_ids = current_reqs - remaining_reqs
+    Requirement.delete(removed_ids)
+
+    puts self.requirements.to_json
+
+    # add new requirements
+    new_reqs ||= []
+    new_reqs.each do |new_req|
+      self.requirements.build(JSON.parse(new_req))
+    end
+    self.save
+    puts self.requirements.to_json
+  end
 end

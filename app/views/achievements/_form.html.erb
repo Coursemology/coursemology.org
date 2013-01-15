@@ -64,7 +64,7 @@
             </select>
           </td>
           <td>
-            <%= link_to course_requirements_path(@course), class: "btn btn-mini add-asm-req" do %>
+            <%= link_to course_requirements_render_form_row_path(@course), class: "btn btn-mini add-asm-req" do %>
               <i class="icon-plus"></i>
             <% end %>
           </td>
@@ -90,7 +90,7 @@
           </select>
         </td>
         <td>
-          <%= link_to course_requirements_path(@course), class: "btn btn-mini add-ach-req" do %>
+          <%= link_to course_requirements_render_form_row_path(@course), class: "btn btn-mini add-ach-req" do %>
             <i class="icon-plus"></i>
           <% end %>
         </td>

@@ -2,12 +2,13 @@ class RequirementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :requirement
 
-  def create
+  def render_form_row
     type = params[:type]
+    @requirement = Requirement.new
+    # don't save the requirement, we just want to create one to render the row
     if type == "Achievement"
       @ach = Achievement.find(params[:ach_id])
       @requirement.req = @ach
-      @requirement.save
       resp = render_to_string(
         partial: "requirements/ach_req_row",
         locals: { ach_req: @requirement }
@@ -22,7 +23,6 @@ class RequirementsController < ApplicationController
         min_grade: params[:min_grade]
       })
       @requirement.req = @asm_req
-      @requirement.save
       resp = render_to_string(
         partial: "requirements/asm_req_row",
         locals: { asm_req: @requirement }

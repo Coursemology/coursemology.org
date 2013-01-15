@@ -25,7 +25,6 @@ $(document).ready(function() {
       data: data,
       dataType: "html",
       success: function(resp) {
-        selected.remove();
         form_row.before(resp);
         selected.detach();
         selected.prop('selected', false);
@@ -55,24 +54,16 @@ $(document).ready(function() {
       data: data,
       dataType: "html",
       success: function(resp) {
-        selected.remove();
         form_row.before(resp);
+        selected.detach();
+        selected.prop('selected', false);
+        form_row.find('select').append(selected);
       }
     });
   });
 
   $(document).on('click', '.remove-req', function(e) {
     e.preventDefault();
-    var del_url = $(this).attr('href');
-    var el = this;
-    $.ajax({
-      url: del_url,
-      type: "DELETE",
-      success: function() {
-        $(el).parents('tr').remove();
-      }
-    });
-
-    return false;
+    $(this).parents('tr').remove();
   });
 });

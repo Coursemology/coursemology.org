@@ -1,14 +1,17 @@
 <tr>
-  <input type="hidden" name="reqids[]" value="<%= asm_req.id %>" />
+  <% if asm_req.id %>
+    <input type="hidden" name="reqids[]" value="<%= asm_req.id %>" />
+  <% else %>
+    <input type="hidden" name="new_reqs[]" value="<%= asm_req.to_json %>" />
+  <% end %>
   <td>
     <p>Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
     <%= link_to asm_req.req.asm.get_title, '#' %></p>
   </td>
   <td>
-    <%= link_to course_requirement_path(@course, asm_req),
-      class: 'btn btn-mini remove-req' do %>
+    <a href="#" class="btn btn-mini remove-req">
       <i class="icon-remove"></i>
-    <% end %>
+    </a>
   </td>
 </tr>
 

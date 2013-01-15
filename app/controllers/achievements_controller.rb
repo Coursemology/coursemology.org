@@ -47,22 +47,11 @@ class AchievementsController < ApplicationController
   def show
   end
 
-  def update_requirement(ach, reqids)
-    if reqids
-      reqids.each do |reqid|
-        req = Requirement.find(reqid.to_i)
-        req.obj = ach
-        req.save
-        puts req.to_json
-      end
-    end
-  end
-
   def create
     @achievement.creator = current_user
+    @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.save
-        update_requirement(@achievement, params[:reqids])
         format.html { redirect_to course_achievements_url(@course),
                       notice: 'achievement was successfully created.' }
         format.json { render json: @achievement, status: :created, location: @achievement }
@@ -74,11 +63,11 @@ class AchievementsController < ApplicationController
   end
 
   def update
-    update_requirement(@achievement, params[:reqids])
+    @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
         # should render single achievement view?? yeah should. with students who has won the achievement
-        format.html { redirect_to course_achievement_url(@course),
+        format.html { redirect_to course_achievements_url(@course),
                       notice: 'achievement was successfully updated.' }
         format.json { head :no_content }
       else
