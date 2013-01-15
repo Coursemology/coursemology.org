@@ -1,16 +1,24 @@
-<img class="sidebar-course-logo" src="<%= @course.logo_url %>" />
-<h3 class="banner-text"><%= @course.title %></h3>
-<hr/>
+<a href="<%= course_path(@course) %>">
+  <img class="sidebar-course-logo" src="<%= @course.logo_url %>" />
+</a>
+<a href="<%= course_path(@course) %>">
+  <h3 class="banner-text"><%= @course.title %></h3>
+</a>
 <% if curr_user_course %>
+  <hr/>
   <div>
     <table class="user-short-profile">
       <tr>
         <td>
-          <img class="user-profile-pic"
-            src=<%= current_user.profile_photo_url %> />
+          <a href="<%= course_user_course_path(@course, curr_user_course)%>">
+            <img class="user-profile-pic"
+              src=<%= current_user.profile_photo_url %> />
+          </a>
         </td>
         <td style="padding-left: 10px">
-          <h3><%= current_user.name %></h3>
+          <a href="<%= course_user_course_path(@course, curr_user_course) %>">
+            <h3><%= current_user.name %></h3>
+          </a>
         </td>
       </tr>
     </table>

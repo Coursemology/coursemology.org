@@ -16,7 +16,7 @@ class CourseAbility
       return
     end
 
-    can :read, Course
+    can :read, [Course, UserCourse]
     can :read, Announcement, Announcement.published do |ann|
       ann.publish_at <= Time.now
     end

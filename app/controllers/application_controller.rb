@@ -51,22 +51,12 @@ class ApplicationController < ActionController::Base
     # in the future, nav items can be loaded from the database
     @nav_items = []
     # home
-    @nav_items = [ {
-      text: "Home",
-      url: course_path(@course),
-      icon: "icon-home"
-    }, {
+    @nav_items = [{
       text: "Announcements",
       url: course_announcements_url(@course),
       img: @theme_settings["Announcements Icon"],
       icon: "icon-bullhorn",
       count: counts[:announcements] || 0
-    }, {
-      text: "Missions",
-      url: course_missions_url(@course),
-      img: @theme_settings["Missions Icon"],
-      icon: "icon-envelope",
-      count: counts[:missions] || 0
     }, {
       text: "Trainings",
       url: course_trainings_url(@course),
