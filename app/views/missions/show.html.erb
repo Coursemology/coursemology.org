@@ -60,13 +60,13 @@
         <tr>
           <td><%= q.description %></td>
           <td>
-            <%= link_to edit_course_mission_question_path(@course, @mission, q), :class => 'btn btn-mini' do %>
+            <%= link_to edit_course_mission_question_path(@course, @mission, q), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
             <%= link_to course_mission_question_path(@course, @mission, q),
-                        :method => :delete,
-                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        :class => 'btn btn-mini btn-danger' do %>
+                        method: :delete,
+                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        class: 'btn btn-danger' do %>
               <i class="icon-trash"></i>
             <% end %>
           </td>
