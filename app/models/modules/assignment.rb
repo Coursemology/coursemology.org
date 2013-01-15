@@ -50,6 +50,7 @@ module Assignment
 
   def retain_asm_tags(asm_tags)
     asm_tags ||= []
+    asm_tags = asm_tags.collect { |id| id.to_i }
     current_asm_tags = self.asm_tags.collect { |asm_tag| asm_tag.id }
     removed_ids = current_asm_tags - asm_tags
     AsmTag.delete(removed_ids)
