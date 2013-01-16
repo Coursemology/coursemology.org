@@ -4,8 +4,11 @@
 </div>
 
 <% if curr_user_course && curr_user_course.is_lecturer? %>
-  <%= link_to t('.new', :default => t("helpers.links.new")),
+  <%= link_to "New Training",
               new_course_training_path(@course),
+              :class => 'btn btn-primary' %>
+  <%= link_to "New Tag",
+              new_course_tag_path(@course),
               :class => 'btn btn-primary' %>
 <% end %>
 

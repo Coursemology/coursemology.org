@@ -29,6 +29,7 @@ class CourseAbility
     can :read, Training, Training.opened do |training|
       training.open_at <= Time.now
     end
+    can :read, Tag
     can :read, [Level, Achievement, Title, Reward]
     can :students, Course
     can :new, EnrollRequest
