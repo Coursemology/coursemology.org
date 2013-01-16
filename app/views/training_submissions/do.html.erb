@@ -1,13 +1,27 @@
 <div class="page-header">
   <h1>Training <%= @training.pos + 1 %>: <%= @training.title %></h1>
 </div>
+<p id="training-stop-pos"></p>
 <p class="well"><%= @training.description.html_safe %></p>
+<div class="step-list">
+  <% (1..@max_step).each do |i| %>
+    <% if i <= @current_step %>
+      <% if i == @step %>
+        <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
+      <% else %>
+        <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
+      <% end %>
+    <% else %>
+      <%= link_to i, '#training-stop-pos', class: "step" %>
+    <% end %>
+  <% end %>
+</div>
 <hr/>
 
 <% if !@current_mcq %>
   <h2>Congratulations, you're done!</h2>
 <% else %>
-  <h2>Step <%= @step %></h2>
+  <!-- <h2>Step <%= @step %></h2> -->
 
   <form id="training-step-form">
     <input type="hidden" name="update_url"
@@ -24,19 +38,17 @@
     <% end %>
     </ul>
 
-    <div id="explanation">
-      <h4 class="result"></h4>
+    <div id="explanation" class="well hidden">
+      <h3 class="result"></h3>
       <p class="reason"></p>
     </div>
 
     <div class="form-actions">
-      <%= link_to t('.submit', :default => t("helpers.links.submit")),
-                  '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
-      <%= link_to t('.save', :default => t("helpers.links.save")),
-                  '#', :class => 'btn' %>
-      <%= link_to t('.continue', :default => t("helpers.links.continue")),
-          nil, :class => 'btn disabled',
-          :id => 'continue-btn'%>
+      <%= link_to "Submit", '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
+      <%= link_to "Continue",
+            edit_course_training_training_submission_path(@course, @training,
+              @training_submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
+            :id => 'continue-btn' %>
     </div>
   </form>
 <% end %>

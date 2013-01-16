@@ -67,11 +67,13 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def edit
-    @step = @training_submission.current_step
+    @current_step = @training_submission.current_step
+    @step = @current_step
+    @max_step = @training.mcqs.count
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
-    if @step <= @training.mcqs.size
+    if @step <= @max_step
       @current_mcq = @training.mcqs[@step - 1]
     end
     respond_to do |format|

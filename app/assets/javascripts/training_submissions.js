@@ -27,6 +27,7 @@ $(document).ready(function(){
         console.log(resp);
         $('#explanation .result').html(resp.result);
         $('#explanation .reason').html(resp.explanation);
+        $('#explanation').removeClass('hidden');
 
         if (resp.is_correct) {
           $('#continue-btn').removeClass('disabled');
