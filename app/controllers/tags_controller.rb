@@ -19,6 +19,13 @@ class TagsController < ApplicationController
   end
 
   def show
+    puts @tag.asm_tags.to_json
+    puts @tag.trainings.to_json, @tag.trainings.count
+    if curr_user_course.is_lecturer?
+      @trainings = @tag.trainings
+    else
+      @trainings = @tag.trainings.opened
+    end
   end
 
   def edit

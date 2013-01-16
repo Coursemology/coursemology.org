@@ -10,12 +10,11 @@
 <h3>Related Trainings:</h3>
 <br/>
 <table class="table">
-  <% @tag.asm_tags.each do |asm_tag| %>
-    <tr>
-      <td><h4><%= link_to asm_tag.asm.get_title, asm_tag.asm.get_path %></h4></td>
+  <% @trainings.each do |training| %>
+    <tr class="<%= "future" if training.open_at > Time.now %>">
+      <td><h4><%= link_to training.get_title, training.get_path %></h4></td>
       <% if curr_user_course.is_student? %>
         <td>
-          <% training = asm_tag.asm %>
           <% submission = training.get_final_sbm_by_std(curr_user_course.id) %>
           <% if submission %>
             <% if !submission.done? %>

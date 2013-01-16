@@ -6,6 +6,8 @@ class Tag < ActiveRecord::Base
   has_many :asm_tags
   has_many :std_tags
 
+  has_many :trainings, through: :asm_tags, source: :asm, source_type: "Training"
+
   before_create :init
 
   def update_max_exp
