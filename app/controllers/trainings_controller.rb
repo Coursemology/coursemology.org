@@ -33,6 +33,9 @@ class TrainingsController < ApplicationController
 
   def show
     @mcqs = @training.mcqs
+    if curr_user_course.is_student?
+      @submission = @training.get_final_sbm_by_std(curr_user_course)
+    end
   end
 
   def new

@@ -73,11 +73,11 @@
             <% if submission %>
               <%= link_to 'Continue',
                       edit_course_training_training_submission_path(@course, training, submission),
-                      class: 'btn' %>
+                      class: 'btn btn-primary' %>
             <% else %>
               <%= link_to 'Start',
                       new_course_training_training_submission_path(@course, training),
-                      class: 'btn' %>
+                      class: 'btn btn-success' %>
             <% end %>
           </td>
         <% elsif curr_user_course.is_lecturer? %>
