@@ -109,10 +109,7 @@ class UserCourse < ActiveRecord::Base
     # get all (final grading)
     puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
 
-    self.exp = 0
-    self.exp_transactions.each do |expt|
-      self.exp += expt.exp
-    end
+    self.exp = self.exp_transactions.sum(&:exp)
 
     self.course.levels.each do |lvl|
       # now: level = first level that is beyonds user's exp
@@ -127,6 +124,7 @@ class UserCourse < ActiveRecord::Base
       end
     end
     self.save
+
     self.update_achievements
   end
 
@@ -154,5 +152,16 @@ class UserCourse < ActiveRecord::Base
       self.save
       self.update_achievements
     end
+  end
+
+  def create_all_std_tags
+    # in case there are tags that are not associated with the student, create new std_tag record
+    self.course.tags.each do |tag|
+      std_tag = self.std_tags.find_by_tag_id(tag.id)
+      if not std_tag
+        self.std_tags.build( { tag_id: tag.id, exp: 0 } )
+      end
+    end
+    self.save
   end
 end

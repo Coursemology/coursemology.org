@@ -21,4 +21,6 @@ class Mission < ActiveRecord::Base
   def get_path
     return course_mission_path(course, self)
   end
+
+  alias_method :sbms, :submissions
 end

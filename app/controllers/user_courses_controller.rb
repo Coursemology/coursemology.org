@@ -5,5 +5,6 @@ class UserCoursesController < ApplicationController
   before_filter :load_general_course_data, only: [:show]
 
   def show
+    @user_course.create_all_std_tags
   end
 end

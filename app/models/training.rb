@@ -20,4 +20,6 @@ class Training < ActiveRecord::Base
   def get_path
     return course_training_path(course, self)
   end
+
+  alias_method :sbms, :training_submissions
 end

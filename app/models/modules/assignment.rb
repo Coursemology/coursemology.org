@@ -15,6 +15,9 @@ module Assignment
       has_many :as_requirements, through: :as_asm_reqs, source: :requirements
 
       has_many :asm_tags, as: :asm
+      has_many :tags, through: :asm_tags
+
+      after_save :after_save_asm
     end
   end
 
@@ -22,14 +25,12 @@ module Assignment
     return "#{self.class.name}: #{self.title}"
   end
 
-  def get_last_submission
-    return self.sbms.order('created_at').last
+  def get_final_sbm_by_std(std_course_id)
+    return self.sbms.find_by_std_course_id(std_course_id)
   end
 
   def get_qn_pos(qn)
-    puts '++', self.asm_qns.to_json
     self.asm_qns.each do |asm_qn|
-      puts ' >>> ', asm_qn.to_json, qn.to_json
       if asm_qn.qn == qn
         return asm_qn.pos + 1
       end
@@ -59,5 +60,9 @@ module Assignment
   def update_tags(remaining_asm_tags, new_tags)
     self.retain_asm_tags(remaining_asm_tags)
     self.add_tags(new_tags)
+  end
+
+  def after_save_asm
+    self.tags.each { |tag| tag.update_max_exp }
   end
 end

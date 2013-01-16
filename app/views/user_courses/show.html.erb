@@ -31,3 +31,27 @@
     <% end %>
   </ul>
 <% end %>
+
+<% if @course.tags.count > 0 %>
+  <h3>Topic Mastery</h3>
+  <br/>
+  <table class="table span6">
+    <colgroup>
+      <col width="30%">
+      <col width="50%">
+    </colgroup>
+    <% @user_course.std_tags.each do |std_tag| %>
+      <tr>
+        <td><%= link_to std_tag.tag.name, course_tag_path(@course, std_tag.tag) %></td>
+        <td>
+          <div class="progress" style="margin-bottom: 3px">
+            <div class="bar bar-success" style="width: <%= std_tag.get_completion_percentage %>%"></div>
+          </div>
+        </td>
+        <td><%= std_tag.exp %></td>
+        <td>/</td>
+        <td><%= std_tag.tag.max_exp %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
