@@ -16,6 +16,7 @@
   <thead>
     <tr>
       <th>Training</th>
+      <th width="15%">Tag</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
       <% if curr_user_course.id %>
@@ -35,9 +36,17 @@
           <%= link_to course_training_path(@course, training) do %>
             <h4><%= training.title %>
               <% if @is_new[training.id] %>
-                <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"
+                <img class="asm-new-icon"
+                    src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
               <% end %>
             </h4>
+          <% end %>
+        </td>
+        <td>
+          <% training.tags.each do |tag| %>
+            <div class="asm-tag">
+            #<%= link_to tag.name, course_tag_path(@course, tag) %>
+            </div>
           <% end %>
         </td>
         <td><%= training.exp %></td>

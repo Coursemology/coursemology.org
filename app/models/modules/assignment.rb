@@ -25,6 +25,10 @@ module Assignment
     return "#{self.class.name}: #{self.title}"
   end
 
+  def get_path
+    raise NotImplementedError
+  end
+
   def get_final_sbm_by_std(std_course_id)
     return self.sbms.find_by_std_course_id(std_course_id)
   end
