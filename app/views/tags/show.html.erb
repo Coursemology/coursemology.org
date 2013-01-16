@@ -1,0 +1,37 @@
+<div class="page-header">
+  <h1>Tag: <%= @tag.name %>
+    <% if curr_user_course && curr_user_course.is_lecturer? %>
+      <%= link_to edit_course_tag_path(@course, @tag), class: "btn" do %>
+       <i class="icon-edit"></i>
+      <% end %>
+    <% end %>
+  </h1>
+</div>
+<h3>Related Trainings:</h3>
+<br/>
+<table class="table">
+  <% @tag.asm_tags.each do |asm_tag| %>
+    <tr>
+      <td><h4><%= link_to asm_tag.asm.get_title, asm_tag.asm.get_path %></h4></td>
+      <% if curr_user_course.is_student? %>
+        <td>
+          <% training = asm_tag.asm %>
+          <% submission = training.get_final_sbm_by_std(curr_user_course.id) %>
+          <% if submission %>
+            <% if !submission.done? %>
+              <%= link_to 'Continue',
+                      edit_course_training_training_submission_path(@course, training, submission),
+                      class: 'btn btn-primary' %>
+            <% else %>
+              <a href="#" class="btn disabled">Done</a>
+            <% end %>
+          <% else %>
+            <%= link_to 'Start',
+                    new_course_training_training_submission_path(@course, training),
+                    class: 'btn btn-success' %>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

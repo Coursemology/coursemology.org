@@ -25,4 +25,8 @@ class TrainingSubmission < ActiveRecord::Base
   def get_new_grading_path
     return '#'
   end
+
+  def done?
+    return current_step >= self.training.mcqs.count
+  end
 end

@@ -71,7 +71,6 @@ class TrainingSubmissionsController < ApplicationController
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
-    puts @training.mcqs.to_json
     if @step <= @training.mcqs.size
       @current_mcq = @training.mcqs[@step - 1]
     end

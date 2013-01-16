@@ -71,9 +71,13 @@
         <% if curr_user_course.is_student? %>
           <td>
             <% if submission %>
-              <%= link_to 'Continue',
-                      edit_course_training_training_submission_path(@course, training, submission),
-                      class: 'btn btn-primary' %>
+              <% if !submission.done? %>
+                <%= link_to 'Continue',
+                        edit_course_training_training_submission_path(@course, training, submission),
+                        class: 'btn btn-primary' %>
+              <% else %>
+                <a href="#" class="btn disabled">Done</a>
+              <% end %>
             <% else %>
               <%= link_to 'Start',
                       new_course_training_training_submission_path(@course, training),
