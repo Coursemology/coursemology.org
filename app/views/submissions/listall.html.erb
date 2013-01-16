@@ -5,7 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <% if curr_user_course && curr_user_course.is_lecturer? %>
+      <% if curr_user_course.is_lecturer? %>
         <th width="20%">Student</th>
       <% end %>
       <th>Mission</th>
@@ -17,7 +17,7 @@
   <tbody>
     <% @sbms.each do |sub| %>
       <tr>
-        <% if curr_user_course && curr_user_course.is_lecturer? %>
+        <% if curr_user_course.is_lecturer? %>
           <td>
             <%= sub.std_course.user.name %>
             <% if @unseen.include?(sub) %>
@@ -27,33 +27,31 @@
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.created_at) %> ago</td>
-        <% if curr_user_course %>
-          <% if curr_user_course.is_lecturer? %>
-            <td>
-              <% sub.submission_gradings.each do |sg| %>
-                <%= link_to sg.get_name, sub.get_path %><br/>
-              <% end %>
-            </td>
-            <% if sub.submission_gradings.count == 0 %>
-              <td>
-                <%= link_to "Evaluate",
-                    sub.get_new_grading_path,
-                    class: "btn btn-primary" %>
-              </td>
-            <% else %>
-              <td>
-                <%= link_to "View", sub.get_path, class: "btn"%>
-              </td>
+        <% if curr_user_course.is_lecturer? %>
+          <td>
+            <% sub.submission_gradings.each do |sg| %>
+              <%= link_to sg.get_name, sub.get_path %><br/>
             <% end %>
+          </td>
+          <% if sub.submission_gradings.count == 0 %>
+            <td>
+              <%= link_to "Evaluate",
+                  sub.get_new_grading_path,
+                  class: "btn btn-primary" %>
+            </td>
           <% else %>
             <td>
-              <%= "Graded" if sub.submission_gradings.count > 0 %>
-            </td>
-            <td>
-              <%= link_to "Review", sub.get_path,
-                class: sub.submission_gradings.count > 0 ? "btn btn-primary" : "btn" %>
+              <%= link_to "View", sub.get_path, class: "btn"%>
             </td>
           <% end %>
+        <% elsif curr_user_course.is_student? %>
+          <td>
+            <%= "Graded" if sub.submission_gradings.count > 0 %>
+          </td>
+          <td>
+            <%= link_to "Review", sub.get_path,
+              class: sub.submission_gradings.count > 0 ? "btn btn-primary" : "btn" %>
+          </td>
         <% end %>
       </tr>
     <% end %>

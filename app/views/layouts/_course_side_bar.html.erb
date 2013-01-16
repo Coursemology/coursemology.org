@@ -4,7 +4,7 @@
 <a href="<%= course_path(@course) %>">
   <h3 class="banner-text"><%= @course.title %></h3>
 </a>
-<% if curr_user_course %>
+<% if curr_user_course.id %>
   <hr/>
   <div>
     <table class="user-short-profile">

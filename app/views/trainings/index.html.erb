@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% if curr_user_course && curr_user_course.is_lecturer? %>
+<% if curr_user_course.is_lecturer? %>
   <%= link_to "New Training",
               new_course_training_path(@course),
               :class => 'btn btn-primary' %>
@@ -18,11 +18,11 @@
       <th>Training</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
-      <% if curr_user_course %>
+      <% if curr_user_course.id %>
         <% if curr_user_course.is_lecturer? %>
           <th width="10%">Time till open</th>
         <% end %>
-        <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+        <th width="10%"></td>
       <% end %>
     </tr>
   </thead>
@@ -48,38 +48,40 @@
             </a>
           <% end %>
         </td>
-        <% if curr_user_course %>
-          <% if curr_user_course.is_lecturer? %>
-            <td>
-              <% if training.open_at > Time.now %>
-                <%= time_ago_in_words(training.open_at) %>
-              <% else %>
-                ----
-              <% end %>
-            </td>
-          <% end %>
+
+        <% if curr_user_course.is_lecturer? %>
           <td>
-            <% if curr_user_course.is_student? %>
-              <% if submission %>
-                <%= link_to 'Continue',
-                        edit_course_training_training_submission_path(@course, training, submission),
-                        class: 'btn' %>
-              <% else %>
-                <%= link_to 'Start',
-                        new_course_training_training_submission_path(@course, training),
-                        class: 'btn' %>
-              <% end %>
-            <% elsif current_user.is_lecturer? %>
-              <%= link_to edit_course_training_path(@course, training), class: 'btn' do %>
-                <i class="icon-edit"></i>
-              <% end %>
-              <%= link_to course_training_path(@course, training),
-                          method: :delete,
-                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
-                                                                       :default => 'Are you sure?')) },
-                          class: 'btn btn-danger' do %>
-                 <i class="icon-trash"></i>
-              <% end %>
+            <% if training.open_at > Time.now %>
+              <%= time_ago_in_words(training.open_at) %>
+            <% else %>
+              ----
+            <% end %>
+          </td>
+        <% end %>
+
+        <% if curr_user_course.is_student? %>
+          <td>
+            <% if submission %>
+              <%= link_to 'Continue',
+                      edit_course_training_training_submission_path(@course, training, submission),
+                      class: 'btn' %>
+            <% else %>
+              <%= link_to 'Start',
+                      new_course_training_training_submission_path(@course, training),
+                      class: 'btn' %>
+            <% end %>
+          </td>
+        <% elsif curr_user_course.is_lecturer? %>
+          <td>
+            <%= link_to edit_course_training_path(@course, training), class: 'btn' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_training_path(@course, training),
+                        method: :delete,
+                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
+                                                                     :default => 'Are you sure?')) },
+                        class: 'btn btn-danger' do %>
+               <i class="icon-trash"></i>
             <% end %>
           </td>
         <% end %>

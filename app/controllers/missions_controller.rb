@@ -5,7 +5,7 @@ class MissionsController < ApplicationController
 
   def index
     @is_new = {}
-    if curr_user_course
+    if curr_user_course.id
       @missions = curr_user_course.get_missions
       unseen = curr_user_course.get_unseen_missions
       unseen.each do |um|

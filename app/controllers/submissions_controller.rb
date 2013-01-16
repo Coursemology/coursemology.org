@@ -11,7 +11,7 @@ class SubmissionsController < ApplicationController
   def listall
     @unseen = []
     @sbms = []
-    if curr_user_course
+    if curr_user_course.id
       if curr_user_course.is_lecturer?
         @sbms = @course.submissions + @course.training_submissions +
             @course.quiz_submissions

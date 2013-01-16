@@ -2,7 +2,7 @@
   <h1><%=t '.title', :default => "Level Design"%></h1>
 </div>
 
-<% if @levels.size == 0 && curr_user_course && curr_user_course.is_lecturer? %>
+<% if @levels.size == 0 && curr_user_course.is_lecturer? %>
   <%= form_tag course_levels_populate_path(@course), method: "POST" do %>
     <h2>Number of level:
       <input name="num_level" />
@@ -25,7 +25,7 @@
       <% end %>
     </tbody>
   </table>
-  <% if curr_user_course && curr_user_course.is_lecturer? %>
+  <% if curr_user_course.is_lecturer? %>
     <div>
       <span>Add new level: </span>
       <input class="new-lvl-exp"></input>

@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
         @course.id
       )
     end
+    @curr_user_course ||= UserCourse.new
     return @curr_user_course
   end
 
@@ -38,7 +39,7 @@ class ApplicationController < ActionController::Base
 
   def load_sidebar_data
     counts = {}
-    if curr_user_course
+    if curr_user_course.id
       counts[:missions] = curr_user_course.get_unseen_missions.count
       counts[:announcements] = curr_user_course.get_unseen_announcements.count
       counts[:trainings] = curr_user_course.get_unseen_trainings.count
@@ -80,7 +81,7 @@ class ApplicationController < ActionController::Base
       icon: "icon-user",
     }]
 
-    if curr_user_course && curr_user_course.is_lecturer?
+    if curr_user_course.is_lecturer?
       @nav_items << {
         text: "Enroll Requests",
         url: course_enroll_requests_url(@course),
@@ -96,7 +97,7 @@ class ApplicationController < ActionController::Base
   end
 
   def load_popup_notifications
-    if curr_user_course
+    if curr_user_course.id
       # for now all notifications are popup
       @popup_notifications = curr_user_course.get_unseen_notifications
       @popup_notifications.each do |popup|

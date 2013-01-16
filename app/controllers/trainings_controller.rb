@@ -6,7 +6,7 @@ class TrainingsController < ApplicationController
 
   def index
     @is_new = {}
-    if curr_user_course
+    if curr_user_course.id
       @trainings = curr_user_course.get_trainings
       unseen = curr_user_course.get_unseen_trainings
       unseen.each do |tn|
@@ -18,7 +18,7 @@ class TrainingsController < ApplicationController
     end
     @trainings_with_sbm = []
     @trainings.each do |training|
-      if curr_user_course
+      if curr_user_course.id
         std_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(
           curr_user_course.id,
           training.id

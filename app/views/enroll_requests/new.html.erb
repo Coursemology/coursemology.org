@@ -1,6 +1,6 @@
 <% if not current_user %>
   Please <%= link_to new_user_session_path, 'log in' %> first.
-<% elsif curr_user_course %>
+<% elsif curr_user_course.id %>
   <p>You have already registed to this class as a <%= @curr_user_course.role.name %></p>
 <% elsif @er %>
   <p>Your request has been received. Please come back later to check for the result!</p>
