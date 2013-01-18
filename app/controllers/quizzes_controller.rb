@@ -19,7 +19,7 @@ class QuizzesController < ApplicationController
     respond_to do |format|
       if @quiz.save
         format.html { redirect_to course_quiz_url(@course, @quiz),
-                      notice: 'Training was successfully created.' }
+                      notice: "The quiz #{@quiz.title} has been created." }
       else
         format.html { render action: "new" }
       end
@@ -33,11 +33,9 @@ class QuizzesController < ApplicationController
     respond_to do |format|
       if @quiz.update_attributes(params[:quiz])
         format.html { redirect_to course_quiz_url(@course, @quiz),
-                      notice: 'Training was successfully updated.' }
-        format.json { head :no_content }
+                      notice: "The quiz #{@quiz.title} has been created." }
       else
         format.html { render action: "edit" }
-        format.json { render json: @quiz.errors, status: :unprocessable_entity }
       end
     end
 
@@ -47,7 +45,8 @@ class QuizzesController < ApplicationController
     @quiz.destroy
 
     respond_to do |format|
-      format.html { redirect_to course_quizs_url }
+      format.html { redirect_to course_quizs_url,
+                    notice: "The quiz #{@quiz.title} has been removed." }
     end
   end
 end

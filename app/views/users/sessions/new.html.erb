@@ -1,3 +1,10 @@
+
+<% if flash[:alert] %>
+  <div class="alert alert-error">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
 <h2>Sign in</h2>
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name),

@@ -10,11 +10,9 @@ class UsersController < ApplicationController
     authorize! :update, current_user
     respond_to do |format|
       if current_user.update_attributes(params[:user])
-        format.html { redirect_to root_path, notice: 'Course was successfully updated.' }
-        format.json { head :no_content }
+        format.html { redirect_to root_path, notice: 'Updated successfully.' }
       else
         format.html { render action: "edit" }
-        format.json { render json: @course.errors, status: :unprocessable_entity }
       end
     end
   end

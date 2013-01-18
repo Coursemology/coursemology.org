@@ -11,7 +11,7 @@ class TagsController < ApplicationController
     respond_to do |format|
       if @tag.save
         format.html { redirect_to course_tag_path(@course, @tag),
-                      notice: "Course was successfully created." }
+                      notice: "The tag '#{@tag.name}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -35,7 +35,7 @@ class TagsController < ApplicationController
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
         format.html { redirect_to course_tag_path(@course, @tag),
-                      notice: 'Tag was successfully updated.' }
+                      notice: "The tag '#{@tag.name}' has been updated." }
       else
         format.html { render action: "edit" }
       end

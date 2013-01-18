@@ -36,7 +36,7 @@
       <div class="controls">
         <% case ca.theme_attribute.value_type
         when "color" %>
-          <div class="input-append color colorpicker" data-color="rgb(255, 146, 180)" data-color-format="hex" id="cp3">
+          <div class="input-append color colorpicker" data-color="<%= ca.value%>" data-color-format="hex" id="cp3">
             <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>" />
             <span class="add-on"><i style="background-color: <%= ca.value %>;"></i></span>
           </div>

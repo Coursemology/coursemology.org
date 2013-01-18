@@ -51,7 +51,7 @@ class TrainingsController < ApplicationController
     respond_to do |format|
       if @training.save
         format.html { redirect_to course_training_url(@course, @training),
-                      notice: 'Training was successfully created.' }
+                      notice: "The training '#{@training.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -67,11 +67,9 @@ class TrainingsController < ApplicationController
     respond_to do |format|
       if @training.update_attributes(params[:training])
         format.html { redirect_to course_training_url(@course, @training),
-                      notice: 'Training was successfully updated.' }
-        format.json { head :no_content }
+                      notice: "The training '#{@training.title}' has been updated." }
       else
         format.html { render action: "edit" }
-        format.json { render json: @training.errors, status: :unprocessable_entity }
       end
     end
 
@@ -81,7 +79,8 @@ class TrainingsController < ApplicationController
     @training.destroy
 
     respond_to do |format|
-      format.html { redirect_to course_trainings_url }
+      format.html { redirect_to course_trainings_url,
+                    notice: "The training '#{@training.title}' has been removed." }
     end
   end
 end

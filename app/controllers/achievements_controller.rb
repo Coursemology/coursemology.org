@@ -53,11 +53,9 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.save
         format.html { redirect_to course_achievements_url(@course),
-                      notice: 'achievement was successfully created.' }
-        format.json { render json: @achievement, status: :created, location: @achievement }
+                      notice: "The achievement '#{@achievement.title}' has been created." }
       else
         format.html { render action: "new" }
-        format.json { render json: @achievement.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -68,11 +66,9 @@ class AchievementsController < ApplicationController
       if @achievement.update_attributes(params[:achievement])
         # should render single achievement view?? yeah should. with students who has won the achievement
         format.html { redirect_to course_achievements_url(@course),
-                      notice: 'achievement was successfully updated.' }
-        format.json { head :no_content }
+                      notice: "The achievement '#{@achievement.title}' has been updated." }
       else
         format.html { render action: "edit" }
-        format.json { render json: @achievement.errors, status: :unprocessable_entity }
       end
     end
 
@@ -81,7 +77,8 @@ class AchievementsController < ApplicationController
   def destroy
     @achievement.destroy
     respond_to do |format|
-      format.html { redirect_to course_achievements_url(@course) }
+      format.html { redirect_to course_achievements_url(@course),
+                    notice: "The achievement '#{@achievement.title}' has been removed." }
     end
   end
 end

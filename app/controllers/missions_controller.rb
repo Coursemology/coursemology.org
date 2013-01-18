@@ -43,7 +43,7 @@ class MissionsController < ApplicationController
     respond_to do |format|
       if @mission.save
         format.html { redirect_to course_mission_url(@course, @mission),
-                      notice: 'Mission was successfully created.' }
+                      notice: "The mission #{@mission.title} has been created." }
       else
         format.html { render action: "new" }
       end
@@ -54,7 +54,7 @@ class MissionsController < ApplicationController
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
         format.html { redirect_to course_mission_url(@course, @mission),
-                      notice: 'Mission was successfully updated.' }
+                      notice: "The mission #{@mission.title} has been updated." }
       else
         format.html { render action: "edit" }
       end
@@ -64,7 +64,8 @@ class MissionsController < ApplicationController
   def destroy
     @mission.destroy
     respond_to do |format|
-      format.html { redirect_to course_missions_url }
+      format.html { redirect_to course_missions_url,
+                    notice: "The mission #{@mission.title} has been removed." }
     end
   end
 end

@@ -3,6 +3,12 @@
     <%= render "layouts/course_side_bar" %>
   </div>
   <div class="span8 content">
+    <% if flash[:notice] %>
+      <div class="alert alert-success">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+    <div style="clearfix"></div>
     <%= yield %>
   </div>
   <%= render "layouts/course_popup" %>

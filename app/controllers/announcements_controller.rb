@@ -39,7 +39,7 @@ class AnnouncementsController < ApplicationController
     respond_to do |format|
       if @announcement.save
         format.html { redirect_to course_announcements_url(@course),
-                      notice: 'announcement was successfully created.' }
+                      notice: "The announcement '#{@announcement.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -50,7 +50,7 @@ class AnnouncementsController < ApplicationController
     respond_to do |format|
       if @announcement.update_attributes(params[:announcement])
         format.html { redirect_to course_announcements_url(@course),
-                      notice: 'announcement was successfully updated.' }
+                      notice: "The announcement '#{@announcement.title}' has been updated." }
       else
         format.html { render action: "edit" }
       end
@@ -61,7 +61,8 @@ class AnnouncementsController < ApplicationController
     @announcement.destroy
 
     respond_to do |format|
-      format.html { redirect_to course_announcements_url }
+      format.html { redirect_to course_announcements_url,
+                    notice: "The announcement '#{@announcement.title}' has been removed." }
     end
   end
 end

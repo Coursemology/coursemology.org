@@ -21,7 +21,8 @@ class LevelsController < ApplicationController
       @course.save
     end
     respond_to do |format|
-      format.html { redirect_to course_levels_path(@course) }
+      format.html { redirect_to course_levels_path(@course),
+                    notice: "#{params[:num_level]} levels has been generated!"}
     end
   end
 

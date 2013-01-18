@@ -23,7 +23,7 @@ class QuestionsController < ApplicationController
       if @question.save && @asm_qn.save
         @mission.update_grade
         format.html { redirect_to course_mission_url(@course, @mission),
-                      notice: 'Question successfully added.' }
+                      notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
         format.html { render action: "new" }
@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
       if @question.update_attributes(params[:question])
         @mission.update_grade
         format.html { redirect_to course_mission_question_url(@course, @mission, @question),
-                      notice: 'Mission was successfully updated.' }
+                      notice: 'Question has been updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
