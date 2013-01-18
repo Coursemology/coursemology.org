@@ -38,7 +38,7 @@ class MissionsController < ApplicationController
   end
 
   def create
-    @mission.pos = @course.missions.size - 1
+    @mission.pos = @course.missions.count - 1
     @mission.creator = current_user
     respond_to do |format|
       if @mission.save

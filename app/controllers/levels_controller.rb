@@ -9,7 +9,7 @@ class LevelsController < ApplicationController
   end
 
   def populate
-    if @course.levels.size == 0 && params[:num_level]
+    if @course.levels.count == 0 && params[:num_level]
       num_level = params[:num_level]
       num_level.to_i.times do |i|
         lvl = i + 1
@@ -26,7 +26,7 @@ class LevelsController < ApplicationController
   end
 
   def create
-    @level.level = @course.levels.size + 1
+    @level.level = @course.levels.count + 1
     @level.exp_threshold = params[:exp]
     if @level.save
       resp = render_to_string(

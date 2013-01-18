@@ -45,7 +45,7 @@ class TrainingsController < ApplicationController
   end
 
   def create
-    @training.pos = @course.trainings.size - 1
+    @training.pos = @course.trainings.count - 1
     @training.creator = current_user
     @training.update_tags(params[:asm_tags], params[:tags])
     respond_to do |format|
