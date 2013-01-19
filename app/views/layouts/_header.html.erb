@@ -4,7 +4,12 @@
       <%= link_to "/", id: "site-logo" do %>
         <img src="/images/coursemology_white.png" />
       <% end %>
-      <nav>
+      <a class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <div class="nav-collapse" style="height: 0px;">
         <ul class="nav pull-right">
           <% if current_user %>
             <li class="dropdown">
@@ -22,7 +27,7 @@
             <li><%= link_to "Sign in", new_user_session_path %></li>
           <% end %>
         </ul>
-      </nav>
+      </div>
     </div>
   </div>
 </header>

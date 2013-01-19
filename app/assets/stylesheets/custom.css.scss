@@ -98,11 +98,12 @@ h1 {
   padding-left: 15px;
 }
 
-.content {
+.row-fluid .content {
   padding: 10px 20px;
   background-color: white;
   border: solid 1px #ccc;
-  min-height: 600px;
+  margin-left: 0px;
+  min-height: 700px;
 }
 
 .course-content {
@@ -275,6 +276,20 @@ ul.sidenav {
   margin-top: 10px;
 }
 
+@media (min-width: 980px) {
+  .sidenav-collapse.collapse {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .sidenav-collapse.collapse {
+    height: 0;
+    overflow: hidden;
+  }
+}
+
 .sidenav-count {
   background-color: #0071BC;
   -webkit-border-radius: 4px;
@@ -427,4 +442,8 @@ a.user-thumb-profile {
 
 .user-sidebar-profile strong {
   font-size: 1.3em;
+}
+
+li .thumbnail {
+  width: 200px;
 }

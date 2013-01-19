@@ -44,7 +44,15 @@
     </div>
   </div>
 <% end %>
-<ul class="nav nav-list sidenav">
+<a class="btn btn-navbar collapsed" data-toggle="collapse"
+    data-target=".sidenav-collapse">
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+  <span class="icon-bar"></span>
+</a>
+<div class="clearfix"></div>
+<div class="sidenav-collapse collapse" style="height: 0px;">
+  <ul class="nav nav-list sidenav">
   <% if @nav_items %>
     <% @nav_items.each do |item| %>
       <li>
@@ -65,3 +73,4 @@
     <% end %>
   <% end %>
 </ul>
+</div>
