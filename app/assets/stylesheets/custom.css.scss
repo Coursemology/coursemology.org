@@ -60,7 +60,11 @@ h1 {
   li {
     line-height: 30px;
     border-bottom: 1px solid #ccc;
-    font-size: 1.2em;
+  }
+
+  li a {
+    text-shadow: none;
+    font-size: 1.1em;
   }
 
   li:first-child {
@@ -98,7 +102,7 @@ h1 {
   padding: 0 20px;
   background-color: white;
   border: solid 1px #ccc;
-  min-height: 1000px;
+  min-height: 600px;
 }
 
 .row-fluid .content {
@@ -286,8 +290,7 @@ ul.sidenav {
   font-weight: bold;
   line-height: 25px;
   margin-top: 5px;
-  padding: 0 5px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  padding: 0 6px;
 }
 
 .new {
@@ -397,4 +400,8 @@ td.user-profile-pic-col {
   background-color: #f2dede;
   border-color: #eed3d7;
   color: #b94a48;
+}
+
+footer {
+  margin-top: 150px;
 }
