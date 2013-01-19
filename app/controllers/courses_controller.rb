@@ -80,20 +80,15 @@ class CoursesController < ApplicationController
   end
 
   def students
-    @lecturers = []
-    @students = []
+    @lecturer_courses = []
+    @student_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_student?
-        @students << uc.user
+        @student_courses << uc
       elsif uc.is_lecturer?
-        @lecturers << uc.user
+        @lecturer_courses << uc
       end
-    end
-
-    respond_to do |format|
-      format.html
-      format.json { render json: { lecturers: @lecturers, students: @students } }
     end
   end
 end

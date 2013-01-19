@@ -1,19 +1,32 @@
-<h1>Lecturers:</h1>
-  <ul>
-  <% @lecturers.each do |lecturer| %>
-    <li>
-    <b><%= lecturer.name %></b>
-    <span><%= lecturer.email %></span>
-    </li>
+<div class="page-header">
+  <h1>Class Enrollment</h1>
+</div>
+<h3>Lecturers:</h3>
+<br/>
+<ul>
+<% @lecturer_courses.each do |lecturer_course| %>
+  <li>
+    <%= render partial: "layouts/user_thumb_profile", locals: { user_course: lecturer_course } %>
+  </li>
+<% end %>
+</ul>
+<h3>Students:</h3>
+<br/>
+<table class="table table-bordered">
+  <% @student_courses.each_with_index do |student_course, i| %>
+    <% student = student_course.user %>
+    <% if i % 2 == 0 %>
+      <tr>
+    <% end %>
+    <td>
+      <%= render partial: "layouts/user_thumb_profile", locals: { user_course: student_course } %>
+    </td>
+    <% if i % 2 == 1 %>
+      </tr>
+    <% end %>
   <% end %>
-  </ul>
-<h1>Students:</h1>
-  <ul>
-  <% @students.each do |student| %>
-    <li>
-    <b><%= student.name %></b>
-    <span><<%= mail_to student.email %>></span>
-    </li>
+  <% if @student_courses.size % 2 == 1 %>
+    <td></td></tr>
   <% end %>
-  </ul>
+</table>
 </h1>

@@ -99,15 +99,10 @@ h1 {
 }
 
 .content {
-  padding: 0 20px;
+  padding: 10px 20px;
   background-color: white;
   border: solid 1px #ccc;
   min-height: 600px;
-}
-
-.row-fluid .content {
-  padding-top: 20px;
-  margin-left: 0;
 }
 
 .course-content {
@@ -219,7 +214,7 @@ ul {
   vertical-align: top;
 }
 
-.user-short-stat, .user-short-profile {
+.user-short-stat {
   width: 100%;
 }
 
@@ -404,4 +399,32 @@ td.user-profile-pic-col {
 
 footer {
   margin-top: 150px;
+}
+
+.user-thumb-profile {
+  cursor: pointer;
+  width: 100%;
+  padding: 5px 10px;
+}
+
+a.user-thumb-profile {
+  text-decoration: none;
+}
+
+.user-thumb-profile strong {
+  float: left;
+  line-height: 50px;
+  padding-left: 10px;
+  color: #2775b3;
+  font-size: 1.1em;
+}
+
+.user-thumb-profile img {
+  float: left;
+  width: 50px;
+  height: 50px;
+}
+
+.user-sidebar-profile strong {
+  font-size: 1.3em;
 }
