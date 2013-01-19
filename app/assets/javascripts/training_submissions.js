@@ -28,11 +28,16 @@ $(document).ready(function(){
         $('#explanation .result').html(resp.result);
         $('#explanation .reason').html(resp.explanation);
         $('#explanation').removeClass('hidden');
+        $('#explanation').removeClass('mcq-ans-incorrect');
+        $('#explanation').removeClass('mcq-ans-correct');
 
         if (resp.is_correct) {
           $('#continue-btn').removeClass('disabled');
           $('#continue-btn').addClass('btn-primary');
           $('#submit-btn').removeClass('btn-primary');
+          $('#explanation').addClass('mcq-ans-correct');
+        } else {
+          $('#explanation').addClass('mcq-ans-incorrect');
         }
       }, 'json');
     }

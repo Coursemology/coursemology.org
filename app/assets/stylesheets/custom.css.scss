@@ -387,13 +387,13 @@ td.user-profile-pic-col {
   }
 }
 
-.mcq-ans-correct {
+.mcq-ans-correct, .mcq-ans-correct h3 {
   background-color: #dff0d8;
   border-color: #d6e9c6;
   color: #468847;
 }
 
-.mcq-ans-incorrect {
+.mcq-ans-incorrect, .mcq-ans-incorrect h3 {
   background-color: #f2dede;
   border-color: #eed3d7;
   color: #b94a48;

@@ -133,7 +133,7 @@ class TrainingSubmissionsController < ApplicationController
 
     resp = {
       is_correct: mcqa.is_correct,
-      result: mcqa.is_correct ? "True" : "False",
+      result: mcqa.is_correct ? "Correct!" : "Incorrect!",
       explanation: mcqa.explanation
     }
 
