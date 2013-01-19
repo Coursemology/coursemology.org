@@ -35,7 +35,7 @@
         <tr>
           <% # <td>10</td> %>
           <td><%= curr_user_course.user_achievements.count() %></td>
-          <td><%= curr_user_course.level ? curr_user_course.level.level : 0 %></td>
+          <td><%= curr_user_course.level ? curr_user_course.level.level - 1 : 0 %></td>
         </tr>
       </tbody>
     </table>
