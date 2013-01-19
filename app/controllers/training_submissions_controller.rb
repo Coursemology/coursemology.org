@@ -31,7 +31,7 @@ class TrainingSubmissionsController < ApplicationController
     @qadata.each do |qid, qa|
       if @std_answers_for_questions.has_key?(qid)
         @qadata[qid][:a] =
-          @std_answers_for_questions[qid].sort_by(&:created_at).reverse
+          @std_answers_for_questions[qid].sort_by(&:created_at)
       end
     end
 

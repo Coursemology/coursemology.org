@@ -24,10 +24,10 @@
 </table>
 <hr/>
 
-<p class="well"><%= @training.description %></p>
+<p class="well"><%= @training.description.html_safe %></p>
 <% @qadata.each do |qid, qa| %>
   <h4>Question:</h4>
-  <p><%= qa[:q].description %></p>
+  <p><%= qa[:q].description.html_safe %></p>
   <ul>
     <% qa[:q].mcq_answers.each do |ans| %>
       <li>
@@ -41,27 +41,27 @@
     <% end %>
   </ul>
   <% if qa[:a] %>
-    <strong>Answer attempts (most recent first)</strong>
+    <strong>Answer attempts</strong>
     <table class="table">
       <thead>
         <tr>
           <th width="2%"></th>
           <th>Answer</th>
-          <th width="15%">Correct</th>
           <th width="15%">Submitted at</th>
         </tr>
       </thead>
       <tbody>
-        <% qa[:a].each do |ans| %>
+        <% prev_ans = nil %>
+        <% qa[:a].each_with_index do |ans, index| %>
           <% puts ans.to_json %>
-          <tr class=<%= "training-final-answer" if qa[:g] && qa[:g].student_answer == ans %>>
-            <td></td>
+          <tr class="<%= ans.mcq_answer.is_correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
+            <td><%= index + 1 %></td>
             <td><%= ans.mcq_answer.text %></td>
-            <td>
-               <input type="checkbox" disabled <%= "checked" if ans.mcq_answer.is_correct %> />
-            </td>
-            <td><%= time_ago_in_words(ans.created_at) %> ago</td>
+            <td><%= index == 0 ?
+                      time_ago_in_words(ans.created_at) + " ago"
+                      : " + " + distance_of_time_in_words(prev_ans.created_at, ans.created_at) %></td>
           </tr>
+          <% prev_ans = ans %>
         <% end %>
       </tbody>
     </table>
