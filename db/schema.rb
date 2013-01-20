@@ -306,14 +306,6 @@ ActiveRecord::Schema.define(:version => 20130115044758) do
     t.datetime "updated_at",    :null => false
   end
 
-  create_table "student_tags", :force => true do |t|
-    t.integer  "student_course_id"
-    t.integer  "tag_id"
-    t.integer  "exp"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
   create_table "submission_gradings", :force => true do |t|
     t.integer  "grader_id"
     t.integer  "total_grade"
