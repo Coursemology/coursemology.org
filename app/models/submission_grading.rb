@@ -6,6 +6,10 @@ class SubmissionGrading < ActiveRecord::Base
   belongs_to :sbm, polymorphic: true
   belongs_to :exp_transaction
 
+  def update_grade
+    self.total_grade = answer_gradings.sum(&:grade)
+  end
+
   def update_exp_transaction
     puts 'update_exp'
     asm = self.sbm.get_asm

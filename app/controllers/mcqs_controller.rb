@@ -42,6 +42,7 @@ class McqsController < ApplicationController
 
   def create
     @mcq.creator = current_user
+    @mcq.max_grade = 2
     @asm_qn = AsmQn.new
     @asm_qn.asm = @asm
     @asm_qn.qn = @mcq

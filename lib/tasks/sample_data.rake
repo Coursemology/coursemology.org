@@ -238,7 +238,7 @@ namespace :db do
     mcq = Mcq.create!(
       description: Faker::Lorem.paragraph(rand(5..7)),
       creator_id: user.id,
-      max_grade: 1
+      max_grade: 2
     )
 
     selected = false

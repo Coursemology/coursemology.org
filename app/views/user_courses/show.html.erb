@@ -7,6 +7,7 @@
       </td>
       <td style="padding-left: 10px">
         <h3><%= @user_course.user.name %></h3>
+        <p><%= @user_course.user.email %></p>
         <% if @user_course.level %>
           <p><%= @user_course.level.get_title %></p>
         <% end %>

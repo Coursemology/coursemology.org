@@ -16,22 +16,21 @@ class TrainingSubmissionsController < ApplicationController
       @qadata[mcq.id] = { q: mcq }
     end
 
-    @std_answers_for_questions = {}
+    @std_answers_for_questions = Hash.new{ |h, k| h[k] = [] }
     @training_submission.std_mcq_answers.each do |sma|
       mcq_id = sma.mcq_id
-      if !@std_answers_for_questions.has_key?(mcq_id)
-        @std_answers_for_questions[mcq_id] = []
-      end
       @std_answers_for_questions[mcq_id] << sma
     end
+    puts '==='
+    puts @training_submission.std_mcq_answers.to_json
+    puts @std_answers_for_questions.to_json
 
     # one question can have many answers.
     # collect all answers of one question in a list
     # sort by order of created time
     @qadata.each do |qid, qa|
       if @std_answers_for_questions.has_key?(qid)
-        @qadata[qid][:a] =
-          @std_answers_for_questions[qid].sort_by(&:created_at)
+        @qadata[qid][:a] = @std_answers_for_questions[qid].sort_by(&:created_at)
       end
     end
 
@@ -85,7 +84,6 @@ class TrainingSubmissionsController < ApplicationController
     # what's the current question?
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
-    # better experience => checking via. ajax
     puts 'Update', params, current_user.to_json
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid])
@@ -98,42 +96,19 @@ class TrainingSubmissionsController < ApplicationController
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
 
-    sg = @training_submission.get_final_grading
-
-    # currently, there is one answer grading for each question
-    # when there are multiple answer for one question, it
-    ag = nil
-    sg.answer_gradings.each do |g|
-      if g.student_answer.mcq == mcq
-        ag = g
-        break
-      end
-    end
-    if !ag
-      ag = sg.answer_gradings.build
-    end
-    if !ag.grade || ag.grade == 0 || mcqa.is_correct
-      ag.student_answer = sma
-      ag.grade = mcqa.is_correct ? mcq.max_grade : 0
-      ag.save
-    end
-
     mcq_pos = @training.get_qn_pos(mcq)
-    puts mcq_pos, @training_submission.current_step
+    grade = 0
     if @training_submission.current_step == mcq_pos
-      sbm_ans.is_final = true
       if mcqa.is_correct
         @training_submission.current_step = mcq_pos + 1
-        # only update the grade if this is the latest question in student's path
-        sg.total_grade += ag.grade
-        sg.update_exp_transaction
-        sg.save
+        grade = @training_submission.auto_grade(mcq, sbm_ans)
       end
     end
 
+    grade_str = grade > 0 ? " + #{grade}" : ""
     resp = {
       is_correct: mcqa.is_correct,
-      result: mcqa.is_correct ? "Correct!" : "Incorrect!",
+      result: mcqa.is_correct ? "Correct! #{grade_str}" : "Incorrect!",
       explanation: mcqa.explanation
     }
 

@@ -20,6 +20,11 @@
 
 <% if !@current_mcq %>
   <h2>Congratulations, you're done!</h2>
+  <p>
+    <a href="<%= course_training_training_submission_path(@course, @training, @training_submission)%>">
+      Click here
+    </a> to review your answers.
+  </p>
 <% else %>
   <!-- <h2>Step <%= @step %></h2> -->
 
