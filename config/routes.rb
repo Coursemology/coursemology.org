@@ -66,6 +66,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :tags
 
+    resources :tag_groups
+
     resources :asm_tags
 
     post "asm_tags/render_form_row" => "asm_tags#render_form_row"

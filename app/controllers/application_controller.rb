@@ -33,8 +33,6 @@ class ApplicationController < ActionController::Base
       ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
       @theme_settings[att.name] = ca.value
     end
-    puts @theme_settings.to_json
-
   end
 
   def load_sidebar_data
@@ -83,11 +81,15 @@ class ApplicationController < ActionController::Base
 
     if curr_user_course.is_lecturer?
       @nav_items << {
+        text: "Tags",
+        url: course_tags_url(@course),
+        icon: "icon-tags"
+      }
+      @nav_items << {
         text: "Enroll Requests",
         url: course_enroll_requests_url(@course),
         icon: "icon-bolt"
       }
-
       @nav_items << {
         text: "Settings",
         url: edit_course_url(@course),

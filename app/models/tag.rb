@@ -1,7 +1,8 @@
 class Tag < ActiveRecord::Base
-  attr_accessible :course_id, :description, :icon_url, :max_exp, :name
+  attr_accessible :course_id, :description, :icon_url, :max_exp, :name, :tag_group_id
 
   belongs_to :course
+  belongs_to :tag_group
 
   has_many :asm_tags
   has_many :std_tags

@@ -23,6 +23,7 @@ class Course < ActiveRecord::Base
   has_many :enroll_requests
 
   has_many :tags
+  has_many :tag_groups
 
   def asms
     return missions + quizzes + trainings

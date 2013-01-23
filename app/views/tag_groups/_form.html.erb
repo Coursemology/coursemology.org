@@ -1,4 +1,4 @@
-<%= form_for [@course, @tag], html: { class: 'form-horizontal' } do |f| %>
+<%= form_for [@course, @tag_group], html: { class: 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :name, class: 'control-label' %>
     <div class="controls">
@@ -9,17 +9,6 @@
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :description, :class => 'text_area span9', :rows => 10 %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label "Tag group", :class => 'control-label' %>
-    <div class="controls">
-      <select name="tag[tag_group_id]">
-        <option>Uncategorized</option>
-        <%= @tag_groups.each do |tag_group| %>
-          <option value="<%= tag_group.id %>"><%= tag_group.name %></option>
-        <% end %>
-      </select>
     </div>
   </div>
   <div class="form-actions">
