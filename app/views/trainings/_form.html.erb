@@ -28,25 +28,9 @@
   <div class="control-group">
     <label>Topic</label>
     <div class="controls">
-      <table>
-        <% @training.asm_tags.each do |asm_tag| %>
-          <%= render partial: "asm_tags/form_row", locals: { asm_tag: asm_tag } %>
-        <% end %>
-        <tr>
-          <td>
-            <select>
-              <% @tags.each do |tag| %>
-                <option value="<%= tag.id %>"><%= tag.name %></option>
-              <% end %>
-            </select>
-          </td>
-          <td>
-            <%= link_to course_asm_tags_render_form_row_path(@course), class: "btn btn-add-tag" do %>
-              <i class="icon-plus"></i>
-            <% end %>
-          </td>
-        </tr>
-      </table>
+      <%= render partial: "tags/form_checkboxes",
+        locals: { tag_groups: @course.tag_groups,
+                  exist_tags_hash: @asm_tags } %>
     </div>
   </div>
   <div class="form-actions">

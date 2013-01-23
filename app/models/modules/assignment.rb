@@ -53,17 +53,20 @@ module Assignment
     self.save
   end
 
-  def retain_asm_tags(asm_tags)
-    asm_tags ||= []
-    asm_tags = asm_tags.collect { |id| id.to_i }
-    current_asm_tags = self.asm_tags.collect { |asm_tag| asm_tag.id }
-    removed_ids = current_asm_tags - asm_tags
-    AsmTag.delete(removed_ids)
-  end
-
-  def update_tags(remaining_asm_tags, new_tags)
-    self.retain_asm_tags(remaining_asm_tags)
-    self.add_tags(new_tags)
+  def update_tags(all_tags)
+    all_tags ||= []
+    all_tags = all_tags.collect { |id| id.to_i }
+    removed_asm_tags = []
+    existing_tags = []
+    self.asm_tags.each do |asm_tag|
+      if !all_tags.include?(asm_tag.tag_id)
+        removed_asm_tags << asm_tag.id
+      else
+        existing_tags << asm_tag.tag_id
+      end
+    end
+    AsmTag.delete(removed_asm_tags)
+    self.add_tags(all_tags - existing_tags)
   end
 
   def after_save_asm
