@@ -64,7 +64,11 @@ class AchievementsController < ApplicationController
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
-        # should render single achievement view?? yeah should. with students who has won the achievement
+        @course.user_courses.each do |user_course|
+          if user_course.is_student?
+            user_course.check_achievement(@achievement)
+          end
+        end
         format.html { redirect_to course_achievements_url(@course),
                       notice: "The achievement '#{@achievement.title}' has been updated." }
       else

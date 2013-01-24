@@ -49,7 +49,7 @@
         <td><%= training.exp %></td>
         <td>
           <% training.as_requirements.each do |req| %>
-            <a href='#' title="<%= req.obj.title %>">
+            <a href='<%= req.obj.get_path %>' title="<%= req.obj.title %>">
               <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
             </a>
           <% end %>

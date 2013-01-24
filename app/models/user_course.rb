@@ -135,26 +135,31 @@ class UserCourse < ActiveRecord::Base
     puts "CHECK ACHIEVEMENT ", self.to_json
     new_ach = false
     self.course.achievements.each do |ach|
-      # verify if users will win achievement ach
-      uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-      if not uach
-        # not earned yet, check this achievement
-        puts "#{ach.fulfilled_conditions?(self)} #{ach.to_json}"
-        if ach.fulfilled_conditions?(self)
-          # assign the achievement to student
-          uach = self.user_achievements.build
-          uach.achievement = ach
-          new_ach = true
-          Activity.earned_smt(self, ach)
-          Notification.earned_achievement(self, ach)
-        end
-      end
+      new_ach ||= self.check_achievement(ach)
     end
     if new_ach
-      # better save first so that other models can do the checking correctly.
-      self.save
       self.update_achievements
     end
+  end
+
+  def check_achievement(ach)
+    # verify if users will win achievement ach
+    uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
+    fulfilled = false
+    if not uach
+      # not earned yet, check this achievement
+      puts "#{ach.fulfilled_conditions?(self)} #{ach.to_json}"
+      if ach.fulfilled_conditions?(self)
+        # assign the achievement to student
+        uach = self.user_achievements.build
+        uach.achievement = ach
+        fulfilled = true
+        Activity.earned_smt(self, ach)
+        Notification.earned_achievement(self, ach)
+        self.save
+      end
+    end
+    return fulfilled
   end
 
   def create_all_std_tags
