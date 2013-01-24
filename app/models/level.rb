@@ -7,7 +7,7 @@ class Level < ActiveRecord::Base
   belongs_to :course
 
   def get_title
-    return "Level #{level}"
+    return "Level #{level - 1}"
   end
 
   def get_path

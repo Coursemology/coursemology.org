@@ -3,6 +3,8 @@ class UserCourse < ActiveRecord::Base
 
   attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
 
+  before_create :init
+
   belongs_to :role
   belongs_to :user
   belongs_to :course
@@ -117,7 +119,7 @@ class UserCourse < ActiveRecord::Base
       # now: level = first level that is beyonds user's exp
       # how level is calculated must be given more thought
       if lvl.exp_threshold > self.exp
-        if self.level != lvl
+        if self.level != lvl && lvl.level > 1
           Activity.earned_smt(self, lvl)
         end
         self.level = lvl
@@ -164,5 +166,10 @@ class UserCourse < ActiveRecord::Base
       end
     end
     self.save
+  end
+
+  def init
+    self.exp = 0
+    self.level = self.course.levels.find_by_level(1)
   end
 end
