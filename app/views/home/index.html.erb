@@ -11,7 +11,7 @@
   <h2>Courses you are attending:</h2>
   <br/>
   <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses } %>
-
+  <p>Click <%= link_to 'here', courses_path %> to view all available courses.</p>
 <% else %>
   <p>Choose a course to enroll!</p>
   <br/>

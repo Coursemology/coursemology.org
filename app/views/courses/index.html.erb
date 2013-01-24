@@ -2,17 +2,4 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
-<% @courses.each do |course| %>
-  <div class="media">
-    <a class="pull-left" href="<%= course_path(course) %>">
-      <img class="media-object" src="<%= course.logo_url %> /">
-    </a>
-    <div class="media-body">
-      <h4 class="media-heading"><%= course.title %></h4>
-      <p><%= course.description %></p>
-    </div>
-  </div>
-<% end %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_course_path,
-            :class => 'btn btn-primary' %>
+<%= render :partial => "courses/thumbnails", :locals => { :courses => @courses } %>
