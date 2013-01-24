@@ -3,6 +3,14 @@
 </div>
 <p id="training-stop-pos"></p>
 <p class="well"><%= @training.description.html_safe %></p>
+<p><b>Grading</b></p>
+<ul>
+  <li>Correct on first try - <b>2 pts</b></li>
+  <li>If mistakes were made - <b>1 pt</b></li>
+  <li>If all choices made were wrong - <b>0 pts</b></li>
+</ul>
+So choose carefully!
+<hr/>
 <div class="step-list">
   <% (1..@max_step).each do |i| %>
     <% if i <= @current_step %>
@@ -26,8 +34,6 @@
     </a> to review your answers.
   </p>
 <% else %>
-  <!-- <h2>Step <%= @step %></h2> -->
-
   <form id="training-step-form">
     <input type="hidden" name="update_url"
         value=<%= course_training_training_submission_submit_path(@course,
