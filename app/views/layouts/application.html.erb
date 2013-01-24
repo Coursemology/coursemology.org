@@ -31,7 +31,7 @@
         }
       <% end %>
       <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
-        .sidebar a {
+        .sidebar a, .sidebar h3, .sidebar {
           color: <%= @theme_settings['Sidebar Link Color'] %>;
         }
         .sidenav-count {
