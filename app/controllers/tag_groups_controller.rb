@@ -31,4 +31,12 @@ class TagGroupsController < ApplicationController
       end
     end
   end
+
+  def destroy
+    @tag_group.destroy
+    respond_to do |format|
+      format.html { redirect_to course_tags_url(@course),
+                    notice: "The tag group '#{@tag_group.name}' has been removed." }
+    end
+  end
 end

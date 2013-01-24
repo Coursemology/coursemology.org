@@ -1,11 +1,11 @@
 class AsmReq < ActiveRecord::Base
   EPS = 1e-5
 
+  include AsRequirement
+
   attr_accessible :asm_id, :asm_type, :min_grade
 
   belongs_to :asm, polymorphic: true
-
-  has_many :requirements, as: :req, dependent: :destroy
 
   def satisfied?(user_course)
     # satisfied this asm or not?

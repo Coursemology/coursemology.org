@@ -1,4 +1,6 @@
 class TrainingSubmission < ActiveRecord::Base
+  acts_as_paranoid
+
   include Rails.application.routes.url_helpers
   include Sbm
 
@@ -8,11 +10,8 @@ class TrainingSubmission < ActiveRecord::Base
   belongs_to :std_course, class_name: "UserCourse"
   belongs_to :training
 
-  has_many :sbm_answers, as: :sbm
   has_many :std_mcq_answers, through: :sbm_answers,
       source: :answer, source_type: "StdMcqAnswer"
-
-  has_many :submission_gradings, as: :sbm
 
   def get_asm
     return self.training

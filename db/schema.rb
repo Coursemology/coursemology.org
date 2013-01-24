@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130123170709) do
+ActiveRecord::Schema.define(:version => 20130124121621) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.integer  "course_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.time     "deleted_at"
   end
 
   create_table "actions", :force => true do |t|
@@ -51,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "updated_at",  :null => false
     t.string   "title"
     t.string   "description"
+    t.time     "deleted_at"
   end
 
   create_table "answer_gradings", :force => true do |t|
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "updated_at",  :null => false
     t.string   "logo_url"
     t.string   "banner_url"
+    t.time     "deleted_at"
   end
 
   create_table "enroll_requests", :force => true do |t|
@@ -125,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.integer  "giver_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.time     "deleted_at"
   end
 
   create_table "file_uploads", :force => true do |t|
@@ -212,6 +216,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+    t.time     "deleted_at"
   end
 
   create_table "quizzes", :force => true do |t|
@@ -327,6 +332,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
+    t.time     "deleted_at"
   end
 
   create_table "tag_groups", :force => true do |t|
@@ -335,6 +341,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.integer  "course_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.time     "deleted_at"
   end
 
   create_table "tags", :force => true do |t|
@@ -346,6 +353,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "tag_group_id"
+    t.time     "deleted_at"
   end
 
   create_table "theme_attributes", :force => true do |t|
@@ -373,6 +381,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "submit_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.time     "deleted_at"
   end
 
   create_table "trainings", :force => true do |t|
@@ -386,6 +395,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "max_grade"
+    t.time     "deleted_at"
   end
 
   create_table "user_achievements", :force => true do |t|
@@ -403,6 +413,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "level_id"
+    t.time     "deleted_at"
   end
 
   create_table "user_rewards", :force => true do |t|
@@ -438,6 +449,7 @@ ActiveRecord::Schema.define(:version => 20130123170709) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.integer  "system_role_id"
+    t.time     "deleted_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

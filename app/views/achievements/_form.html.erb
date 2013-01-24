@@ -48,7 +48,7 @@
     <label class="control-label">Trainings</label>
     <div class="controls">
       <table>
-        <% @achievement.asm_reqs.each do |asm_req| %>
+        <% @achievement.requirements.asm_req.each do |asm_req| %>
           <%= render partial: "requirements/asm_req_row", locals: { asm_req: asm_req } %>
         <% end %>
         <tr>
@@ -77,7 +77,7 @@
     <label class="control-label">Achievements</label>
     <div class="controls">
       <table>
-      <% @achievement.ach_reqs.each do |ach_req| %>
+      <% @achievement.requirements.ach_req.each do |ach_req| %>
         <%= render partial: "requirements/ach_req_row", locals: { ach_req: ach_req } %>
       <% end %>
       <tr>

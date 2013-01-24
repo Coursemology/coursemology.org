@@ -30,7 +30,7 @@
       </td>
       <td>
         <ul>
-        <% ach.asm_reqs.each do |asm_req| %>
+        <% ach.requirements.asm_req.each do |asm_req| %>
           <li>
             <% if ach_info[:req_check][asm_req.id] %>
               <i class="icon-ok"></i>
@@ -41,7 +41,7 @@
             <%= link_to asm_req.req.asm.get_title, asm_req.req.asm.get_path %>
           </li>
         <% end %>
-        <% ach.ach_reqs.each do |ach_req| %>
+        <% ach.requirements.ach_req.each do |ach_req| %>
           <li>
             <% if ach_info[:req_check][ach_req.id] %>
               <i class="icon-ok"></i>

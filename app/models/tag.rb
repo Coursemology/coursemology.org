@@ -1,11 +1,13 @@
 class Tag < ActiveRecord::Base
+  acts_as_paranoid
+
   attr_accessible :course_id, :description, :icon_url, :max_exp, :name, :tag_group_id
 
   belongs_to :course
   belongs_to :tag_group
 
-  has_many :asm_tags
-  has_many :std_tags
+  has_many :asm_tags, dependent: :destroy
+  has_many :std_tags, dependent: :destroy
 
   has_many :trainings, through: :asm_tags, source: :asm, source_type: "Training"
 

@@ -1,4 +1,6 @@
 class Course < ActiveRecord::Base
+  acts_as_paranoid
+
   attr_accessible :creator_id, :description, :logo_url, :title
 
   belongs_to :creator, class_name: "User"

@@ -1,4 +1,12 @@
 module Sbm
+
+  def self.included(base)
+    base.class_eval do
+      has_many :sbm_answers, as: :sbm, dependent: :destroy
+      has_many :submission_gradings, as: :sbm, dependent: :destroy
+    end
+  end
+
   def get_asm
     raise NotImplementedError
   end

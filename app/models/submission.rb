@@ -1,4 +1,6 @@
 class Submission < ActiveRecord::Base
+  acts_as_paranoid
+
   include Rails.application.routes.url_helpers
   include Sbm
 
@@ -8,9 +10,6 @@ class Submission < ActiveRecord::Base
   belongs_to :std_course, class_name: "UserCourse"
   belongs_to :final_grading, class_name: "SubmissionGrading"
 
-  has_many :submission_gradings, as: :sbm
-
-  has_many :sbm_answers, as: :sbm
   has_many :std_answers, through: :sbm_answers,
       source: :answer, source_type: "StdAnswer"
 

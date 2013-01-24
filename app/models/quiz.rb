@@ -1,14 +1,17 @@
 class Quiz < ActiveRecord::Base
+
   include Rails.application.routes.url_helpers
+  # Assignments may have other assignment as requirement
+  # Not implemented yet.
+  include HasRequirement
   include ActivityObject
   include Assignment
 
   attr_accessible :attempt_limit, :close_at, :course_id, :creator_id, :description, :exp,
       :max_grade, :open_at, :pos, :title
 
-  has_many :asm_qns, as: :asm
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
-  has_many :quiz_submissions
+  has_many :quiz_submissions, dependent: :destroy
 
   belongs_to :creator, class_name: "User"
   belongs_to :course

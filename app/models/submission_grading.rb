@@ -1,7 +1,8 @@
 class SubmissionGrading < ActiveRecord::Base
   attr_accessible :comment, :grader_id, :publish_at, :sbm_id, :sbm_type, :total_grade
 
-  has_many :answer_gradings
+  has_many :answer_gradings, dependent: :destroy
+
   belongs_to :grader, class_name: "User"
   belongs_to :sbm, polymorphic: true
   belongs_to :exp_transaction

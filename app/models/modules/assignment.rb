@@ -7,14 +7,12 @@ module Assignment
       scope :opened, lambda { where("open_at <= ? ", Time.now) }
       scope :future, lambda { where("open_at > ? ", Time.now) }
 
-      # mission can have other assigments as requirement
-      has_many :requirements, as: :obj, dependent: :destroy
-      has_many :asm_reqs, through: :requirements, source: :req, source_type: "AsmReq"
-
       has_many :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
-      has_many :as_requirements, through: :as_asm_reqs, source: :requirements
+      has_many :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
-      has_many :asm_tags, as: :asm
+      has_many :asm_qns, as: :asm, dependent: :destroy
+
+      has_many :asm_tags, as: :asm, dependent: :destroy
       has_many :tags, through: :asm_tags
 
       after_save :after_save_asm

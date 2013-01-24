@@ -1,4 +1,6 @@
 class Announcement < ActiveRecord::Base
+  acts_as_paranoid
+
   attr_accessible :course_id, :creator_id, :description, :important, :publish_at, :title
 
   scope :published, lambda { where("publish_at <= ? ", Time.now) }

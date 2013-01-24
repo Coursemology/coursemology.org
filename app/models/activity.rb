@@ -1,6 +1,6 @@
 class Activity < ActiveRecord::Base
-  attr_accessible :action_id, :actor_course_id, :course_id, :extra, :obj_id, :obj_type,
-      :target_course_id
+  attr_accessible :action_id, :actor_course_id, :course_id, :extra, :obj_id,
+      :obj_type, :target_course_id
 
   belongs_to :course
   belongs_to :action

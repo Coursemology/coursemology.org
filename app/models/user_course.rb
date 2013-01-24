@@ -1,4 +1,6 @@
 class UserCourse < ActiveRecord::Base
+  acts_as_paranoid
+
   attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
 
   belongs_to :role
