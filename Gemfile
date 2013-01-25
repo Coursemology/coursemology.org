@@ -36,6 +36,7 @@ gem 'cancan'
 gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
+gem 'yaml_db'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
