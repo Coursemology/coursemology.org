@@ -13,7 +13,11 @@ class ApplicationController < ActionController::Base
         @course.id
       )
     end
-    @curr_user_course ||= UserCourse.new(user_id: current_user.id)
+    if current_user
+      @curr_user_course ||= UserCourse.new(user_id: current_user.id)
+    else
+      @curr_user_course ||= UserCourse.new
+    end
     return @curr_user_course
   end
 
