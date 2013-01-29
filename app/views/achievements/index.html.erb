@@ -23,7 +23,7 @@
     <% @achievements_with_info.each do |ach_info| %>
     <% ach = ach_info[:ach] %>
     <tr class="<%= ach_info[:won] ? "ach-won" : "ach-normal" %>">
-      <td><img class="ach-icon" src=<%= ach.icon_url %> /></td>
+      <td><img class="ach-icon" src="<%= ach.icon_url %>" /></td>
       <td>
         <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
         <p><%= ach.description %></p>

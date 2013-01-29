@@ -1,11 +1,11 @@
 <tr>
   <td>
-    <a href=<%= course_level_path(@course, lvl) %> class="lvl-url hidden"></a>
+    <a href="<%= course_level_path(@course, lvl) %>" class="lvl-url hidden"></a>
     <%= lvl.level %>
   </td>
   <td>
     <span class="lvl-threshold"><%= lvl.exp_threshold %></span>
-    <input value=<%= lvl.exp_threshold %> class="lvl-threshold-input hidden"/>
+    <input value="<%= lvl.exp_threshold %>" class="lvl-threshold-input hidden"/>
   </td>
   <% if curr_user_course.is_lecturer? %>
     <td>

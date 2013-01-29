@@ -18,7 +18,7 @@
       <% @lecturer_requests.each do |rq| %>
         <tr>
           <input type="hidden" class="destroy-url"
-              value=<%= role_request_path(rq.id) %> />
+              value="<%= role_request_path(rq.id) %>" />
           <td><%= rq.id %></td>
           <td><%= rq.user.name %></td>
           <td><%= rq.user.email %></td>

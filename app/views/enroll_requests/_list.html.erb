@@ -11,7 +11,7 @@
     <% requests.each do |ec| %>
     <tr>
       <input type="hidden" class="destroy-url"
-          value=<%= course_enroll_request_path(@course, ec.id) %> />
+          value="<%= course_enroll_request_path(@course, ec.id) %>" />
       <td><%= ec.id %></td>
       <td><%= ec.user.name %></td>
       <td><%= ec.user.email %></td>

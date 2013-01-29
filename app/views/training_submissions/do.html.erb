@@ -36,9 +36,9 @@ So choose carefully!
 <% else %>
   <form id="training-step-form">
     <input type="hidden" name="update_url"
-        value=<%= course_training_training_submission_submit_path(@course,
-                      @training, @training_submission) %> />
-    <input type="hidden" name="qid" value=<%= @current_mcq.id %> />
+        value="<%= course_training_training_submission_submit_path(@course,
+                      @training, @training_submission) %>" />
+    <input type="hidden" name="qid" value="<%= @current_mcq.id %>" />
     <p><%= @current_mcq.description.html_safe %></p>
     <ul>
     <% @current_mcq.mcq_answers.each do |ans| %>

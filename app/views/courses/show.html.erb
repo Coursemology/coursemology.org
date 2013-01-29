@@ -3,13 +3,13 @@
     <h1><%= @course.title %></h1>
     <% if current_user %>
       <div class="pull-right">
-        <a href=<%= new_course_enroll_request_path(@course) %> class="btn btn-primary">Request to Enroll</a>
+        <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-primary">Request to Enroll</a>
       </div>
     <% end %>
     <div class="media">
       <a class="pull-left" href="#">
         <img class="media-object activity-icon"
-          src=<%= @course.creator.profile_photo_url %> >
+          src="<%= @course.creator.profile_photo_url %>" >
       </a>
       <div class="media-body">
         <%= @course.creator.name %>
@@ -32,15 +32,15 @@
 <ul class="activities">
 <% @activities.each do |act| %>
   <li class="media">
-    <a class="pull-left" href=<%= course_user_course_path(@course, act.actor_course) %>>
+    <a class="pull-left" href="<%= course_user_course_path(@course, act.actor_course) %>">
       <img class="media-object activity-icon"
-        src=<%= act.actor_course.user.profile_photo_url %> >
+        src="<%= act.actor_course.user.profile_photo_url %>">
     </a>
     <div class="media-body">
-      <a href=<%= course_user_course_path(@course, act.actor_course) %>>
+      <a href="<%= course_user_course_path(@course, act.actor_course) %>">
         <%= act.actor_course.user.name %>
       </a> <%= act.action.text %>
-      <a href=<%= act.obj.get_path %>><%= act.obj.get_title %></a>
+      <a href="<%= act.obj.get_path %>"><%= act.obj.get_title %></a>
       &middot;
       <span class="time-small"><%= time_ago_in_words(act.created_at) %>
     </div>

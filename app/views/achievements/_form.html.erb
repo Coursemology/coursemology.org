@@ -57,7 +57,7 @@
             % in
             <select class="form-temp">
               <% @all_asm.each do |asm| %>
-                <option value=<%= asm.id %> data-type=<%= asm.class.name %>>
+                <option value="<%= asm.id %>" data-type="<%= asm.class.name %>">
                   <%= asm.get_title %>
                 </option>
               <% end %>
@@ -85,7 +85,7 @@
           Earned
           <select name="achievement" class="form-temp">
             <% @all_ach.each do |ach| %>
-              <option value=<%= ach.id %>><%= ach.title %></option>
+              <option value="<%= ach.id %>"><%= ach.title %></option>
           <% end %>
           </select>
         </td>

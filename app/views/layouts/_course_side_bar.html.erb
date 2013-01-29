@@ -9,7 +9,7 @@
   <div>
     <div class="user-sidebar-profile">
       <a class="user-thumb-profile" href="<%= course_user_course_path(@course, curr_user_course)%>">
-        <img class="user-profile-pic" src=<%= current_user.profile_photo_url %> />
+        <img class="user-profile-pic" src="<%= current_user.profile_photo_url %>" />
         <strong><%= current_user.name %></strong>
       </a>
       <div class="clearfix"></div>
@@ -56,7 +56,7 @@
   <% if @nav_items %>
     <% @nav_items.each do |item| %>
       <li>
-        <a href=<%= item[:url] %>>
+        <a href="<%= item[:url] %>">
           <span class="nav-icon">
             <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
               <img src="<%= item[:img] %>" />

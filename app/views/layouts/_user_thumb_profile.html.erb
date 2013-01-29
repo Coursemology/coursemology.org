@@ -1,6 +1,6 @@
 <% user = user_course.user %>
 <a class="user-thumb-profile" href="<%= course_user_course_path(@course, user_course)%>">
-  <img class="user-profile-pic" src=<%= user.profile_photo_url %> />
+  <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
   <strong><%= user.name %></strong>
 </a>
 <div class="clearfix"></div>
