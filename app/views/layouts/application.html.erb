@@ -15,9 +15,16 @@
         background-color: white;
       }
     </style>
+  <% else %>
+    <% if @course.course_themes.count > 0 %>
+      <% theme = @course.course_themes.first %>
+      <link href="<%= "#{theme.theme_folder_url}/style.css" %>" media="all"
+          rel="stylesheet" type="text/css" />
+    <% end %>
   <% end %>
   <% if @theme_settings %>
     <style>
+      <%= @theme_settings['Custom CSS'] %>
       <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
         body {
           background-color: <%= @theme_settings['Background Color'] %>
@@ -38,7 +45,6 @@
           background-color: <%= @theme_settings['Sidebar Link Color'] %>;
         }
       <% end %>
-
     </style>
   <% end %>
   <%= render partial: "layouts/google_analytics" %>

@@ -27,6 +27,8 @@ class Course < ActiveRecord::Base
   has_many :tags
   has_many :tag_groups
 
+  has_many :course_themes  # currently only has one though
+
   def asms
     return missions + quizzes + trainings
   end

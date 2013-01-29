@@ -29,7 +29,23 @@
   </div>
 
   <hr/>
-  <h1>Customize Theme</h1>
+  <h3>Uploade New Theme</h3>
+  <div class="control-group">
+    <label>Theme</label>
+    <div class="controls">
+      <div class="theme-zip-target-done" style="display:none">Uploaded!</div>
+      <input type="hidden" name="theme_folder_url"
+          class="theme-zip-target-input"
+          value="" />
+      <a href="#file-uploader-modal"
+          class="file-uploader-trigger"
+          data-target=".theme-zip-target"
+          data-toggle="modal">Upload Zip File</a>
+    </div>
+  </div>
+
+  <hr/>
+  <h3>Customize Theme</h3>
   <% @course_atts.each do |ca| %>
     <div class="control-group">
       <label><%= ca.theme_attribute.name %></label>
@@ -51,20 +67,22 @@
               class="image-uploader-trigger"
               data-target=".theme-attribute-<%= ca.theme_attribute.id %>-target"
               data-toggle="modal">Upload image</a>
+        <% when "text" %>
+          <textarea class="span6" rows="7" name="course_atts[<%= ca.id %>]"><%= ca.value %></textarea>
         <% else %>
           <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>">
         <% end %>
       </div>
     </div>
   <% end %>
+
   <div class="form-actions">
     <%= f.submit nil, class: 'btn btn-primary' %>
     <%= link_to t('.cancel', default: t("helpers.links.cancel")),
                 courses_path, class: 'btn' %>
   </div>
+
 <% end %>
 
-<%= render partial: "layouts/image_uploader",
-      locals: { upload_to: course_file_uploads_path(@course),
-                container_class: '',
-                image_url_class: '' } %>
+<%= render partial: "layouts/file_uploader",
+      locals: { upload_to: course_file_uploads_path(@course) } %>

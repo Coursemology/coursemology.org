@@ -53,7 +53,13 @@ if ThemeAttribute.count == 0
   ThemeAttribute.create! name: "Submissions Icon",
       description: "Icon for the Submissions navigation link on the sidebar",
       value_type: "image"
-  ThemeAttribute.create! name: "Leaderboard Icon",
+  ThemeAttribute.create! name: "Leaderboards Icon",
       description: "Icon for the Leaderboard navigation link on the sidebar",
       value_type: "image"
+end
+
+if ThemeAttribute.count == 8
+  ThemeAttribute.create! name: "Custom CSS",
+      description: "Custom style sheet rules",
+      value_type: "text"
 end

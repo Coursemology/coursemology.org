@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124121621) do
+ActiveRecord::Schema.define(:version => 20130128190046) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -99,6 +99,14 @@ ActiveRecord::Schema.define(:version => 20130124121621) do
     t.string   "value"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+  end
+
+  create_table "course_themes", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "theme_id"
+    t.string   "theme_folder_url"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "courses", :force => true do |t|

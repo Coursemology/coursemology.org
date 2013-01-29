@@ -50,12 +50,13 @@ class CoursesController < ApplicationController
     atts = []
     atts << ThemeAttribute.find_by_name('Background Color')
     atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Announcements Icon')
-    atts << ThemeAttribute.find_by_name('Missions Icon')
-    atts << ThemeAttribute.find_by_name('Trainings Icon')
-    atts << ThemeAttribute.find_by_name('Submissions Icon')
-    atts << ThemeAttribute.find_by_name('Leaderboard Icon')
-    atts << ThemeAttribute.find_by_name('Background Image')
+    atts << ThemeAttribute.find_by_name('Custom CSS')
+    # atts << ThemeAttribute.find_by_name('Announcements Icon')
+    # atts << ThemeAttribute.find_by_name('Missions Icon')
+    # atts << ThemeAttribute.find_by_name('Trainings Icon')
+    # atts << ThemeAttribute.find_by_name('Submissions Icon')
+    # atts << ThemeAttribute.find_by_name('Leaderboard Icon')
+    # atts << ThemeAttribute.find_by_name('Background Image')
 
     @course_atts = []
     atts.each do |att|

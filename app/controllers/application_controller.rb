@@ -21,17 +21,28 @@ class ApplicationController < ActionController::Base
     atts = []
     atts << ThemeAttribute.find_by_name('Background Color')
     atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Announcements Icon')
-    atts << ThemeAttribute.find_by_name('Missions Icon')
-    atts << ThemeAttribute.find_by_name('Trainings Icon')
-    atts << ThemeAttribute.find_by_name('Submissions Icon')
-    atts << ThemeAttribute.find_by_name('Leaderboard Icon')
-    atts << ThemeAttribute.find_by_name('Background Image')
+    atts << ThemeAttribute.find_by_name('Custom CSS')
+    # atts << ThemeAttribute.find_by_name('Announcements Icon')
+    # atts << ThemeAttribute.find_by_name('Missions Icon')
+    # atts << ThemeAttribute.find_by_name('Trainings Icon')
+    # atts << ThemeAttribute.find_by_name('Submissions Icon')
+    # atts << ThemeAttribute.find_by_name('Leaderboards Icon')
+    # atts << ThemeAttribute.find_by_name('Background Image')
 
     @theme_settings = {}
     atts.each do |att|
       ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
       @theme_settings[att.name] = ca.value
+    end
+
+    theme = @course.course_themes.first
+    if theme
+      theme_folder = theme.theme_folder_url
+      @theme_settings['Announcements Icon'] = "#{theme_folder}/images/announcements_icon.png"
+      @theme_settings['Trainings Icon'] = "#{theme_folder}/images/trainings_icon.png"
+      @theme_settings['Submissions Icon'] = "#{theme_folder}/images/submissions_icon.png"
+      @theme_settings['Leaderboards Icon'] = "#{theme_folder}/images/leaderboards_icon.png"
+      @theme_settings['Background Image'] = "#{theme_folder}/images/background.png"
     end
   end
 
@@ -71,7 +82,7 @@ class ApplicationController < ActionController::Base
     }, {
       text: "Leaderboards",
       url: course_leaderboards_url(@course),
-      img: @theme_settings["Leaderboard Icon"],
+      img: @theme_settings["Leaderboards Icon"],
       icon: "icon-star-empty"
     }, {
       text: "Students",
