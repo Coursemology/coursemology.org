@@ -38,7 +38,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def is_lecturer?
-    return self.role == Role.find_by_name('lecturer')
+    return self.user.is_admin? || self.role == Role.find_by_name('lecturer')
   end
 
   def level_percentage

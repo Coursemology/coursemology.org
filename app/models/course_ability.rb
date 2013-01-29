@@ -5,10 +5,9 @@ class CourseAbility
   # https://github.com/ryanb/cancan/wiki/Changing-Defaults
   # https://github.com/ryanb/cancan/wiki/Accessing-request-data
   def initialize(user_course)
-    user_course ||= UserCourse.new
+    # user_course ||= UserCourse.new
 
-    if user_course.id &&
-        (user_course.user.is_admin? || user_course.is_lecturer?)
+    if user_course.is_lecturer?
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all

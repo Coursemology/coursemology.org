@@ -12,6 +12,7 @@
 
 # Ignore all logfiles and tempfiles.
 /public/system/file_uploads/
+/public/course_themes
 /log/*.log
 /tmp
 /doc
