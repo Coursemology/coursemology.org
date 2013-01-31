@@ -5,21 +5,14 @@ class AchievementsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def index
-    # need to know for each achievement:
-    # - student has won it or not?
-    # - what requirements has the students fulfilled
-    uc = UserCourse.find_by_user_id_and_course_id(
-      current_user.id, @course.id)
-
     @achievements_with_info = []
-
     @achievements.each do |ach|
       req_check = {}
-      if uc
+      if curr_user_course
         uach = UserAchievement.find_by_user_course_id_and_achievement_id(
-          uc.id, ach.id)
+          curr_user_course.id, ach.id)
         ach.requirements.each do |req|
-          req_check[req.id] = req.satisfied?(uc)
+          req_check[req.id] = req.satisfied?(curr_user_course)
         end
       end
       @achievements_with_info << {

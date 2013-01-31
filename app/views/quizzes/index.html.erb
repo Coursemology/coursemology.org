@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, Quiz %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_quiz_path(@course),
               :class => 'btn btn-primary' %>
@@ -30,11 +30,7 @@
           <% end %>
         </td>
         <td><%= quiz.exp %></td>
-        <% if curr_user_course.is_student? %>
-          <td>
-            <%= link_to 'Attempt', new_course_quiz_quiz_submission_path(@course, quiz), class: 'btn' %>
-          </td>
-        <% elsif current_user.is_lecturer? %>
+        <% if can? :manage, Quiz %>
           <td>
             <%= link_to edit_course_quiz_path(@course, quiz), :class => 'btn' do %>
               <i class="icon-edit"></i>
@@ -45,6 +41,10 @@
                         class: 'btn btn-danger' do %>
                <i class="icon-trash"></i>
             <% end %>
+          </td>
+        <% elsif curr_user_course.is_student? %>
+          <td>
+            <%= link_to 'Attempt', new_course_quiz_quiz_submission_path(@course, quiz), class: 'btn' %>
           </td>
         <% end %>
       </tr>

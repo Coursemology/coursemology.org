@@ -21,7 +21,7 @@
 </table>
 <hr/>
 
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, @quiz %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_quiz_mcq_path(@course, @quiz),
               :class => 'btn btn-primary' %>

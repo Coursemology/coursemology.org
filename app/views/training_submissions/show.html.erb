@@ -31,7 +31,7 @@
   <ul>
     <% qa[:q].mcq_answers.each do |ans| %>
       <li>
-        <% if curr_user_course.is_lecturer? %>
+        <% if can? :manage, Training %>
           <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
         <% else %>
           <input type="checkbox" disabled />

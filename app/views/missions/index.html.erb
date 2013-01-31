@@ -3,7 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, Mission %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_mission_path(@course),
               :class => 'btn btn-primary' %>
@@ -15,7 +15,7 @@
       <th>Mission</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
-      <% if curr_user_course.is_lecturer? %>
+      <% if can? :manage, Mission %>
         <th width="10%">Time till open</th>
       <% end %>
       <th width="10%">Time Left</th>
@@ -46,7 +46,7 @@
           <% end %>
         </td>
 
-        <% if curr_user_course.is_lecturer? %>
+        <% if can? :manage, Mission %>
           <td>
             <% if mission.open_at > Time.now %>
               <%= time_ago_in_words(mission.open_at) %>
@@ -63,13 +63,7 @@
             ----
           <% end %>
         </td>
-        <% if curr_user_course.is_student? %>
-          <td>
-            <% if mission.close_at > Time.now %>
-              <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), class: 'btn' %>
-           <% end %>
-          </td>
-        <% elsif curr_user_course.is_lecturer? %>
+        <% if can? :manage, Mission %>
           <td>
             <%= link_to edit_course_mission_path(@course, mission), class: 'btn' do %>
               <i class="icon-edit"></i>
@@ -80,6 +74,12 @@
                         class: 'btn btn-danger' do %>
                <i class="icon-trash"></i>
             <% end %>
+          </td>
+        <% elsif can? :manage, Submission %>
+          <td>
+            <% if mission.close_at > Time.now %>
+              <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), class: 'btn' %>
+           <% end %>
           </td>
         <% end %>
       </tr>

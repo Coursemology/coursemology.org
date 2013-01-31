@@ -37,7 +37,7 @@
 </table>
 <a href="<%= course_mission_submissions_path(@course, @mission) %>">View submissions</a>
 
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, @mission %>
   <hr/>
   <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
     Add Question

@@ -2,7 +2,7 @@
   <h1>Achievements</h1>
 </div>
 
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, Achievement %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_achievement_path(@course),
               :class => 'btn btn-primary' %>
@@ -14,7 +14,7 @@
       <th width="10%"></th>
       <th width="40%">Description</th>
       <th>Requirements</th>
-      <% if curr_user_course.is_lecturer? %>
+      <% if can? :manage, Achievement %>
         <th width="10%">Actions</th>
       <% end %>
     </tr>
@@ -54,7 +54,7 @@
         <% end %>
         </ul>
       </td>
-      <% if curr_user_course.is_lecturer? %>
+      <% if can? :manage, Achievement %>
         <td>
           <%= link_to edit_course_achievement_path(@course, ach), class: 'btn' do %>
             <i class="icon-edit"></i>

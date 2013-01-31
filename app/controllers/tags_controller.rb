@@ -35,7 +35,7 @@ class TagsController < ApplicationController
   end
 
   def show
-    if curr_user_course.is_lecturer?
+    if can? :manage, Training
       @trainings = @tag.trainings
     else
       @trainings = @tag.trainings.opened
