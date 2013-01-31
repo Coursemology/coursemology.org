@@ -5,7 +5,7 @@
 <table class="table">
   <thead>
     <tr>
-      <% if curr_user_course.is_lecturer? %>
+      <% if can? :see_all, Submission %>
         <th width="20%">Student</th>
       <% end %>
       <th>Mission</th>
@@ -17,17 +17,17 @@
   <tbody>
     <% @sbms.each do |sub| %>
       <tr>
-        <% if curr_user_course.is_lecturer? %>
+        <% if can? :see_all, Submission %>
           <td>
             <%= sub.std_course.user.name %>
             <% if @unseen.include?(sub) %>
-              <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"
+              <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
             <% end %>
           </td>
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.created_at) %> ago</td>
-        <% if curr_user_course.is_lecturer? %>
+        <% if can? :manage, SubmissionGrading %>
           <td>
             <% sub.submission_gradings.each do |sg| %>
               <%= link_to sg.get_name, sub.get_path %><br/>
@@ -44,7 +44,7 @@
               <%= link_to "View", sub.get_path, class: "btn"%>
             </td>
           <% end %>
-        <% elsif curr_user_course.is_student? %>
+        <% else %>
           <td>
             <%= "Graded" if sub.submission_gradings.count > 0 %>
           </td>

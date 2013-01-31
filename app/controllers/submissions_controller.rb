@@ -10,21 +10,18 @@ class SubmissionsController < ApplicationController
 
   def listall
     @unseen = []
-    @sbms = []
+    @sbms = @course.submissions.accessible_by(current_ability) +
+            @course.training_submissions.accessible_by(current_ability) +
+            @course.quiz_submissions.accessible_by(current_ability)
+
     if curr_user_course.id
-      if curr_user_course.is_lecturer?
-        @sbms = @course.submissions + @course.training_submissions +
-            @course.quiz_submissions
-        @unseen = curr_user_course.get_unseen_sbms
-        @unseen.each do |sbm|
-          curr_user_course.mark_as_seen(sbm)
-        end
-      else
-        @sbms = curr_user_course.submissions + curr_user_course.training_submissions +
-            curr_user_course.quiz_submissions
+      @seen = curr_user_course.get_seen_sbms
+      @unseen = @sbms - @seen
+      @unseen.each do |sbm|
+        curr_user_course.mark_as_seen(sbm)
       end
-      @sbms = @sbms.sort_by(&:created_at).reverse
     end
+    @sbms = @sbms.sort_by(&:created_at).reverse
   end
 
   def show

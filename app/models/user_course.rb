@@ -79,14 +79,9 @@ class UserCourse < ActiveRecord::Base
     return self.get_announcements - self.seen_announcements
   end
 
-  def get_unseen_sbms
-    if self.is_lecturer?
-      all_sbms = course.submissions + course.training_submissions +
-        course.quiz_submissions
-      seen_sbms = seen_submissions + seen_training_submissions + seen_quiz_submissions
-      return all_sbms - seen_sbms
-    end
-    return nil
+  def get_seen_sbms
+    seen_sbms = seen_submissions + seen_training_submissions + seen_quiz_submissions
+    return seen_sbms
   end
 
   def get_unseen_notifications

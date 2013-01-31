@@ -91,11 +91,21 @@ class ApplicationController < ActionController::Base
       icon: "icon-user",
     }]
 
-    if curr_user_course.is_lecturer?
+    if can? :manage, Course
       @nav_items << {
         text: "Tags",
         url: course_tags_url(@course),
         icon: "icon-tags"
+      }
+      @nav_items << {
+        text: "Levels",
+        url: course_levels_url(@course),
+        icon: "icon-star-empty"
+      }
+      @nav_items << {
+        text: "Achievements",
+        url: course_achievements_url(@course),
+        icon: "icon-star"
       }
       @nav_items << {
         text: "Enroll Requests",

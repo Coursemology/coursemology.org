@@ -5,6 +5,7 @@ class CourseAbility
   # https://github.com/ryanb/cancan/wiki/Changing-Defaults
   # https://github.com/ryanb/cancan/wiki/Accessing-request-data
   def initialize(user, user_course)
+    user ||= User.new
     user_course ||= UserCourse.new
 
     if user_course.is_lecturer? || user.is_admin?
@@ -12,6 +13,7 @@ class CourseAbility
       # the current course
       can :manage, :all
       can :populate, Level
+      can :see_all, [Submission, TrainingSubmission, QuizSubmission]
       return
     end
 

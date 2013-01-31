@@ -18,9 +18,6 @@ class EnrollRequestsController < ApplicationController
         @staff_requests << er
       end
     end
-
-    puts 'Student Request', @student_requests
-    puts 'Staff Request', @staff_requests
   end
 
   def new
