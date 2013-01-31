@@ -38,8 +38,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def is_lecturer?
-    return (self.role == Role.find_by_name('lecturer')) ||
-           (self.user && self.user.is_admin?)
+    return self.role == Role.find_by_name('lecturer')
   end
 
   def level_percentage
@@ -63,16 +62,8 @@ class UserCourse < ActiveRecord::Base
     return self.get_missions - self.seen_missions
   end
 
-  def get_trainings
-    trainings = course.trainings.opened.order("open_at DESC")
-    if self.is_lecturer?
-      trainings = course.trainings.future.order(:open_at) + trainings
-    end
-    return trainings
-  end
-
-  def get_unseen_trainings
-    return self.get_trainings - self.seen_trainings
+  def get_unseen_trainings(all_trainings)
+    return all_trainings - self.seen_trainings
   end
 
   def get_announcements

@@ -13,11 +13,7 @@ class ApplicationController < ActionController::Base
         @course.id
       )
     end
-    if current_user
-      @curr_user_course ||= UserCourse.new(user_id: current_user.id)
-    else
-      @curr_user_course ||= UserCourse.new
-    end
+    @curr_user_course ||= UserCourse.new
     return @curr_user_course
   end
 
@@ -53,9 +49,10 @@ class ApplicationController < ActionController::Base
   def load_sidebar_data
     counts = {}
     if curr_user_course.id
+      all_trainings = @course.trainings.accessible_by(current_ability)
       counts[:missions] = curr_user_course.get_unseen_missions.count
       counts[:announcements] = curr_user_course.get_unseen_announcements.count
-      counts[:trainings] = curr_user_course.get_unseen_trainings.count
+      counts[:trainings] = curr_user_course.get_unseen_trainings(all_trainings).count
       if curr_user_course.is_lecturer?
         # lecturers see number of new submissions of all students in the course
         counts[:submissions] = curr_user_course.get_unseen_sbms.count
@@ -134,7 +131,7 @@ class ApplicationController < ActionController::Base
   private
   def current_ability
     if @course
-      @current_ability ||= CourseAbility.new(curr_user_course)
+      @current_ability ||= CourseAbility.new(current_user, curr_user_course)
     else
       @current_ability ||= Ability.new(current_user)
     end

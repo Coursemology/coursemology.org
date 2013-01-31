@@ -1,7 +1,16 @@
 <%- model_class = Training -%>
 <div class="page-header">
   <h1 class="pull-left">Training: <%= @training.title %></h1>
-  <% if curr_user_course.is_student? %>
+  <% if can? :manage, Training %>
+    <div class="pull-right">
+      <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to course_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
+        <i class="icon-trash"></i>
+      <% end %>
+    </div>
+  <% elsif can? :manage, TrainingSubmission %>
     <div class="pull-right">
       <% if @submission %>
         <% if !@submission.done? %>
@@ -17,16 +26,6 @@
         <%= link_to 'Start',
                 new_course_training_training_submission_path(@course, @training),
                 class: 'btn btn-success' %>
-      <% end %>
-    </div>
-  <% end %>
-  <% if curr_user_course.is_lecturer? %>
-    <div class="pull-right">
-      <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
-        <i class="icon-edit"></i>
-      <% end %>
-      <%= link_to course_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
-        <i class="icon-trash"></i>
       <% end %>
     </div>
   <% end %>
@@ -50,7 +49,7 @@
   </tr>
 </table>
 <hr/>
-<% if curr_user_course.is_lecturer? %>
+<% if can? :manage, @training %>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_training_mcq_path(@course, @training),
               :class => 'btn btn-primary' %>
