@@ -8,7 +8,7 @@ class TrainingsController < ApplicationController
     @is_new = {}
     @trainings = @course.trainings.accessible_by(current_ability).order("open_at DESC")
     if curr_user_course.id
-      unseen = curr_user_course.get_unseen_trainings(@trainings)
+      unseen = @trainings - curr_user_course.seen_trainings
       unseen.each do |tn|
         @is_new[tn.id] = true
         curr_user_course.mark_as_seen(tn)

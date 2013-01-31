@@ -50,14 +50,25 @@ class ApplicationController < ActionController::Base
     counts = {}
     if curr_user_course.id
       all_trainings = @course.trainings.accessible_by(current_ability)
-      counts[:missions] = curr_user_course.get_unseen_missions.count
-      counts[:announcements] = curr_user_course.get_unseen_announcements.count
-      counts[:trainings] = curr_user_course.get_unseen_trainings(all_trainings).count
-      if curr_user_course.is_lecturer?
+      unseen_trainings = all_trainings - curr_user_course.seen_trainings
+      counts[:trainings] = unseen_trainings.count
+
+      all_announcements = @course.announcements.accessible_by(current_ability)
+      unseen_anns = all_announcements - curr_user_course.seen_announcements
+      counts[:announcements] = unseen_anns.count
+
+      all_missions = @course.missions.accessible_by(current_ability)
+      unseen_missions = all_missions - curr_user_course.seen_missions
+      counts[:missions] = unseen_missions.count
+      if can? :see_all, Submission
         # lecturers see number of new submissions of all students in the course
-        counts[:submissions] = curr_user_course.get_unseen_sbms.count
+        all_sbms = @course.submissions.accessible_by(current_ability) +
+                @course.training_submissions.accessible_by(current_ability) +
+                @course.quiz_submissions.accessible_by(current_ability)
+        unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
+        counts[:submissions] = unseen_sbms.count
       end
-      # students see the number of new gradings
+      # TODO students see the number of new gradings
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []

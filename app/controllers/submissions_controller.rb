@@ -15,8 +15,7 @@ class SubmissionsController < ApplicationController
             @course.quiz_submissions.accessible_by(current_ability)
 
     if curr_user_course.id
-      @seen = curr_user_course.get_seen_sbms
-      @unseen = @sbms - @seen
+      @unseen = @sbms - curr_user_course.get_seen_sbms
       @unseen.each do |sbm|
         curr_user_course.mark_as_seen(sbm)
       end

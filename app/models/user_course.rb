@@ -48,37 +48,6 @@ class UserCourse < ActiveRecord::Base
     return 0
   end
 
-  def get_missions
-    # sort by ones that is still open, the ones that is closed
-    missions = course.missions.opened.still_open.order(:close_at) +
-      course.missions.closed
-    if self.is_lecturer?
-      missions = course.missions.future.order(:open_at) + missions
-    end
-    return missions
-  end
-
-  def get_unseen_missions
-    return self.get_missions - self.seen_missions
-  end
-
-  def get_unseen_trainings(all_trainings)
-    return all_trainings - self.seen_trainings
-  end
-
-  def get_announcements
-    if self.is_lecturer?
-      announcements = course.announcements.order("publish_at DESC")
-    else
-      announcements = course.announcements.published.order("publish_at DESC")
-    end
-    return announcements
-  end
-
-  def get_unseen_announcements
-    return self.get_announcements - self.seen_announcements
-  end
-
   def get_seen_sbms
     seen_sbms = seen_submissions + seen_training_submissions + seen_quiz_submissions
     return seen_sbms

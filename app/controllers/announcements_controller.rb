@@ -6,29 +6,18 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
+    @announcements = @course.announcements.accessible_by(current_ability).order("publish_at DESC")
     if curr_user_course.id
-      @announcements = curr_user_course.get_announcements
-      unseen = curr_user_course.get_unseen_announcements
+      unseen = @announcements - curr_user_course.seen_announcements
       unseen.each do |ann|
         @is_new[ann.id] = true
         curr_user_course.mark_as_seen(ann)
       end
-    else
-      @announcements = @course.announcements.published.order("publish_at DESC")
-    end
-    @announcements.each do |ann|
-      authorize! :index, ann
-    end
-    respond_to do |format|
-      format.html # index.html.erb
     end
   end
 
   def new
     @announcement.publish_at = DateTime.now
-    respond_to do |format|
-      format.html # new.html.erb
-    end
   end
 
   def edit
