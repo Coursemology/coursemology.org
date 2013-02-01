@@ -32,8 +32,8 @@
 <ul class="activities">
 <% @activities.each do |act| %>
   <li class="media">
-    <a class="pull-left" href="<%= course_user_course_path(@course, act.actor_course) %>">
-      <img class="media-object activity-icon"
+    <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
+      <img class="media-object"
         src="<%= act.actor_course.user.profile_photo_url %>">
     </a>
     <div class="media-body">
