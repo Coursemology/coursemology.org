@@ -7,7 +7,7 @@
       </div>
     <% end %>
     <div class="media">
-      <a class="pull-left" href="#">
+      <a class="pull-left activity-icon" href="#">
         <img class="media-object activity-icon"
           src="<%= @course.creator.profile_photo_url %>" >
       </a>
@@ -29,23 +29,25 @@
   <br/>
 <% end %>
 
-<ul class="activities">
+<table class="activities">
 <% @activities.each do |act| %>
-  <li class="media">
-    <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
-      <img class="media-object"
-        src="<%= act.actor_course.user.profile_photo_url %>">
-    </a>
-    <div class="media-body">
-      <a href="<%= course_user_course_path(@course, act.actor_course) %>">
-        <%= act.actor_course.user.name %>
-      </a> <%= act.action.text %>
-      <a href="<%= act.obj.get_path %>"><%= act.obj.get_title %></a>
-      &middot;
-      <span class="time-small"><%= time_ago_in_words(act.created_at) %></span>
-    </div>
-    <div class="clearfix"></div>
-  </li>
+  <tr>
+    <td width="25px">
+      <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
+        <img class="media-object"
+          src="<%= act.actor_course.user.profile_photo_url %>">
+      </a>
+    </td>
+    <td>
+        <a href="<%= course_user_course_path(@course, act.actor_course) %>">
+          <%= act.actor_course.user.name %>
+        </a> <%= act.action.text %>
+        <a href="<%= act.obj.get_path %>"><%= act.obj.get_title %></a>
+        <br/>
+        <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
+      </div>
+    </td>
+  </tr>
 <% end %>
-</ul>
+</table>
 
