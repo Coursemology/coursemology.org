@@ -86,3 +86,8 @@
 
 <%= render partial: "layouts/file_uploader",
       locals: { upload_to: course_file_uploads_path(@course) } %>
+
+<%= render partial: "layouts/image_uploader",
+      locals: { upload_to: course_file_uploads_path(@course),
+                container_class: '',
+                image_url_class: '' } %>

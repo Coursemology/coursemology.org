@@ -107,7 +107,7 @@ h1 {
   min-height: 700px;
 }
 
-.course-content {
+.course-ontent {
   padding: 0px;
   margin-top: -20px;
 }
@@ -140,22 +140,22 @@ ul {
   list-style: none;
 }
 
-#dropzone {
+.drag-drop-area {
   background: #D8EDE2;
   text-align: center;
-  border: 3px dashed #aaa;
+#  border: 3px dashed #aaa;
   padding: 80px;
 }
 
-#dropzone.in {
+.drag-drop-area.in {
 }
 
-#dropzone.hover {
+.drag-drop-area.hover {
   border-color: #666;
   background: palegreen;
 }
 
-#dropzone.fade {
+.drag-drop-area.fade {
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -ms-transition: all 0.3s ease-out;

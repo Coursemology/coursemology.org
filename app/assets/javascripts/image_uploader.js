@@ -10,7 +10,7 @@ $(document).ready(function(){
   });
 
   $(document).bind('dragover', function (e) {
-      var dropZone = $('#dropzone'),
+      var dropZone = $('#image-dropzone'),
           timeout = window.dropZoneTimeout;
       if (!timeout) {
           dropZone.addClass('in');
@@ -36,7 +36,7 @@ $(document).ready(function(){
   $('#image-upload-form').fileupload({
     acceptFileTypes: '/(\.|\/)(gif|jpe?g|png)$/i',
     autoUpload: true,
-    dropZone: $('#dropzone'),
+    dropZone: $('#image-dropzone'),
     dataType: 'json',
     url: $('#image-upload-form').attr('action'),
     formData: [ { name: '_method',
