@@ -2,7 +2,7 @@
   <% tag_groups.each do |tag_group| %>
     <% if tag_group.tags.size > 0 %>
       <strong><%= tag_group.name %></strong>
-      <table class="span8">
+      <table width="100%">
         <% tag_group.tags.each_with_index do |tag, i| %>
           <% if i % 4 == 0 %>
             <tr>
