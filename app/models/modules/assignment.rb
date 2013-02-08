@@ -32,9 +32,9 @@ module Assignment
   end
 
   def get_qn_pos(qn)
-    self.asm_qns.each do |asm_qn|
+    self.asm_qns.each_with_index do |asm_qn, i|
       if asm_qn.qn == qn
-        return asm_qn.pos + 1
+        return (asm_qn.pos || i) + 1
       end
     end
     return -1
