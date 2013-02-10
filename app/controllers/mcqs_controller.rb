@@ -30,7 +30,11 @@ class McqsController < ApplicationController
           ans = McqAnswer.find(answer['id'])
           ans.mcq = mcq
           # TODO: check if this answer does belong to the current question
-          updated = updated && ans.update_attributes(answer)
+          if !answer['text'] || answer['text'] == ''
+            ans.destroy
+          else
+            updated = updated && ans.update_attributes(answer)
+          end
         else
           ans = mcq.mcq_answers.build(answer)
           updated = updated && ans.save

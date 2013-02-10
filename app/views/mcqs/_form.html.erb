@@ -24,18 +24,29 @@
         </thead>
         <tbody>
           <% @mcq.mcq_answers.each do |answer| %>
-            <%= render partial: "mcq_answers/form_row", locals: { answer: answer } %>
+            <tr>
+              <input type="hidden" name="answers[][id]" value="<%= answer.id %>" />
+              <td><input type="checkbox" name="answers[][is_correct]" value="true"
+                <%= 'checked' if answer.is_correct %> />
+              </td>
+              <td>
+                <textarea name="answers[][text]" placeholder="Answer..." /><%= answer.text %></textarea>
+                <textarea name="answers[][explanation]" placeholder="Explanation..." /><%= answer.explanation %></textarea>
+              </td>
+            </tr>
           <% end %>
-          <tr class="answer-new answer-row">
-            <td><input type="checkbox" /></td>
-            <td><input type="text" class="ans-text" placeholder="Answer..." /></td>
-            <td><input type="text" class="ans-expl" placeholder="Explanation..." /></td>
-            <td>
-              <%= link_to course_mcq_answers_path(@course), class: "btn add-mcq-answer" do %>
-                <i class="icon-plus"></i>
-              <% end %>
-            </td>
-          </tr>
+          <% if @mcq.mcq_answers.size < 4 %>
+            <% (4 - @mcq.mcq_answers.size).times.each do %>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>
+                  <textarea name="answers[]" placeholder="Answer..." /></textarea>
+                  <textarea name="answers[][explanation]" placeholder="Explanation..." /></textarea>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr><td></td><td><a href='#' class="add-mcq-answer">Add more choices</a></td></tr>
         </tbody>
       </table>
     </div>
