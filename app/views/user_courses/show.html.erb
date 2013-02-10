@@ -41,7 +41,14 @@
       <col width="30%">
       <col width="50%">
     </colgroup>
-    <% @user_course.std_tags.each do |std_tag| %>
+    <% prev_tag = nil %>
+    <% @std_tags.each do |std_tag| %>
+      <% if !prev_tag || std_tag.tag.tag_group_id != prev_tag.tag.tag_group_id %>
+        <tr>
+          <td><strong><%= std_tag.tag.tag_group.name if std_tag.tag.tag_group %></strong></td>
+        </tr>
+      <% end %>
+      <% prev_tag = std_tag %>
       <tr>
         <td><%= link_to std_tag.tag.name, course_tag_path(@course, std_tag.tag) %></td>
         <td>
