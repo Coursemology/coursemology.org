@@ -80,6 +80,12 @@ class ApplicationController < ActionController::Base
       icon: "icon-bullhorn",
       count: counts[:announcements] || 0
     }, {
+      text: "Missions",
+      url: course_missions_url(@course),
+      img: @theme_settings["Missions Icon"],
+      icon: "icon-envelope",
+      count: counts[:missions] || 0
+    }, {
       text: "Trainings",
       url: course_trainings_url(@course),
       img: @theme_settings["Trainings Icon"],

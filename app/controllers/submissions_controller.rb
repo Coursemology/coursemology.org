@@ -72,7 +72,8 @@ class SubmissionsController < ApplicationController
     if @submission.save
       Activity.attempted_asm(curr_user_course, @mission)
       respond_to do |format|
-        format.html
+        format.html { redirect_to course_submissions_url(@course),
+                      notice: "Your submission has been recorded." }
       end
     else
       respond_to do |format|

@@ -6,8 +6,8 @@ class MissionsController < ApplicationController
   def index
     @is_new = {}
     if curr_user_course.id
-      @missions = curr_user_course.get_missions
-      unseen = curr_user_course.get_unseen_missions
+      @missions = @course.missions.accessible_by(current_ability).order(:open_at).reverse
+      unseen = @missions - curr_user_course.seen_missions
       unseen.each do |um|
         @is_new[um.id] = true
         curr_user_course.mark_as_seen(um)
