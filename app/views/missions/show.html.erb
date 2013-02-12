@@ -58,7 +58,7 @@
     <tbody>
       <% @questions.each do |q| %>
         <tr>
-          <td><%= q.description %></td>
+          <td><%= q.description.html_safe %></td>
           <td>
             <%= link_to edit_course_mission_question_path(@course, @mission, q), class: 'btn' do %>
               <i class="icon-edit"></i>

@@ -42,7 +42,7 @@
         <td>
           <% training.tags.each do |tag| %>
             <div class="asm-tag">
-            #<%= link_to tag.name, course_tag_path(@course, tag) %>
+              <%= link_to tag.name, course_tag_path(@course, tag) %>
             </div>
           <% end %>
         </td>

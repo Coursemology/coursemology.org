@@ -13,6 +13,7 @@
   <thead>
     <tr>
       <th>Mission</th>
+      <th width="15%">Tag</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
       <% if can? :manage, Mission %>
@@ -36,7 +37,13 @@
             </h4>
           <% end %>
         </td>
-
+        <td>
+          <% mission.tags.each do |tag| %>
+            <div class="asm-tag">
+              <%= link_to tag.name, course_tag_path(@course, tag) %>
+            </div>
+          <% end %>
+        </td>
         <td><%= mission.exp %></td>
         <td>
           <% mission.as_requirements.each do |req| %>

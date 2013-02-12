@@ -29,17 +29,28 @@ class MissionsController < ApplicationController
   end
 
   def new
+    @mission.exp = 1000
+    @mission.open_at = DateTime.now
+    @mission.close_at = DateTime.now + 7  # 1 week from now
+
+    @tags = @course.tags
+    @asm_tags = {}
+
     respond_to do |format|
       format.html # new.html.erb
     end
   end
 
   def edit
+    @tags = @course.tags
+    @asm_tags = {}
+    @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def create
     @mission.pos = @course.missions.count - 1
     @mission.creator = current_user
+    @mission.update_tags(params[:tags])
     respond_to do |format|
       if @mission.save
         format.html { redirect_to course_mission_url(@course, @mission),
@@ -51,6 +62,7 @@ class MissionsController < ApplicationController
   end
 
   def update
+    @mission.update_tags(params[:tags])
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
         format.html { redirect_to course_mission_url(@course, @mission),

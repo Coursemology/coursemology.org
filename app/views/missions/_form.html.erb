@@ -34,15 +34,11 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :timelimit, :class => 'control-label' %>
+    <label>Topic</label>
     <div class="controls">
-      <%= f.number_field :timelimit, :class => 'number_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :attempt_limit, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :attempt_limit, :class => 'number_field' %>
+      <%= render partial: "tags/form_checkboxes",
+        locals: { tag_groups: @course.tag_groups,
+                  exist_tags_hash: @asm_tags } %>
     </div>
   </div>
   <div class="form-actions">
