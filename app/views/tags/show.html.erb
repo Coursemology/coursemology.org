@@ -7,6 +7,27 @@
     <% end %>
   </h1>
 </div>
+<h3>Related Missions:</h3>
+<br/>
+<table class="table">
+  <% @missions.each do |mission| %>
+    <tr class="<%= "future" if mission.open_at > Time.now %>">
+      <td><h4><%= link_to mission.get_title, mission.get_path %></h4></td>
+      <% if curr_user_course.is_student? %>
+        <td width="20%">
+          <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
+          <% if submission %>
+            <a href="#" class="btn disabled">Done</a>
+          <% else %>
+            <%= link_to 'Attempt',
+                    new_course_mission_submission_path(@course, mission),
+                    class: 'btn btn-success' %>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
 <h3>Related Trainings:</h3>
 <br/>
 <table class="table">
@@ -14,7 +35,7 @@
     <tr class="<%= "future" if training.open_at > Time.now %>">
       <td><h4><%= link_to training.get_title, training.get_path %></h4></td>
       <% if curr_user_course.is_student? %>
-        <td>
+        <td width="20%">
           <% submission = training.get_final_sbm_by_std(curr_user_course.id) %>
           <% if submission %>
             <% if !submission.done? %>

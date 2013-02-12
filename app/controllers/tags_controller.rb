@@ -35,11 +35,8 @@ class TagsController < ApplicationController
   end
 
   def show
-    if can? :manage, Training
-      @trainings = @tag.trainings
-    else
-      @trainings = @tag.trainings.opened
-    end
+    @missions = @tag.missions.accessible_by(current_ability)
+    @trainings = @tag.trainings.accessible_by(current_ability)
   end
 
   def index

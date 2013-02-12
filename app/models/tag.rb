@@ -10,6 +10,7 @@ class Tag < ActiveRecord::Base
   has_many :std_tags, dependent: :destroy
 
   has_many :trainings, through: :asm_tags, source: :asm, source_type: "Training"
+  has_many :missions, through: :asm_tags, source: :asm, source_type: "Mission"
 
   before_create :init
 
