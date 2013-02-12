@@ -85,7 +85,14 @@
         <% elsif can? :manage, Submission %>
           <td>
             <% if mission.close_at > Time.now %>
-              <%= link_to 'Attempt', new_course_mission_submission_path(@course, mission), class: 'btn' %>
+              <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
+              <% if submission %>
+                <a href="#" class="btn disabled">Done</a>
+              <% else %>
+                <%= link_to 'Attempt',
+                        new_course_mission_submission_path(@course, mission),
+                        class: 'btn btn-success' %>
+              <% end %>
            <% end %>
           </td>
         <% end %>
