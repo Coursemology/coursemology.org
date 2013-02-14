@@ -7,7 +7,7 @@ class StdMcqAnswer < ActiveRecord::Base
   belongs_to :mcq
   belongs_to :mcq_answer
 
-  has_one :answer_grading, as: :student_answer
+  has_one :answer_grading, as: :student_answer, dependent: :destroy
 
   alias_method :qn, :mcq
 end

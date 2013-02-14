@@ -48,4 +48,13 @@ class QuestionsController < ApplicationController
 
   def show
   end
+
+  def destroy
+    @question.destroy
+    @mission.update_grade
+    @mission.update_qns_pos
+    respond_to do |format|
+      format.html { redirect_to @mission.get_path }
+    end
+  end
 end

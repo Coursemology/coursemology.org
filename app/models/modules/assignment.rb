@@ -40,6 +40,13 @@ module Assignment
     return -1
   end
 
+  def update_qns_pos
+    self.asm_qns.each_with_index do |asm_qn, i|
+      asm_qn.pos = i
+      asm_qn.save
+    end
+  end
+
   def add_tags(tags)
     tags ||= []
     tags.each do |tag_id|

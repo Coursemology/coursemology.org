@@ -97,6 +97,8 @@ class McqsController < ApplicationController
 
   def destroy
     @mcq.destroy
+    @asm.update_grade
+    @asm.update_qns_pos
     respond_to do |format|
       format.html { redirect_to @asm.get_path }
     end
