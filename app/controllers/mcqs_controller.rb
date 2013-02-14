@@ -24,7 +24,8 @@ class McqsController < ApplicationController
   def update_answers(mcq)
     if params[:answers]
       updated = true
-      params[:answers].each do |answer|
+      params[:answers].each do |i, answer|
+        puts answer
         answer['is_correct'] = answer.has_key?('is_correct')
         if answer.has_key?('id')
           ans = McqAnswer.find(answer['id'])
@@ -35,7 +36,7 @@ class McqsController < ApplicationController
           else
             updated = updated && ans.update_attributes(answer)
           end
-        else
+        elsif answer['text'] && answer['text'] != ''
           ans = mcq.mcq_answers.build(answer)
           updated = updated && ans.save
         end
