@@ -16,12 +16,10 @@
       <th width="15%">Tag</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
-      <% if curr_user_course.id %>
-        <% if can? :manage, Training %>
-          <th width="10%">Time till open</th>
-        <% end %>
-        <th width="10%"></td>
+      <% if can? :manage, Training %>
+        <th width="10%">Time till open</th>
       <% end %>
+      <th width="10%"></td>
     </tr>
   </thead>
   <tbody>
@@ -30,14 +28,12 @@
       <% submission = tws[:submission] %>
       <tr class="<%= "future" if training.open_at > Time.now %>">
         <td>
-          <%= link_to course_training_path(@course, training) do %>
-            <h4><%= training.title %>
-              <% if @is_new[training.id] %>
-                <img class="asm-new-icon"
-                    src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
-              <% end %>
-            </h4>
-          <% end %>
+          <h4><%= training.title %>
+            <% if @is_new[training.id] %>
+              <img class="asm-new-icon"
+                  src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
+            <% end %>
+          </h4>
         </td>
         <td>
           <% training.tags.each do |tag| %>
