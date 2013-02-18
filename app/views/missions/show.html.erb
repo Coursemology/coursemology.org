@@ -35,7 +35,6 @@
     <td><%= @mission.attempt_limit %></td>
   </tr>
 </table>
-<a href="<%= course_mission_submissions_path(@course, @mission) %>">View submissions</a>
 
 <% if can? :manage, @mission %>
   <hr/>
