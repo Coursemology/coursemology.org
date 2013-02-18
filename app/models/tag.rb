@@ -25,7 +25,9 @@ class Tag < ActiveRecord::Base
       final_sbm = asm_tag.asm.get_final_sbm_by_std(std_course_id)
       if final_sbm
         final_grading = final_sbm.get_final_grading
-        exp_transactions << final_grading.exp_transaction
+        if final_grading && final_grading.exp_transaction
+          exp_transactions << final_grading.exp_transaction
+        end
       end
     end
     std_tag = self.std_tags.find_by_std_course_id(std_course_id)

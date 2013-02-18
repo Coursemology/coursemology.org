@@ -21,12 +21,12 @@ class TrainingSubmissionsController < ApplicationController
       mcq_id = sma.mcq_id
       @std_answers_for_questions[mcq_id] << sma
     end
-    puts '==='
-    puts @training.to_json
-    puts @training_submission.to_json
-    puts @grading.to_json
-    puts @training_submission.std_mcq_answers.to_json
-    puts @std_answers_for_questions.to_json
+    # puts '==='
+    # puts @training.to_json
+    # puts @training_submission.to_json
+    # puts @grading.to_json
+    # puts @training_submission.std_mcq_answers.to_json
+    # puts @std_answers_for_questions.to_json
 
     # one question can have many answers.
     # collect all answers of one question in a list
@@ -40,8 +40,6 @@ class TrainingSubmissionsController < ApplicationController
     if @grading
       @grading.answer_gradings.each do |ag|
         if ag.student_answer && @qadata.has_key?(ag.student_answer.mcq_id)
-          puts 'qa ', @qadata.to_json
-          puts 'ag ', ag.to_json
           @qadata[ag.student_answer.mcq_id][:g] = ag
         end
       end
