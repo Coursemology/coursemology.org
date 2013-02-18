@@ -12,6 +12,6 @@ $(document).ready(function() {
     };
     $('textarea.html-editor').wysihtml5(options);
   } else {
-    $('textarea.html-editor').wysihtml5();
+    $("textarea.html-editor").each(function(){$(this).wysihtml5();});
   }
 });
