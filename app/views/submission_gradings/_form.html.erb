@@ -26,7 +26,7 @@
 
   <% @qadata.each do |qid, qa| %>
     <hr/>
-    <h3>Question:</h3>
+    <h3>Question <%= qa[:i] %>:</h3>
     <p><%= qa[:q].description.html_safe %></p>
     <% if qa[:a] %>
       <h3>Answer:</h3>
@@ -43,7 +43,7 @@
       <div class="control-group">
         <label class="control-label">Comment</label>
         <div class="controls">
-          <textarea name="ags[<%= qa[:g].id if qa[:g] %>][comment]" class="span9" rows="5"><%= qa[:g].comment if qa[:g] %></textarea>
+          <textarea name="ags[<%= qa[:g].id if qa[:g] %>][comment]" class="span9 html-editor" rows="5"><%= qa[:g].comment if qa[:g] %></textarea>
         </div>
       </div>
     <% else %>

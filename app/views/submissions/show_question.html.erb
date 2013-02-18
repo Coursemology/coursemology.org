@@ -23,13 +23,13 @@
 <p class="well"><%= @mission.description.html_safe %></p>
 
 <% @qadata.each do |qid, qa| %>
-  <h3>Question:</h3>
+  <h3>Question <%= qa[:i] %>:</h3>
   <p><%= qa[:q].description.html_safe %></p>
   <h3>Answer:</h3>
   <p><%= qa[:a].text.html_safe %></p>
   <% if @grading %>
     <% if qa[:g] %>
-      <p><strong>Grade: </strong><%= qa[:g].grade %> / <%= qa[:q].max_grade %></p>
+      <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
       <% if qa[:g].comment %>
         <strong>Comment:</strong><p><%= qa[:g].comment %></p>
       <% end %>

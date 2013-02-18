@@ -23,6 +23,7 @@ class MissionsController < ApplicationController
   def show
     @questions = @mission.questions
     @question = Question.new
+    @question.max_grade = 10
     respond_to do |format|
       format.html # show.html.erb
     end

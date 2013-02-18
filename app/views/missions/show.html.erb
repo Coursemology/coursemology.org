@@ -55,9 +55,12 @@
       </tr>
     </thead>
     <tbody>
-      <% @questions.each do |q| %>
+      <% @questions.each_with_index do |q, i| %>
         <tr>
-          <td><%= q.description.html_safe %></td>
+          <td>
+            <h3>Question <%= i + 1 %></h3>
+            <%= q.description.html_safe %>
+          </td>
           <td>
             <%= link_to edit_course_mission_question_path(@course, @mission, q), class: 'btn' do %>
               <i class="icon-edit"></i>
