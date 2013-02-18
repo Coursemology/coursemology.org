@@ -26,11 +26,11 @@
 
   <% @qadata.each do |qid, qa| %>
     <hr/>
-    <h4>Question:</h4>
+    <h3>Question:</h3>
     <p><%= qa[:q].description.html_safe %></p>
     <% if qa[:a] %>
-      <h4>Answer:</h4>
-      <p><%= qa[:a].text %></p>
+      <h3>Answer:</h3>
+      <p><%= qa[:a].text.html_safe %></p>
       <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
       <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_type]" value="<%= qa[:a].class.name %>">
       <div class="control-group">

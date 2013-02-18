@@ -39,8 +39,8 @@
     <h3>Question <%= i + 1 %>:</h3>
     <span><%= q.description.html_safe %></span>
     <br/><br/>
-    <label><strong>Your answer:</strong></label>
-    <textarea name="answers[<%= q.id %>]" class="span10" rows="8"/></textarea>
+    <label><h3>Your answer:</h3></label>
+    <textarea name="answers[<%= q.id %>]" class="span10 html-editor" rows="8"/></textarea>
     <hr/>
   <% end %>
 
