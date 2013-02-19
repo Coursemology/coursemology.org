@@ -4,5 +4,7 @@ class StdAnswer < ActiveRecord::Base
   belongs_to :student, class_name: "User"
   belongs_to :question
 
+  has_many :comments, as: :commentable
+
   alias_method :qn, :question
 end

@@ -1,0 +1,35 @@
+<div class="well">
+  <h3>Comments</h3>
+  <table class="comment-table">
+    <colgroup>
+      <col class="comment-profile-pic-col"></col>
+    </colgroup>
+    <% comments.each do |comment| %>
+      <% poster = comment.user_course.user %>
+      <tr>
+        <td>
+          <img src="<%= poster.profile_photo_url %>" class="small-user-profile-pic">
+        </td>
+        <td>
+          <strong><%= poster.name %></strong>
+          <%= simple_format(comment.text) %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <% @comment = Comment.new %>
+      <%= form_for [@course, @comment], :html => { :class => 'form-horizontal' } do |f| %>
+        <%= f.hidden_field :commentable_id, value: target.id %>
+        <%= f.hidden_field :commentable_type, value: target.class.name %>
+        <input type="hidden" name="origin" value="<%= origin %>">
+        <td>
+          <img src="<%= current_user.profile_photo_url %>" class="small-user-profile-pic">
+        </td>
+        <td>
+          <%= f.text_area :text, class: "textarea span6", rows: 2 %>
+          <button class="btn">Comment</button>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+</div>

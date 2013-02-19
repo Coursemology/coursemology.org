@@ -31,8 +31,13 @@
     <% if qa[:g] %>
       <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
       <% if qa[:g].comment %>
-        <strong>Comment:</strong><p><%= simple_format(qa[:g].comment) %></p>
+        <strong>Comment by grader:</strong>
+        <p><%= simple_format(qa[:g].comment) %></p>
       <% end %>
+      <%= render partial: "comments/list",
+        locals: { comments: qa[:a].comments,
+                  target: qa[:a],
+                  origin: course_mission_submission_path(@course, @mission, @submission) } %>
     <% end %>
   <% end %>
   <hr/>
