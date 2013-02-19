@@ -5,4 +5,6 @@ class AnswerGrading < ActiveRecord::Base
   belongs_to :submission_grading
   belongs_to :student_answer, polymorphic: true
   belongs_to :grader, class_name: "User"
+
+  has_many :comments, as: :commentable
 end

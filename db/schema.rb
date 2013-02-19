@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130208045403) do
+ActiveRecord::Schema.define(:version => 20130219034623) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -91,6 +91,15 @@ ActiveRecord::Schema.define(:version => 20130208045403) do
     t.integer  "max_exp"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_course_id"
+    t.text     "text"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "course_theme_attributes", :force => true do |t|
