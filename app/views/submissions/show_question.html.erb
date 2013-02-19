@@ -31,7 +31,7 @@
     <% if qa[:g] %>
       <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
       <% if qa[:g].comment %>
-        <strong>Comment:</strong><p><%= qa[:g].comment %></p>
+        <strong>Comment:</strong><p><%= simple_format(qa[:g].comment) %></p>
       <% end %>
     <% end %>
   <% end %>
