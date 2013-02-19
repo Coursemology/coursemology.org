@@ -34,11 +34,11 @@
         <strong>Comment by grader:</strong>
         <p><%= simple_format(qa[:g].comment) %></p>
       <% end %>
-      <%= render partial: "comments/list",
-        locals: { comments: qa[:a].comments,
-                  target: qa[:a],
-                  origin: course_mission_submission_path(@course, @mission, @submission) } %>
     <% end %>
   <% end %>
+  <%= render partial: "comments/list",
+    locals: { comments: qa[:a].comments,
+              target: qa[:a],
+              origin: course_mission_submission_path(@course, @mission, @submission) } %>
   <hr/>
 <% end %>
