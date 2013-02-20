@@ -9,4 +9,18 @@ class UserMailer < ActionMailer::Base
     @redirect_url = redirect_url
     mail(to: user.email, subject: "New comment!")
   end
+
+  def new_grading(user, redirect_url)
+    puts "to email #{user.email} redirect #{redirect_url}"
+    @user = user
+    @redirect_url = redirect_url
+    mail(to: user.email, subject: "New Grading available!")
+  end
+
+  def new_submission(user, redirect_url)
+    puts "to email #{user.email} redirect #{redirect_url}"
+    @user = user
+    @redirect_url = redirect_url
+    mail(to: user.email, subject: "New Submission!")
+  end
 end

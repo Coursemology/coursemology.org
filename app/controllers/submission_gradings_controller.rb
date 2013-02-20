@@ -34,6 +34,10 @@ class SubmissionGradingsController < ApplicationController
       @submission.final_grading = @submission_grading
       @submission_grading.update_exp_transaction
       @submission.save
+      UserMailer.new_grading(
+        @submission.std_course.user,
+        course_mission_submission_url(@course, @mission, @submission)
+      ).deliver
       respond_to do |format|
         format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                       notice: "Grading has been recorded." }
