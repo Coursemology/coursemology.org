@@ -1,0 +1,13 @@
+Hello, <%= @user.name %>!
+
+<%= @comment.user_course.user.name %> has made a new comment to a thread you are subscribed to:
+<blockquote>
+  <%= simple_format(@comment.text) %>
+</blockquote>
+
+<p><a href="<%= @redirect_url %>"> Click here</a> to view the full thread.</p>
+
+Best Regards,
+<br/>
+
+The Coursemology Team

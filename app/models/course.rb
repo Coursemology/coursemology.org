@@ -33,6 +33,10 @@ class Course < ActiveRecord::Base
     return missions + quizzes + trainings
   end
 
+  def lect_courses
+    return user_courses.joins(:role).where('roles.name' => 'lecturer')
+  end
+
   def student_courses
     std = Role.find_by_name("student")
     return self.user_courses.where(role_id: std.id)

@@ -39,6 +39,6 @@
   <%= render partial: "comments/list",
     locals: { comments: qa[:a].comments,
               target: qa[:a],
-              origin: course_mission_submission_path(@course, @mission, @submission) } %>
+              origin: course_mission_submission_url(@course, @mission, @submission) } %>
   <hr/>
 <% end %>

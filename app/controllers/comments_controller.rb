@@ -4,12 +4,12 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.new(params[:comment])
     @comment.user_course = curr_user_course
-    puts @comment.commentable.to_json
-    puts can?(:read, @comment.commentable)
     authorize! :read, @comment.commentable
-    @comment.save
-    respond_to do |format|
-      format.html { redirect_to params[:origin] }
+    if @comment.save
+      @comment.commentable.notify_user(@comment, params[:origin])
+      respond_to do |format|
+        format.html { redirect_to params[:origin] }
+      end
     end
   end
 end
