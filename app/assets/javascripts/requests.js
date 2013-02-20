@@ -3,7 +3,6 @@ $(document).ready(function() {
   $('.request-del').click(function(e){
     var tr = $(this).parents('tr');
     var url = tr.find('.destroy-url').val();
-    console.log(url);
     $.ajax({
       url: url,
       type: 'DELETE',
@@ -17,7 +16,6 @@ $(document).ready(function() {
   $('.request-approve').click(function(e){
     var tr = $(this).parents('tr');
     var url = tr.find('.destroy-url').val();
-    console.log(url);
     $.ajax({
       url: url,
       type: 'DELETE',

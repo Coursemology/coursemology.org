@@ -42,8 +42,6 @@ $(document).ready(function(){
     formData: [ { name: '_method',
                   value: 'POST ' } ],
     done: function(e, data) {
-      console.log(data.result);
-      console.log(target_el);
       $('.image-uploader-input-url').val(data.result.url);
       $('.image-uploader-preview-img').attr('src', data.result.url);
       $(target_el + '-preview').attr('src', data.result.url);

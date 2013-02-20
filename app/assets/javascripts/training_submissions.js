@@ -24,7 +24,6 @@ $(document).ready(function(){
       // update result form
       // change submit to continue if the answer is correct
       $.post(update_url, data, function(resp) {
-        console.log(resp);
         $('#explanation .result').html(resp.result);
         $('#explanation .reason').html(resp.explanation);
         $('#explanation').removeClass('hidden');

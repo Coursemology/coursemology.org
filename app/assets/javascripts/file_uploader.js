@@ -19,8 +19,6 @@ $(document).ready(function(){
     formData: [ { name: '_method',
                   value: 'POST ' } ],
     done: function(e, data) {
-      console.log(data.result);
-      console.log(target_el);
       $(target_el + '-input').attr('value', data.result.url);
       $(target_el + '-done').css('display', 'block');
       $('.file-uploader-insert-btn').click();

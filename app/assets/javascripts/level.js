@@ -26,7 +26,6 @@ $(document).ready(function() {
     e.preventDefault();
     var exp = $(this).parent().find('.new-lvl-exp').val();
     var url = $(this).attr('href');
-    console.log(exp, url);
     $.ajax({
       url: url,
       type: 'POST',
@@ -56,7 +55,6 @@ $(document).ready(function() {
     ok_btn.removeClass('hidden');
     $(ok_btn).one('click', function() {
       var new_exp = input.val();
-      console.log(new_exp);
       $.ajax({
         url: url,
         type: 'PUT',
