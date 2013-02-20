@@ -55,12 +55,12 @@ class TrainingSubmissionsController < ApplicationController
     @training_submission.current_step = 1
     @training_submission.save
 
-    @course.lect_courses.each do |uc|
-      UserMailer.new_submission(
-        uc.user,
-        course_training_training_submission_url(@course, @training, @training_submission)
-      ).deliver
-    end
+    # @course.lect_courses.each do |uc|
+    #   UserMailer.new_submission(
+    #     uc.user,
+    #     course_training_training_submission_url(@course, @training, @training_submission)
+    #   ).deliver
+    # end
 
     Activity.started_asm(curr_user_course, @training)
 

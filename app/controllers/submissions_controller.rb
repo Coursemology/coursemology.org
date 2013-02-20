@@ -72,13 +72,13 @@ class SubmissionsController < ApplicationController
     end
     if @submission.save
       Activity.attempted_asm(curr_user_course, @mission)
-      @course.lect_courses.each do |uc|
-        puts 'notify lecturers'
-        UserMailer.new_submission(
-          uc.user,
-          new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
-        ).deliver
-      end
+      # @course.lect_courses.each do |uc|
+      #   puts 'notify lecturers'
+      #   UserMailer.new_submission(
+      #     uc.user,
+      #     new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
+      #   ).deliver
+      # end
       respond_to do |format|
         format.html { redirect_to course_submissions_url(@course),
                       notice: "Your submission has been recorded." }
