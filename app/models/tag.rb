@@ -3,6 +3,8 @@ class Tag < ActiveRecord::Base
 
   attr_accessible :course_id, :description, :icon_url, :max_exp, :name, :tag_group_id
 
+  scope :uncategorized, where(tag_group_id: 0)
+
   belongs_to :course
   belongs_to :tag_group
 

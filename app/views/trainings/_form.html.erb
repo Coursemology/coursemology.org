@@ -30,6 +30,7 @@
     <div class="controls">
       <%= render partial: "tags/form_checkboxes",
         locals: { tag_groups: @course.tag_groups,
+                  uncats: @course.tags.uncategorized,
                   exist_tags_hash: @asm_tags } %>
     </div>
   </div>
