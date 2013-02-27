@@ -27,6 +27,10 @@ class User < ActiveRecord::Base
     return self.is_admin? || self.system_role == Role.find_by_name('lecturer')
   end
 
+  def self.admins
+    return User.joins(:system_role).where('roles.name' => 'superuser')
+  end
+
   private
   def set_default_role
     if !self.system_role
