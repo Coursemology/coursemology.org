@@ -28,4 +28,10 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail(to: user.email, subject: "You are now a lecturer on Coursemology!")
   end
+
+  def new_student(user, course)
+    @user = user
+    @course = course
+    mail(to: user.email, subject: "You are enrolled in to the course #{course.title}!")
+  end
 end
