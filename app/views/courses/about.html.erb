@@ -1,0 +1,42 @@
+<div class="span8">
+  <table>
+    <tr>
+      <td>
+        <a href="<%= course_path(@course) %>">
+          <img class="sidebar-course-logo" src="<%= @course.logo_url %>" />
+        </a>
+      </td>
+      <td>
+        <h1><%= @course.title %></h1>
+      </td>
+      <td>
+        <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-primary">Request to<br/>Enroll</a>
+      </td>
+    </tr>
+  </table>
+  <table class="table-top-align">
+    <tr>
+      <td>
+        <h2>About</h2>
+        <p>
+          <%= @course.description.html_safe %>
+        </p>
+        <h2>Lecturers</h2>
+        <ul>
+        <% @course.lect_courses.each do |lecturer_course| %>
+          <li>
+            <% user = lecturer_course.user %>
+            <a class="user-thumb-profile" href="#">
+              <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
+              <strong><%= user.name %></strong>
+            </a>
+            <div class="clearfix"></div>
+          </li>
+        <% end %>
+        </ul>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>

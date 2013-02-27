@@ -51,7 +51,7 @@
 </head>
 <body>
   <%= render "layouts/header" %>
-  <% if @course && @course.id %>
+  <% if @course && @course.id && (can? :participate, Course) %>
     <div class="container-fluid course-content">
       <%= render "layouts/course_layout" %>
     </div>

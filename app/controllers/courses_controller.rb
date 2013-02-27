@@ -66,9 +66,15 @@ class CoursesController < ApplicationController
   end
 
   def show
-    @activities = @course.activities.order("created_at DESC")
-    respond_to do |format|
-      format.html
+    if can? :participate, Course
+      @activities = @course.activities.order("created_at DESC")
+      respond_to do |format|
+        format.html
+      end
+    else
+      respond_to do |format|
+        format.html { render "courses/about" }
+      end
     end
   end
 
