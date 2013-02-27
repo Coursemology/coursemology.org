@@ -34,6 +34,7 @@ class RoleRequestsController < ApplicationController
       user = @role_request.user
       user.system_role = Role.find_by_name('lecturer')
       user.save
+      UserMailer.new_lecturer(user).deliver
     end
 
     @role_request.destroy

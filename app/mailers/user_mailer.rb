@@ -23,4 +23,9 @@ class UserMailer < ActionMailer::Base
     @redirect_url = redirect_url
     mail(to: user.email, subject: "New Submission!")
   end
+
+  def new_lecturer(user)
+    @user = user
+    mail(to: user.email, subject: "You are now a lecturer on Coursemology!")
+  end
 end
