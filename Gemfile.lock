@@ -43,6 +43,12 @@ GEM
     builder (3.0.4)
     cancan (1.6.9)
     cocaine (0.4.2)
+    daemons (1.1.9)
+    delayed_job (3.0.5)
+      activesupport (~> 3.0)
+    delayed_job_active_record (0.4.2)
+      activerecord (>= 2.1.0, < 4)
+      delayed_job (~> 3.0)
     devise (2.1.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -146,6 +152,8 @@ DEPENDENCIES
   bootstrap-sass (= 2.0.0)
   bootstrap-wysihtml5-rails
   cancan
+  daemons
+  delayed_job_active_record
   devise (= 2.1.2)
   faker
   font-awesome-sass-rails

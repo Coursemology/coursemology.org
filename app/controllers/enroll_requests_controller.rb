@@ -48,7 +48,7 @@ class EnrollRequestsController < ApplicationController
       uc.role = @enroll_request.role
       uc.exp = 0
       uc.save
-      UserMailer.new_student(uc.user, uc.course).deliver
+      UserMailer.delay.new_student(uc.user, uc.course)
     end
 
     @enroll_request.destroy

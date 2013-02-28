@@ -13,7 +13,7 @@ module Commentable
     to_be_notified.delete(comment.user_course)
     to_be_notified.each do |uc|
       puts " to email #{uc.user.email}"
-      UserMailer.new_comment(uc.user, comment, redirect_url).deliver
+      UserMailer.delay.new_comment(uc.user, comment, redirect_url)
       # TODO add a notification as well
     end
   end

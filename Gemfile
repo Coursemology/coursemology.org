@@ -40,6 +40,9 @@ gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
 gem 'yaml_db'
 gem 'rubyzip'
+gem 'delayed_job_active_record'
+gem 'daemons'
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
