@@ -43,6 +43,8 @@ class CourseAbility
 
       can :manage, [Submission, TrainingSubmission, QuizSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer], student_id: user_course.user.id
+
+      cannot :see_all, [Submission, TrainingSubmission, QuizSubmission]
     end
   end
 end

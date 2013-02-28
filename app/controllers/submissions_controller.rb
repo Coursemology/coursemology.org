@@ -9,17 +9,49 @@ class SubmissionsController < ApplicationController
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create]
 
   def listall
-    @unseen = []
-    @sbms = @course.submissions.accessible_by(current_ability) +
-            @course.training_submissions.accessible_by(current_ability) +
-            @course.quiz_submissions.accessible_by(current_ability)
+    # find selected course
+    if params[:asm] && params[:asm] != "0"
+      asm_info = JSON.parse(params[:asm])
+      asm_id = asm_info["id"].to_i
+      asm_type = asm_info["type"]
 
+      case asm_type
+      when "Mission"
+        @selected_asm = @course.missions.find(asm_id)
+      when "Training"
+        @selected_asm = @course.trainings.find(asm_id)
+      end
+    end
+
+    # find selected students
+    if params[:student] && params[:student] != "0"
+      sc = params[:student].to_i
+      @selected_sc = @course.user_courses.find(sc)
+    end
+
+    @all_asm = @course.asms
+    @student_courses = @course.student_courses
+
+    if @selected_asm
+      @sbms = @selected_asm.sbms
+    else
+      @sbms = @course.submissions.accessible_by(current_ability) +
+              @course.training_submissions.accessible_by(current_ability) +
+              @course.quiz_submissions.accessible_by(current_ability)
+    end
+
+    if @selected_sc
+      @sbms = @sbms.select { |sbm| sbm.std_course == @selected_sc }
+    end
+
+    @unseen = []
     if curr_user_course.id
       @unseen = @sbms - curr_user_course.get_seen_sbms
       @unseen.each do |sbm|
         curr_user_course.mark_as_seen(sbm)
       end
     end
+
     @sbms = @sbms.sort_by(&:created_at).reverse
   end
 
