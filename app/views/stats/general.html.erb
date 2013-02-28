@@ -1,0 +1,57 @@
+<div class="page-header">
+  <h1>Course Statistics</h1>
+</div>
+<h3>Assignment</h3>
+<p>View detail statistics of each assignment:</p>
+<table class="table-basic">
+  <tr>
+    <td>Mission</td>
+    <td>
+      <select>
+        <option>AA</option>
+        <option>BB</option>
+      </select>
+    </td>
+    <td><a href="#" class="btn">Go</a></td>
+  </tr>
+  <tr>
+    <td>Training</td>
+    <td>
+      <select>
+        <option>AA</option>
+        <option>BB</option>
+      </select>
+    </td>
+    <td><a href="#" class="btn">Go</a></td>
+  </tr>
+</table>
+<br/>
+<h3>Level</h3>
+
+<table class="table">
+  <tr>
+    <th width="10%"></th>
+    <th width="10%">Count</th>
+    <th>Students</th>
+  </tr>
+<% @levels.each do |lvl| %>
+  <% if lvl.user_courses.size > 0 %>
+    <tr>
+      <td><%= lvl.get_title %></td>
+      <td><%= lvl.user_courses.size %></td>
+      <td>
+        <% lvl.user_courses.map do |sc| %>
+          <%= link_to course_user_course_path(@course, sc) do %>
+            <span class="label label-info"><%= sc.user.name %></span>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+</table>
+
+<br/>
+<h3>Achievement</h3>
+<!-- A graph to show statistical exp -->
+

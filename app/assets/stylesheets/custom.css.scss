@@ -471,10 +471,15 @@ li .thumbnail {
   overflow: visible\9;
 }
 
-table {
+.table-top-align td {
+  vertical-align: top;
   width: 100%;
 }
 
-.table-top-align td {
-  vertical-align: top;
+.table-basic td{
+  padding: 5px;
+}
+
+.label {
+  text-transform: none;
 }

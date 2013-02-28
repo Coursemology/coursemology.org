@@ -6,6 +6,8 @@ class Level < ActiveRecord::Base
 
   belongs_to :course
 
+  has_many :user_courses
+
   def get_title
     return "Level #{level - 1}"
   end

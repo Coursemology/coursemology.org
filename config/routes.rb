@@ -73,6 +73,8 @@ JfdiAcademy::Application.routes.draw do
     post "asm_tags/render_form_row" => "asm_tags#render_form_row"
 
     resources :comments
+
+    get "stats" => "stats#general"
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
