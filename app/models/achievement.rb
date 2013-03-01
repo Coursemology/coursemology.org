@@ -11,6 +11,8 @@ class Achievement < ActiveRecord::Base
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
+  has_many :user_achievements
+
   def fulfilled_conditions?(user_course)
     satisfied = true
     requirements.each do |req|

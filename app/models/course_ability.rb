@@ -17,6 +17,7 @@ class CourseAbility
       can :manage, :all
       can :populate, Level
       can :see_all, [Submission, TrainingSubmission, QuizSubmission]
+      can :view_stat, [Mission, Training]
       can :participate, Course
       return
     end

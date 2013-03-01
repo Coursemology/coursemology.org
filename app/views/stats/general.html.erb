@@ -7,22 +7,24 @@
   <tr>
     <td>Mission</td>
     <td>
-      <select>
-        <option>AA</option>
-        <option>BB</option>
+      <select id="select-mission">
+        <%= @missions.each do |asm| %>
+          <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
+        <% end %>
       </select>
     </td>
-    <td><a href="#" class="btn">Go</a></td>
+    <td><a href="#" class="btn btn-select-nav" data-target="#select-mission">View</a></td>
   </tr>
   <tr>
     <td>Training</td>
     <td>
-      <select>
-        <option>AA</option>
-        <option>BB</option>
+      <select id="select-training">
+        <%= @trainings.each do |asm| %>
+          <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
+        <% end %>
       </select>
     </td>
-    <td><a href="#" class="btn">Go</a></td>
+    <td><a href="#" class="btn btn-select-nav" data-target="#select-training">View</a></td>
   </tr>
 </table>
 <br/>
@@ -34,24 +36,48 @@
     <th width="10%">Count</th>
     <th>Students</th>
   </tr>
-<% @levels.each do |lvl| %>
-  <% if lvl.user_courses.size > 0 %>
-    <tr>
-      <td><%= lvl.get_title %></td>
-      <td><%= lvl.user_courses.size %></td>
-      <td>
-        <% lvl.user_courses.map do |sc| %>
-          <%= link_to course_user_course_path(@course, sc) do %>
-            <span class="label label-info"><%= sc.user.name %></span>
+  <% @levels.each do |lvl| %>
+    <% if lvl.user_courses.size > 0 %>
+      <tr>
+        <td><%= lvl.get_title %></td>
+        <td><%= lvl.user_courses.size %></td>
+        <td>
+          <% lvl.user_courses.each do |sc| %>
+            <%= link_to course_user_course_path(@course, sc) do %>
+              <span class="label label-info"><%= sc.user.name %></span>
+            <% end %>
           <% end %>
-        <% end %>
-      </td>
-    </tr>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
-<% end %>
 </table>
 
 <br/>
 <h3>Achievement</h3>
+<table class="table">
+  <tr>
+    <th width="10%"></th>
+    <th width="20%">Title</th>
+    <th width="10%">Count</th>
+    <th>Students</th>
+  </tr>
+  <% @achievements.each do |ach| %>
+    <% if ach.user_achievements.size > 0 %>
+      <tr>
+        <td><img src="<%= ach.icon_url %>" /></td>
+        <td><%= ach.title %></td>
+        <td><%= ach.user_achievements.size %></td>
+        <td>
+          <% ach.user_achievements.each do |uach| %>
+            <%= link_to course_user_course_path(@course, uach.user_course) do %>
+              <span class="label label-info"><%= uach.user_course.user.name %></span>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
 <!-- A graph to show statistical exp -->
 

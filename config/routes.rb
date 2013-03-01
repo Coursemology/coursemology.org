@@ -75,6 +75,10 @@ JfdiAcademy::Application.routes.draw do
     resources :comments
 
     get "stats" => "stats#general"
+
+    get "stats/missions/:mission_id" => "stats#mission", as: :stats_mission
+
+    get "stats/trainings/:training_id" => "stats#training", as: :stats_training
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
