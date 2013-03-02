@@ -9,44 +9,45 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  <% if !@course %>
-    <style>
-      body {
-        background-color: white;
-      }
-    </style>
-  <% else %>
+  <% if @course && @course.id && (can? :participate, Course) %>
     <% if @course.course_themes.count > 0 %>
       <% theme = @course.course_themes.first %>
       <link href="<%= "#{theme.theme_folder_url}/style.css" %>" media="all"
           rel="stylesheet" type="text/css" />
     <% end %>
-  <% end %>
-  <% if @theme_settings %>
+    <% if @theme_settings %>
+      <style>
+        <%= @theme_settings['Custom CSS'] %>
+        <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
+          body {
+            background-color: <%= @theme_settings['Background Color'] %>
+          }
+        <% end %>
+        <% if @theme_settings['Background Image'] && @theme_settings['Background Image'] != '' %>
+          body {
+            background-image: url(<%= @theme_settings['Background Image'] %>);
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          }
+        <% end %>
+        <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
+          .sidebar a, .sidebar h3, .sidebar {
+            color: <%= @theme_settings['Sidebar Link Color'] %>;
+          }
+          .sidenav-count {
+            background-color: <%= @theme_settings['Sidebar Link Color'] %>;
+          }
+        <% end %>
+      </style>
+    <% end %>
+  <% else %>
     <style>
-      <%= @theme_settings['Custom CSS'] %>
-      <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
-        body {
-          background-color: <%= @theme_settings['Background Color'] %>
-        }
-      <% end %>
-      <% if @theme_settings['Background Image'] && @theme_settings['Background Image'] != '' %>
-        body {
-          background-image: url(<%= @theme_settings['Background Image'] %>);
-          background-position: bottom left;
-          background-repeat: no-repeat;
-        }
-      <% end %>
-      <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
-        .sidebar a, .sidebar h3, .sidebar {
-          color: <%= @theme_settings['Sidebar Link Color'] %>;
-        }
-        .sidenav-count {
-          background-color: <%= @theme_settings['Sidebar Link Color'] %>;
-        }
-      <% end %>
+      body {
+        background-color: white;
+      }
     </style>
   <% end %>
+
   <%= render partial: "layouts/google_analytics" %>
   <script src='http://www.google.com/jsapi'></script>
 </head>

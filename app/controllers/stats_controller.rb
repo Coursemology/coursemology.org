@@ -17,7 +17,7 @@ class StatsController < ApplicationController
     grade_table.new_column('string', nil, nil, 'tooltip')
     data.sort.each do |k, sbms|
       row = []
-      row << k
+      row << k.to_s
       row << sbms.size
       tooltip = sbms.map { |sbm| sbm.std_course.user.name }.join(',')
       row << tooltip
