@@ -18,10 +18,13 @@
     <tr>
       <td>
         <h2>About</h2>
+        <br/>
         <p>
           <%= @course.description.html_safe %>
         </p>
+        <br/>
         <h2>Lecturers</h2>
+        <br/>
         <ul>
         <% @course.lect_courses.each do |lecturer_course| %>
           <li>
