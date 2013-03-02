@@ -41,21 +41,22 @@ to review all submission for this training.
 <%= render_chart(@date_chart, "asm_starttime_graph") %>
 <h3>Mcq stats</h3>
 <% @mcqs.each do |mcq| %>
-  <p class="well"><%= mcq.description %></p>
+  <p class="well"><%= mcq.description.html_safe %></p>
   <table class="table">
     <colgroup>
       <col width="5%"></col>
-      <col width="30%"></col>
+      <col width="35%"></col>
       <col width="5%"></col>
     </colgroup>
     <% mcq.mcq_answers.each do |choice| %>
+      <% uniq_stds = choice.std_mcq_answers.map { |sma| sma.student }.uniq %>
       <tr>
         <td><input type="checkbox" disabled <%= "checked" if choice.is_correct %> /></td>
         <td><%= choice.text %></td>
-        <td><%= choice.std_mcq_answers.size %></td>
+        <td><%= uniq_stds.size %></td>
         <td>
-          <% choice.std_mcq_answers.each do |sma| %>
-            <span class="label label-info"><%= sma.student.name %></span>
+          <% uniq_stds.each do |std| %>
+            <span class="label label-info"><%= std.name %></span>
           <% end %>
         </td>
       </tr>
