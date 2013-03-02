@@ -26,14 +26,37 @@
     </td>
   </tr>
 </table>
-<h4>Grade</h4>
+<h3>Grade</h3>
 <div class="graph-container">
   <div id="asm_grade_graph" class="graph"></div>
 </div>
 <%= render_chart(@grade_chart, "asm_grade_graph") %>
-<h4>Start time:</h4>
+<h3>Start time</h3>
 <div id="asm_starttime_graph" class="graph"></div>
 <%= render_chart(@date_chart, "asm_starttime_graph") %>
+<h3>Mcq stats</h3>
+<% @mcqs.each do |mcq| %>
+  <p class="well"><%= mcq.description %></p>
+  <table class="table">
+    <colgroup>
+      <col width="5%"></col>
+      <col width="30%"></col>
+      <col width="5%"></col>
+    </colgroup>
+    <% mcq.mcq_answers.each do |choice| %>
+      <tr>
+        <td><input type="checkbox" disabled <%= "checked" if choice.is_correct %> /></td>
+        <td><%= choice.text %></td>
+        <td><%= choice.std_mcq_answers.size %></td>
+        <td>
+          <% choice.std_mcq_answers.each do |sma| %>
+            <span class="label label-info"><%= sma.student.name %></span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
 <hr>
 <p>View detail statistics of other assignment:</p>
 <table class="table-basic">

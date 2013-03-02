@@ -70,6 +70,8 @@ class StatsController < ApplicationController
     sbms_by_date = sbms_graded.group_by { |sbm| sbm.created_at.to_date.to_s }
     @date_chart = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
 
+    @mcqs = @training.mcqs
+
     @missions = @course.missions
     @trainings = @course.trainings
   end
