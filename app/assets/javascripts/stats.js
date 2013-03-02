@@ -6,6 +6,6 @@ $(document).ready(function() {
     evt.preventDefault();
     var target = $(this).attr('data-target');
     var selected_url = $(target).find(":selected").val();
-    window.open(selected_url);
-  })
+    location = selected_url;
+  });
 });

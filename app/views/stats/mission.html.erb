@@ -1,1 +1,62 @@
-View stat of mission <%= @mission.title %>
+<div class="page-header">
+  <h1>Mission Statistics</h1>
+</div>
+<h3>Mission: <%= @mission.title %></h3>
+<a href="#">Click here</a> to review all submission for this mission.
+<br/>
+<table class="table">
+  <tr>
+    <td>Submitted</td>
+    <td><%= @submitted.size %></td>
+    <td>
+      <% @submitted.each do |uc| %>
+        <%= render partial: "user_courses/short_name_display",
+          locals: { user_course: uc } %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Not started</td>
+    <td><%= @unsubmitted.size %></td>
+    <td>
+      <% @unsubmitted.each do |uc| %>
+        <%= render partial: "user_courses/short_name_display",
+          locals: { user_course: uc } %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+<h4>Grade</h4>
+<div class="graph-container">
+  <div id="asm_grade_graph" class="graph"></div>
+</div>
+<%= render_chart(@grade_chart, "asm_grade_graph") %>
+<h4>Start time:</h4>
+<div id="asm_starttime_graph" class="graph"></div>
+<%= render_chart(@date_chart, "asm_starttime_graph") %>
+<hr>
+<p>View detail statistics of other assignment:</p>
+<table class="table-basic">
+  <tr>
+    <td>Mission</td>
+    <td>
+      <select id="select-mission">
+        <%= @missions.each do |asm| %>
+          <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
+        <% end %>
+      </select>
+    </td>
+    <td><a href="#" class="btn btn-select-nav" data-target="#select-mission">View</a></td>
+  </tr>
+  <tr>
+    <td>Training</td>
+    <td>
+      <select id="select-training">
+        <%= @trainings.each do |asm| %>
+          <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
+        <% end %>
+      </select>
+    </td>
+    <td><a href="#" class="btn btn-select-nav" data-target="#select-training">View</a></td>
+  </tr>
+</table>

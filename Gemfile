@@ -42,6 +42,7 @@ gem 'yaml_db'
 gem 'rubyzip'
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem "google_visualr", ">= 2.1"
 
 
 # To use ActiveModel has_secure_password

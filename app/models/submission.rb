@@ -13,6 +13,8 @@ class Submission < ActiveRecord::Base
   has_many :std_answers, through: :sbm_answers,
       source: :answer, source_type: "StdAnswer"
 
+  scope :graded, lambda { where("final_grading_id IS NOT NULL") }
+
   # implement method of Sbm interface
   def get_asm
     return self.mission

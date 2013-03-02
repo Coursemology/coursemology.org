@@ -43,9 +43,8 @@
         <td><%= lvl.user_courses.size %></td>
         <td>
           <% lvl.user_courses.each do |sc| %>
-            <%= link_to course_user_course_path(@course, sc) do %>
-              <span class="label label-info"><%= sc.user.name %></span>
-            <% end %>
+            <%= render partial: "user_courses/short_name_display",
+              locals: { user_course: sc } %>
           <% end %>
         </td>
       </tr>
@@ -70,9 +69,8 @@
         <td><%= ach.user_achievements.size %></td>
         <td>
           <% ach.user_achievements.each do |uach| %>
-            <%= link_to course_user_course_path(@course, uach.user_course) do %>
-              <span class="label label-info"><%= uach.user_course.user.name %></span>
-            <% end %>
+            <%= render partial: "user_courses/short_name_display",
+              locals: { user_course: uach.user_course } %>
           <% end %>
         </td>
       </tr>
