@@ -2,7 +2,12 @@
   <h1>Training Statistics</h1>
 </div>
 <h3>Training: <%= @training.title %></h3>
-<a href="#">Click here</a> to review all submission for this training.
+<%= link_to "Click here",
+  course_submissions_path(@course, asm: {id: @training.id,
+                                         type: @training.class.name}.to_json),
+  method: "GET" %>
+to review all submission for this training.
+<br/>
 <br/>
 <table class="table">
   <tr>

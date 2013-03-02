@@ -2,7 +2,12 @@
   <h1>Mission Statistics</h1>
 </div>
 <h3>Mission: <%= @mission.title %></h3>
-<a href="#">Click here</a> to review all submission for this mission.
+<%= link_to "Click here",
+  course_submissions_path(@course, asm: {id: @mission.id,
+                                         type: @mission.class.name}.to_json),
+  method: "GET" %>
+to review all submission for this training.
+<br/>
 <br/>
 <table class="table">
   <tr>
