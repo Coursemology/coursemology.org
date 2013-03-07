@@ -48,8 +48,13 @@
     <td><%= @training.open_at %></td>
   </tr>
 </table>
-<hr/>
+
 <% if can? :manage, @training %>
+  <%= link_to "Update info", edit_course_training_path(@course, @training) %>
+<% end %>
+
+<% if can? :manage, @training %>
+  <hr/>
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_course_training_mcq_path(@course, @training),
               :class => 'btn btn-primary' %>

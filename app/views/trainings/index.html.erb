@@ -99,7 +99,7 @@
 
         <% if can? :manage, Training %>
           <td>
-            <%= link_to edit_course_training_path(@course, training), class: 'btn' do %>
+            <%= link_to course_training_path(@course, training), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
             <%= link_to course_training_path(@course, training),

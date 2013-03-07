@@ -4,7 +4,6 @@
 </div>
 
 <p><%= @mission.description.html_safe %></p>
-
 <table>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
@@ -35,6 +34,10 @@
     <td><%= @mission.attempt_limit %></td>
   </tr>
 </table>
+
+<% if can? :manage, @mission %>
+  <%= link_to "Update info", edit_course_mission_path(@course, @mission) %>
+<% end %>
 
 <% if can? :manage, @mission %>
   <hr/>

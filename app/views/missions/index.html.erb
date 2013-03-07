@@ -98,7 +98,7 @@
         <% end %>
         <% if can? :manage, Mission %>
           <td>
-            <%= link_to edit_course_mission_path(@course, mission), class: 'btn' do %>
+            <%= link_to course_mission_path(@course, mission), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
             <%= link_to course_mission_path(@course, mission),
