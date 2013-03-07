@@ -54,7 +54,7 @@ class MissionsController < ApplicationController
     @mission.update_tags(params[:tags])
     respond_to do |format|
       if @mission.save
-        format.html { redirect_to course_mission_url(@course, @mission),
+        format.html { redirect_to new_course_mission_question_path(@course, @mission),
                       notice: "The mission #{@mission.title} has been created." }
       else
         format.html { render action: "new" }
