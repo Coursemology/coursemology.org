@@ -79,6 +79,10 @@ JfdiAcademy::Application.routes.draw do
     get "stats/missions/:mission_id" => "stats#mission", as: :stats_mission
 
     get "stats/trainings/:training_id" => "stats#training", as: :stats_training
+
+    get "duplicate" => "duplicate#manage", as: :duplicate
+
+    get "duplicate_course" => "duplicate#duplicate_course", as: :duplicate_course
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130228035457) do
+ActiveRecord::Schema.define(:version => 20130321041710) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -144,6 +144,18 @@ ActiveRecord::Schema.define(:version => 20130228035457) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
+
+  create_table "duplicate_logs", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "origin_course_id"
+    t.integer  "dest_course_id"
+    t.integer  "origin_obj_id"
+    t.string   "origin_obj_type"
+    t.integer  "dest_obj_id"
+    t.string   "dest_obj_type"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
 
   create_table "enroll_requests", :force => true do |t|
     t.integer  "user_id"

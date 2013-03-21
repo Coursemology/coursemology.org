@@ -38,6 +38,9 @@
               <i class="icon-remove"></i>
             <% end %>
             Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
+            <% puts asm_req.to_json %>
+            <% puts asm_req.req.to_json %>
+            <% puts asm_req.req.asm.to_json %>
             <%= link_to asm_req.req.asm.get_title, asm_req.req.asm.get_path %>
           </li>
         <% end %>

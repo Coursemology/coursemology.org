@@ -135,6 +135,11 @@ class ApplicationController < ActionController::Base
         icon: "icon-bolt"
       }
       @nav_items << {
+        text: "Duplicate Data",
+        url: course_duplicate_url(@course),
+        icon: "icon-bolt"
+      }
+      @nav_items << {
         text: "Settings",
         url: edit_course_url(@course),
         icon: "icon-cog"

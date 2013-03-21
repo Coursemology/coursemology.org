@@ -1,0 +1,2 @@
+module DuplicateHelper
+end

@@ -1,0 +1,71 @@
+<div class="page-header">
+  <h1>Duplicate Data</h1>
+</div>
+
+<h3>Duplicate this course to a new course</h3>
+<br/>
+<p class="well">This action will clone the whole course, including: missions, training, levels,
+achievements, and tags. The requirement of achievements, or the tags of the assignments are preserved as well.
+</p>
+
+<div class="center">
+  <%= link_to "Duplicate Course", course_duplicate_course_path(@course),
+    class: "btn btn-large btn-primary center" %>
+</div>
+
+<hr/>
+
+<h3>Duplicate individual data</h3>
+<br/>
+<p class="well">Duplicating the data, the links are not preserved. For example: achievements will not have requirement.
+Assignments will not be tagged, etc.</p>
+
+<strong>Select target course:</strong>
+<select>
+  <option>Mathematics</option>
+  <option>Gamedeology</option>
+  <option>Mathematics</option>
+  <option>Gamedeology</option>
+  <option>Mathematics</option>
+  <option>Gamedeology</option>
+</select><span>(data will be copied to this course)</span>
+<br/>
+
+<strong>Duplicate following data:</strong>
+<br/>
+<br/>
+Training:<br/>
+<a href="#">Select all</a>
+<table class="table">
+  <% @trainings.each_with_index do |asm, i| %>
+    <% if i % 2 == 0 %>
+      <tr>
+    <% end %>
+    <td>
+      <input type="checkbox"/>
+      <span><%= asm.title %></span>
+    </td>
+    <% if i % 2 == 1 || i == @trainings.size %>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+Mission:<br/>
+<a href="#">Select all</a>
+<table class="table">
+  <% @missions.each_with_index do |asm, i| %>
+    <% if i % 2 == 0 %>
+      <tr>
+    <% end %>
+    <td>
+      <input type="checkbox"/>
+      <span><%= asm.title %></span>
+    </td>
+    <% if i % 2 == 1 || i == @missions.size %>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+<div class="center">
+  <button class="btn btn-large btn-primary">Duplicate selected</button>
+</div>
