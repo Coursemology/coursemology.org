@@ -11,6 +11,18 @@ class CourseAbility
     can :read, Course
     can :new, EnrollRequest
 
+    if user.is_lecturer? || user.is_admin?
+      can :ask_for_share, Course
+    end
+
+    if user_course.role == Role.shared.first || user.is_admin?
+      can :share, Course
+      can :participate, Course
+      can :duplicate, Course
+      can :read, [Mission, Training, Quiz]
+      can :view_detail, [Mission, Training, Quiz]
+    end
+
     if user_course.is_lecturer? || user.is_admin?
       # this is enough since all resources are loaded related to
       # the current course
@@ -18,6 +30,7 @@ class CourseAbility
       can :populate, Level
       can :see_all, [Submission, TrainingSubmission, QuizSubmission]
       can :view_stat, [Mission, Training]
+      can :view_detail, [Mission, Training, Quiz]
       can :participate, Course
       can :duplicate, Course
       return

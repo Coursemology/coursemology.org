@@ -14,6 +14,10 @@ if Role.count == 0
   Role.create! name: "student", title: "Student"
 end
 
+if Role.count == 5
+  Role.create! name: "shared", title: "Previewer"
+end
+
 if User.count == 0
   admin = User.create!(name: "Admin", email: "jfdi@academy.com",
                        password: "supersecretpass",

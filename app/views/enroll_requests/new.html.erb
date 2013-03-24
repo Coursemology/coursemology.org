@@ -2,6 +2,7 @@
   Please <%= link_to 'log in', new_user_session_path %> first.
 <% elsif curr_user_course.id %>
   <p>You have already registed to this class as a <%= @curr_user_course.role.name %></p>
-<% elsif @er %>
+<% elsif @er.id %>
+  <p>Request to enroll as: <%= @er.role.title %></p>
   <p>Your request has been received. Please come back later to check for the result!</p>
 <% end %>

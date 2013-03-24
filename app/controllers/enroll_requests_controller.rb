@@ -21,20 +21,24 @@ class EnrollRequestsController < ApplicationController
   end
 
   def new
-    if current_user && current_user.id
-      @er = EnrollRequest.find_by_user_id_and_course_id(current_user.id, @course.id)
-      if !curr_user_course.id && !@er
-        if params[:role]
-          role = Role.find_by_name(params[:role])
-        else
-          role = Role.find_by_name('student')
-        end
-        @enroll_request.course = @course
-        @enroll_request.user = current_user
-        @enroll_request.role = role
-        @enroll_request.save
-        @er = @enroll_request
+    if !current_user
+      redirect_to new_user_session_path
+    end
+    @er = EnrollRequest.find_by_user_id_and_course_id(current_user.id, @course.id)
+    if !curr_user_course.id && !@er
+      if params[:role]
+        @role = Role.find_by_name(params[:role])
+      else
+        @role = Role.find_by_name('student')
       end
+      if @role == Role.shared.first
+        authorize! :ask_for_share, Course
+      end
+      @enroll_request.course = @course
+      @enroll_request.user = current_user
+      @enroll_request.role = @role
+      @enroll_request.save
+      @er = @enroll_request
     end
   end
 

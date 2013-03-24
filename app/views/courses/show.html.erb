@@ -4,6 +4,11 @@
     <% if current_user %>
       <div class="pull-right">
         <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-primary">Request to Enroll</a>
+        <% if can? :manage, Course %>
+          <br/>
+          <br/>
+          <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-info">Request to Share</a>
+        <% end %>
       </div>
     <% end %>
     <div class="media">

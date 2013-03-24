@@ -10,8 +10,18 @@
         <h1><%= @course.title %></h1>
       </td>
       <td>
-        <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-primary">Request to<br/>Enroll</a>
+        <%= link_to new_course_enroll_request_path(@course), class: "btn btn-primary" do %>
+          Request to<br/>Enroll
+        <% end %>
       </td>
+      <% if can? :ask_for_share, Course %>
+        <td>
+          <%= link_to new_course_enroll_request_path(@course, role: Role.shared.first.name),
+            class:"btn btn-info" do %>
+              Request to<br/>Share content</a>
+          <% end %>
+        </td>
+      <% end %>
     </tr>
   </table>
   <table class="table-top-align">

@@ -4,6 +4,7 @@
       <td>Id</td>
       <td>Name</td>
       <td>Email</td>
+      <td>Role</td>
       <td>Action</td>
     </tr>
   </thead>
@@ -15,6 +16,7 @@
       <td><%= ec.id %></td>
       <td><%= ec.user.name %></td>
       <td><%= ec.user.email %></td>
+      <td><%= ec.role.title %></td>
       <td>
         <%= link_to '#', class: "btn btn-primary request-approve" do %>
           <i class="icon-ok"></i>

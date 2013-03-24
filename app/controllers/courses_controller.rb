@@ -66,7 +66,7 @@ class CoursesController < ApplicationController
   end
 
   def show
-    if can? :participate, Course
+    if can?(:participate, Course) || can?(:share, Course)
       @activities = @course.activities.order("created_at DESC")
       respond_to do |format|
         format.html

@@ -16,14 +16,14 @@
       <th width="10%">Tag</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
-      <% if can? :manage, Mission %>
+      <% if can? :view_detail, Mission %>
         <th width="10%">Time till open</th>
       <% end %>
       <th width="10%">Time Left</th>
       <% if curr_user_course.id && can?(:manage, Submission) %>
         <th width="10%"></th>
       <% end %>
-      <% if can? :manage, Mission %>
+      <% if can?(:view_detail, Mission) %>
         <th width="10%"></th>
       <% end %>
     </tr>
@@ -65,7 +65,7 @@
           <% end %>
         </td>
 
-        <% if can? :manage, Mission %>
+        <% if can? :view_detail, Mission %>
           <td>
             <% if mission.open_at > Time.now %>
               <%= time_ago_in_words(mission.open_at) %>
@@ -96,16 +96,18 @@
            <% end %>
           </td>
         <% end %>
-        <% if can? :manage, Mission %>
+        <% if can? :view_detail, Mission %>
           <td>
             <%= link_to course_mission_path(@course, mission), class: 'btn' do %>
-              <i class="icon-edit"></i>
+              <i class="icon-external-link"></i>
             <% end %>
-            <%= link_to course_mission_path(@course, mission),
-                        method: :delete,
-                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        class: 'btn btn-danger' do %>
-               <i class="icon-trash"></i>
+            <% if can? :manage, Mission %>
+              <%= link_to course_mission_path(@course, mission),
+                          method: :delete,
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          class: 'btn btn-danger' do %>
+                 <i class="icon-trash"></i>
+              <% end %>
             <% end %>
           </td>
         <% end %>
