@@ -2,78 +2,109 @@
   <h1>Tags</h1>
 </div>
 
-<%= link_to "New Tag Group",
-  new_course_tag_group_path(@course),
-  :class => 'btn btn-primary' %>
+<% if can? :manage, TagGroup %>
+  <%= link_to "New Tag Group",
+    new_course_tag_group_path(@course),
+    :class => 'btn btn-primary' %>
+<% end %>
+
+<% if can? :manage, Tag %>
+  <%= link_to "New Tag",
+    new_course_tag_path(@course),
+    :class => 'btn btn-primary' %>
+<% end %>
 
 <br/>
 
 <table class="table">
   <thead>
     <th>Tag Group</th>
-    <th width="40%">Description</th>
-    <th width="10%">Action</th>
-  </thead>
-<% @tag_groups.each do |tag_group| %>
-  <tr>
-    <td>
-      <%= link_to course_tag_group_path(@course, tag_group) do %>
-        <strong><%= tag_group.name %></strong>
-      <% end %>
-    </td>
-    <td><%= tag_group.description %></td>
-    <td>
-      <%= link_to edit_course_tag_group_path(@course, tag_group), class: 'btn' do %>
-        <i class="icon-edit"></i>
-      <% end %>
-      <%= link_to course_tag_group_path(@course, tag_group),
-                  method: :delete,
-                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
-                                                               :default => 'Are you sure?')) },
-                  class: 'btn btn-danger' do %>
-         <i class="icon-trash"></i>
-      <% end %>
-    </td>
-  </tr>
-<% end %>
-</table>
-
-<hr/>
-
-<%= link_to "New Tag",
-  new_course_tag_path(@course),
-  :class => 'btn btn-primary' %>
-
-<br/>
-
-<table class="table">
-  <thead>
     <th>Tag</th>
-    <th>Group</th>
     <th width="40%">Description</th>
     <th width="10%">Action</th>
   </thead>
-<% @tags.each do |tag| %>
-  <tr>
-    <td>
-      <%= link_to course_tag_path(@course, tag) do %>
-        <strong><%= tag.name %></strong>
+
+  <tbody>
+    <% @tag_groups.each do |tag_group| %>
+      <tr class="well">
+        <td>
+          <strong><%= tag_group.name %></strong>
+        </td>
+        <td></td>
+        <td><%= tag_group.description %></td>
+        <td>
+          <% if can? :manage, tag_group %>
+            <%= link_to edit_course_tag_group_path(@course, tag_group), class: 'btn' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_tag_group_path(@course, tag_group),
+                        method: :delete,
+                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
+                                                                     :default => 'Are you sure?')) },
+                        class: 'btn btn-danger' do %>
+               <i class="icon-trash"></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+
+      <% tag_group.tags.each do |tag| %>
+        <tr>
+          <td><%= tag_group.name %></td>
+          <td>
+            <%= link_to course_tag_path(@course, tag) do %>
+              <strong><%= tag.name %></strong>
+            <% end %>
+          </td>
+          <td><%= tag.description %></td>
+          <td>
+            <% if can? :manage, tag %>
+              <%= link_to edit_course_tag_path(@course, tag), class: 'btn' do %>
+                <i class="icon-edit"></i>
+              <% end %>
+              <%= link_to course_tag_path(@course, tag),
+                          method: :delete,
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
+                                                                       :default => 'Are you sure?')) },
+                          class: 'btn btn-danger' do %>
+                 <i class="icon-trash"></i>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
-    </td>
-    <td><%= tag.tag_group.name if tag.tag_group %></td>
-    <td><%= tag.description %></td>
-    <td>
-      <%= link_to edit_course_tag_path(@course, tag), class: 'btn' do %>
-        <i class="icon-edit"></i>
-      <% end %>
-      <%= link_to course_tag_path(@course, tag),
-                  method: :delete,
-                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
-                                                               :default => 'Are you sure?')) },
-                  class: 'btn btn-danger' do %>
-         <i class="icon-trash"></i>
-      <% end %>
-    </td>
-  </tr>
-<% end %>
+    <% end %>
+
+    <tr class="well">
+      <td><strong>Uncategorized</strong></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% @uncat_tags.each do |tag| %>
+      <tr>
+        <td>--</td>
+        <td>
+          <%= link_to course_tag_path(@course, tag) do %>
+            <strong><%= tag.name %></strong>
+          <% end %>
+        </td>
+        <td><%= tag.description %></td>
+        <td>
+          <% if can? :manage, tag %>
+            <%= link_to edit_course_tag_path(@course, tag), class: 'btn' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_tag_path(@course, tag),
+                        method: :delete,
+                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
+                                                                     :default => 'Are you sure?')) },
+                        class: 'btn btn-danger' do %>
+               <i class="icon-trash"></i>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

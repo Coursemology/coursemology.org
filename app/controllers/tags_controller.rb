@@ -41,6 +41,7 @@ class TagsController < ApplicationController
 
   def index
     @tag_groups = @course.tag_groups
+    @uncat_tags = @course.tags.uncategorized
   end
 
   def destroy
