@@ -1,5 +1,5 @@
 <div class="span8">
-  <table class="table">
+  <table class="table-top-align">
     <tr>
       <td>
         <a href="<%= course_path(@course) %>">
@@ -24,32 +24,25 @@
       <% end %>
     </tr>
   </table>
-  <table class="table-top-align">
-    <tr>
-      <td>
-        <h2>About</h2>
-        <br/>
-        <p>
-          <%= @course.description.html_safe %>
-        </p>
-        <br/>
-        <h2>Lecturers</h2>
-        <br/>
-        <ul>
-        <% @course.lect_courses.each do |lecturer_course| %>
-          <li>
-            <% user = lecturer_course.user %>
-            <a class="user-thumb-profile" href="#">
-              <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
-              <strong><%= user.name %></strong>
-            </a>
-            <div class="clearfix"></div>
-          </li>
-        <% end %>
-        </ul>
-      </td>
-      <td>
-      </td>
-    </tr>
-  </table>
+  <hr/>
+  <h2>About</h2>
+  <br/>
+  <p>
+    <%= @course.description.html_safe %>
+  </p>
+  <br/>
+  <h2>Lecturers</h2>
+  <br/>
+  <ul>
+  <% @course.lect_courses.each do |lecturer_course| %>
+    <li>
+      <% user = lecturer_course.user %>
+      <a class="user-thumb-profile" href="#">
+        <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
+        <strong><%= user.name %></strong>
+      </a>
+      <div class="clearfix"></div>
+    </li>
+  <% end %>
+  </ul>
 </div>
