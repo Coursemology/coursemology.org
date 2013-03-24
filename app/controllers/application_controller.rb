@@ -98,6 +98,10 @@ class ApplicationController < ActionController::Base
       icon: "icon-envelope-alt",
       count: counts[:submissions] || 0
     }, {
+      text: "Tags",
+      url: course_tags_url(@course),
+      icon: "icon-tags"
+    }, {
       text: "Leaderboards",
       url: course_leaderboards_url(@course),
       img: @theme_settings["Leaderboards Icon"],
@@ -109,11 +113,6 @@ class ApplicationController < ActionController::Base
     }]
 
     if can? :manage, Course
-      @nav_items << {
-        text: "Tags",
-        url: course_tags_url(@course),
-        icon: "icon-tags"
-      }
       @nav_items << {
         text: "Levels",
         url: course_levels_url(@course),

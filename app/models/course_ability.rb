@@ -21,6 +21,9 @@ class CourseAbility
       can :duplicate, Course
       can :read, [Mission, Training, Quiz]
       can :view_detail, [Mission, Training, Quiz]
+      can :read, Tag
+      can :read, [Level, Achievement, Title, Reward]
+      can :students, Course
     end
 
     if user_course.is_lecturer? || user.is_admin?
