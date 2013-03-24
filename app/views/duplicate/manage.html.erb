@@ -32,36 +32,24 @@ Assignments will not be tagged, etc.</p>
   <h3>Duplicate following data:</h3>
   <br/>
   <h3>Mission:</h3>
-  <table class="table">
+  <ul>
     <% @missions.each_with_index do |asm, i| %>
-      <% if i % 2 == 0 %>
-        <tr>
-      <% end %>
-      <td>
+      <li>
         <input type="checkbox" name="missions[]" value="<%= asm.id %>" />
         <span><%= asm.title %></span>
-      </td>
-      <% if i % 2 == 1 || i == @missions.size %>
-        </tr>
-      <% end %>
+      </li>
     <% end %>
-  </table>
+  </ul>
 
   <h3>Training:</h3>
-  <table class="table">
+  <ul>
     <% @trainings.each_with_index do |asm, i| %>
-      <% if i % 2 == 0 %>
-        <tr>
-      <% end %>
-      <td>
+      <li>
         <input type="checkbox" name="trainings[]" value="<%= asm.id %>" />
         <span><%= asm.title %></span>
-      </td>
-      <% if i % 2 == 1 || i == @trainings.size %>
-        </tr>
-      <% end %>
+      </li>
     <% end %>
-  </table>
+  </ul>
   <div class="center">
     <button class="btn btn-large btn-primary">Duplicate selected</button>
   </div>
