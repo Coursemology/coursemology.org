@@ -2,7 +2,7 @@
   <h1>Duplicate Data</h1>
 </div>
 
-<h3>Duplicate this course to a new course</h3>
+<h2>Duplicate this course to a new course</h2>
 <br/>
 <p class="well">This action will clone the whole course, including: missions, training, levels,
 achievements, and tags. The requirement of achievements, or the tags of the assignments are preserved as well.
@@ -15,57 +15,54 @@ achievements, and tags. The requirement of achievements, or the tags of the assi
 
 <hr/>
 
-<h3>Duplicate individual data</h3>
+<h2>Duplicate individual data</h2>
 <br/>
 <p class="well">Duplicating the data, the links are not preserved. For example: achievements will not have requirement.
 Assignments will not be tagged, etc.</p>
 
-<strong>Select target course:</strong>
-<select>
-  <option>Mathematics</option>
-  <option>Gamedeology</option>
-  <option>Mathematics</option>
-  <option>Gamedeology</option>
-  <option>Mathematics</option>
-  <option>Gamedeology</option>
-</select><span>(data will be copied to this course)</span>
-<br/>
+<form action="<%= course_duplicate_assignments_path(@course) %>" action="POST">
+  <h3>Select target course:</h3><span>Data will be copied to the course: </span>
+  <select name="dest_course">
+    <% @my_courses.each do |c| %>
+      <option value="<%= c.id %>"><%= c.title %></option>
+    <% end %>
+  </select>
+  <br/>
 
-<strong>Duplicate following data:</strong>
-<br/>
-<br/>
-Training:<br/>
-<a href="#">Select all</a>
-<table class="table">
-  <% @trainings.each_with_index do |asm, i| %>
-    <% if i % 2 == 0 %>
-      <tr>
+  <h3>Duplicate following data:</h3>
+  <br/>
+  <h3>Mission:</h3>
+  <table class="table">
+    <% @missions.each_with_index do |asm, i| %>
+      <% if i % 2 == 0 %>
+        <tr>
+      <% end %>
+      <td>
+        <input type="checkbox" name="missions[]" value="<%= asm.id %>" />
+        <span><%= asm.title %></span>
+      </td>
+      <% if i % 2 == 1 || i == @missions.size %>
+        </tr>
+      <% end %>
     <% end %>
-    <td>
-      <input type="checkbox"/>
-      <span><%= asm.title %></span>
-    </td>
-    <% if i % 2 == 1 || i == @trainings.size %>
-      </tr>
+  </table>
+
+  <h3>Training:</h3>
+  <table class="table">
+    <% @trainings.each_with_index do |asm, i| %>
+      <% if i % 2 == 0 %>
+        <tr>
+      <% end %>
+      <td>
+        <input type="checkbox" name="trainings[]" value="<%= asm.id %>" />
+        <span><%= asm.title %></span>
+      </td>
+      <% if i % 2 == 1 || i == @trainings.size %>
+        </tr>
+      <% end %>
     <% end %>
-  <% end %>
-</table>
-Mission:<br/>
-<a href="#">Select all</a>
-<table class="table">
-  <% @missions.each_with_index do |asm, i| %>
-    <% if i % 2 == 0 %>
-      <tr>
-    <% end %>
-    <td>
-      <input type="checkbox"/>
-      <span><%= asm.title %></span>
-    </td>
-    <% if i % 2 == 1 || i == @missions.size %>
-      </tr>
-    <% end %>
-  <% end %>
-</table>
-<div class="center">
-  <button class="btn btn-large btn-disabled">Duplicate selected</button>
-</div>
+  </table>
+  <div class="center">
+    <button class="btn btn-large btn-primary">Duplicate selected</button>
+  </div>
+</form>

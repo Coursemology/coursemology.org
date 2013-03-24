@@ -83,6 +83,9 @@ JfdiAcademy::Application.routes.draw do
     get "duplicate" => "duplicate#manage", as: :duplicate
 
     get "duplicate_course" => "duplicate#duplicate_course", as: :duplicate_course
+
+    get "duplicate_assignments" => "duplicate#duplicate_assignments", as: :duplicate_assignments
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

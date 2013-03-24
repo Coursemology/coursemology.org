@@ -5,6 +5,9 @@ class UserCourse < ActiveRecord::Base
 
   before_create :init
 
+  scope :lecturer, where(:role_id => Role.lecturer.first)
+  scope :student, where(:role_id => Role.student.first)
+
   belongs_to :role
   belongs_to :user
   belongs_to :course
