@@ -41,6 +41,7 @@ class DuplicateController < ApplicationController
   def duplicate_course
     require 'duplication'
     authorize! :duplicate, @course
+    authorize! :create, Course
     clone = Duplication.duplicate_course(current_user, @course)
     respond_to do |format|
       format.html { redirect_to edit_course_path(clone),

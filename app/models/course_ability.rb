@@ -11,12 +11,12 @@ class CourseAbility
     can :read, Course
     can :new, EnrollRequest
 
-    user.user_courses.lecturer.each do |uc|
-      can :manage, uc.course
-    end
-
     if user.is_lecturer? || user.is_admin?
       can :ask_for_share, Course
+      can :create, Course
+      user.user_courses.lecturer.each do |uc|
+        can :manage, uc.course
+      end
     end
 
     if user_course.role == Role.shared.first || user.is_admin?

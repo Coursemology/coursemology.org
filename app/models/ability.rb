@@ -6,9 +6,12 @@ class Ability
     if user
       if user.is_admin?
         can :manage, :all
-      elsif user.is_lecturer?
-        can :manage, Course, creator_id: user.id
       end
+
+      user.user_courses.lecturer.each do |uc|
+        can :manage, uc.course
+      end
+
       can :manage, User, id: user.id
       can :new, RoleRequest
     end
