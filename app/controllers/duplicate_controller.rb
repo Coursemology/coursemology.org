@@ -12,17 +12,20 @@ class DuplicateController < ApplicationController
   def duplicate_assignments
     require 'duplication'
     dest_course = Course.find(params[:dest_course])
+    puts dest_course.to_json
     authorize! :manage, dest_course
     authorize! :duplicate, Course
 
-    params[:trainings].each do |id|
+    training_ids = params[:trainings] || []
+    training_ids.each do |id|
       training = @course.trainings.find(id)
       if training
         Duplication.duplicate_asm(current_user, training, @course, dest_course)
       end
     end
 
-    params[:missions].each do |id|
+    mission_ids = params[:missions] || []
+    mission_ids.each do |id|
       mission = @course.missions.find(id)
       if mission
         Duplication.duplicate_asm(current_user, mission, @course, dest_course)
