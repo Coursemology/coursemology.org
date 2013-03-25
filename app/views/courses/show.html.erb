@@ -7,7 +7,10 @@
         <% if can? :manage, Course %>
           <br/>
           <br/>
-          <a href="<%= new_course_enroll_request_path(@course) %>" class="btn btn-info">Request to Share</a>
+          <%= link_to new_course_enroll_request_path(@course, role: Role.shared.first.name),
+            class:"btn btn-info" do %>
+              Request to<br/>Share content</a>
+          <% end %>
         <% end %>
       </div>
     <% end %>
