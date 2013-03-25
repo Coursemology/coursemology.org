@@ -8,10 +8,25 @@
 </div>
 
 <% if @courses.count > 0 %>
-  <h2>Courses you are attending:</h2>
-  <br/>
-  <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses } %>
+  <% if @courses_std.size > 0 %>
+    <h2>Courses you are attending:</h2>
+    <br/>
+    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_std } %>
+  <% end %>
+
+  <% if @courses_lect.size > 0 %>
+    <h2>Courses you are teaching:</h2>
+    <br/>
+    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_lect } %>
+  <% end %>
+
+  <% if @courses_shared.size > 0 %>
+    <h2>Courses you are observing:</h2>
+    <br/>
+    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_shared } %>
+  <% end %>
   <p>Click <%= link_to 'here', courses_path %> to view all available courses.</p>
+
 <% else %>
   <p>Choose a course to enroll!</p>
   <br/>
