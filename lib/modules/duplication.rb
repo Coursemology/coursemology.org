@@ -1,11 +1,23 @@
 module Duplication
 
   class Duplicator
+
+    def duplicate_qn_no_log(qn)
+      clone_qn = qn.dup
+      if qn.is_a?(Mcq)
+        qn.mcq_answers.each do |ma|
+          clone_ma = ma.dup
+          clone_qn.mcq_answers << clone_ma
+        end
+      end
+      return clone_qn
+    end
+
     def duplicate_asm_no_log(asm)
       clone = asm.dup
       # duplicate question and create new asm_qn links
       asm.asm_qns.each do |asm_qn|
-        clone_qn = asm_qn.qn.dup
+        clone_qn = duplicate_qn_no_log(asm_qn.qn)
         new_link = asm_qn.dup
         new_link.qn = clone_qn
         clone.asm_qns << new_link
