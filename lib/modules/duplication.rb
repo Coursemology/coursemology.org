@@ -63,11 +63,21 @@ module Duplication
         clone_map[asm] = clone_asm
       end
 
-      (course.levels + course.achievements + course.tags + course.tag_groups).each do |obj|
+      (course.levels + course.achievements + course.tag_groups).each do |obj|
         clone_obj = obj.dup
         clone_obj.course = clone
         clone_obj.save
         clone_map[obj] = clone_obj
+      end
+
+      course.tag_groups.each do |tg|
+        tg.tags.each do |tag|
+          clone_obj = tag.dup
+          clone_obj.course = clone
+          clone_obj.tag_group = clone_map[tg]
+          clone_obj.save
+          clone_map[tag] = clone_obj
+        end
       end
 
       # log the duplication
