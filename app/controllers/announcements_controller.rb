@@ -6,9 +6,9 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
-    @announcements = @course.announcements.accessible_by(current_ability).order("publish_at DESC")
+    @announcements = @course.announcements.accessible_by(current_ability).order("publish_at DESC").first(30)
     if curr_user_course.id
-      unseen = @announcements - curr_user_course.seen_announcements
+      unseen = @announcements - curr_user_course.seen_announcements.first(30)
       unseen.each do |ann|
         @is_new[ann.id] = true
         curr_user_course.mark_as_seen(ann)
