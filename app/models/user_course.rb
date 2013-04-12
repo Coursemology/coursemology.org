@@ -111,15 +111,22 @@ class UserCourse < ActiveRecord::Base
       puts "#{ach.fulfilled_conditions?(self)} #{ach.to_json}"
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
-        uach = self.user_achievements.build
-        uach.achievement = ach
         fulfilled = true
-        Activity.earned_smt(self, ach)
-        Notification.earned_achievement(self, ach)
-        self.save
+        self.give_achievement(ach)
       end
     end
     return fulfilled
+  end
+
+  def give_achievement(ach)
+    uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
+    if not uach
+      uach = self.user_achievements.build
+      uach.achievement = ach
+      Activity.earned_smt(self, ach)
+      Notification.earned_achievement(self, ach)
+      self.save
+    end
   end
 
   def create_all_std_tags

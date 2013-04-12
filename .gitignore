@@ -20,3 +20,6 @@
 * ̃
 .project
 .DS_Store
+
+# ignode devise config file
+/config/initializers/devise.rb

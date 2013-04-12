@@ -86,6 +86,10 @@ JfdiAcademy::Application.routes.draw do
 
     get "duplicate_assignments" => "duplicate#duplicate_assignments", as: :duplicate_assignments
 
+    match "award_exp" => "manual_rewards#manual_exp", as: :manual_exp
+
+    match "award_achievement" => "manual_rewards#manual_achievement", as: :manual_achievement
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

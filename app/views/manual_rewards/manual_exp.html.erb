@@ -1,0 +1,25 @@
+<div class="page-header">
+  <h1>Awarding EXPs</h1>
+</div>
+
+<h2>Giving EXP for students:</h2>
+<br/>
+<%= form_tag course_manual_exp_path(@course), method: "POST" do %>
+  <table>
+    <% @student_courses.each do |std_course| %>
+      <tr>
+        <td><%= render partial: "layouts/user_thumb_profile",
+          locals: { user_course: std_course } %>
+        </td>
+        <td><input name="exps[<%= std_course.id %>]"></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td><h2>Reason</h2></td>
+      <td><input name="reason"></td>
+    </tr>
+  </table>
+  <div class="form-actions">
+    <button class="btn btn-large btn-primary">Give EXP</button>
+  </div>
+<% end %>

@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
   attr_accessible :display_name, :name, :profile_photo_url, :system_role_id
   attr_accessible :provider, :uid
 
-  has_many :user_courses
-  has_many :courses, through: :user_courses
+  has_many :user_courses, dependent: :destroy
+  has_many :courses, through: :user_courses, dependent: :destroy
 
   belongs_to :system_role, class_name: "Role"
 

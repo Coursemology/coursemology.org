@@ -1,0 +1,61 @@
+<div class="page-header">
+  <h1>Awarding Achievements</h1>
+</div>
+
+<h2>Give Achievements</h2>
+
+<%= form_tag course_manual_achievement_path(@course), method:"POST" do %>
+
+  <table class="table table-vertical-middle">
+    <% @achievements.each_with_index do |ach, index| %>
+      <% if index % 3 == 0 %>
+        <tr>
+      <% end %>
+      <td class="box-left" width="3%">
+        <input id="ach-<%= ach.id %>" type="checkbox" name="achs[]" value="<%= ach.id %>">
+      </td>
+      <td class="box-middle">
+        <label for="ach-<%= ach.id %>">
+          <img class="ach-icon" src="<%= ach.icon_url %>">
+        </label>
+      </td>
+      <td class="box-right" width="23%">
+        <label for="ach-<%= ach.id %>">
+          <%= ach.title %>
+        </label>
+      </td>
+      <% if index % 3 == 2 || index == @achievements.size %>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+
+  <h2>To Students</h2>
+
+  <table class="table table-vertical-middle">
+    <% @student_courses.each_with_index do |std_course, index| %>
+      <% if index % 3 == 0 %>
+        <tr>
+      <% end %>
+      <td class="box-left" width="3%">
+        <input type="checkbox" id="std-<%= std_course.id %>" name="std_courses[]" value="<%= std_course.id %>">
+      </td>
+      <td class="ach-icon box-middle">
+        <label for="std-<%= std_course.id %>">
+          <img class="ach-icon" src="<%= std_course.user.profile_photo_url %>" />
+        </label>
+      </td>
+      <td class="box-right">
+        <label for="std-<%= std_course.id %>">
+          <%= std_course.user.name %>
+        </label>
+      </td>
+      <% if index % 3 == 2 || index == @achievements.size %>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+  <div class="center form-actions">
+    <button class="btn btn-primary btn-large">Give Achievements</button>
+  </div>
+<% end %>

@@ -124,12 +124,17 @@ class ApplicationController < ActionController::Base
         icon: "icon-star"
       }
       @nav_items << {
+        text: "Award Give-away",
+        url: course_manual_exp_url(@course),
+        icon: "icon-star"
+      }
+      @nav_items << {
         text: "Statistics",
         url: course_stats_url(@course),
         icon: "icon-bar-chart"
       }
       @nav_items << {
-        text: "Enroll Requests",
+        text: "Enrollment",
         url: course_enroll_requests_url(@course),
         icon: "icon-bolt"
       }

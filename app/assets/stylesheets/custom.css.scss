@@ -195,8 +195,8 @@ ul {
 }
 
 .ach-icon {
-  width: 100%;
-  max-height: 100%;
+  width: 50px;
+  height: 50px;
 }
 
 .achievement-list .icon-remove {
@@ -497,4 +497,25 @@ li .thumbnail {
 
 .signin-form, .signup-form {
   margin-left: 20px;
+}
+
+.table-no-border td {
+  border: none
+}
+
+.table-vertical-middle td {
+  vertical-align: middle;
+}
+
+.box-left {
+  border-left: 1px solid #dddddd;
+}
+
+.box-right {
+  border-right: 1px solid #dddddd;
+}
+
+.box-middle, .box-left, .box-right {
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
 }
