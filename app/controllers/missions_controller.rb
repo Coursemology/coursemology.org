@@ -1,6 +1,6 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :mission, through: :course, except: [:index]
+  load_and_authorize_resource :mission, through: :course
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def index

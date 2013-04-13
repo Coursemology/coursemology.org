@@ -3,6 +3,7 @@ class ManualRewardsController < ApplicationController
   before_filter :load_general_course_data
 
   def manual_exp
+    authorize! :award_points, UserCourse
     @student_courses = @course.user_courses.student
     exps = params[:exps]
     if exps
@@ -28,6 +29,7 @@ class ManualRewardsController < ApplicationController
   end
 
   def manual_achievement
+    authorize! :award_points, UserCourse
     @achievements = @course.achievements
     @student_courses = @course.user_courses.student
 

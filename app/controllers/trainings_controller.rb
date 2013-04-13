@@ -1,6 +1,6 @@
 class TrainingsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :training, through: :course, except: [:index]
+  load_and_authorize_resource :training, through: :course
 
   before_filter :load_general_course_data, only: [:show, :index, :edit, :new]
 

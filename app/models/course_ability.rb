@@ -11,6 +11,11 @@ class CourseAbility
     can :read, Course
     can :new, EnrollRequest
 
+    if !user.persisted?
+      # not logged in user
+      cannot :read, [Mission, Training]
+    end
+
     if user.is_lecturer? || user.is_admin?
       can :ask_for_share, Course
       can :create, Course
@@ -40,6 +45,7 @@ class CourseAbility
       can :view_detail, [Mission, Training, Quiz]
       can :participate, Course
       can :duplicate, Course
+      can :award_points, UserCourse
       return
     end
 
