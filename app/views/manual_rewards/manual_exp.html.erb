@@ -2,6 +2,15 @@
   <h1>Awarding EXPs</h1>
 </div>
 
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href='<%= course_manual_exp_path(@course) %>'>Giving EXP</a>
+  </li>
+  <li>
+    <a href='<%= course_manual_achievement_path(@course) %>'>Giving Achievements</a>
+  </li>
+</ul>
+
 <h2>Giving EXP for students:</h2>
 <br/>
 <%= form_tag course_manual_exp_path(@course), method: "POST" do %>
