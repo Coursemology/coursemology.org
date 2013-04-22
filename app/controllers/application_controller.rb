@@ -114,16 +114,6 @@ class ApplicationController < ActionController::Base
 
     if can? :manage, Course
       @nav_items << {
-        text: "Levels",
-        url: course_levels_url(@course),
-        icon: "icon-star-empty"
-      }
-      @nav_items << {
-        text: "Achievements",
-        url: course_achievements_url(@course),
-        icon: "icon-star"
-      }
-      @nav_items << {
         text: "Award Give-away",
         url: course_manual_exp_url(@course),
         icon: "icon-star"
