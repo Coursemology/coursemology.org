@@ -9,7 +9,7 @@ class SubmissionsController < ApplicationController
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create]
 
   def listall
-    # find selected course
+    # find selected assignment
     if params[:asm] && params[:asm] != "0"
       asm_info = JSON.parse(params[:asm])
       asm_id = asm_info["id"].to_i
@@ -35,9 +35,9 @@ class SubmissionsController < ApplicationController
     if @selected_asm
       @sbms = @selected_asm.sbms
     else
-      @sbms = @course.submissions.accessible_by(current_ability) +
-              @course.training_submissions.accessible_by(current_ability) +
-              @course.quiz_submissions.accessible_by(current_ability)
+      @sbms = @course.submissions.accessible_by(current_ability).order("created_at DESC").first(20) +
+              @course.training_submissions.accessible_by(current_ability).order("created_at DESC").first(20) +
+              @course.quiz_submissions.accessible_by(current_ability).order("created_at DESC").first(20)
     end
 
     if @selected_sc
