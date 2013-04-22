@@ -75,9 +75,10 @@
       </tr>
     </thead>
     <tbody>
-      <% @mcqs.each do |q| %>
+      <% @mcqs.each_with_index do |q, index| %>
         <tr>
           <td>
+            <h3>Question <%= index + 1 %></h3>
             <%= render partial: "mcqs/one", locals: { q: q } %>
           </td>
           <% if can? :manage, Training %>
