@@ -25,6 +25,10 @@ There is one super user added through db:seed
         username: jfdi@academy.com
         pass: supersecretpass
 
+Update Devise configuration:
+        copy config/initializers/devise_sample.rb to config/initializers/devise.rb
+        update email / facebook app info
+
 Using rails console to test
         $ rails c
 
