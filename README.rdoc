@@ -1,14 +1,6 @@
 == Introduction
 
-JEDI Academy, an open source online education platform for school :-)
-
-== Repository
-
-Github:
-        https://github.com/manhhung741/jfdi-academy
-
-Heroku:
-        http://jfdi-academy.herokuapp.com
+Coursemology, an open source online education platform for school :-)
 
 == Setting up
 
