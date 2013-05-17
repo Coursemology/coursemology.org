@@ -8,6 +8,12 @@ Coursemology, an open source online education platform for school :-)
         $ rake db:migrate
         $ rake db:seed
 
+Using rails console to test
+        $ rails c
+
+Running local server
+        $ rails s
+
 == Testing
 
 Populate sample data:
@@ -17,18 +23,27 @@ There is one super user added through db:seed
         username: jfdi@academy.com
         pass: supersecretpass
 
+== Configuration
+
+You need to set the following environment variable
+        GMAIL_SMTP_USER
+        GMAIL_SMTP_PASSWORD
+
+so that the website can send out email successfully.
+
 Update Devise configuration:
-        copy config/initializers/devise_sample.rb to config/initializers/devise.rb
-        update email / facebook app info
+        cp config/initializers/devise_sample.rb config/initializers/devise.rb
 
-Using rails console to test
-        $ rails c
-
-Running local server
-        $ rails s
+Then update the email used, the facebook app info in the config file above.
 
 == Checking available API / routes:
         $ rake routes
+
+== Self deploying Ruby on Rails app with Phusion Messenger
+
+In case you are trying to deploy the website yourself using Phusion Messenger, here is a good guide to get started.
+
+        http://www.web-l.nl/posts/5
 
 == Third party libraries
 
