@@ -23,6 +23,7 @@ class EnrollRequestsController < ApplicationController
   def new
     if !current_user
       redirect_to new_user_session_path
+      return
     end
     @er = EnrollRequest.find_by_user_id_and_course_id(current_user.id, @course.id)
     if !curr_user_course.id && !@er
