@@ -32,7 +32,7 @@ You need to set the following environment variable
 so that the website can send out email successfully.
 
 Update Devise configuration:
-        cp config/initializers/devise_sample.rb config/initializers/devise.rb
+        cp devise_sample_config.rb config/initializers/devise.rb
 
 Then update the email used, the facebook app info in the config file above.
 
