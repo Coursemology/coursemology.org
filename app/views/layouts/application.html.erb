@@ -53,7 +53,15 @@
 </head>
 <body>
   <%= render "layouts/header" %>
-  <% if @course && @course.id && (can? :participate, Course) %>
+  <% if @setting %>
+    <div class="container-fluid">
+      <%= render "layouts/setting_layout" %>
+    </div>
+  <% elsif @admin %>
+    <div class="container-fluid">
+      <%= render "layouts/admin_layout" %>
+    </div>
+  <% elsif @course && @course.id && (can? :participate, Course) %>
     <div class="container-fluid course-content">
       <%= render "layouts/course_layout" %>
     </div>

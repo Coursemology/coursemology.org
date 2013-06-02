@@ -9,11 +9,20 @@ JfdiAcademy::Application.routes.draw do
   get "about" => "static_pages#about"
   get "access_denied" => "static_pages#access_denied"
 
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
+                                       :registrations => "registrations" }
 
   get "users/settings" => "users#edit"
   put "users/update" => "users#update"
-
+  match "admins" => "admins#access_control"
+  match "users" => "users#show"
+  resources :users
+  #resources :users do
+  #  collection do
+  #    get 'search'
+  #  end
+  #end
+  #match "admins/index" =>"admins#index"
   get "lecturers/request" => "role_requests#new"
   resources :role_requests
 

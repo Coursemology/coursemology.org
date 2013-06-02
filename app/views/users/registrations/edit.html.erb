@@ -1,8 +1,8 @@
 <div class="page-header">
-  <h1>Update Information:</h1>
+  <h3>Update credentials</h3>
 </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
              html: { method: :put, class: "form-horizontal" } ) do |f| %>
   <%= devise_error_messages! %>
 
@@ -14,23 +14,23 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :password %>
+    <%= f.label :current_password %>
+      <div class="controls">
+        <%= f.password_field :current_password %>
+      </div>
+    </div>
+
+  <div class="control-group">
+    <%= f.label :password, "New password" %>
     <div class="controls">
       <%= f.password_field :password, autocomplete: "off" %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :password_confirmation %>
+    <%= f.label :password_confirmation, "New password confirmation" %>
     <div class="controls">
       <%= f.password_field :password_confirmation %>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <%= f.label :current_password %>
-    <div class="controls">
-      <%= f.password_field :current_password %>
     </div>
   </div>
 

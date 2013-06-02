@@ -27,6 +27,9 @@
 //= require bootstrap-wysihtml5
 //= require jquery-fileupload/basic
 
+//= require jquery.purr
+//= require best_in_place
+
 $(document).ready(function() {
 
   $(".datepicker").datepicker({
