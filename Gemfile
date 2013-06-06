@@ -64,8 +64,8 @@ gem 'best_in_place'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Deploy with Capistrano
-# gem 'capistrano'
+#Deploy with Capistrano
+gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'

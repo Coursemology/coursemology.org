@@ -16,7 +16,6 @@ JfdiAcademy::Application.routes.draw do
   put "users/update" => "users#update"
   match "admins" => "admins#access_control"
   match "users" => "users#show"
-  resources :users
   #resources :users do
   #  collection do
   #    get 'search'
