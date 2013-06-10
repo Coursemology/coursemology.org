@@ -44,7 +44,7 @@ class SubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.page(params[:page]).per(5)
+    @sbms = @sbms.page(params[:page])
 
   end
 

@@ -6,7 +6,7 @@ class TrainingSubmissionsController < ApplicationController
   skip_load_and_authorize_resource :training_submission, only: :listall
   skip_load_and_authorize_resource :training, only: :listall
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :listall]
 
   def listall
     @tab = "TrainingSubmission"
@@ -44,7 +44,7 @@ class TrainingSubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.page(params[:page]).per(5)
+    @sbms = @sbms.page(params[:page])
 
     respond_to do |format|
       format.html { render "submissions/listall" }
