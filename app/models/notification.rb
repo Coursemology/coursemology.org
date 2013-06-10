@@ -1,5 +1,6 @@
 class Notification < ActiveRecord::Base
   attr_accessible :action_id, :actor_id, :extra, :obj_id, :obj_type, :target_course_id
+  #target_course_id: student_course_id of the target.., not the course_id of the target
 
   belongs_to :action
   belongs_to :actor, class_name: "User"

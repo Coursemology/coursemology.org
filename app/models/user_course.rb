@@ -81,6 +81,7 @@ class UserCourse < ActiveRecord::Base
       if lvl.exp_threshold > self.exp
         if self.level != lvl && lvl.level > 1
           Activity.earned_smt(self, lvl)
+          Notification.leveledup(self, lvl)
         end
         self.level = lvl
         break
