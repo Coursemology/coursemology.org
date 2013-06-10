@@ -3,9 +3,52 @@ class TrainingSubmissionsController < ApplicationController
   load_and_authorize_resource :training, through: :course
   load_and_authorize_resource :training_submission, through: :training
 
+  skip_load_and_authorize_resource :training_submission, only: :listall
+  skip_load_and_authorize_resource :training, only: :listall
+
   before_filter :load_general_course_data, only: [:show, :index, :edit]
 
-  def index
+  def listall
+    @tab = "TrainingSubmission"
+
+    # find selected assignment
+    if params[:asm_id] && params[:asm_id] != "0"
+      asm_id = params[:asm_id].to_i
+      @selected_asm = @course.trainings.find(asm_id)
+    end
+
+    # find selected students
+    if params[:student] && params[:student] != "0"
+      sc = params[:student].to_i
+      @selected_sc = @course.user_courses.find(sc)
+    end
+
+    @all_asm = @course.trainings
+    @student_courses = @course.student_courses
+
+    if @selected_asm
+      @sbms = @selected_asm.sbms
+    else
+      @sbms = @course.training_submissions.accessible_by(current_ability).order(:created_at).reverse_order
+    end
+
+    if @selected_sc
+      @sbms = @sbms.where('std_course_id = ?', @selected_sc)
+    end
+
+    @unseen = []
+    if curr_user_course.id
+      @unseen = @sbms - curr_user_course.get_seen_sbms
+      @unseen.each do |sbm|
+        curr_user_course.mark_as_seen(sbm)
+      end
+    end
+
+    @sbms = @sbms.page(params[:page]).per(5)
+
+    respond_to do |format|
+      format.html { render "submissions/listall" }
+    end
   end
 
   def show

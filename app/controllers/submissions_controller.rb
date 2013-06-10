@@ -9,18 +9,12 @@ class SubmissionsController < ApplicationController
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create]
 
   def listall
-    # find selected assignment
-    if params[:asm] && params[:asm] != "0"
-      asm_info = JSON.parse(params[:asm])
-      asm_id = asm_info["id"].to_i
-      asm_type = asm_info["type"]
+    @tab = "MissionSubmission"
 
-      case asm_type
-      when "Mission"
-        @selected_asm = @course.missions.find(asm_id)
-      when "Training"
-        @selected_asm = @course.trainings.find(asm_id)
-      end
+    # find selected assignment
+    if params[:asm_id] && params[:asm_id] != "0"
+      asm_id = params[:asm_id].to_i
+      @selected_asm = @course.missions.find(asm_id)
     end
 
     # find selected students
@@ -29,19 +23,17 @@ class SubmissionsController < ApplicationController
       @selected_sc = @course.user_courses.find(sc)
     end
 
-    @all_asm = @course.asms
+    @all_asm = @course.missions
     @student_courses = @course.student_courses
 
     if @selected_asm
       @sbms = @selected_asm.sbms
     else
-      @sbms = @course.submissions.accessible_by(current_ability).order("created_at DESC").first(20) +
-              @course.training_submissions.accessible_by(current_ability).order("created_at DESC").first(20) +
-              @course.quiz_submissions.accessible_by(current_ability).order("created_at DESC").first(20)
+      @sbms = @course.submissions.accessible_by(current_ability).order(:created_at).reverse_order
     end
 
     if @selected_sc
-      @sbms = @sbms.select { |sbm| sbm.std_course == @selected_sc }
+      @sbms = @sbms.where('std_course_id = ?', @selected_sc)
     end
 
     @unseen = []
@@ -52,7 +44,8 @@ class SubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.sort_by(&:created_at).reverse
+    @sbms = @sbms.page(params[:page]).per(5)
+
   end
 
   def show

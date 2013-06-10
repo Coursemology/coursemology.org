@@ -2,16 +2,25 @@
   <h1>Submissions</h1>
 </div>
 
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "MissionSubmission" %>">
+    <a href="<%= course_submissions_path(@course) %>" data-toggle="tab">Mission Submissions</a>
+  </li>
+  <li class="<%= "active" if @tab == "TrainingSubmission" %>">
+    <a href="<%= course_training_submissions_path(@course) %>" data-toggle="tab">Training Submissions</a>
+  </li>
+</ul>
+
 <% if can? :see_all, Submission %>
   <form class="form-horizontal" action="<%= nil %>" method="GET">
     <h3>Show only Submissions:</h3>
     <div class="control-group">
       <label>Assignments</label>
       <div class="controls">
-        <select name="asm">
+        <select name="asm_id">
           <option value="0">Any</option>
           <% @all_asm.each do |asm| %>
-            <option value="<%= { id: asm.id, type: asm.class.name }.to_json %>"
+            <option value="<%= asm.id %>"
               <%= "selected" if @selected_asm && asm == @selected_asm %>>
               <%= asm.get_title %>
             </option>
@@ -96,3 +105,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @sbms %>
