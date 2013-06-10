@@ -13,6 +13,13 @@ group :production do
   gem 'mysql2'
 end
 
+gem "rspec-rails", :group => [:test, :development]
+group :test do
+  gem "factory_girl_rails"
+  gem "capybara"
+  gem "guard-rspec"
+end
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -28,8 +35,8 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'coffee-rails'
 end
-
 
 gem 'pg'
 gem 'jquery-rails', '2.1.3'
@@ -46,6 +53,7 @@ gem 'google_visualr', '>= 2.1'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'kaminari'
+gem 'best_in_place'
 
 
 # To use ActiveModel has_secure_password
@@ -57,8 +65,8 @@ gem 'kaminari'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Deploy with Capistrano
-# gem 'capistrano'
+#Deploy with Capistrano
+gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'

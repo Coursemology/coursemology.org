@@ -73,6 +73,15 @@ class User < ActiveRecord::Base
         'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
   end
 
+  def self.search(search)
+    search_condition = "%" + search + "%"
+    find(:all, :conditions => ['display_name LIKE ? OR email LIKE ?', search_condition, search_condition])
+  end
+
+  def get_role
+    self.system_role.title
+  end
+
   private
   def set_default_role
     if !self.system_role

@@ -16,13 +16,17 @@
               </a>
               <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
                 <!-- <li><a href="#">Profile</a></li> -->
-                <li><%= link_to "Setting", users_settings_path %></a></li>
+                <li><%= link_to "Account management", users_settings_path %></a></li>
+                <% if current_user.is_admin? %>
+                    <li><%= link_to "Admin panel", admins_path %></a></li>
+              <% end %>
                 <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
               </ul>
             </li>
           <% else %>
-            <li><%= link_to "Sign up", new_user_registration_path %></li>
-            <li><%= link_to "Sign in", new_user_session_path %></li>
+              <li><%= link_to "Courses", courses_path %></li>
+              <li><%= link_to "Sign up", new_user_registration_path %></li>
+              <li><%= link_to "Sign in", new_user_session_path %></li>
           <% end %>
         </ul>
       </div>
