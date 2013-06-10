@@ -20,7 +20,6 @@
             <td width="32%">
               <%= best_in_place user, :system_role_id, type: :select, collection:Role.all.collect {|r| [ r.id,r.title ]} %>
             </td>
-
           </tr>
       <% end %>
       </tbody>

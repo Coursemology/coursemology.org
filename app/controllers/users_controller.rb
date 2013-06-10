@@ -41,6 +41,5 @@ class UsersController < ApplicationController
   def show
     @admin = true
     @users = User.search params[:search]
-    logger.info "search result: "
   end
 end

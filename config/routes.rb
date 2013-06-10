@@ -16,11 +16,11 @@ JfdiAcademy::Application.routes.draw do
   put "users/update" => "users#update"
   match "admins" => "admins#access_control"
   match "users" => "users#show"
-  #resources :users do
-  #  collection do
-  #    get 'search'
-  #  end
-  #end
+  resources :users do
+    collection do
+      get 'search'
+    end
+  end
   #match "admins/index" =>"admins#index"
   get "lecturers/request" => "role_requests#new"
   resources :role_requests
