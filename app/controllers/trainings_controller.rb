@@ -6,7 +6,9 @@ class TrainingsController < ApplicationController
 
   def index
     @is_new = {}
-    @trainings = @course.trainings.accessible_by(current_ability).order("open_at DESC")
+    @trainings = @course.trainings.accessible_by(current_ability)
+                    .order(:open_at).reverse_order
+                    .page(params[:page])
     if curr_user_course.id
       unseen = @trainings - curr_user_course.seen_trainings
       unseen.each do |tn|

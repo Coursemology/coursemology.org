@@ -5,15 +5,15 @@ class MissionsController < ApplicationController
 
   def index
     @is_new = {}
+    @missions = @course.missions.accessible_by(current_ability)
+                  .order(:open_at).reverse_order
+                  .page(params[:page])
     if curr_user_course.id
-      @missions = @course.missions.accessible_by(current_ability).order(:open_at).reverse
       unseen = @missions - curr_user_course.seen_missions
       unseen.each do |um|
         @is_new[um.id] = true
         curr_user_course.mark_as_seen(um)
       end
-    else
-      @missions = @course.missions.opened.still_open.order(:close_at) + @course.missions.closed
     end
     respond_to do |format|
       format.html # index.html.erb

@@ -45,6 +45,7 @@ gem 'daemons'
 gem 'google_visualr', '>= 2.1'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'kaminari'
 
 
 # To use ActiveModel has_secure_password

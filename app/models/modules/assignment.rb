@@ -16,6 +16,8 @@ module Assignment
       has_many :tags, through: :asm_tags
 
       after_save :after_save_asm
+
+      paginates_per 10
     end
   end
 
