@@ -1,8 +1,8 @@
 class McqsController < ApplicationController
   load_and_authorize_resource :course
   load_resource :training, through: :course
-  load_resource :quiz, through: :course
-  load_and_authorize_resource :mcq, through: [:training, :quiz]
+  # load_resource :quiz, through: :course
+  load_and_authorize_resource :mcq, through: :training
   # may need to authorize @quiz || @training separately
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter :init_asm
@@ -10,7 +10,7 @@ class McqsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def init_asm
-    @asm = @training || @quiz
+    @asm = @training
   end
 
   def new
