@@ -4,7 +4,7 @@
     {
         height:800px;
         left:0;
-        top:60px;
+        top:30px;
         width:1030px;
         z-index:0;
         background-color:#FFF;
@@ -626,7 +626,12 @@
 </head>
 <body id="inner_body" class="inner_body">
 <div id="content" class="content">
-  <%= devise_error_messages! %>
+  <div class="container-fluid">
+    <% if flash[:notice] %>
+      <div class="alert alert-info">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
   <div id="_slogen" class="_slogen">
     <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;">
       Gamified Online Education Platform:
