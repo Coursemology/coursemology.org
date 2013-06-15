@@ -4,6 +4,6 @@ class AdminsController < ApplicationController
     super
   end
   def show
-    logger.info "admin show "
+    logger.info "admin show"
   end
 end
