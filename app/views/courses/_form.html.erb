@@ -18,8 +18,8 @@
   <div class="control-group">
     <%= f.label "Course Logo", class: 'control-label' %>
     <div class="controls">
-      <img src="<%= @course.logo_url %>" class="course-logo-target-preview" alt="Logo Preview" />
-      <%= f.hidden_field :logo_url, class: "course-logo-target-input" %>
+      <img src="<%= @course.logo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
+      <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
       <br/>
       <a href="#image-uploader-modal"
           class="image-uploader-trigger"
