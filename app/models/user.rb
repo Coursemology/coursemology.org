@@ -33,6 +33,21 @@ class User < ActiveRecord::Base
     return User.joins(:system_role).where('roles.name' => 'superuser')
   end
 
+  def update_external_account(auth)
+    user = User.where(:provider => auth.provider, :uid => auth.uid).first
+
+    if user && user != self 
+      return false
+    end
+
+    self.provider = auth.provider
+    self.uid = auth.uid
+    if self.use_default_photo_pic?
+      self.profile_photo_url = auth.info.image
+    end
+    self.save
+  end
+
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     puts auth.to_json
     user = User.where(:provider => auth.provider, :uid => auth.uid).first

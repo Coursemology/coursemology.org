@@ -1,3 +1,16 @@
+
+<% if flash[:success] %>
+  <div class="alert alert-success">
+    <%= flash[:success] %>
+  </div>
+<% end %>
+
+<% if flash[:error] %>
+  <div class="alert alert-error">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+
 <div class="page-header">
   <h3>Account settings</h3>
 </div>
@@ -8,6 +21,18 @@
     <%= f.label :name, class: "control-label" %>
     <div class="controls">
       <%= f.text_field :name %>
+    </div>
+  </div>
+
+  <% # The section is potentially misleading because linking facebook accounts doesn't belong to the form %>
+  <div class="control-group">
+    <label>Facebook Account</label>
+    <div class="controls">
+      <% if current_user.provider == 'facebook' && !current_user.uid.nil? %>
+        <%= link_to "http://facebook.com/profile.php?id=#{current_user.uid}" %>
+      <% else %>
+        <%= link_to "Click here to link with your Facebook Account", user_omniauth_authorize_path(:facebook) %>
+      <% end %>
     </div>
   </div>
 
