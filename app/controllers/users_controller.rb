@@ -1,10 +1,8 @@
 class UsersController < ApplicationController
+  before_filter :signed_in_user, only: [:edit,:update,:show]
+
   def edit
-    if !current_user
-      redirect_to new_user_session_path
-    else
       @setting = true
-    end
   end
 
   respond_to :html, :json
@@ -30,6 +28,10 @@ class UsersController < ApplicationController
 
   def show
     @admin = true
-    @users = User.search params[:search]
+    if !params[:search].nil?
+      @users = User.search params[:search]
+    end
   end
+
+  private
 end
