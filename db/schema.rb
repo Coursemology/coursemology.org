@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612081225) do
+ActiveRecord::Schema.define(:version => 20130628155608) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -295,6 +295,15 @@ ActiveRecord::Schema.define(:version => 20130612081225) do
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
 
+  create_table "paths", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "steps"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
     t.text     "description", :limit => 255
@@ -545,6 +554,14 @@ ActiveRecord::Schema.define(:version => 20130612081225) do
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"
   add_index "trainings", ["creator_id"], :name => "index_trainings_on_creator_id"
+
+  create_table "tutorial_groups", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "tutor_id"
+    t.integer  "student_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "user_achievements", :force => true do |t|
     t.integer  "user_course_id"
