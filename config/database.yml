@@ -26,4 +26,4 @@ production:
   pool: 5
   username: coursemology
   password: coursemology
-  socket: /tmp/mysql.sock
+#  socket: /tmp/mysql.sock
