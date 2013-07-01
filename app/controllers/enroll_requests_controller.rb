@@ -43,17 +43,97 @@ class EnrollRequestsController < ApplicationController
     end
   end
 
+  def approve_request(enroll_request)
+    puts 'Approve request ', enroll_request.to_json
+    uc = UserCourse.new
+    uc.course = enroll_request.course
+    uc.user = enroll_request.user
+    uc.role = enroll_request.role
+    uc.exp = 0
+    uc.save
+    UserMailer.delay.new_student(uc.user, uc.course)
+  end
+
+  def approve_all
+    req_type = params[:req_type]
+    std_role = Role.find_by_name("student")
+    @enroll_requests = @course.enroll_requests
+    @enroll_requests.each do |enroll_request|
+      if req_type == 'student' && enroll_request.role == std_role
+        approve_request(enroll_request)
+        enroll_request.destroy
+      end
+      if req_type == 'staff' && enroll_request.role != std_role
+        approve_request(enroll_request)
+        enroll_request.destroy
+      end
+    end
+    respond_to do |format|
+      format.html {
+        redirect_to course_enroll_requests_path(@course),
+          notice: "All requests have been approved!"
+      }
+    end
+  end
+
+  def approve_selected
+    enroll_requests = EnrollRequest.where(id: params[:ids])
+    puts params[:ids]
+    puts enroll_requests.to_json
+    enroll_requests.each do |enroll_request|
+      puts enroll_request.to_json
+      approve_request(enroll_request)
+      enroll_request.destroy
+    end
+
+    respond_to do |format|
+      format.html {
+        redirect_to course_enroll_requests_path(@course),
+          notice: "The request(s) have been approved!"
+      }
+    end
+  end
+
+  def delete_all
+    req_type = params[:req_type]
+    std_role = Role.find_by_name("student")
+    @enroll_requests = @course.enroll_requests
+    @enroll_requests.each do |enroll_request|
+      if req_type == 'student' && enroll_request.role == std_role
+        enroll_request.destroy
+      end
+      if req_type == 'staff' && enroll_request.role != std_role
+        enroll_request.destroy
+      end
+    end
+    respond_to do |format|
+      format.html {
+        redirect_to course_enroll_requests_path(@course),
+          notice: "All requests have been deleted!"
+      }
+    end
+  end
+
+  def delete_selected
+    enroll_requests = EnrollRequest.where(id: params[:ids])
+    enroll_requests.each do |enroll_request|
+      puts enroll_request.to_json
+      enroll_request.destroy
+    end
+
+    respond_to do |format|
+      format.html {
+        redirect_to course_enroll_requests_path(@course),
+          notice: "The request(s) have been deleted!"
+      }
+    end
+  end
+
   def destroy
     if params[:approved]
       puts 'Request approved!'
       # create new UserCourse record
-      uc = UserCourse.new
-      uc.course = @enroll_request.course
-      uc.user = @enroll_request.user
-      uc.role = @enroll_request.role
-      uc.exp = 0
-      uc.save
-      UserMailer.delay.new_student(uc.user, uc.course)
+      approve_request(@enroll_request)
     end
 
     @enroll_request.destroy

@@ -3,13 +3,15 @@
 </div>
 
 <% if @staff_requests.size > 0 %>
-  <h2>Staff Requests:</h2>
-  <%= render partial: "enroll_requests/list", locals: { requests: @staff_requests } %>
+  <h3>Staff Requests:</h3>
+  <%= render partial: "enroll_requests/list", locals: { requests: @staff_requests, type: "staff" } %>
 <% end %>
 
+<br/>
+
 <% if @student_requests.size > 0 %>
-  <h2>Student Requests:</h2>
-  <%= render partial: "enroll_requests/list", locals: { requests: @student_requests } %>
+  <h3>Student Requests:</h3>
+  <%= render partial: "enroll_requests/list", locals: { requests: @student_requests, type: "student" } %>
 <% end %>
 
 <% if @staff_requests.size + @student_requests.size == 0 %>
