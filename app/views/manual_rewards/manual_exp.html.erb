@@ -11,23 +11,25 @@
   </li>
 </ul>
 
-<h2>Giving EXP for students:</h2>
-<br/>
 <%= form_tag course_manual_exp_path(@course), method: "POST" do %>
-  <table>
-    <% @student_courses.each do |std_course| %>
+  <h2>Giving EXP to Students:</h2>
+  <table class="indent1">
+    <% @student_courses.each_with_index do |std_course, index| %>
       <tr>
         <td><%= render partial: "layouts/user_thumb_profile",
           locals: { user_course: std_course } %>
         </td>
-        <td><input name="exps[<%= std_course.id %>]"></td>
+        <td>
+          <input name="exps[<%= std_course.id %>]" class="exp-input">
+          <% if index == 0 %>
+            <a class="repeat-exp-link" href="#"><small>Copy EXP number</small></a>
+          <% end %>
+        </td>
       </tr>
     <% end %>
-    <tr>
-      <td><h2>Reason</h2></td>
-      <td><input name="reason"></td>
-    </tr>
   </table>
+  <h2>Reason:</h2>
+  <div class="indent1"><textarea name="reason" class="span6" rows="5"></textarea></div>
   <div class="form-actions">
     <button class="btn btn-large btn-primary">Give EXP</button>
   </div>
