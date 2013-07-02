@@ -25,3 +25,5 @@
 /config/initializers/devise.rb
 
 /.idea/
+/config/deploy.rb
+/Capfile

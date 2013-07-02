@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612081225) do
+ActiveRecord::Schema.define(:version => 20130702120602) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -112,6 +112,16 @@ ActiveRecord::Schema.define(:version => 20130612081225) do
 
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
+
+  create_table "coding_questions", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "step_name"
+    t.string   "description"
+    t.text     "data"
+    t.integer  "max_grade"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "comments", :force => true do |t|
     t.integer  "user_course_id"
@@ -412,6 +422,14 @@ ActiveRecord::Schema.define(:version => 20130612081225) do
 
   add_index "std_answers", ["question_id"], :name => "index_std_answers_on_question_id"
   add_index "std_answers", ["student_id"], :name => "index_std_answers_on_student_id"
+
+  create_table "std_coding_answers", :force => true do |t|
+    t.text     "code"
+    t.integer  "student_id"
+    t.integer  "qn_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "std_mcq_answers", :force => true do |t|
     t.integer  "mcq_answer_id"

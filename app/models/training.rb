@@ -14,6 +14,7 @@ class Training < ActiveRecord::Base
   belongs_to :course
 
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
+  has_many :coding_questions, through: :asm_qns, source: :qn, source: "Coding"
   has_many :training_submissions, dependent: :destroy
 
   def update_grade

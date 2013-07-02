@@ -62,12 +62,12 @@
 <% if can? :view_detail, @training %>
   <hr/>
   <% if can? :manage, @training %>
-    <%= link_to t('.new', :default => t("helpers.links.new")),
+    <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
                 new_course_training_mcq_path(@course, @training),
                 :class => 'btn btn-primary' %>
   <% end %>
 
-  <h2>MCQ Questions</h2>
+  <h2>Steps</h2>
   <table class="table">
     <thead>
       <tr>

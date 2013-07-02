@@ -13,6 +13,9 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_mcq_answers, through: :sbm_answers,
       source: :answer, source_type: "StdMcqAnswer"
 
+  has_many :std_coding_answers, through: :sbm_answers,
+           :source => :answer, :source_type => "StdCodingAnswer"
+
   def get_asm
     return self.training
   end
