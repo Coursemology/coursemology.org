@@ -29,6 +29,8 @@
 
 //= require jquery.purr
 //= require best_in_place
+//= require codemirror
+//= require codemirror/modes/python
 
 $(document).ready(function() {
 

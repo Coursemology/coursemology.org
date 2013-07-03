@@ -71,6 +71,7 @@ class StatsController < ApplicationController
     @date_chart = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
 
     @mcqs = @training.mcqs
+    @coding_question = @training.coding_questions
 
     @missions = @course.missions
     @trainings = @course.trainings

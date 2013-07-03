@@ -1,5 +1,5 @@
 class CodingQuestion < ActiveRecord::Base
-  attr_accessible :creator_id, :step_name, :description,:max_grade
+  attr_accessible :creator_id, :step_name, :description,:max_grade, :comments, :data
 
   belongs_to :creator, class_name: "User"
 

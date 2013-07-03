@@ -1,0 +1,150 @@
+// Place all the styles related to the CodingQuestions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#main{
+  position:relative;
+  width:1000px;
+  margin: 0px auto;
+  bottom:0px;
+  height:100%;
+}
+
+#top{
+  background-color: rgb(183, 216, 75);
+  padding:20px 30px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+#path_menu input{
+  width:100%;
+}
+#path_menu{
+  position:absolute;
+  top:50px;
+  left:-30px;
+  width:150px;
+  padding:20px 10px;
+  background:#F95B34;
+  border-radius:15px 15px 0px 0px;
+  opacity:0.95;
+}
+
+#path_submenu{
+  position:absolute;
+  top:165px;
+  left:-30px;
+  width:150px;
+  padding:20px 10px;
+  background:#FB8E73;
+  border-radius:0px 0px 15px 15px;
+  opacity:0.95;
+}
+
+#content{
+  padding:5px 10px 5px 150px;
+  min-height:100%;
+  background-color:#fff;
+
+}
+#path_step{
+  margin:15px 0px 0px;
+  list-style-type:none;
+  padding:0px;
+
+}
+
+#path_step li{
+  margin:0px;
+  padding:3px 2px;
+  cursor: move;
+}
+#path_step li:hover{
+  background-color: #8A1F04;
+  border-radius:5px;
+}
+
+.reorg_placeholder{
+  height:24px;
+  background-color: #666;
+  opacity:0.3;
+}
+
+.path_select{
+  width:115px;
+  border-radius:4px;
+}
+.path_delete{
+  width:25px;
+  border-radius:4px;
+}
+
+.formlayout div{
+  width:130px;
+  float:left;
+}
+.formlayout input[type=text], .formlayout textarea{
+  width:570px;
+}
+.test_table{
+  border-collapse:collapse;
+  margin:10px 0px;
+  width:98%;
+  text-align: center;
+  vertical-align: center;
+}
+
+.test_table input{
+  width:98%;
+}
+#public_tests, #private_tests{
+  margin:15px 0px;
+
+}
+//#pathstep_content{
+//  display:none;
+//}
+#pathmcq_content{
+  display:none;
+}
+#pathload_content{
+  display:none;
+}
+#mcq_details{
+  padding:0px;
+  margin: 5px 0px;
+  list-style-type:none;
+
+}
+#mcq_details li{
+  padding:5px;
+  border:1px dashed #ccc;
+  cursor:move;
+  margin: 2px 0px;
+}
+
+#mcq_details li:hover{
+  background-color: #FBF3B9;
+}
+
+//codemirror
+#path_dooptions  .CodeMirror {
+  line-height: 1em;
+  font-family: consolas;
+  font-size:14px;
+  border:1px solid black;
+  height: 200px;
+}
+
+//#path_dooptions .CodeMirror-scroll {
+//  height: auto;
+//  min-height: 100px;
+//  overflow-y: hidden;
+//  overflow-x: auto;
+//}
+//.CodeMirror textarea {
+//  font-family: inherit !important;
+//  font-size: inherit !important;
+//}

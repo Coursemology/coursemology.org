@@ -1,0 +1,76 @@
+<%= form_for [@course, @asm, @coding_question], :html => { :class => 'form-horizontal' } do |f| %>
+    <div id="pathstep_content">
+      <div id="path_metadata" class="formlayout">
+        <label><div> Language:</div><select class="lang" name="language" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
+        <label for="name"><div>Step Name:</div>
+          <%= f.text_field :step_name, :class => 'text_field' %>
+        </label><br />
+        <label for="description"><div>Description:</div>
+          <%= f.text_area :description, :rows => 8 %>
+        </label><br />
+        <label for="comments"><div>Staff Comments (hidden):</div>
+          <%= f.text_area :comments, :rows => 4 %>
+        </label><br />
+      </div>
+      <div id="path_dooptions">
+        <h3>Options</h3>
+        <div class="formlayout">
+          <label for="timeLimit"><div>Time Limit (secs):</div><input type="text" id="timeLimit" value="1" name="timeLimit" onchange="path.changeTimeLimit(this.value);" /></label><br />
+          <label for="memoryLimit"><div>Memory Limit (mb):</div><input type="text" id="memoryLimit" value="2" name="memoryLimit" onchange="path.changeMemoryLimit(this.value);" /></label><br />
+        </div>
+        <div>Pre-filled code:</div><textarea name="prefilled" rows="4" id="prefilled"></textarea>
+        <div>Included code (optional, hidden):</div><textarea name="included" rows="2" id="included"></textarea> <br />
+      </div>
+      <div id="path_testcases">
+        <h3>Test Cases</h3>
+        <div id="public_tests">
+
+          Public Tests: <input type="button" id="addpublictest"  class="btn btn-info" value="Add New Test" onclick="path.addTest('public');"  />
+          <table id="public_test" class="table table-bordered test_table">
+            <thead>
+            <tr>
+              <th>
+                Code to Run
+              </th>
+              <th>
+                Expected Output
+              </th>
+              <th width="35px">
+              </th>
+            </tr>
+            </thead>
+            <tbody id="public_test_tbody">
+            </tbody>
+          </table>
+
+        </div>
+        <div id="private_tests" >
+          Private Tests: <input type="button" id="addprivatetest" class="btn btn-info" value="Add New Test" onclick="path.addTest('private');" />
+          <table id="private_test" class="table table-bordered test_table">
+            <thead>
+            <tr>
+              <th>
+                Code to Run
+              </th>
+              <th>
+                Expected Output
+              </th>
+              <th width="35px">
+              </th>
+            </tr>
+            </thead>
+            <tbody id="private_test_tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <%= f.hidden_field :data %>
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary', id:"savePath" %>
+      <!--<input type="button" id="savePath" class="btn btn-primary" value="Create Coding Question">-->
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  nil, :class => 'btn' %>
+    </div>
+    </div>
+<% end %>

@@ -26,77 +26,80 @@
     </td>
 
     <% if can? :manage, TrainingSubmission %>
-      <td>
-        <% if @submission %>
-          <% if !@submission.done? %>
-            <%= link_to 'Continue',
-                    edit_course_training_training_submission_path(@course, @training, @submission,
-                    anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
+        <td>
+          <% if @submission %>
+              <% if !@submission.done? %>
+                  <%= link_to 'Continue',
+                              edit_course_training_training_submission_path(@course, @training, @submission,
+                                                                            anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
+              <% else %>
+                  <%= link_to "Revise",
+                              edit_course_training_training_submission_path(@course, @training, @submission,
+                                                                            anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+              <% end %>
           <% else %>
-            <%= link_to "Revise",
-                  edit_course_training_training_submission_path(@course, @training, @submission,
-                    anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+              <%= link_to 'Start',
+                          new_course_training_training_submission_path(@course, @training),
+                          class: 'btn btn-success' %>
           <% end %>
-        <% else %>
-          <%= link_to 'Start',
-                  new_course_training_training_submission_path(@course, @training),
-                  class: 'btn btn-success' %>
-        <% end %>
-      </td>
+        </td>
     <% end %>
 
     <% if can? :manage, Training %>
-      <td width="10%">
-        <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to course_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
-          <i class="icon-trash"></i>
-        <% end %>
-      </td>
+        <td width="10%">
+          <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
+              <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to course_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
+              <i class="icon-trash"></i>
+          <% end %>
+        </td>
     <% end %>
 
   </tr>
 </table>
 
 <% if can? :view_detail, @training %>
-  <hr/>
-  <% if can? :manage, @training %>
-    <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
-                new_course_training_mcq_path(@course, @training),
-                :class => 'btn btn-primary' %>
-  <% end %>
+    <hr/>
+    <% if can? :manage, @training %>
+        <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
+                    new_course_training_mcq_path(@course, @training),
+                    :class => 'btn btn-primary' %>
+        <%= link_to t('.new', :default => t("helpers.links.new_cq")),
+                    new_course_training_coding_question_path(@course, @training),
+                    :class => 'btn btn-primary' %>
+    <% end %>
 
-  <h2>Steps</h2>
-  <table class="table">
-    <thead>
+    <h2>Steps</h2>
+    <table class="table">
+      <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <% @mcqs.each_with_index do |q, index| %>
-        <tr>
-          <td>
-            <h3>Question <%= index + 1 %></h3>
-            <%= render partial: "mcqs/one", locals: { q: q } %>
-          </td>
-          <% if can? :manage, Training %>
+          <tr>
             <td>
-              <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
-                <i class="icon-edit"></i>
-              <% end %>
-              <%= link_to course_training_mcq_path(@course, @training, q),
-                          method: :delete,
-                          data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          class: 'btn btn-danger' do %>
-                <i class="icon-trash"></i>
-              <% end %>
+              <h3>Question <%= index + 1 %></h3>
+              <%= render partial: "mcqs/one", locals: { q: q } %>
             </td>
-          <% end %>
-        </tr>
+            <% if can? :manage, Training %>
+                <td>
+                  <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
+                      <i class="icon-edit"></i>
+                  <% end %>
+                  <%= link_to course_training_mcq_path(@course, @training, q),
+                              method: :delete,
+                              data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+                </td>
+            <% end %>
+          </tr>
       <% end %>
-    </tbody>
-  </table>
-  <br/>
+      </tbody>
+    </table>
+    <br/>
 <% end %>

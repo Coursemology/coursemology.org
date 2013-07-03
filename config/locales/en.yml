@@ -4,4 +4,5 @@
 en:
   helpers:
     links:
-      new_mcq: "New MCQ Question"
+      new_mcq:  "New MCQ Question"
+      new_cq:   "New Coding Question"

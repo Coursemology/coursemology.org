@@ -61,6 +61,8 @@ GEM
       activesupport (>= 3.0)
     cocaine (0.5.1)
       climate_control (>= 0.0.3, < 1.0)
+    codemirror-rails (3.14)
+      railties (>= 3.0, < 5)
     coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -273,6 +275,7 @@ DEPENDENCIES
   cancan
   capistrano
   capybara
+  codemirror-rails (~> 3.14)
   coffee-rails
   daemons
   delayed_job_active_record
