@@ -17,13 +17,18 @@ class Training < ActiveRecord::Base
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
   has_many :training_submissions, dependent: :destroy
 
+
   def update_grade
-    self.max_grade = self.mcqs.sum(&:max_grade)
+    self.max_grade = self.mcqs.sum(&:max_grade) + self.coding_questions.sum(&:max_grade)
     self.save
   end
 
   def get_path
     return course_training_path(course, self)
+  end
+
+  def questions
+    self.asm_qns.map {|q| q.qn}
   end
 
   alias_method :sbms, :training_submissions

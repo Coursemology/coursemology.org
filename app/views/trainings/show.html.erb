@@ -78,28 +78,45 @@
       </tr>
       </thead>
       <tbody>
-      <% @mcqs.each_with_index do |q, index| %>
+      <% @steps.each_with_index do |q, index| %>
           <tr>
             <td>
               <h3>Question <%= index + 1 %></h3>
-              <%= render partial: "mcqs/one", locals: { q: q } %>
+              <% if q.class == Mcq %>
+                  <%= render partial: "mcqs/one", locals: { q: q } %>
+              <% elsif q.class == CodingQuestion %>
+                  Coding
+              <% end %>
             </td>
             <% if can? :manage, Training %>
                 <td>
-                  <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
-                      <i class="icon-edit"></i>
+                  <% if q.class == Mcq %>
+                      <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
+                          <i class="icon-edit"></i>
+                      <% end %>
+                      <%= link_to course_training_mcq_path(@course, @training, q),
+                                  method: :delete,
+                                  data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                                  class: 'btn btn-danger' do %>
+                          <i class="icon-trash"></i>
+                      <% end %>
+                  <% elsif q.class == CodingQuestion %>
+                          <%= link_to edit_course_training_coding_question_path(@course, @training, q), class: 'btn' do %>
+                          <i class="icon-edit"></i>
+                      <% end %>
+                      <%= link_to course_training_coding_question_path(@course, @training, q),
+                                  method: :delete,
+                                  data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                                  class: 'btn btn-danger' do %>
+                          <i class="icon-trash"></i>
+                      <% end %>
                   <% end %>
-                  <%= link_to course_training_mcq_path(@course, @training, q),
-                              method: :delete,
-                              data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                              class: 'btn btn-danger' do %>
-                      <i class="icon-trash"></i>
+
+                      </td>
                   <% end %>
-                </td>
+                  </tr>
             <% end %>
-          </tr>
+            </tbody>
+            </table>
+            <br/>
       <% end %>
-      </tbody>
-    </table>
-    <br/>
-<% end %>

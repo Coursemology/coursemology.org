@@ -3,7 +3,7 @@ class CodingQuestion < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many  :std_coding_answers, dependent: :destroy
+  has_many  :std_coding_answers, foreign_key: "qn_id", dependent: :destroy
   has_many  :asm_qns, as: :qn, dependent: :destroy
 
 

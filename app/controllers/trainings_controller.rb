@@ -32,7 +32,7 @@ class TrainingsController < ApplicationController
   end
 
   def show
-    @mcqs = @training.mcqs
+    @steps = @training.questions
     if curr_user_course.is_student?
       @submission = @training.get_final_sbm_by_std(curr_user_course)
     end
