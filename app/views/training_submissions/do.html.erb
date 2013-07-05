@@ -13,53 +13,52 @@ So choose carefully!
 <hr/>
 <div class="step-list">
   <% (1..@max_step).each do |i| %>
-    <% if i <= @current_step %>
-      <% if i == @step %>
-        <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
+      <% if i <= @current_step %>
+          <% if i == @step %>
+              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
+          <% else %>
+              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
+          <% end %>
       <% else %>
-        <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
+          <%= link_to i, '#training-stop-pos', class: "step" %>
       <% end %>
-    <% else %>
-      <%= link_to i, '#training-stop-pos', class: "step" %>
-    <% end %>
   <% end %>
 </div>
 <hr/>
 
-<% if !@current_mcq %>
-  <h2>Congratulations, you're done!</h2>
-  <p>
-    <a href="<%= course_training_training_submission_path(@course, @training, @training_submission)%>">
-      Click here
-    </a> to review your answers.
-  </p>
+<% if !@current_question %>
+    <h2>Congratulations, you're done!</h2>
+    <p>
+      <a href="<%= course_training_training_submission_path(@course, @training, @training_submission)%>">
+        Click here
+      </a> to review your answers.
+    </p>
 <% else %>
-  <form id="training-step-form">
-    <input type="hidden" name="update_url"
-        value="<%= course_training_training_submission_submit_path(@course,
-                      @training, @training_submission) %>" />
-    <input type="hidden" name="qid" value="<%= @current_mcq.id %>" />
-    <p><%= @current_mcq.description.html_safe %></p>
-    <ul>
-    <% @current_mcq.mcq_answers.each do |ans| %>
-      <li>
-        <input type="radio" name="answers" value="<%= ans.id %>" />
-        <span><%= ans.text %></span>
-      </li>
-    <% end %>
-    </ul>
+    <form id="training-step-form">
+      <input type="hidden" name="current_step" value="<%= @step %>">
+      <input type="hidden" name="update_url"
+             value="<%= course_training_training_submission_submit_path(@course,
+                                                                        @training, @training_submission) %>" />
+      <input type="hidden" name="qid" value="<%= @current_question.id %>" />
 
-    <div id="explanation" class="well hidden">
-      <h3 class="result"></h3>
-      <p class="reason"></p>
-    </div>
+      <% if @current_question.class == Mcq %>
+          <%= render "do_mcq" %>
+      <% elsif @current_question.class == CodingQuestion %>
+          <%= render "do_coding" %>
+      <% end %>
 
-    <div class="form-actions">
-      <%= link_to "Submit", '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
-      <%= link_to "Continue",
-            edit_course_training_training_submission_path(@course, @training,
-              @training_submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
-            :id => 'continue-btn' %>
-    </div>
-  </form>
+      <div class="form-actions">
+        <% if @current_question.class == Mcq %>
+            <%= link_to "Submit", '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
+        <% elsif @current_question.class == CodingQuestion %>
+            <%= link_to "Run (ALT+R)", '#', class:'btn btn-danger', id:"pathrun" %>
+            <!--<input id="pathrun" class="path_button" type="button" value="Run (ALT+R)" />-->
+        <% end %>
+
+        <%= link_to "Continue",
+                    edit_course_training_training_submission_path(@course, @training,
+                                                                  @training_submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
+                    :id => 'continue-btn' %>
+      </div>
+    </form>
 <% end %>

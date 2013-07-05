@@ -13,4 +13,7 @@ class CodingQuestion < ActiveRecord::Base
   #has_many :mcq_answers, dependent: :destroy
   #has_many :std_mcq_answers, dependent: :destroy
   #has_many :asm_qns, as: :qn, dependent: :destroy
+  def data_hash
+    JSON.parse(self.data)
+  end
 end

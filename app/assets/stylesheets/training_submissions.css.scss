@@ -1,0 +1,84 @@
+div.page_subtitles {
+  position: relative; left: -18px; right: 0px;
+  font-size: 16px; color: rgba(0, 0, 0, 0.98); text-align: left; width: 100% !important;
+  padding: 0 26px 0 10px;
+  font-weight: normal;
+  line-height: 35px;
+  margin: 5px 0 10px 0;
+  height: 35px;
+  border-bottom: 1px solid #1D1F21;
+  //background: url(../gradient/stop_offsets[]/0/stop_colors[]/2e3135/stop_opacity[]/1/stop_offsets[]/100/stop_colors[]/383f46/stop_opacity[]/1) repeat-x 0 0;
+  clear: both;
+}
+
+div.page_subtitle_line
+{
+  display: none;
+  width: 80%;
+  border-bottom: 1.8px solid white;
+}
+
+
+.step_description{
+  background-color: #303336;
+  padding:5px;
+  color: #ffffff;
+}
+
+
+//#publicTestTable{
+//  border-collapse: collapse;
+//  background-color: #002142;
+//}
+//
+//#publicTestTable thead td{
+//  border:1px solid white;
+//  //background: #fdf6d2;
+//  padding:3px;
+//  min-width:100px;
+//  color: greenyellow;
+//}
+//
+//#publicTestTable tbody td{
+//  border:1px solid white;
+//  padding:3px;
+//  color: #ffffff;
+//}
+
+.path_button{
+  //width:100%;
+  border:1px solid #ccc;
+  background:#9B3300;
+  color:white;
+}
+.path_button[disabled]{
+  color:#666;
+}
+.path_button[disabled]:hover{
+  width:100%;
+  border:1px solid #ccc;
+  background:#333;
+  color:#666;
+}
+.path_button:hover{
+  //width:100%;
+  border:1px solid #ccc;
+  background:darkred;
+  color:white;
+}
+.path_cm_txtbox .CodeMirror {
+  line-height: 1em;
+  font-family: monospace;
+  font-size:12px;
+  border:1px solid black;
+  height: auto;
+}
+
+.path_cm_txtbox .CodeMirror-scroll {
+  //height: auto;
+  min-height:100px;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+#ruler {position: fixed; top: 0px; bottom: 0px; display: none; background: transparent;}

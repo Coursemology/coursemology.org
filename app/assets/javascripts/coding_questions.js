@@ -21,11 +21,6 @@ var path = function(){
         };
     }
 
-    function _reorderSteps(){
-        $("#path_step").children().each(function(index, e){
-            e.id = "step_"+(index+1);
-        });
-    }
     return {
         data: {
             type: "do",

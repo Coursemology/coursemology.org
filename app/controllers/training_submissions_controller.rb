@@ -1,4 +1,5 @@
 class TrainingSubmissionsController < ApplicationController
+  include TrainingSubmissionsHelper
   load_and_authorize_resource :course
   load_and_authorize_resource :training, through: :course
   load_and_authorize_resource :training_submission, through: :training
@@ -80,9 +81,10 @@ class TrainingSubmissionsController < ApplicationController
       end
     end
 
+    #TODO: reviewing currently just for mcqs
     if @grading
       @grading.answer_gradings.each do |ag|
-        if ag.student_answer && @qadata.has_key?(ag.student_answer.mcq_id)
+        if ag.student_answer && ag.student_answer.class == StdMcqAnswer && @qadata.has_key?(ag.student_answer.mcq_id)
           @qadata[ag.student_answer.mcq_id][:g] = ag
         end
       end
@@ -100,8 +102,8 @@ class TrainingSubmissionsController < ApplicationController
 
     @course.lect_courses.each do |uc|
       UserMailer.delay.new_submission(
-        uc.user,
-        course_training_training_submission_url(@course, @training, @training_submission)
+          uc.user,
+          course_training_training_submission_url(@course, @training, @training_submission)
       )
     end
 
@@ -115,7 +117,7 @@ class TrainingSubmissionsController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to edit_course_training_training_submission_path(
-            @course, @training, @training_submission)
+                        @course, @training, @training_submission)
       end
     end
   end
@@ -123,12 +125,14 @@ class TrainingSubmissionsController < ApplicationController
   def edit
     @current_step = @training_submission.current_step
     @step = @current_step
-    @max_step = @training.mcqs.count
+    @max_step = @training.questions.count
+    puts "edit",@step,@max_step
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
+    puts "fetch",@step,@max_step
     if @step <= @max_step
-      @current_mcq = @training.mcqs[@step - 1]
+      @current_question = @training.questions[@step - 1]
     end
     respond_to do |format|
       format.html { render template: "training_submissions/do.html.erb" }
@@ -140,6 +144,18 @@ class TrainingSubmissionsController < ApplicationController
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
     puts 'Update', params, current_user.to_json
+    #submit_mcq()
+    @current_question = @training.questions[params[:current_step].to_i - 1]
+
+    if @current_question.class == Mcq
+      submit_mcq()
+    else
+      submit_code()
+    end
+
+  end
+
+  def submit_mcq
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid])
     sma = StdMcqAnswer.new()
@@ -162,9 +178,9 @@ class TrainingSubmissionsController < ApplicationController
 
     grade_str = grade > 0 ? " + #{grade}" : ""
     resp = {
-      is_correct: mcqa.is_correct,
-      result: mcqa.is_correct ? "Correct! #{grade_str}" : "Incorrect!",
-      explanation: mcqa.explanation
+        is_correct: mcqa.is_correct,
+        result: mcqa.is_correct ? "Correct! #{grade_str}" : "Incorrect!",
+        explanation: mcqa.explanation
     }
 
     if @training_submission.save
@@ -173,4 +189,46 @@ class TrainingSubmissionsController < ApplicationController
       end
     end
   end
+
+  def submit_code
+    code = params[:code]
+    coding_question = CodingQuestion.find(params[:qid])
+    sma = StdCodingAnswer.new()
+    sma.student = current_user
+    sma.qn = coding_question
+    sma.code = code
+
+    #evaluate
+    tmp_file = get_tmp_file_name
+    code_to_write = get_code_to_write(@current_question.data_hash["included"],code)
+    eval_summary = eval_python(tmp_file,code_to_write,{publicTests:@current_question.data_hash["publicTests"],
+                                                       privateTests:@current_question.data_hash["privateTests"]})
+    public_tests = if eval_summary[:publicTests].length == 0 then true else eval_summary[:publicTests].inject{|sum,a| sum and a} end
+    private_tests = if eval_summary[:privateTests].length == 0 then true else eval_summary[:privateTests].inject{|sum,a| sum and a} end
+
+    sma.is_correct = false
+    puts "judge:", eval_summary[:errors].length, public_tests, private_tests
+    if eval_summary[:errors].length == 0 and public_tests and private_tests
+      sma.is_correct = true
+    end
+
+    sbm_ans = @training_submission.sbm_answers.build
+    sbm_ans.answer = sma
+
+    pos = @training.get_qn_pos(coding_question)
+    puts "correct!",pos,@training_submission.current_step
+    if @training_submission.current_step == pos
+      if sma.is_correct
+        puts "correct!",pos,@training_submission.current_step
+        @training_submission.current_step = pos + 1
+        @training_submission.auto_grade(coding_question,sbm_ans)
+      end
+    end
+    if @training_submission.save
+      respond_to do |format|
+        format.html {render json: eval_summary }
+      end
+    end
+  end
+
 end

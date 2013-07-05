@@ -81,11 +81,17 @@
       <% @steps.each_with_index do |q, index| %>
           <tr>
             <td>
-              <h3>Question <%= index + 1 %></h3>
+              <h3>Question <%= index + 1 %>
+                <% if q.class == CodingQuestion %>
+                    <% if !q.step_name.to_s.strip.empty? %>
+                        : <%=q.step_name %>
+                    <% end %>
+                <% end %>
+              </h3>
               <% if q.class == Mcq %>
                   <%= render partial: "mcqs/one", locals: { q: q } %>
               <% elsif q.class == CodingQuestion %>
-                  Coding
+                  <%= render partial: "coding_questions/one", locals: { q: q } %>
               <% end %>
             </td>
             <% if can? :manage, Training %>
@@ -101,7 +107,7 @@
                           <i class="icon-trash"></i>
                       <% end %>
                   <% elsif q.class == CodingQuestion %>
-                          <%= link_to edit_course_training_coding_question_path(@course, @training, q), class: 'btn' do %>
+                      <%= link_to edit_course_training_coding_question_path(@course, @training, q), class: 'btn' do %>
                           <i class="icon-edit"></i>
                       <% end %>
                       <%= link_to course_training_coding_question_path(@course, @training, q),
@@ -111,12 +117,11 @@
                           <i class="icon-trash"></i>
                       <% end %>
                   <% end %>
-
-                      </td>
-                  <% end %>
-                  </tr>
+                </td>
             <% end %>
-            </tbody>
-            </table>
-            <br/>
+          </tr>
       <% end %>
+      </tbody>
+    </table>
+    <br/>
+<% end %>

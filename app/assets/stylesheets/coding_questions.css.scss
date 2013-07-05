@@ -135,15 +135,14 @@
   font-family: consolas;
   font-size:14px;
   border:1px solid black;
-  height: 200px;
+  height: auto;
 }
 
-//#path_dooptions .CodeMirror-scroll {
-//  height: auto;
-//  min-height: 100px;
-//  overflow-y: hidden;
-//  overflow-x: auto;
-//}
+#path_dooptions .CodeMirror-scroll {
+  min-height: 100px;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
 //.CodeMirror textarea {
 //  font-family: inherit !important;
 //  font-size: inherit !important;

@@ -1,0 +1,14 @@
+<p><%= @current_question.description.html_safe %></p>
+<ul>
+  <% @current_question.mcq_answers.each do |ans| %>
+      <li>
+        <input type="radio" name="answers" value="<%= ans.id %>" />
+        <span><%= ans.text %></span>
+      </li>
+  <% end %>
+</ul>
+
+<div id="explanation" class="well hidden">
+  <h3 class="result"></h3>
+  <p class="reason"></p>
+</div>

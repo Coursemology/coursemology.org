@@ -51,7 +51,7 @@ class TrainingsController < ApplicationController
     @training.update_tags(params[:tags])
     respond_to do |format|
       if @training.save
-        format.html { redirect_to new_course_training_mcq_path(@course, @training),
+        format.html { redirect_to course_training_path(@course, @training),
                       notice: "The training '#{@training.title}' has been created." }
       else
         format.html { render action: "new" }
