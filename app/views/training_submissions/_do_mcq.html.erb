@@ -1,4 +1,4 @@
-<p><%= @current_question.description.html_safe %></p>
+<p><%= style_format(@current_question.description) %></p>
 <ul>
   <% @current_question.mcq_answers.each do |ans| %>
       <li>

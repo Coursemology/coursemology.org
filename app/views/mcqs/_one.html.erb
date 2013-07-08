@@ -1,4 +1,5 @@
-<span><%= q.description.html_safe %></span>
+<!--<span><%= q.description.html_safe %></span>-->
+<span><%= style_format(q.description) %></span>
 <ul>
   <% q.mcq_answers.each do |ans| %>
     <li>

@@ -32,15 +32,33 @@
 //= require best_in_place
 //= require codemirror
 //= require codemirror/modes/python
+//= require codemirror/addons/runmode/runmode
 
 $(document).ready(function() {
 
-  $(".datepicker").datepicker({
-    "format": "dd-mm-yyyy",
-    "autoclose": true
-  });
+    $(".datepicker").datepicker({
+        "format": "dd-mm-yyyy",
+        "autoclose": true
+    });
 
-  $('a[rel=tooltip]').tooltip();
+    $('a[rel=tooltip]').tooltip();
 
-  $('.colorpicker').colorpicker();
+    $('.colorpicker').colorpicker();
+
+    var _jfdiFormatFunc = function(i, d){
+        console.log(i)
+        console.log($(d))
+        console.log($(d).text())
+        if ($(d).data('jfdiFormatted')) return;
+        $(d).data('jfdiFormatted', true);
+        if($(d).hasClass("pythonCode")){
+          CodeMirror.runMode($(d).text(), "python", d);
+        }
+    }
+    function jfdiFormat(element){
+        $(element).find(".jfdiCode").each(_jfdiFormatFunc);
+    }
+    $(function(){
+        $(".jfdiCode").each(_jfdiFormatFunc);
+    });
 });

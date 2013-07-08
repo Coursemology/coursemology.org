@@ -55,6 +55,7 @@ gem 'omniauth-facebook'
 gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
+gem 'htmlentities'
 
 
 # To use ActiveModel has_secure_password

@@ -1,17 +1,32 @@
 <%= form_for [@course, @asm, @coding_question], :html => { :class => 'form-horizontal' } do |f| %>
     <div id="pathstep_content">
-      <div id="path_metadata" class="formlayout">
-        <label><div> Language:</div><select class="lang" name="language" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
-        <label for="name"><div>Step Name:</div>
-          <%= f.text_field :step_name, :class => 'text_field' %>
-        </label><br />
-        <label for="description"><div>Description:</div>
-          <%= f.text_area :description, :rows => 8 %>
-        </label><br />
-        <label for="comments"><div>Staff Comments (hidden):</div>
-          <%= f.text_area :comments, :rows => 4 %>
-        </label><br />
+      <div class="control-group">
+        <%= f.label :Language, :class => 'control-label' %>
+        <div class="controls">
+          <select class="lang" name="language" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
+        </div>
       </div>
+
+      <div class="control-group">
+        <%= f.label :step_name,"Step Name", :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :step_name, :class => 'text_field' %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :description, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_area :description, class:'text_area span9 html-editor',:rows => 10 %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :comments,'Stuff Comments (hidden)', :class => 'control-label' %>
+        <div class="controls" >
+          <%= f.text_area :comments, :rows => 4, class:'text_area span9' %>
+        </div>
+      </div>
+
       <div id="path_dooptions">
         <h3>Options</h3>
         <div class="formlayout">

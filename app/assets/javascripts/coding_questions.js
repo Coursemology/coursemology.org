@@ -142,6 +142,7 @@ $(document).ready(function() {
             indentUnit: 4,
             tabMode: "shift",
             matchBrackets: true
+//            theme:'night'
         };
 
         cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);

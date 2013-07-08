@@ -532,3 +532,148 @@ li .thumbnail {
 small {
   font-size: 85%;
 }
+
+code formatting
+.CodeMirror {
+  line-height: 1em;
+  font-family: monospace;
+  font-size:12px;
+  border:1px solid black;
+  height: auto;
+}
+
+//.CodeMirror-scroll {
+//  overflow-x: auto;
+//  height:100px;
+//  max-height: 500px;
+//}
+//
+//.CodeMirror-gutter {
+//  position: absolute; left: 0; top: 0;
+//  background-color: #f7f7f7;
+//  border-right: 1px solid #eee;
+//  min-width: 2em;
+//  height: 100%;
+//}
+//.CodeMirror-gutter-text {
+//  color: #aaa;
+//  text-align: right;
+//  padding: .4em .2em .4em .4em;
+//}
+//.CodeMirror-gutter-text pre {
+//  cursor: pointer;
+//}
+//.CodeMirror-lines {
+//  padding: .4em;
+//}
+//
+//.CodeMirror pre {
+//  -moz-border-radius: 0;
+//  -webkit-border-radius: 0;
+//  -o-border-radius: 0;
+//  border-radius: 0;
+//  border-width: 0; margin: 0; padding: 0; background: transparent;
+//  font-family: inherit;
+//  font-size: inherit;
+//  padding: 0; margin: 0;
+//  white-space: pre;
+//  word-wrap: normal;
+//}
+
+//.CodeMirror textarea {
+//  font-family: inherit !important;
+//  font-size: inherit !important;
+//}
+
+.CodeMirror-cursor {
+  z-index: 10;
+  position: absolute;
+  visibility: hidden;
+  border-left: 1px solid black !important;
+}
+.CodeMirror-focused .CodeMirror-cursor {
+  visibility: visible;
+}
+
+span.CodeMirror-selected {
+  background: #ccc !important;
+  color: HighlightText !important;
+}
+.CodeMirror-focused span.CodeMirror-selected {
+  background: Highlight !important;
+}
+.CodeMirror-matchingbracket {color: #0f0 !important;}
+.CodeMirror-nonmatchingbracket {color: #f22 !important;}
+/* Loosely based on the Midnight Textmate theme */
+
+.cm-s-night { background: #0a001f; color: #f8f8f8; }
+.cm-s-night span.CodeMirror-selected { background: #a8f !important; }
+.cm-s-night .CodeMirror-gutter { background: #0a001f; border-right: 1px solid #aaa; }
+.cm-s-night .CodeMirror-gutter-text { color: #f8f8f8; }
+.cm-s-night .CodeMirror-cursor { border-left: 1px solid white !important; }
+
+.cm-s-night span.cm-comment { color: #6900a1; }
+.cm-s-night span.cm-atom { color: #845dc4; }
+.cm-s-night span.cm-number { color: #ffd500; }
+.cm-s-night span.cm-keyword { color: #599eff; }
+.cm-s-night span.cm-string { color: #37f14a; }
+.cm-s-night span.cm-meta { color: #7678e2; }
+.cm-s-night span.cm-variable-2 { color: #99b2ff; }
+.cm-s-night span.cm-variable-3, .cm-s-night span.cm-def { color: white; }
+.cm-s-night span.cm-error { color: #9d1e15; }
+.cm-s-night span.cm-bracket { color: #8da6ce; }
+.cm-s-night span.cm-comment { color: #6900a1; }
+.cm-s-night span.cm-builtin, .cm-s-night span.cm-special { color: #ff9e59; }
+
+
+.cm-s-molokai { background: #272822; color: #A5E02D; font-family: Consolas, Monaco, monospace, "Courier New"; font-size: 12px; line-height: 120%;}
+.cm-s-molokai span.CodeMirror-selected { background: #66c !important; }
+.cm-s-molokai .CodeMirror-gutter { background: #f7f7f7; border-right: 1px solid #eee; }
+.cm-s-molokai .CodeMirror-gutter-text { color: #aaa; }
+.cm-s-molokai .CodeMirror-cursor { border-left: 1px solid white !important; }
+
+.cm-s-molokai span.cm-keyword {color: #64D9ED; }
+.cm-s-molokai span.cm-comment {color: #876;}
+.cm-s-molokai span.cm-atom { color: #FB951F; }
+.cm-s-molokai span.cm-number { color: #FB951F; }
+.cm-s-molokai span.cm-builtin { color: #64D9ED; }
+.cm-s-molokai span.cm-string { color: #E2DA6E; }
+.cm-s-molokai span.cm-error { color: #9d1e15; }
+.cm-s-molokai span.cm-bracket { color: #fff; }
+.cm-s-molokai span.cm-meta { color: #f37; }
+
+
+.cm-s-wombat { background: #272822; color: #8ED850; font-family: "Courier New", Consolas, Monaco, monospace; font-size: 13px; line-height: 118%; ;}
+.cm-s-wombat span.CodeMirror-selected { background: #66c !important; }
+.cm-s-wombat .CodeMirror-gutter { background: #f7f7f7; border-right: 1px solid #eee; }
+.cm-s-wombat .CodeMirror-gutter-text { color: black; }
+.cm-s-wombat .CodeMirror-cursor { border-left: 1px solid white !important; }
+
+.cm-s-wombat span.cm-comment {color: #876;}
+.cm-s-wombat span.cm-atom { color: #FB951F; }
+.cm-s-wombat span.cm-number { color: #FB951F; }
+.cm-s-wombat span.cm-builtin { color: #76A6BB; }
+.cm-s-wombat span.cm-string { color: #c76; }
+.cm-s-wombat span.cm-error { color: #9d1e15; }
+.cm-s-wombat span.cm-bracket { color: #fff; }
+.cm-s-wombat span.cm-meta { color: #f37; }
+
+
+
+.CodeMirror-lines div { z-index: 8;}
+
+
+
+.CodeMirror-gutter-text pre.hover {
+  background-color: black;
+  color: white;
+}
+
+/** used in jfdiFormat multi-line code blocks **/
+div.jfdiCode{
+  padding:8px 7px;
+}
+
+pre.jfdiCode{
+  padding: 0px;
+}

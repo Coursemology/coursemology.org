@@ -3,13 +3,16 @@
 </div>
 <p class="well"><%= @training.description.html_safe %></p>
 <p id="training-stop-pos"></p>
-<p><b>Grading</b></p>
-<ul>
-  <li>Correct on first try - <b>2 pts</b></li>
-  <li>If mistakes were made - <b>1 pt</b></li>
-  <li>If all choices made were wrong - <b>0 pts</b></li>
-</ul>
-So choose carefully!
+<% if @current_question.class == Mcq %>
+    <p><b>Grading</b></p>
+    <ul>
+      <li>Correct on first try - <b>2 pts</b></li>
+      <li>If mistakes were made - <b>1 pt</b></li>
+      <li>If all choices made were wrong - <b>0 pts</b></li>
+    </ul>
+    So choose carefully!
+<% end %>
+
 <hr/>
 <div class="step-list">
   <% (1..@max_step).each do |i| %>

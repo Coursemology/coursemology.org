@@ -575,6 +575,14 @@ ActiveRecord::Schema.define(:version => 20130705164200) do
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"
   add_index "trainings", ["creator_id"], :name => "index_trainings_on_creator_id"
 
+  create_table "tutorial_groups", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "tutor_id"
+    t.integer  "student_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "user_achievements", :force => true do |t|
     t.integer  "user_course_id"
     t.integer  "achievement_id"

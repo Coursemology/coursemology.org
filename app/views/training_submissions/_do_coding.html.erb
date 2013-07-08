@@ -4,7 +4,8 @@
 <h3>Step Task Description</h3>
 <!--<div class="step_description">-->
   <div>
-  <%= @current_question.description %>
+  <%= style_format(@current_question.description) %>
+
 </div>
 
 <% if @current_question.data_hash["publicTests"].length > 0 %>
