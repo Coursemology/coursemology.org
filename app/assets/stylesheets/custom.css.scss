@@ -143,7 +143,7 @@ ul {
 .drag-drop-area {
   background: #D8EDE2;
   text-align: center;
-#  border: 3px dashed #aaa;
+  border: 3px dashed #aaa;
   padding: 80px;
 }
 
@@ -521,6 +521,7 @@ li .thumbnail {
   border-bottom: 1px solid #dddddd;
 }
 
+<<<<<<< HEAD
 .exp-input {
   width: 50px;
 }
@@ -541,49 +542,6 @@ code formatting
   border:1px solid black;
   height: auto;
 }
-
-//.CodeMirror-scroll {
-//  overflow-x: auto;
-//  height:100px;
-//  max-height: 500px;
-//}
-//
-//.CodeMirror-gutter {
-//  position: absolute; left: 0; top: 0;
-//  background-color: #f7f7f7;
-//  border-right: 1px solid #eee;
-//  min-width: 2em;
-//  height: 100%;
-//}
-//.CodeMirror-gutter-text {
-//  color: #aaa;
-//  text-align: right;
-//  padding: .4em .2em .4em .4em;
-//}
-//.CodeMirror-gutter-text pre {
-//  cursor: pointer;
-//}
-//.CodeMirror-lines {
-//  padding: .4em;
-//}
-//
-//.CodeMirror pre {
-//  -moz-border-radius: 0;
-//  -webkit-border-radius: 0;
-//  -o-border-radius: 0;
-//  border-radius: 0;
-//  border-width: 0; margin: 0; padding: 0; background: transparent;
-//  font-family: inherit;
-//  font-size: inherit;
-//  padding: 0; margin: 0;
-//  white-space: pre;
-//  word-wrap: normal;
-//}
-
-//.CodeMirror textarea {
-//  font-family: inherit !important;
-//  font-size: inherit !important;
-//}
 
 .CodeMirror-cursor {
   z-index: 10;
@@ -676,4 +634,35 @@ div.jfdiCode{
 
 pre.jfdiCode{
   padding: 0px;
+}
+/* debug style */
+
+$grayMediumLight: #eaeaea;
+
+@mixin box_sizing {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+/* error message style */
+
+#error_explanation {
+  color: #f00;
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}
+.field_with_errors {
+  @extend .control-group;
+  @extend .error;
 }

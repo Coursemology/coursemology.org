@@ -170,6 +170,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def signed_in_user
+    unless current_user
+      redirect_to new_user_session_path, alert: "You need to sign in or sign up before continuing."
+    end
+  end
+
   private
   def current_ability
     if @course
