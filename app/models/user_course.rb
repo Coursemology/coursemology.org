@@ -38,11 +38,23 @@ class UserCourse < ActiveRecord::Base
   has_many :std_tags, foreign_key: "std_course_id"
 
   def is_student?
-    return self.role == Role.find_by_name('student')
+    self.role == Role.find_by_name('student')
   end
 
   def is_lecturer?
-    return self.role == Role.find_by_name('lecturer')
+    self.role == Role.find_by_name('lecturer')
+  end
+
+  def is_ta?
+    self.role == Role.find_by_name('ta')
+  end
+
+  def is_stuff?
+    self.is_ta? || self.is_lecturer?
+  end
+
+  def is_creator?
+    self.user == self.course.creator
   end
 
   def level_percentage

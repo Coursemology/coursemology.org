@@ -14,7 +14,7 @@ class CoursesController < ApplicationController
     respond_to do |format|
       if @course.save  && user_course.save
         format.html { redirect_to edit_course_path(@course),
-                      notice: "The course '#{@course.title}' has been created." }
+                                  notice: "The course '#{@course.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -22,6 +22,12 @@ class CoursesController < ApplicationController
   end
 
   def update
+    puts params
+    if params[:user_course_id]
+      uc = @course.user_courses.where(id:params[:user_course_id]).first
+      uc.role_id = params[:role_id]
+      uc.save
+    end
     if params[:course_atts]
       params[:course_atts].each do |id, val|
         ca = CourseThemeAttribute.find(id)
@@ -30,9 +36,12 @@ class CoursesController < ApplicationController
       end
     end
     respond_to do |format|
-      if @course.update_attributes(params[:course])
+      if params[:user_course_id]
+        format.html { redirect_to course_stuff_url(@course),
+                                  notice: 'New stuff added.'}
+      elsif @course.update_attributes(params[:course])
         format.html { redirect_to edit_course_path(@course),
-                      notice: 'Course setting has been updated.' }
+                                  notice: 'Course setting has been updated.' }
       else
         format.html { render action: "edit" }
       end
@@ -61,7 +70,7 @@ class CoursesController < ApplicationController
     @course_atts = []
     atts.each do |att|
       @course_atts <<
-        CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+          CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
     end
   end
 

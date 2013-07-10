@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130705164200) do
+ActiveRecord::Schema.define(:version => 20130708152522) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"

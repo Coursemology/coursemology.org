@@ -1,0 +1,13 @@
+<%= form_for(@course, url: course_manage_add_student_path,
+             html: { method: :post, class: "form-horizontal" } ) do |f| %>
+<select id="attemptingstudent" name="student">
+  <% @students_course.each do |student_course|  %>
+      <% student = student_course.user %>
+      <option value="<%= student.id %>">
+        <%= student.name %>
+      </option>
+  <% end %>
+</select>
+<input type="submit" name="_inneraddstudentform" value="Add this student" />
+<input type="submit" name="_innerdelstudentform" value="Remove student from my group" />
+<% end %>

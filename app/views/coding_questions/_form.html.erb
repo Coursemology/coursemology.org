@@ -29,9 +29,17 @@
 
       <div id="path_dooptions">
         <h3>Options</h3>
-        <div class="formlayout">
-          <label for="timeLimit"><div>Time Limit (secs):</div><input type="text" id="timeLimit" value="1" name="timeLimit" onchange="path.changeTimeLimit(this.value);" /></label><br />
-          <label for="memoryLimit"><div>Memory Limit (mb):</div><input type="text" id="memoryLimit" value="2" name="memoryLimit" onchange="path.changeMemoryLimit(this.value);" /></label><br />
+        <div class="control-group">
+          <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>
+          <div class="controls">
+            <input type="text" id="timeLimit" value="1" name="timeLimit" onchange="path.changeTimeLimit(this.value);" />
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :memoryLimit,"Memory Limit (mb)", class:'control-label' %>
+          <div class="controls">
+            <input type="text" id="memoryLimit" value="2" name="memoryLimit" onchange="path.changeMemoryLimit(this.value);" />
+          </div>
         </div>
         <div>Pre-filled code:</div><textarea name="prefilled" rows="4" id="prefilled"></textarea>
         <div>Included code (optional, hidden):</div><textarea name="included" rows="2" id="included"></textarea> <br />

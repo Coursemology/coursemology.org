@@ -28,10 +28,9 @@ class UsersController < ApplicationController
 
   def show
     @admin = true
-    if !params[:search].nil?
+    unless params[:search].nil?
       @users = User.search params[:search]
     end
   end
 
-  private
 end
