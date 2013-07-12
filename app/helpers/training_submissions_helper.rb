@@ -41,7 +41,7 @@ module TrainingSubmissionsHelper
         end
         test_code = ''
         test_type.each do |test|
-          test_code << "\nprint(#{test["expression"]} is #{test["expected"]})\n"
+          test_code << "\nprint(#{test["expression"]} == #{test["expected"]})\n"
         end
         file.write(test_code)
         file.close
