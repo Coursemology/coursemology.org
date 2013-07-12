@@ -65,6 +65,7 @@ module TrainingSubmissionsHelper
         @stderr.close
         @stdout.close
         File.delete(file_path)
+        puts "coding path",output
 
         if output.size == 1
           summary[:errors] = "Your solution was rejected as it exceeded the time limit for this question."
