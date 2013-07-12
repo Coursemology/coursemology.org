@@ -1,7 +1,7 @@
 <div class="alert alert-success hidden"></div>
 <h1>Manage Stuff</h1>
 
-<% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_course.size > 1 %>
+<% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_course.size > 0 %>
     <%= form_for [@course], :html => { :class => 'form-horizontal' } do |f| %>
         <table class="table">
           <tr>
