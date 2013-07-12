@@ -608,7 +608,7 @@ class PGLogger(bdb.Bdb):
 
 
 
-      return self.finalizer_func(self.executed_script, self.trace[-1])
+      return self.finalizer_func(self.executed_script, self.trace)
 
 
 import json
