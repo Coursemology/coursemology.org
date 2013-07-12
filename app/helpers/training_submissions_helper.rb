@@ -65,7 +65,7 @@ module TrainingSubmissionsHelper
         @stderr.close
         @stdout.close
         File.delete(file_path)
-        puts "coding path",output
+        logger.info output
 
         if output.size == 1
           summary[:errors] = "Your solution was rejected as it exceeded the time limit for this question."
@@ -79,11 +79,12 @@ module TrainingSubmissionsHelper
           break
         end
 
-        results = trace["stdout"].split(' ')
+        results = trace["stdout"].split(' ').map{ |r| if r == "True" then true else false end }
         test_type = if i == 0 then :publicTests else :privateTests end
         summary[test_type] = results
       end
     end
+    puts summary
     summary
   end
 end
