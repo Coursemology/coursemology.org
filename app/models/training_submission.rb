@@ -45,7 +45,7 @@ class TrainingSubmission < ActiveRecord::Base
       ag = ags.first || subm_grading.answer_gradings.build
       std_answers = question.std_coding_answers.find_all_by_student_id(std_ans.student_id)
     elsif question.class == Mcq and std_ans.mcq_answer.is_correct
-      ags = subm_grading.answer_gradings.select { |g| g.student_answer.mcq == question }
+      ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
       ag = ags.first || subm_grading.answer_gradings.build
       std_answers = question.std_mcq_answers.find_all_by_student_id(std_ans.student_id)
     end
