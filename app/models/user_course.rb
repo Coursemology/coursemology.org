@@ -36,8 +36,8 @@ class UserCourse < ActiveRecord::Base
   has_many :notifications, foreign_key: "target_course_id"
 
   has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
-  has_many :tut_course, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
-  has_many :std_course, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
+  has_many :std_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
+  has_many :tut_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
 
   def is_student?
     self.role == Role.find_by_name('student')
@@ -171,5 +171,13 @@ class UserCourse < ActiveRecord::Base
     exp_transaction.is_valid = true
     exp_transaction.save
     user_course.update_exp_and_level
+  end
+
+  def get_my_tutors
+    tutor_courses = self.tut_courses.map{|tg| tg.tut_course}
+    if tutor_courses.size == 0
+      tutor_courses = self.course.lect_courses
+    end
+    tutor_courses
   end
 end

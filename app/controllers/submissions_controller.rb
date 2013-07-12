@@ -97,11 +97,11 @@ class SubmissionsController < ApplicationController
     end
     if @submission.save
       Activity.attempted_asm(curr_user_course, @mission)
-      @course.lect_courses.each do |uc|
-        puts 'notify lecturers'
+      curr_user_course.get_my_tutors.each do |uc|
+        puts 'notify tutors'
         UserMailer.delay.new_submission(
-          uc.user,
-          new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
+            uc.user,
+            new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
         )
       end
       respond_to do |format|

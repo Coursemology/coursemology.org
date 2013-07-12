@@ -21,7 +21,6 @@
       </th>
       </thead>
       <tbody>
-      <!--<%= @my_std_courses %>-->
       <% @my_std_courses.each do |std_course| %>
           <tr>
             <td><%= link_to std_course.user.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
