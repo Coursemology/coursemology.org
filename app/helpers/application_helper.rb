@@ -28,10 +28,12 @@ module ApplicationHelper
       end
       str = str.gsub(/\[b\](.+?)\[\/b\]/m,'<strong>\1</strong>')
       str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span>')
-      str = str.gsub(/\[mc\](.+?)\[\/mc\]/m,'<pre class="jfdiCode"><div class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</div></pre>')
+      str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<pre class="jfdiCode"><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
+') <<'</div></pre>'}
       str.html_safe
     end
   end
+
 
   #overwrite to customize display of error messages
   def devise_error_messages!

@@ -46,9 +46,9 @@ $(document).ready(function() {
     $('.colorpicker').colorpicker();
 
     var _jfdiFormatFunc = function(i, d){
-        console.log(i)
-        console.log($(d))
-        console.log($(d).text())
+//        console.log(i)
+//        console.log($(d))
+//        console.log($(d).text())
         if ($(d).data('jfdiFormatted')) return;
         $(d).data('jfdiFormatted', true);
         if($(d).hasClass("pythonCode")){
