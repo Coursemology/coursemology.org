@@ -119,14 +119,14 @@ class ApplicationController < ActionController::Base
     if can? :manage, Course
       @nav_items << {
           text: "Manage Stuff",
-          url:  course_stuff_url(@course)
-          #icon: "icon-tags"
+          url:  course_stuff_url(@course),
+          icon: "icon-user"
       }
       if curr_user_course.is_stuff?
         @nav_items << {
             text: "My Students",
-            url: course_manage_students_url(@course)
-            #icon: "icon-tags"
+            url: course_manage_students_url(@course),
+            icon: "icon-user"
         }
       end
 
