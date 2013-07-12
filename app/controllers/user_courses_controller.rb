@@ -17,7 +17,6 @@ class UserCoursesController < ApplicationController
   end
 
   def update
-    puts params
     @user_course.role_id = params[:role_id]
     if @user_course.save
       respond_to do |format|

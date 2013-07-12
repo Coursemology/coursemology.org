@@ -30,9 +30,10 @@ JfdiAcademy::Application.routes.draw do
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
-    match "/stuff"      => "user_courses#stuff", as: :stuff
+    match "/stuff"            => "user_courses#stuff", as: :stuff
     match "/manage_students"  => "course_groups#manage_students", as: :manage_students
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
+    post "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
     resources :user_courses
 

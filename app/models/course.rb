@@ -30,7 +30,6 @@ class Course < ActiveRecord::Base
   has_many :course_themes, dependent: :destroy  # currently only has one though
 
   has_many :tutorial_groups, dependent: :destroy
-  has_many :tutors, through: :tutorial_groups, foreign_key: "tutor_id"
 
   def asms
      missions + quizzes + trainings

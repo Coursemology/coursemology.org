@@ -5,56 +5,58 @@
   <h3 class="banner-text"><%= @course.title %></h3>
 </a>
 <% if curr_user_course.id %>
-  <hr/>
-  <div>
-    <div class="user-sidebar-profile">
-      <a class="user-thumb-profile" href="<%= course_user_course_path(@course, curr_user_course)%>">
-        <img class="user-profile-pic" src="<%= current_user.profile_photo_url %>" />
-        <strong><%= current_user.name %></strong>
-      </a>
-      <div class="clearfix"></div>
-    </div>
-    <hr>
-    <table class="table user-short-stat" style="text-align:center">
-      <thead>
-        <tr>
-          <% # <th>Ranking</th> %>
-          <th><%= link_to 'Achievement', course_achievements_path(@course) %></th>
-          <th><%= link_to 'Level', course_levels_path(@course) %><th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <% # <td>10</td> %>
-          <td><%= curr_user_course.user_achievements.count() %></td>
-          <td><%= curr_user_course.level ? curr_user_course.level.level - 1 : 0 %></td>
-        </tr>
-      </tbody>
-    </table>
+    <hr/>
     <div>
-      <div class="progress" style="margin-bottom: 3px">
-        <div class="bar bar-success" style="width: 
-          <%= curr_user_course.level_percentage %>%"></div>
+      <div class="user-sidebar-profile">
+        <a class="user-thumb-profile" href="<%= course_user_course_path(@course, curr_user_course)%>">
+          <img class="user-profile-pic" src="<%= current_user.profile_photo_url %>" />
+          <strong><%= current_user.name %></strong>
+        </a>
+        <div class="clearfix"></div>
       </div>
+      <% if curr_user_course.is_student? %>
+          <hr>
+          <table class="table user-short-stat" style="text-align:center">
+            <thead>
+            <tr>
+              <% # <th>Ranking</th> %>
+              <th><%= link_to 'Achievement', course_achievements_path(@course) %></th>
+              <th><%= link_to 'Level', course_levels_path(@course) %><th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <% # <td>10</td> %>
+              <td><%= curr_user_course.user_achievements.count() %></td>
+              <td><%= curr_user_course.level ? curr_user_course.level.level - 1 : 0 %></td>
+            </tr>
+            </tbody>
+          </table>
+          <div>
+            <div class="progress" style="margin-bottom: 3px">
+              <div class="bar bar-success" style="width:
+                      <%= curr_user_course.level_percentage %>%"></div>
+            </div>
       <span class="pull-right">
         <strong style="font-size: 1.2em"><%= curr_user_course.exp %></strong>
         /
         <%= curr_user_course.level ? curr_user_course.level.exp_threshold : 0 %> EXP</span>
-      <div class="clearfix"></div>
+            <div class="clearfix"></div>
+          </div>
+      <% end %>
     </div>
-  </div>
 <% end %>
 <a class="btn btn-navbar collapsed" data-toggle="collapse"
-    data-target=".sidenav-collapse">
+   data-target=".sidenav-collapse">
   <span class="icon-chevron-down"></span>
 </a>
 <div class="clearfix"></div>
 <div class="sidenav-collapse collapse" style="height: 0px;">
   <ul class="nav nav-list sidenav">
-  <% if @nav_items %>
-    <% @nav_items.each do |item| %>
-      <li>
-        <a href="<%= item[:url] %>">
+    <% if @nav_items %>
+        <% @nav_items.each do |item| %>
+            <li>
+              <a href="<%= item[:url] %>">
           <span class="nav-icon">
             <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
               <img src="<%= item[:img] %>" />
@@ -62,13 +64,13 @@
               <i class="<%= item[:icon] %>"></i>
             <% end %>
           </span>
-          <%= item[:text] %>
-          <% if item.has_key?(:count) && item[:count] > 0 %>
-            <span class="sidenav-count pull-right"><%= item[:count] %></span>
-          <% end %>
-        </a>
-      </li>
+                <%= item[:text] %>
+                <% if item.has_key?(:count) && item[:count] > 0 %>
+                    <span class="sidenav-count pull-right"><%= item[:count] %></span>
+                <% end %>
+              </a>
+            </li>
+        <% end %>
     <% end %>
-  <% end %>
-</ul>
+  </ul>
 </div>

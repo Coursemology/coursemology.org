@@ -11,16 +11,7 @@ class ManualRewardsController < ApplicationController
       exps.each do |std_course_id, exp_str|
         exp = exp_str.to_i
         if exp > 0
-          std_course = @course.user_courses.find(std_course_id)
-          puts std_course, exp
-          exp_transaction = ExpTransaction.new
-          exp_transaction.exp = exp
-          exp_transaction.giver = current_user
-          exp_transaction.user_course = std_course
-          exp_transaction.reason = params[:reason]
-          exp_transaction.is_valid = true
-          exp_transaction.save
-          std_course.update_exp_and_level
+          curr_user_course.manual_exp_award(std_course_id,exp,params[:reason])
           count += 1
         end
       end

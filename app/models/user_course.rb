@@ -35,7 +35,9 @@ class UserCourse < ActiveRecord::Base
 
   has_many :notifications, foreign_key: "target_course_id"
 
-  has_many :std_tags, foreign_key: "std_course_id"
+  has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
+  has_many :tut_course, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
+  has_many :std_course, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
 
   def is_student?
     self.role == Role.find_by_name('student')
@@ -156,5 +158,18 @@ class UserCourse < ActiveRecord::Base
   def init
     self.exp = 0
     self.level = self.course.levels.find_by_level(1)
+  end
+
+  def manual_exp_award(user_course_id,exp,reason)
+    user_course = self.course.user_courses.find(user_course_id)
+    puts user_course, exp, reason
+    exp_transaction = ExpTransaction.new
+    exp_transaction.exp = exp
+    exp_transaction.giver = self.user
+    exp_transaction.user_course = user_course
+    exp_transaction.reason = reason
+    exp_transaction.is_valid = true
+    exp_transaction.save
+    user_course.update_exp_and_level
   end
 end

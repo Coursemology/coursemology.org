@@ -37,10 +37,13 @@ $(document).ready(function() {
     $('.update-stuff').on('click',function(e) {
         e.preventDefault();
         var stuff_row = $(this).parents('tr');
+        var btn = stuff_row.find('.update-stuff');
+        if(btn.hasClass("disabled")) {
+            return;
+        }
         var curr_val = stuff_row.find('.change-role').val();
         stuff_row.find('.old-role').val(curr_val);
         var url = stuff_row.find('.uc-url').attr('href');
-        var btn = stuff_row.find('.update-stuff');
         var notice = $('.alert');
         if(notice.size() > 1) {
             notice[0].parentNode.removeChild(notice[0]);

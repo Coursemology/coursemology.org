@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130708152522) do
+ActiveRecord::Schema.define(:version => 20130711080325) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -577,11 +577,13 @@ ActiveRecord::Schema.define(:version => 20130708152522) do
 
   create_table "tutorial_groups", :force => true do |t|
     t.integer  "course_id"
-    t.integer  "tutor_id"
-    t.integer  "student_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "std_course_id"
+    t.integer  "tut_course_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
+
+  add_index "tutorial_groups", ["std_course_id", "tut_course_id"], :name => "index_tutorial_groups_on_std_course_id_and_tut_course_id", :unique => true
 
   create_table "user_achievements", :force => true do |t|
     t.integer  "user_course_id"
