@@ -59,32 +59,26 @@ module TrainingSubmissionsHelper
         #  Process.kill("TERM", t.pid)
         #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
         #}
-        @stdin,@stdout,@stderr = Open3.popen3("python3 #{@@path_temp_folder}#{"exec.py -t "<< timeLimit << " -m "<<memoryLimit << " "<< file_path}")
-        output = @stdout.readlines
+        @stdin,@stdout,@stderr = Open3.popen3("python3 #{file_path}")
+        errors = @stderr.readlines
+        results = @stdout.readlines.map{|r| if r.gsub("\n",'') == "True" then true else false end}
         @stdin.close
         @stderr.close
         @stdout.close
         File.delete(file_path)
-        logger.info output
 
-        if output.size == 1
-          summary[:errors] = "Your solution was rejected as it exceeded the time limit for this question."
-          break
-        end
-
-        trace = JSON.parse(output.join)["trace"]
-
-        if trace["event"] != "return"
-          summary[:errors] = trace["event"] << "\n  " << trace["exception_msg"]
-          break
-        end
-
-        results = trace["stdout"].split(' ').map{ |r| if r == "True" then true else false end }
         test_type = if i == 0 then :publicTests else :privateTests end
         summary[test_type] = results
+        #puts "error: ", errors
+        if errors.length > 0
+          error_message = errors.join.scan(/", line \d*.*\n.*\n/).map{ |m| m[3,m.length - 1]} << errors.last
+          summary[:errors] = error_message.join
+          break
+        end
+
       end
     end
-    puts summary
+    #puts "summary", summary
     summary
   end
 end
