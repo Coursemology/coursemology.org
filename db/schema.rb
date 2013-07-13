@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130711080325) do
+ActiveRecord::Schema.define(:version => 20130713010831) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -116,11 +116,11 @@ ActiveRecord::Schema.define(:version => 20130711080325) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.string   "description"
+    t.text     "description", :limit => 255
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.string   "comments"
   end
 
