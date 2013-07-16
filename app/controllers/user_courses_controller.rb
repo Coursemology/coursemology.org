@@ -28,16 +28,16 @@ class UserCoursesController < ApplicationController
   end
 
   def stuff
-    @stuff_course = []
-    @students_course = []
+    @stuff_courses = []
+    @students_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_ta?
-        @stuff_course << uc
+        @stuff_courses << uc
       elsif uc.is_lecturer?
-        @stuff_course << uc
+        @stuff_courses << uc
       else
-        @students_course << uc
+        @students_courses << uc
       end
     end
   end

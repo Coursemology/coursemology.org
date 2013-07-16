@@ -1,13 +1,13 @@
 <div class="alert alert-success hidden"></div>
 <h1>Manage Stuff</h1>
 
-<% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_course.size > 0 %>
+<% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_courses.size > 0 %>
     <%= form_for [@course], :html => { :class => 'form-horizontal' } do |f| %>
         <table class="table">
           <tr>
             <td>
               <select id="attemptingstudent" name="user_course_id">
-                <% @students_course.each do |student_course|  %>
+                <% @students_courses.each do |student_course|  %>
                     <option value="<%= student_course.id %>">
                       <%= student_course.user.name %>
                     </option>
@@ -40,13 +40,13 @@
   <th width="15%"></th>
   </thead>
   <tbody>
-  <% @stuff_course.each do |s_course| %>
+  <% @stuff_courses.each do |s_course| %>
       <tr>
 
         <!--<td><%= link_to s_course.user.name,course_user_course_path(@course,s_course),id:s_course.id %></td>-->
         <td>
           <input type="hidden" class="old-name" value="<%= s_course.user.name  %>">
-          <input type="text" value="<%= s_course.user.name  %>" name="user-name" class="change-name"> </td>
+          <input type="text" value="<%= s_course.user.name  %>" name="user-name" class="change-name" required> </td>
         <!--<td><%= s_course.user.name  %></td>-->
         <td><%= s_course.user.email %></td>
         <td>

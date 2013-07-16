@@ -5,4 +5,7 @@ class TutorialGroup < ActiveRecord::Base
   belongs_to :std_course, class_name: "UserCourse"
   belongs_to :tut_course, class_name: "UserCourse"
 
+  validates :std_course_id, presence: true
+  validates :tut_course_id, presence: true
+
 end

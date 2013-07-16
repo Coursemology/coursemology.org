@@ -5,11 +5,11 @@ class CourseGroupsController < ApplicationController
 
   def manage_students
     puts "manage students"
-    @students_course = []
+    @students_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_student?
-        @students_course << uc
+        @students_courses << uc
       end
     end
     @assigned_students = @course.tutorial_groups.map {|m| m.std_course}
@@ -23,6 +23,7 @@ class CourseGroupsController < ApplicationController
       remove_student(tg_exist)
       return
     end
+
     unless tg_exist
       tg = @course.tutorial_groups.build
       tg.std_course = @course.user_courses.where(id:params[:std_course_id]).first

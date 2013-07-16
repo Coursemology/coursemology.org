@@ -98,13 +98,17 @@ class CoursesController < ApplicationController
   def students
     @lecturer_courses = []
     @student_courses = []
+    @ta_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_student?
         @student_courses << uc
       elsif uc.is_lecturer?
         @lecturer_courses << uc
+      elsif uc.is_ta?
+        @ta_courses << uc
       end
     end
+    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(20)
   end
 end
