@@ -18,8 +18,9 @@ class UserCoursesController < ApplicationController
 
   def update
     @user_course.role_id = params[:role_id]
+    @user_course.user.name = params[:name]
     @user_course.tut_courses.map {|tc| tc.destroy }
-    if @user_course.save
+    if @user_course.save && @user_course.user.save
       respond_to do |format|
         format.html { render json: { status: 'OK' }}
       end

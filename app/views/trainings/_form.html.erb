@@ -14,7 +14,7 @@
     <div class="control-group">
       <%= f.label :exp, :class => 'control-label' %>
       <div class="controls">
-        <%= f.number_field :exp, :class => 'number_field' %>
+        <%= f.number_field :exp, :class => 'number_field input-medium' %>
       </div>
     </div>
     <div class="control-group">
@@ -31,6 +31,19 @@
       </div>
     </div>
     <div class="control-group">
+      <label>Lesson materials</label>
+      <div class="controls">
+        <div class="theme-zip-target-done" style="display:none">Uploaded!</div>
+        <input type="hidden" name="theme_folder_url"
+               class="theme-zip-target-input"
+               value="" />
+        <a href="#file-uploader-modal"
+           class="file-uploader-trigger"
+           data-target=".theme-zip-target"
+           data-toggle="modal">Upload Files</a>
+      </div>
+    </div>
+    <div class="control-group">
       <label>Topic</label>
       <div class="controls">
         <%= render partial: "tags/form_checkboxes",
@@ -39,11 +52,14 @@
                              exist_tags_hash: @asm_tags } %>
       </div>
     </div>
+
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>
-
     <%= render :partial => "layouts/html_editor" %>
+    <%= render partial: "layouts/file_uploader",
+               locals: { upload_to: course_file_uploads_path(@course) } %>
+
 <% end %>
