@@ -40,7 +40,7 @@ class TrainingsController < ApplicationController
 
   def new
     @training.exp = 1000
-    @training.open_at = DateTime.now
+    @training.open_at = DateTime.now.beginning_of_day
     @tags = @course.tags
     @asm_tags = {}
   end

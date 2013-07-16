@@ -14,9 +14,14 @@
   <div class="control-group">
     <%= f.label :publish_at, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :publish_at,
-          :value => date_mdY(@announcement.publish_at),
-          :class => 'datepicker' %>
+      <div class="datetimepicker input-append date">
+        <%= f.text_field :publish_at,
+                         :value => datetime_format(@announcement.publish_at),
+                         :class => 'input-medium'%>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
     </div>
   </div>
   <!--

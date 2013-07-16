@@ -18,11 +18,11 @@
 //= require bootstrap-dropdown
 //= require bootstrap-transition
 //= require bootstrap-collapse
-//= require bootstrap-datepicker/core
 //= require bootstrap-button
 //= require bootstrap-tooltip
 //
 //= require bootstrap-colorpicker
+//= require bootstrap-datetimepicker
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
@@ -36,9 +36,9 @@
 
 $(document).ready(function() {
 
-    $(".datepicker").datepicker({
-        "format": "dd-mm-yyyy",
-        "autoclose": true
+    $('.datetimepicker').datetimepicker({
+        format: 'dd-MM-yyyy hh:mm:ss',
+        language: 'pt-BR'
     });
 
     $('a[rel=tooltip]').tooltip();
@@ -52,7 +52,7 @@ $(document).ready(function() {
         if ($(d).data('jfdiFormatted')) return;
         $(d).data('jfdiFormatted', true);
         if($(d).hasClass("pythonCode")){
-          CodeMirror.runMode($(d).text(), "python", d);
+            CodeMirror.runMode($(d).text(), "python", d);
         }
     }
     function jfdiFormat(element){

@@ -18,11 +18,11 @@ class Mission < ActiveRecord::Base
 
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade)
-    self.save
+    self.save                                            w
   end
 
   def get_path
-    return course_mission_path(course, self)
+    course_mission_path(course, self)
   end
 
   alias_method :sbms, :submissions

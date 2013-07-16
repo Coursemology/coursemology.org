@@ -9,6 +9,14 @@ module ApplicationHelper
     end
   end
 
+  def datetime_format(datetime)
+    if datetime.nil?
+      ""
+    else
+      datetime.strftime("%d-%m-%Y %H:%M:%S")
+    end
+  end
+
   def resource_name
     :user
   end

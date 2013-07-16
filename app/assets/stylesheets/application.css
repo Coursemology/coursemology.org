@@ -10,7 +10,7 @@
  *
  *= require_self
  *= require_tree .
- *= require bootstrap-datepicker
+ *= require bootstrap-datetimepicker
  *= require bootstrap-wysihtml5
  *= require bootstrap-colorpicker
  //= require codemirror
