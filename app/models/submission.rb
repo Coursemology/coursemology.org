@@ -24,6 +24,10 @@ class Submission < ActiveRecord::Base
     return course_mission_submission_path(mission.course, mission, self)
   end
 
+  def get_edit_path
+    return edit_course_mission_submission_path(mission.course, mission, self)
+  end
+
   def get_new_grading_path
     return new_course_mission_submission_submission_grading_path(
       mission.course, mission, self)

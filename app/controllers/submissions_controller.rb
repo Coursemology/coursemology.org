@@ -6,7 +6,7 @@ class SubmissionsController < ApplicationController
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
-  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create]
+  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
 
   def listall
     @tab = "MissionSubmission"
@@ -111,6 +111,37 @@ class SubmissionsController < ApplicationController
     else
       respond_to do |format|
         format.html { render action: "new" }
+      end
+    end
+  end
+
+  def edit
+    @questions = @mission.questions
+    @std_answers = {}
+    @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def update
+    @std_answers = {}
+    @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
+
+    params[:answers].each do |qid, ans|
+      answer = @std_answers[qid.to_i]
+      if answer
+        answer.text = ans
+        answer.save
+      end
+    end
+
+    respond_to do |format|
+      if @submission.save
+        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+                      notice: "Your submission has been updated." }
+      else
+        format.html { render action: "edit" }
       end
     end
   end

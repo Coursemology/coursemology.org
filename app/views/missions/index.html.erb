@@ -87,7 +87,7 @@
             <% if mission.close_at > Time.now %>
               <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
               <% if submission %>
-                <a href="#" class="btn disabled">Done</a>
+                <a href="<%= edit_course_mission_submission_path(@course, mission, submission) %>" class="btn">Edit</a>
               <% else %>
                 <%= link_to 'Attempt',
                         new_course_mission_submission_path(@course, mission),
