@@ -2,9 +2,9 @@
   <h1>Enroll Requests</h1>
 </div>
 
-<% if @staff_requests.size > 0 %>
-  <h3>Staff Requests:</h3>
-  <%= render partial: "enroll_requests/list", locals: { requests: @staff_requests, type: "staff" } %>
+<% if @stuff_requests.size > 0 %>
+  <h3>Stuff Requests:</h3>
+  <%= render partial: "enroll_requests/list", locals: { requests: @stuff_requests, type: "stuff" } %>
 <% end %>
 
 <br/>
@@ -14,6 +14,6 @@
   <%= render partial: "enroll_requests/list", locals: { requests: @student_requests, type: "student" } %>
 <% end %>
 
-<% if @staff_requests.size + @student_requests.size == 0 %>
+<% if @stuff_requests.size + @student_requests.size == 0 %>
   <span>There is no outstanding request</span>
 <% end %>

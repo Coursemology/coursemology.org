@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.remove-stuff', function(e) {
         e.preventDefault();
-        if(confirm('Are you sure you want to delete this staff?')) {
+        if(confirm('Are you sure you want to delete this stuff?')) {
             var stuff_row = $(this).parents('tr');
             var url = stuff_row.find('.uc-url').attr('href');
             $.ajax({

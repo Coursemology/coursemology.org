@@ -5,9 +5,9 @@ class EnrollRequestsController < ApplicationController
   before_filter :load_general_course_data, only: [:index, :new]
 
   def index
-    # only staff should be able to access this page
-    # here staff can approve student to enroll to a class
-    @staff_requests = []
+    # only stuff should be able to access this page
+    # here stuff can approve student to enroll to a class
+    @stuff_requests = []
     @student_requests = []
 
     std_role = Role.find_by_name("student")
@@ -15,7 +15,7 @@ class EnrollRequestsController < ApplicationController
       if er.role == std_role
         @student_requests << er
       else
-        @staff_requests << er
+        @stuff_requests << er
       end
     end
   end
@@ -63,7 +63,7 @@ class EnrollRequestsController < ApplicationController
         approve_request(enroll_request)
         enroll_request.destroy
       end
-      if req_type == 'staff' && enroll_request.role != std_role
+      if req_type == 'stuff' && enroll_request.role != std_role
         approve_request(enroll_request)
         enroll_request.destroy
       end
@@ -102,7 +102,7 @@ class EnrollRequestsController < ApplicationController
       if req_type == 'student' && enroll_request.role == std_role
         enroll_request.destroy
       end
-      if req_type == 'staff' && enroll_request.role != std_role
+      if req_type == 'stuff' && enroll_request.role != std_role
         enroll_request.destroy
       end
     end
