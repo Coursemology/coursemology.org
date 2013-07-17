@@ -306,15 +306,6 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
 
-  create_table "paths", :force => true do |t|
-    t.integer  "creator_id"
-    t.string   "name"
-    t.text     "data"
-    t.integer  "steps"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
     t.text     "description", :limit => 255

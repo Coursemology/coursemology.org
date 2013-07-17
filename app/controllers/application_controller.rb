@@ -117,47 +117,48 @@ class ApplicationController < ActionController::Base
     }]
 
     if can? :manage, Course
-      @nav_items << {
+      @admin_nav_items = []
+      @admin_nav_items << {
           text: "Manage Stuff",
           url:  course_stuff_url(@course),
           icon: "icon-user"
       }
       if curr_user_course.is_stuff?
-        @nav_items << {
+        @admin_nav_items << {
             text: "My Students",
             url: course_manage_students_url(@course),
             icon: "icon-user"
         }
       end
 
-      @nav_items << {
+      @admin_nav_items << {
         text: "Tags",
         url: course_tags_url(@course),
         icon: "icon-tags"
       }
-      @nav_items << {
+      @admin_nav_items << {
         text: "Award Give-away",
         url: course_manual_exp_url(@course),
         icon: "icon-star"
       }
-      @nav_items << {
+      @admin_nav_items << {
         text: "Statistics",
         url: course_stats_url(@course),
         icon: "icon-bar-chart"
       }
-      @nav_items << {
+      @admin_nav_items << {
         text: "Enrollment",
         url: course_enroll_requests_url(@course),
         icon: "icon-bolt"
       }
-      @nav_items << {
+      @admin_nav_items << {
         text: "Settings",
         url: edit_course_url(@course),
         icon: "icon-cog"
       }
     end
     if can? :share, Course
-      @nav_items << {
+      @admin_nav_items << {
         text: "Duplicate Data",
         url: course_duplicate_url(@course),
         icon: "icon-bolt"
