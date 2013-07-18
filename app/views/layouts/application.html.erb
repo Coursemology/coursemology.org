@@ -10,72 +10,74 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
   <% if @course && @course.id && (can? :participate, Course) %>
-    <% if @course.course_themes.count > 0 %>
-      <% theme = @course.course_themes.first %>
-      <link href="<%= "#{theme.theme_folder_url}/style.css" %>" media="all"
-          rel="stylesheet" type="text/css" />
-    <% end %>
-    <% if @theme_settings %>
-      <style>
-        <%= @theme_settings['Custom CSS'] %>
-        <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
-          body {
-            background-color: <%= @theme_settings['Background Color'] %>
-          }
-        <% end %>
-        <% if @theme_settings['Background Image'] && @theme_settings['Background Image'] != '' %>
-          body {
-            background-image: url(<%= @theme_settings['Background Image'] %>);
-            background-position: bottom left;
-            background-repeat: no-repeat;
-          }
-        <% end %>
-        <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
-          .sidebar a, .sidebar h3, .sidebar {
-            color: <%= @theme_settings['Sidebar Link Color'] %>;
-          }
-          .sidenav-count {
-            background-color: <%= @theme_settings['Sidebar Link Color'] %>;
-          }
-        <% end %>
-      </style>
-    <% end %>
+      <% if @course.course_themes.count > 0 %>
+          <% theme = @course.course_themes.first %>
+          <% if File.exist?("#{theme.theme_folder_url}/style.css") %>
+              <link href="<%= "#{theme.theme_folder_url}/style.css" %>" media="all"
+                    rel="stylesheet" type="text/css" />
+          <% end %>
+      <% end %>
+      <% if @theme_settings %>
+          <style>
+              <%= @theme_settings['Custom CSS'] %>
+              <% if @theme_settings['Background Color'] && @theme_settings['Background Color'] != '' %>
+              body {
+                  background-color: <%= @theme_settings['Background Color'] %>
+              }
+              <% end %>
+              <% if @theme_settings['Background Image'] && @theme_settings['Background Image'] != '' %>
+              body {
+                  background-image: url(<%= @theme_settings['Background Image'] %>);
+                  background-position: bottom left;
+                  background-repeat: no-repeat;
+              }
+              <% end %>
+              <% if @theme_settings['Sidebar Link Color'] && @theme_settings['Sidebar Link Color'] != '' %>
+              .sidebar a, .sidebar h3, .sidebar {
+                  color: <%= @theme_settings['Sidebar Link Color'] %>;
+              }
+              .sidenav-count {
+                  background-color: <%= @theme_settings['Sidebar Link Color'] %>;
+              }
+              <% end %>
+          </style>
+      <% end %>
   <% else %>
-    <style>
-      body {
-        background-color: white;
-      }
-    </style>
+      <style>
+          body {
+              background-color: white;
+          }
+      </style>
   <% end %>
 
   <%= render partial: "layouts/google_analytics" %>
   <script src='http://www.google.com/jsapi'></script>
 </head>
 <body>
-  <%= render "layouts/header" %>
-  <% if @setting %>
+<%= render "layouts/header" %>
+<% if @setting %>
     <div class="container-fluid">
       <%= render "layouts/setting_layout" %>
     </div>
-  <% elsif @admin %>
+<% elsif @admin %>
     <div class="container-fluid">
       <%= render "layouts/admin_layout" %>
     </div>
-  <% elsif @course && @course.id && (can? :participate, Course) %>
+<% elsif @course && @course.id && (can? :participate, Course) %>
     <div class="container-fluid course-content">
       <%= render "layouts/course_layout" %>
     </div>
-  <% else %>
+<% else %>
     <div class="container-fluid">
       <% if flash[:notice] %>
-        <div class="alert alert-info">
-          <%= flash[:notice] %>
-        </div>
+          <div class="alert alert-info">
+            <%= flash[:notice] %>
+          </div>
       <% end %>
       <%= yield %>
     </div>
-  <% end %>
-  <%= render "layouts/footer" %>
-  <%= debug(params) if Rails.env.development? %>
+<% end %>
+<%= render "layouts/footer" %>
+<%= debug(params) if Rails.env.development? %>
 </body>
 </html>
