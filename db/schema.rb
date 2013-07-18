@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130713010831) do
+ActiveRecord::Schema.define(:version => 20130718113601) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -414,11 +414,13 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
 
   create_table "std_answers", :force => true do |t|
-    t.text     "text",        :limit => 255
+    t.text     "text",              :limit => 255
     t.integer  "student_id"
     t.integer  "question_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.time     "last_commented_at"
+    t.integer  "std_course_id"
   end
 
   add_index "std_answers", ["question_id"], :name => "index_std_answers_on_question_id"
@@ -428,9 +430,10 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
     t.text     "code"
     t.integer  "student_id"
     t.integer  "qn_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.boolean  "is_correct"
+    t.integer  "std_course_id"
   end
 
   create_table "std_mcq_answers", :force => true do |t|
@@ -440,6 +443,7 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
     t.integer  "mcq_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "std_course_id"
   end
 
   add_index "std_mcq_answers", ["mcq_answer_id"], :name => "index_std_mcq_answers_on_mcq_answer_id"

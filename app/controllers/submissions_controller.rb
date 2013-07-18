@@ -94,6 +94,7 @@ class SubmissionsController < ApplicationController
       })
       sa.question = @wq
       sa.student = current_user
+      sa.std_course = curr_user_course
     end
     if @submission.save
       Activity.attempted_asm(curr_user_course, @mission)

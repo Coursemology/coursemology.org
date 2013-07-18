@@ -160,6 +160,7 @@ class TrainingSubmissionsController < ApplicationController
     mcqa = McqAnswer.find(params[:aid])
     sma = StdMcqAnswer.new()
     sma.student = current_user
+    sma.std_course = curr_user_course
     sma.mcq = mcq
     sma.mcq_answer = mcqa
     # TODO: record the choices
@@ -195,6 +196,7 @@ class TrainingSubmissionsController < ApplicationController
     coding_question = CodingQuestion.find(params[:qid])
     sma = StdCodingAnswer.new()
     sma.student = current_user
+    sma.std_course = curr_user_course
     sma.qn = coding_question
     sma.code = code
 

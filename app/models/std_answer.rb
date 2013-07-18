@@ -1,10 +1,11 @@
 class StdAnswer < ActiveRecord::Base
   include Commentable
 
-  attr_accessible :question_id, :student_id, :text
+  attr_accessible :question_id, :std_course_id, :student_id, :text
 
   belongs_to :student, class_name: "User"
   belongs_to :question
+  belongs_to :std_course, class_name: "UserCourse"
 
   has_many :comments, as: :commentable
 
