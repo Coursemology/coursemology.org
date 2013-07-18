@@ -7,4 +7,5 @@ class StdCodingAnswer < ActiveRecord::Base
 
   has_one :answer_grading, as: :student_answer, dependent: :destroy
 
+  has_many :sbm_answers, as: :answer, dependent: :destroy
 end
