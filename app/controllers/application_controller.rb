@@ -100,8 +100,7 @@ class ApplicationController < ActionController::Base
     }, {
       text: "Comments",
       url: course_comments_url(@course),
-      icon: "icon-comment",
-      count: counts[:submissions] || 0
+      icon: "icon-comment"
     }, {
       text: "Levels",
       url: course_levels_url(@course),
