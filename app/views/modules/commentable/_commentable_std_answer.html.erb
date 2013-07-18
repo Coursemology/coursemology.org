@@ -1,0 +1,8 @@
+<% question = std_answer.question %>
+<% pos = question.asm_qns.first.pos %>
+<% mission = question.asm_qns.first.asm %>
+<h3>Mission: <%= mission.title %></h3>
+<h4>Question <%= pos.to_i + 1 %></h4>
+<p><%= question.description.html_safe %></p>
+<h4>Student Answer:</h4>
+<p><%= std_answer.text.html_safe %></p>

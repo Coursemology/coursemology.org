@@ -98,6 +98,11 @@ class ApplicationController < ActionController::Base
       icon: "icon-envelope-alt",
       count: counts[:submissions] || 0
     }, {
+      text: "Comments",
+      url: course_comments_url(@course),
+      icon: "icon-comment",
+      count: counts[:submissions] || 0
+    }, {
       text: "Levels",
       url: course_levels_url(@course),
       icon: "icon-star-empty"

@@ -1,7 +1,10 @@
 class StdAnswer < ActiveRecord::Base
   include Commentable
 
-  attr_accessible :question_id, :std_course_id, :student_id, :text
+  # TODO: may need to store more information in the std_answer
+  # in case a question is linked to more than one mission
+
+  attr_accessible :last_commented_at, :question_id, :std_course_id, :student_id, :text
 
   belongs_to :student, class_name: "User"
   belongs_to :question
