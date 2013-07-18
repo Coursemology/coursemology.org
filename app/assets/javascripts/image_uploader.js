@@ -39,8 +39,11 @@ $(document).ready(function(){
     dropZone: $('#image-dropzone'),
     dataType: 'json',
     url: $('#image-upload-form').attr('action'),
-    formData: [ { name: '_method',
-                  value: 'POST ' } ],
+    formData: [
+        {
+            name: '_method',
+            value: 'POST ' }
+        ],
     done: function(e, data) {
       $('.image-uploader-input-url').val(data.result.url);
       $('.image-uploader-preview-img').attr('src', data.result.url);

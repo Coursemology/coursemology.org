@@ -31,19 +31,6 @@
       </div>
     </div>
     <div class="control-group">
-      <label>Lesson materials</label>
-      <div class="controls">
-        <div class="theme-zip-target-done" style="display:none">Uploaded!</div>
-        <input type="hidden" name="theme_folder_url"
-               class="theme-zip-target-input"
-               value="" />
-        <a href="#file-uploader-modal"
-           class="file-uploader-trigger"
-           data-target=".theme-zip-target"
-           data-toggle="modal">Upload Files</a>
-      </div>
-    </div>
-    <div class="control-group">
       <label>Topic</label>
       <div class="controls">
         <%= render partial: "tags/form_checkboxes",
@@ -59,7 +46,9 @@
                   course_path(@course), :class => 'btn' %>
     </div>
     <%= render :partial => "layouts/html_editor" %>
-    <%= render partial: "layouts/file_uploader",
-               locals: { upload_to: course_file_uploads_path(@course) } %>
-
 <% end %>
+<h3>Upload lesson materials</h3>
+<br/>
+
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { upload_to: course_file_uploads_path(@course) } %>

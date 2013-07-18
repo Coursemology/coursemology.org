@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130713010831) do
+ActiveRecord::Schema.define(:version => 20130718085939) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -224,7 +224,7 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
   add_index "exp_transactions", ["user_course_id"], :name => "index_exp_transactions_on_user_course_id"
 
   create_table "file_uploads", :force => true do |t|
-    t.integer  "course_id"
+    t.integer  "owner_id"
     t.integer  "creator_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(:version => 20130713010831) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.string   "owner_type"
   end
 
   create_table "levels", :force => true do |t|

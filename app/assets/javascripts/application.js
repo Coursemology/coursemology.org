@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui.min
+//= require jquery-fileupload
 //= require_tree .
 //
 //= require bootstrap-dropdown
@@ -26,7 +27,6 @@
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
-//= require jquery-fileupload/basic
 
 //= require jquery.purr
 //= require best_in_place
