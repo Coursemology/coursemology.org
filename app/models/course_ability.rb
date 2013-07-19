@@ -47,7 +47,7 @@ class CourseAbility
       can :duplicate, Course
       can :award_points, UserCourse
 
-      cannot :edit, TrainingSubmission
+      cannot :modify, TrainingSubmission
       return
     end
 
@@ -74,7 +74,7 @@ class CourseAbility
       can :manage, [Submission, TrainingSubmission, QuizSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer], student_id: user_course.user.id
 
-      cannot :edit, TrainingSubmission
+      cannot :modify, TrainingSubmission
 
       cannot :see_all, [Submission, TrainingSubmission, QuizSubmission]
     end

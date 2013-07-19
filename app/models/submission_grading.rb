@@ -26,6 +26,9 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.exp = 0
     else
       self.exp_transaction.exp = self.total_grade * asm.exp / asm.max_grade
+      if sbm.multiplier
+        self.exp_transaction.exp *= sbm.multiplier
+      end
     end
     self.exp_transaction.save
     asm.tags.each { |tag| tag.update_exp_for_std(sbm.std_course_id) }

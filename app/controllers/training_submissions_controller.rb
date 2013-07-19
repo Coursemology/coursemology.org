@@ -94,10 +94,18 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def new
+
     @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
     @training_submission.current_step = 1
+
+    # Is it the first submission? Otherwise set the multiplier to 1/5
+    sbm_count = @training.training_submissions.where(std_course_id: curr_user_course).count
+    if sbm_count > 0
+      @training_submission.multiplier = 0.2
+    end
+
     @training_submission.save
 
     @course.lect_courses.each do |uc|

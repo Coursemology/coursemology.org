@@ -19,10 +19,10 @@ class TrainingsController < ApplicationController
     @trainings_with_sbm = []
     @trainings.each do |training|
       if curr_user_course.id
-        std_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(
-          curr_user_course.id,
-          training.id
-        )
+        std_sbm = TrainingSubmission.where(
+          std_course_id: curr_user_course.id,
+          training_id: training.id
+        ).last
       end
       @trainings_with_sbm << {
         training: training,
