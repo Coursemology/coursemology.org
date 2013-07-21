@@ -624,73 +624,90 @@
 </style>
 <meta property='og:image' content='http://landerstorage.blob.core.windows.net/lander-user-images/LanderUserGallery_17957/image_19438683-1fa5-4bee-b98c-bea39ee4d4f4_'>
 </head>
+
+<script>
+  $(document).ready(function(){
+      $.ajaxSetup({ cache: true });
+      $.getScript('//connect.facebook.net/en_US/all.js', function(){
+          FB.init({
+              appId: <%= Devise.omniauth_configs[:facebook].strategy.client_id %>
+          });
+          FB.getLoginStatus(function(response) {
+//              console.log(response)
+              if (response.status === 'connected') {
+                  window.location.href = "/users/auth/facebook"
+              }
+          });
+      });
+  });
+</script>
 <body id="inner_body" class="inner_body">
 <div id="content" class="content">
   <div class="container-fluid">
     <% if flash[:notice] %>
-      <div class="alert alert-info">
-        <%= flash[:notice] %>
-      </div>
+        <div class="alert alert-info">
+          <%= flash[:notice] %>
+        </div>
     <% end %>
-  <div id="_slogen" class="_slogen">
-    <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;">
+    <div id="_slogen" class="_slogen">
+      <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;">
       Gamified Online Education Platform:
     </span></p>
-    <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;"><span>
+      <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;"><span>
       Making your class a world of games in a universe of fun.
     </span></span></p>
-  </div>
-  <div class="_gray_background">
-
-  </div><div id="_center_image">
-  <img src="/images/teaching-wordle_316.png">
-</div>
-  <div id="_share_button">
-    <script type="text/javascript">var addthis_config=addthis_config||{
-            }
-            ;
-    addthis_config.ui_language="en";
-    addthis_config.data_track_clickback=false;
-    var shareMaxZindex=shareMaxZindex||1000;
-    </script>
-    <div class="addthis_toolbox addthis_default_style ">
-      <a class="addthis_button_facebook_like" fb:like:layout="button_count" style=" width:79px;
-              opacity:1;
-      " fb:like:locale="en_US"></a>
-      <a class="addthis_button_tweet" style=" width:90px;
-      "></a>
-      <a class="addthis_button_google_plusone" g:plusone:size="medium" style=" width:73px;
-      "></a>
-      <a class="addthis_counter addthis_pill_style"></a>
     </div>
-    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4ec5a3c44709a190&async=1"></script>
-    <script type="text/javascript">function initAddThis(){addthis.init()
-    }
-    function addShareBlocker(){$("#_share_button").prepend("<div class='blockedShareBar'></div>");
-        $(".blockedShareBar").click(function(){event.stopPropagation()
-                }
-        ).height("32px").css("margin-bottom",-32).css("z-index",9999)
-    }
-    if(document.location.href.indexOf("LandingPages/Editor/Preview")!=-1){addShareBlocker()
-    }
-    $(window).load(function(){initAddThis();
-                $(".addthis_toolbox.addthis_default_style").attr("addthis:url",document.location.href.replace("/confirmation",""));
-                $("#_share_button").mouseover(function(){$(this).attr("style","z-index:"+(shareMaxZindex++))
-                        }
-                )
-            }
-    );
-    </script>
+    <div class="_gray_background">
+
+    </div><div id="_center_image">
+    <img src="/images/teaching-wordle_316.png">
   </div>
+    <div id="_share_button">
+      <script type="text/javascript">
+          var addthis_config=addthis_config||{
+          };
+          addthis_config.ui_language="en";
+          addthis_config.data_track_clickback=false;
+          var shareMaxZindex=shareMaxZindex||1000;
+      </script>
+      <div class="addthis_toolbox addthis_default_style ">
+        <a class="addthis_button_facebook_like" fb:like:layout="button_count" style=" width:79px;
+                opacity:1;
+        " fb:like:locale="en_US"></a>
+        <a class="addthis_button_tweet" style=" width:90px;
+        "></a>
+        <a class="addthis_button_google_plusone" g:plusone:size="medium" style=" width:73px;
+        "></a>
+        <a class="addthis_counter addthis_pill_style"></a>
+      </div>
+      <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4ec5a3c44709a190&async=1"></script>
+      <script type="text/javascript">function initAddThis(){addthis.init()
+      }
+      function addShareBlocker(){$("#_share_button").prepend("<div class='blockedShareBar'></div>");
+          $(".blockedShareBar").click(function(){event.stopPropagation()
+                  }
+          ).height("32px").css("margin-bottom",-32).css("z-index",9999)
+      }
+      if(document.location.href.indexOf("LandingPages/Editor/Preview")!=-1){addShareBlocker()
+      }
+      $(window).load(function(){initAddThis();
+                  $(".addthis_toolbox.addthis_default_style").attr("addthis:url",document.location.href.replace("/confirmation",""));
+                  $("#_share_button").mouseover(function(){$(this).attr("style","z-index:"+(shareMaxZindex++))
+                          }
+                  )
+              }
+      );
+      </script>
+    </div>
 
-  <div id="_sign_up">
-    <div id="landerapp_conversionform">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <div id="_sign_up">
+      <div id="landerapp_conversionform">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
 
-          <%= f.label :name, class: "firstLabel labelInput" %>
-          <%= f.text_field :name%>
+            <%= f.label :name, class: "firstLabel labelInput" %>
+            <%= f.text_field :name%>
 
-          <!--
+            <!--
     <div class="control-group">
       <%= f.label :display_name, class: "control-label" %>
       <div class="controls">
@@ -699,83 +716,84 @@
     </div>
     -->
 
-          <%= f.label :email, class: "labelInput" %>
-          <%= f.email_field :email %>
+            <%= f.label :email, class: "labelInput" %>
+            <%= f.email_field :email %>
 
-          <%= f.label :password, class: "control-label" %>
-          <%= f.password_field :password %>
+            <%= f.label :password, class: "control-label" %>
+            <%= f.password_field :password %>
 
-          <%= f.label :password_confirmation, class: "control-label" %>
-          <%= f.password_field :password_confirmation %>
+            <%= f.label :password_confirmation, class: "control-label" %>
+            <%= f.password_field :password_confirmation %>
 
-          <div style="text-align: right">
-            <%= f.submit "Sign up", class: "btn btn-primary" %>
-          </div>
-      <% end %>
+            <div style="text-align: right">
+              <%= f.submit "Sign up", class: "btn btn-primary" %>
+            </div>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  <div id="_first_divider"></div>
-  <div id="_second_divider"></div>
-  <div id="_engaging_title">
-    <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">Engaging<br></span></strong></span></p>
-  </div>
-  <div id="_first_tick">
-    <img src="/images/tick.png" height="31" width="31" alt="">
-  </div>
-  <div id="_second_tick">
-    <img src="/images/tick.png" height="31" width="31" alt="">
-  </div>
-  <div id="_second_title">
-    <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">General<br></span></strong></span></p>
-  </div>
+    <div id="_first_divider"></div>
+    <div id="_second_divider"></div>
+    <div id="_engaging_title">
+      <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">Engaging<br></span></strong></span></p>
+    </div>
+    <div id="_first_tick">
+      <img src="/images/tick.png" height="31" width="31" alt="">
+    </div>
+    <div id="_second_tick">
+      <img src="/images/tick.png" height="31" width="31" alt="">
+    </div>
+    <div id="_second_title">
+      <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">General<br></span></strong></span></p>
+    </div>
 
-  <div id="_third_title">
-    <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">Simple</span></strong></span></p>
-  </div>
+    <div id="_third_title">
+      <p><span style="color: #333333;font-size: 18px;"><strong><span style="font-family: arial,helvetica,sans-serif;">Simple</span></strong></span></p>
+    </div>
 
-  <div id="_third_tick">
-    <img src="/images/tick.png" height="31" width="31" alt="">
-  </div>
+    <div id="_third_tick">
+      <img src="/images/tick.png" height="31" width="31" alt="">
+    </div>
 
-  <div id="_bottom_line"></div>
+    <div id="_bottom_line"></div>
 
-  <div id="_first_text_box" class="_first_text_box">
-    <p><span style="color: #707070;">
+    <div id="_first_text_box" class="_first_text_box">
+      <p><span style="color: #707070;">
     Coursemology allows educators to add gamification elements, such as experience points, levels, achievements, to their classroom exercises and assignments.
   </span></p>
-    <p><span style="color: #707070;"> </span></p>
-    <p><span style="color: #707070;">
+      <p><span style="color: #707070;"> </span></p>
+      <p><span style="color: #707070;">
     The gamification elements of Coursemology motivate students to do assignments and trainings.
   </span></p>
-    <p><br><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"><br></span></p>
-  </div>
+      <p><br><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"><br></span></p>
+    </div>
 
-  <div id="_second_text_box" class="_second_text_box">
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
+    <div id="_second_text_box" class="_second_text_box">
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
     It's built for all subjects. The gamification system of Coursemology doesn't make assumption on the course's subject.
   </span></p>
-    <p> </p>
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
+      <p> </p>
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
     Through Coursemology, any teacher who teaches any subject can turn his course excercies into a online game.
   </span></p>
-  </div>
+    </div>
 
-  <div id="_third_text_box" class="_third_text_box">
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
+    <div id="_third_text_box" class="_third_text_box">
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
     It's built for all teachers. You don't need to have any programming knowledge to master the platform.
   </span></p>
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"></span></p>
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"></span></p>
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;">
     Coursemology is easy and intuitive to use for both teachers and students.
   </span></p>
-    <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"> </span></p>
-  </div>
+      <p><span style="font-family: arial,helvetica,sans-serif;color: #707070;font-size: small;"> </span></p>
+    </div>
 
-  <div id="_logo">
-    <img src="\images\coursemology_logo_landscape_100.png"  alt="">
-  </div>
+    <div id="_logo">
+      <img src="\images\coursemology_logo_landscape_100.png"  alt="">
+    </div>
 
+  </div>
 </div>
 </body>
 
