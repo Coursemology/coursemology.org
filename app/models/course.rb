@@ -13,6 +13,8 @@ class Course < ActiveRecord::Base
 
   has_many :users, through: :user_courses
 
+  has_many :std_answers, through: :user_courses
+
   has_many :submissions, through: :user_courses
   has_many :training_submissions, through: :user_courses
   has_many :quiz_submissions, through: :user_courses

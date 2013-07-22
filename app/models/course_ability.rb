@@ -35,7 +35,7 @@ class CourseAbility
       can :students, Course
     end
 
-    if user.is_admin?  || user_course.is_stuff?
+    if user.is_admin?  || user_course.is_staff?
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all
@@ -46,6 +46,8 @@ class CourseAbility
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
+
+      cannot :modify, TrainingSubmission
       return
     end
 
@@ -71,6 +73,8 @@ class CourseAbility
 
       can :manage, [Submission, TrainingSubmission, QuizSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer], student_id: user_course.user.id
+
+      cannot :modify, TrainingSubmission
 
       cannot :see_all, [Submission, TrainingSubmission, QuizSubmission]
     end

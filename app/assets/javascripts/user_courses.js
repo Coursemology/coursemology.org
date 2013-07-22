@@ -1,15 +1,15 @@
 $(document).ready(function() {
 
-    $(document).on('click', '.remove-stuff', function(e) {
+    $(document).on('click', '.remove-staff', function(e) {
         e.preventDefault();
-        if(confirm('Are you sure you want to delete this stuff?')) {
-            var stuff_row = $(this).parents('tr');
-            var url = stuff_row.find('.uc-url').attr('href');
+        if(confirm('Are you sure you want to delete this staff?')) {
+            var staff_row = $(this).parents('tr');
+            var url = staff_row.find('.uc-url').attr('href');
             $.ajax({
                 url: url,
                 type: 'DELETE',
                 success: function() {
-                    stuff_row.remove();
+                    staff_row.remove();
                 }
             });
         }
@@ -17,10 +17,10 @@ $(document).ready(function() {
 
 //    $(document).on('change','.change-role',function(e){
 //        e.preventDefault();
-//        var stuff_row = $(this).parents('tr');
-//        var btn = stuff_row.find('.update-stuff');
-//        var old_val = stuff_row.find('.old-role').val();
-//        var curr_val = stuff_row.find('.change-role').val();
+//        var staff_row = $(this).parents('tr');
+//        var btn = staff_row.find('.update-staff');
+//        var old_val = staff_row.find('.old-role').val();
+//        var curr_val = staff_row.find('.change-role').val();
 //
 //        if(old_val != curr_val)
 //        {
@@ -41,12 +41,12 @@ $(document).ready(function() {
 //        }
 //    });
 
-    $('.update-stuff').on('click',function(e) {
+    $('.update-staff').on('click',function(e) {
         e.preventDefault();
-        var stuff_row = $(this).parents('tr');
-        var curr_role_val = stuff_row.find('.change-role').val();
-        var name_field = stuff_row.find('.change-name');
-        var old_name  = stuff_row.find('.old-name');
+        var staff_row = $(this).parents('tr');
+        var curr_role_val = staff_row.find('.change-role').val();
+        var name_field = staff_row.find('.change-name');
+        var old_name  = staff_row.find('.old-name');
         var notice = $('.alert');
         if(notice.size() > 1) {
             notice[0].parentNode.removeChild(notice[0]);
@@ -66,7 +66,7 @@ $(document).ready(function() {
             return;
         }
         old_name.val(name_field.val());
-        var url = stuff_row.find('.uc-url').attr('href');
+        var url = staff_row.find('.uc-url').attr('href');
         notice.addClass("alert-success");
         notice.removeClass("alert-error");
         notice.text("Update user info successful!");

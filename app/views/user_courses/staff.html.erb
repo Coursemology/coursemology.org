@@ -1,5 +1,5 @@
 <div class="alert alert-success hidden"></div>
-<h1>Manage Stuff</h1>
+<h1>Manage Staff</h1>
 
 <% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_courses.size > 0 %>
     <%= form_for [@course], :html => { :class => 'form-horizontal' } do |f| %>
@@ -16,7 +16,7 @@
             </td>
             <td>
               <select class="select-role" name="role_id">
-                <% Role.get_stuff_roles.each do |r| %>
+                <% Role.get_staff_roles.each do |r| %>
                     <option value="<%= r.id %>">
                       <%= r.title %>
                     </option>
@@ -24,7 +24,7 @@
               </select>
             </td>
             <td>
-              <%= f.submit "Add as stuff", :class => 'btn btn-primary'%>
+              <%= f.submit "Add as staff", :class => 'btn btn-primary'%>
             </td>
             <td width="30%"></td>
           </tr>
@@ -32,15 +32,15 @@
     <% end %>
 <% end %>
 
-<table class="table stuff-table table-striped">
+<table class="table staff-table table-striped">
   <thead>
-  <th width="30%">Stuff Name</th>
+  <th width="30%">Staff Name</th>
   <th width="40%">Email</th>
   <th width="15%">Role</th>
   <th width="15%"></th>
   </thead>
   <tbody>
-  <% @stuff_courses.each do |s_course| %>
+  <% @staff_courses.each do |s_course| %>
       <tr>
 
         <!--<td><%= link_to s_course.user.name,course_user_course_path(@course,s_course),id:s_course.id %></td>-->
@@ -54,7 +54,7 @@
           <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
               <!--<input type="hidden" class="old-role" value="<%= s_course.role.id %>">-->
               <select class="change-role">
-                <% Role.get_stuff_roles.each do |r| %>
+                <% Role.get_staff_roles.each do |r| %>
                     <option value="<%= r.id %>" <% if r.id == s_course.role.id %>selected="selected"<% end %>>
                       <%= r.title %>
                     </option>
@@ -66,11 +66,11 @@
         </td>
         <td>
           <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
-              <%= link_to '#', class: 'btn update-stuff' do %>
+              <%= link_to '#', class: 'btn update-staff' do %>
                   <i class="icon-ok"></i>
               <% end %>
               <% unless s_course.is_creator? %>
-                  <%= link_to '#', class: 'btn remove-stuff' do %>
+                  <%= link_to '#', class: 'btn remove-staff' do %>
                       <i class="icon-remove"></i>
                   <% end %>
               <% end %>

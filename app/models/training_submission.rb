@@ -5,7 +5,7 @@ class TrainingSubmission < ActiveRecord::Base
   include Sbm
 
   # current_step starts from 1, not 0
-  attr_accessible :current_step, :open_at, :std_course_id, :submit_at, :training_id
+  attr_accessible :current_step, :multiplier, :open_at, :std_course_id, :submit_at, :training_id
 
   belongs_to :std_course, class_name: "UserCourse"
   belongs_to :training
@@ -47,7 +47,7 @@ class TrainingSubmission < ActiveRecord::Base
     elsif question.class == Mcq and std_ans.mcq_answer.is_correct
       ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
       ag = ags.first || subm_grading.answer_gradings.build
-      std_answers = question.std_mcq_answers.find_all_by_student_id(std_ans.student_id)
+      std_answers = self.std_mcq_answers.where(mcq_id: question.id)
     end
 
     # Strategy: mark again every time I receive a new answer

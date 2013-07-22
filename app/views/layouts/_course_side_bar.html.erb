@@ -73,4 +73,28 @@
         <% end %>
     <% end %>
   </ul>
+  <% if @admin_nav_items %>
+    <br>
+    <h3>For Staff Only</h3>
+    <ul class="nav nav-list sidenav">
+      <% @admin_nav_items.each do |item| %>
+        <li>
+          <a href="<%= item[:url] %>">
+            <span class="nav-icon">
+              <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
+                <img src="<%= item[:img] %>" />
+              <% else %>
+                <i class="<%= item[:icon] %>"></i>
+              <% end %>
+            </span>
+            <%= item[:text] %>
+            <% if item.has_key?(:count) && item[:count] > 0 %>
+                <span class="sidenav-count pull-right"><%= item[:count] %></span>
+            <% end %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
 </div>

@@ -10,7 +10,7 @@
         <td>Total grade: </td>
         <td>
           <%= @grading.total_grade %> / <%= @mission.max_grade %>
-          <% if curr_user_course.is_stuff? %>
+          <% if curr_user_course.is_staff? %>
               <%= link_to "Update",
                           edit_course_mission_submission_submission_grading_path(@course, @mission, @submission, @grading)
               %>

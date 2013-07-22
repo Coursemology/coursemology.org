@@ -2,7 +2,7 @@ class UserCoursesController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :user_course
 
-  before_filter :load_general_course_data, only: [:show,:stuff]
+  before_filter :load_general_course_data, only: [:show,:staff]
 
   def show
     @user_course.create_all_std_tags
@@ -27,15 +27,15 @@ class UserCoursesController < ApplicationController
     end
   end
 
-  def stuff
-    @stuff_courses = []
+  def staff
+    @staff_courses = []
     @students_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_ta?
-        @stuff_courses << uc
+        @staff_courses << uc
       elsif uc.is_lecturer?
-        @stuff_courses << uc
+        @staff_courses << uc
       else
         @students_courses << uc
       end

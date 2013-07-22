@@ -43,7 +43,7 @@
       <div class="control-group">
         <label class="control-label">Comment</label>
         <div class="controls">
-          <textarea name="ags[<%= qa[:g].id if qa[:g] %>][comment]" class="span9" rows="5"><%= qa[:g].comment if qa[:g] %></textarea>
+          <textarea name="ags[<%= qa[:g].id if qa[:g] %>][comment]" class="span9 html-editor" rows="5"><%= qa[:g].comment if qa[:g] %></textarea>
         </div>
       </div>
     <% else %>

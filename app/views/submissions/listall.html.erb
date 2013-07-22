@@ -101,6 +101,11 @@
               class: sub.submission_gradings.count > 0 ? "btn btn-primary" : "btn" %>
           </td>
         <% end %>
+        <% if can? :modify, sub %>
+          <td>
+            <%= link_to "Edit", sub.get_edit_path, class: "btn" %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

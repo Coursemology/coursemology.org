@@ -37,8 +37,8 @@ class CoursesController < ApplicationController
     end
     respond_to do |format|
       if params[:user_course_id]
-        format.html { redirect_to course_stuff_url(@course),
-                                  notice: 'New stuff added.'}
+        format.html { redirect_to course_staff_url(@course),
+                                  notice: 'New staff added.'}
       elsif @course.update_attributes(params[:course])
         format.html { redirect_to edit_course_path(@course),
                                   notice: 'Course setting has been updated.' }

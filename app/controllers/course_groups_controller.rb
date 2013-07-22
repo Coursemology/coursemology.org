@@ -75,7 +75,7 @@ class CourseGroupsController < ApplicationController
 
   private
   def access_control
-    unless curr_user_course.is_stuff?
+    unless curr_user_course.is_staff?
       redirect_to access_denied_url, alert: 'Sorry dude! You are not authorized to access this page.'
     end
   end

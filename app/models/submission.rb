@@ -25,12 +25,16 @@ class Submission < ActiveRecord::Base
     course_mission_submission_path(mission.course, mission, self)
   end
 
+  def get_edit_path
+    return edit_course_mission_submission_path(mission.course, mission, self)
+  end
+
   def get_new_grading_path
     new_course_mission_submission_submission_grading_path(
         mission.course, mission, self)
   end
 
-  def build_std_answers(params,current_user)
+  def get_std_answers(params,current_user)
     answers = params[:answers] ? params[:answers] : []
     answers.each do |qid, ans|
       @wq = Question.find(qid)

@@ -86,8 +86,8 @@
                       anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
               <% else %>
                 <%= link_to "Revise",
-                      edit_course_training_training_submission_path(@course, training, submission,
-                        anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+                      new_course_training_training_submission_path(@course, training),
+                      class: 'btn' %>
               <% end %>
             <% else %>
               <%= link_to 'Start',

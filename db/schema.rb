@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130718085939) do
+ActiveRecord::Schema.define(:version => 20130719144739) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -424,24 +424,30 @@ ActiveRecord::Schema.define(:version => 20130718085939) do
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
 
   create_table "std_answers", :force => true do |t|
-    t.text     "text",        :limit => 255
+    t.text     "text",              :limit => 255
     t.integer  "student_id"
     t.integer  "question_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.time     "last_commented_at"
+    t.integer  "std_course_id"
   end
 
   add_index "std_answers", ["question_id"], :name => "index_std_answers_on_question_id"
+  add_index "std_answers", ["std_course_id"], :name => "index_std_answers_on_std_course_id"
   add_index "std_answers", ["student_id"], :name => "index_std_answers_on_student_id"
 
   create_table "std_coding_answers", :force => true do |t|
     t.text     "code"
     t.integer  "student_id"
     t.integer  "qn_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.boolean  "is_correct"
+    t.integer  "std_course_id"
   end
+
+  add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"
 
   create_table "std_mcq_answers", :force => true do |t|
     t.integer  "mcq_answer_id"
@@ -450,10 +456,12 @@ ActiveRecord::Schema.define(:version => 20130718085939) do
     t.integer  "mcq_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "std_course_id"
   end
 
   add_index "std_mcq_answers", ["mcq_answer_id"], :name => "index_std_mcq_answers_on_mcq_answer_id"
   add_index "std_mcq_answers", ["mcq_id"], :name => "index_std_mcq_answers_on_mcq_id"
+  add_index "std_mcq_answers", ["std_course_id"], :name => "index_std_mcq_answers_on_std_course_id"
   add_index "std_mcq_answers", ["student_id"], :name => "index_std_mcq_answers_on_student_id"
 
   create_table "std_tags", :force => true do |t|
@@ -554,6 +562,7 @@ ActiveRecord::Schema.define(:version => 20130718085939) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
     t.time     "deleted_at"
+    t.float    "multiplier"
   end
 
   add_index "training_submissions", ["std_course_id"], :name => "index_training_submissions_on_std_course_id"

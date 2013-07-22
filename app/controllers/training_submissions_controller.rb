@@ -94,10 +94,18 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def new
+
     @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
     @training_submission.current_step = 1
+
+    # Is it the first submission? Otherwise set the multiplier to 1/5
+    sbm_count = @training.training_submissions.where(std_course_id: curr_user_course).count
+    if sbm_count > 0
+      @training_submission.multiplier = 0.2
+    end
+
     @training_submission.save
 
     @course.lect_courses.each do |uc|
@@ -160,6 +168,7 @@ class TrainingSubmissionsController < ApplicationController
     mcqa = McqAnswer.find(params[:aid])
     sma = StdMcqAnswer.new()
     sma.student = current_user
+    sma.std_course = curr_user_course
     sma.mcq = mcq
     sma.mcq_answer = mcqa
     # TODO: record the choices
@@ -195,6 +204,7 @@ class TrainingSubmissionsController < ApplicationController
     coding_question = CodingQuestion.find(params[:qid])
     sma = StdCodingAnswer.new()
     sma.student = current_user
+    sma.std_course = curr_user_course
     sma.qn = coding_question
     sma.code = code
 

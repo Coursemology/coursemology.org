@@ -8,7 +8,7 @@ class Role < ActiveRecord::Base
   scope :admin, where(name: 'admin')
   scope :tutor, where(name:'ta')
 
-  def self.get_stuff_roles
+  def self.get_staff_roles
     roles = []
     roles << Role.find_by_name('lecturer')  << Role.find_by_name('ta')
   end
