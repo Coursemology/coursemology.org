@@ -54,6 +54,9 @@ class MissionsController < ApplicationController
     @mission.creator = current_user
     @mission.update_tags(params[:tags])
     puts "mission_saving",@mission
+    if params[:files]
+      @mission.attach_files(params[:files].values)
+    end
     respond_to do |format|
       if @mission.save
         format.html { redirect_to new_course_mission_question_path(@course, @mission),
@@ -66,6 +69,9 @@ class MissionsController < ApplicationController
 
   def update
     @mission.update_tags(params[:tags])
+    if params[:files]
+      @mission.attach_files(params[:files].values)
+    end
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
         format.html { redirect_to course_mission_url(@course, @mission),

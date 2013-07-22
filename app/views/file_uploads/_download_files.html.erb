@@ -1,0 +1,10 @@
+<% if owner.files.size > 0 %>
+    <p><strong>Download <%= owner.class.model_name.human %> <%=  owner.files.size > 1 ? "files" : "file" %> :</strong></p>
+    <ul>
+      <% owner.files.each do |file_upload| %>
+          <li><a href="<%= file_upload.file.url %>" rel="" download="<%= file_upload.file_file_name %>">
+            <i class="icon-download-alt"></i>
+            <%= file_upload.file_file_name %></a></li>
+      <% end %>
+    </ul>
+<% end %>

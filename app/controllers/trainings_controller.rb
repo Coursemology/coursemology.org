@@ -7,8 +7,8 @@ class TrainingsController < ApplicationController
   def index
     @is_new = {}
     @trainings = @course.trainings.accessible_by(current_ability)
-                    .order(:open_at).reverse_order
-                    .page(params[:page])
+    .order(:open_at).reverse_order
+    .page(params[:page])
     if curr_user_course.id
       unseen = @trainings - curr_user_course.seen_trainings
       unseen.each do |tn|
@@ -20,13 +20,13 @@ class TrainingsController < ApplicationController
     @trainings.each do |training|
       if curr_user_course.id
         std_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(
-          curr_user_course.id,
-          training.id
+            curr_user_course.id,
+            training.id
         )
       end
       @trainings_with_sbm << {
-        training: training,
-        submission: std_sbm
+          training: training,
+          submission: std_sbm
       }
     end
   end
@@ -49,10 +49,15 @@ class TrainingsController < ApplicationController
     @training.pos = @course.trainings.count - 1
     @training.creator = current_user
     @training.update_tags(params[:tags])
+    if params[:files]
+      @training.attach_files(params[:files].values)
+    end
+
     respond_to do |format|
       if @training.save
+        puts "here we are",@training.files
         format.html { redirect_to course_training_path(@course, @training),
-                      notice: "The training '#{@training.title}' has been created." }
+                                  notice: "The training '#{@training.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -67,10 +72,14 @@ class TrainingsController < ApplicationController
 
   def update
     @training.update_tags(params[:tags])
+    if params[:files]
+      @training.attach_files(params[:files].values)
+    end
     respond_to do |format|
       if @training.update_attributes(params[:training])
+        puts "here we are",@training.files
         format.html { redirect_to course_training_url(@course, @training),
-                      notice: "The training '#{@training.title}' has been updated." }
+                                  notice: "The training '#{@training.title}' has been updated." }
       else
         format.html { render action: "edit" }
       end
@@ -83,7 +92,7 @@ class TrainingsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to course_trainings_url,
-                    notice: "The training '#{@training.title}' has been removed." }
+                                notice: "The training '#{@training.title}' has been removed." }
     end
   end
 end

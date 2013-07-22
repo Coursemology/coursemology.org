@@ -115,4 +115,13 @@ JfdiAcademy::Application.routes.draw do
   match "courses/:id/students" => "courses#students", as: :course_students
 
   resources :file_uploads
+
+  resources :trainings do
+    resources :file_uploads
+  end
+
+  resources :missions do
+    resources :file_uploads
+  end
+
 end

@@ -10,10 +10,11 @@ class FileUpload < ActiveRecord::Base
 
   def to_jq_upload
     {
-        "name" => read_attribute(:file_file_name),
-        "size" => read_attribute(:file_file_size),
-        "url" => file.url(:original),
-        "delete_url" => file_upload_path(self),
+        "id"    =>  read_attribute(:id),
+        "name"  => read_attribute(:file_file_name),
+        "size"  => read_attribute(:file_file_size),
+        "url"   => file.url(:original),
+        "delete_url"  => file_upload_path(self),
         "delete_type" => "DELETE"
     }
   end

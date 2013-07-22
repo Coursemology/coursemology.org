@@ -87,14 +87,8 @@ class SubmissionsController < ApplicationController
 
   def create
     @submission.std_course = curr_user_course
-    params[:answers].each do |qid, ans|
-      @wq = Question.find(qid)
-      sa = @submission.std_answers.build({
-        text: ans,
-      })
-      sa.question = @wq
-      sa.student = current_user
-    end
+    @submission.build_std_answers(params,current_user)
+
     if @submission.save
       Activity.attempted_asm(curr_user_course, @mission)
       curr_user_course.get_my_tutors.each do |uc|

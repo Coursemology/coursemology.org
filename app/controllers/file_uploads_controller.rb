@@ -32,7 +32,7 @@ class FileUploadsController < ApplicationController
     if params[:file_upload].to_s.size > 0
       file_upload = FileUpload.create({
                                           creator: current_user,
-                                          file: params[:file_upload][:upload]
+                                          file: params[:file_upload]
                                       })
       puts file_upload
       puts "end here",@course
@@ -76,8 +76,19 @@ class FileUploadsController < ApplicationController
   end
 
   def index
+    puts "file upload index",params
+    owner = nil
+    if params[:training_id]
+      owner = Training.find(params[:training_id])
+    elsif params[:mission_id]
+      owner = Mission.find(params[:mission_id])
+    end
+
+    @uploads = owner ? owner.files : []
+
     respond_to do |format|
-      format.json { render json:{status:"OK"} }
+      format.html
+      format.json { render json: @uploads.map{|upload| upload.to_jq_upload } }
     end
   end
   def new

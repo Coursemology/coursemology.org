@@ -6,16 +6,18 @@
   <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
   <tr><td>Submited at: </td><td><%= time_ago_in_words(@submission.created_at) %> ago</td></tr>
   <% if @grading %>
-    <tr>
-      <td>Total grade: </td>
-      <td>
-        <%= @grading.total_grade %> / <%= @mission.max_grade %>
-        <%= link_to "Update",
-            edit_course_mission_submission_submission_grading_path(@course, @mission, @submission, @grading)
-            %>
-      </td>
-    </tr>
-    <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+      <tr>
+        <td>Total grade: </td>
+        <td>
+          <%= @grading.total_grade %> / <%= @mission.max_grade %>
+          <% if curr_user_course.is_stuff? %>
+              <%= link_to "Update",
+                          edit_course_mission_submission_submission_grading_path(@course, @mission, @submission, @grading)
+              %>
+          <% end %>
+        </td>
+      </tr>
+      <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
   <% end %>
 </table>
 <hr/>
@@ -23,22 +25,22 @@
 <p class="well"><%= @mission.description.html_safe %></p>
 
 <% @qadata.each do |qid, qa| %>
-  <h3>Question <%= qa[:i] %>:</h3>
-  <p><%= qa[:q].description.html_safe %></p>
-  <h3>Answer:</h3>
-  <p><%= qa[:a].text.html_safe %></p>
-  <% if @grading %>
-    <% if qa[:g] %>
-      <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
-      <% if qa[:g].comment %>
-        <strong>Comment by grader:</strong>
-        <p><%= simple_format(qa[:g].comment) %></p>
-      <% end %>
+    <h3>Question <%= qa[:i] %>:</h3>
+    <p><%= qa[:q].description.html_safe %></p>
+    <h3>Answer:</h3>
+    <p><%= qa[:a].text.html_safe %></p>
+    <% if @grading %>
+        <% if qa[:g] %>
+            <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
+            <% if qa[:g].comment.size > 0 %>
+                <strong>Comment by grader:</strong>
+                <p><%= simple_format(qa[:g].comment) %></p>
+            <% end %>
+        <% end %>
     <% end %>
-  <% end %>
-  <%= render partial: "comments/list",
-    locals: { comments: qa[:a].comments,
-              target: qa[:a],
-              origin: course_mission_submission_url(@course, @mission, @submission) } %>
-  <hr/>
+    <%= render partial: "comments/list",
+               locals: { comments: qa[:a].comments,
+                         target: qa[:a],
+                         origin: course_mission_submission_url(@course, @mission, @submission) } %>
+    <hr/>
 <% end %>

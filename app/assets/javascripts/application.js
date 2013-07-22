@@ -61,4 +61,5 @@ $(document).ready(function() {
     $(function(){
         $(".jfdiCode").each(_jfdiFormatFunc);
     });
+
 });

@@ -16,6 +16,7 @@ class Training < ActiveRecord::Base
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
   has_many :training_submissions, dependent: :destroy
+  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
 
   def update_grade
@@ -29,6 +30,14 @@ class Training < ActiveRecord::Base
 
   def questions
     self.asm_qns.map {|q| q.qn}
+  end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find(id)
+      file.owner = self
+      file.save
+    end
   end
 
   alias_method :sbms, :training_submissions

@@ -39,9 +39,11 @@
                              exist_tags_hash: @asm_tags } %>
       </div>
     </div>
+    <!--for file uploads-->
+    <div id="uploaded_files_div"></div>
 
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= f.submit nil, :class => 'btn btn-primary', id:"new-training-submit" %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>
@@ -51,4 +53,4 @@
 <br/>
 
 <%= render partial: "layouts/file_uploader_complicated",
-           locals: { upload_to: course_file_uploads_path(@course) } %>
+           locals: { owner: @training } %>

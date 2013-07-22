@@ -59,6 +59,8 @@
     <% end %>
   </tr>
 </table>
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @mission}%>
 <div class="clearfix"></div>
 
 <% if can? :view_detail, @mission %>

@@ -53,6 +53,7 @@
                              exist_tags_hash: @asm_tags } %>
       </div>
     </div>
+    <div id="uploaded_files_div"></div>
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
@@ -61,3 +62,7 @@
 
     <%= render :partial => "layouts/html_editor" %>
 <% end %>
+<h3>Upload mission files</h3>
+<br/>
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: @mission } %>
