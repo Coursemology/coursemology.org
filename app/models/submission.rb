@@ -11,17 +11,18 @@ class Submission < ActiveRecord::Base
   belongs_to :final_grading, class_name: "SubmissionGrading"
 
   has_many :std_answers, through: :sbm_answers,
-      source: :answer, source_type: "StdAnswer"
+           source: :answer, source_type: "StdAnswer"
+  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
   scope :graded, lambda { where("final_grading_id IS NOT NULL") }
 
   # implement method of Sbm interface
   def get_asm
-    return self.mission
+    self.mission
   end
 
   def get_path
-    return course_mission_submission_path(mission.course, mission, self)
+    course_mission_submission_path(mission.course, mission, self)
   end
 
   def get_edit_path
@@ -29,7 +30,29 @@ class Submission < ActiveRecord::Base
   end
 
   def get_new_grading_path
-    return new_course_mission_submission_submission_grading_path(
-      mission.course, mission, self)
+    new_course_mission_submission_submission_grading_path(
+        mission.course, mission, self)
+  end
+
+  def get_std_answers(params,current_user)
+    answers = params[:answers] ? params[:answers] : []
+    answers.each do |qid, ans|
+      @wq = Question.find(qid)
+      sa = self.std_answers.build({
+                                             text: ans,
+                                         })
+      sa.question = @wq
+      sa.student = current_user
+    end
+    sub_files = params[:files] ? params[:files].values : []
+    self.attach_files(sub_files)
+  end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find(id)
+      file.owner = self
+      file.save
+    end
   end
 end

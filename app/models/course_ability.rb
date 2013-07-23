@@ -35,7 +35,7 @@ class CourseAbility
       can :students, Course
     end
 
-    if user.is_admin?  || user_course.is_stuff?
+    if user.is_admin?  || user_course.is_staff?
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all

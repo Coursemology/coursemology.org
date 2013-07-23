@@ -2,6 +2,10 @@
   <h1>Training <%= @training.pos + 1 %>: <%= @training.title %></h1>
 </div>
 <p class="well"><%= @training.description.html_safe %></p>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @training}%>
+
 <p id="training-stop-pos"></p>
 <% if @current_question.class == Mcq %>
     <p><b>Grading</b></p>

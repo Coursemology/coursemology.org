@@ -15,6 +15,7 @@ class Mission < ActiveRecord::Base
 
   has_many :questions, through: :asm_qns, source: :qn, source_type: "Question"
   has_many :submissions, dependent: :destroy
+  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade)
@@ -22,7 +23,15 @@ class Mission < ActiveRecord::Base
   end
 
   def get_path
-    return course_mission_path(course, self)
+    course_mission_path(course, self)
+  end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find(id)
+      file.owner = self
+      file.save
+    end
   end
 
   alias_method :sbms, :submissions

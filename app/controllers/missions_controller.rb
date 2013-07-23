@@ -31,8 +31,8 @@ class MissionsController < ApplicationController
 
   def new
     @mission.exp = 1000
-    @mission.open_at = DateTime.now
-    @mission.close_at = DateTime.now + 7  # 1 week from now
+    @mission.open_at = DateTime.now.beginning_of_day
+    @mission.close_at = DateTime.now.end_of_day + 7  # 1 week from now
 
     @tags = @course.tags
     @asm_tags = {}
@@ -49,9 +49,14 @@ class MissionsController < ApplicationController
   end
 
   def create
+    puts "params",params
     @mission.pos = @course.missions.count - 1
     @mission.creator = current_user
     @mission.update_tags(params[:tags])
+    puts "mission_saving",@mission
+    if params[:files]
+      @mission.attach_files(params[:files].values)
+    end
     respond_to do |format|
       if @mission.save
         format.html { redirect_to new_course_mission_question_path(@course, @mission),
@@ -64,6 +69,9 @@ class MissionsController < ApplicationController
 
   def update
     @mission.update_tags(params[:tags])
+    if params[:files]
+      @mission.attach_files(params[:files].values)
+    end
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
         format.html { redirect_to course_mission_url(@course, @mission),

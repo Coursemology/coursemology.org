@@ -38,8 +38,7 @@ GEM
       rails (~> 3.1)
     bootstrap-colorpicker-rails (0.3.1)
       railties (>= 3.0)
-    bootstrap-datepicker-rails (1.0.0.7)
-      railties (>= 3.0)
+    bootstrap-datetimepicker-rails (0.0.11)
     bootstrap-sass (2.0.0)
     bootstrap-wysihtml5-rails (0.3.1.20)
       railties (>= 3.0)
@@ -270,7 +269,7 @@ DEPENDENCIES
   acts_as_paranoid (~> 0.4.0)
   best_in_place
   bootstrap-colorpicker-rails
-  bootstrap-datepicker-rails
+  bootstrap-datetimepicker-rails
   bootstrap-sass (= 2.0.0)
   bootstrap-wysihtml5-rails
   cancan

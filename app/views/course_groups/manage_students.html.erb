@@ -21,14 +21,13 @@
       </th>
       </thead>
       <tbody>
-      <%= @my_std_courses if Rails.env.development? %>
       <% @my_std_courses.each do |std_course| %>
           <tr>
             <td><%= link_to std_course.user.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
             <td><%= std_course.level ? std_course.level.level - 1 : 0 %></td>
             <td><%= std_course.exp %></td>
             <td><%= std_course.user.email %></td>
-            <td><input type="number" name="EXP[<%= std_course.id %>]" title="EXP amount" class="exp-input"> </td>
+            <td><input type="number" name="EXP[<%= std_course.id %>]" title="EXP amount" class="input-mini"> </td>
           </tr>
       <% end %>
       </tbody>

@@ -32,6 +32,7 @@ class Course < ActiveRecord::Base
   has_many :course_themes, dependent: :destroy  # currently only has one though
 
   has_many :tutorial_groups, dependent: :destroy
+  has_many :file_uploads, as: :owner
 
   def asms
      missions + quizzes + trainings

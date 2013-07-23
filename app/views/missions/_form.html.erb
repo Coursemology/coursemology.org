@@ -1,52 +1,68 @@
 <%= form_for [@course, @mission], :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :title, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :title, :class => 'text_field span9' %>
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field span9' %>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, :class => 'text_area span9 html-editor', :rows => 10 %>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area span9 html-editor', :rows => 10 %>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :exp, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :exp, :class => 'number_field' %>
+    <div class="control-group">
+      <%= f.label :exp, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.number_field :exp, :class => 'number_field input-medium' %>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :open_at, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :open_at,
-          :value => date_mdY(@mission.open_at),
-          :class => 'datepicker' %>
+    <div class="control-group">
+      <%= f.label :open_time, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :open_at,
+                           :value => datetime_format(@mission.open_at),
+                           :class => 'input-medium'%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :close_at, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :close_at,
-          :value => date_mdY(@mission.close_at),
-          :class => 'datepicker' %>
+    <div class="control-group">
+      <%= f.label :close_time, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :close_at,
+                           :value => datetime_format(@mission.close_at),
+                           :class => 'input-medium' %>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+           </span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label>Topic</label>
-    <div class="controls">
-      <%= render partial: "tags/form_checkboxes",
-        locals: { tag_groups: @course.tag_groups,
-                  uncats: @course.tags.uncategorized,
-                  exist_tags_hash: @asm_tags } %>
-    </div>
-  </div>
-  <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_path(@course), :class => 'btn' %>
-  </div>
 
-  <%= render :partial => "layouts/html_editor" %>
+    <div class="control-group">
+      <label>Topic</label>
+      <div class="controls">
+        <%= render partial: "tags/form_checkboxes",
+                   locals: { tag_groups: @course.tag_groups,
+                             uncats: @course.tags.uncategorized,
+                             exist_tags_hash: @asm_tags } %>
+      </div>
+    </div>
+    <div id="uploaded_files_div"></div>
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  course_path(@course), :class => 'btn' %>
+    </div>
+
+    <%= render :partial => "layouts/html_editor" %>
 <% end %>
+<h3>Upload mission files</h3>
+<br/>
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: @mission } %>

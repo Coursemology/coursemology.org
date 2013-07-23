@@ -1,0 +1,16 @@
+<table class="table table-striped">
+  <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+  <% @uploads.each do |upload| %>
+    <tr class="template-download fade in">
+      <td class="name">
+        <a href="<%= upload.file.url %>" title="<%= upload.file_file_name %>" rel="" download="<%= upload.file_file_name %>"><%= upload.file_file_name %></a>
+      </td>
+      <!--<td class="size"><span><%= upload.file_file_size %></span></td>-->
+
+
+    </tr>
+
+<% end %>
+
+  </tbody>
+</table>

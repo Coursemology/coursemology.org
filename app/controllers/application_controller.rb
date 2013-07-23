@@ -38,11 +38,11 @@ class ApplicationController < ActionController::Base
     theme = @course.course_themes.first
     if theme
       theme_folder = theme.theme_folder_url
-      @theme_settings['Announcements Icon'] = "#{theme_folder}/images/announcements_icon.png"
-      @theme_settings['Trainings Icon'] = "#{theme_folder}/images/trainings_icon.png"
-      @theme_settings['Submissions Icon'] = "#{theme_folder}/images/submissions_icon.png"
-      @theme_settings['Leaderboards Icon'] = "#{theme_folder}/images/leaderboards_icon.png"
-      @theme_settings['Background Image'] = "#{theme_folder}/images/background.png"
+      @theme_settings['Announcements Icon'] = File.exist?("#{theme_folder}/images/announcements_icon.png") ? "#{theme_folder}/images/announcements_icon.png" : nil
+      @theme_settings['Trainings Icon'] = File.exist?("#{theme_folder}/images/trainings_icon.png") ? "#{theme_folder}/images/trainings_icon.png" : nil
+      @theme_settings['Submissions Icon'] =  File.exist?("#{theme_folder}/images/submissions_icon.png") ? "#{theme_folder}/images/submissions_icon.png" : nil
+      @theme_settings['Leaderboards Icon'] = File.exist?("#{theme_folder}/images/leaderboards_icon.png") ? "#{theme_folder}/images/leaderboards_icon.png" : nil
+      @theme_settings['Background Image'] = File.exist?("#{theme_folder}/images/background.png") ? "#{theme_folder}/images/background.png" : nil
     end
   end
 
@@ -123,11 +123,11 @@ class ApplicationController < ActionController::Base
     if can? :manage, Course
       @admin_nav_items = []
       @admin_nav_items << {
-          text: "Manage Stuff",
-          url:  course_stuff_url(@course),
+          text: "Manage Staff",
+          url:  course_staff_url(@course),
           icon: "icon-user"
       }
-      if curr_user_course.is_stuff?
+      if curr_user_course.is_staff?
         @admin_nav_items << {
             text: "My Students",
             url: course_manage_students_url(@course),

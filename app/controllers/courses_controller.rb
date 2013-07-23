@@ -37,8 +37,8 @@ class CoursesController < ApplicationController
     end
     respond_to do |format|
       if params[:user_course_id]
-        format.html { redirect_to course_stuff_url(@course),
-                                  notice: 'New stuff added.'}
+        format.html { redirect_to course_staff_url(@course),
+                                  notice: 'New staff added.'}
       elsif @course.update_attributes(params[:course])
         format.html { redirect_to edit_course_path(@course),
                                   notice: 'Course setting has been updated.' }
@@ -98,13 +98,17 @@ class CoursesController < ApplicationController
   def students
     @lecturer_courses = []
     @student_courses = []
+    @ta_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
     uc_sorted.each do |uc|
       if uc.is_student?
         @student_courses << uc
       elsif uc.is_lecturer?
         @lecturer_courses << uc
+      elsif uc.is_ta?
+        @ta_courses << uc
       end
     end
+    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(20)
   end
 end

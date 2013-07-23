@@ -224,7 +224,7 @@ ActiveRecord::Schema.define(:version => 20130723141846) do
   add_index "exp_transactions", ["user_course_id"], :name => "index_exp_transactions_on_user_course_id"
 
   create_table "file_uploads", :force => true do |t|
-    t.integer  "course_id"
+    t.integer  "owner_id"
     t.integer  "creator_id"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(:version => 20130723141846) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.string   "owner_type"
   end
 
   create_table "levels", :force => true do |t|
@@ -314,6 +315,15 @@ ActiveRecord::Schema.define(:version => 20130723141846) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
+
+  create_table "paths", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "steps"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"

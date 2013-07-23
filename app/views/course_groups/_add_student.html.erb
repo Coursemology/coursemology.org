@@ -1,14 +1,18 @@
-<%= form_for(@course, url: course_manage_add_student_path,
-             html: { method: :post, class: "form-horizontal" } ) do |f| %>
-    <select id="attempting-add-student" name="std_course_id">
-      <% @students_course.each do |student_course|  %>
-          <% student = student_course.user %>
-          <option value="<%= student_course.id %>" >
-            <%= student.name %>
-          </option>
-      <% end %>
-    </select>
-    <input type="hidden" id="assigned-std" value="<%= @assigned_students.map {|s| if s then s.id end} %>">
-    <input type="submit" class="btn btn-primary" id="mng-add-std-btn" name="_inneraddstudentform" value="Add this student" />
-    <input type="submit" class="btn btn-primary" id="mng-del-std-btn" name="_innerdelstudentform" value="Remove student from my group" />
+<% if @students_courses.size > 0 %>
+    <%= form_for(@course, url: course_manage_add_student_path,
+                 html: { method: :post, class: "form-horizontal" } ) do |f| %>
+        <select id="attempting-add-student" name="std_course_id">
+          <% @students_courses.each do |student_course|  %>
+              <% student = student_course.user %>
+              <option value="<%= student_course.id %>" >
+                <%= student.name %>
+              </option>
+          <% end %>
+        </select>
+        <input type="hidden" id="assigned-std" value="<%= @assigned_students.map {|s| if s then s.id end} %>">
+        <input type="submit" class="btn btn-primary" id="mng-add-std-btn" name="_inneraddstudentform" value="Add this student" />
+        <input type="submit" class="btn btn-primary" id="mng-del-std-btn" name="_innerdelstudentform" value="Remove student from my group" />
+    <% end %>
+<% else %>
+    <h3>No student to add!</h3>
 <% end %>

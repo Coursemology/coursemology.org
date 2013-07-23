@@ -54,7 +54,7 @@ class UserCourse < ActiveRecord::Base
     self.role == Role.find_by_name('ta')
   end
 
-  def is_stuff?
+  def is_staff?
     self.is_ta? || self.is_lecturer?
   end
 
