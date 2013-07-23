@@ -17,7 +17,8 @@ Running local server
 == Testing
 
 Populate sample data:
-        $ bundle db:gen_fake_data
+        $ rake db:gen_fake_data
+This might take some times, so be patient :)
 
 There is one super user added through db:seed
         username: jfdi@academy.com
