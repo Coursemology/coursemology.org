@@ -26,7 +26,7 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.exp = 0
     else
       self.exp_transaction.exp = self.total_grade * asm.exp / asm.max_grade
-      if sbm.multiplier
+      if sbm.has_multiplier?
         self.exp_transaction.exp *= sbm.multiplier
       end
     end
