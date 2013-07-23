@@ -36,4 +36,8 @@ module Sbm
       end
     end
   end
+
+  def has_multiplier?
+    self.respond_to?(:multiplier) && self.multiplier
+  end
 end
