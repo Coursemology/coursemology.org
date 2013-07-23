@@ -203,5 +203,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def masquerading?
+    puts session.to_json
+    session[:admin_id].present?
+  end
+
+  helper_method :masquerading?
+
   helper_method :curr_user_course
 end

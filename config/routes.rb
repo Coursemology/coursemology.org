@@ -14,9 +14,13 @@ JfdiAcademy::Application.routes.draw do
 
   get "users/settings" => "users#edit"
   put "users/update" => "users#update"
+
   match "admins" => "admins#access_control"
   match "users" => "users#show"
+  delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
+
   resources :users do
+    resources :masquerades, only: [:new]
     collection do
       get 'search'
     end
