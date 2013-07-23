@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719144739) do
+ActiveRecord::Schema.define(:version => 20130723141846) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -245,6 +245,15 @@ ActiveRecord::Schema.define(:version => 20130719144739) do
 
   add_index "levels", ["course_id"], :name => "index_levels_on_course_id"
   add_index "levels", ["creator_id"], :name => "index_levels_on_creator_id"
+
+  create_table "masquerade_logs", :force => true do |t|
+    t.integer  "by_user_id"
+    t.integer  "as_user_id"
+    t.text     "action"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "mcq_answers", :force => true do |t|
     t.integer  "mcq_id"

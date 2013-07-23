@@ -13,10 +13,23 @@ class MasqueradesController < ApplicationController
     end
     user = User.find(params[:user_id])
     sign_in user
+
+    log = MasqueradeLog.new
+    log.by_user_id = session[:admin_id]
+    log.as_user_id = params[:user_id]
+    log.action = 'login'
+    log.save
+
     redirect_to root_path, notice: "Now masquerading as #{user.name}"
   end
 
   def destroy
+    log = MasqueradeLog.new
+    log.by_user_id = session[:admin_id]
+    log.as_user_id = current_user.id
+    log.action = 'login'
+    log.save
+
     user = User.find(session[:admin_id])
     sign_in user
     session[:admin_id] = nil
