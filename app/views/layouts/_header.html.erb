@@ -28,6 +28,11 @@
               <li><%= link_to "Sign up", new_user_registration_path %></li>
               <li><%= link_to "Sign in", new_user_session_path %></li>
           <% end %>
+          <% if masquerading? %>
+            <li>
+              <%= link_to "(Stop Masquerading)", destroy_masquerades_path, method: :delete %>
+            </li>
+          <% end %>
         </ul>
       </div>
     </div>
