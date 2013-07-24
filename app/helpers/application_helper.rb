@@ -29,7 +29,7 @@ module ApplicationHelper
     @devise_mapping ||= Devise.mappings[:user]
   end
 
-  def style_format(str, html_safe = true, lang='python')
+  def self.style_format(str, html_safe = true, lang='python')
     if str.to_s.length > 0
       unless html_safe
         str = HTMLEntities.new.encode(str)
@@ -40,6 +40,10 @@ module ApplicationHelper
 ') <<'</div></pre></div>'}
       str.html_safe
     end
+  end
+
+  def style_format(str, html_safe = true, lang='python')
+    ApplicationHelper.style_format(str,html_safe,lang)
   end
 
 

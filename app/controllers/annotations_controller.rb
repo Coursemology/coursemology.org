@@ -1,6 +1,10 @@
 class AnnotationsController < ApplicationController
   load_and_authorize_resource :course
 
+  include ApplicationHelper
+  include ActionView::Helpers::DateHelper
+
+
   def create
     @annotation = Annotation.new(params[:annotation])
     @annotation.user_course = curr_user_course
@@ -9,17 +13,14 @@ class AnnotationsController < ApplicationController
     if @annotation.save
       @annotation.annotable.notify_user(@annotation,params[:origin])
       respond_to do |format|
-        #format.html {redirect_to params[:origin]}
         format.json {render json: get_all}
       end
     end
   end
 
   def index
-    responds = get_all
-
     respond_to do |format|
-      format.json {render json: responds}
+      format.json {render json: get_all}
     end
   end
 
@@ -29,16 +30,15 @@ class AnnotationsController < ApplicationController
     responds = []
     @annotations.each do |anno|
       responds.append({
-                          c:  anno.text,
+                          c:  style_format(anno.text),
                           s:  anno.line_start,
                           e:  anno.line_end,
                           id: anno.id,
-                          t:  anno.updated_at,
+                          t:  time_ago_in_words(anno.updated_at),
                           u:  '<span class="student-link"><a href="'+anno.user_course.get_path+'">'+anno.user_course.user.name+'</a></span>',
                           p:  anno.user_course.user.get_profile_photo_url
                       })
     end
-    puts responds
     responds
   end
 end
