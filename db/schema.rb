@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724154720) do
+ActiveRecord::Schema.define(:version => 20130724170444) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(:version => 20130724154720) do
   end
 
   add_index "activities", ["course_id"], :name => "index_activities_on_course_id"
+
+  create_table "annotations", :force => true do |t|
+    t.integer  "annotable_id"
+    t.string   "annotable_type"
+    t.integer  "line_start"
+    t.integer  "line_end"
+    t.integer  "user_course_id"
+    t.text     "text"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "announcements", :force => true do |t|
     t.integer  "creator_id"

@@ -99,6 +99,15 @@ class User < ActiveRecord::Base
     self.system_role.title
   end
 
+  def get_profile_photo_url
+    if self.uid && self.provider == "facebook"
+      'http://graph.facebook.com/'+self.uid+'/picture'
+    else
+      self.profile_photo_url
+    end
+
+  end
+
   private
   def set_default_role
     if !self.system_role

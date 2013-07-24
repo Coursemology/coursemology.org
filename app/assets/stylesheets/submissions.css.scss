@@ -130,6 +130,11 @@ div.error { color: #f55;}
   max-height: 100px;
   overflow: hidden;
   padding: 3px 8px 3px 8px;
+  color: #ffffff;
+}
+
+.comment-box ul {
+  margin: 0px;
 }
 .comment-box.hover { z-index: 14; background-color: #555; }
 .comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #4D4D4F; max-height: none; border-radius: 6px;}

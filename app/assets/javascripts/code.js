@@ -99,6 +99,28 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         this.append($ab);
 
         $ta.focus();
+        $("#annotateButton").on('click',function(){
+            var $ab = $("#annotate-box");
+            if ($ab.attr('disabled') == 'disabled') return false;
+            var t = $ab.val().trim();
+            var s = $ab.data('s'), e = $ab.data('e');
+            if (t == ''){
+                $ab.focus();
+            }else{
+                $ab.attr('disabled','disabled');
+                $.post($('#annotation_path').val(), {
+                    annotation:{
+                        annotable_id: _cid,
+                        annotable_type: "StdCodingAnswer",
+                        text: t,
+                        line_start: s,
+                        line_end: e
+                    }}, function(s){
+                    $ab.attr('disabled',false).val('');
+                    parseComments(s);
+                });
+            }
+        });
     }
     function createComment(start, end, callback,temporary) {
         if (_vt!='view')return;
@@ -269,29 +291,29 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         x();
     }
 
-    function parseComments(comments){
+    function parseComments(annotations){
         if (typeof Comment != 'undefined'){
-            Comment.parseComment(comments, _cid);
+            Comment.parseComment(annotations, _cid);
         }
-        for (var i=0;i<comments.length;++i){
-            if (typeof _annotate_ids[comments[i].id] != 'undefined') continue;
-            _annotate_ids[comments[i].id] = true;
-            if (comments[i].s == -1){
+        for (var i=0;i<annotations.length;++i){
+            if (typeof _annotate_ids[annotations[i].id] != 'undefined') continue;
+            _annotate_ids[annotations[i].id] = true;
+            if (annotations[i].s == -1){
             }else{
-                createComment(comments[i].s, comments[i].e, function(){
+                createComment(annotations[i].s, annotations[i].e, function(){
                     if (this.is('#temporary-comment-box')){
                         this.attr('id', '');
-                        _comments.push( {s: comments[i].s-1, e: comments[i].e-1} );
+                        _comments.push( {s: annotations[i].s-1, e: annotations[i].e-1} );
                     }
                     if (this.find('.annotate-area').size() == 0){
                         this.prepend('<ul class="annotate-area code-comment-box">');
                     }
                     var $li = $('<li class="comment"/>');
                     $li
-                        .append('<img class="small-profile-pic" src="http://graph.facebook.com/'+comments[i].uid+'/picture" width="32" height="32" />')
-                        .append('<div class="timestamp">'+comments[i].t+'</div>')
-                        .append('<div class="commentor">'+comments[i].u+'</div>')
-                        .append('<div class="comment">'+comments[i].c.nl2br()+'</div>')
+                        .append('<img class="small-profile-pic" src="'+annotations[i].p+'" width="32" height="32" />')
+                        .append('<div class="timestamp">'+annotations[i].t+'</div>')
+                        .append('<div class="commentor">'+annotations[i].u+'</div>')
+                        .append('<div class="comment">'+annotations[i].c.nl2br()+'</div>')
                         .appendTo(this.find('.annotate-area'));
                     jfdiFormat($li.find('.comment').get(0));
                 });
@@ -299,9 +321,13 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
         checkScroll.call($wrapper);
     }
+
     function refreshComments(){
-        $.post(makelink('code/_get_comments'), {cid: code_id}, function(s){
-            s = JSON.parse(s);
+        $.get($('#annotation_path').val(), {
+            annotation:{
+            annotable_id: _cid,
+            annotable_type: "StdCodingAnswer"
+        }}, function(s){
             parseComments(s);
             setTimeout(refreshComments, 4000);
         });
@@ -375,7 +401,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
 
         //$(window).unload( function () {  } );
     }
-    setTimeout(refreshComments,4000);
+    refreshComments();
 
     $("#commentButton").click(function(){
         if ($("#comment-ta").attr('disabled') == 'disabled') return false;
@@ -392,22 +418,6 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
     });
 
-    $("#annotateButton").on('click',function(){
-        var $ab = $("#annotate-box");
-        if ($ab.attr('disabled') == 'disabled') return false;
-        var t = $ab.val().trim();
-        var s = $ab.data('s'), e = $ab.data('e');
-        if (t == ''){
-            $ab.focus();
-        }else{
-            $ab.attr('disabled','disabled');
-            $.post(makelink('code/_annotate'), {cid: _cid, comment: t, s: s, e: e}, function(s){
-                s = JSON.parse(s);
-                $ab.attr('disabled',false).val('');
-                parseComments(s);
-            });
-        }
-    });
 
     function fullScreen(){ // currently not working
         $wrapper.wrap('<div id="wrapper-container" />');

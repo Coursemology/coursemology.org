@@ -92,6 +92,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :comments
 
+    resources :annotations
+
     get "stats" => "stats#general"
 
     get "stats/missions/:mission_id" => "stats#mission", as: :stats_mission

@@ -46,21 +46,25 @@ $(document).ready(function() {
 
     $('.colorpicker').colorpicker();
 
-    var _jfdiFormatFunc = function(i, d){
-//        console.log(i)
-//        console.log($(d))
-//        console.log($(d).text())
-        if ($(d).data('jfdiFormatted')) return;
-        $(d).data('jfdiFormatted', true);
-        if($(d).hasClass("pythonCode")){
-            CodeMirror.runMode($(d).text(), "python", d);
-        }
-    }
-    function jfdiFormat(element){
-        $(element).find(".jfdiCode").each(_jfdiFormatFunc);
-    }
+
     $(function(){
         $(".jfdiCode").each(_jfdiFormatFunc);
     });
 
 });
+
+var _jfdiFormatFunc = function(i, d){
+
+    if ($(d).data('jfdiFormatted')) return;
+    $(d).data('jfdiFormatted', true);
+    if($(d).hasClass("pythonCode")){
+        CodeMirror.runMode($(d).text(), "python", d);
+    }
+}
+function jfdiFormat(element){
+    $(element).find(".jfdiCode").each(_jfdiFormatFunc);
+}
+
+String.prototype.nl2br = function(){
+    return (this + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
+};

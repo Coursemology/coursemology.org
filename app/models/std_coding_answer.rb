@@ -7,6 +7,7 @@ class StdCodingAnswer < ActiveRecord::Base
   belongs_to :qn, class_name: "CodingQuestion"
 
   has_many :comments, as: :commentable
+  has_many :annotations, as: :annotable
 
   has_one :answer_grading, as: :student_answer, dependent: :destroy
 

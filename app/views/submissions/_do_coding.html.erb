@@ -12,24 +12,14 @@
   <div class="span2"></div>
 </div>
 <input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= qn.id %>">
+<input type="hidden" id="annotation_path" value="/courses/<%=@course.id%>/annotations">
 <style>
     .CodeMirror-scroll {
         height: 495px !important;
     }
     pre {
-        /* Reset some styles that the rest of the page might have set */
-        /*-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;*/
-        /*border-width: 0;*/
         background: transparent;
-        /*font-family: inherit;*/
-        /*font-size: inherit;*/
-        /*margin: 0;*/
         white-space: pre;
-        /*line-height: inherit;*/
-        /*color: inherit;*/
-        /*z-index: 2;*/
-        /*position: relative;*/
-        /*overflow: visible;*/
         font-family:  monospace;
     }
 
@@ -41,12 +31,15 @@
         text-align: left;
         color: inherit;
     }
+    #annotate-area {
+        color: #ffffff;
+    }
 </style>
 <script>
     var _source_code = <%= answer ? raw(answer.code.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
     $('#code_<%= qn.id %>').val(_source_code);
 
-    var _cid = <%= qn.id %>;
+    var _cid = <%= answer ? answer.id : qn.id %>;
     var _c = [];
     var _ca = true;
     var _cc = true;

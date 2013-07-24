@@ -1,6 +1,8 @@
 class UserCourse < ActiveRecord::Base
   acts_as_paranoid
 
+  include Rails.application.routes.url_helpers
+
   attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
 
   before_create :init
@@ -179,5 +181,9 @@ class UserCourse < ActiveRecord::Base
       tutor_courses = self.course.lect_courses
     end
     tutor_courses
+  end
+
+  def get_path
+    course_user_course_path(self.course, self)
   end
 end
