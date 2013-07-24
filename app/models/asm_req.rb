@@ -16,8 +16,6 @@ class AsmReq < ActiveRecord::Base
       last_sbm = TrainingSubmission.find_by_std_course_id_and_training_id(user_course.id, asm_id)
     when Mission
       last_sbm = Submission.find_by_std_course_id_and_mission_id(user_course.id, asm_id)
-    when Quiz
-      last_sbm = QuizSubmission.find_by_std_course_id_and_quiz_id(user_course.id, asm_id)
     end
 
     if last_sbm

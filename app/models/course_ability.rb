@@ -28,8 +28,8 @@ class CourseAbility
       can :share, Course
       can :participate, Course
       can :duplicate, Course
-      can :read, [Mission, Training, Quiz]
-      can :view_detail, [Mission, Training, Quiz]
+      can :read, [Mission, Training]
+      can :view_detail, [Mission, Training]
       can :read, Tag
       can :read, [Level, Achievement, Title, Reward]
       can :students, Course
@@ -40,9 +40,9 @@ class CourseAbility
       # the current course
       can :manage, :all
       can :populate, Level
-      can :see_all, [Submission, TrainingSubmission, QuizSubmission]
+      can :see_all, [Submission, TrainingSubmission]
       can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training, Quiz]
+      can :view_detail, [Mission, Training]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
@@ -60,9 +60,6 @@ class CourseAbility
       can :read, Mission, Mission.opened do |mission|
         mission.open_at <= Time.now
       end
-      can :read, Quiz, Quiz.opened do |quiz|
-        quiz.open_at <= Time.now
-      end
       can :read, Training, Training.opened do |training|
         training.open_at <= Time.now
       end
@@ -71,12 +68,12 @@ class CourseAbility
       can :read, [Level, Achievement, Title, Reward]
       can :students, Course
 
-      can :manage, [Submission, TrainingSubmission, QuizSubmission], std_course_id: user_course.id
+      can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
 
       cannot :modify, TrainingSubmission
 
-      cannot :see_all, [Submission, TrainingSubmission, QuizSubmission]
+      cannot :see_all, [Submission, TrainingSubmission]
     end
   end
 end

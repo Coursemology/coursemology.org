@@ -66,9 +66,6 @@ class CodingQuestionsController < ApplicationController
         if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
                                     notice: 'New question added.' }
-        elsif @asm.is_a?(Quiz)
-          format.html { redirect_to course_quiz_url(@course, @quiz),
-                                    notice: 'New question added.' }
         end
       else
         format.html { render action: "new" }
@@ -89,11 +86,7 @@ class CodingQuestionsController < ApplicationController
         if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
                                     notice: 'Question updated.' }
-        elsif @asm.is_a?(Quiz)
-          format.html { redirect_to course_quiz_url(@course, @quiz),
-                                    notice: 'Question updated.' }
         end
-
       else
         format.html { render action: "edit" }
       end

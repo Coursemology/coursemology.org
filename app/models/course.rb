@@ -9,7 +9,6 @@ class Course < ActiveRecord::Base
   has_many :announcements, dependent: :destroy
   has_many :user_courses, dependent: :destroy
   has_many :trainings, dependent: :destroy
-  has_many :quizzes, dependent: :destroy
 
   has_many :users, through: :user_courses
 
@@ -17,7 +16,6 @@ class Course < ActiveRecord::Base
 
   has_many :submissions, through: :user_courses
   has_many :training_submissions, through: :user_courses
-  has_many :quiz_submissions, through: :user_courses
 
   has_many :activities, dependent: :destroy
 
@@ -35,7 +33,7 @@ class Course < ActiveRecord::Base
   has_many :file_uploads, as: :owner
 
   def asms
-     missions + quizzes + trainings
+     missions + trainings
   end
 
   def lect_courses

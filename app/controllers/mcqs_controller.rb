@@ -1,9 +1,7 @@
 class McqsController < ApplicationController
   load_and_authorize_resource :course
   load_resource :training, through: :course
-  # load_resource :quiz, through: :course
   load_and_authorize_resource :mcq, through: :training
-  # may need to authorize @quiz || @training separately
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter :init_asm
 
@@ -61,9 +59,6 @@ class McqsController < ApplicationController
         if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
                         notice: 'New question added.' }
-        elsif @asm.is_a?(Quiz)
-          format.html { redirect_to course_quiz_url(@course, @quiz),
-                        notice: 'New question added.' }
         end
       else
         format.html { render action: "new" }
@@ -83,9 +78,6 @@ class McqsController < ApplicationController
         @asm.update_grade
         if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
-                        notice: 'Question updated.' }
-        elsif @asm.is_a?(Quiz)
-          format.html { redirect_to course_quiz_url(@course, @quiz),
                         notice: 'Question updated.' }
         end
 

@@ -63,8 +63,7 @@ class ApplicationController < ActionController::Base
       if can? :see_all, Submission
         # lecturers see number of new submissions of all students in the course
         all_sbms = @course.submissions.accessible_by(current_ability) +
-                @course.training_submissions.accessible_by(current_ability) +
-                @course.quiz_submissions.accessible_by(current_ability)
+                @course.training_submissions.accessible_by(current_ability)
         unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
         counts[:submissions] = unseen_sbms.count
       end

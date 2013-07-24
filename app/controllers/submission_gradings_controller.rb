@@ -7,7 +7,6 @@ class SubmissionGradingsController < ApplicationController
   before_filter :load_general_course_data, only: [:new, :edit]
 
   # note: it only handles view & grading of missions
-  # checkout quiz_submission for quiz submission grading
 
   def new
     @qadata = {}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724093301) do
+ActiveRecord::Schema.define(:version => 20130724154720) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -334,36 +334,6 @@ ActiveRecord::Schema.define(:version => 20130724093301) do
   end
 
   add_index "questions", ["creator_id"], :name => "index_questions_on_creator_id"
-
-  create_table "quiz_submissions", :force => true do |t|
-    t.integer  "std_course_id"
-    t.integer  "quiz_id"
-    t.datetime "open_at"
-    t.datetime "submit_at"
-    t.integer  "attempt"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.integer  "final_grading_id"
-    t.time     "deleted_at"
-  end
-
-  create_table "quizzes", :force => true do |t|
-    t.integer  "course_id"
-    t.string   "title"
-    t.text     "description",   :limit => 255
-    t.integer  "exp"
-    t.integer  "max_grade"
-    t.datetime "open_at"
-    t.datetime "close_at"
-    t.integer  "pos"
-    t.integer  "attempt_limit"
-    t.integer  "creator_id"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-  end
-
-  add_index "quizzes", ["course_id"], :name => "index_quizzes_on_course_id"
-  add_index "quizzes", ["creator_id"], :name => "index_quizzes_on_creator_id"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"

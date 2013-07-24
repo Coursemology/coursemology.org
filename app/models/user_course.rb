@@ -23,17 +23,14 @@ class UserCourse < ActiveRecord::Base
 
   has_many :submissions, foreign_key: "std_course_id"
   has_many :training_submissions, foreign_key: "std_course_id"
-  has_many :quiz_submissions, foreign_key: "std_course_id"
 
   has_many :std_answers, foreign_key: "std_course_id"
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
-  has_many :seen_quizzes, through: :seen_stuff, source: :obj, source_type: "Quiz"
   has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
   has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
   has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
-  has_many :seen_quiz_submissions, through: :seen_stuff, source: :obj, source_type: "QuizSubmission"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
 
   has_many :notifications, foreign_key: "target_course_id"
@@ -70,7 +67,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_seen_sbms
-    seen_sbms = seen_submissions + seen_training_submissions + seen_quiz_submissions
+    seen_sbms = seen_submissions + seen_training_submissions
     return seen_sbms
   end
 

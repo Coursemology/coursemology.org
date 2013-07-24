@@ -56,7 +56,7 @@ module Duplication
       clone_map = {}
 
       # clone the entity
-      (course.missions + course.trainings + course.quizzes).each do |asm|
+      (course.missions + course.trainings).each do |asm|
         clone_asm = duplicate_asm_no_log(asm)
         clone_asm.course = clone
         clone_asm.save
