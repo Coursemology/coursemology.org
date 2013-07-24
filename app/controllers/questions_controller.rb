@@ -36,7 +36,7 @@ class QuestionsController < ApplicationController
     respond_to do |format|
       if @question.update_attributes(params[:question])
         @mission.update_grade
-        format.html { redirect_to course_mission_question_url(@course, @mission, @question),
+        format.html { redirect_to course_mission_url(@course, @mission),
                       notice: 'Question has been updated.' }
         format.json { head :no_content }
       else

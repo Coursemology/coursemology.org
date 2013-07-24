@@ -12,13 +12,30 @@ class SubmissionGradingsController < ApplicationController
   def new
     @qadata = {}
 
-    @mission.questions.each_with_index do |q, i|
-      @qadata[q.id] = { q: q, i: i + 1 }
+    #@mission.questions.each_with_index do |q, i|
+    #  @qadata[q.id] = { q: q, i: i + 1 }
+    #end
+    #
+    #@submission.std_answers.each do |sa|
+    #  @qadata[sa.question_id][:a] = sa
+    #end
+
+    @mission.get_all_questions.each_with_index do |q,i|
+      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
 
-    @submission.std_answers.each do |sa|
-      @qadata[sa.question_id][:a] = sa
+    @submission.get_all_answers.each do |sa|
+      qn = sa.qn
+      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
     end
+
+    #if @grading
+    #  @grading.answer_gradings.each do |ag|
+    #    qn = ag.student_answer.qn
+    #    @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
+    #  end
+    #end
+
   end
 
   def create
@@ -31,16 +48,17 @@ class SubmissionGradingsController < ApplicationController
     end
     @submission_grading.grader = current_user
     if @submission_grading.save
+      @submission.set_graded
       @submission.final_grading = @submission_grading
       @submission_grading.update_exp_transaction
       @submission.save
       UserMailer.delay.new_grading(
-        @submission.std_course.user,
-        course_mission_submission_url(@course, @mission, @submission)
+          @submission.std_course.user,
+          course_mission_submission_url(@course, @mission, @submission)
       )
       respond_to do |format|
         format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
-                      notice: "Grading has been recorded." }
+                                  notice: "Grading has been recorded." }
       end
     else
       respond_to do |format|
@@ -52,17 +70,18 @@ class SubmissionGradingsController < ApplicationController
   def edit
     @qadata = {}
 
-    @mission.questions.each do |q|
-      @qadata[q.id] = { q: q }
+    @mission.get_all_questions.each_with_index do |q,i|
+      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
 
-    @submission.std_answers.each do |sa|
-      @qadata[sa.question_id][:a] = sa
+    @submission.get_all_answers.each do |sa|
+      qn = sa.qn
+      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
     end
 
-    # student answer must be a StdAnswer
     @submission_grading.answer_gradings.each do |ag|
-      @qadata[ag.student_answer.question_id][:g] = ag
+      qn = ag.student_answer.qn
+      @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
     end
   end
 
@@ -79,7 +98,7 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.update_exp_transaction
       respond_to do |format|
         format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
-                      notice: "Grading has been recorded." }
+                                  notice: "Grading has been recorded." }
       end
     else
       respond_to do |format|

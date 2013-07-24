@@ -28,7 +28,14 @@
     <h3>Question <%= qa[:i] %>:</h3>
     <p><%= qa[:q].description.html_safe %></p>
     <h3>Answer:</h3>
-    <p><%= qa[:a].text.html_safe %></p>
+    <% if qa[:q].class == CodingQuestion %>
+        <%= render partial: "do_coding",
+                   locals: {answer: qa[:a],
+                            qn: qa[:q],
+                            mode:"view"}%>
+    <% else %>
+        <p><%= qa[:a].text.html_safe %></p>
+    <% end %>
     <% if @grading %>
         <% if qa[:g] %>
             <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
@@ -44,3 +51,4 @@
                          origin: course_mission_submission_url(@course, @mission, @submission) } %>
     <hr/>
 <% end %>
+

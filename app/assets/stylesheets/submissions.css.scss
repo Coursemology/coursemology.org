@@ -1,0 +1,190 @@
+//html, body, div, span, object, iframe, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite,
+//code,del, dfn, em, img, ins, kbd, q, samp,small, strike, strong, sub, sup, tt, var,b, i, dl, dt, dd, ol, ul, li,fieldset,
+//form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td  {margin: 0;padding: 0;border: 0;vertical-align: baseline;text-align: left;}
+//address, cite, q, dfn {font-style: normal;}
+//h1, h2, h3, h4, h5, h6, th {font-weight: normal;}
+//q, blockquote {quotes: none;}
+//q:after, q:before,blockquote:after, blockquote:before {content: "";content: none;}
+//table {border-collapse: collapse;border-spacing: 0;}
+//th, td {vertical-align: top;}
+//th {text-align: left;}
+//button, input, select, textarea {font: inherit;text-align:justify;}
+//ul {list-style-type: none;}
+//.clearer {clear: both; height: 0px;}
+//hr { border: 1px solid black; border-width: 1px 0 0 0;}
+//.hide {display: none;}
+//.fh { height: 100%; }
+
+.code-submission a, ins, del {
+  text-decoration: none;
+  color: black;
+}
+
+//#source-code .CodeMirror-scroll {
+//  height: 470px !important;
+//}
+
+body.fullscreen { overflow: hidden !important;}
+
+
+#breadcrumbs {list-style-type: none; margin: 5px 0 5px 0;}
+#breadcrumbs li { display: inline; margin: 5px 5px 5px 0;}
+
+#code-list{ width: 100%; border:1px solid #353535; margin: 0 0 10px 0;}
+#code-list .icon {width: 26px;}
+#code-list thead { background-color: #353535;}
+#code-list thead th { padding: 4px;}
+
+#code-list tbody { background-color: #666;}
+#code-list tbody tr { height: 26px; border-top: 1px solid #353535;}
+#code-list tbody td { line-height: 26px;}
+
+#code-list .empty { text-align: center;}
+#code-list tbody .folder .icon { background: url(img/folder.png) 6px 4px no-repeat;}
+#code-list tbody .scheme .icon { background: url(img/scheme.png) 6px 4px no-repeat;}
+#code-list tbody .javascript .icon { background: url(img/js.png) 6px 4px no-repeat;}
+
+
+input.filename {width: 500px; line-height: 18px;}
+input.foldername { font-size: 10px; padding: 0px; line-height: 10px; width: 90%;}
+input.button {
+  background-color:#353535;
+  border:1px solid #454545;
+  border-top: 1px solid #555;
+  border-left: 1px solid #555;
+  font-family:"Century Gothic","Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+  text-decoration:none;
+  font-size: 11px;
+  color:white;
+  cursor:pointer;
+  line-height: 18px;
+  padding:2px 10px 2px 10px; /* Links */
+}
+
+
+//hr { border: 1px solid #353535; border-width: 1px 0 0 0; }
+
+div.error { color: #f55;}
+
+.code-wrapper {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 500px;
+  margin: 0 0 5px 0;
+}
+
+.code-wrapper.fullscreen {
+  z-index: 20000;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  height: auto !important;
+  margin: 0;
+}
+.static-code {
+  width: auto;
+  min-width: 100%;
+}
+.static-code .lines {
+  width: 27px;
+  background-color: white;
+}
+.static-code .lines .line-number {
+  position: absolute;
+  text-align: right;
+  width: 22px;
+  background-color: #353535;
+  color: #fff;
+  padding-right: 3px;
+  font-size: 9px;
+  cursor: pointer;
+  font-family: Arial,
+  Helvetica, sans-serif;
+}
+.static-code .lines .line-number.hover {
+  background-color: #000;
+}
+.static-code .lines .line-number.annotate { background-color: #300;}
+.static-code .source {
+  padding: 2px 0 3px 27px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.highlight {background-color: #555;}
+.annotate { background-color: #353535;}
+.annotate.hover {background-color: #555;}
+.lines-highlight { position: absolute; background-color: #353535; z-index: 5 !important; cursor: pointer;}
+.lines-highlight.hover { background-color: #555; }
+
+.comment-box {
+  position: absolute;
+  right: 0px;
+  min-width:250px;
+  background-color: #353535;
+  z-index: 12;
+  max-height: 100px;
+  overflow: hidden;
+  padding: 3px 8px 3px 8px;
+}
+.comment-box.hover { z-index: 14; background-color: #555; }
+.comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #4D4D4F; max-height: none; border-radius: 6px;}
+
+.annotate-box {
+  width: 100%;
+  height: 100px;
+  padding: 0px;
+}
+
+
+.mission-pending {margin-top: 20px; text-align: right;}
+.mission-box {background-color: #353535; margin-top: 3px; padding: 5px; display: block; text-decoration: none; position: relative; cursor:pointer;}
+.mission-box:hover {background-color: #151515;}
+.mission-box .title { font-size: 18px; line-height: 24px; color: #FF9E59}
+.mission-box label { display: inline-block; width: 60px;}
+
+
+#code-comment {
+
+}
+.code-comment-box li.comment, .code-comment-box li.hidden { background-color: #353535; margin-top: 3px; padding: 5px;}
+.code-comment-box li.textarea {background: transparent; padding: 0px; margin-top: 3px;}
+.code-comment-box li .commentor { float: left; margin-right: 8px;}
+.code-comment-box li .timestamp { font-size: 0.85em; }
+.code-comment-box li .small-profile-pic {float: left; margin-right: 5px;}
+.code-comment-box li .hidden {font-style: italic;}
+.code-comment-box li .comment {margin-left: 38px;}
+.code-annotation { margin-left: 30px;}
+.code-annotation ul.code-comment-box { margin-left: 15px;}
+
+.annotate-code-lines { position: relative;}
+.annotate-code-lines pre.line { margin-left: 21px; }
+.annotate-code-lines .line-numbers { font-size: 0.8em; background-color: #151515; color: white; float: left; width: 19px; position: absolute; top: 0px; left: 0px;}
+
+.active .annotate-area { max-height: 450px; overflow: auto;}
+
+
+#permissions { list-style-type: none; }
+#permissions li { float: right; padding: 3px 10px 3px 10px; border:1px solid #353535; background: #555; border-bottom: 0px; cursor: pointer; color: #333;}
+#permissions li.hover {color: white;}
+#permissions .private {background: #433; border-left: 0px;}
+#permissions .public {background: #343;}
+#permissions .private.sel {background: #d22; color: white;}
+#permissions .public.sel {background: #2a2; color: white;}
+
+#delete-code {width: 21px; height: 20px; display: block; float: right; background: url(img/trash.png); margin: 2px 12px 0 0;}
+//#fullscreen-link {width: 20px; height: 20px; display: block; float: right; margin: 2px 5px 0 0;}
+//#toggle-comment {width: 20px; height: 20px; display: block; float: right; margin: 2px 5px 0 0;}
+//#toggle-comment.hide {background-position: -20px 0;}
+//#select-all-code {width: 20px; height: 20px; display: block; float: right; margin: 2px 5px 0 0;}
+
+.top-link {margin-bottom: 15px;font-size:1.2em;}
+.top-link a {font-weight: normal;}
+.top-link a.active { font-weight: bold;}
+
+#page-numbers {list-style-type: none; text-align: center; margin: 10px 0 0 0;}
+#page-numbers li {display:inline-block; margin: 0 0 0 5px;}

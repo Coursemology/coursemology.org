@@ -1,0 +1,107 @@
+<div class="row-fluid">
+  <div class="code-submission span10">
+    <% if mode == "view" %>
+        <div class="btn-group" style="float: right" >
+          <a class="btn" href="#" id="select-all-code" title="Select entire code"><i class="icon-file"></i></a>
+          <a class="btn" href="#" id="toggle-comment" title="Toggle Annotations"><i class="icon-comment"></i></a>
+          <a class="btn" href="#" id="fullscreen-link" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
+        </div>
+    <% end %>
+    <div id="source-code" class="code-wrapper cos_code"></div>
+  </div>
+  <div class="span2"></div>
+</div>
+<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= qn.id %>">
+<style>
+    .CodeMirror-scroll {
+        height: 495px !important;
+    }
+    pre {
+        /* Reset some styles that the rest of the page might have set */
+        /*-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;*/
+        /*border-width: 0;*/
+        background: transparent;
+        /*font-family: inherit;*/
+        /*font-size: inherit;*/
+        /*margin: 0;*/
+        white-space: pre;
+        /*line-height: inherit;*/
+        /*color: inherit;*/
+        /*z-index: 2;*/
+        /*position: relative;*/
+        /*overflow: visible;*/
+        font-family:  monospace;
+    }
+
+    pre, div {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        vertical-align: baseline;
+        text-align: left;
+        color: inherit;
+    }
+</style>
+<script>
+    var _source_code = <%= answer ? raw(answer.code.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
+    $('#code_<%= qn.id %>').val(_source_code);
+
+    var _cid = <%= qn.id %>;
+    var _c = [];
+    var _ca = true;
+    var _cc = true;
+    var _vt = '<%= mode %>';
+    //        var _vt = 'view'
+    var _language = "python";
+    $(function(){
+        var cv = CodeViewer.init($("#source-code"), _source_code, 'molokai', _cid, _vt=='edit');
+//        cv.parseComments(_c);
+
+//        $("#permissions li").hover(function(){
+//            $(this).addClass('hover');
+//        }, function(){
+//            $(this).removeClass('hover');
+//        }).bind('click', function(){
+//                    if ($(this).hasClass('sel')) return;
+//                    $("#permissions li").removeClass('sel');
+//                    p = $(this).hasClass('public') ? 'public' : 'private';
+//                    $(this).addClass('sel');
+//
+//                    $.post(makelink('code/_set_permission'), {cid: _cid, p: p}, function(s){
+//                    });
+//                });
+
+        $("#delete-code").click(function(){
+            return (confirm('Are you sure you want to delete this awesome source code?'));
+        });
+        $("#fullscreen-link").click(function(){
+            cv.fullScreen();
+            return false;
+        });
+        $("#toggle-comment").click(function(){
+            var $this = $(this);
+            if ($this.hasClass('disabled')){
+                $this.removeClass("disabled");
+                cv.showAnnotation();
+            }else{
+                cv.hideAnnotation();
+                $this.addClass('disabled');
+            }
+            return false;
+        });
+        $("#select-all-code").click(function(){
+            cv.selectAll();
+            return false;
+        });
+
+        if (typeof Comment != 'undefined'){
+            Comment.init(_cid,_cc);
+        }
+
+        $('#mission_submit').click(function(e){
+            if(!confirm("THIS ACTION IS IRREVERSIBLE\n\nAre you sure you want to submit? You will no longer be able to amend your submission!")){
+                e.preventDefault();
+            }
+        });
+    });
+</script>

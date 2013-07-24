@@ -3,7 +3,7 @@
       <div class="control-group">
         <%= f.label :Language, :class => 'control-label' %>
         <div class="controls">
-          <select class="lang" name="language" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
+          <select class="lang" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
         </div>
       </div>
 
@@ -27,22 +27,22 @@
         </div>
       </div>
 
-      <div id="path_dooptions">
+      <div class="cos_code" id="path_dooptions">
         <h3>Options</h3>
         <div class="control-group">
           <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>
           <div class="controls">
-            <input type="text" id="timeLimit" value="1" name="timeLimit" onchange="path.changeTimeLimit(this.value);" />
+            <input type="text" id="timeLimit" value="1"  onchange="path.changeTimeLimit(this.value);" />
           </div>
         </div>
         <div class="control-group">
           <%= f.label :memoryLimit,"Memory Limit (mb)", class:'control-label' %>
           <div class="controls">
-            <input type="text" id="memoryLimit" value="2" name="memoryLimit" onchange="path.changeMemoryLimit(this.value);" />
+            <input type="text" id="memoryLimit" value="2"  onchange="path.changeMemoryLimit(this.value);" />
           </div>
         </div>
-        <div>Pre-filled code:</div><textarea name="prefilled" rows="4" id="prefilled"></textarea>
-        <div>Included code (optional, hidden):</div><textarea name="included" rows="2" id="included"></textarea> <br />
+        <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
+        <div>Included code (optional, hidden):</div><textarea  rows="2" id="included"></textarea> <br />
       </div>
       <div id="path_testcases">
         <h3>Test Cases</h3>

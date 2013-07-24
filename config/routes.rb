@@ -42,6 +42,7 @@ JfdiAcademy::Application.routes.draw do
     resources :user_courses
 
     resources :missions do
+      resources :mission_coding_questions, as: :coding_questions
       resources :questions
       resources :submissions do
         resources :submission_gradings

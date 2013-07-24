@@ -79,4 +79,20 @@ class TrainingSubmission < ActiveRecord::Base
     subm_grading.save
     return grade
   end
+
+  def status
+    if self.submission_gradings.count > 0
+      "Auto graded"
+    else
+      "Pending"
+    end
+  end
+
+  def graded?
+    if self.submission_gradings.count > 0
+      true
+    else
+      false
+    end
+  end
 end

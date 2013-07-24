@@ -33,6 +33,7 @@
 //= require codemirror
 //= require codemirror/modes/python
 //= require codemirror/addons/runmode/runmode
+//= require codemirror/addons/edit/matchbrackets
 
 $(document).ready(function() {
 

@@ -24,10 +24,15 @@ class StdAnswer < ActiveRecord::Base
       course = sbm.std_course.course
       ucs += course.lect_courses
     end
-    return ucs.uniq { |uc| uc.id }
+     ucs.uniq { |uc| uc.id }
   end
 
   def get_url
-    return sbm_answers.first.sbm.get_url
+     sbm_answers.first.sbm.get_url
   end
+
+  def qn_id
+    self.question_id
+  end
+
 end

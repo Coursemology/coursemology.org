@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130723141846) do
+ActiveRecord::Schema.define(:version => 20130724093301) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -450,10 +450,11 @@ ActiveRecord::Schema.define(:version => 20130723141846) do
     t.text     "code"
     t.integer  "student_id"
     t.integer  "qn_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.boolean  "is_correct"
     t.integer  "std_course_id"
+    t.time     "last_commented_at"
   end
 
   add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"
@@ -510,6 +511,7 @@ ActiveRecord::Schema.define(:version => 20130723141846) do
     t.datetime "updated_at",       :null => false
     t.integer  "final_grading_id"
     t.time     "deleted_at"
+    t.string   "status"
   end
 
   add_index "submissions", ["final_grading_id"], :name => "index_submissions_on_final_grading_id"

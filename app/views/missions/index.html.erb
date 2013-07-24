@@ -4,115 +4,121 @@
 </div>
 
 <% if can? :manage, Mission %>
-  <%= link_to t('.new', :default => t("helpers.links.new")),
-              new_course_mission_path(@course),
-              :class => 'btn btn-primary' %>
+    <%= link_to t('.new', :default => t("helpers.links.new")),
+                new_course_mission_path(@course),
+                :class => 'btn btn-primary' %>
 <% end %>
 
 <table class="table table-hover assignments">
   <thead>
-    <tr>
-      <th>Mission</th>
-      <th width="10%">Tag</th>
-      <th width="5%">Max Exp</th>
-      <th width="10%">Requirement for</th>
-      <% if can? :view_detail, Mission %>
+  <tr>
+    <th>Mission</th>
+    <th width="10%">Tag</th>
+    <th width="5%">Max Exp</th>
+    <th width="10%">Requirement for</th>
+    <% if can? :view_detail, Mission %>
         <th width="10%">Time till open</th>
-      <% end %>
-      <th width="10%">Time Left</th>
-      <% if curr_user_course.id && can?(:manage, Submission) %>
+    <% end %>
+    <th width="10%">Time Left</th>
+    <% if curr_user_course.id && can?(:manage, Submission) %>
         <th width="10%"></th>
-      <% end %>
-      <% if can?(:view_detail, Mission) %>
+    <% end %>
+    <% if can?(:view_detail, Mission) %>
         <th width="10%"></th>
-      <% end %>
-    </tr>
+    <% end %>
+  </tr>
   </thead>
 
   <tbody>
-    <% @missions.each do |mission| %>
+  <% @missions.each do |mission| %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <td>
           <% if can? :manage, Mission %>
-            <%= link_to course_mission_path(@course, mission) do %>
+              <%= link_to course_mission_path(@course, mission) do %>
+                  <h4><%= mission.title %>
+                    <% if @is_new[mission.id] %>
+                        <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
+                    <% end %>
+                  </h4>
+              <% end %>
+          <% else %>
               <h4><%= mission.title %>
                 <% if @is_new[mission.id] %>
-                  <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
+                    <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
                 <% end %>
               </h4>
-            <% end %>
-          <% else %>
-            <h4><%= mission.title %>
-              <% if @is_new[mission.id] %>
-                <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
-              <% end %>
-            </h4>
           <% end %>
         </td>
         <td>
           <% mission.tags.each do |tag| %>
-            <div class="asm-tag">
-              <%= link_to tag.name, course_tag_path(@course, tag) %>
-            </div>
+              <div class="asm-tag">
+                <%= link_to tag.name, course_tag_path(@course, tag) %>
+              </div>
           <% end %>
         </td>
         <td><%= mission.exp %></td>
         <td>
           <% mission.as_requirements.each do |req| %>
-            <a href='#' title="<%= req.obj.title %>">
-              <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
-            </a>
+              <a href='#' title="<%= req.obj.title %>">
+                <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
+              </a>
           <% end %>
         </td>
 
         <% if can? :view_detail, Mission %>
-          <td>
-            <% if mission.open_at > Time.now %>
-              <%= time_ago_in_words(mission.open_at) %>
-            <% else %>
-              ----
-            <% end %>
-          </td>
+            <td>
+              <% if mission.open_at > Time.now %>
+                  <%= time_ago_in_words(mission.open_at) %>
+              <% else %>
+                  ----
+              <% end %>
+            </td>
         <% end %>
 
         <td>
           <% if mission.close_at > Time.now %>
-            <%= time_ago_in_words(mission.close_at) %>
+              <%= time_ago_in_words(mission.close_at) %>
           <% else %>
-            ----
+              ----
           <% end %>
         </td>
         <% if curr_user_course.id && can?(:manage, Submission) %>
-          <td>
-            <% if mission.close_at > Time.now %>
-              <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
-              <% if submission %>
-                <a href="<%= edit_course_mission_submission_path(@course, mission, submission) %>" class="btn">Edit</a>
-              <% else %>
-                <%= link_to 'Attempt',
-                        new_course_mission_submission_path(@course, mission),
-                        class: 'btn btn-success' %>
+            <td>
+              <% if mission.close_at > Time.now %>
+                  <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
+                  <% if submission %>
+                      <% if submission.attempting? %>
+                          <a href="<%= edit_course_mission_submission_path(@course, mission, submission) %>" class="btn">Edit</a>
+                      <% else %>
+                          <%= link_to 'Review',
+                                      submission.get_path,
+                                      class: 'btn btn-info' %>
+                      <% end %>
+                  <% else %>
+                      <%= link_to 'Attempt',
+                                  new_course_mission_submission_path(@course, mission),
+                                  class: 'btn btn-success' %>
+                  <% end %>
               <% end %>
-           <% end %>
-          </td>
+            </td>
         <% end %>
         <% if can? :view_detail, Mission %>
-          <td>
-            <%= link_to course_mission_path(@course, mission), class: 'btn' do %>
-              <i class="icon-external-link"></i>
-            <% end %>
-            <% if can? :manage, Mission %>
-              <%= link_to course_mission_path(@course, mission),
-                          method: :delete,
-                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          class: 'btn btn-danger' do %>
-                 <i class="icon-trash"></i>
+            <td>
+              <%= link_to course_mission_path(@course, mission), class: 'btn' do %>
+                  <i class="icon-external-link"></i>
               <% end %>
-            <% end %>
-          </td>
+              <% if can? :manage, Mission %>
+                  <%= link_to course_mission_path(@course, mission),
+                              method: :delete,
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+              <% end %>
+            </td>
         <% end %>
       </tr>
-    <% end %>
+  <% end %>
   </tbody>
 </table>
 

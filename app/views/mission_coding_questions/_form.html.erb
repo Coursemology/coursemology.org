@@ -1,0 +1,66 @@
+<%= form_for [@course, @mission, @coding_question], :html => { :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area span9 html-editor', :rows => 10 %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :max_grade, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.number_field :max_grade, :class => 'number_field' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :Language, :class => 'control-label' %>
+      <div class="controls">
+        <select class="lang" name="language" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
+      </div>
+    </div>
+    <div>Pre-filled code:</div>
+    <div class="cos_code" id="template_code">
+      <textarea rows="4" id="template"></textarea>
+    </div>
+    <%= f.hidden_field :data %>
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary', id:"m_submit_coding_qn" %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  course_mission_path(@course, @mission), :class => 'btn' %>
+    </div>
+
+    <%= render :partial => "layouts/html_editor" %>
+<% end %>
+
+<script>
+    $(function(){
+        editor = CodeMirror.fromTextArea($("#template").get(0), {
+            mode: {name: "python",
+                version: 3,
+                singleLineStringErrors: false},
+            lineNumbers: true,
+            indentUnit: 4,
+            tabMode: "shift",
+            matchBrackets: true,
+            theme:"molokai"
+        });
+
+        var data = {
+            type: "do",
+            language: "python",
+            prefill: ""
+        }
+
+        $("#m_submit_coding_qn").click(function(e){
+            data.prefill =  editor.getValue();
+            $("#coding_question_data").val(JSON.stringify(data));
+        })
+
+        function initializeQn() {
+            if( $("#coding_question_data").val() != "") {
+                data =  JSON.parse($("#coding_question_data").val());
+                editor.setValue(data.prefill);
+            }
+        }
+        initializeQn();
+    });
+</script>

@@ -12,102 +12,108 @@
 </ul>
 
 <% if can? :see_all, Submission %>
-  <form class="form-horizontal" action="<%= nil %>" method="GET">
-    <h3>Show only Submissions:</h3>
-    <div class="control-group">
-      <label>Assignments</label>
-      <div class="controls">
-        <select name="asm_id">
-          <option value="0">Any</option>
-          <% @all_asm.each do |asm| %>
-            <option value="<%= asm.id %>"
-              <%= "selected" if @selected_asm && asm == @selected_asm %>>
-              <%= asm.get_title %>
-            </option>
-          <% end %>
-        </select>
+    <form class="form-horizontal" action="<%= nil %>" method="GET">
+      <h3>Show only Submissions:</h3>
+      <div class="control-group">
+        <label>Assignments</label>
+        <div class="controls">
+          <select name="asm_id">
+            <option value="0">Any</option>
+            <% @all_asm.each do |asm| %>
+                <option value="<%= asm.id %>"
+                        <%= "selected" if @selected_asm && asm == @selected_asm %>>
+                  <%= asm.get_title %>
+                </option>
+            <% end %>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label>Students</label>
-      <div class="controls">
-        <select name="student">
-          <option value="0">Any</option>
-          <% @student_courses.each do |sc| %>
-            <option name="student" value="<%= sc.id %>"
-              <%= "selected" if @selected_sc && sc.id = @selected_sc.id %>>
-              <%= sc.user.name %>
-            </option>
-          <% end %>
-        </select>
+      <div class="control-group">
+        <label>Students</label>
+        <div class="controls">
+          <select name="student">
+            <option value="0">Any</option>
+            <% @student_courses.each do |sc| %>
+                <option name="student" value="<%= sc.id %>"
+                        <%= "selected" if @selected_sc && sc.id = @selected_sc.id %>>
+                  <%= sc.user.name %>
+                </option>
+            <% end %>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <div class="controls">
-        <button class="btn btn-primary">Submit</button>
+      <div class="control-group">
+        <div class="controls">
+          <button class="btn btn-primary">Submit</button>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
 <% end %>
 
 <table class="table">
   <thead>
-    <tr>
-      <% if can? :see_all, Submission %>
+  <tr>
+    <% if can? :see_all, Submission %>
         <th width="20%">Student</th>
+    <% end %>
+    <th>Mission</th>
+    <th width="20%">Submitted at </th>
+
+    <th width="15%">
+      <% if can? :manage, SubmissionGrading %>
+          Grading
+      <% else %>
+          Status
       <% end %>
-      <th>Mission</th>
-      <th width="20%">Submitted at </th>
-      <th width="15%">Grading</th>
-      <th width="10%">Action</th>
-    </tr>
+    </th>
+
+
+
+    <th width="10%">Action</th>
+  </tr>
   </thead>
   <tbody>
-    <% @sbms.each do |sub| %>
+  <% @sbms.each do |sub| %>
       <tr>
         <% if can? :see_all, Submission %>
-          <td>
-            <%= sub.std_course.user.name %>
-            <% if @unseen.include?(sub) %>
-              <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
-            <% end %>
-          </td>
+            <td>
+              <%= sub.std_course.user.name %>
+              <% if @unseen.include?(sub) %>
+                  <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
+              <% end %>
+            </td>
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.created_at) %> ago</td>
         <% if can? :manage, SubmissionGrading %>
-          <td>
-            <% sub.submission_gradings.each do |sg| %>
-              <%= link_to sg.get_name, sub.get_path %><br/>
+            <td>
+              <% sub.submission_gradings.each do |sg| %>
+                  <%= link_to sg.get_name, sub.get_path %><br/>
+              <% end %>
+            </td>
+            <% if sub.submission_gradings.count == 0 %>
+                <td>
+                  <%= link_to "Evaluate",
+                              sub.get_new_grading_path,
+                              class: "btn btn-primary" %>
+                </td>
+            <% else %>
+                <td>
+                  <%= link_to "View", sub.get_path, class: "btn"%>
+                </td>
             <% end %>
-          </td>
-          <% if sub.submission_gradings.count == 0 %>
-            <td>
-              <%= link_to "Evaluate",
-                  sub.get_new_grading_path,
-                  class: "btn btn-primary" %>
-            </td>
-          <% else %>
-            <td>
-              <%= link_to "View", sub.get_path, class: "btn"%>
-            </td>
-          <% end %>
         <% else %>
-          <td>
-            <%= "Graded" if sub.submission_gradings.count > 0 %>
-          </td>
-          <td>
-            <%= link_to "Review", sub.get_path,
-              class: sub.submission_gradings.count > 0 ? "btn btn-primary" : "btn" %>
-          </td>
+            <td>
+              <%= sub.status %>
+            </td>
+            <td>
+              <%= link_to "Review", sub.get_path,
+                          class: sub.graded? ? "btn btn-primary" : "btn" %>
+            </td>
         <% end %>
-        <% if can? :modify, sub %>
-          <td>
-            <%= link_to "Edit", sub.get_edit_path, class: "btn" %>
-          </td>
-        <% end %>
+
       </tr>
-    <% end %>
+  <% end %>
   </tbody>
 </table>
 

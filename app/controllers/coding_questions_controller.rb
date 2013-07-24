@@ -1,7 +1,6 @@
 class CodingQuestionsController < ApplicationController
   load_and_authorize_resource :course
-  load_resource :training, through: :course
-  # load_resource :quiz, through: :course
+  load_and_authorize_resource :training, through: :course
   load_and_authorize_resource :coding_question, through: :training
 
   before_filter :init_asm

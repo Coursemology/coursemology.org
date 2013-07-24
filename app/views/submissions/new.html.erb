@@ -35,19 +35,5 @@
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @mission}%>
 <hr/>
-<input type="hidden" value="<%= file_uploads_path %>" id="upload_url">
-<%= form_for [@course, @mission, @submission], :html => { :multipart => true, :id => "fileupload" ,:class => 'form-horizontal' } do |f| %>
 
-    <% @questions.each_with_index do |q, i| %>
-        <h3>Question <%= i + 1 %>:</h3>
-        <span><%= q.description.html_safe %></span>
-        <br/><br/>
-        <label><h3>Your answer:</h3></label>
-        <textarea name="answers[<%= q.id %>]" class="span10 html-editor" rows="8"/></textarea>
-        <hr/>
-    <% end %>
-    <br/>
-    <div class="form-actions">
-      <%= f.submit "Submit", :class => 'btn btn-primary' %>
-    </div>
-<% end %>
+<%= render "form" %>

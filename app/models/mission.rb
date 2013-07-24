@@ -14,16 +14,21 @@ class Mission < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :questions, through: :asm_qns, source: :qn, source_type: "Question"
+  has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
   has_many :submissions, dependent: :destroy
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
   def update_grade
-    self.max_grade = self.questions.sum(&:max_grade)
+    self.max_grade = self.questions.sum(&:max_grade) + self.coding_questions.sum(&:max_grade)
     self.save
   end
 
   def get_path
     course_mission_path(course, self)
+  end
+
+  def get_all_questions
+    self.asm_qns.map {|q| q.qn}
   end
 
   def attach_files(files)

@@ -21,9 +21,11 @@ class MissionsController < ApplicationController
   end
 
   def show
-    @questions = @mission.questions
+    @questions = @mission.get_all_questions
     @question = Question.new
     @question.max_grade = 10
+    @coding_question = CodingQuestion.new
+    @coding_question.max_grade = 10
     respond_to do |format|
       format.html # show.html.erb
     end
@@ -59,7 +61,7 @@ class MissionsController < ApplicationController
     end
     respond_to do |format|
       if @mission.save
-        format.html { redirect_to new_course_mission_question_path(@course, @mission),
+        format.html { redirect_to course_mission_path(@course, @mission),
                       notice: "The mission #{@mission.title} has been created." }
       else
         format.html { render action: "new" }

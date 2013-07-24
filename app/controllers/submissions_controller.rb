@@ -6,6 +6,8 @@ class SubmissionsController < ApplicationController
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
+  before_filter :allow_only_one_submission, only: [:new, :create]
+  before_filter :no_update_after_submission, only: [:edit, :update]
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
 
   def listall
@@ -36,6 +38,8 @@ class SubmissionsController < ApplicationController
       @sbms = @sbms.where('std_course_id = ?', @selected_sc)
     end
 
+    @sbms = @sbms.where('status != ?','attempting')
+
     @unseen = []
     if curr_user_course.id
       @unseen = @sbms - curr_user_course.get_seen_sbms
@@ -57,21 +61,21 @@ class SubmissionsController < ApplicationController
       @grading = @submission.final_grading
     end
 
-    @mission.questions.each_with_index do |q, i|
-      @qadata[q.id] = { q: q, i: i + 1 }
+    @mission.get_all_questions.each_with_index do |q,i|
+      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
 
-    @submission.std_answers.each do |sa|
-      @qadata[sa.question.id][:a] = sa
+    @submission.get_all_answers.each do |sa|
+      qn = sa.qn
+      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
     end
 
     if @grading
       @grading.answer_gradings.each do |ag|
-        @qadata[ag.student_answer.question_id][:g] = ag
+        qn = ag.student_answer.qn
+        @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
       end
     end
-
-    puts @qadata
 
     respond_to do |format|
       format.html { render "submissions/show_question" }
@@ -79,63 +83,78 @@ class SubmissionsController < ApplicationController
   end
 
   def new
-    @questions = @mission.questions
-    respond_to do |format|
-      format.html
+    if @submission.save
+      if @submission.attempt == 1
+        Activity.attempted_asm(curr_user_course, @mission)
+      end
+      respond_to do |format|
+        format.html { redirect_to edit_course_mission_submission_path(@course,@mission,@submission)}
+      end
     end
   end
 
   def create
-    @submission.std_course = curr_user_course
-    @submission.get_std_answers(params,current_user)
-
-    if @submission.save
-      Activity.attempted_asm(curr_user_course, @mission)
-      curr_user_course.get_my_tutors.each do |uc|
-        puts 'notify tutors'
-        UserMailer.delay.new_submission(
-            uc.user,
-            new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
-        )
-      end
-      respond_to do |format|
-        format.html { redirect_to course_submissions_url(@course),
-                      notice: "Your submission has been recorded." }
-      end
-    else
-      respond_to do |format|
-        format.html { render action: "new" }
-      end
-    end
+    update
   end
 
   def edit
-    @questions = @mission.questions
+    @questions = @mission.get_all_questions
     @std_answers = {}
+    @std_coding_answers = {}
     @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
+    @submission.std_coding_answers.each { |answer| @std_coding_answers[answer.qn_id] = answer}
     respond_to do |format|
       format.html
     end
   end
 
   def update
-    @std_answers = {}
-    @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
-
-    params[:answers].each do |qid, ans|
-      answer = @std_answers[qid.to_i]
-      if answer
-        answer.text = ans
-        answer.save
-      end
-    end
+    @submission.fetch_params_answers(params,current_user)
 
     respond_to do |format|
       if @submission.save
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
-                      notice: "Your submission has been updated." }
+        if params[:commit] == 'Save'
+          @submission.set_attempting
+          format.html { redirect_to edit_course_mission_submission_path(@course, @mission, @submission),
+                                    notice: "Your submission has been saved." }
+        else
+          @submission.set_submitted
+          notify_new_sub
+          format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+                                    notice: "Your submission has been updated." }
+        end
       else
         format.html { render action: "edit" }
+      end
+    end
+  end
+
+  private
+  def notify_new_sub
+    curr_user_course.get_my_tutors.each do |uc|
+      puts 'notify tutors'
+      UserMailer.delay.new_submission(
+          uc.user,
+          new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
+      )
+    end
+  end
+
+  def allow_only_one_submission
+    sub = @mission.submissions.where(std_course_id:curr_user_course.id).first
+    if sub
+      @submission = sub
+    else
+      @submission.std_course = curr_user_course
+    end
+    @submission.attempt_mission
+  end
+
+  def no_update_after_submission
+    unless @submission.attempting?
+      respond_to do |format|
+        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+                                  notice: "Your have already submitted this mission." }
       end
     end
   end

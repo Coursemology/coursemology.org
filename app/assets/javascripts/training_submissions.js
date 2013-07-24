@@ -62,7 +62,7 @@ $(document).ready(function(){
                 indentUnit: 4,
                 tabMode: "shift",
                 matchBrackets: true,
-                theme:"night"
+                theme:"molokai"
             });
         $(document).keydown(function(evt){
             if(evt.altKey && evt.which == 82){

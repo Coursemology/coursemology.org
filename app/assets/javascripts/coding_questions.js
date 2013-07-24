@@ -36,20 +36,6 @@ var path = function(){
         savePath: function(){
             saving = true;
             $("#coding_question_data").val(JSON.stringify(path.data));
-            $.post("path_create.php",{data: JSON.stringify(path.data)}, function(data){
-                saving = false;
-                if(data[2] != true){
-                    alert("Saving failed for some reason. Your path data is either invalid in some way (e.g. have empty test cases) or your data is corrupted and saving was blocked. \n\nReason given:\n"+data[2]);
-                }else{
-                    if(path.data.id == null){
-                        alert("Success. New path created and saved to database.");
-                    }else{
-                        alert("Existing path successfully saved!");
-                    }
-                    path.data.id = data[0];
-                    path.data.timestamp = data[1];
-                }
-            }, 'json');
         },
         initialize: function() {
             $("#savePath").click(path.savePath);
@@ -102,7 +88,7 @@ var path = function(){
         deleteTest: function(testDiv, testType){
             var i = $(testDiv).attr("testNo");
             $(testDiv).remove();
-            eval('cStep.'+testType+'Tests.remove(i-1)');
+            eval('cStep.'+testType+'Tests.splice(i-1,1)');
             $("#"+testType+"_test_tbody").children().each(function(index, e){
                 $(e).attr("testNo", index+1);
             });
@@ -141,8 +127,8 @@ $(document).ready(function() {
             lineNumbers: true,
             indentUnit: 4,
             tabMode: "shift",
-            matchBrackets: true
-//            theme:'night'
+            matchBrackets: true,
+            theme:'molokai'
         };
 
         cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);

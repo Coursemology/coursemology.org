@@ -72,7 +72,7 @@ class CourseAbility
       can :students, Course
 
       can :manage, [Submission, TrainingSubmission, QuizSubmission], std_course_id: user_course.id
-      can :manage, [StdAnswer, StdMcqAnswer], student_id: user_course.user.id
+      can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
 
       cannot :modify, TrainingSubmission
 
