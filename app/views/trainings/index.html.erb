@@ -3,10 +3,14 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
+<p><i>* Click at the tags to view missions and trainings in that tag.</i></p>
+
 <% if can? :create, Training %>
-  <%= link_to "New Training",
-              new_course_training_path(@course),
-              :class => 'btn btn-primary' %>
+  <p>
+    <%= link_to "New Training",
+                new_course_training_path(@course),
+                :class => 'btn btn-primary' %>
+  </p>
 <% end %>
 
 <table class="table table-hover assignments">
@@ -53,9 +57,9 @@
         </td>
         <td>
           <% training.tags.each do |tag| %>
-            <div class="asm-tag">
-              <%= link_to tag.name, course_tag_path(@course, tag) %>
-            </div>
+            <%= link_to course_tag_path(@course, tag) do %>
+              <span class="label label-info"><%= tag.name %></span>
+            <% end %>
           <% end %>
         </td>
         <td><%= training.exp %></td>

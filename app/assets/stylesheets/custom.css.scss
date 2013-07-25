@@ -661,3 +661,8 @@ $grayMediumLight: #eaeaea;
   @extend .control-group;
   @extend .error;
 }
+
+.assignments thead {
+  font-size: 1.3em;
+  background-color: #f5f5f5;;
+}

@@ -3,17 +3,21 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
+<p><i>* Click at the tags to view missions and trainings in that tag.</i></p>
+
 <% if can? :manage, Mission %>
-  <%= link_to t('.new', :default => t("helpers.links.new")),
-              new_course_mission_path(@course),
-              :class => 'btn btn-primary' %>
+  <p>
+    <%= link_to t('.new', :default => t("helpers.links.new")),
+                new_course_mission_path(@course),
+                :class => 'btn btn-primary' %>
+  </p>
 <% end %>
 
 <table class="table table-hover assignments">
   <thead>
     <tr>
       <th>Mission</th>
-      <th width="10%">Tag</th>
+      <th width="15%">Tag</th>
       <th width="5%">Max Exp</th>
       <th width="10%">Requirement for</th>
       <% if can? :view_detail, Mission %>
@@ -51,9 +55,9 @@
         </td>
         <td>
           <% mission.tags.each do |tag| %>
-            <div class="asm-tag">
-              <%= link_to tag.name, course_tag_path(@course, tag) %>
-            </div>
+            <%= link_to course_tag_path(@course, tag) do %>
+              <span class="label label-info"><%= tag.name %></span>
+            <% end %>
           <% end %>
         </td>
         <td><%= mission.exp %></td>
