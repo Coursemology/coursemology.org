@@ -17,16 +17,16 @@ JfdiAcademy::Application.routes.draw do
 
   post "user/auto_login" => "auto_login#auto_login_from_facebook"
 
-  match "admins" => "admins#access_control"
-  match "users" => "users#show"
+  match "admin" => "admins#access_control"
+  match "admin/search" => "admins#search"
+  #match "admin/access_control" => "admins#access_control"
+
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
 
   resources :users do
     resources :masquerades, only: [:new]
-    collection do
-      get 'search'
-    end
   end
+
   #match "admins/index" =>"admins#index"
   get "lecturers/request" => "role_requests#new"
   resources :role_requests

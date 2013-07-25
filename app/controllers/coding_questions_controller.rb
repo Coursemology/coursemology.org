@@ -19,30 +19,6 @@ class CodingQuestionsController < ApplicationController
     end
   end
 
-  #def update_details(coding_question)
-  #  if params[:answers]
-  #    updated = true
-  #    params[:answers].each do |i, answer|
-  #      puts answer
-  #      answer['is_correct'] = answer.has_key?('is_correct')
-  #      if answer.has_key?('id')
-  #        ans = McqAnswer.find(answer['id'])
-  #        ans.mcq = mcq
-  #        # TODO: check if this answer does belong to the current question
-  #        if !answer['text'] || answer['text'] == ''
-  #          ans.destroy
-  #        else
-  #          updated = updated && ans.update_attributes(answer)
-  #        end
-  #      elsif answer['text'] && answer['text'] != ''
-  #        ans = mcq.mcq_answers.build(answer)
-  #        updated = updated && ans.save
-  #      end
-  #    end
-  #  end
-  #  return updated
-  #end
-
   def create
     @coding_question.creator = current_user
     @coding_question.max_grade = 2
@@ -50,13 +26,6 @@ class CodingQuestionsController < ApplicationController
     @asm_qn.asm = @asm
     @asm_qn.qn = @coding_question
     @asm_qn.pos = @asm.asm_qns.count
-    logger.info "Logging"
-    logger.info @coding_question.description
-    logger.info @coding_question.comments
-    logger.info @coding_question.step_name
-    logger.info @coding_question.data
-
-
 
     # update max grade of the asm it belongs to
     respond_to do |format|

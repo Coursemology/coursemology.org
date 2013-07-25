@@ -18,7 +18,7 @@
                   <!-- <li><a href="#">Profile</a></li> -->
                   <li><%= link_to "Account management", users_settings_path %></a></li>
                   <% if current_user.is_admin? %>
-                      <li><%= link_to "Admin panel", admins_path %></a></li>
+                      <li><%= link_to "Admin panel", admin_path %></a></li>
                   <% end %>
                   <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
                 </ul>

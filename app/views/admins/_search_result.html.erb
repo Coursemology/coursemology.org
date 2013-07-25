@@ -12,10 +12,10 @@
       <% @users.each do |user| %>
           <tr>
             <td>
-                <%= user.name %>
+              <%= user.name %>
             </td>
             <td>
-                <%= user.email %>
+              <%= user.email %>
             </td>
             <td width="32%">
               <%= best_in_place user, :system_role_id, type: :select, collection:Role.all.collect {|r| [ r.id,r.title ]} %>
