@@ -26,7 +26,7 @@ class MasqueradesController < ApplicationController
   def destroy
     log = MasqueradeLog.new
     log.by_user_id = session[:admin_id]
-    log.as_user_id = current_user.id
+    log.as_user_id = current_user ? current_user.id : nil
     log.action = 'login'
     log.save
 
