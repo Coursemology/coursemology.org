@@ -6,7 +6,11 @@
             FB.getLoginStatus(function(response) {
                 console.log(response)
                 if (response.status === 'connected') {
-                window.location.href = "/users/auth/facebook"
+
+                    $.post("/user/auto_login", {}, function(s){
+                        window.location.reload();
+                    });
+//                window.location.href = "/users/auth/facebook"
                 }
             });
             //here to request feed to publish

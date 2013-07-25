@@ -9,12 +9,11 @@ class ApplicationController < ActionController::Base
   def curr_user_course
     if current_user and @course
       @curr_user_course ||= UserCourse.find_by_user_id_and_course_id(
-        current_user.id,
-        @course.id
+          current_user.id,
+          @course.id
       )
     end
     @curr_user_course ||= UserCourse.new
-    return @curr_user_course
   end
 
   def load_theme_setting
@@ -63,7 +62,7 @@ class ApplicationController < ActionController::Base
       if can? :see_all, Submission
         # lecturers see number of new submissions of all students in the course
         all_sbms = @course.submissions.accessible_by(current_ability) +
-                @course.training_submissions.accessible_by(current_ability)
+            @course.training_submissions.accessible_by(current_ability)
         unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
         counts[:submissions] = unseen_sbms.count
       end
@@ -73,51 +72,51 @@ class ApplicationController < ActionController::Base
     @nav_items = []
     # home
     @nav_items = [{
-      text: "Announcements",
-      url: course_announcements_url(@course),
-      img: @theme_settings["Announcements Icon"],
-      icon: "icon-bullhorn",
-      count: counts[:announcements] || 0
-    }, {
-      text: "Missions",
-      url: course_missions_url(@course),
-      img: @theme_settings["Missions Icon"],
-      icon: "icon-envelope",
-      count: counts[:missions] || 0
-    }, {
-      text: "Trainings",
-      url: course_trainings_url(@course),
-      img: @theme_settings["Trainings Icon"],
-      icon: "icon-envelope",
-      count: counts[:trainings] || 0
-    }, {
-      text: "Submissions",
-      url: course_submissions_url(@course),
-      img: @theme_settings["Submissions Icon"],
-      icon: "icon-envelope-alt",
-      count: counts[:submissions] || 0
-    }, {
-      text: "Comments",
-      url: course_comments_url(@course),
-      icon: "icon-comment"
-    }, {
-      text: "Levels",
-      url: course_levels_url(@course),
-      icon: "icon-star-empty"
-    }, {
-      text: "Achievements",
-      url: course_achievements_url(@course),
-      icon: "icon-star"
-    }, {
-      text: "Leaderboards",
-      url: course_leaderboards_url(@course),
-      img: @theme_settings["Leaderboards Icon"],
-      icon: "icon-star-empty"
-    }, {
-      text: "Students",
-      url: course_students_url(@course),
-      icon: "icon-user",
-    }]
+                      text: "Announcements",
+                      url: course_announcements_url(@course),
+                      img: @theme_settings["Announcements Icon"],
+                      icon: "icon-bullhorn",
+                      count: counts[:announcements] || 0
+                  }, {
+                      text: "Missions",
+                      url: course_missions_url(@course),
+                      img: @theme_settings["Missions Icon"],
+                      icon: "icon-envelope",
+                      count: counts[:missions] || 0
+                  }, {
+                      text: "Trainings",
+                      url: course_trainings_url(@course),
+                      img: @theme_settings["Trainings Icon"],
+                      icon: "icon-envelope",
+                      count: counts[:trainings] || 0
+                  }, {
+                      text: "Submissions",
+                      url: course_submissions_url(@course),
+                      img: @theme_settings["Submissions Icon"],
+                      icon: "icon-envelope-alt",
+                      count: counts[:submissions] || 0
+                  }, {
+                      text: "Comments",
+                      url: course_comments_url(@course),
+                      icon: "icon-comment"
+                  }, {
+                      text: "Levels",
+                      url: course_levels_url(@course),
+                      icon: "icon-star-empty"
+                  }, {
+                      text: "Achievements",
+                      url: course_achievements_url(@course),
+                      icon: "icon-star"
+                  }, {
+                      text: "Leaderboards",
+                      url: course_leaderboards_url(@course),
+                      img: @theme_settings["Leaderboards Icon"],
+                      icon: "icon-star-empty"
+                  }, {
+                      text: "Students",
+                      url: course_students_url(@course),
+                      icon: "icon-user",
+                  }]
 
     if can? :manage, Course
       @admin_nav_items = []
@@ -135,36 +134,36 @@ class ApplicationController < ActionController::Base
       end
 
       @admin_nav_items << {
-        text: "Tags",
-        url: course_tags_url(@course),
-        icon: "icon-tags"
+          text: "Tags",
+          url: course_tags_url(@course),
+          icon: "icon-tags"
       }
       @admin_nav_items << {
-        text: "Award Give-away",
-        url: course_manual_exp_url(@course),
-        icon: "icon-star"
+          text: "Award Give-away",
+          url: course_manual_exp_url(@course),
+          icon: "icon-star"
       }
       @admin_nav_items << {
-        text: "Statistics",
-        url: course_stats_url(@course),
-        icon: "icon-bar-chart"
+          text: "Statistics",
+          url: course_stats_url(@course),
+          icon: "icon-bar-chart"
       }
       @admin_nav_items << {
-        text: "Enrollment",
-        url: course_enroll_requests_url(@course),
-        icon: "icon-bolt"
+          text: "Enrollment",
+          url: course_enroll_requests_url(@course),
+          icon: "icon-bolt"
       }
       @admin_nav_items << {
-        text: "Settings",
-        url: edit_course_url(@course),
-        icon: "icon-cog"
+          text: "Settings",
+          url: edit_course_url(@course),
+          icon: "icon-cog"
       }
     end
     if can? :share, Course
       @admin_nav_items << {
-        text: "Duplicate Data",
-        url: course_duplicate_url(@course),
-        icon: "icon-bolt"
+          text: "Duplicate Data",
+          url: course_duplicate_url(@course),
+          icon: "icon-bolt"
       }
     end
   end

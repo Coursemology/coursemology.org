@@ -15,6 +15,8 @@ JfdiAcademy::Application.routes.draw do
   get "users/settings" => "users#edit"
   put "users/update" => "users#update"
 
+  post "user/auto_login" => "auto_login#auto_login_from_facebook"
+
   match "admins" => "admins#access_control"
   match "users" => "users#show"
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades

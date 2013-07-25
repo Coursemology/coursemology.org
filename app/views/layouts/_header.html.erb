@@ -2,7 +2,7 @@
   <div class="navbar-inner">
     <div class="container-fluid">
       <%= link_to "/", id: "site-logo" do %>
-        <img src="/images/coursemology_white.png" />
+          <img src="/images/coursemology_white.png" />
       <% end %>
       <a class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
         <span class="icon-chevron-down"></span>
@@ -10,28 +10,28 @@
       <div class="nav-collapse" style="height: 0px;">
         <ul class="nav pull-right">
           <% if current_user %>
-            <li class="dropdown">
-              <a id="usercontrol" class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <%= current_user.name %><b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
-                <!-- <li><a href="#">Profile</a></li> -->
-                <li><%= link_to "Account management", users_settings_path %></a></li>
-                <% if current_user.is_admin? %>
-                    <li><%= link_to "Admin panel", admins_path %></a></li>
-              <% end %>
-                <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
-              </ul>
-            </li>
+              <li class="dropdown">
+                <a id="usercontrol" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <%= current_user.name %><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
+                  <!-- <li><a href="#">Profile</a></li> -->
+                  <li><%= link_to "Account management", users_settings_path %></a></li>
+                  <% if current_user.is_admin? %>
+                      <li><%= link_to "Admin panel", admins_path %></a></li>
+                  <% end %>
+                  <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
+                </ul>
+              </li>
           <% else %>
               <li><%= link_to "Courses", courses_path %></li>
               <li><%= link_to "Sign up", new_user_registration_path %></li>
               <li><%= link_to "Sign in", new_user_session_path %></li>
           <% end %>
           <% if masquerading? %>
-            <li>
-              <%= link_to "(Stop Masquerading)", destroy_masquerades_path, method: :delete %>
-            </li>
+              <li>
+                <%= link_to "(Stop Masquerading)", destroy_masquerades_path, method: :delete %>
+              </li>
           <% end %>
         </ul>
       </div>
