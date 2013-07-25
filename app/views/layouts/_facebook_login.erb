@@ -6,15 +6,9 @@
             FB.getLoginStatus(function(response) {
                 console.log(response)
                 if (response.status === 'connected') {
-//                window.location.href = "/users/auth/facebook"
+                window.location.href = "/users/auth/facebook"
                 }
             });
-//            FB.Event.subscribe('auth.login', function(response) {
-//                console.log("async response");
-//                console.log(response);
-//                window.location.reload();
-////            window.location.href = "/auth/facebook/callback"
-//            });
             //here to request feed to publish
         };
         (function(d){
