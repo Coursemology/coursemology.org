@@ -1,0 +1,27 @@
+<% unless current_user %>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({appId: '<%= Devise.omniauth_configs[:facebook].strategy.client_id %>', status: true, cookie: true, xfbml: true, oauth:true});
+
+            FB.getLoginStatus(function(response) {
+                console.log(response)
+                if (response.status === 'connected') {
+//                window.location.href = "/users/auth/facebook"
+                }
+            });
+//            FB.Event.subscribe('auth.login', function(response) {
+//                console.log("async response");
+//                console.log(response);
+//                window.location.reload();
+////            window.location.href = "/auth/facebook/callback"
+//            });
+            //here to request feed to publish
+        };
+        (function(d){
+            var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            d.getElementsByTagName('head')[0].appendChild(js);
+        }(document));
+    </script>
+<% end %>

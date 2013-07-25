@@ -1,39 +1,5 @@
 <meta name="viewport" content="width=device-width">
-<meta property='og:image' content='http://landerstorage.blob.core.windows.net/lander-user-images/LanderUserGallery_17957/image_19438683-1fa5-4bee-b98c-bea39ee4d4f4_'>
-</head>
 
-<script>
-  $(document).ready(function(){
-      $.ajaxSetup({ cache: true });
-      $.getScript('//connect.facebook.net/en_US/all.js', function(){
-          FB.init({
-              appId: <%= Devise.omniauth_configs[:facebook].strategy.client_id %>
-          });
-          FB.getLoginStatus(function(response) {
-//              console.log(response)
-              if (response.status === 'connected') {
-                  window.location.href = "/users/auth/facebook"
-              }
-          });
-      });
-  });
-</script>
-<div id="fb-root"></div>
-<script>
-    window.fbAsyncInit = function() {
-        FB.init({appId: <%= Devise.omniauth_configs[:facebook].strategy.client_id %>, status: true, cookie: true, xfbml: true, oauth:true});
-        FB.Event.subscribe('auth.login', function(response) {
-            window.location.reload();
-        });
-        //here to request feed to publish
-    };
-    (function(d){
-        var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-        js = d.createElement('script'); js.id = id; js.async = true;
-        js.src = "//connect.facebook.net/en_US/all.js";
-        d.getElementsByTagName('head')[0].appendChild(js);
-    }(document));
-</script>
 <body id="inner_body" class="inner_body">
 <div id="content" class="welcome_content">
   <div class="container-fluid">
@@ -55,43 +21,7 @@
     </div><div id="_center_image">
     <img src="/images/teaching-wordle_316.png">
   </div>
-    <div id="_share_button">
-      <script type="text/javascript">
-          var addthis_config=addthis_config||{
-          };
-          addthis_config.ui_language="en";
-          addthis_config.data_track_clickback=false;
-          var shareMaxZindex=shareMaxZindex||1000;
-      </script>
-      <div class="addthis_toolbox addthis_default_style ">
-        <a class="addthis_button_facebook_like" fb:like:layout="button_count" style=" width:79px;
-                opacity:1;
-        " fb:like:locale="en_US"></a>
-        <a class="addthis_button_tweet" style=" width:90px;
-        "></a>
-        <a class="addthis_button_google_plusone" g:plusone:size="medium" style=" width:73px;
-        "></a>
-        <a class="addthis_counter addthis_pill_style"></a>
-      </div>
-      <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4ec5a3c44709a190&async=1"></script>
-      <script type="text/javascript">function initAddThis(){addthis.init()
-      }
-      function addShareBlocker(){$("#_share_button").prepend("<div class='blockedShareBar'></div>");
-          $(".blockedShareBar").click(function(){event.stopPropagation()
-                  }
-          ).height("32px").css("margin-bottom",-32).css("z-index",9999)
-      }
-      if(document.location.href.indexOf("LandingPages/Editor/Preview")!=-1){addShareBlocker()
-      }
-      $(window).load(function(){initAddThis();
-                  $(".addthis_toolbox.addthis_default_style").attr("addthis:url",document.location.href.replace("/confirmation",""));
-                  $("#_share_button").mouseover(function(){$(this).attr("style","z-index:"+(shareMaxZindex++))
-                          }
-                  )
-              }
-      );
-      </script>
-    </div>
+
 
     <div id="_sign_up">
       <div id="landerapp_conversionform">
