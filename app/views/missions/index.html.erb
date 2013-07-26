@@ -70,15 +70,9 @@
         </td>
         <td>
           <% mission.tags.each do |tag| %>
-<<<<<<< HEAD
-              <div class="asm-tag">
-                <%= link_to tag.name, course_tag_path(@course, tag) %>
-              </div>
-=======
             <%= link_to course_tag_path(@course, tag) do %>
               <span class="label label-info"><%= tag.name %></span>
             <% end %>
->>>>>>> hung-dev
           <% end %>
         </td>
         <td><%= mission.exp %></td>
