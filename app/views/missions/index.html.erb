@@ -3,20 +3,39 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
+<div>
+  <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
+  <%= form_tag(course_missions_path(@course), method: :get) do %>
+    <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
+      <div class="well">
+        <%= render partial: "tags/form_checkboxes",
+                   locals: { tag_groups: @course.tag_groups,
+                             uncats: @course.tags.uncategorized,
+                             exist_tags_hash: @tags_map } %>
+        <button class="btn">Filter</button>
+      </div>
+    </div>
+  <% end %>
+</div>
+
 <% if can? :manage, Mission %>
-    <%= link_to t('.new', :default => t("helpers.links.new")),
+  <p>
+    <%= link_to "New Mission",
                 new_course_mission_path(@course),
                 :class => 'btn btn-primary' %>
+  </p>
 <% end %>
+
+<p><i>* Click at the tags to view missions and trainings in that tag.</i></p>
 
 <table class="table table-hover assignments">
   <thead>
-  <tr>
-    <th>Mission</th>
-    <th width="10%">Tag</th>
-    <th width="5%">Max Exp</th>
-    <th width="10%">Requirement for</th>
-    <% if can? :view_detail, Mission %>
+    <tr>
+      <th>Mission</th>
+      <th width="15%">Tag</th>
+      <th width="5%">Max Exp</th>
+      <th width="10%">Requirement for</th>
+      <% if can? :view_detail, Mission %>
         <th width="10%">Time till open</th>
     <% end %>
     <th width="10%">Time Left</th>
@@ -51,9 +70,15 @@
         </td>
         <td>
           <% mission.tags.each do |tag| %>
+<<<<<<< HEAD
               <div class="asm-tag">
                 <%= link_to tag.name, course_tag_path(@course, tag) %>
               </div>
+=======
+            <%= link_to course_tag_path(@course, tag) do %>
+              <span class="label label-info"><%= tag.name %></span>
+            <% end %>
+>>>>>>> hung-dev
           <% end %>
         </td>
         <td><%= mission.exp %></td>
@@ -122,4 +147,6 @@
   </tbody>
 </table>
 
-<%= paginate @missions %>
+<% if @can_paginate %>
+  <%= paginate @missions %>
+<% end %>
