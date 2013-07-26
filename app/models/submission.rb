@@ -57,6 +57,7 @@ class Submission < ActiveRecord::Base
                                                })
             sa.qn = qn
             sa.student = current_user
+            sa.std_course = self.std_course
           end
         else
           sa = self.std_answers.where(question_id:qid).first
@@ -70,6 +71,7 @@ class Submission < ActiveRecord::Base
                                         })
             sa.question = qn
             sa.student = current_user
+            sa.std_course = self.std_course
           end
         end
       end
