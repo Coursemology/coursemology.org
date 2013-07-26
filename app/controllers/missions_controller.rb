@@ -5,9 +5,23 @@ class MissionsController < ApplicationController
 
   def index
     @is_new = {}
-    @missions = @course.missions.accessible_by(current_ability)
-                  .order(:open_at).reverse_order
-                  .page(params[:page])
+    @tags_map = {}
+    @selected_tags = params[:tags]
+
+    if @selected_tags
+      tags = Tag.find(@selected_tags)
+      mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
+      @missions = @course.missions.accessible_by(current_ability)
+                    .order(:open_at).reverse_order.find(mission_ids)
+
+      tags.each { |tag| @tags_map[tag.id] = true }
+    else
+      @missions = @course.missions.accessible_by(current_ability)
+                    .order(:open_at).reverse_order
+                    .page(params[:page])
+      @can_paginate = true
+    end
+
     if curr_user_course.id
       unseen = @missions - curr_user_course.seen_missions
       unseen.each do |um|

@@ -6,9 +6,23 @@ class TrainingsController < ApplicationController
 
   def index
     @is_new = {}
-    @trainings = @course.trainings.accessible_by(current_ability)
-    .order(:open_at).reverse_order
-    .page(params[:page])
+    @tags_map = {}
+    @selected_tags = params[:tags]
+
+    if @selected_tags
+      tags = Tag.find(@selected_tags)
+      training_ids = tags.map { |tag| tag.trainings.map{ |t| t.id } }.reduce(:&)
+      @trainings = @course.trainings.accessible_by(current_ability)
+                          .order(:open_at).reverse_order.find(training_ids)
+
+      tags.each { |tag| @tags_map[tag.id] = true }
+    else
+      @trainings = @course.trainings.accessible_by(current_ability)
+                          .order(:open_at).reverse_order
+                          .page(params[:page])
+      @can_paginate = true
+    end
+
     if curr_user_course.id
       unseen = @trainings - curr_user_course.seen_trainings
       unseen.each do |tn|
@@ -16,6 +30,7 @@ class TrainingsController < ApplicationController
         curr_user_course.mark_as_seen(tn)
       end
     end
+
     @trainings_with_sbm = []
     @trainings.each do |training|
       if curr_user_course.id
