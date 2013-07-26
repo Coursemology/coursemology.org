@@ -69,16 +69,14 @@ module TrainingSubmissionsHelper
 
         test_type = if i == 0 then :publicTests else :privateTests end
         summary[test_type] = results
-        #puts "error: ", errors
         if errors.length > 0
-          error_message = errors.join.scan(/", line \d*.*\n.*\n/).map{ |m| m[3,m.length - 1]} << errors.last
+          error_message = errors.join.scan(/", line \d*.(.*)/m).map{ |m| m}
           summary[:errors] = error_message.join
           break
         end
 
       end
     end
-    #puts "summary", summary
     summary
   end
 end
