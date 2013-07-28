@@ -15,12 +15,14 @@ class Requirement < ActiveRecord::Base
     # level
     # achievement
     case req
-    when Achievement
-      return check_achievement(user_course)
-    when AsmReq
-      return req.satisfied?(user_course)
-    else
-      return true
+      when Achievement
+        return check_achievement(user_course)
+      when AsmReq
+        return req.satisfied?(user_course)
+      when Level
+        return req.satisfied?(user_course)
+      else
+        return true
     end
 
     return false;
