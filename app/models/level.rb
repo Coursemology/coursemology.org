@@ -15,4 +15,9 @@ class Level < ActiveRecord::Base
   def get_path
     return course_levels_path(course)
   end
+
+  def satisfied?(user_course)
+    #user_course.level only get the Level object, same type as self object
+    return user_course.level.level == self.level
+  end
 end
