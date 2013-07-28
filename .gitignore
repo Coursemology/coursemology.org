@@ -23,7 +23,11 @@
 
 # ignode devise config file
 /config/initializers/devise.rb
+/config/facebook.yml
 
 /.idea/
 /config/deploy.rb
 /Capfile
+
+#.rvmrc perform certain actions when developer cd into the folder
+.rvmrc
