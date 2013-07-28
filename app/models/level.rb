@@ -21,4 +21,9 @@ class Level < ActiveRecord::Base
   def next_level
     return course.levels.find_by_level(level + 1) || self
   end
+
+  def satisfied?(user_course)
+    #user_course.level only get the Level object, same type as self object
+    return user_course.level.level == self.level
+  end
 end
