@@ -1,0 +1,16 @@
+<tr>
+  <% if lvl_req.id %>
+    <input type="hidden" name="reqids[]" value="<%= lvl_req.id %>" />
+  <% else %>
+    <input type="hidden" name="new_reqs[]" value="<%= lvl_req.to_json %>" />
+  <% end %>
+  <td><p>Earn
+    <%= link_to lvl_req.req.title, course_achievement_path(@course, lvl_req.req) %></p>
+  </td>
+  <td>
+    <a href="#" class="btn remove-req">
+      <i class="icon-remove"></i>
+    </a>
+  </td>
+</tr>
+

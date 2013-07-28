@@ -300,6 +300,7 @@ DEPENDENCIES
   omniauth-facebook
   paperclip (~> 3.0)
   pg
+  pry
   rails (= 3.2.11)
   rspec-rails
   rubyzip
