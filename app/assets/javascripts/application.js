@@ -39,7 +39,8 @@ $(document).ready(function() {
 
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR'
+        language: 'pt-BR',
+        startDate: new Date()
     });
 
     $('a[rel=tooltip]').tooltip();
