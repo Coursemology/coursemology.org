@@ -37,6 +37,9 @@ Update Devise configuration:
 
 Then update the email used, the facebook app info in the config file above.
 
+The app performance can be monitored by adding newrelic config file:
+        config/newrelic.yml
+
 == Checking available API / routes:
         $ rake routes
 
