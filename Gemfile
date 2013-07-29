@@ -7,7 +7,6 @@ gem 'rails', '3.2.11'
 
 group :development do
   gem 'sqlite3'
-  gem 'newrelic_rpm'
 end
 
 group :production do
@@ -58,6 +57,7 @@ gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
+gem 'newrelic_rpm'
 
 
 # To use ActiveModel has_secure_password
