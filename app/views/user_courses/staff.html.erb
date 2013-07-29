@@ -43,41 +43,45 @@
   <% @staff_courses.each do |s_course| %>
       <tr>
 
-        <!--<td><%= link_to s_course.user.name,course_user_course_path(@course,s_course),id:s_course.id %></td>-->
+
         <td>
           <input type="hidden" class="old-name" value="<%= s_course.user.name  %>">
-          <input type="text" value="<%= s_course.user.name  %>" name="user-name" class="change-name" required> </td>
-        <!--<td><%= s_course.user.name  %></td>-->
-        <td><%= s_course.user.email %></td>
-        <td>
-          <a href="<%= course_user_course_path(s_course.course.id,s_course.id) %>" class="uc-url hidden"></a>
           <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
-              <!--<input type="hidden" class="old-role" value="<%= s_course.role.id %>">-->
-              <select class="change-role">
-                <% Role.get_staff_roles.each do |r| %>
-                    <option value="<%= r.id %>" <% if r.id == s_course.role.id %>selected="selected"<% end %>>
-                      <%= r.title %>
-                    </option>
-                <% end %>
-              </select>
+              <input type="text" value="<%= s_course.user.name  %>" name="user-name" class="change-name" required> </td>
           <% else %>
-              <%= s_course.role.title %>
+              <%= link_to s_course.user.name, course_user_course_path(@course,s_course),id:s_course.id %>
           <% end %>
-        </td>
-        <td>
-          <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
-              <%= link_to '#', class: 'btn update-staff' do %>
-                  <i class="icon-ok"></i>
-              <% end %>
-              <% unless s_course.is_creator? %>
-                  <%= link_to '#', class: 'btn remove-staff' do %>
-                      <i class="icon-remove"></i>
+          <!--<td><%= s_course.user.name  %></td>-->
+          <td><%= s_course.user.email %></td>
+          <td>
+            <a href="<%= course_user_course_path(s_course.course.id,s_course.id) %>" class="uc-url hidden"></a>
+            <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
+                <!--<input type="hidden" class="old-role" value="<%= s_course.role.id %>">-->
+                <select class="change-role">
+                  <% Role.get_staff_roles.each do |r| %>
+                      <option value="<%= r.id %>" <% if r.id == s_course.role.id %>selected="selected"<% end %>>
+                        <%= r.title %>
+                      </option>
                   <% end %>
-              <% end %>
+                </select>
+            <% else %>
+                <%= s_course.role.title %>
+            <% end %>
+          </td>
+          <td>
+            <% if current_user.is_admin? or curr_user_course.is_lecturer? %>
+                <%= link_to '#', class: 'btn update-staff' do %>
+                    <i class="icon-ok"></i>
+                <% end %>
+                <% unless s_course.is_creator? %>
+                    <%= link_to '#', class: 'btn remove-staff' do %>
+                        <i class="icon-remove"></i>
+                    <% end %>
+                <% end %>
 
-          <% end %>
-        </td>
-      </tr>
+            <% end %>
+          </td>
+          </tr>
   <% end %>
   </tbody>
 </table>
