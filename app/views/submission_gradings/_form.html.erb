@@ -43,7 +43,13 @@
             <div class="control-group">
               <label class="control-label">Grade</label>
               <div class="controls">
-                <input type="text" name="ags[<%= qa[:g].id if qa[:g] %>][grade]" value="<%= qa[:g].grade if qa[:g] %>" />
+                <input type="number"
+                       name="ags[<%= qa[:g].id if qa[:g] %>][grade]"
+                       value="<%= qa[:g].grade if qa[:g] %>"
+                       min="0"
+                       max="<%= qa[:q].max_grade %>"
+                       step="any"
+                       class="input-medium"/>
                 / <%= qa[:q].max_grade %>
               </div>
             </div>
