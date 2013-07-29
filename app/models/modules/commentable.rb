@@ -4,17 +4,19 @@ module Commentable
     raise NotImplementedError
   end
 
-  def notify_user(comment, redirect_url)
+  def notify_user(curr_user_course, comment, redirect_url)
     # user and all who has commented on this?
     # all lecturers
 
     # all users?
-    to_be_notified = self.get_subscribed_user_courses
-    to_be_notified.delete(comment.user_course)
-    to_be_notified.each do |uc|
-      puts " to email #{uc.user.email}"
-      UserMailer.delay.new_comment(uc.user, comment, redirect_url)
-      # TODO add a notification as well
+    #commented by the student
+    if curr_user_course == self.std_course
+      self.std_course.get_my_tutors.each do |uc|
+        UserMailer.delay.new_comment(uc.user, comment, redirect_url)
+      end
+    else
+      UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
     end
+    # TODO add a notification as well
   end
 end

@@ -31,7 +31,7 @@ class SubmissionsController < ApplicationController
     if @selected_asm
       @sbms = @selected_asm.sbms
     else
-      @sbms = @course.submissions.accessible_by(current_ability).order(:created_at).reverse_order
+      @sbms = @course.submissions.accessible_by(current_ability).order(:updated_at).reverse_order
     end
 
     if @selected_sc
@@ -119,7 +119,7 @@ class SubmissionsController < ApplicationController
                                     notice: "Your submission has been saved." }
         else
           @submission.set_submitted
-          notify_new_sub
+          @submission.notify_submission(curr_user_course)
           format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                                     notice: "Your submission has been updated." }
         end
@@ -130,15 +130,6 @@ class SubmissionsController < ApplicationController
   end
 
   private
-  def notify_new_sub
-    curr_user_course.get_my_tutors.each do |uc|
-      puts 'notify tutors'
-      UserMailer.delay.new_submission(
-          uc.user,
-          new_course_mission_submission_submission_grading_url(@course, @mission, @submission)
-      )
-    end
-  end
 
   def allow_only_one_submission
     sub = @mission.submissions.where(std_course_id:curr_user_course.id).first

@@ -16,8 +16,9 @@
     <div class="controls">
       <div class="datetimepicker input-append date">
         <%= f.text_field :publish_at,
-                         :value => datetime_format(@announcement.publish_at),
-                         :class => 'input-medium'%>
+                         value: datetime_format(@announcement.publish_at),
+                         class: 'input-medium',
+                         id: "publish_time"%>
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
@@ -33,10 +34,21 @@
   </div>
   -->
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_announcements_path, :class => 'btn' %>
+    <%= f.submit nil, :class => 'btn btn-primary',id: 'submit_announcement' %>
+    <%= link_to t('.cancel',
+                  :default => t("helpers.links.cancel")),
+                  course_announcements_path,
+                  :class => 'btn'%>
   </div>
 <% end %>
 
 <%= render :partial => "layouts/html_editor" %>
+
+<script>
+  $("#submit_announcement").click(function(e){
+//      e.preventDefault();
+      console.log($('#publish_time').val());
+  })
+
+
+</script>

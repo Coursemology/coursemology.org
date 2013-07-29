@@ -13,14 +13,4 @@ class StdCodingAnswer < ActiveRecord::Base
 
   has_many :sbm_answers, as: :answer, dependent: :destroy
 
-  def get_subscribed_user_courses
-    ucs = []
-    sbm_answers.each do |sbm_ans|
-      sbm = sbm_ans.sbm
-      ucs << sbm.std_course
-      course = sbm.std_course.course
-      ucs += course.lect_courses
-    end
-    ucs.uniq { |uc| uc.id }
-  end
 end

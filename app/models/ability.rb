@@ -2,7 +2,6 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    puts 'Using Ability for authorization!'
     if user
       if user.is_admin?
         can :manage, :all

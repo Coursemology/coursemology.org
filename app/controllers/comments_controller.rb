@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
       commentable = @comment.commentable
       commentable.last_commented_at = Time.now
       commentable.save
-      @comment.commentable.notify_user(@comment, params[:origin])
+      @comment.commentable.notify_user(curr_user_course,@comment, params[:origin])
       respond_to do |format|
         format.html { redirect_to params[:origin] }
       end

@@ -4,7 +4,7 @@
 
 <table>
   <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
-  <tr><td>Submited at: </td><td><%= time_ago_in_words(@submission.created_at) %> ago</td></tr>
+  <tr><td>Submited at: </td><td><%= time_ago_in_words(@submission.updated_at) %> ago</td></tr>
   <% if @grading %>
       <tr>
         <td>Total grade: </td>

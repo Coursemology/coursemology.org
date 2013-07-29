@@ -7,7 +7,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     @comment = comment
     @redirect_url = redirect_url
-    mail(to: user.email, subject: "New comment!")
+    mail(to: user.email, subject: "New comment by #{@comment.user_course.user.name}!")
   end
 
   def new_grading(user, redirect_url)
@@ -17,11 +17,12 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "New Grading available!")
   end
 
-  def new_submission(user, redirect_url)
+  def new_submission(user, submitted_by, mission, redirect_url)
     puts "to email #{user.email} redirect #{redirect_url}"
     @user = user
     @redirect_url = redirect_url
-    mail(to: user.email, subject: "New Submission!")
+    @submitted_by = submitted_by
+    mail(to: user.email, subject: "New Submission on Mission: #{mission.title}!")
   end
 
   def new_lecturer(user)

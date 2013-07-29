@@ -4,7 +4,7 @@ class Submission < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   include Sbm
 
-  attr_accessible :attempt, :status, :final_grading_id, :mission_id, :open_at, :std_course_id, :submit_at
+  attr_accessible :attempt, :status, :final_grading_id, :mission_id, :open_at, :std_course_id, :submit_at, :updated_at
 
   belongs_to :mission
   belongs_to :std_course, class_name: "UserCourse"
@@ -116,6 +116,18 @@ class Submission < ActiveRecord::Base
   def attempt_mission
     self.set_attempting
     self.attempt = self.attempt ? self.attempt + 1 : 1
+  end
+
+  def notify_submission(curr_user_course)
+    curr_user_course.get_my_tutors.each do |uc|
+      puts 'notify tutors'
+      UserMailer.delay.new_submission(
+          uc.user,
+          std_course.user,
+          mission,
+          self.get_new_grading_path
+      )
+    end
   end
 
 end

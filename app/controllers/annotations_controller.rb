@@ -11,7 +11,7 @@ class AnnotationsController < ApplicationController
 
     authorize! :read, @annotation.annotable
     if @annotation.save
-      @annotation.annotable.notify_user(@annotation,params[:origin])
+      @annotation.annotable.notify_user(curr_user_course, @annotation, params[:origin])
       respond_to do |format|
         format.json {render json: get_all}
       end
