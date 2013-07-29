@@ -156,6 +156,7 @@ GEM
     net-ssh (2.6.7)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
+    newrelic_rpm (3.6.6.147)
     nokogiri (1.5.9)
     nokogiri (1.5.9-x86-mingw32)
     oauth2 (0.8.1)
@@ -296,6 +297,7 @@ DEPENDENCIES
   kaminari
   koala
   mysql2
+  newrelic_rpm
   omniauth
   omniauth-facebook
   paperclip (~> 3.0)

@@ -27,3 +27,4 @@
 /.idea/
 /config/deploy.rb
 /Capfile
+/config/newrelic.yml
