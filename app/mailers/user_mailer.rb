@@ -42,6 +42,6 @@ class UserMailer < ActionMailer::Base
 
   def update_user_role(user)
     @user = user
-    mail(to:user.email, subject: "You have been granted #{user.title} role on Coursemology!")
+    mail(to:user.email, subject: "You are now #{user.get_role} on Coursemology!")
   end
 end
