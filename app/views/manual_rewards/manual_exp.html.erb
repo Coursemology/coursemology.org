@@ -20,7 +20,7 @@
           locals: { user_course: std_course } %>
         </td>
         <td>
-          <input name="exps[<%= std_course.id %>]" class="input-mini exp-input">
+          <input type="number" name="exps[<%= std_course.id %>]" class="input-mini exp-input" min="1">
           <% if index == 0 %>
             <a class="repeat-exp-link" href="#"><small>Copy EXP number</small></a>
           <% end %>
