@@ -23,8 +23,10 @@
 
 # ignode devise config file
 /config/initializers/devise.rb
-
+/config/facebook.yml
 /.idea/
 /config/deploy.rb
 /Capfile
+
 /config/newrelic.yml
+

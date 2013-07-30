@@ -32,8 +32,16 @@ You need to set the following environment variable
 
 so that the website can send out email successfully.
 
+You can add these into a .rvmrc file for easy of development
+        export GMAIL_SMTP_USER=rudy.cs21032012@gmail.com
+        export GMAIL_SMTP_PASSWORD=2012cs2103
+
 Update Devise configuration:
         cp devise_sample_config.rb config/initializers/devise.rb
+
+Update Facebook App config (copy + edit with appropirate info):
+        cp config/facebook.yml.sample config/facebook.yml
+
 
 Then update the email used, the facebook app info in the config file above.
 

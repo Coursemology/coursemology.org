@@ -1,0 +1,11 @@
+development:
+  app_id: 'abcxyz'
+  secret_key: 'abcxyz'
+
+test:
+  app_id: 'abcxyz'
+  secret_key: 'abcxyz'
+
+producttion:
+  app_id: 'abcxyz'
+  secret_key: 'abcxyz'
