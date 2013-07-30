@@ -8,11 +8,12 @@ class EnrollRequest < ActiveRecord::Base
   belongs_to :user
   belongs_to :role
 
-  before_save :notify_lecturer
+  before_create :notify_lecturer
 
   def notify_lecturer
+    puts "lect courses", course.lect_courses
     course.lect_courses.each do |uc|
-      UserMailer.delay.new_enroll_request(self,uc.user, new_course_enroll_request_path(course))
+      UserMailer.delay.new_enroll_request(self, uc.user, new_course_enroll_request_path(course))
     end
   end
 end
