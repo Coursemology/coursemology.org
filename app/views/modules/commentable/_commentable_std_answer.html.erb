@@ -1,8 +1,17 @@
 <% question = std_answer.question %>
 <% pos = question.asm_qns.first.pos %>
 <% mission = question.asm_qns.first.asm %>
-<h3>Mission: <%= mission.title %></h3>
-<h4>Question <%= pos.to_i + 1 %></h4>
-<p><%= question.description.html_safe %></p>
-<h4>Student Answer:</h4>
-<p><%= std_answer.text.html_safe %></p>
+<% std_course = std_answer.std_course %>
+<% course = mission.course %>
+
+
+<div class="mission-box" href="<%= course_mission_path(course,mission) %>">
+  <!--<img class="small-mission-pic" width="54" height="54" src="public/images/mission_icons/mission22_small.jpg">-->
+  <div class="title">Mission <%= mission.pos + 1 if mission.pos %>: <%= mission.title %></div>
+  <div class="student"><label>by:</label><span class="student-link">
+    <a href="<%= course_user_course_path(course,std_course) %>"><%= std_course.user.name %></a>
+    <!--<span class="student-tag common ">Chao Recruit</span>-->
+    </span>
+  </div>
+  <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.html_safe.split(" ").first(13).join(" ") %>... </span></div>
+</div>

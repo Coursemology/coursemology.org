@@ -147,16 +147,55 @@ div.error { color: #f55;}
 
 
 .mission-pending {margin-top: 20px; text-align: right;}
-.mission-box {background-color: #353535; margin-top: 3px; padding: 5px; display: block; text-decoration: none; position: relative; cursor:pointer;}
+.mission-box {background-color: #353535;
+  margin-top: 3px;
+  padding: 5px;
+  display: block;
+  text-decoration: none;
+  position: relative;
+  cursor:pointer;
+  color: #ffffff;
+  a:visited, a:link
+  {
+    color:#FCDF9A;
+
+    font-weight: bold;
+  }
+  a:hover {
+    color: #ffc;
+  }
+  a:link
+  {
+    text-decoration: none;
+  }
+}
 .mission-box:hover {background-color: #151515;}
 .mission-box .title { font-size: 18px; line-height: 24px; color: #FF9E59}
-.mission-box label { display: inline-block; width: 60px;}
+.mission-box label { display: inline-block; width: 70px; color: #ffffff;}
 
 
 #code-comment {
 
 }
-.code-comment-box li.comment, .code-comment-box li.hidden { background-color: #353535; margin-top: 3px; padding: 5px;}
+.code-comment-box li.comment, .code-comment-box li.hidden {
+  background-color: #353535;
+  margin-top: 3px;
+  padding: 5px;
+  color: #ffffff;
+  a:visited, a:link
+  {
+    color:#FCDF9A;
+
+    font-weight: bold;
+  }
+  a:hover {
+    color: #ffc;
+  }
+  a:link
+  {
+    text-decoration: none;
+  }
+}
 .code-comment-box li.textarea {background: transparent; padding: 0px; margin-top: 3px;}
 .code-comment-box li .commentor { float: left; margin-right: 8px;}
 .code-comment-box li .timestamp { font-size: 0.85em; }
@@ -193,3 +232,4 @@ div.error { color: #f55;}
 
 #page-numbers {list-style-type: none; text-align: center; margin: 10px 0 0 0;}
 #page-numbers li {display:inline-block; margin: 0 0 0 5px;}
+

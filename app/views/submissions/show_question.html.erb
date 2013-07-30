@@ -39,16 +39,13 @@
     <% if @grading %>
         <% if qa[:g] %>
             <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
-            <% if qa[:g].comment.size > 0 %>
-                <strong>Comment by grader:</strong>
-                <p><%= simple_format(qa[:g].comment) %></p>
-            <% end %>
         <% end %>
     <% end %>
     <%= render partial: "comments/list",
-               locals: { comments: qa[:a].comments,
-                         target: qa[:a],
-                         origin: course_mission_submission_url(@course, @mission, @submission) } %>
+               locals: { comments:  qa[:a].comments_json,
+                         target:    qa[:a],
+                         header:    "Comments",
+                         margin_left: "0px"} %>
     <hr/>
 <% end %>
 

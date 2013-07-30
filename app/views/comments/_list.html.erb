@@ -1,35 +1,15 @@
-<div class="well">
-  <h3>Comments</h3>
-  <table class="comment-table">
-    <colgroup>
-      <col class="comment-profile-pic-col"></col>
-    </colgroup>
-    <% comments.each do |comment| %>
-      <% poster = comment.user_course.user %>
-      <tr>
-        <td>
-          <img src="<%= poster.profile_photo_url %>" class="small-user-profile-pic">
-        </td>
-        <td>
-          <strong><%= poster.name %></strong>
-          <%= style_format(comment.text) %>
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <% @comment = Comment.new %>
-      <%= form_for [@course, @comment], :html => { :class => 'form-horizontal' } do |f| %>
-        <%= f.hidden_field :commentable_id, value: target.id %>
-        <%= f.hidden_field :commentable_type, value: target.class.name %>
-        <input type="hidden" name="origin" value="<%= origin %>">
-        <td>
-          <img src="<%= current_user.profile_photo_url %>" class="small-user-profile-pic">
-        </td>
-        <td>
-          <%= f.text_area :text, class: "textarea span6", rows: 2 %>
-          <button class="btn">Comment</button>
-        </td>
-      <% end %>
-    </tr>
-  </table>
-</div>
+<% if header.size > 0 %>
+    <h3><%= header %></h3>
+    <hr>
+<% end %>
+<% @ecid =  Digest::MD5.hexdigest(target.class.to_s << target.id) %>
+<ul ecid="<%= @ecid %>" class="code-comment-box" style="margin-left: <%= margin_left %>;">
+</ul>
+<input type="hidden" id="<%= @ecid %>_post_path" value="<%= course_comments_path(@course) %>">
+<input type="hidden" id="<%= @ecid %>_commentable_type" value="<%= target.class.to_s %>">
+<input type="hidden" id="<%= @ecid %>_commentable_id" value="<%= target.id %>">
+
+<script>
+    Comment.init('<%= @ecid %>', true);
+    Comment.parseComment(<%= raw(comments.to_json) %>, '<%= @ecid %>')
+</script>

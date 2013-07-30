@@ -13,7 +13,8 @@ class CommentsController < ApplicationController
       commentable.save
       @comment.commentable.notify_user(curr_user_course,@comment, params[:origin])
       respond_to do |format|
-        format.html { redirect_to params[:origin] }
+        #format.html { redirect_to params[:origin] }
+        format.json {render json: @comment.commentable.comments_json}
       end
     end
   end
