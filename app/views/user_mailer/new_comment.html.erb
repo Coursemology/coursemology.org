@@ -1,6 +1,6 @@
 Hello, <%= @user.name %>!
 
-<%= @comment.user_course.user.name %> has made a new comment to a thread you are subscribed to:
+<p><%= @comment.user_course.user.name %> has made a new comment to a thread you are subscribed to:</p>
 <blockquote>
   <%= simple_format(@comment.text) %>
 </blockquote>
