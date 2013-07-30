@@ -45,4 +45,13 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail(to:user.email, subject: "You are now #{user.get_role} on Coursemology!")
   end
+
+  def new_enroll_request(enroll_request, lecturer,redirect_url)
+    @course =  enroll_request.course
+    @role = enroll_request.role
+    @user = enroll_request.user
+    @lecturer = lecturer
+    @redirect_url = redirect_url
+    mail(to:lecturer.email, subject: "New enroll request for your course on Coursemology")
+  end
 end

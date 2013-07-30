@@ -11,14 +11,6 @@ class SubmissionGradingsController < ApplicationController
   def new
     @qadata = {}
 
-    #@mission.questions.each_with_index do |q, i|
-    #  @qadata[q.id] = { q: q, i: i + 1 }
-    #end
-    #
-    #@submission.std_answers.each do |sa|
-    #  @qadata[sa.question_id][:a] = sa
-    #end
-
     @mission.get_all_questions.each_with_index do |q,i|
       @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
@@ -27,13 +19,6 @@ class SubmissionGradingsController < ApplicationController
       qn = sa.qn
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
     end
-
-    #if @grading
-    #  @grading.answer_gradings.each do |ag|
-    #    qn = ag.student_answer.qn
-    #    @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
-    #  end
-    #end
 
   end
 
