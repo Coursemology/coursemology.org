@@ -30,3 +30,5 @@
 
 /config/newrelic.yml
 
+#.rvmrc perform certain actions when developer cd into the folder
+.rvmrc
