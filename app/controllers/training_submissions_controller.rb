@@ -108,12 +108,12 @@ class TrainingSubmissionsController < ApplicationController
 
     @training_submission.save
 
-    @course.lect_courses.each do |uc|
-      UserMailer.delay.new_submission(
-          uc.user,
-          course_training_training_submission_url(@course, @training, @training_submission)
-      )
-    end
+    #@course.lect_courses.each do |uc|
+    #  UserMailer.delay.new_submission(
+    #      uc.user,
+    #      course_training_training_submission_url(@course, @training, @training_submission)
+    #  )
+    #end
 
     Activity.started_asm(curr_user_course, @training)
 
