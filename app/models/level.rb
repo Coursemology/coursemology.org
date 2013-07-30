@@ -24,6 +24,6 @@ class Level < ActiveRecord::Base
 
   def satisfied?(user_course)
     #user_course.level only get the Level object, same type as self object
-    return user_course.level.level == self.level
+    return user_course.level.level >= self.level
   end
 end
