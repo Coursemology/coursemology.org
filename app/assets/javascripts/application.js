@@ -56,24 +56,18 @@ $(document).ready(function() {
         page_header = $(".page-header h1");
         if (page_header.size() <= 0)
             return;
-        console.log(page_header);
         page_name =page_header[0].innerHTML.replace(/\s/g,"-");
-        console.log(page_name);
         if (!page_name)
             return;
         //<input type="hidden" id="<%= item[:text] %>_count" value="<%= item[:count] %>">
         badge_count = $("#"+page_name+"_count");
-        console.log(badge_count);
         if (badge_count.size() <= 0)
             return;
         new_items_seen = $(".new_"+page_name).size();
-        console.log(new_items_seen);
         //<i class="<%= item[:icon] %>" id="badge_<%= item[:text] %>"></i>
         set_badge = $("#badge_"+page_name);
         if (new_items_seen >0 && set_badge.size() > 0) {
-            console.log(set_badge);
             update_count = badge_count.val() - new_items_seen;
-            console.log(update_count);
             set_badge[0].innerHTML = update_count > 0 ? update_count : "";
         }
     });
