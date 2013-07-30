@@ -56,6 +56,7 @@
               <%= link_to course_mission_path(@course, mission) do %>
                   <h4><%= mission.title %>
                     <% if @is_new[mission.id] %>
+                        <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
                         <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
                     <% end %>
                   </h4>
@@ -63,6 +64,7 @@
           <% else %>
               <h4><%= mission.title %>
                 <% if @is_new[mission.id] %>
+                    <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
                     <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
                 <% end %>
               </h4>

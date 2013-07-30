@@ -1,5 +1,6 @@
+<%- model_class = Submission -%>
 <div class="page-header">
-  <h1>Submissions</h1>
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
 <ul class="nav nav-tabs">
@@ -79,6 +80,7 @@
             <td>
               <%= sub.std_course.user.name %>
               <% if @unseen.include?(sub) %>
+                  <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
                   <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
               <% end %>
             </td>

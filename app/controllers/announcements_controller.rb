@@ -28,7 +28,6 @@ class AnnouncementsController < ApplicationController
     @announcement.creator = current_user
     respond_to do |format|
       if @announcement.save
-        @announcement.notify_users
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been created." }
       else

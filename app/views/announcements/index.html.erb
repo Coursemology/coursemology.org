@@ -2,34 +2,35 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
   <% if can? :manage, Announcement %>
-    <%= link_to t('.new', :default => t("helpers.links.new")),
-                new_course_announcement_path(@course),
-                :class => 'btn btn-primary' %>
+      <%= link_to t('.new', :default => t("helpers.links.new")),
+                  new_course_announcement_path(@course),
+                  :class => 'btn btn-primary' %>
 
   <% end %>
 </div>
 
 <% @announcements.each do |announcement| %>
-  <div class="announcement <%= 'future' if announcement.publish_at > DateTime.now %>">
-    <h3><%= announcement.title %>
-      <% if @is_new.has_key?(announcement.id) %>
-        <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
-      <% end %>
-      <% if can? :manage, Announcement %>
-        <div class="pull-right">
-          <%= link_to edit_course_announcement_path(@course, announcement), class: "btn" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to course_announcement_path(@course, announcement), class: "btn btn-danger", method: "DELETE" do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </div>
-      <% end %>
-    </h3>
-    <p><%= announcement.description.html_safe %></p>
-    <i><%= announcement.publish_at.to_formatted_s(:long) %></i>
-  </div>
-  <hr/>
+    <div class="announcement <%= 'future' if announcement.publish_at > DateTime.now %>">
+      <h3><%= announcement.title %>
+        <% if @is_new.has_key?(announcement.id) %>
+            <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
+            <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
+        <% end %>
+        <% if can? :manage, Announcement %>
+            <div class="pull-right">
+              <%= link_to edit_course_announcement_path(@course, announcement), class: "btn" do %>
+                  <i class="icon-edit"></i>
+              <% end %>
+              <%= link_to course_announcement_path(@course, announcement), class: "btn btn-danger", method: "DELETE" do %>
+                  <i class="icon-trash"></i>
+              <% end %>
+            </div>
+        <% end %>
+      </h3>
+      <p><%= announcement.description.html_safe %></p>
+      <i><%= announcement.publish_at.to_formatted_s(:long) %></i>
+    </div>
+    <hr/>
 <% end %>
 
 <%= paginate @announcements %>

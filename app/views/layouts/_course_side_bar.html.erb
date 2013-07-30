@@ -34,8 +34,7 @@
           </table>
           <div>
             <div class="progress" style="margin-bottom: 3px">
-              <div class="bar bar-success" style="width:
-                      <%= curr_user_course.level_percentage %>%"></div>
+              <div class="bar bar-success" style="width: <%= curr_user_course.level_percentage %>%"></div>
             </div>
       <span class="pull-right">
         <strong style="font-size: 1.2em"><%= curr_user_course.exp %></strong>
@@ -66,7 +65,8 @@
           </span>
                 <%= item[:text] %>
                 <% if item.has_key?(:count) && item[:count] > 0 %>
-                    <span class="sidenav-count pull-right"><%= item[:count] %></span>
+                    <input type="hidden" id="<%= item[:text] %>_count" value="<%= item[:count] %>">
+                    <span class="sidenav-count pull-right" id="badge_<%= item[:text] %>"><%= item[:count] %></span>
                 <% end %>
               </a>
             </li>
