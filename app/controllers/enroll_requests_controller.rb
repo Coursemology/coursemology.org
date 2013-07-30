@@ -39,6 +39,7 @@ class EnrollRequestsController < ApplicationController
       @enroll_request.user = current_user
       @enroll_request.role = @role
       @enroll_request.save
+      @enroll_request.notify_lecturer(course_enroll_requests_url(@course))
       @er = @enroll_request
     end
   end

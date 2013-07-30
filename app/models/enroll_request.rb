@@ -8,12 +8,11 @@ class EnrollRequest < ActiveRecord::Base
   belongs_to :user
   belongs_to :role
 
-  before_create :notify_lecturer
 
-  def notify_lecturer
+  def notify_lecturer(redirect_url)
     puts "lect courses", course.lect_courses
     course.lect_courses.each do |uc|
-      UserMailer.delay.new_enroll_request(self, uc.user, new_course_enroll_request_path(course))
+      UserMailer.delay.new_enroll_request(self, uc.user, redirect_url)
     end
   end
 end

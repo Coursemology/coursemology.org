@@ -118,14 +118,14 @@ class Submission < ActiveRecord::Base
     self.attempt = self.attempt ? self.attempt + 1 : 1
   end
 
-  def notify_submission(curr_user_course)
+  def notify_submission(curr_user_course,redirect_url)
     curr_user_course.get_my_tutors.each do |uc|
       puts 'notify tutors'
       UserMailer.delay.new_submission(
           uc.user,
           std_course.user,
           mission,
-          self.get_new_grading_path
+          redirect_url
       )
     end
   end

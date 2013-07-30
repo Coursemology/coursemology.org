@@ -119,7 +119,7 @@ class SubmissionsController < ApplicationController
                                     notice: "Your submission has been saved." }
         else
           @submission.set_submitted
-          @submission.notify_submission(curr_user_course)
+          @submission.notify_submission(curr_user_course,course_mission_submission_url(@course,@mission,@submission))
           format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                                     notice: "Your submission has been updated." }
         end
