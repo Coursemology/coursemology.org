@@ -13,8 +13,8 @@ class Mission < ActiveRecord::Base
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
-  has_many :questions, through: :asm_qns, source: :qn, source_type: "Question"
-  has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
+  has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
+  has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
   has_many :submissions, dependent: :destroy
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 

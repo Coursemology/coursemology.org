@@ -17,6 +17,14 @@ module ApplicationHelper
     end
   end
 
+  def datetime_no_seconds(datetime)
+    if datetime.nil?
+      ""
+    else
+      datetime.strftime("%d %b %Y %H:%M")
+    end
+  end
+
   def resource_name
     :user
   end

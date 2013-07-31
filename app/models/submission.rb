@@ -14,6 +14,9 @@ class Submission < ActiveRecord::Base
            source: :answer, source_type: "StdAnswer"
   has_many :std_coding_answers, through: :sbm_answers,
            source: :answer, source_type: "StdCodingAnswer"
+
+  has_many :answers, as: :sbm, class_name: "SbmAnswer"
+
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
   scope :graded, lambda { where("final_grading_id IS NOT NULL") }
@@ -107,6 +110,7 @@ class Submission < ActiveRecord::Base
 
   def set_submitted
     self.update_attribute(:status,'submitted')
+    self.update_attribute(:submit_at, updated_at)
   end
 
   def set_graded
@@ -119,7 +123,7 @@ class Submission < ActiveRecord::Base
   end
 
   def notify_submission(curr_user_course,redirect_url)
-    curr_user_course.get_my_tutors.each do |uc|
+    curr_user_course.get_staff_incharge.each do |uc|
       puts 'notify tutors'
       UserMailer.delay.new_submission(
           uc.user,

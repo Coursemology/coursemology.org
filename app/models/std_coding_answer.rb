@@ -8,9 +8,14 @@ class StdCodingAnswer < ActiveRecord::Base
 
   has_many :comments, as: :commentable
   has_many :annotations, as: :annotable
+  has_one :pending_comments, as: :answer
 
   has_one :answer_grading, as: :student_answer, dependent: :destroy
 
   has_many :sbm_answers, as: :answer, dependent: :destroy
+
+  def question
+    qn
+  end
 
 end

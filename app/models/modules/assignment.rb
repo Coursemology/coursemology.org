@@ -22,7 +22,7 @@ module Assignment
   end
 
   def get_title
-    return "#{self.class.name}: #{self.title}"
+    return "#{self.class.name} : #{self.title}"
   end
 
   def get_path

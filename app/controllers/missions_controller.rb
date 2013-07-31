@@ -66,7 +66,7 @@ class MissionsController < ApplicationController
 
   def create
     puts "params",params
-    @mission.pos = @course.missions.count - 1
+    @mission.pos = @course.missions.count + 1
     @mission.creator = current_user
     @mission.update_tags(params[:tags])
     puts "mission_saving",@mission

@@ -27,6 +27,8 @@ class UserCourse < ActiveRecord::Base
   has_many :training_submissions, foreign_key: "std_course_id"
 
   has_many :std_answers, foreign_key: "std_course_id"
+  has_many :std_coding_answers, foreign_key: "std_course_id"
+
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
   has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
@@ -175,15 +177,37 @@ class UserCourse < ActiveRecord::Base
     user_course.update_exp_and_level
   end
 
-  def get_my_tutors
-    tutor_courses = self.tut_courses.map{|tg| tg.tut_course}
+  def get_staff_incharge
+    tutor_courses = get_my_tutors
     if tutor_courses.size == 0
       tutor_courses = self.course.lect_courses
     end
     tutor_courses
   end
 
+  def get_my_tutors
+    self.tut_courses.map{|tg| tg.tut_course}
+  end
+
+  def get_my_stds
+    if self.std_courses.size > 0
+      self.std_courses.map {|sg| sg.std_course}
+    elsif self.is_lecturer?
+      self.get_all_stds
+    else
+      []
+    end
+  end
+
+  def get_all_stds
+    UserCourse.find_all_by_course_id_and_role_id(self.course, Role.student.first.id)
+  end
+
   def get_path
     course_user_course_path(self.course, self)
+  end
+
+  def get_all_answers
+    self.uc_answers.each.map { |uc_answer| uc_answer.answer }
   end
 end

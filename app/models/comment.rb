@@ -3,4 +3,5 @@ class Comment < ActiveRecord::Base
 
   belongs_to :user_course
   belongs_to :commentable, polymorphic: true
+
 end

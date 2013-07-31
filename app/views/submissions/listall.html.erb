@@ -3,6 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
+
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "MissionSubmission" %>">
     <a href="<%= course_submissions_path(@course) %>" data-toggle="tab">Mission Submissions</a>
@@ -86,7 +87,7 @@
             </td>
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
-        <td><%= time_ago_in_words(sub.updated_at) %> ago</td>
+        <td><%= time_ago_in_words(sub.submit_at) %> ago</td>
         <% if can? :manage, SubmissionGrading %>
             <td>
               <% sub.submission_gradings.each do |sg| %>

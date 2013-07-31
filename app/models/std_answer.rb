@@ -11,13 +11,14 @@ class StdAnswer < ActiveRecord::Base
   belongs_to :std_course, class_name: "UserCourse"
 
   has_many :comments, as: :commentable
+  has_one :pending_comments, as: :answer
 
   has_many :sbm_answers, as: :answer, dependent: :destroy
 
   alias_method :qn, :question
 
   def get_url
-     sbm_answers.first.sbm.get_url
+    sbm_answers.first.sbm.get_url
   end
 
   def qn_id

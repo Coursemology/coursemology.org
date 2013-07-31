@@ -66,7 +66,7 @@
                 <%= item[:text] %>
                 <% if item.has_key?(:count) && item[:count] > 0 %>
                     <input type="hidden" id="<%= item[:text] %>_count" value="<%= item[:count] %>">
-                    <span class="sidenav-count pull-right" id="badge_<%= item[:text] %>"><%= item[:count] %></span>
+                    <span class="sidenav-count pull-right" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
                 <% end %>
               </a>
             </li>
@@ -88,8 +88,8 @@
               <% end %>
             </span>
             <%= item[:text] %>
-            <% if item.has_key?(:count) && item[:count] > 0 %>
-                <span class="sidenav-count pull-right"><%= item[:count] %></span>
+            <% if item.has_key?(:count) %>
+                <span class="sidenav-count pull-right" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
             <% end %>
           </a>
         </li>

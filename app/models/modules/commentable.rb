@@ -6,17 +6,33 @@ module Commentable
     raise NotImplementedError
   end
 
-  def notify_user(curr_user_course, comment, redirect_url)
-    # user and all who has commented on this?
-    # all lecturers
+  def pending?
+    if self.pending_comments
+      self.pending_comments.pending?
+    else
+      false
+    end
+  end
 
-    # all users?
-    #commented by the student
+  def set_pending_comments(pending)
+    if self.pending_comments
+      self.pending_comments.update_attribute(:pending, pending)
+    else
+      self.build_pending_comments(pending:pending).save
+    end
+  end
+
+  def notify_user(curr_user_course, comment, redirect_url)
+
     if curr_user_course == self.std_course
-      self.std_course.get_my_tutors.each do |uc|
+      #commented by the student, set pending true
+      comment.commentable.set_pending_comments(true)
+      self.std_course.get_staff_incharge.each do |uc|
         UserMailer.delay.new_comment(uc.user, comment, redirect_url)
       end
     else
+      #commented by the staff, set pending false
+      comment.commentable.set_pending_comments(false)
       UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
     end
     # TODO add a notification as well
@@ -30,12 +46,11 @@ module Commentable
                           s:  -1,
                           e:  -1,
                           id: c.id,
-                          t:  time_ago_in_words(c.updated_at),
+                          t:  datetime_no_seconds(c.updated_at),
                           u:  '<span class="student-link"><a href="'+c.user_course.get_path+'">'+c.user_course.user.name+'</a></span>',
                           p:  c.user_course.user.get_profile_photo_url
                       })
     end
     responds
   end
-
 end
