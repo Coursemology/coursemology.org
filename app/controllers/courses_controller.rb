@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students, :edit]
+  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings]
 
   def create
     @course = Course.new(params[:course])
@@ -110,5 +110,10 @@ class CoursesController < ApplicationController
       end
     end
     @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(20)
+  end
+
+  def pending_gradings
+    authorize! :see, :pending_gradings
+    @pending_gradings = @course.get_pending_gradings(curr_user_course)
   end
 end

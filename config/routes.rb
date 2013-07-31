@@ -115,6 +115,7 @@ JfdiAcademy::Application.routes.draw do
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
+  match "courses/:id//pending_gradings"   => "courses#pending_gradings", as: :course_pending_gradings
 
   resources :file_uploads
 

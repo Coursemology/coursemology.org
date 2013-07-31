@@ -1,0 +1,50 @@
+<div class="page-header">
+  <h1>Pending Grading</h1>
+</div>
+<table class="table">
+  <thead>
+  <tr>
+    <th width="15%">Student</th>
+    <th>Mission</th>
+    <th width="15%">Submitted at </th>
+    <th>Tutor</th>
+    <th width="10%">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @pending_gradings.each do |sub| %>
+      <tr>
+        <td>
+          <%= sub.std_course.user.name %>
+        </td>
+        <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
+        <td><%= datetime_format sub.updated_at %> </td>
+        <td>
+          <%tutor = sub.std_course.get_my_tutors %>
+          <% if tutor.size > 0 %>
+              <%= tutor.first.user.name %>
+          <% else %>
+              Unassigned!
+          <% end %>
+
+        </td>
+        <% if can? :manage, SubmissionGrading %>
+
+            <% if sub.submission_gradings.count == 0 %>
+                <td>
+                  <%= link_to "Evaluate",
+                              sub.get_new_grading_path,
+                              class: "btn btn-primary" %>
+                </td>
+            <% end %>
+        <% end %>
+
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<script>
+    count = <%= @pending_gradings.size %>;
+    $("#badge_PendingGrading")[0].innerHTML = count || ""
+</script>
