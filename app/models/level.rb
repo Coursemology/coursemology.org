@@ -23,6 +23,11 @@ class Level < ActiveRecord::Base
   end
 
   def satisfied?(user_course)
+    # achievement check in AchievementsController#index eventually call this
+    # however, when lecturer creates a course, their user_course.level is nil.
+    # we shouldn't check it if that's the case
+    return false if user_course.level.nil? and user_course.user.is_lecturer?
+
     #user_course.level only get the Level object, same type as self object
     return user_course.level.level >= self.level
   end
