@@ -66,57 +66,73 @@ class ApplicationController < ActionController::Base
         unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
         counts[:submissions] = unseen_sbms.count
       end
+      if can? :see, :pending_grading
+        counts[:pending_grading] = @course.get_pending_gradings(curr_user_course).count
+      end
+      if can? :see, :pending_comments
+        counts[:pending_comments] = @course.get_pending_comments.count
+      end
       # TODO students see the number of new gradings
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
     # home
     @nav_items = [{
-                      text: "Announcements",
-                      url: course_announcements_url(@course),
-                      img: @theme_settings["Announcements Icon"],
-                      icon: "icon-bullhorn",
-                      count: counts[:announcements] || 0
+                      text:   "Announcements",
+                      url:    course_announcements_url(@course),
+                      img:    @theme_settings["Announcements Icon"],
+                      icon:   "icon-bullhorn",
+                      count:  counts[:announcements] || 0
                   }, {
-                      text: "Missions",
-                      url: course_missions_url(@course),
-                      img: @theme_settings["Missions Icon"],
-                      icon: "icon-envelope",
-                      count: counts[:missions] || 0
+                      text:   "Missions",
+                      url:    course_missions_url(@course),
+                      img:    @theme_settings["Missions Icon"],
+                      icon:   "icon-envelope",
+                      count:   counts[:missions] || 0
                   }, {
-                      text: "Trainings",
-                      url: course_trainings_url(@course),
-                      img: @theme_settings["Trainings Icon"],
-                      icon: "icon-envelope",
-                      count: counts[:trainings] || 0
+                      text:   "Trainings",
+                      url:    course_trainings_url(@course),
+                      img:    @theme_settings["Trainings Icon"],
+                      icon:   "icon-envelope",
+                      count:  counts[:trainings] || 0
                   }, {
-                      text: "Submissions",
-                      url: course_submissions_url(@course),
-                      img: @theme_settings["Submissions Icon"],
-                      icon: "icon-envelope-alt",
-                      count: counts[:submissions] || 0
-                  }, {
-                      text: "Comments",
-                      url: course_comments_url(@course),
-                      icon: "icon-comment"
-                  }, {
-                      text: "Levels",
-                      url: course_levels_url(@course),
-                      icon: "icon-star-empty"
-                  }, {
-                      text: "Achievements",
-                      url: course_achievements_url(@course),
-                      icon: "icon-star"
-                  }, {
-                      text: "Leaderboards",
-                      url: course_leaderboards_url(@course),
-                      img: @theme_settings["Leaderboards Icon"],
-                      icon: "icon-star-empty"
-                  }, {
-                      text: "Students",
-                      url: course_students_url(@course),
-                      icon: "icon-user",
+                      text:   "Submissions",
+                      url:    course_submissions_url(@course),
+                      img:    @theme_settings["Submissions Icon"],
+                      icon:   "icon-envelope-alt",
+                      count:  counts[:submissions] || 0
                   }]
+    if curr_user_course.is_staff?
+      @nav_items <<   {
+          text:   "Comments",
+          url:    course_comments_url(@course),
+          icon:   "icon-comment",
+          count:  counts[:pending_comments] || 0
+      }
+      @nav_items <<    {
+          text: "Pending Grading",
+          url:  course_pending_gradings_url(@course),
+          icon: "icon-envelope-alt",
+          count: counts[:pending_grading]
+      }
+    end
+
+    @nav_items << {
+        text:   "Achievements",
+        url:    course_achievements_url(@course),
+        icon:   "icon-star"
+    }
+    @nav_items <<    {
+        text:   "Leaderboards",
+        url:    course_leaderboards_url(@course),
+        img:    @theme_settings["Leaderboards Icon"],
+        icon:   "icon-star-empty"
+    }
+    @nav_items <<    {
+        text:   "Students",
+        url:    course_students_url(@course),
+        icon:   "icon-user",
+    }
 
     if can? :manage, Course
       @admin_nav_items = []
@@ -132,6 +148,11 @@ class ApplicationController < ActionController::Base
             icon: "icon-user"
         }
       end
+      @admin_nav_items << {
+          text:   "Levels",
+          url:    course_levels_url(@course),
+          icon:   "icon-star-empty"
+      }
 
       @admin_nav_items << {
           text: "Tags",

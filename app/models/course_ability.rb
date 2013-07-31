@@ -46,6 +46,8 @@ class CourseAbility
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
+      can :see, :pending_grading
+      can :see, :pending_comments
 
       cannot :modify, TrainingSubmission
       return
@@ -65,7 +67,7 @@ class CourseAbility
       end
 
       can :read, Tag
-      can :read, [Level, Achievement, Title, Reward]
+      can :read, [Achievement, Title, Reward]
       can :students, Course
 
       can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
