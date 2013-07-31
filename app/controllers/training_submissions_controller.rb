@@ -203,6 +203,8 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_code
+    require 'AutoGrader'
+
     code = params[:code]
     coding_question = CodingQuestion.find(params[:qid])
     sma = StdCodingAnswer.new()
