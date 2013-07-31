@@ -30,6 +30,16 @@ class RequirementsController < ApplicationController
       respond_to do |format|
         format.json { render text: resp }
       end
+    elsif type == "Level"
+      @lvl_req = Level.find(params[:lvl_id])
+      @requirement.req = @lvl_req
+      resp = render_to_string(
+        partial: "requirements/lvl_req_row",
+        locals: { lvl_req: @requirement}
+      )
+      respond_to do |format|
+        format.json { render text: resp }
+      end
     end
   end
 
