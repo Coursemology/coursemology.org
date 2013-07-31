@@ -23,7 +23,7 @@ production:
   encoding: utf8
   reconnect: true
   database: coursemology
-  pool: 5
+  pool: 20
   username: coursemology
   password: coursemology
 #  socket: /tmp/mysql.sock
