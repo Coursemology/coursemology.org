@@ -14,6 +14,12 @@ class Achievement < ActiveRecord::Base
   has_many :user_achievements
 
   def fulfilled_conditions?(user_course)
+    # consider achievement with no requirement a special case
+    # it can only be assigned manually, since there is no condition to check
+    if !requirements || requirements.count == 0
+      return false
+    end
+
     satisfied = true
     requirements.each do |req|
       satisfied &&= req.satisfied?(user_course)

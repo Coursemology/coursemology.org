@@ -65,7 +65,7 @@ class UserCourse < ActiveRecord::Base
 
   def level_percentage
     if self.level
-      return self.exp * 100 / self.level.exp_threshold
+      return self.exp * 100 / self.level.next_level.exp_threshold
     end
     return 0
   end
@@ -94,14 +94,13 @@ class UserCourse < ActiveRecord::Base
     self.exp = self.exp_transactions.sum(&:exp)
 
     self.course.levels.each do |lvl|
-      # now: level = first level that is beyonds user's exp
-      # how level is calculated must be given more thought
-      if lvl.exp_threshold > self.exp
+      if lvl.exp_threshold <= self.exp
         if self.level != lvl && lvl.level > 1
           Activity.earned_smt(self, lvl)
           Notification.leveledup(self, lvl)
         end
         self.level = lvl
+      else
         break
       end
     end
@@ -161,7 +160,7 @@ class UserCourse < ActiveRecord::Base
 
   def init
     self.exp = 0
-    self.level = self.course.levels.find_by_level(1)
+    self.level = self.course.levels.find_by_level(0)
   end
 
   def manual_exp_award(user_course_id,exp,reason)

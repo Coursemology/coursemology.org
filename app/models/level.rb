@@ -1,4 +1,6 @@
 class Level < ActiveRecord::Base
+  default_scope { order("level ASC") }
+
   include Rails.application.routes.url_helpers
   include ActivityObject
 
@@ -9,10 +11,14 @@ class Level < ActiveRecord::Base
   has_many :user_courses
 
   def get_title
-    return "Level #{level - 1}"
+    return "Level #{level}"
   end
 
   def get_path
     return course_levels_path(course)
+  end
+
+  def next_level
+    return course.levels.find_by_level(level + 1) || self
   end
 end

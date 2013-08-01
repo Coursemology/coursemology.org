@@ -9,7 +9,7 @@ class LevelsController < ApplicationController
   end
 
   def populate
-    if @course.levels.count == 0 && params[:num_level]
+    if @course.levels.count <= 1 && params[:num_level]
       num_level = params[:num_level]
       num_level.to_i.times do |i|
         lvl = i + 1

@@ -28,7 +28,7 @@
             <tr>
               <% # <td>10</td> %>
               <td><%= curr_user_course.user_achievements.count() %></td>
-              <td><%= curr_user_course.level ? curr_user_course.level.level - 1 : 0 %></td>
+              <td><%= curr_user_course.level ? curr_user_course.level.level : 0 %></td>
             </tr>
             </tbody>
           </table>
@@ -39,7 +39,7 @@
       <span class="pull-right">
         <strong style="font-size: 1.2em"><%= curr_user_course.exp %></strong>
         /
-        <%= curr_user_course.level ? curr_user_course.level.exp_threshold : 0 %> EXP</span>
+        <%= curr_user_course.level ? curr_user_course.level.next_level.exp_threshold : 0 %> EXP</span>
             <div class="clearfix"></div>
           </div>
       <% end %>
