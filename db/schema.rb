@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130729084346) do
+ActiveRecord::Schema.define(:version => 20130801143400) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -329,6 +329,25 @@ ActiveRecord::Schema.define(:version => 20130729084346) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
+
+  create_table "paths", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "steps"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "pending_comments", :force => true do |t|
+    t.integer  "answer_id"
+    t.string   "answer_type"
+    t.boolean  "pending"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "pending_comments", ["answer_id"], :name => "index_pending_comments_on_answer_id"
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"

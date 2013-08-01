@@ -206,7 +206,4 @@ class UserCourse < ActiveRecord::Base
     course_user_course_path(self.course, self)
   end
 
-  def get_all_answers
-    self.uc_answers.each.map { |uc_answer| uc_answer.answer }
-  end
 end
