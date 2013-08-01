@@ -11,6 +11,7 @@ end
 
 group :production do
   gem 'mysql2'
+  gem 'puma'
 end
 
 gem "rspec-rails", :group => [:test, :development]
