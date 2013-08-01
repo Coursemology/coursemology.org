@@ -37,7 +37,7 @@ class CommentsController < ApplicationController
         @topics = get_mystudent_comments
       else
         @tab = 'pending'
-        @topics = @course.get_all_comments
+        @topics = @pending_comments
     end
 
     @topics = sorting_and_paging(@topics)
