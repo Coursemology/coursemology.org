@@ -185,6 +185,7 @@ class TrainingSubmissionsController < ApplicationController
       if mcqa.is_correct
         @training_submission.current_step = mcq_pos + 1
         grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+        @training_submission.update_grade
       end
     end
 
@@ -236,6 +237,10 @@ class TrainingSubmissionsController < ApplicationController
         puts "correct!",pos,@training_submission.current_step
         @training_submission.current_step = pos + 1
         AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
+        # only update grade after finishing the assignments
+        if @training_submission.done?
+          @training_submission.update_grade
+        end
       end
     end
     if @training_submission.save

@@ -32,6 +32,13 @@ class TrainingSubmission < ActiveRecord::Base
     return current_step >= self.training.mcqs.count
   end
 
+  def update_grade
+    subm_grading = self.get_final_grading
+    subm_grading.update_grade
+    subm_grading.update_exp_transaction
+    subm_grading.save
+  end
+
   def auto_grade(question, std_sbm_ans)
     grade = 0
     subm_grading = self.get_final_grading
