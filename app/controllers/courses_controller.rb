@@ -5,6 +5,8 @@ class CoursesController < ApplicationController
   def create
     @course = Course.new(params[:course])
     @course.creator = current_user
+    @course.levels.build({ level: 0, exp_threshold: 0  })
+    @course.save
 
     user_course = @course.user_courses.build()
     user_course.course = @course
