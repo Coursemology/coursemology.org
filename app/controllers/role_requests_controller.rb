@@ -3,6 +3,7 @@ class RoleRequestsController < ApplicationController
 
   def index
     # only admin should be able to access this page
+    @admin = true
     @lecturer_requests = []
     @lecturer_role = Role.find_by_name('lecturer')
     @role_requests.each do |role_request|

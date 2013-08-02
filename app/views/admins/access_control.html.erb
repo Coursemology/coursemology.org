@@ -1,1 +1,44 @@
-<%= render :partial => 'search_form' %>
+<div class="page-header">
+  <h3>Access Control</h3>
+</div>
+<div class="alert alert-success hidden">Update role successful</div>
+<%= form_tag admins_path, :method => 'get' do %>
+    <%= render :partial => 'search_form'%>
+<% end %>
+
+<% if @users %>
+    <table class="table table-hover assignments">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th width="10%">Role</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @users.each do |user| %>
+          <tr>
+            <td>
+               <input type="hidden" class="user-id" value="<%= user.id %>">
+              <input type="hidden" class="user-role-update-path" value="<%= users_update_path %>">
+              <%= user.name %>
+            </td>
+            <td>
+              <%= user.email %>
+            </td>
+            <td width="10%">
+              <%= select "select-role","", Role.all.map {|role| [role.title, role.id] }, {:selected => "#{user.system_role_id}" }%>
+            </td>
+            <td>
+              <%= link_to '#', class: 'btn update-user-role' do %>
+                  <i class="icon-ok"></i>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= paginate @users %>
+<% end %>
