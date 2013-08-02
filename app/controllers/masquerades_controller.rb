@@ -33,6 +33,6 @@ class MasqueradesController < ApplicationController
     user = User.find(session[:admin_id])
     sign_in user
     session[:admin_id] = nil
-    redirect_to admin_path, notice: "Stopped masquerading"
+    redirect_to admin_masquerades_path, notice: "Stopped masquerading"
   end
 end

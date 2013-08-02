@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   rescue_from CanCan::AccessDenied do |exception|
+
+    unless current_user
+      session[:request_url] = request.url
+    end
+
     Rails.logger.debug "Access denied on #{exception.action} #{exception.subject.inspect}"
     redirect_to access_denied_path, alert: exception.message
   end
