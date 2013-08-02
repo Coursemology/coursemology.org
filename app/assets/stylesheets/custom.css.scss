@@ -102,8 +102,8 @@ h1 {
 .row-fluid .content {
   padding: 10px 20px;
   background-color: white;
-  border: solid 1px #ccc;
-  margin-left: 0px;
+  //border: solid 1px #ccc;
+  margin-left: 10px;
   min-height: 700px;
 }
 
@@ -235,7 +235,7 @@ ul {
 }
 
 .sidebar-course-logo {
-  border: 1px solid #ccc;
+  //border: 1px solid #ccc;
 }
 
 .user-profile-pic {
@@ -429,19 +429,22 @@ footer {
 .user-thumb-profile {
   cursor: pointer;
   width: 100%;
-  padding: 5px 10px;
 }
 
 a.user-thumb-profile {
   text-decoration: none;
 }
 
-.user-thumb-profile strong {
-  float: left;
-  line-height: 50px;
+#user-profile-name  {
+  //float: left;
+  height: 45px;
   padding-left: 10px;
   color: #2775b3;
-  font-size: 1.1em;
+  font-size: 0.9em;
+  font-weight: bold;
+  padding-top: 5px;
+  vertical-align: middle;
+  display: table-cell;
 }
 
 .user-thumb-profile img {
@@ -449,10 +452,6 @@ a.user-thumb-profile {
   max-width: 50px;
   max-height: 50px;
   text-align: center;
-}
-
-.user-sidebar-profile strong {
-  font-size: 1.3em;
 }
 
 li .thumbnail {
@@ -644,4 +643,22 @@ $grayMediumLight: #eaeaea;
 .assignments thead {
   font-size: 1.3em;
   background-color: #f5f5f5;;
+}
+
+.row-fluid .course-title {
+  background-color: #eee;
+  padding: 10px 20px;
+  margin-left: 10px;
+  a:visited, a:link {
+    color: #563D7C;
+    font-weight: bold;
+    font-size: 2em;
+  }
+  a:hover {
+    color: #78617C;
+  }
+  a:link
+  {
+    text-decoration: none;
+  }
 }
