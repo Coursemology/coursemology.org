@@ -65,7 +65,8 @@ class UserCourse < ActiveRecord::Base
 
   def level_percentage
     if self.level
-      return self.exp * 100 / self.level.next_level.exp_threshold
+      threshold = self.level.next_level.exp_threshold
+      return threshold == 0? 0 : self.exp * 100 / self.level.next_level.exp_threshold
     end
     return 0
   end
