@@ -164,6 +164,9 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq
+
+    require 'AutoGrader'
+
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid])
     sma = StdMcqAnswer.new()
@@ -181,7 +184,8 @@ class TrainingSubmissionsController < ApplicationController
     if @training_submission.current_step == mcq_pos
       if mcqa.is_correct
         @training_submission.current_step = mcq_pos + 1
-        grade = @training_submission.auto_grade(mcq, sbm_ans)
+        grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+        @training_submission.update_grade
       end
     end
 
@@ -200,6 +204,8 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_code
+    require 'AutoGrader'
+
     code = params[:code]
     coding_question = CodingQuestion.find(params[:qid])
     sma = StdCodingAnswer.new()
@@ -230,7 +236,11 @@ class TrainingSubmissionsController < ApplicationController
       if sma.is_correct
         puts "correct!",pos,@training_submission.current_step
         @training_submission.current_step = pos + 1
-        @training_submission.auto_grade(coding_question,sbm_ans)
+        AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
+        # only update grade after finishing the assignments
+        if @training_submission.done?
+          @training_submission.update_grade
+        end
       end
     end
     if @training_submission.save
