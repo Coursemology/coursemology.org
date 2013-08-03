@@ -109,6 +109,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             }else{
                 $ab.attr('disabled','disabled');
                 $.post($('#annotation_path').val(), {
+                    origin: document.URL,
                     annotation:{
                         annotable_id: _cid,
                         annotable_type: "StdCodingAnswer",

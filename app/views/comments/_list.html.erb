@@ -2,14 +2,14 @@
     <h3><%= header %></h3>
     <hr>
 <% end %>
-<% @ecid =  Digest::MD5.hexdigest(target.class.to_s << target.id.to_s) %>
-<ul ecid="<%= @ecid %>" class="code-comment-box" style="margin-left: <%= margin_left %>;">
+<ul ecid="<%= ecid %>" class="code-comment-box" style="margin-left: <%= margin_left %>;">
 </ul>
-<input type="hidden" id="<%= @ecid %>_post_path" value="<%= course_comments_path(@course) %>">
-<input type="hidden" id="<%= @ecid %>_commentable_type" value="<%= target.class.to_s %>">
-<input type="hidden" id="<%= @ecid %>_commentable_id" value="<%= target.id %>">
+
+<input type="hidden" id="<%= ecid %>_post_path" value="<%= course_comments_path(@course) %>">
+<input type="hidden" id="<%= ecid %>_commentable_type" value="<%= target.class.to_s %>">
+<input type="hidden" id="<%= ecid %>_commentable_id" value="<%= target.id %>">
 
 <script>
-    Comment.init('<%= @ecid %>', true);
-    Comment.parseComment(<%= raw(comments.to_json) %>, '<%= @ecid %>')
+    Comment.init('<%= ecid %>', true);
+    Comment.parseComment(<%= raw(comments.to_json) %>, '<%= ecid %>')
 </script>

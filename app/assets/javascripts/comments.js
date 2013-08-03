@@ -49,6 +49,7 @@ var Comment = (function(){
             }else{
                 $ta.attr('disabled','disabled');
                 $.post($("#"+ecid+"_post_path").val(),{
+                    origin: $("#submission_url_"+ecid).val(),
                     comment:{
                         commentable_id: $("#"+ecid+"_commentable_id").val(),
                         commentable_type: $("#"+ecid+"_commentable_type").val(),
