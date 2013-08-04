@@ -132,7 +132,7 @@ class ApplicationController < ActionController::Base
           text: "Pending Grading",
           url:  course_pending_gradings_url(@course),
           icon: "icon-envelope-alt",
-          count: counts[:pending_grading]
+          count: counts[:pending_grading] || 0
       }
       @nav_items << {
           text:   "Achievements",
