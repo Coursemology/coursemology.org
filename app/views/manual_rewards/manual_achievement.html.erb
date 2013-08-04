@@ -11,11 +11,12 @@
   </li>
 </ul>
 
-<h2>Give Achievements</h2>
-
+<h3>Give Achievements</h3>
 <%= form_tag course_manual_achievement_path(@course), method:"POST" do %>
+  <a href='#' class='select-all-achs'>Select all</a>
+  | <a href='#' class='deselect-all-achs'>Deselect all</a>
 
-  <table class="table table-vertical-middle">
+  <table class="table table-vertical-middle manual-awards-achievements">
     <% @achievements.each_with_index do |ach, index| %>
       <% if index % 3 == 0 %>
         <tr>
@@ -39,9 +40,15 @@
     <% end %>
   </table>
 
-  <h2>To Students</h2>
+  <h3>To Students</h3>
+  <div>
+    <a href='#' class="select-all-stds">Select all</a>
+    | <a href='#' class="deselect-all-stds">Deselect all</a>
+    | <a href='?all_students'>View all students</a>
+    | <a href='?'>View my students</a>
+  </div>
 
-  <table class="table table-vertical-middle">
+  <table class="table table-vertical-middle manual-awards-students">
     <% @student_courses.each_with_index do |std_course, index| %>
       <% if index % 3 == 0 %>
         <tr>
@@ -59,7 +66,7 @@
           <%= std_course.user.name %>
         </label>
       </td>
-      <% if index % 3 == 2 || index == @achievements.size %>
+      <% if index % 3 == 2 || index == @student_courses.size %>
         </tr>
       <% end %>
     <% end %>

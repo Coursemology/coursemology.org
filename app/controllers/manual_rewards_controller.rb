@@ -4,7 +4,16 @@ class ManualRewardsController < ApplicationController
 
   def manual_exp
     authorize! :award_points, UserCourse
-    @student_courses = @course.user_courses.student
+
+    if params.has_key?(:all_students)
+      @student_courses = @course.user_courses.student
+    else
+      @student_courses = @course.tutorial_groups.where(tut_course_id:curr_user_course).map {|m| m.std_course}
+      if !@student_courses
+        @student_courses = @course.user_courses.student
+      end
+    end
+
     exps = params[:exps]
     if exps
       count = 0
@@ -22,7 +31,15 @@ class ManualRewardsController < ApplicationController
   def manual_achievement
     authorize! :award_points, UserCourse
     @achievements = @course.achievements
-    @student_courses = @course.user_courses.student
+
+    if params.has_key?(:all_students)
+      @student_courses = @course.user_courses.student
+    else
+      @student_courses = @course.tutorial_groups.where(tut_course_id:curr_user_course).map {|m| m.std_course}
+      if !@student_courses
+        @student_courses = @course.user_courses.student
+      end
+    end
 
     ach_ids = params[:achs]
     std_course_ids = params[:std_courses]

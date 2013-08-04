@@ -12,7 +12,12 @@
 </ul>
 
 <%= form_tag course_manual_exp_path(@course), method: "POST" do %>
-  <h2>Giving EXP to Students:</h2>
+  <h3>Giving EXP</h3>
+  <div>
+    <a href='?all_students'>View all students</a>
+    | <a href='?'>View my students</a>
+  </div>
+  <br/>
   <table class="indent1">
     <% @student_courses.each_with_index do |std_course, index| %>
       <tr>
@@ -28,7 +33,9 @@
       </tr>
     <% end %>
   </table>
-  <h2>Reason:</h2>
+  <br/>
+  <h3>Reason:</h3>
+  <br/>
   <div class="indent1"><textarea name="reason" class="span6" rows="5"></textarea></div>
   <div class="form-actions">
     <button class="btn btn-large btn-primary">Give EXP</button>
