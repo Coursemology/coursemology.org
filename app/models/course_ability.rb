@@ -56,6 +56,9 @@ class CourseAbility
       cannot :manage, :course_preference
     end
 
+    if user.is_admin?  || user_course.is_staff?
+      return
+    end
 
     if user_course.is_student?
       can :participate, Course

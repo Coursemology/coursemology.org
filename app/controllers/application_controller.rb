@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if curr_user_course.is_staff?
+    if can? :manage, Course
       @nav_items = [{
                         text:   "Announcements",
                         url:    course_announcements_url(@course),
