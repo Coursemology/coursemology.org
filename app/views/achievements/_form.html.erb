@@ -99,6 +99,32 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <label class="control-label">Levels</label>
+    <div class="controls">
+      <table>
+      <% @achievement.requirements.lvl_req.each do |lvl_req| %>
+        <%= render partial: "requirements/lvl_req_row", locals: { lvl_req: lvl_req } %>
+      <% end %>
+      <tr>
+        <td>
+          Reached
+          <select name="achievement" class="form-temp">
+            <% @all_level.each do |lvl| %>
+              <option value="<%= lvl.id %>"><%= lvl.get_title %></option>
+          <% end %>
+          </select>
+        </td>
+        <td>
+          <%= link_to course_requirements_render_form_row_path(@course), class: "btn add-lvl-req" do %>
+            <i class="icon-plus"></i>
+          <% end %>
+        </td>
+      </tr>
+      </table>
+    </div>
+  </div>
+
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary form-submit' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
