@@ -8,6 +8,7 @@ class UserCourse < ActiveRecord::Base
   before_create :init
 
   scope :lecturer, where(:role_id => Role.lecturer.first)
+  scope :tutor, where(:role_id => Role.tutor.first)
   scope :student, where(:role_id => Role.student.first)
   scope :shared, where(:role_id => Role.shared.first)
 
