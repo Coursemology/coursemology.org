@@ -10,6 +10,7 @@ class UserCourse < ActiveRecord::Base
   scope :lecturer, where(:role_id => Role.lecturer.first)
   scope :student, where(:role_id => Role.student.first)
   scope :shared, where(:role_id => Role.shared.first)
+  scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first])
 
   belongs_to :role
   belongs_to :user

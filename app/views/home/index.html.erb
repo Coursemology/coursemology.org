@@ -14,10 +14,10 @@
     <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_std } %>
   <% end %>
 
-  <% if @courses_lect.size > 0 %>
+  <% if @courses_staff.size > 0 %>
     <h2>Courses you are teaching:</h2>
     <br/>
-    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_lect } %>
+    <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_staff } %>
   <% end %>
 
   <% if @courses_shared.size > 0 %>
