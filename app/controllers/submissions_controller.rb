@@ -84,7 +84,7 @@ class SubmissionsController < ApplicationController
 
   def new
     if @submission.save
-      if @submission.attempt == 1
+      if @submission.attempt == 1 && curr_user_course.is_student?
         Activity.attempted_asm(curr_user_course, @mission)
       end
       respond_to do |format|
