@@ -62,6 +62,32 @@ $(document).ready(function() {
     });
   });
 
+  $('.add-lvl-req').click(function(e) {
+    e.preventDefault();
+    var form_row = $(this).parents('tr');
+    var selected = form_row.find('select :selected');
+    var lvl_id = selected.val();
+    var create_url = $(this).attr('href');
+
+    var data = {
+      type: "Level",
+      lvl_id: lvl_id
+    };
+
+    $.ajax({
+      url: create_url,
+      type: "POST",
+      data: data,
+      dataType: "html",
+      success: function(resp) {
+        form_row.before(resp);
+        selected.detach();
+        selected.prop('selected', false);
+        form_row.find('select').append(selected);
+      }
+    });
+  });
+
   $(document).on('click', '.remove-req', function(e) {
     e.preventDefault();
     $(this).parents('tr').remove();

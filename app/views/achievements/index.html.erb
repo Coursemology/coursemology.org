@@ -55,6 +55,17 @@
             <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %>
           </li>
         <% end %>
+        <% ach.requirements.lvl_req.each do |lvl_req| %>
+          <li>
+            <% if ach_info[:req_check][lvl_req.id] %>
+              <i class="icon-ok"></i>
+            <% else %>
+              <i class="icon-remove"></i>
+            <% end %>
+            Earn
+            <%= link_to lvl_req.req.get_title, course_achievement_path(@course, lvl_req.req) %>
+          </li>
+        <% end %>
         </ul>
       </td>
       <% if can? :manage, Achievement %>
