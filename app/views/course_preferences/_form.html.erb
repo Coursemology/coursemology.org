@@ -1,0 +1,87 @@
+<%= form_tag course_preferences_path(@course), :method => 'POST' do %>
+    <input type="hidden" name="origin" class="origin_url">
+    <% if @tab == 'TrainingPreference'  %>
+        <h3>Columns display:</h3>
+        <p>Customize the display of training columns.</p>
+    <% elsif @tab == 'MissionPreference' %>
+        <h3>Columns display:</h3>
+        <p>Customize the display of mission columns.</p>
+    <% else %>
+        <h3>Student sidebar display:</h3>
+        <p>Customize the display of sidebar for students.</p>
+    <% end %>
+    <table class="table table-bordered table-striped">
+      <thead>
+      <th>
+        Current Title
+      </th>
+      <th>
+        Description
+      </th>
+
+      <th>
+        Customize Title
+      </th>
+      <th>
+        Display?
+      </th>
+
+      </thead>
+
+      <tbody>
+      <% @preferences.each do |pref| %>
+          <% item = pref.preferable_item %>
+          <tr>
+            <td>
+              <%= pref.prefer_value %>
+            </td>
+            <td>
+              <%= item.description %>
+            </td>
+            <td>
+              <input name="preferences[<%= pref.id%>][prefer_value]" type="text">
+            </td>
+            <td>
+              <input name="preferences[<%= pref.id%>][display]" type="checkbox" <% if pref.display? %> checked <% end %>>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <% if @tab == 'TrainingPreference'  %>
+        <h3>Time Format:</h3>
+        <p>Customize the time format to display for training's start and end time.</p>
+    <% elsif @tab == 'MissionPreference' %>
+        <h3>Time Format:</h3>
+        <p>Customize the time format to display for mission's start and end time.</p>
+    <% end %>
+    <% if @tab != 'Sidebar' %>
+        <div class="info-block">
+          Current Format:
+            <% if @time_format && @time_format.prefer_value != 'ago' %>
+              <code><%= Time.now.strftime(@time_format.prefer_value) %> </code>
+        <% else %>
+                <code> <%= time_ago_in_words(Time.now) %></code> (Time ago in words)
+            <% end %>
+            <br><br>
+            <span>Customize:</span>
+            <select style="width: 180px" name="preferences[<%= if @time_format then @time_format.id else 0 end%>][prefer_value]">
+              <option value="">Please Select</option>
+              <option value="%d-%m-%Y"><%= Time.now.strftime('%d-%m-%Y') %></option>
+              <option value="%d %b %Y %H:%M"><%= Time.now.strftime('%d %b %Y %H:%M') %></option>
+              <option value="%d-%m-%Y %H:%M:%S"><%= Time.now.strftime('%d-%m-%Y %H:%M:%S') %></option>
+              <option value="ago"> <%= time_ago_in_words(Time.now.beginning_of_day) %></option>
+            </select>
+            </div>
+    <% end %>
+
+    <div class="center">
+      <button class="btn btn-large btn-primary">Update</button>
+    </div>
+<% end %>
+<script>
+    $(document).ready(function(){
+        $('.origin_url').val(document.URL);
+    });
+</script>

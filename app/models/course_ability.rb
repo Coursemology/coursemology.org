@@ -39,8 +39,7 @@ class CourseAbility
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all
-      can :populate, Level
-      can :see_all, [Submission, TrainingSubmission]
+      can :see_all, [Submission, TrainingSubmission, Level]
       can :view_stat, [Mission, Training]
       can :view_detail, [Mission, Training]
       can :participate, Course
@@ -50,8 +49,13 @@ class CourseAbility
       can :see, :pending_comments
 
       cannot :modify, TrainingSubmission
-      return
     end
+
+    if user_course.is_ta?
+      cannot :manage, :user
+      cannot :manage, :course_preference
+    end
+
 
     if user_course.is_student?
       can :participate, Course

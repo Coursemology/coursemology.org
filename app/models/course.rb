@@ -2,6 +2,7 @@ class Course < ActiveRecord::Base
   acts_as_paranoid
 
   attr_accessible :creator_id, :description, :logo_url, :title
+  before_create :populate_preference
 
   belongs_to :creator, class_name: "User"
 
@@ -32,6 +33,7 @@ class Course < ActiveRecord::Base
 
   has_many :tutorial_groups, dependent: :destroy
   has_many :file_uploads, as: :owner
+  has_many :course_preferences, dependent: :destroy
 
   def asms
     missions + trainings
@@ -59,11 +61,55 @@ class Course < ActiveRecord::Base
   end
 
   def get_pending_comments
-     self.get_all_answers.select { |ans| ans.pending? }
+    self.get_all_answers.select { |ans| ans.pending? }
   end
 
   def get_all_comments
     self.get_all_answers.select { |ans| ans.last_commented_at }
   end
 
+  def mission_columns
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" && pref.preferable_item.item_type == "Column" }
+  end
+
+  def training_columns
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Column" }
+  end
+
+  def student_sidebar_items
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Sidebar" && pref.preferable_item.item_type == "Student" }
+  end
+
+  def student_sidebar_display
+    student_sidebar_items.select {|pref| pref.display }
+  end
+
+  def mission_columns_display
+    mission_columns.select {|pref| pref.display }
+  end
+
+  def training_columns_display
+    training_columns.select {|pref| pref.display }
+  end
+
+  def mission_time_format
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" && pref.preferable_item.item_type == "Time" }.first
+  end
+
+  def training_time_format
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
+  end
+
+  def populate_preference
+    PreferableItem.all.each do |item|
+      cp = CoursePreference.where(course_id:self.id, preferable_item_id: item.id).first
+      unless cp
+        pref = self.course_preferences.build
+        pref.preferable_item = item
+        pref.prefer_value = item.default_value
+        pref.display = item.default_display
+        pref.save
+      end
+    end
+  end
 end

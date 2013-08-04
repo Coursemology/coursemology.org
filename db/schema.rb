@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130801143400) do
+ActiveRecord::Schema.define(:version => 20130803065441) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -149,6 +149,18 @@ ActiveRecord::Schema.define(:version => 20130801143400) do
 
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_course_id"], :name => "index_comments_on_user_course_id"
+
+  create_table "course_preferences", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "preferable_item_id"
+    t.string   "prefer_value"
+    t.boolean  "display"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "course_preferences", ["course_id"], :name => "index_course_preferences_on_course_id"
+  add_index "course_preferences", ["preferable_item_id"], :name => "index_course_preferences_on_preferable_item_id"
 
   create_table "course_theme_attributes", :force => true do |t|
     t.integer  "course_id"
@@ -348,6 +360,17 @@ ActiveRecord::Schema.define(:version => 20130801143400) do
   end
 
   add_index "pending_comments", ["answer_id"], :name => "index_pending_comments_on_answer_id"
+
+  create_table "preferable_items", :force => true do |t|
+    t.string   "item"
+    t.string   "item_type"
+    t.string   "name"
+    t.string   "default_value"
+    t.boolean  "default_display"
+    t.string   "description"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"

@@ -6,39 +6,40 @@
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
   <%= form_tag(course_missions_path(@course), method: :get) do %>
-    <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
-      <div class="well">
-        <%= render partial: "tags/form_checkboxes",
-                   locals: { tag_groups: @course.tag_groups,
-                             uncats: @course.tags.uncategorized,
-                             exist_tags_hash: @tags_map } %>
-        <button class="btn">Filter</button>
+      <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
+        <div class="well">
+          <%= render partial: "tags/form_checkboxes",
+                     locals: { tag_groups: @course.tag_groups,
+                               uncats: @course.tags.uncategorized,
+                               exist_tags_hash: @tags_map } %>
+          <button class="btn">Filter</button>
+        </div>
       </div>
-    </div>
   <% end %>
 </div>
 
 <% if can? :manage, Mission %>
-  <p>
-    <%= link_to "New Mission",
-                new_course_mission_path(@course),
-                :class => 'btn btn-primary' %>
-  </p>
+    <p>
+      <%= link_to "New Mission",
+                  new_course_mission_path(@course),
+                  :class => 'btn btn-primary' %>
+    </p>
 <% end %>
 
 <p><i>* Click at the tags to view missions and trainings in that tag.</i></p>
 
 <table class="table table-hover assignments">
   <thead>
-    <tr>
-      <th>Mission</th>
-      <th width="15%">Tag</th>
-      <th width="5%">Max Exp</th>
-      <th width="10%">Requirement for</th>
-      <% if can? :view_detail, Mission %>
-        <th width="10%">Time till open</th>
+  <tr>
+    <% @display_columns.each do |key, val| %>
+        <th width="<% if key == 'tag'  %>
+        15%
+        <% elsif key == 'title' %>
+        25%
+        <% end %>
+        "><%= val %></th>
     <% end %>
-    <th width="10%">Time Left</th>
+
     <% if curr_user_course.id && can?(:manage, Submission) %>
         <th width="10%"></th>
     <% end %>
@@ -49,11 +50,21 @@
   </thead>
 
   <tbody>
+  <% to_display = @display_columns.keys %>
   <% @missions.each do |mission| %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
-        <td>
-          <% if can? :manage, Mission %>
-              <%= link_to course_mission_path(@course, mission) do %>
+        <% if to_display.include? 'title' %>
+            <td>
+              <% if can? :manage, Mission %>
+                  <%= link_to course_mission_path(@course, mission) do %>
+                      <h4><%= mission.title %>
+                        <% if @is_new[mission.id] %>
+                            <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
+                            <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
+                        <% end %>
+                      </h4>
+                  <% end %>
+              <% else %>
                   <h4><%= mission.title %>
                     <% if @is_new[mission.id] %>
                         <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
@@ -61,48 +72,48 @@
                     <% end %>
                   </h4>
               <% end %>
-          <% else %>
-              <h4><%= mission.title %>
-                <% if @is_new[mission.id] %>
-                    <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
-                    <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
-                <% end %>
-              </h4>
-          <% end %>
-        </td>
-        <td>
-          <% mission.tags.each do |tag| %>
-            <%= link_to course_tag_path(@course, tag) do %>
-              <span class="label label-info"><%= tag.name %></span>
-            <% end %>
-          <% end %>
-        </td>
-        <td><%= mission.exp %></td>
-        <td>
-          <% mission.as_requirements.each do |req| %>
-              <a href='#' title="<%= req.obj.title %>">
-                <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
-              </a>
-          <% end %>
-        </td>
-
-        <% if can? :view_detail, Mission %>
+            </td>
+        <% end %>
+        <% if to_display.include? 'tag' %>
             <td>
-              <% if mission.open_at > Time.now %>
-                  <%= time_ago_in_words(mission.open_at) %>
+              <% mission.tags.each do |tag| %>
+                  <%= link_to course_tag_path(@course, tag) do %>
+                      <span class="label label-info"><%= tag.name %></span>
+                  <% end %>
+              <% end %>
+            </td>
+        <% end %>
+        <% if to_display.include? 'exp' %>
+            <td><%= mission.exp %></td>
+        <% end %>
+        <% if to_display.include? 'award' %>
+            <td>
+              <% mission.as_requirements.each do |req| %>
+                  <a href='#' title="<%= req.obj.title %>">
+                    <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
+                  </a>
+              <% end %>
+            </td>
+        <% end %>
+        <% if to_display.include? 'start' %>
+            <td>
+              <% if @time_format.prefer_value == 'ago' %>
+                  <%= if mission.open_at > Time.now then time_ago_in_words(mission.open_at) else '----' end%>
               <% else %>
-                  ----
+                  <%= mission.open_at.strftime(@time_format.prefer_value)  %>
               <% end %>
             </td>
         <% end %>
 
-        <td>
-          <% if mission.close_at > Time.now %>
-              <%= time_ago_in_words(mission.close_at) %>
-          <% else %>
-              ----
-          <% end %>
-        </td>
+        <% if to_display.include?  'end'%>
+            <td>
+              <% if @time_format.prefer_value == 'ago' %>
+                  <%= if mission.close_at > Time.now then time_ago_in_words(mission.close_at) else '----' end%>
+              <% else %>
+                  <%= mission.close_at.strftime(@time_format.prefer_value) %>
+              <% end %>
+            </td>
+        <% end %>
         <% if curr_user_course.id && can?(:manage, Submission) %>
             <td>
               <% if mission.close_at > Time.now %>
@@ -144,5 +155,5 @@
 </table>
 
 <% if @can_paginate %>
-  <%= paginate @missions %>
+    <%= paginate @missions %>
 <% end %>

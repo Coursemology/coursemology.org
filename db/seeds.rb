@@ -37,33 +37,190 @@ end
 
 if ThemeAttribute.count == 0
   ThemeAttribute.create! name: "Background Color",
-      description: "Background color of the page",
-      value_type: "color"
+                         description: "Background color of the page",
+                         value_type: "color"
   ThemeAttribute.create! name: "Background Image",
-      description: "Background image. It will be added to the bottom of the page",
-      value_type: "image"
+                         description: "Background image. It will be added to the bottom of the page",
+                         value_type: "image"
   ThemeAttribute.create! name: "Sidebar Link Color",
-      description: "Color of the navigation links",
-      value_type: "color"
+                         description: "Color of the navigation links",
+                         value_type: "color"
   ThemeAttribute.create! name: "Announcements Icon",
-      description: "Icon for the Announcements navigation link on the sidebar",
-      value_type: "image"
+                         description: "Icon for the Announcements navigation link on the sidebar",
+                         value_type: "image"
   ThemeAttribute.create! name: "Missions Icon",
-      description: "Icon for the Mission navigation link on the sidebar",
-      value_type: "image"
+                         description: "Icon for the Mission navigation link on the sidebar",
+                         value_type: "image"
   ThemeAttribute.create! name: "Trainings Icon",
-      description: "Icon for the Trainings navigation link on the sidebar",
-      value_type: "image"
+                         description: "Icon for the Trainings navigation link on the sidebar",
+                         value_type: "image"
   ThemeAttribute.create! name: "Submissions Icon",
-      description: "Icon for the Submissions navigation link on the sidebar",
-      value_type: "image"
+                         description: "Icon for the Submissions navigation link on the sidebar",
+                         value_type: "image"
   ThemeAttribute.create! name: "Leaderboards Icon",
-      description: "Icon for the Leaderboard navigation link on the sidebar",
-      value_type: "image"
+                         description: "Icon for the Leaderboard navigation link on the sidebar",
+                         value_type: "image"
 end
 
 if ThemeAttribute.count == 8
   ThemeAttribute.create! name: "Custom CSS",
-      description: "Custom style sheet rules",
-      value_type: "text"
+                         description: "Custom style sheet rules",
+                         value_type: "text"
+end
+
+if PreferableItem.count == 0
+
+  #Missions
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "title",
+                         default_value: "Mission",
+                         description:   "Mission title",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "tag",
+                         default_value: "Tag",
+                         description:   "Mission tags" ,
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "exp",
+                         default_value: "Max Exp",
+                         description:   "Mission exp gainable",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "award",
+                         default_value: "Requirement for",
+                         description:   "Requirement for achievement",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "start",
+                         default_value: "Start Time",
+                         description:   "Mission start time",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Column",
+                         name:          "end",
+                         default_value: "End Time",
+                         description:   "Mission end time",
+                         default_display: true
+
+  #Training
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "title",
+                         default_value: "Training",
+                         description:   "Training title",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "tag",
+                         default_value: "Tag",
+                         description:   "Training tags",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "exp",
+                         default_value: "Max Exp",
+                         description:   "Training exp gainable",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "award",
+                         default_value: "Requirement for",
+                         description:   "Requirement for achievement",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "start",
+                         default_value: "Start Time",
+                         description:   "Training start time",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "end",
+                         default_value: "End Time",
+                         description:   "Training end time",
+                         default_display: false
+
+  #SideBar  - students
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "announcements",
+                         default_value: "Announcements",
+                         description:   "Course announcements",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "missions",
+                         default_value: "Missions",
+                         description:   "Course missions",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "trainings",
+                         default_value: "Trainings",
+                         description:   "Course trainings",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "submissions",
+                         default_value: "Submissions",
+                         description:   "All submissions",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "achievements",
+                         default_value: "Achievements",
+                         description:   "Show all achievements",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "leaderboard",
+                         default_value: "Leaderboard",
+                         description:   "Show leaderboard",
+                         default_display: true
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "students",
+                         default_value: "Students",
+                         description:   "Show all students",
+                         default_display: true
+end
+
+if PreferableItem.count == 19
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Time",
+                         name:          "time_format",
+                         default_value: "%d-%m-%Y",
+                         description:   "Training time display format",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Time",
+                         name:          "time_format",
+                         default_value: "%d-%m-%Y",
+                         description:   "Mission time display format",
+                         default_display: true
+
 end

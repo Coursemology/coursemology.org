@@ -7,6 +7,12 @@ class MissionsController < ApplicationController
     @is_new = {}
     @tags_map = {}
     @selected_tags = params[:tags]
+    @display_columns = {}
+    @course.mission_columns_display.each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
+    @time_format =  @course.mission_time_format
+
 
     if @selected_tags
       tags = Tag.find(@selected_tags)

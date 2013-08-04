@@ -82,32 +82,46 @@ class ApplicationController < ActionController::Base
     # in the future, nav items can be loaded from the database
     @nav_items = []
     # home
-    @nav_items = [{
-                      text:   "Announcements",
-                      url:    course_announcements_url(@course),
-                      img:    @theme_settings["Announcements Icon"],
-                      icon:   "icon-bullhorn",
-                      count:  counts[:announcements] || 0
-                  }, {
-                      text:   "Missions",
-                      url:    course_missions_url(@course),
-                      img:    @theme_settings["Missions Icon"],
-                      icon:   "icon-envelope",
-                      count:   counts[:missions] || 0
-                  }, {
-                      text:   "Trainings",
-                      url:    course_trainings_url(@course),
-                      img:    @theme_settings["Trainings Icon"],
-                      icon:   "icon-envelope",
-                      count:  counts[:trainings] || 0
-                  }, {
-                      text:   "Submissions",
-                      url:    course_submissions_url(@course),
-                      img:    @theme_settings["Submissions Icon"],
-                      icon:   "icon-envelope-alt",
-                      count:  counts[:submissions] || 0
-                  }]
+
+    if curr_user_course.is_student?
+      @course.student_sidebar_display.each do |item|
+        item_name = item.preferable_item.name
+        url_and_icon = get_url_and_icon(item_name)
+        @nav_items << {
+            text: item.prefer_value,
+            url:  url_and_icon.first,
+            icon: url_and_icon.last,
+            count: counts[item_name.to_sym] || 0
+        }
+      end
+    end
+
     if curr_user_course.is_staff?
+      @nav_items = [{
+                        text:   "Announcements",
+                        url:    course_announcements_url(@course),
+                        img:    @theme_settings["Announcements Icon"],
+                        icon:   "icon-bullhorn",
+                        count:  counts[:announcements] || 0
+                    }, {
+                        text:   "Missions",
+                        url:    course_missions_url(@course),
+                        img:    @theme_settings["Missions Icon"],
+                        icon:   "icon-envelope",
+                        count:   counts[:missions] || 0
+                    }, {
+                        text:   "Trainings",
+                        url:    course_trainings_url(@course),
+                        img:    @theme_settings["Trainings Icon"],
+                        icon:   "icon-envelope",
+                        count:  counts[:trainings] || 0
+                    }, {
+                        text:   "Submissions",
+                        url:    course_submissions_url(@course),
+                        img:    @theme_settings["Submissions Icon"],
+                        icon:   "icon-envelope-alt",
+                        count:  counts[:submissions] || 0
+                    }]
       @nav_items <<   {
           text:   "Comments",
           url:    course_comments_url(@course),
@@ -120,24 +134,23 @@ class ApplicationController < ActionController::Base
           icon: "icon-envelope-alt",
           count: counts[:pending_grading]
       }
+      @nav_items << {
+          text:   "Achievements",
+          url:    course_achievements_url(@course),
+          icon:   "icon-star"
+      }
+      @nav_items <<    {
+          text:   "Leaderboards",
+          url:    course_leaderboards_url(@course),
+          img:    @theme_settings["Leaderboards Icon"],
+          icon:   "icon-star-empty"
+      }
+      @nav_items <<    {
+          text:   "Students",
+          url:    course_students_url(@course),
+          icon:   "icon-user",
+      }
     end
-
-    @nav_items << {
-        text:   "Achievements",
-        url:    course_achievements_url(@course),
-        icon:   "icon-star"
-    }
-    @nav_items <<    {
-        text:   "Leaderboards",
-        url:    course_leaderboards_url(@course),
-        img:    @theme_settings["Leaderboards Icon"],
-        icon:   "icon-star-empty"
-    }
-    @nav_items <<    {
-        text:   "Students",
-        url:    course_students_url(@course),
-        icon:   "icon-user",
-    }
 
     if can? :manage, Course
       @admin_nav_items = []
@@ -179,17 +192,19 @@ class ApplicationController < ActionController::Base
           url: course_enroll_requests_url(@course),
           icon: "icon-bolt"
       }
-      @admin_nav_items << {
-          text: "Settings",
-          url: edit_course_url(@course),
-          icon: "icon-cog"
-      }
     end
     if can? :share, Course
       @admin_nav_items << {
           text: "Duplicate Data",
           url: course_duplicate_url(@course),
           icon: "icon-bolt"
+      }
+    end
+    if can? :manage, Course
+      @admin_nav_items << {
+          text: "Settings",
+          url: edit_course_url(@course),
+          icon: "icon-cog"
       }
     end
   end
@@ -230,6 +245,35 @@ class ApplicationController < ActionController::Base
   def masquerading?
     puts session.to_json
     session[:admin_id].present?
+  end
+
+  def get_url_and_icon(item)
+    url = root_path
+    icon = 'icon-star'
+    case item
+      when 'announcements'
+        url = course_announcements_path(@course)
+        icon = 'icon-bullhorn'
+      when 'missions'
+        url = course_missions_url(@course)
+        icon = 'icon-envelope'
+      when 'trainings'
+        url = course_trainings_path(@course)
+        icon = 'icon-envelope'
+      when 'submissions'
+        url = course_submissions_path(@course)
+        icon = 'icon-envelope-alt'
+      when 'achievements'
+        url = course_achievements_url(@course)
+        icon = 'icon-star'
+      when 'leaderboard'
+        url =  course_leaderboards_url(@course)
+        icon = 'icon-star-empty'
+      when 'students'
+        url = course_students_url(@course)
+        icon = 'icon-user'
+    end
+    [url, icon]
   end
 
   helper_method :masquerading?

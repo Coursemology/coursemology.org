@@ -8,6 +8,11 @@ class TrainingsController < ApplicationController
     @is_new = {}
     @tags_map = {}
     @selected_tags = params[:tags]
+    @display_columns = {}
+    @course.training_columns_display.each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
+    @time_format =  @course.training_time_format
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
