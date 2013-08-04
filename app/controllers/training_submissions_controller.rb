@@ -240,5 +240,4 @@ class TrainingSubmissionsController < ApplicationController
       end
     end
   end
-
 end

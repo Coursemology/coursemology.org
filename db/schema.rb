@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130803065441) do
+ActiveRecord::Schema.define(:version => 20130804092515) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -381,6 +381,18 @@ ActiveRecord::Schema.define(:version => 20130803065441) do
   end
 
   add_index "questions", ["creator_id"], :name => "index_questions_on_creator_id"
+
+  create_table "queued_jobs", :force => true do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "delayed_job_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "queued_jobs", ["delayed_job_id"], :name => "index_queued_jobs_on_delayed_job_id"
+  add_index "queued_jobs", ["owner_id"], :name => "index_queued_jobs_on_owner_id"
+  add_index "queued_jobs", ["owner_type"], :name => "index_queued_jobs_on_owner_type"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"
