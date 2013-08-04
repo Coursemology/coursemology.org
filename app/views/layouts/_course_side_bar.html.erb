@@ -78,7 +78,7 @@
         <!--TODO: refactoring-->
         <% @admin_nav_items.each do |item| %>
               <% if item[:text] == "Settings" && (can? :manage, :course_preference) %>
-                <li class="dropdown dropdown-nav">
+                <li class="dropdown-nav dropdown">
                   <a href="#" data-toggle="dropdown" class="dropdown-toggle" >
                   <span class="nav-icon">
                   <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>

@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
           count:  counts[:pending_comments] || 0
       }
       @nav_items <<    {
-          text: "Pending Grading",
+          text: "Pending Gradings",
           url:  course_pending_gradings_url(@course),
           icon: "icon-envelope-alt",
           count: counts[:pending_grading] || 0
@@ -140,7 +140,7 @@ class ApplicationController < ActionController::Base
           icon:   "icon-star"
       }
       @nav_items <<    {
-          text:   "Leaderboards",
+          text:   "Leaderboard",
           url:    course_leaderboards_url(@course),
           img:    @theme_settings["Leaderboards Icon"],
           icon:   "icon-star-empty"
@@ -209,7 +209,7 @@ class ApplicationController < ActionController::Base
   end
 
   def load_popup_notifications
-    if curr_user_course.id
+    if curr_user_course.id && curr_user_course.is_student?
       # for now all notifications are popup
       @popup_notifications = curr_user_course.get_unseen_notifications
       @popup_notifications.each do |popup|

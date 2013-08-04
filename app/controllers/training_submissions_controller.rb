@@ -114,8 +114,9 @@ class TrainingSubmissionsController < ApplicationController
     #      course_training_training_submission_url(@course, @training, @training_submission)
     #  )
     #end
-
-    Activity.started_asm(curr_user_course, @training)
+    if curr_user_course.is_student?
+      Activity.started_asm(curr_user_course, @training)
+    end
 
     sg = SubmissionGrading.new
     sg.sbm = @training_submission
