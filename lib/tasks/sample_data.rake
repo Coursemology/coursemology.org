@@ -2,6 +2,25 @@ namespace :db do
   desc "Fill database with sample data"
 
   task gen_fake_data: :environment do
+    puts "Ensure all roles are created"
+
+    # the code to create user make use of Role. But sometimes role might not have been setup
+    # like when user create & migrated db, but haven't run rake db:seed
+    {
+      "normal" => "normal",
+      "shared" => "shared",
+      "student" => "student",
+      "lecturer" => "lecturer",
+      "admin" => "admin",
+      "tutor" => "ta"
+    }.map do |key, value|
+      if Role.find_by_name(key).nil?
+        Role.create! name: value, title: "User"
+      end
+    end
+
+    # --------------------------------------
+
     puts "Add fake lecturer & courses"
 
     std_role = Role.find_by_name("student")
