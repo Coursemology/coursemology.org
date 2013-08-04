@@ -78,7 +78,7 @@
         <!--TODO: refactoring-->
         <% @admin_nav_items.each do |item| %>
               <% if item[:text] == "Settings" && (can? :manage, :course_preference) %>
-                <li class="dropdown">
+                <li class="dropdown dropdown-nav">
                   <a href="#" data-toggle="dropdown" class="dropdown-toggle" >
                   <span class="nav-icon">
                   <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
@@ -119,11 +119,11 @@
 </div>
 <style>
 
-    .dropdown:hover .dropdown-menu {
+    .dropdown-nav:hover .dropdown-menu {
         display: block;
     }
 
-    .dropdown .dropdown-menu li {
+    .dropdown-nav .dropdown-menu li {
         border: none;
     }
 </style>
