@@ -188,6 +188,11 @@ class ApplicationController < ActionController::Base
           icon: "icon-bar-chart"
       }
       @admin_nav_items << {
+          text: "Settings",
+          url: edit_course_url(@course),
+          icon: "icon-cog"
+      }
+      @admin_nav_items << {
           text: "Enrollment",
           url: course_enroll_requests_url(@course),
           icon: "icon-bolt"
@@ -200,13 +205,7 @@ class ApplicationController < ActionController::Base
           icon: "icon-bolt"
       }
     end
-    if can? :manage, Course
-      @admin_nav_items << {
-          text: "Settings",
-          url: edit_course_url(@course),
-          icon: "icon-cog"
-      }
-    end
+
   end
 
   def load_popup_notifications

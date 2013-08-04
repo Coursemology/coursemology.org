@@ -74,13 +74,12 @@
   <% if @admin_nav_items %>
       <br>
       <h3>Admin Functions</h3>
-      <ul class="nav nav-list sidenav ">
+      <ul class="nav nav-list sidenav">
         <!--TODO: refactoring-->
         <% @admin_nav_items.each do |item| %>
-            <li>
               <% if item[:text] == "Settings" && (can? :manage, :course_preference) %>
-                <li class="dropdown-nav ">
-                  <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                <li class="dropdown">
+                  <a href="#" data-toggle="dropdown" class="dropdown-toggle" >
                   <span class="nav-icon">
                   <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
                     <img src="<%= item[:img] %>" />
@@ -90,11 +89,14 @@
                    </span>
                    Settings<b class="down-caret"></b>
                     </a>
-                  <ul class="dropdown-menu ">
+                  <!--<ul style="list-style: none;" class="collapse" id="headDJMenu">-->
+                  <ul class="dropdown-menu" >
                     <li><a href="<%= item[:url] %>">Course Settings</a></li>
                     <li><a href="<%= course_preferences_path(@course) %>">Preference Settings</a></li>
                   </ul>
+                </li>
             <% else %>
+                <li>
                 <a href="<%= item[:url] %>">
             <span class="nav-icon">
               <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
@@ -108,9 +110,20 @@
                       <span class="sidenav-count pull-right" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
                   <% end %>
                 </a>
+                </li>
             <% end %>
-            </li>
+
         <% end %>
       </ul>
   <% end %>
 </div>
+<style>
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown .dropdown-menu li {
+        border: none;
+    }
+</style>
