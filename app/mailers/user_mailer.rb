@@ -63,4 +63,26 @@ class UserMailer < ActionMailer::Base
     mail(to: user_email, subject: "#{course_name}: New Announcement")
   end
 
+  def new_mission(user_name, user_email, mission_title, course_name, redirect_to)
+    @user_name = user_name
+    @mission_title = mission_title
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: New Mission Available!")
+  end
+
+  def new_training(user_name, user_email, training_title, course_name, redirect_to)
+    @user_name = user_name
+    @training_title = training_title
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: New Training Available!")
+  end
+
+  def mission_due(user_name, user_email, mission_title, course_name, due_time, redirect_to)
+    @user_name = user_name
+    @mission_title = mission_title
+    @due_time = due_time
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: Reminder about mission due!")
+  end
+
 end

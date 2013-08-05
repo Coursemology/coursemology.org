@@ -11,7 +11,7 @@ class Announcement < ActiveRecord::Base
 
   #before_destroy :delete_jobs
 
-  def notify(ucs, redirect_to)
+  def schedule_mail(ucs, redirect_to)
     QueuedJob.destroy(self.queued_jobs)
     ucs.each do |uc|
       user = uc.user

@@ -18,13 +18,13 @@ class MissionsController < ApplicationController
       tags = Tag.find(@selected_tags)
       mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
       @missions = @course.missions.accessible_by(current_ability)
-                    .order(:open_at).reverse_order.find(mission_ids)
+      .order(:open_at).reverse_order.find(mission_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     else
       @missions = @course.missions.accessible_by(current_ability)
-                    .order(:open_at).reverse_order
-                    .page(params[:page])
+      .order(:open_at).reverse_order
+      .page(params[:page])
       @can_paginate = true
     end
 
@@ -81,8 +81,9 @@ class MissionsController < ApplicationController
     end
     respond_to do |format|
       if @mission.save
+        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_path(@course, @mission),
-                      notice: "The mission #{@mission.title} has been created." }
+                                  notice: "The mission #{@mission.title} has been created." }
       else
         format.html { render action: "new" }
       end
@@ -94,12 +95,16 @@ class MissionsController < ApplicationController
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
+    reschedule_email = Time.parse(params[:mission][:open_at]) != @mission.open_at
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
+        if reschedule_email
+          @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
+        end
         format.html { redirect_to course_mission_url(@course, @mission),
-                      notice: "The mission #{@mission.title} has been updated." }
+                                  notice: "The mission #{@mission.title} has been updated." }
       else
-        format.html { render action: "edit" }
+        format.html {redirect_to edit_course_mission_path(@course, @mission) }
       end
     end
   end
@@ -108,7 +113,7 @@ class MissionsController < ApplicationController
     @mission.destroy
     respond_to do |format|
       format.html { redirect_to course_missions_url,
-                    notice: "The mission #{@mission.title} has been removed." }
+                                notice: "The mission #{@mission.title} has been removed." }
     end
   end
 end
