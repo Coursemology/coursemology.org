@@ -84,7 +84,7 @@ class SubmissionsController < ApplicationController
 
   def new
     if @submission.save
-      if @submission.attempt == 1
+      if @submission.attempt == 1 && curr_user_course.is_student?
         Activity.attempted_asm(curr_user_course, @mission)
       end
       respond_to do |format|
@@ -118,8 +118,7 @@ class SubmissionsController < ApplicationController
           format.html { redirect_to edit_course_mission_submission_path(@course, @mission, @submission),
                                     notice: "Your submission has been saved." }
         else
-          @submission.set_submitted
-          @submission.notify_submission(curr_user_course,course_mission_submission_url(@course,@mission,@submission))
+          @submission.set_submitted(course_mission_submission_url(@course,@mission,@submission))
           format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                                     notice: "Your submission has been updated." }
         end

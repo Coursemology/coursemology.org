@@ -1,8 +1,13 @@
-<div class="row-fluid">
+<div class="row-fluid" style="width: 90%">
   <div class="span2 sidebar">
     <%= render "layouts/course_side_bar" %>
   </div>
-  <div class="span8 content">
+  <div class="course-title span9">
+    <a href="<%= course_path(@course) %>">
+      <%= @course.title %>
+    </a>
+  </div>
+  <div class="span9 content">
     <% if flash[:notice] %>
       <div class="alert alert-success">
         <%= flash[:notice] %>

@@ -42,8 +42,6 @@
   <tbody>
   <% @staff_courses.each do |s_course| %>
       <tr>
-
-
         <td>
           <input type="hidden" class="old-name" value="<%= s_course.user.name  %>">
           <% if current_user.is_admin? or curr_user_course.is_lecturer? %>

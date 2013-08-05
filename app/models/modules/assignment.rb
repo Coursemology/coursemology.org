@@ -14,6 +14,7 @@ module Assignment
 
       has_many :asm_tags, as: :asm, dependent: :destroy
       has_many :tags, through: :asm_tags
+      has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
 
       after_save :after_save_asm
 
@@ -22,7 +23,7 @@ module Assignment
   end
 
   def get_title
-    return "#{self.class.name} : #{self.title}"
+    "#{self.class.name} : #{self.title}"
   end
 
   def get_path
@@ -30,7 +31,7 @@ module Assignment
   end
 
   def get_final_sbm_by_std(std_course_id)
-    return self.sbms.find_by_std_course_id(std_course_id)
+    self.sbms.find_by_std_course_id(std_course_id)
   end
 
   def get_qn_pos(qn)
@@ -39,7 +40,7 @@ module Assignment
         return (asm_qn.pos || i) + 1
       end
     end
-    return -1
+    -1
   end
 
   def update_qns_pos
@@ -53,8 +54,8 @@ module Assignment
     tags ||= []
     tags.each do |tag_id|
       self.asm_tags.build(
-        tag_id: tag_id,
-        max_exp: exp
+          tag_id: tag_id,
+          max_exp: exp
       )
     end
     self.save
@@ -79,4 +80,26 @@ module Assignment
   def after_save_asm
     self.tags.each { |tag| tag.update_max_exp }
   end
+
+  def schedule_mail(ucs, redirect_to)
+    type = self.class
+    QueuedJob.destroy(self.queued_jobs)
+    course = self.course
+    if type == Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
+      return
+    end
+    if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
+      return
+    end
+    ucs.each do |uc|
+      user = uc.user
+      if type == Mission
+        delayed_job = UserMailer.delay(:run_at => self.open_at).new_mission(user.name, user.email, self.title, course.title, redirect_to)
+      elsif type == Training
+        delayed_job = UserMailer.delay(:run_at => self.open_at).new_training(user.name, user.email, self.title, course.title, redirect_to)
+      end
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+  end
+
 end

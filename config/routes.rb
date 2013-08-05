@@ -17,8 +17,10 @@ JfdiAcademy::Application.routes.draw do
 
   post "user/auto_login" => "auto_login#auto_login_from_facebook"
 
-  match "admin" => "admins#access_control"
-  match "admin/search" => "admins#search"
+
+  match "admins" => "admins#access_control"
+  match "admins/search" => "admins#search"
+  match "admins/masquerades" => 'admins#masquerades', as: :admin_masquerades
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
@@ -111,6 +113,10 @@ JfdiAcademy::Application.routes.draw do
     match "award_exp" => "manual_rewards#manual_exp", as: :manual_exp
 
     match "award_achievement" => "manual_rewards#manual_achievement", as: :manual_achievement
+
+    get "preferences" => "course_preferences#edit", as: :preferences
+
+    post "preferences" => "course_preferences#update", as: :preferences
 
   end
 

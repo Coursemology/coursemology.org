@@ -1,0 +1,22 @@
+
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "Sidebar" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=sidebar" data-toggle="tab">Sidebar Preferences</a>
+  </li>
+  <li class="<%= "active" if @tab == "MissionPreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=mission" data-toggle="tab">Mission Preferences</a>
+  </li>
+  <li class="<%= "active" if @tab == "TrainingPreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=training" data-toggle="tab">Training Preferences</a>
+  </li>
+  <li class="<%= "active" if @tab == "NotificationPreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=email" data-toggle="tab">Notification Preferences</a>
+  </li>
+</ul>
+
+<% if @tab == "NotificationPreference" %>
+    <%= render partial: "email_form" %>
+<% else %>
+    <%=render partial: "form" %>
+<% end %>
+

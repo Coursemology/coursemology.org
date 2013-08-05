@@ -52,7 +52,10 @@ class EnrollRequestsController < ApplicationController
     uc.role = enroll_request.role
     uc.exp = 0
     uc.save
-    UserMailer.delay.new_student(uc.user, uc.course)
+
+    if @course.email_notify_enabled? PreferableItem.new_student
+      UserMailer.delay.new_student(uc.user, uc.course)
+    end
   end
 
   def approve_all
@@ -72,7 +75,7 @@ class EnrollRequestsController < ApplicationController
     respond_to do |format|
       format.html {
         redirect_to course_enroll_requests_path(@course),
-          notice: "All requests have been approved!"
+                    notice: "All requests have been approved!"
       }
     end
   end
@@ -90,7 +93,7 @@ class EnrollRequestsController < ApplicationController
     respond_to do |format|
       format.html {
         redirect_to course_enroll_requests_path(@course),
-          notice: "The request(s) have been approved!"
+                    notice: "The request(s) have been approved!"
       }
     end
   end
@@ -110,7 +113,7 @@ class EnrollRequestsController < ApplicationController
     respond_to do |format|
       format.html {
         redirect_to course_enroll_requests_path(@course),
-          notice: "All requests have been deleted!"
+                    notice: "All requests have been deleted!"
       }
     end
   end
@@ -125,7 +128,7 @@ class EnrollRequestsController < ApplicationController
     respond_to do |format|
       format.html {
         redirect_to course_enroll_requests_path(@course),
-          notice: "The request(s) have been deleted!"
+                    notice: "The request(s) have been deleted!"
       }
     end
   end

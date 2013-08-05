@@ -54,4 +54,35 @@ class UserMailer < ActionMailer::Base
     @redirect_url = redirect_url
     mail(to:lecturer.email, subject: "New enroll request for your course on Coursemology")
   end
+
+  def new_announcement(user_name, ann, user_email, redirect_to, course_name)
+    @user_name = user_name
+    @redirect_url = redirect_to
+    @ann = ann
+    @course_name = course_name
+    mail(to: user_email, subject: "#{course_name}: New Announcement")
+  end
+
+  def new_mission(user_name, user_email, mission_title, course_name, redirect_to)
+    @user_name = user_name
+    @mission_title = mission_title
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: New Mission Available!")
+  end
+
+  def new_training(user_name, user_email, training_title, course_name, redirect_to)
+    @user_name = user_name
+    @training_title = training_title
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: New Training Available!")
+  end
+
+  def mission_due(user_name, user_email, mission_title, course_name, due_time, redirect_to)
+    @user_name = user_name
+    @mission_title = mission_title
+    @due_time = due_time
+    @redirect_to = redirect_to
+    mail(to: user_email, subject: "#{course_name}: Reminder about mission due!")
+  end
+
 end

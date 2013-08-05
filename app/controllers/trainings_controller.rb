@@ -8,18 +8,23 @@ class TrainingsController < ApplicationController
     @is_new = {}
     @tags_map = {}
     @selected_tags = params[:tags]
+    @display_columns = {}
+    @course.training_columns_display.each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
+    @time_format =  @course.training_time_format
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
       training_ids = tags.map { |tag| tag.trainings.map{ |t| t.id } }.reduce(:&)
       @trainings = @course.trainings.accessible_by(current_ability)
-                          .order(:open_at).reverse_order.find(training_ids)
+      .order(:open_at).reverse_order.find(training_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     else
       @trainings = @course.trainings.accessible_by(current_ability)
-                          .order(:open_at).reverse_order
-                          .page(params[:page])
+      .order(:open_at).reverse_order
+      .page(params[:page])
       @can_paginate = true
     end
 
@@ -35,8 +40,8 @@ class TrainingsController < ApplicationController
     @trainings.each do |training|
       if curr_user_course.id
         std_sbm = TrainingSubmission.where(
-          std_course_id: curr_user_course.id,
-          training_id: training.id
+            std_course_id: curr_user_course.id,
+            training_id: training.id
         ).last
       end
       @trainings_with_sbm << {
@@ -70,7 +75,7 @@ class TrainingsController < ApplicationController
 
     respond_to do |format|
       if @training.save
-        puts "here we are",@training.files
+        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
         format.html { redirect_to course_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }
       else
@@ -90,9 +95,12 @@ class TrainingsController < ApplicationController
     if params[:files]
       @training.attach_files(params[:files].values)
     end
+    reschedule_email = Time.parse(params[:training][:open_at]) != @training.open_at
     respond_to do |format|
+      if reschedule_email
+        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
+      end
       if @training.update_attributes(params[:training])
-        puts "here we are",@training.files
         format.html { redirect_to course_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else

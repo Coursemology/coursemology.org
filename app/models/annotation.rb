@@ -3,4 +3,8 @@ class Annotation < ActiveRecord::Base
 
   belongs_to :user_course
   belongs_to :annotable, polymorphic: true
+
+  def commentable
+    annotable
+  end
 end

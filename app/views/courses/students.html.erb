@@ -10,6 +10,7 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
+        <th>Tutor</th>
         <th></th>
       </tr>
       <% @student_courses.each_with_index do |student_course| %>
@@ -22,6 +23,14 @@
                 </td>
                 <td>
                   <input type="email" name="email" value="<%= student.email %>" required>
+                </td>
+                <td>
+                  <%tutor = student_course.get_my_tutors.first %>
+                  <% if tutor %>
+                      <%= tutor.user.name %>
+                  <% else %>
+                      unassigned!
+                  <% end %>
                 </td>
                 <td>
                   <input type="hidden" name="redirect_back_url" value="<%= course_students_url(@course)%>">

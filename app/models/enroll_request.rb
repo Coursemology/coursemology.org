@@ -10,6 +10,10 @@ class EnrollRequest < ActiveRecord::Base
 
 
   def notify_lecturer(redirect_url)
+    unless course.email_notify_enabled? PreferableItem.new_enroll_request
+      return
+    end
+
     puts "lect courses", course.lect_courses
     course.lect_courses.each do |uc|
       UserMailer.delay.new_enroll_request(self, uc.user, redirect_url)

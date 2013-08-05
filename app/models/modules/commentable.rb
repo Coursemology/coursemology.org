@@ -23,16 +23,24 @@ module Commentable
   end
 
   def notify_user(curr_user_course, comment, redirect_url)
+    unless curr_user_course.course.email_notify_enabled? PreferableItem.new_comment
+      return
+    end
 
     if curr_user_course == self.std_course
+
       #commented by the student, set pending true
       comment.commentable.set_pending_comments(true)
+
       self.std_course.get_staff_incharge.each do |uc|
         UserMailer.delay.new_comment(uc.user, comment, redirect_url)
       end
+
     else
+
       #commented by the staff, set pending false
       comment.commentable.set_pending_comments(false)
+
       UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
     end
     # TODO add a notification as well

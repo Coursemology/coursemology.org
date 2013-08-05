@@ -1,0 +1,46 @@
+<%= form_tag course_preferences_path(@course), :method => 'POST' do %>
+    <input type="hidden" name="origin" class="origin_url">
+    <h3>Email notifications:</h3>
+    <p>Enable or disable email notifications.</p>
+
+    <table class="table table-bordered table-striped" style="width: 80%">
+      <th>
+        Item
+      </th>
+      <th>
+        Description
+      </th>
+     <th>
+        send?
+      </th>
+
+      </thead>
+
+      <tbody>
+      <% @preferences.each do |pref| %>
+          <% item = pref.preferable_item %>
+          <tr>
+            <td>
+              <%= item.default_value %>
+            </td>
+            <td>
+              <%= item.description %>
+            </td>
+            <td>
+              <input name="preferences[<%= pref.id%>][prefer_value]" type="hidden">
+              <input name="preferences[<%= pref.id%>][display]" type="checkbox" <% if pref.display? %> checked <% end %>>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <div class="center">
+      <button class="btn btn-large btn-primary">Update</button>
+    </div>
+<% end %>
+<script>
+    $(document).ready(function(){
+        $('.origin_url').val(document.URL);
+    });
+</script>

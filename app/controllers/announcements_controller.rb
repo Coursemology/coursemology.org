@@ -28,6 +28,7 @@ class AnnouncementsController < ApplicationController
     @announcement.creator = current_user
     respond_to do |format|
       if @announcement.save
+        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course))
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been created." }
       else
@@ -39,6 +40,7 @@ class AnnouncementsController < ApplicationController
   def update
     respond_to do |format|
       if @announcement.update_attributes(params[:announcement])
+        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course))
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been updated." }
       else
