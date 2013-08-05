@@ -224,3 +224,71 @@ if PreferableItem.count == 19
                          default_display: true
 
 end
+
+if PreferableItem.count == 21
+  #notification email preference
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_comment",
+                         default_value: "New Comment",
+                         description:   "Notify user when someone commented on his/her thread",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_grading",
+                         default_value: "New Grading",
+                         description:   "Notify student for new available mission grading",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_submission",
+                         default_value: "New Submission",
+                         description:   "Notify student's tutor for new mission submission",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_student",
+                         default_value: "New Student",
+                         description:   "Notify students when their enrollment request is approved",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_enroll_request",
+                         default_value: "New Enroll Request",
+                         description:   "Notify lecturer(s) for new enrollment request",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_announcement",
+                         default_value: "New Announcement",
+                         description:   "Notify all staff and students for new announcement",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_mission",
+                         default_value: "New Mission",
+                         description:   "Notify all staff and students for new mission available",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "new_training",
+                         default_value: "New Training",
+                         description:   "Notify all staff and students for new training available",
+                         default_display: true
+
+  PreferableItem.create! item:          "Email",
+                         item_type:     "Course",
+                         name:          "mission_due",
+                         default_value: "Mission Reminder",
+                         description:   "Mission due reminder for students who didn't submit yet",
+                         default_display: true
+
+end

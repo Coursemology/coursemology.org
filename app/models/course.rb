@@ -100,7 +100,26 @@ class Course < ActiveRecord::Base
     self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
   end
 
+  def email_notifications
+    self.course_preferences.select {|pref| pref.preferable_item.item == "Email" && pref.preferable_item.item_type == "Course" }
+  end
+
+  def email_notify_enabled?(item)
+    enabled_notifications.include? item
+  end
+
+  def enabled_notifications
+    email_notifications.select {|pref| pref.display }.map { |pref| pref.preferable_item.name }
+  end
+
   def populate_preference
+    course_preferences.each do |pref|
+      item = PreferableItem.where(id: pref.preferable_item_id).first
+      unless item
+        CoursePreference.destroy(pref)
+      end
+    end
+
     PreferableItem.all.each do |item|
       cp = CoursePreference.where(course_id:self.id, preferable_item_id: item.id).first
       unless cp

@@ -97,7 +97,7 @@ class UserCourse < ActiveRecord::Base
 
     self.course.levels.each do |lvl|
       if lvl.exp_threshold <= self.exp
-        if self.level != lvl && lvl.level > 1
+        if self.level != lvl && lvl.level > 1 && self.is_student?
           Activity.earned_smt(self, lvl)
           Notification.leveledup(self, lvl)
         end
@@ -140,7 +140,7 @@ class UserCourse < ActiveRecord::Base
 
   def give_achievement(ach)
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    if not uach
+    if  !uach && self.is_student?
       uach = self.user_achievements.build
       uach.achievement = ach
       Activity.earned_smt(self, ach)

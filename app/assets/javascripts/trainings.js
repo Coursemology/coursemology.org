@@ -20,7 +20,7 @@ $(document).ready(function(){
     });
     function date_from_string(str) {
         if (typeof str == 'undefined')
-            return null;
+            return;
         date_time = str.split(' ');
         date = date_time[0];
         time = date_time[1];

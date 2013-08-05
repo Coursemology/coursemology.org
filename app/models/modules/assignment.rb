@@ -85,6 +85,12 @@ module Assignment
     type = self.class
     QueuedJob.destroy(self.queued_jobs)
     course = self.course
+    if type == Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
+      return
+    end
+    if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
+      return
+    end
     ucs.each do |uc|
       user = uc.user
       if type == Mission

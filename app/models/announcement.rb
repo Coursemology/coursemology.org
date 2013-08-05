@@ -13,6 +13,11 @@ class Announcement < ActiveRecord::Base
 
   def schedule_mail(ucs, redirect_to)
     QueuedJob.destroy(self.queued_jobs)
+
+    unless course.email_notify_enabled? PreferableItem.new_announcement
+      return
+    end
+
     ucs.each do |uc|
       user = uc.user
 

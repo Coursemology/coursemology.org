@@ -108,9 +108,10 @@ class Submission < ActiveRecord::Base
     self.update_attribute(:status,'attempting')
   end
 
-  def set_submitted
+  def set_submitted(redirect_url)
     self.update_attribute(:status,'submitted')
     self.update_attribute(:submit_at, updated_at)
+    notify_submission(redirect_url)
   end
 
   def set_graded
@@ -122,8 +123,11 @@ class Submission < ActiveRecord::Base
     self.attempt = self.attempt ? self.attempt + 1 : 1
   end
 
-  def notify_submission(curr_user_course,redirect_url)
-    curr_user_course.get_staff_incharge.each do |uc|
+  def notify_submission(redirect_url)
+    unless std_course.course.email_notify_enabled?(PreferableItem.new_submission)
+      return
+    end
+    std_course.get_staff_incharge.each do |uc|
       puts 'notify tutors'
       UserMailer.delay.new_submission(
           uc.user,
@@ -133,5 +137,4 @@ class Submission < ActiveRecord::Base
       )
     end
   end
-
 end

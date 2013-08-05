@@ -98,6 +98,7 @@ class TrainingSubmissionsController < ApplicationController
     @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
+    @training_submission.submit_at = DateTime.now
     @training_submission.current_step = 1
 
     # Is it the first submission? Otherwise set the multiplier to 1/5
