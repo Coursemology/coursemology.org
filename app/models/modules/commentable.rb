@@ -15,10 +15,13 @@ module Commentable
   end
 
   def set_pending_comments(pending)
-    if self.pending_comments
-      self.pending_comments.update_attribute(:pending, pending)
-    else
-      self.build_pending_comments(pending:pending).save
+    if self.respond_to?(:pending_comments)
+      # TODO support pending comments for mcq & coding question
+      if self.pending_comments
+        self.pending_comments.update_attribute(:pending, pending)
+      else
+        self.build_pending_comments(pending:pending).save
+      end
     end
   end
 
@@ -27,12 +30,10 @@ module Commentable
       return
     end
 
-    if curr_user_course == self.std_course
-
+    if curr_user_course.is_student?
       #commented by the student, set pending true
       comment.commentable.set_pending_comments(true)
-
-      self.std_course.get_staff_incharge.each do |uc|
+      curr_user_course.get_staff_incharge.each do |uc|
         UserMailer.delay.new_comment(uc.user, comment, redirect_url)
       end
 
@@ -40,8 +41,11 @@ module Commentable
 
       #commented by the staff, set pending false
       comment.commentable.set_pending_comments(false)
-
-      UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
+      # TODO this only handle the case where the commentable is a std_answer
+      # need to change it to work when commentable is mcq or coding_question
+      if self.respond_to?(:std_course)
+        UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
+      end
     end
     # TODO add a notification as well
   end
