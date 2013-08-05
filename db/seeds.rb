@@ -294,11 +294,20 @@ if PreferableItem.count == 21
 end
 
 if PreferableItem.count == 30
-
   PreferableItem.create! item:          "Sidebar",
                          item_type:     "Student",
                          name:          "comments",
                          default_value: "Comments",
                          description:   "Show comments summary",
                          default_display: true
+end
+
+if PreferableItem.count == 31
+  PreferableItem.create! item:          "Mcq",
+                         item_type:     "AutoGrader",
+                         name:          "title",
+                         default_value: "default",
+                         description:   "The Auto Grader used to grade MCQ Question",
+                         default_display: true
+
 end

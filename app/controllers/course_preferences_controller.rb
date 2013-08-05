@@ -15,6 +15,9 @@ class CoursePreferencesController < ApplicationController
         @tab = "TrainingPreference"
         @preferences = @course.training_columns
         @time_format =  @course.training_time_format
+      when 'mcq'
+        @tab = "McqPreference"
+        @mcq_auto_grader = @course.mcq_auto_grader
       when 'email'
         @tab = "NotificationPreference"
         @preferences = @course.email_notifications

@@ -82,6 +82,10 @@ class Course < ActiveRecord::Base
     self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Column" }
   end
 
+  def mcq_auto_grader
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Mcq" && pref.preferable_item.item_type == "AutoGrader"}.first
+  end
+
   def student_sidebar_items
     self.course_preferences.select { |pref| pref.preferable_item.item == "Sidebar" && pref.preferable_item.item_type == "Student" }
   end
