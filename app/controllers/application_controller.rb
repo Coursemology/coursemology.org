@@ -271,6 +271,9 @@ class ApplicationController < ActionController::Base
       when 'students'
         url = course_students_url(@course)
         icon = 'icon-user'
+      when 'comments'
+        url = course_comments_url(@course)
+        icon = 'icon-comment'
     end
     [url, icon]
   end

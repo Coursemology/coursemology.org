@@ -292,3 +292,13 @@ if PreferableItem.count == 21
                          default_display: true
 
 end
+
+if PreferableItem.count == 30
+
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "comments",
+                         default_value: "Comments",
+                         description:   "Show comments summary",
+                         default_display: true
+end
