@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130804092515) do
+ActiveRecord::Schema.define(:version => 20130805034745) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -130,12 +130,13 @@ ActiveRecord::Schema.define(:version => 20130804092515) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.text     "description", :limit => 255
+    t.text     "description",       :limit => 255
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "comments"
+    t.time     "last_commented_at"
   end
 
   create_table "comments", :force => true do |t|
@@ -302,6 +303,7 @@ ActiveRecord::Schema.define(:version => 20130804092515) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "max_grade"
+    t.time     "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
@@ -341,15 +343,6 @@ ActiveRecord::Schema.define(:version => 20130804092515) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
-
-  create_table "paths", :force => true do |t|
-    t.integer  "creator_id"
-    t.string   "name"
-    t.text     "data"
-    t.integer  "steps"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
 
   create_table "pending_comments", :force => true do |t|
     t.integer  "answer_id"

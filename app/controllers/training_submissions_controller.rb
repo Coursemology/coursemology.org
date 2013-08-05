@@ -186,7 +186,12 @@ class TrainingSubmissionsController < ApplicationController
     if @training_submission.current_step == mcq_pos
       if mcqa.is_correct
         @training_submission.current_step = mcq_pos + 1
-        grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+        if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+          grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+        else
+          # default grader
+          grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
+        end
         @training_submission.update_grade
       end
     end

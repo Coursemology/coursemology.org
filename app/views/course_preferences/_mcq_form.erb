@@ -1,0 +1,47 @@
+<%= form_tag course_preferences_path(@course), :method => 'POST' do %>
+  <input type="hidden" name="origin" class="origin_url">
+  <h3>Auto Grader</h3>
+  <p>Customize the Auto Grader used to grade MCQ questions</p>
+
+  <div class="info-block">
+    Select the Auto Grader:
+    <select name="preferences[<%= @mcq_auto_grader ? @mcq_auto_grader.id : 0 %>][prefer_value]">
+      <option value="default"
+          <%= "selected" if @mcq_auto_grader.prefer_value == "default"%>>
+          Default
+      </option>
+      <option value="two-one-zero"
+          <%= "selected" if @mcq_auto_grader.prefer_value == "two-one-zero"%>>
+          TOZ Grader
+      </option>
+    </select>
+
+    <p>Available Grader:</p>
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Default</td>
+        <td>Students and get full mark whenever they answer correctly.</td>
+      </tr>
+      <tr>
+        <td>TOZ</td>
+        <td>Students get:<br>
+          2 points if answering correctly in the first attempt<br>
+          1 point in subsequent attempts and<br>
+          0 if they got it right in the last choice</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="center">
+    <button class="btn btn-large btn-primary">Update</button>
+  </div>
+<% end %>
+<script>
+    $(document).ready(function(){
+        $('.origin_url').val(document.URL);
+    });
+</script>
