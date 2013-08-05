@@ -20,24 +20,27 @@ class CommentsController < ApplicationController
   end
 
   def index
-    authorize! :see, :pending_comments
-    @tab = params[:_tab]
+    if can? :see, :pending_comments
+      @tab = params[:_tab]
 
-    @pending_comments = @course.get_pending_comments
-    @mine_pending_coments = get_mystudent_pending_comments
+      @pending_comments = @course.get_pending_comments
+      @mine_pending_coments = get_mystudent_pending_comments
 
-    case @tab
-      when 'all'
-        @topics = @course.get_all_comments
-      when 'pending'
-        @topics = @pending_comments
-      when 'minepending'
-        @topics = @mine_pending_coments
-      when 'mine'
-        @topics = get_mystudent_comments
-      else
-        @tab = 'pending'
-        @topics = @pending_comments
+      case @tab
+        when 'all'
+          @topics = @course.get_all_comments
+        when 'pending'
+          @topics = @pending_comments
+        when 'minepending'
+          @topics = @mine_pending_coments
+        when 'mine'
+          @topics = get_mystudent_comments
+        else
+          @tab = 'pending'
+          @topics = @pending_comments
+      end
+    else
+      @topics = @course.std_answers.accessible_by(current_ability).where("last_commented_at IS NOT NULL")
     end
 
     @topics = sorting_and_paging(@topics)

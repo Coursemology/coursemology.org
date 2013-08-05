@@ -101,14 +101,14 @@ class ApplicationController < ActionController::Base
                       img:    @theme_settings["Submissions Icon"],
                       icon:   "icon-envelope-alt",
                       count:  counts[:submissions] || 0
-                  }]
+                  },   {
+                      text:   "Comments",
+                      url:    course_comments_url(@course),
+                      icon:   "icon-comment",
+                      count:  counts[:pending_comments] || 0
+                  } ]
+
     if curr_user_course.is_staff?
-      @nav_items <<   {
-          text:   "Comments",
-          url:    course_comments_url(@course),
-          icon:   "icon-comment",
-          count:  counts[:pending_comments] || 0
-      }
       @nav_items <<    {
           text: "Pending Grading",
           url:  course_pending_gradings_url(@course),
