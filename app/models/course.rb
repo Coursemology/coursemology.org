@@ -66,4 +66,10 @@ class Course < ActiveRecord::Base
     self.get_all_answers.select { |ans| ans.last_commented_at }
   end
 
+  def get_all_comments_by_ability(ability)
+    topics = std_answers.accessible_by(ability) +
+      std_coding_answers.accessible_by(ability)
+    topics.select { |ans| ans.last_commented_at }
+  end
+
 end

@@ -40,7 +40,7 @@ class CommentsController < ApplicationController
           @topics = @pending_comments
       end
     else
-      @topics = @course.std_answers.accessible_by(current_ability).where("last_commented_at IS NOT NULL")
+      @topics = @course.get_all_comments_by_ability(current_ability)
     end
 
     @topics = sorting_and_paging(@topics)
