@@ -26,7 +26,7 @@ class CourseGroupsController < ApplicationController
 
     unless tg_exist
       tg = @course.tutorial_groups.build
-      tg.std_course = @course.user_courses.where(id:params[:std_course_id]).first
+      tg.std_course_id = params[:std_course_id]
       tg.tut_course = curr_user_course
       tg.save
     end

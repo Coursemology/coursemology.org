@@ -6,6 +6,7 @@
 <h1>Class Enrollment</h1>
 
 <% if can? :manage, UserCourse %>
+    <% tas = (@lecturer_courses + @ta_courses).map {|tac| [tac.user.name, tac.id] }.unshift(["Unassigned", -1]) %>
     <table class="table">
       <tr>
         <th>Name</th>
@@ -15,8 +16,8 @@
       </tr>
       <% @student_courses.each_with_index do |student_course| %>
           <% student = student_course.user %>
-          <%= form_for(student,
-                       html: { method: :put, class: "form-horizontal" } ) do |f| %>
+          <%= form_for [@course,student_course],
+                       html: { method: :put, class: "form-horizontal" }  do |f| %>
               <tr>
                 <td>
                   <input type="text" name="name" value="<%= student.name %>" required>
@@ -27,15 +28,24 @@
                 <td>
                   <%tutor = student_course.get_my_tutors.first %>
                   <% if tutor %>
-                      <%= tutor.user.name %>
+                      <%= select "tutor","", tas, {:selected => "#{tutor.id}" }%>
                   <% else %>
-                      unassigned!
+                      <%= select "tutor","", tas, {:selected => "#{-1}" }%>
                   <% end %>
+
+
                 </td>
                 <td>
                   <input type="hidden" name="redirect_back_url" value="<%= course_students_url(@course)%>">
-                  <%= f.submit "Update", :class => 'btn',:style=>"vertical-align:middle;margin-bottom: 0px" %>
-
+                  <button type="submit" class="btn">
+                    <i class="icon-ok"></i>
+                  </button>
+                  <%= link_to course_user_course_path(@course, student_course),
+                              method: :delete,
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
                 </td>
               </tr>
           <% end %>

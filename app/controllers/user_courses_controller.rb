@@ -12,18 +12,37 @@ class UserCoursesController < ApplicationController
   def destroy
     @user_course.destroy
     respond_to do |format|
-      format.html { render json: { status: 'OK' } }
+      format.json { render json: { status: 'OK' } }
+      format.html { redirect_to course_students_path(@course) }
     end
   end
 
+
   def update
-    @user_course.role_id = params[:role_id]
-    @user_course.user.name = params[:name]
+    if params[:role_id]
+      @user_course.role_id = params[:role_id]
+    end
+    if params[:name]
+      @user_course.user.name = params[:name]
+    end
+    if params[:email]
+      @user_course.user.email = params[:email]
+    end
+
     @user_course.tut_courses.map {|tc| tc.destroy }
+
+    if params[:tutor]
+      tg = @course.tutorial_groups.build
+      tg.std_course = @user_course
+      tg.tut_course_id =  params[:tutor].first
+      tg.save
+    end
+
     if @user_course.save && @user_course.user.save
       respond_to do |format|
-        format.html { render json: { status: 'OK' }}
-      end
+        format.json { render json: { status: 'OK' }}
+        format.html { redirect_to params[:redirect_back_url], notice: 'Updated successfully.' }
+        end
     end
   end
 
