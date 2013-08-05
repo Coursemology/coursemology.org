@@ -17,9 +17,13 @@ class UsersController < ApplicationController
         change_role_not_allowed
         return
       end
+      puts "email address", params[:user][:email], current_user.email
+      email_updated = params[:user][:email] != current_user.email
+
       respond_to do |format|
         if current_user.update_attributes(params[:user])
-          format.html { redirect_to root_path, notice: 'Updated successfully.' }
+          notice = email_updated ? 'A confirmation email has been sent to yur new email address.' : 'Updated successfully.'
+          format.html { redirect_to root_path, notice: notice }
         else
           format.html { render action: "edit" }
         end
@@ -30,6 +34,7 @@ class UsersController < ApplicationController
       UserMailer.delay.update_user_role(@user)
       respond_with @user
     else
+      authorize! :manage, @user
       @user.name = params[:name]
       @user.email = params[:email]
       respond_to do |format|
