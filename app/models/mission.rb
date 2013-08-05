@@ -10,6 +10,9 @@ class Mission < ActiveRecord::Base
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
     :description, :exp, :open_at, :pos, :timelimit, :title
 
+  validates_with DateValidator, fields: [:open_at, :close_at]
+
+
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
