@@ -18,12 +18,12 @@ class TrainingsController < ApplicationController
       tags = Tag.find(@selected_tags)
       training_ids = tags.map { |tag| tag.trainings.map{ |t| t.id } }.reduce(:&)
       @trainings = @course.trainings.accessible_by(current_ability)
-      .order(:open_at).reverse_order.find(training_ids)
+      .order(:open_at).find(training_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     else
       @trainings = @course.trainings.accessible_by(current_ability)
-      .order(:open_at).reverse_order
+      .order(:open_at)
       .page(params[:page])
       @can_paginate = true
     end

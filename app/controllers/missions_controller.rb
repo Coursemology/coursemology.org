@@ -18,12 +18,12 @@ class MissionsController < ApplicationController
       tags = Tag.find(@selected_tags)
       mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
       @missions = @course.missions.accessible_by(current_ability)
-      .order(:open_at).reverse_order.find(mission_ids)
+      .order(:open_at).find(mission_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     else
       @missions = @course.missions.accessible_by(current_ability)
-      .order(:open_at).reverse_order
+      .order(:open_at)
       .page(params[:page])
       @can_paginate = true
     end
