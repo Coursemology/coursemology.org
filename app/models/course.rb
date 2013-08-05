@@ -11,6 +11,9 @@ class Course < ActiveRecord::Base
   has_many :user_courses, dependent: :destroy
   has_many :trainings, dependent: :destroy
 
+  has_many :mcqs, through: :trainings
+  has_many :coding_questions, through: :trainings
+
   has_many :users, through: :user_courses
 
   has_many :std_answers, through: :user_courses
@@ -57,7 +60,7 @@ class Course < ActiveRecord::Base
   end
 
   def get_all_answers
-    std_answers + std_coding_answers
+    std_answers + std_coding_answers + mcqs + coding_questions
   end
 
   def get_pending_comments
@@ -70,7 +73,9 @@ class Course < ActiveRecord::Base
 
   def get_all_comments_by_ability(ability)
     topics = std_answers.accessible_by(ability) +
-        std_coding_answers.accessible_by(ability)
+      std_coding_answers.accessible_by(ability) +
+      mcqs.accessible_by(ability) +
+      coding_questions.accessible_by(ability)
     topics.select { |ans| ans.last_commented_at }
   end
 

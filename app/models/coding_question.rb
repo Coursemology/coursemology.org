@@ -9,6 +9,7 @@ class CodingQuestion < ActiveRecord::Base
   has_many  :asm_qns, as: :qn, dependent: :destroy
 
   has_many :comments, as: :commentable
+  has_one :pending_comments, as: :answer
 
   #belongs_to :creator, class_name: "User"
   #

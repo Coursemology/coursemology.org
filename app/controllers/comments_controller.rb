@@ -44,7 +44,6 @@ class CommentsController < ApplicationController
     end
 
     @topics = sorting_and_paging(@topics)
-
   end
 
   def get_mystudent_pending_comments

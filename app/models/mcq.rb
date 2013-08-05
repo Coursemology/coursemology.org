@@ -6,6 +6,7 @@ class Mcq < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :comments, as: :commentable
+  has_one :pending_comments, as: :answer
 
   has_many :mcq_answers, dependent: :destroy
   has_many :std_mcq_answers, dependent: :destroy
