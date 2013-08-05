@@ -21,7 +21,10 @@
               <%= link_to edit_course_announcement_path(@course, announcement), class: "btn" do %>
                   <i class="icon-edit"></i>
               <% end %>
-              <%= link_to course_announcement_path(@course, announcement), class: "btn btn-danger", method: "DELETE" do %>
+              <%= link_to course_announcement_path(@course, announcement),
+                          class: "btn btn-danger",
+                          method: "DELETE",
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} do %>
                   <i class="icon-trash"></i>
               <% end %>
             </div>
