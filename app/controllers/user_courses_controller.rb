@@ -37,12 +37,13 @@ class UserCoursesController < ApplicationController
       tg.tut_course_id =  params[:tutor].first
       tg.save
     end
-
-    if @user_course.save && @user_course.user.save
-      respond_to do |format|
+    respond_to do |format|
+      if @user_course.save && @user_course.user.save
         format.json { render json: { status: 'OK' }}
         format.html { redirect_to params[:redirect_back_url], notice: 'Updated successfully.' }
-        end
+      else
+        format.json { render json: {errors: @user_course.user.errors}}
+      end
     end
   end
 

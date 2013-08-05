@@ -78,8 +78,6 @@ $(document).ready(function() {
         notice.addClass("alert-success");
         notice.removeClass("alert-error");
         notice.text("Update user info successful!");
-        notice.slideDown();
-        notice._removeClass('hidden');
 //        console.log(notice);
         $.ajax({
             url: url,
@@ -87,13 +85,28 @@ $(document).ready(function() {
             data: { role_id: curr_role_val,
                 name:name_field.val(),
                 email: email_field.val() },
-            dataType: 'html',
-            success: function() {
-                notice.slideDown(function(){
-                    setTimeout(function(){
-                        notice.slideUp()
-                    },1500);
-                });
+            dataType: 'json',
+            success: function(e) {
+//                json = JSON.parse(e);
+                if (e.status != 'OK') {
+                    notice.addClass("alert-error");
+                    notice.text("Email entered is already taken!");
+                    notice.slideDown();
+                    notice._removeClass('hidden');
+                    notice.slideDown(function(){
+                        setTimeout(function(){
+                            notice.slideUp()
+                        },4400);
+                    });
+                } else {
+                    notice.slideDown();
+                    notice._removeClass('hidden');
+                    notice.slideDown(function(){
+                        setTimeout(function(){
+                            notice.slideUp()
+                        },1500);
+                    });
+                }
             }
         });
     });

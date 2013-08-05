@@ -85,4 +85,10 @@ class UserMailer < ActionMailer::Base
     mail(to: user_email, subject: "#{course_name}: Reminder about mission due!")
   end
 
+  def email_changed(user_name, new_email, email_was)
+    @user_name = user_name
+    @new_email = new_email
+    @email_was = email_was
+    mail(to: new_email, subject: "Your email has been updated.")
+  end
 end

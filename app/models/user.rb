@@ -17,6 +17,8 @@ class User < ActiveRecord::Base
   attr_accessible :provider, :uid
 
   validates :name, presence: true
+  validates_uniqueness_of :email, :if => :email_changed?
+  before_update :send_out_notification_email, :if => :email_changed?
 
   has_many :user_courses, dependent: :destroy
   has_many :courses, through: :user_courses, dependent: :destroy
@@ -106,6 +108,10 @@ class User < ActiveRecord::Base
       self.profile_photo_url
     end
 
+  end
+
+  def send_out_notification_email
+    UserMailer.delay.email_changed(name, email, email_was)
   end
 
   private

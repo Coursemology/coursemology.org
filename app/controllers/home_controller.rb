@@ -5,7 +5,7 @@ class HomeController < ApplicationController
 
     if @courses.count == 1
       user_course = UserCourse.find_by_user_id_and_course_id(current_user, @courses.first)
-      if user_course.is_student?
+      if user_course.is_student? &&  (cannot? :manage, Course)
         redirect_to course_path(@courses.first)
       end
     end
