@@ -1,19 +1,20 @@
-<div class="row-fluid" style="width: 90%">
+<div class="row" >
   <div class="span2 sidebar">
     <%= render "layouts/course_side_bar" %>
   </div>
-  <div class="course-title span9">
-    <a href="<%= course_path(@course) %>">
-      <%= @course.title %>
-    </a>
-  </div>
-  <div class="span9 content">
+
+  <div class="span10 span-content">
+    <div class="course-title">
+      <a href="<%= course_path(@course) %>">
+        <%= @course.title %>
+      </a>
+    </div>
     <% if flash[:notice] %>
       <div class="alert alert-success">
         <%= flash[:notice] %>
       </div>
     <% end %>
-    <div style="clearfix"/>
+    <div style="clearfix" class="content"/>
     <%= yield %>
   </div>
   <%= render "layouts/course_popup" %>

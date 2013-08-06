@@ -67,7 +67,7 @@
       <%= render "layouts/admin_layout" %>
     </div>
 <% elsif @course && @course.id && (can? :participate, Course) %>
-    <div class="container-fluid course-content">
+    <div class="container course-content">
       <%= render "layouts/course_layout" %>
     </div>
 <% else %>

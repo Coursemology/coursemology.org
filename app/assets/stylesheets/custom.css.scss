@@ -47,11 +47,11 @@ h1 {
 }
 
 .sidebar {
-  padding: 10px 5px;
+  //padding: 5px 5px;
   color: #0071BC;
 
   i {
-    font-size: 1.6em;
+    font-size: 1.5em;
   }
 
   a, h3 {
@@ -99,12 +99,16 @@ h1 {
   padding-left: 15px;
 }
 
-.row-fluid .content {
+.row .content {
   padding: 10px 20px;
   background-color: white;
   //border: solid 1px #ccc;
+  //margin-left: 10px;
+  //min-height: 700px;
+}
+
+.row .span-content {
   margin-left: 10px;
-  min-height: 700px;
 }
 
 .course-ontent {
@@ -255,7 +259,7 @@ ul {
 }
 
 .nav-icon {
-  width: 35px;
+  //width: 30px;
   height: 25px;
   display: inline-block;
   position: relative;
@@ -294,6 +298,11 @@ ul.sidenav {
   .sidenav-collapse.collapse {
     height: 0;
     overflow: hidden;
+  }
+}
+@media (max-width: 768px) {
+  .sidebar-course-logo {
+    height: 0;
   }
 }
 
@@ -646,10 +655,10 @@ $grayMediumLight: #eaeaea;
   background-color: #f5f5f5;;
 }
 
-.row-fluid .course-title {
+.row .course-title {
   background-color: #eee;
   padding: 10px 20px;
-  margin-left: 10px;
+  //margin-left: 10px;
   a:visited, a:link {
     color: #563D7C;
     font-weight: bold;
