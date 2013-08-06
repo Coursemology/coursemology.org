@@ -2,7 +2,7 @@ Hello, <%= @user.name %>!
 
 <p><%= @comment.user_course.user.name %> has made a new comment to a thread you are subscribed to:</p>
 <blockquote>
-  <%= simple_format(@comment.text) %>
+  <%= @comment.text.html_safe %>
 </blockquote>
 
 <p><a href="<%= @redirect_url %>"> Click here</a> to view the full thread.</p>

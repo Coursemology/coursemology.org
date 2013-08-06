@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
-  default from: "coursemology@gmail.com"
+  default from: "coursemology@gmail.com",
+          'Content-Transfer-Encoding' => '7bit'
 
   def new_comment(user, comment, redirect_url)
     puts "to email #{user.email} comment #{comment.text}"
