@@ -41,7 +41,7 @@ class StatsController < ApplicationController
     @unsubmitted = all_std - @submitted
 
     sbms_graded = @sbms.graded
-    sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_grading.total_grade }
+    sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_gwrading.total_grade }
     @grade_chart = produce_submission_graph(sbms_by_grade, 'Grade', 'Grade distribution')
 
     sbms_by_date = sbms_graded.group_by { |sbm| sbm.created_at.to_date.to_s }
