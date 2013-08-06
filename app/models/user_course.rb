@@ -18,15 +18,15 @@ class UserCourse < ActiveRecord::Base
   belongs_to :course
   belongs_to :level
 
-  has_many :user_achievements
+  has_many :user_achievements, dependent: :destroy
   has_many :user_titles
   has_many :user_rewards
   has_many :exp_transactions
   has_many :seen_stuff, class_name: "SeenByUser"
   has_many :comments
 
-  has_many :submissions, foreign_key: "std_course_id"
-  has_many :training_submissions, foreign_key: "std_course_id"
+  has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
+  has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
 
   has_many :std_answers, foreign_key: "std_course_id"
   has_many :std_coding_answers, foreign_key: "std_course_id"

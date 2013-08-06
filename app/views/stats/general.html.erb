@@ -9,7 +9,7 @@
     <td>
       <select id="select-mission">
         <%= @missions.each do |asm| %>
-          <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
+            <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
     </td>
@@ -20,7 +20,7 @@
     <td>
       <select id="select-training">
         <%= @trainings.each do |asm| %>
-          <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
+            <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
     </td>
@@ -37,18 +37,18 @@
     <th>Students</th>
   </tr>
   <% @levels.each do |lvl| %>
-    <% if lvl.user_courses.size > 0 %>
-      <tr>
-        <td><%= lvl.get_title %></td>
-        <td><%= lvl.user_courses.size %></td>
-        <td>
-          <% lvl.user_courses.each do |sc| %>
-            <%= render partial: "user_courses/short_name_display",
-              locals: { user_course: sc } %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
+      <% if lvl.user_courses.size > 0 %>
+          <tr>
+            <td><%= lvl.get_title %></td>
+            <td><%= lvl.user_courses.size %></td>
+            <td>
+              <% lvl.user_courses.each do |sc| %>
+                  <%= render partial: "user_courses/short_name_display",
+                             locals: { user_course: sc } %>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
   <% end %>
 </table>
 
@@ -62,19 +62,19 @@
     <th>Students</th>
   </tr>
   <% @achievements.each do |ach| %>
-    <% if ach.user_achievements.size > 0 %>
-      <tr>
-        <td><img src="<%= ach.icon_url %>" /></td>
-        <td><%= ach.title %></td>
-        <td><%= ach.user_achievements.size %></td>
-        <td>
-          <% ach.user_achievements.each do |uach| %>
-            <%= render partial: "user_courses/short_name_display",
-              locals: { user_course: uach.user_course } %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
+      <% if ach.user_achievements.size > 0 %>
+          <tr>
+            <td><img src="<%= ach.icon_url %>" /></td>
+            <td><%= ach.title %></td>
+            <td><%= ach.user_achievements.size %></td>
+            <td>
+              <% ach.user_achievements.each do |uach| %>
+                  <%= render partial: "user_courses/short_name_display",
+                             locals: { user_course: uach.user_course } %>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
   <% end %>
 </table>
 <!-- A graph to show statistical exp -->
