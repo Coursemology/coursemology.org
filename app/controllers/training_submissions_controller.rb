@@ -96,7 +96,8 @@ class TrainingSubmissionsController < ApplicationController
   def new
 
     @reattempt = @course.course_preferences.training_reattempt.first
-    if !@reattempt || !@reattempt.display
+    sbm = @training.training_submissions.where(std_course_id: curr_user_course).last
+    if sbm && (!@reattempt || !@reattempt.display)
       sbm = @training.training_submissions.where(std_course_id: curr_user_course).last
       redirect_to edit_course_training_training_submission_path(@course, @training, sbm)
       return
