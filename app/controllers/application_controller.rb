@@ -279,6 +279,5 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :masquerading?
-
   helper_method :curr_user_course
 end
