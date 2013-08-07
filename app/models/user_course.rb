@@ -123,29 +123,30 @@ class UserCourse < ActiveRecord::Base
     end
   end
 
-  def check_achievement(ach)
+  def check_achievement(ach, should_notify=true)
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
     fulfilled = false
     if not uach
       # not earned yet, check this achievement
-      puts "#{ach.fulfilled_conditions?(self)} #{ach.to_json}"
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
         fulfilled = true
-        self.give_achievement(ach)
+        self.give_achievement(ach, should_notify)
       end
     end
     return fulfilled
   end
 
-  def give_achievement(ach)
+  def give_achievement(ach, should_notify=true)
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    if  !uach && self.is_student?
+    if !uach && self.is_student?
       uach = self.user_achievements.build
       uach.achievement = ach
-      Activity.earned_smt(self, ach)
-      Notification.earned_achievement(self, ach)
+      if should_notify
+        Activity.earned_smt(self, ach)
+        Notification.earned_achievement(self, ach)
+      end
       self.save
     end
   end
