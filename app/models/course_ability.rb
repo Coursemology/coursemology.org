@@ -51,6 +51,10 @@ class CourseAbility
       cannot :modify, TrainingSubmission
     end
 
+    if user_course.is_lecturer? && !user.is_admin?
+      cannot :manage, :user
+    end
+
     if user_course.is_ta?
       cannot :manage, :user
       cannot :manage, :course_preference
@@ -80,6 +84,7 @@ class CourseAbility
 
       can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
+      can :manage, ExpTransaction, user_course_id: user_course.id
 
       cannot :modify, TrainingSubmission
 

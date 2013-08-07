@@ -21,7 +21,7 @@ class UserCourse < ActiveRecord::Base
   has_many :user_achievements, dependent: :destroy
   has_many :user_titles
   has_many :user_rewards
-  has_many :exp_transactions
+  has_many :exp_transactions, dependent: :destroy
   has_many :seen_stuff, class_name: "SeenByUser"
   has_many :comments
 

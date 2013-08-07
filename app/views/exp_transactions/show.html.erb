@@ -1,0 +1,49 @@
+<div class="page-header">
+  <h1>EXP History</h1>
+</div>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>
+      Entered by
+    </th>
+    <th>
+      Reason
+    </th>
+    <!--<th>-->
+    <!--Grade-->
+    <!--</th>-->
+    <th>
+      Amount
+    </th>
+    <th>
+      Time Entered
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @exp_transactions.each do |et| %>
+      <tr>
+        <td>
+          <% if et.giver %>
+              <%= et.giver.name %>
+          <% else %>
+              Self
+          <% end %>
+        </td>
+        <td>
+          <%= et.reason %>
+        </td>
+        <td>
+          <%= et.exp %> EXP
+        </td>
+        <td>
+          <%= datetime_format(et.created_at) %>
+        </td>
+
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
