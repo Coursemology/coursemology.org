@@ -6,7 +6,7 @@
     <div>
       <div class="user-sidebar-profile">
         <a class="user-thumb-profile" href="<%= course_user_course_path(@course, curr_user_course)%>">
-          <img class="user-profile-pic" src="<%= current_user.profile_photo_url %>" />
+          <img class="user-profile-pic" src="<%= current_user.get_profile_photo_url %>" />
         </a>
         <div id="user-profile-name"> <a href="<%= course_user_course_path(@course, curr_user_course)%>">
           <%= current_user.name %></a></div>

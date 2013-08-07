@@ -9,7 +9,7 @@
       <tr class="<%= "leaderboard-top-row" if index == 0 %>">
         <td class="user-profile-pic-col">
           <a href="<%= course_user_course_path(@course, std_course) %>">
-            <img class="user-profile-pic" src="<%= std_course.user.profile_photo_url %>">
+            <img class="user-profile-pic" src="<%= std_course.user.get_profile_photo_url %>">
           </a>
         </td>
         <td>
@@ -32,7 +32,7 @@
       <tr class="<%= "leaderboard-top-row" if index == 0 %>">
         <td class="user-profile-pic-col">
           <a href="<%= course_user_course_path(@course, std_course) %>">
-            <img class="user-profile-pic" src="<%= std_course.user.profile_photo_url %>">
+            <img class="user-profile-pic" src="<%= std_course.user.get_profile_photo_url %>">
           </a>
         </td>
         <td>

@@ -46,7 +46,7 @@
   <div class="control-group">
     <%= f.label "Profile picture", class: 'control-label' %>
     <div class="controls">
-      <img src="<%= current_user.profile_photo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Photo Preview" />
+      <img src="<%= current_user.get_profile_photo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Photo Preview" />
       <%= f.hidden_field :profile_photo_url, class: "image-uploader-input-url" %>
       <br/>
       <a href="#image-uploader-modal" data-toggle="modal">Upload new photo</a>
