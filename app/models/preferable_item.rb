@@ -1,6 +1,9 @@
 class PreferableItem < ActiveRecord::Base
   attr_accessible :item, :item_type, :name, :default_value, :description, :default_display
 
+
+  scope :training_reattempt, where(item: 'Training', item_type: 'Re-attempt')
+
   def self.mission_columns
     PreferableItem.where(item: "Mission", item_type: "Column")
   end

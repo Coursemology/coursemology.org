@@ -15,6 +15,7 @@ class CoursePreferencesController < ApplicationController
         @tab = "TrainingPreference"
         @preferences = @course.training_columns
         @time_format =  @course.training_time_format
+        @reattempt = @course.course_preferences.training_reattempt.first
       when 'mcq'
         @tab = "McqPreference"
         @mcq_auto_grader = @course.mcq_auto_grader

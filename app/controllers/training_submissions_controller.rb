@@ -95,6 +95,13 @@ class TrainingSubmissionsController < ApplicationController
 
   def new
 
+    @reattempt = @course.course_preferences.training_reattempt.first
+    if !@reattempt || !@reattempt.display
+      sbm = @training.training_submissions.where(std_course_id: curr_user_course).last
+      redirect_to edit_course_training_training_submission_path(@course, @training, sbm)
+      return
+    end
+
     @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
@@ -104,7 +111,7 @@ class TrainingSubmissionsController < ApplicationController
     # Is it the first submission? Otherwise set the multiplier to 1/5
     sbm_count = @training.training_submissions.where(std_course_id: curr_user_course).count
     if sbm_count > 0
-      @training_submission.multiplier = 0.2
+      @training_submission.multiplier = @reattempt.prefer_value.to_f / 100
     end
 
     @training_submission.save

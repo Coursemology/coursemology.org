@@ -110,6 +110,10 @@ class Course < ActiveRecord::Base
     self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
   end
 
+  def training_time_format
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
+  end
+
   def email_notifications
     self.course_preferences.select {|pref| pref.preferable_item.item == "Email" && pref.preferable_item.item_type == "Course" }
   end

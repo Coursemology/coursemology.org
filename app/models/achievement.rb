@@ -46,14 +46,11 @@ class Achievement < ActiveRecord::Base
     removed_ids = current_reqs - remaining_reqs
     Requirement.delete(removed_ids)
 
-    puts self.requirements.to_json
-
     # add new requirements
     new_reqs ||= []
     new_reqs.each do |new_req|
       self.requirements.build(JSON.parse(new_req))
     end
     self.save
-    puts self.requirements.to_json
   end
 end

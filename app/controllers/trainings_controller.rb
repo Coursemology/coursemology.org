@@ -13,6 +13,7 @@ class TrainingsController < ApplicationController
       @display_columns[cp.preferable_item.name] = cp.prefer_value
     end
     @time_format =  @course.training_time_format
+    @reattempt = @course.course_preferences.training_reattempt.first
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
