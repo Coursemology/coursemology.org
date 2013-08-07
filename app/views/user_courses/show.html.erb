@@ -23,7 +23,7 @@
   </table>
 </div>
 
-<% if @user_course.user_achievements.count > 0 %>
+<% if @user_course.is_student? && @user_course.user_achievements.count > 0 %>
     <h3>Achievements</h3>
     <br/>
     <ul class="thumbnails">
@@ -40,7 +40,7 @@
     </ul>
 <% end %>
 
-<% if @course.tags.count > 0 %>
+<% if @user_course.is_student? && @course.tags.count > 0 %>
     <h3>Topic Mastery</h3>
     <br/>
     <table class="table span6">
