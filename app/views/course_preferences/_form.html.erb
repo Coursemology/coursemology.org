@@ -75,6 +75,21 @@
             </select>
             </div>
     <% end %>
+    <% if @reattempt %>
+      <h3>Re-Attempt</h3>
+      <p><%= @reattempt.preferable_item.description %></p>
+      <div class="info-block">
+        <input type="checkbox"
+            name="preferences[<%= @reattempt.id %>][display]"
+             <%= "checked" if @reattempt.display %>>
+        </input>Enabled</span>
+        <br/>
+        <span>Percentage of the EXP earnable:</span>
+        <input class="span1" type="number" min="0" max="100"
+            name="preferences[<%= @reattempt.id %>][prefer_value]"
+            value="<%= @reattempt.prefer_value %>" col="20"></input>
+      </div>
+    <% end %>
 
     <div class="center">
       <button class="btn btn-large btn-primary">Update</button>

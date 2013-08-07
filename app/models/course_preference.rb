@@ -4,4 +4,6 @@ class CoursePreference < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :preferable_item
 
+  scope :training_reattempt, where(preferable_item_id: PreferableItem.training_reattempt.first)
+
 end

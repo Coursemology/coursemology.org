@@ -311,3 +311,12 @@ if PreferableItem.count == 31
                          default_display: true
 
 end
+
+if PreferableItem.count == 32
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Re-attempt",
+                         name:          "title",
+                         default_value: "20",
+                         description:   "Enable Re-attempt allows students to do training again to get a fraction of the full EXP.",
+                         default_display: true
+end
