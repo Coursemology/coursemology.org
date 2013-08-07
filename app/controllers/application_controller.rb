@@ -64,13 +64,13 @@ class ApplicationController < ActionController::Base
       all_missions = @course.missions.accessible_by(current_ability)
       unseen_missions = all_missions - curr_user_course.seen_missions
       counts[:missions] = unseen_missions.count
-      if can? :see_all, Submission
-        # lecturers see number of new submissions of all students in the course
-        all_sbms = @course.submissions.accessible_by(current_ability) +
-            @course.training_submissions.accessible_by(current_ability)
-        unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
-        counts[:submissions] = unseen_sbms.count
-      end
+      #if can? :see_all, Submission
+      #  # lecturers see number of new submissions of all students in the course
+      #  all_sbms = @course.submissions.accessible_by(current_ability) +
+      #      @course.training_submissions.accessible_by(current_ability)
+      #  unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
+      #  counts[:submissions] = unseen_sbms.count
+      #end
       if can? :see, :pending_grading
         counts[:pending_grading] = @course.get_pending_gradings(curr_user_course).count
       end
@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
                         url:    course_submissions_url(@course),
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
-                        count:  counts[:submissions] || 0
+                        #count:  counts[:submissions] || 0
                     }]
       @nav_items <<   {
           text:   "Comments",

@@ -101,7 +101,7 @@ h1 {
 
 .row .content {
   padding: 10px 20px;
-  background-color: white;
+
   //border: solid 1px #ccc;
   //margin-left: 10px;
   //min-height: 700px;
@@ -109,6 +109,7 @@ h1 {
 
 .row .span-content {
   margin-left: 10px;
+  background-color: white;
 }
 
 .course-ontent {
@@ -650,6 +651,11 @@ $grayMediumLight: #eaeaea;
   @extend .error;
 }
 
+.input_with_error {
+  color: #b94a48;
+  border-color: #b94a48;
+}
+
 .assignments thead {
   font-size: 1.3em;
   background-color: #f5f5f5;;
@@ -686,4 +692,36 @@ $grayMediumLight: #eaeaea;
   vertical-align: middle;
   width: 0;
   /*float: right;*/
+}
+
+.grading-block {
+  background-color: #363636;
+  color: #ffffff;
+  position: relative;
+  margin: 15px 0px;
+  padding: 30px 10px 10px;
+  *padding-top: 19px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  h4 {
+    color: floralwhite;
+  }
+}
+
+.grading-block:after {
+  content: " Grade ";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  padding: 3px 17px;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: grey;
+  -webkit-border-radius: 4px 0 4px 0;
+  -moz-border-radius: 4px 0 4px 0;
+  border-radius: 4px 0 4px 0;
 }

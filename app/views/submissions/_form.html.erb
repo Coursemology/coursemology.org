@@ -6,7 +6,7 @@
         <br/><br/>
         <label><h3>Your answer:</h3></label>
         <% if q.class == Question %>
-            <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span10 html-editor" rows="8"/>
+            <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span7 html-editor" rows="8"/>
             <% answer = @std_answers[q.id] %>
             <% if answer %>
                 <%= answer.text %>

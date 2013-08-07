@@ -1,13 +1,13 @@
 <%- model_class = Mission -%>
 <div class="page-header">
-  <h1>Mission <%= @mission.pos + 1 if @mission.pos %>: <%= @mission.title %></h1>
+  <h1>Mission : <%= @mission.title %></h1>
 </div>
 
 <table class="table-top-align">
   <tr>
     <td>
       <p><%= @mission.description.html_safe %></p>
-      <table>
+      <table class="table table-bordered" style="width: 300px">
         <tr>
           <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
           <td><%= @mission.exp %></td>
@@ -18,24 +18,24 @@
         </tr>
         <tr>
           <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
-          <td><%= @mission.open_at %></td>
+          <td><%= datetime_format(@mission.open_at) %></td>
         </tr>
         <tr>
           <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
-          <td><%= @mission.close_at %></td>
+          <td><%= datetime_format(@mission.close_at) %></td>
         </tr>
-        <tr>
-          <td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>
-          <td><%= @mission.deadline %></td>
-        </tr>
-        <tr>
-          <td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>
-          <td><%= @mission.timelimit %></td>
-        </tr>
-        <tr>
-          <td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>
-          <td><%= @mission.attempt_limit %></td>
-        </tr>
+        <!--<tr>-->
+          <!--<td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>-->
+          <!--<td><%= @mission.deadline %></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+          <!--<td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>-->
+          <!--<td><%= @mission.timelimit %></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+          <!--<td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>-->
+          <!--<td><%= @mission.attempt_limit %></td>-->
+        <!--</tr>-->
       </table>
     </td>
 

@@ -3,8 +3,8 @@
 </div>
 <% require 'digest/md5' %>
 <table>
-  <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
-  <tr><td>Submited at: </td><td><%= time_ago_in_words(@submission.updated_at) %> ago</td></tr>
+  <tr><td style="width: 100px">Student: </td><td><%= @submission.std_course.user.name %></td></tr>
+  <tr><td>Submited at:</td><td><%= datetime_format(@submission.updated_at) %> </td></tr>
   <% if @grading %>
       <tr>
         <td>Total grade: </td>
@@ -15,6 +15,12 @@
                           edit_course_mission_submission_submission_grading_path(@course, @mission, @submission, @grading)
               %>
           <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Total EXP: </td>
+        <td>
+          <%= @grading.total_exp %> / <%= @mission.exp %>
         </td>
       </tr>
       <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
@@ -39,10 +45,11 @@
     <% if @grading %>
         <% if qa[:g] %>
             <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
+            <h3>EXP: <%= qa[:g].exp %> / <%= (@mission.exp * (qa[:q].max_grade.to_f / @mission.max_grade.to_f)).to_i%></h3>
         <% end %>
     <% end %>
     <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
-    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>"
+    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
     <%= render partial: "comments/list",
                locals: { comments:  qa[:a].comments_json,
                          target:    qa[:a],
