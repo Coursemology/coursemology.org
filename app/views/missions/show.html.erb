@@ -95,7 +95,7 @@
           <tr>
             <td>
               <h3>Question <%= i + 1 %></h3>
-              <%= q.description.html_safe %>
+              <%= style_format(q.description) %>
             </td>
             <% if can? :manage, @mission %>
                 <td>

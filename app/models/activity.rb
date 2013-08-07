@@ -23,6 +23,11 @@ class Activity < ActiveRecord::Base
     Activity.add(user_course.course, user_course, action, obj, nil, nil)
   end
 
+  def self.reached_lvl(user_course, obj)
+    action = Action.find_by_text("reached")
+    Activity.add(user_course.course, user_course, action, obj, nil, nil)
+  end
+
   private
   def self.add(course, actor_course, action, obj, target_course, extra)
     act = Activity.new

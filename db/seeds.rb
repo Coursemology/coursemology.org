@@ -311,3 +311,8 @@ if PreferableItem.count == 31
                          default_display: true
 
 end
+
+if Action.count == 7
+  Action.create! text: "reached",
+                 description: "actor reached obj (lvl)"
+end

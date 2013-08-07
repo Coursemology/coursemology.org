@@ -8,7 +8,7 @@ class Notification < ActiveRecord::Base
   belongs_to :target_course, class_name: "UserCourse"
 
   def self.leveledup(target_course, level)
-    action = Action.find_by_text("earned")
+    action = Action.find_by_text("reached")
     self.add(target_course, nil, action, level, nil)
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130805034745) do
+ActiveRecord::Schema.define(:version => 20130807031715) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20130805034745) do
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.string   "student_answer_type"
+    t.integer  "exp"
   end
 
   add_index "answer_gradings", ["grader_id"], :name => "index_answer_gradings_on_grader_id"
@@ -130,13 +131,12 @@ ActiveRecord::Schema.define(:version => 20130805034745) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.text     "description",       :limit => 255
+    t.text     "description", :limit => 255
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.string   "comments"
-    t.time     "last_commented_at"
   end
 
   create_table "comments", :force => true do |t|
@@ -303,7 +303,6 @@ ActiveRecord::Schema.define(:version => 20130805034745) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "max_grade"
-    t.time     "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
@@ -343,6 +342,15 @@ ActiveRecord::Schema.define(:version => 20130805034745) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
+
+  create_table "paths", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "steps"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "pending_comments", :force => true do |t|
     t.integer  "answer_id"
@@ -519,6 +527,7 @@ ActiveRecord::Schema.define(:version => 20130805034745) do
     t.datetime "updated_at",                        :null => false
     t.string   "sbm_type"
     t.integer  "exp_transaction_id"
+    t.integer  "total_exp"
   end
 
   add_index "submission_gradings", ["exp_transaction_id"], :name => "index_submission_gradings_on_exp_transaction_id"

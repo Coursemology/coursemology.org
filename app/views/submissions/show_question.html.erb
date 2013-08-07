@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Submission</h1>
+  <h1>Submission:  <%= @mission.title %></h1>
 </div>
 <% require 'digest/md5' %>
 <table>
@@ -28,34 +28,8 @@
 </table>
 <hr/>
 
-<p class="well"><%= @mission.description.html_safe %></p>
+<div class="well"><%= @mission.description.html_safe %></div>
 
-<% @qadata.each do |qid, qa| %>
-    <h3>Question <%= qa[:i] %>:</h3>
-    <p><%= qa[:q].description.html_safe %></p>
-    <h3>Answer:</h3>
-    <% if qa[:q].class == CodingQuestion %>
-        <%= render partial: "do_coding",
-                   locals: {answer: qa[:a],
-                            qn: qa[:q],
-                            mode:"view"}%>
-    <% else %>
-        <p><%= qa[:a].text.html_safe %></p>
-    <% end %>
-    <% if @grading %>
-        <% if qa[:g] %>
-            <h3>Grade: <%= qa[:g].grade %> / <%= qa[:q].max_grade %></h3>
-            <h3>EXP: <%= qa[:g].exp %> / <%= (@mission.exp * (qa[:q].max_grade.to_f / @mission.max_grade.to_f)).to_i%></h3>
-        <% end %>
-    <% end %>
-    <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
-    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
-    <%= render partial: "comments/list",
-               locals: { comments:  qa[:a].comments_json,
-                         target:    qa[:a],
-                         header:    "Comments",
-                         ecid: ecid,
-                         margin_left: "0px"} %>
-    <hr/>
-<% end %>
+<%= render partial: "layouts/submission_form", locals: {mode: "view"} %>
+
 

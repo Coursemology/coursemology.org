@@ -99,7 +99,7 @@ class UserCourse < ActiveRecord::Base
     self.course.levels.each do |lvl|
       if lvl.exp_threshold <= self.exp
         if self.level != lvl && lvl.level > 1 && self.is_student?
-          Activity.earned_smt(self, lvl)
+          Activity.reached_lvl(self, lvl)
           Notification.leveledup(self, lvl)
         end
         self.level = lvl

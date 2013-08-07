@@ -2,11 +2,15 @@
 
     <% @questions.each_with_index do |q, i| %>
         <h3>Question <%= i + 1 %>:</h3>
-        <span><%= q.description.html_safe %></span>
+        <div class="row">
+          <div class="span8">
+            <span ><%= style_format(q.description) %></span>
+          </div>
+        </div>
         <br/><br/>
         <label><h3>Your answer:</h3></label>
         <% if q.class == Question %>
-            <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span7 html-editor" rows="8"/>
+            <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span8 html-editor" rows="8"/>
             <% answer = @std_answers[q.id] %>
             <% if answer %>
                 <%= answer.text %>

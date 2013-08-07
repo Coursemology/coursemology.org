@@ -725,3 +725,13 @@ $grayMediumLight: #eaeaea;
   -moz-border-radius: 4px 0 4px 0;
   border-radius: 4px 0 4px 0;
 }
+
+.submission-question-block {
+  position: relative;
+  margin: 15px 0px;
+  *padding-top: 10px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
