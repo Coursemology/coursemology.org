@@ -44,7 +44,7 @@
             <td width="25px">
               <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
                 <img class="media-object"
-                     src="<%= act.actor_course.user.profile_photo_url %>">
+                     src="<%= act.actor_course.user.get_profile_photo_url %>">
               </a>
             </td>
             <td>
