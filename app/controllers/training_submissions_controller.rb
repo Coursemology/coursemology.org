@@ -199,7 +199,9 @@ class TrainingSubmissionsController < ApplicationController
           # default grader
           grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
         end
-        @training_submission.update_grade
+        if @training_submission.done?
+          @training_submission.update_grade
+        end
       end
     end
 
