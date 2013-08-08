@@ -1,5 +1,30 @@
 module AutoGrader
 
+  def AutoGrader.mcq_select_all_grader(training_submission, question, std_sbm_ans)
+    grade = 0
+    subm_grading = training_submission.get_final_grading
+    std_ans = std_sbm_ans.answer
+
+    if std_ans.selected_choices != question.correct_answers
+      return false, grade
+    end
+
+    # correct answer
+    ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
+    # keep only 1 answer grading per question
+    ag = ags.first || subm_grading.answer_gradings.build
+    ag.grade = 2
+    ag.student_answer = std_ans
+    ag.save
+
+    std_sbm_ans.is_final = true
+    std_sbm_ans.save
+
+    grade = ag.grade
+
+    return true, grade
+  end
+
   def AutoGrader.mcq_grader(training_submission, question, std_sbm_ans)
     # normal grading scheme where for each question:
     # - students can try as many times as they want
@@ -47,7 +72,6 @@ module AutoGrader
     #   + First try => 2pts
     #   + If all wrong answers are ticked off => 0pt
     #   + Otherwise 1pt
-
 
     std_answers = training_submission.std_mcq_answers.where(mcq_id: question.id)
     if std_answers.count == 0

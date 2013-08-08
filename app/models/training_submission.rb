@@ -29,7 +29,7 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def done?
-    return current_step >= self.training.mcqs.count
+    return current_step > self.training.questions.count
   end
 
   def update_grade

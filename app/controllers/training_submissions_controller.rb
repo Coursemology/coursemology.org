@@ -165,6 +165,7 @@ class TrainingSubmissionsController < ApplicationController
 
     if @current_question.class == Mcq
       if @current_question.select_all
+        submit_mcq_select_all()
       else
         submit_mcq()
       end
@@ -175,7 +176,6 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq
-
     require 'AutoGrader'
 
     mcq = Mcq.find(params[:qid])
@@ -221,6 +221,44 @@ class TrainingSubmissionsController < ApplicationController
         format.html { render json: resp }
       end
     end
+  end
+
+  def submit_mcq_select_all
+    require 'AutoGrader'
+
+    mcq = Mcq.find(params[:qid])
+    sma = StdMcqAllAnswer.new()
+    sma.student = current_user
+    sma.std_course = curr_user_course
+    sma.mcq = mcq
+    sma.selected_choices = params[:aid].map(&:to_i).to_json
+    sma.choices = params[:choices].map(&:to_i).to_json
+
+    sbm_ans = @training_submission.sbm_answers.build
+    sbm_ans.answer = sma
+    mcq_pos = @training.get_qn_pos(mcq)
+    is_correct, grade = AutoGrader.mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+
+    if is_correct && @training_submission.current_step == mcq_pos
+      @training_submission.current_step = mcq_pos + 1
+      if @training_submission.done?
+        @training_submission.update_grade
+      end
+    end
+
+    grade_str = grade > 0 ? " + #{grade}" : ""
+    resp = {
+        is_correct: is_correct,
+        result: is_correct ? "Correct! #{grade_str}" : "Incorrect!",
+        explanation: ""
+    }
+
+    if @training_submission.save
+      respond_to do |format|
+        format.html { render json: resp }
+      end
+    end
+
   end
 
   def submit_code
