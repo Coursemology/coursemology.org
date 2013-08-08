@@ -61,10 +61,12 @@ $(document).ready(function() {
         var email_field = staff_row.find('.change-email');
         var old_name  = staff_row.find('.old-name');
         var notice = $('.alert');
+        var name = name_field.val().trim();
+        var email = email_field.val().trim();
         if(notice.size() > 1) {
             notice[0].parentNode.removeChild(notice[0]);
         }
-        if(name_field.val().length == 0) {
+        if(name.length == 0) {
             showAlertNotice("User name can't be empty!");
             name_field.val(old_name.val());
             return;
@@ -73,7 +75,9 @@ $(document).ready(function() {
             showAlertNotice("Please input valid email address!");
             return
         }
-        old_name.val(name_field.val());
+        old_name.val(name);
+        name_field.val(name);
+        email_field.val(email);
         var url = staff_row.find('.uc-url').attr('href');
         notice.addClass("alert-success");
         notice.removeClass("alert-error");
@@ -83,8 +87,8 @@ $(document).ready(function() {
             url: url,
             type: 'PUT',
             data: { role_id: curr_role_val,
-                name:name_field.val(),
-                email: email_field.val() },
+                name: name,
+                email: email },
             dataType: 'json',
             success: function(e) {
 //                json = JSON.parse(e);

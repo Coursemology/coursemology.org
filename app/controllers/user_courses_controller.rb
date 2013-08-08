@@ -23,10 +23,10 @@ class UserCoursesController < ApplicationController
       @user_course.role_id = params[:role_id]
     end
     if params[:name]
-      @user_course.user.name = params[:name]
+      @user_course.user.name = params[:name].strip
     end
     if params[:email]
-      @user_course.user.email = params[:email]
+      @user_course.user.email = params[:email].strip
     end
 
     @user_course.tut_courses.map {|tc| tc.destroy }
@@ -43,6 +43,8 @@ class UserCoursesController < ApplicationController
         format.html { redirect_to params[:redirect_back_url], notice: 'Updated successfully.' }
       else
         format.json { render json: {errors: @user_course.user.errors}}
+        flash[:error] ='Update failed. You may entered invalid name or email.'
+        format.html { redirect_to params[:redirect_back_url] }
       end
     end
   end
