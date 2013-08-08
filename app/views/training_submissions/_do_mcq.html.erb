@@ -1,8 +1,15 @@
 <p><%= style_format(@current_question.description) %></p>
+<% if @current_question.select_all %>
+  <p>Select all correct answers</p>
+<% end %>
 <ul>
   <% @current_question.mcq_answers.each do |ans| %>
       <li>
-        <input type="radio" name="answers" value="<%= ans.id %>" />
+        <% if @current_question.select_all %>
+          <input class="choices" type="checkbox" name="answers[]" value="<%= ans.id %>" />
+        <% else %>
+          <input class="choices" type="radio" name="answers" value="<%= ans.id %>" />
+        <% end %>
         <span><%= ans.text %></span>
       </li>
   <% end %>

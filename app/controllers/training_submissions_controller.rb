@@ -161,11 +161,14 @@ class TrainingSubmissionsController < ApplicationController
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
     puts 'Update', params, current_user.to_json
-    #submit_mcq()
     @current_question = @training.questions[params[:current_step].to_i - 1]
 
     if @current_question.class == Mcq
-      submit_mcq()
+      if @current_question.select_all
+        submit_mcq_select_all()
+      else
+        submit_mcq()
+      end
     else
       submit_code()
     end
@@ -173,11 +176,10 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq
-
-    require 'AutoGrader'
+    require 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
-    mcqa = McqAnswer.find(params[:aid])
+    mcqa = McqAnswer.find(params[:aid].first)
     sma = StdMcqAnswer.new()
     sma.student = current_user
     sma.std_course = curr_user_course
@@ -185,23 +187,25 @@ class TrainingSubmissionsController < ApplicationController
     sma.mcq_answer = mcqa
     # TODO: record the choices
 
+    puts mcqa.to_json
+
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
 
     mcq_pos = @training.get_qn_pos(mcq)
+    is_correct = false
     grade = 0
-    if @training_submission.current_step == mcq_pos
-      if mcqa.is_correct
-        @training_submission.current_step = mcq_pos + 1
-        if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
-          grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
-        else
-          # default grader
-          grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
-        end
-        if @training_submission.done?
-          @training_submission.update_grade
-        end
+
+    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+      is_correct, grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+    else
+      is_correct, grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
+    end
+
+    if is_correct && @training_submission.current_step == mcq_pos
+      @training_submission.current_step = mcq_pos + 1
+      if @training_submission.done?
+        @training_submission.update_grade
       end
     end
 
@@ -219,8 +223,51 @@ class TrainingSubmissionsController < ApplicationController
     end
   end
 
+  def submit_mcq_select_all
+    require 'auto_grader'
+
+    mcq = Mcq.find(params[:qid])
+    sma = StdMcqAllAnswer.new()
+    sma.student = current_user
+    sma.std_course = curr_user_course
+    sma.mcq = mcq
+    sma.selected_choices = params[:aid].map(&:to_i).to_json
+    sma.choices = params[:choices].map(&:to_i).to_json
+
+    sbm_ans = @training_submission.sbm_answers.build
+    sbm_ans.answer = sma
+    mcq_pos = @training.get_qn_pos(mcq)
+
+    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+      is_correct, grade = AutoGrader.toz_mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+    else
+      is_correct, grade = AutoGrader.mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+    end
+
+    if is_correct && @training_submission.current_step == mcq_pos
+      @training_submission.current_step = mcq_pos + 1
+      if @training_submission.done?
+        @training_submission.update_grade
+      end
+    end
+
+    grade_str = grade > 0 ? " + #{grade}" : ""
+    resp = {
+        is_correct: is_correct,
+        result: is_correct ? "Correct! #{grade_str}" : "Incorrect!",
+        explanation: ""
+    }
+
+    if @training_submission.save
+      respond_to do |format|
+        format.html { render json: resp }
+      end
+    end
+
+  end
+
   def submit_code
-    require 'AutoGrader'
+    require 'auto_grader'
 
     code = params[:code]
     coding_question = CodingQuestion.find(params[:qid])
