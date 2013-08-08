@@ -16,6 +16,8 @@
       <% end %>
   <% end %>
 </table>
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @submission}%>
 <hr/>
 
 <p class="well"><%= @mission.description.html_safe %></p>
