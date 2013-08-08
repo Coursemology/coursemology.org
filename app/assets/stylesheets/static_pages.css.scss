@@ -1,8 +1,7 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-.welcome_content
-{
+.welcome_content {
   height:800px;
   left:0;
   top:30px;
@@ -14,8 +13,7 @@
   position:relative;
 }
 
-._slogen
-{
+._slogen {
   height:34px;
   left:0px;
   top:155px;
@@ -26,25 +24,21 @@
   border-style:None None None None;
   border-color:#000;
   border-width:1px;
-  font-size:10pt
-
+  font-size:10px;
 }
 
-._slogen *{
+._slogen * {
   border-width:0;
   line-height:1.4
 
 }
 
-._slogen a
-{
+._slogen a {
   border-width:0;
   text-decoration:none
-
 }
 
-._gray_background
-{
+._gray_background {
   height:378px;
   left:0;
   top:230px;
@@ -57,8 +51,7 @@
   border-width:1px
 }
 
-#_center_image
-{
+#_center_image {
   position:absolute;
   top:250px;
   left:21px;
@@ -72,8 +65,7 @@
 
 }
 
-#_share_button
-{
+#_share_button {
   position:absolute;
   top:580px;
   left:19px;
@@ -82,20 +74,17 @@
 
 }
 
-.fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr
-{
+.fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr {
   display:none!important
 
 }
 
-.blockedShareBar
-{
+.blockedShareBar {
   position:relative;
   width:370px
 }
 
-#_sign_up
-{
+#_sign_up {
   position:absolute;
   top:250px;
   left:730px;
@@ -115,46 +104,46 @@
 
 }
 
-#_sign_up form
-{
+#_sign_up form {
   padding:19px 32px 22px 22px
 }
 
-#_sign_up h1
-{
-  font-family:arial;
+#_sign_up h1 {
+  font-family: 'Lato', sans-serif;
   font-size:19px;
   font-weight:bold;
   color:#333;
   padding:0 0 4px 0;
   margin:0
 }
-#_sign_up p{font-family:arial;
+
+#_sign_up p {
+  font-family: 'Lato', sans-serif;
   font-size:13px;
   font-weight:normal;
   color:#666;
   padding:0 0 1px 0;
   margin:0
 }
-#_sign_up label{font-family:arial;
+
+#_sign_up label {
+  font-family: 'Lato', sans-serif;
   font-size:13px;
   font-weight:bold!important;
   color:#333
 }
 
-label.labelInput
-{
+label.labelInput {
   display:block;
   padding-top:8px
 
 }
 
-label.firstLabel
-{padding-top:0
+label.firstLabel {
+  padding-top:0
 }
 
-#_sign_up label.optionsTitle
-{
+#_sign_up label.optionsTitle {
   vertical-align:middle;
   width:70%;
   display:block;
@@ -164,8 +153,7 @@ label.firstLabel
   padding-bottom:6px
 }
 
-#_sign_up textarea
-{
+#_sign_up textarea {
   min-width:210px;
   max-width:210px;
   height:57px;
@@ -173,8 +161,7 @@ label.firstLabel
   resize:none
 }
 
-#_sign_up select
-{
+#_sign_up select {
   height:29px;
   line-height:24px;
   width:226px;
@@ -184,8 +171,7 @@ label.firstLabel
   font-weight:bold
 }
 
-#_sign_up input[type="checkbox"],#_sign_up input[type="radio"]
-{
+#_sign_up input[type="checkbox"],#_sign_up input[type="radio"] {
   width:13px;
   margin:0 9px 0 0;
   font-weight:bold;
@@ -193,58 +179,56 @@ label.firstLabel
   box-shadow:none
 }
 
-#_sign_up div.itemsContainer
-{
+#_sign_up div.itemsContainer {
   padding:8px 0 0 0;
   width:226px
 }
 
-#_sign_up div.itemsContainer label.itemLabel
-{
+#_sign_up div.itemsContainer label.itemLabel {
   color:#666;
-  font-family:arial;
+  font-family: 'Lato', sans-serif;
   display:block;
   font-size:13px;
   font-weight:normal
 }
-#_sign_up div.itemsContainer.itemRequiredInput
-{
+
+#_sign_up div.itemsContainer.itemRequiredInput {
   background:url("/Content/Images/formRequiredRadio_v1.26.png") no-repeat scroll right 10px
 }
-.radio_separator
-{
+
+.radio_separator {
   height:11px
 }
-#_sign_up div.itemsContainer.itemRequiredInputError
-{
+
+#_sign_up div.itemsContainer.itemRequiredInputError {
   background:url("/Content/Images/formRequiredInputError_v1.26.png") no-repeat scroll right 10px
 }
-#_sign_up .requiredFieldsText
-{
+
+#_sign_up .requiredFieldsText {
   font-size:10px;
   color:#989898;
   padding:22px 0 0 0;
   display:inline-block;
   font-style:italic
 }
-input.requiredInput[type=text]
-{
+
+input.requiredInput[type=text] {
   background:url("/Content/Images/formRequiredInput_v1.26.png") no-repeat right center #FFF
 }
-input.requiredInputError[type=text]
-{
+
+input.requiredInputError[type=text] {
   background:url("/Content/Images/formRequiredInputError_v1.26.png") no-repeat right center #FFF
 }
-textarea.requiredInput
-{
+
+textarea.requiredInput {
   background:url("/Content/Images/formRequiredInput_v1.26.png") no-repeat right 3px #FFF
 }
-textarea.requiredInputError
-{
+
+textarea.requiredInputError {
   background:url("/Content/Images/formRequiredInputError_v1.26.png") no-repeat right 3px #FFF
 }
-label.error a.emailWarning,label.error a.numberWarning
-{
+
+label.error a.emailWarning,label.error a.numberWarning {
   display:inline-block!important;
   background:url("/Content/Images/formEmailInputError.png") no-repeat 0 0 transparent;
   width:18px;
@@ -253,33 +237,35 @@ label.error a.emailWarning,label.error a.numberWarning
   top:-22px;
   float:right
 }
-.buttonLoading
-{
+
+.buttonLoading {
   background:#CCC!important;
   -webkit-box-shadow:0 1px 1px 0 #FFF!important;
   -moz-box-shadow:0 1px 1px 0 #FFF!important;
   box-shadow:0 1px 1px 0 #FFF!important;
   cursor:default
 }
-.buttonLoading span{text-shadow:none
+
+.buttonLoading span{
+  text-shadow:none
 }
-.buttonMessage
-{
+
+.buttonMessage {
   background:transparent!important;
   box-shadow:none!important;
   -webkit-box-shadow:none!important;
   -moz-box-shadow:none!important;
   cursor:default
 }
-.buttonMessage span
-{
+
+.buttonMessage span {
   font-size:12px;
   color:#798992;
   text-shadow:none;
   font-weight:normal
 }
-.selectRequiredImgContainer
-{
+
+.selectRequiredImgContainer {
   position:relative;
   float:right;
   bottom:29px;
@@ -289,23 +275,23 @@ label.error a.emailWarning,label.error a.numberWarning
   width:101px;
   right:10px
 }
-.selectContainer
-{
+
+.selectContainer {
   margin-top:10px
 }
-.selectRequiredImgContainer.valid
-{
+
+.selectRequiredImgContainer.valid {
   background:0
 }
-.selectRequiredImgContainer.error
-{
+
+.selectRequiredImgContainer.error {
   background:url("/Content/Images/formRequiredInputError_v1.26.png") no-repeat right center
 }
-#_
-{
+
+#_ {
   cursor:pointer;
   color:#FFF;
-  font-family:arial;
+  font-family: 'Lato', sans-serif;
   font-size:16px;
   font-weight:Bold;
   text-align:center;
@@ -335,13 +321,13 @@ label.error a.emailWarning,label.error a.numberWarning
   -moz-border-radius:7px;
   border-radius:4px
 }
-#_ span
-{
+
+#_ span {
   line-height:33px;
   font-family:inherit
 }
-#_ a
-{
+
+#_ a {
   color:#FFF;
   text-decoration:none;
   width:130px;
@@ -349,18 +335,18 @@ label.error a.emailWarning,label.error a.numberWarning
   display:inline-block;
   font-family:inherit
 }
-#_:hover a
-{
+
+#_:hover a {
   color:#FFF;
   text-decoration:none
 }
-#_:active a
-{
+
+#_:active a {
   color:#FFF;
   text-decoration:none
 }
-#_:hover,#_:focus
-{
+
+#_:hover,#_:focus {
   background-color:#51b981;
   background-position:top left;
   background:-moz-linear-gradient(top,#51b981 0,#1FA559 100%);
@@ -376,8 +362,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-left:1px none #000;
   color:#FFF
 }
-#_:active
-{
+
+#_:active {
   background-color:#51b981;
   background-position:top left;
   background:-moz-linear-gradient(top,#51b981 0,#1FA559 100%);
@@ -393,8 +379,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-left:1px none #000;
   color:#FFF
 }
-#_first_divider
-{
+
+#_first_divider {
   height:191px;
   left:343px;
   top:650px;
@@ -404,8 +390,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:0;
   background-color:#EBEBEB
 }
-#_second_divider
-{
+
+#_second_divider {
   height:191px;
   left:689px;
   top:650px;
@@ -415,8 +401,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:0;
   background-color:#EBEBEB
 }
-#_engaging_title
-{
+
+#_engaging_title {
   height:25px;
   left:92px;
   top:652px;
@@ -429,13 +415,19 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-#_engaging_title *{border-width:0;
+
+#_engaging_title * {
+  border-width:0;
   line-height:1.4
 }
-#_engaging_title a{border-width:0;
+
+#_engaging_title a {
+  border-width:0;
   text-decoration:none
 }
-#_first_tick{position:absolute;
+
+#_first_tick {
+  position:absolute;
   top:649px;
   left:50px;
   width:31px;
@@ -446,8 +438,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-bottom:1px None #000;
   border-left:1px None #000
 }
-#_second_tick
-{
+
+#_second_tick {
   position:absolute;
   top:649px;
   left:393px;
@@ -459,8 +451,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-bottom:1px None #000;
   border-left:1px None #000
 }
-#_second_title
-{
+
+#_second_title {
   height:25px;
   left:435px;
   top:652px;
@@ -473,18 +465,18 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-#_second_title *
-{
+
+#_second_title * {
   border-width:0;
   line-height:1.4
 }
-#_second_title a
-{
+
+#_second_title a {
   border-width:0;
   text-decoration:none
 }
-#_third_title
-{
+
+#_third_title {
   height:25px;
   left:782px;
   top:652px;
@@ -497,18 +489,17 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-#_third_title *
-{
+#_third_title * {
   border-width:0;
   line-height:1.4
 }
-#_third_title a
-{
+
+#_third_title a {
   border-width:0;
   text-decoration:none
 }
-#_third_tick
-{
+
+#_third_tick {
   position:absolute;
   top:649px;
   left:740px;
@@ -520,8 +511,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-bottom:1px None #000;
   border-left:1px None #000
 }
-#_bottom_line
-{
+
+#_bottom_line {
   height:1px;
   left:0;
   top:840px;
@@ -531,8 +522,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:0;
   background-color:#EDEDED
 }
-._first_text_box
-{
+
+._first_text_box {
   height:144px;
   left:55px;
   top:694px;
@@ -545,18 +536,18 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-._first_text_box *
-{
+
+._first_text_box * {
   border-width:0;
   line-height:1.4
 }
-._first_text_box a
-{
+
+._first_text_box a {
   border-width:0;
   text-decoration:none
 }
-._second_text_box
-{
+
+._second_text_box {
   height:144px;
   left:390px;
   top:694px;
@@ -569,18 +560,18 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-._second_text_box *
-{
+
+._second_text_box * {
   border-width:0;
   line-height:1.4
 }
-._second_text_box a
-{
+
+._second_text_box a {
   border-width:0;
   text-decoration:none
 }
-._third_text_box
-{
+
+._third_text_box {
   height:144px;
   left:740px;
   top:694px;
@@ -593,18 +584,18 @@ label.error a.emailWarning,label.error a.numberWarning
   border-width:1px;
   font-size:10pt
 }
-._third_text_box *
-{
+
+._third_text_box * {
   border-width:0;
   line-height:1.4
 }
-._third_text_box a
-{
+
+._third_text_box a {
   border-width:0;
   text-decoration:none
 }
-#_logo
-{
+
+#_logo {
   position:absolute;
   top:40px;
   left:354px;
@@ -614,8 +605,8 @@ label.error a.emailWarning,label.error a.numberWarning
   border-bottom:1px none #000;
   border-left:1px none #000
 }
-.inner_body
-{
+
+.inner_body {
   border-width:0;
   margin:0;
   padding:0

@@ -1,9 +1,11 @@
 @import "bootstrap";
 @import "font-awesome";
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 body {
   padding-top: 63px;
   background-color: whiteSmoke;
+  font-family: 'Lato', sans-serif;
 }
 
 @import "bootstrap-responsive";
@@ -46,6 +48,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+p {
+  font-family: 'Lato', sans-serif;
+}
+
 .sidebar {
   //padding: 5px 5px;
   color: #0071BC;
@@ -83,6 +89,16 @@ h1 {
   }
 }
 
+.nav-list > li > a, .nav-list .nav-header {
+  padding: 2px 0px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.nav > li > a:hover {
+  background-color: none;
+}
+
 .well {
   border-radius: 0;
   -moz-border-radius: 0;
@@ -110,6 +126,9 @@ h1 {
 .row .span-content {
   margin-left: 10px;
   background-color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .course-ontent {
@@ -241,17 +260,26 @@ ul {
 
 .sidebar-course-logo {
   //border: 1px solid #ccc;
+}
 
+.user-sidebar-container {
+  margin-top: 10px;
 }
 
 .user-profile-pic {
   max-width: 50px;
   max-height: 50px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
 }
 
 .small-user-profile-pic {
   max-width: 32px;
   max-height: 32px;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
 }
 
 .course-logo-preview {
@@ -265,6 +293,7 @@ ul {
   display: inline-block;
   position: relative;
   top: 3px;
+  margin-right: 3px;
 }
 
 .asm-ach-icon, .asm-new-icon {
@@ -280,6 +309,12 @@ ul {
 
 .announcement {
   padding-left: 8px;
+  .timestamp {
+    color: #999;
+  }
+  .announcement-content {
+    margin-top: 10px;
+  }
 }
 
 ul.sidenav {
@@ -318,6 +353,7 @@ ul.sidenav {
   line-height: 25px;
   margin-top: 5px;
   padding: 0 6px;
+  margin-left: 5px;
 }
 
 .new {
@@ -463,6 +499,9 @@ a.user-thumb-profile {
   max-width: 50px;
   max-height: 50px;
   text-align: center;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
 }
 
 li .thumbnail {
@@ -663,20 +702,22 @@ $grayMediumLight: #eaeaea;
 
 .row .course-title {
   background-color: #eee;
-  padding: 10px 20px;
+  padding: 20px 20px;
   //margin-left: 10px;
   a:visited, a:link {
-    color: #563D7C;
+    // color: #563D7C;
     font-weight: bold;
     font-size: 2em;
   }
-  a:hover {
-    color: #78617C;
-  }
+  // a:hover {
+  //   color: #78617C;
+  // }
   a:link
   {
     text-decoration: none;
   }
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 
