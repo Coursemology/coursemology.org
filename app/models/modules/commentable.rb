@@ -1,7 +1,14 @@
 module Commentable
-
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
+
+  def self.included(base)
+    base.class_eval do
+      has_many :comment_subscriptions, as: :topic, dependent: :destroy
+      has_many :user_courses, through: :comment_subscriptions
+    end
+  end
+
   def get_subscribed_user_courses
     raise NotImplementedError
   end
@@ -26,28 +33,14 @@ module Commentable
   end
 
   def notify_user(curr_user_course, comment, redirect_url)
-    unless curr_user_course.course.email_notify_enabled? PreferableItem.new_comment
-      return
+    # notify everyone except the ones who made the comment
+    user_courses = self.user_courses - [curr_user_course]
+    puts '----------------'
+    user_courses.each do |uc|
+      puts 'Notify ', uc.to_json
+      UserMailer.delay.new_comment(uc.user, comment, redirect_url)
     end
-
-    if curr_user_course.is_student?
-      #commented by the student, set pending true
-      comment.commentable.set_pending_comments(true)
-      curr_user_course.get_staff_incharge.each do |uc|
-        UserMailer.delay.new_comment(uc.user, comment, redirect_url)
-      end
-
-    else
-
-      #commented by the staff, set pending false
-      comment.commentable.set_pending_comments(false)
-      # TODO this only handle the case where the commentable is a std_answer
-      # need to change it to work when commentable is mcq or coding_question
-      if self.respond_to?(:std_course)
-        UserMailer.delay.new_comment(self.std_course.user, comment, redirect_url)
-      end
-    end
-    # TODO add a notification as well
+    puts '----------------'
   end
 
   def comments_json

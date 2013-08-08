@@ -38,8 +38,14 @@ class Course < ActiveRecord::Base
   has_many :file_uploads, as: :owner
   has_many :course_preferences, dependent: :destroy
 
+  has_many :comment_subscriptions, dependent: :destroy
+
   def asms
     missions + trainings
+  end
+
+  def commented_topics
+    self.comment_subscriptions.map { |cs| cs.topic }.uniq
   end
 
   def lect_courses
@@ -64,19 +70,7 @@ class Course < ActiveRecord::Base
   end
 
   def get_pending_comments
-    self.get_all_answers.select { |ans| ans.pending? }
-  end
-
-  def get_all_comments
-    self.get_all_answers.select { |ans| ans.last_commented_at }
-  end
-
-  def get_all_comments_by_ability(ability)
-    topics = std_answers.accessible_by(ability) +
-      std_coding_answers.accessible_by(ability) +
-      mcqs.accessible_by(ability) +
-      coding_questions.accessible_by(ability)
-    topics.select { |ans| ans.last_commented_at }
+    self.commented_topics.select(&:pending?)
   end
 
   def mission_columns

@@ -24,6 +24,7 @@ class UserCourse < ActiveRecord::Base
   has_many :exp_transactions
   has_many :seen_stuff, class_name: "SeenByUser"
   has_many :comments
+  has_many :comment_subscriptions, dependent: :destroy
 
   has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
   has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
@@ -210,6 +211,10 @@ class UserCourse < ActiveRecord::Base
 
   def get_path
     course_user_course_path(self.course, self)
+  end
+
+  def subscribed_topics
+    self.comment_subscriptions.map { |cs| cs.topic }.uniq
   end
 
 end
