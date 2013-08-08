@@ -135,4 +135,8 @@ JfdiAcademy::Application.routes.draw do
     resources :file_uploads
   end
 
+  resources :submissions do
+    resources :file_uploads
+  end
+
 end

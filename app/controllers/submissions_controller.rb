@@ -110,6 +110,9 @@ class SubmissionsController < ApplicationController
 
   def update
     @submission.fetch_params_answers(params,current_user)
+    if params[:files]
+      @submission.attach_files(params[:files].values)
+    end
 
     respond_to do |format|
       if @submission.save

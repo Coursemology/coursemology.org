@@ -82,6 +82,8 @@ class FileUploadsController < ApplicationController
       owner = Training.find(params[:training_id])
     elsif params[:mission_id]
       owner = Mission.find(params[:mission_id])
+    elsif params[:submission_id]
+      owner = Submission.find(params[:submission_id])
     end
 
     @uploads = owner ? owner.files : []

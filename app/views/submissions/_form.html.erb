@@ -27,8 +27,20 @@
     <% end %>
 
     <br/>
+    <div id="uploaded_files_div"></div>
     <div class="form-actions">
       <%= f.submit 'Save', :class => 'btn btn-primary' %>
       <%= f.submit 'Finalize Submission', :class => 'btn btn-danger', id:"mission_submit" %>
     </div>
 <% end %>
+
+
+<span class="btn" data-toggle="collapse" data-target="#submission-files">
+          <i class="icon-upload icon-white"></i>
+          <span>Add files for submission</span>
+        </span>
+<br/><br/>
+<div id="submission-files" class="collapse out">
+  <%= render partial: "layouts/file_uploader_complicated",
+             locals: { owner: @submission } %>
+</div>

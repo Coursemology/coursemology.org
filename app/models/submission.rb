@@ -137,4 +137,12 @@ class Submission < ActiveRecord::Base
       )
     end
   end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find(id)
+      file.owner = self
+      file.save
+    end
+  end
 end
