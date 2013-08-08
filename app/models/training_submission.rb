@@ -13,6 +13,9 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_mcq_answers, through: :sbm_answers,
            source: :answer, source_type: "StdMcqAnswer"
 
+  has_many :std_mcq_all_answers, through: :sbm_answers,
+           source: :answer, source_type: "StdMcqAllAnswer"
+
   has_many :std_coding_answers, through: :sbm_answers,
            :source => :answer, :source_type => "StdCodingAnswer"
 
@@ -29,7 +32,7 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def done?
-    return current_step >= self.training.mcqs.count
+    return current_step > self.training.questions.count
   end
 
   def update_grade

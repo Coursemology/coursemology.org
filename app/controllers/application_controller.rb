@@ -107,13 +107,13 @@ class ApplicationController < ActionController::Base
                         text:   "Missions",
                         url:    course_missions_url(@course),
                         img:    @theme_settings["Missions Icon"],
-                        icon:   "icon-envelope",
+                        icon:   "icon-fighter-jet",
                         count:   counts[:missions] || 0
                     }, {
                         text:   "Trainings",
                         url:    course_trainings_url(@course),
                         img:    @theme_settings["Trainings Icon"],
-                        icon:   "icon-envelope",
+                        icon:   "icon-upload-alt",
                         count:  counts[:trainings] || 0
                     }, {
                         text:   "Submissions",
@@ -125,19 +125,19 @@ class ApplicationController < ActionController::Base
       @nav_items <<   {
           text:   "Comments",
           url:    course_comments_url(@course),
-          icon:   "icon-comment",
+          icon:   "icon-comments",
           count:  counts[:pending_comments] || 0
       }
       @nav_items <<    {
           text: "Pending Gradings",
           url:  course_pending_gradings_url(@course),
-          icon: "icon-envelope-alt",
+          icon: "icon-question-sign",
           count: counts[:pending_grading] || 0
       }
       @nav_items << {
           text:   "Achievements",
           url:    course_achievements_url(@course),
-          icon:   "icon-star"
+          icon:   "icon-trophy"
       }
       @nav_items <<    {
           text:   "Leaderboard",
@@ -148,7 +148,7 @@ class ApplicationController < ActionController::Base
       @nav_items <<    {
           text:   "Students",
           url:    course_students_url(@course),
-          icon:   "icon-user",
+          icon:   "icon-group",
       }
     end
 
@@ -163,7 +163,7 @@ class ApplicationController < ActionController::Base
         @admin_nav_items << {
             text: "My Students",
             url: course_manage_students_url(@course),
-            icon: "icon-user"
+            icon: "icon-group"
         }
       end
       @admin_nav_items << {
@@ -255,25 +255,25 @@ class ApplicationController < ActionController::Base
         icon = 'icon-bullhorn'
       when 'missions'
         url = course_missions_url(@course)
-        icon = 'icon-envelope'
+        icon = 'icon-fighter-jet'
       when 'trainings'
         url = course_trainings_path(@course)
-        icon = 'icon-envelope'
+        icon = 'icon-upload-alt'
       when 'submissions'
         url = course_submissions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
         url = course_achievements_url(@course)
-        icon = 'icon-star'
+        icon = 'icon-trophy'
       when 'leaderboard'
         url =  course_leaderboards_url(@course)
         icon = 'icon-star-empty'
       when 'students'
         url = course_students_url(@course)
-        icon = 'icon-user'
+        icon = 'icon-group'
       when 'comments'
         url = course_comments_url(@course)
-        icon = 'icon-comment'
+        icon = 'icon-comments'
     end
     [url, icon]
   end

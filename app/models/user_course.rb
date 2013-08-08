@@ -96,18 +96,20 @@ class UserCourse < ActiveRecord::Base
 
     self.exp = self.exp_transactions.sum(&:exp)
 
+    new_level = nil
     self.course.levels.each do |lvl|
-      puts "threshold",  lvl.exp_threshold, lvl.next_level.exp_threshold
-      if lvl.exp_threshold <= self.exp && lvl.next_level.exp_threshold >= self.exp
-        if self.level != lvl && lvl.level > 1 && self.is_student?
-          Activity.reached_lvl(self, lvl)
-          Notification.leveledup(self, lvl)
-        end
-        self.level = lvl
+      if lvl.exp_threshold <= self.exp
+        new_level = lvl
+      else
         break
       end
     end
-    self.save
+    if new_level && self.level != new_level && self.is_student?
+      self.level = new_level
+      self.save
+      Activity.reached_lvl(self, new_level)
+      Notification.leveledup(self, new_level)
+    end
 
     self.update_achievements
   end
