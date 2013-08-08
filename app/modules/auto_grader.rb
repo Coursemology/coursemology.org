@@ -33,7 +33,9 @@ module AutoGrader
     subm_grading = training_submission.get_final_grading
     std_ans = std_sbm_ans.answer
 
-    if std_ans.mcq_answer.is_correct
+    is_correct = std_ans.mcq_answer.is_correct
+
+    if is_correct
       ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
       # keep only 1 answer grading per question
       ag = ags.first || subm_grading.answer_gradings.build
@@ -45,7 +47,7 @@ module AutoGrader
       std_sbm_ans.save
     end
 
-    return grade
+    return is_correct, grade
   end
 
   def AutoGrader.toz_mcq_grader(training_submission, question, std_sbm_ans)
@@ -55,11 +57,16 @@ module AutoGrader
     # 0 for only answering correctly in the last choice
     grade = 0
     subm_grading = training_submission.get_final_grading
+    std_ans = std_sbm_ans.answer
+    is_correct = std_ans.mcq_answer.is_correct
+
+    if !is_correct
+      return is_correct, grade
+    end
 
     # currently, there is one answer grading for each question
     # when there are multiple answer for one question, only the one
     # that is counted is graded (and attached with the grading)
-    std_ans = std_sbm_ans.answer
     if std_ans.mcq_answer.is_correct
       ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
       ag = ags.first || subm_grading.answer_gradings.build
@@ -90,7 +97,7 @@ module AutoGrader
     grade = ag.grade
     ag.save
     std_sbm_ans.save
-    return grade
+    return is_correct, grade
   end
 
   def AutoGrader.coding_question_grader(training_submission, question, std_sbm_ans)

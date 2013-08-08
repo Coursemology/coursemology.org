@@ -176,7 +176,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq
-    require 'AutoGrader'
+    require 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid].first)
@@ -193,19 +193,19 @@ class TrainingSubmissionsController < ApplicationController
     sbm_ans.answer = sma
 
     mcq_pos = @training.get_qn_pos(mcq)
+    is_correct = false
     grade = 0
-    if @training_submission.current_step == mcq_pos
-      if mcqa.is_correct
-        @training_submission.current_step = mcq_pos + 1
-        if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
-          grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
-        else
-          # default grader
-          grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
-        end
-        if @training_submission.done?
-          @training_submission.update_grade
-        end
+
+    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+      is_correct, grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
+    else
+      is_correct, grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
+    end
+
+    if is_correct && @training_submission.current_step == mcq_pos
+      @training_submission.current_step = mcq_pos + 1
+      if @training_submission.done?
+        @training_submission.update_grade
       end
     end
 
@@ -224,7 +224,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq_select_all
-    require 'AutoGrader'
+    require 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
     sma = StdMcqAllAnswer.new()
@@ -262,7 +262,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_code
-    require 'AutoGrader'
+    require 'auto_grader'
 
     code = params[:code]
     coding_question = CodingQuestion.find(params[:qid])
