@@ -20,6 +20,7 @@
   </ul>
 <% end %>
 
+<input type="hidden" id="comments_togging_path" value="<%= course_comments_toggle_path(@course) %>">
 <% @topics.each do |topic| %>
 
     <% # currently the topic of the comment is only student answer for a question %>

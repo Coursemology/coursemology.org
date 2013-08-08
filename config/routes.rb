@@ -97,6 +97,7 @@ JfdiAcademy::Application.routes.draw do
     post "asm_tags/render_form_row" => "asm_tags#render_form_row"
 
     resources :comments
+    post "/comments/toggle" => "comments#pending_toggle"
 
     resources :annotations
 

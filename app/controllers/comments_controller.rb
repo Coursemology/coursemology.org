@@ -59,6 +59,22 @@ class CommentsController < ApplicationController
     @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
   end
 
+  def pending_toggle
+    if !params[:cid] || !params[:ctype]
+      return
+    end
+    pending_comment = PendingComments.find_by_answer_id_and_answer_type(params[:cid], params[:ctype])
+    unless pending_comment
+      pending_comment = PendingComments.create(answer_id:params[:cid], answer_type:params[:ctype],pending: false)
+    end
+    pending_comment.pending = !pending_comment.pending
+    if pending_comment.save
+      respond_to do |format|
+        format.json {render json: {status: 'OK'}}
+      end
+    end
+  end
+
   private
   def sorting_and_paging(topics)
     @topics = topics.sort_by { |ans| ans.last_commented_at }

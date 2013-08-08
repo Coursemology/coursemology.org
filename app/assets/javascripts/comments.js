@@ -55,9 +55,9 @@ var Comment = (function(){
                         commentable_type: $("#"+ecid+"_commentable_type").val(),
                         text: t
                     }}, function(s){
-                        $ta.attr('disabled',false).val('').focus();
-                        self.parseComment(s,ecid);
-                    });
+                    $ta.attr('disabled',false).val('').focus();
+                    self.parseComment(s,ecid);
+                });
             }
         });
         $but.appendTo($li);
@@ -114,3 +114,22 @@ var Comment = (function(){
 
     return self;
 })();
+
+$(function(){
+    $('.mission-pending a').click(function(){
+        var $this = $(this);
+        $.post($("#comments_togging_path").val(),
+            {
+                cid: $(this).attr('cid'),
+                ctype: $(this).attr('ctype')
+            },
+            function(s){
+                if ($this.text() == 'Mark as pending'){
+                    $this.text('Unmark as pending');
+                }else{
+                    $this.text('Mark as pending');
+                }
+            });
+        return false;
+    });
+});

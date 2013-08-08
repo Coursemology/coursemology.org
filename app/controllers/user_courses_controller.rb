@@ -31,12 +31,8 @@ class UserCoursesController < ApplicationController
 
     @user_course.tut_courses.map {|tc| tc.destroy }
 
-    if params[:tutor]
-      tg = @course.tutorial_groups.build
-      tg.std_course = @user_course
-      tg.tut_course_id =  params[:tutor].first
-      tg.save
-    end
+    tut_group_assign
+
     respond_to do |format|
       if @user_course.save && @user_course.user.save
         format.json { render json: { status: 'OK' }}
@@ -60,6 +56,25 @@ class UserCoursesController < ApplicationController
         @staff_courses << uc
       else
         @students_courses << uc
+      end
+    end
+  end
+
+  private
+
+  def tut_group_assign
+    unless params[:tutor]
+      return
+    end
+    if params[:tutor].first.to_i > 0
+      tg = @course.tutorial_groups.build
+      tg.std_course = @user_course
+      tg.tut_course_id =  params[:tutor].first
+      tg.save
+    else
+      tg = @course.tutorial_groups.find_by_tut_course_id_and_std_course_id(params[:tutor].first, @course.id)
+      if tg
+        tg.destroy
       end
     end
   end
