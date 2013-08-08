@@ -176,7 +176,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq
-    require 'auto_grader'
+    require_dependency 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
     mcqa = McqAnswer.find(params[:aid].first)
@@ -224,7 +224,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_mcq_select_all
-    require 'auto_grader'
+    require_dependency 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
     sma = StdMcqAllAnswer.new()
@@ -267,7 +267,7 @@ class TrainingSubmissionsController < ApplicationController
   end
 
   def submit_code
-    require 'auto_grader'
+    require_dependency 'auto_grader'
 
     code = params[:code]
     coding_question = CodingQuestion.find(params[:qid])
