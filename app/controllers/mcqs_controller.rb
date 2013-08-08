@@ -40,6 +40,8 @@ class McqsController < ApplicationController
         end
       end
     end
+    correct_answers = mcq.mcq_answers.where(is_correct: true)
+    mcq.correct_answers = correct_answers.map(&:id).to_json
     return updated
   end
 
@@ -55,6 +57,7 @@ class McqsController < ApplicationController
     respond_to do |format|
       if @mcq.save && @asm_qn.save
         update_answers(@mcq)
+        @mcq.save
         @asm.update_grade
         if @asm.is_a?(Training)
           format.html { redirect_to course_training_url(@course, @training),
@@ -70,8 +73,7 @@ class McqsController < ApplicationController
   end
 
   def update
-    updated = @mcq.update_attributes(params[:mcq])
-    updated = updated && update_answers(@mcq)
+    updated = update_answers(@mcq) && @mcq.update_attributes(params[:mcq])
 
     respond_to do |format|
       if updated

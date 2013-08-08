@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130807031715) do
+ActiveRecord::Schema.define(:version => 20130808084910) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -131,12 +131,13 @@ ActiveRecord::Schema.define(:version => 20130807031715) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.text     "description", :limit => 255
+    t.text     "description",       :limit => 255
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "comments"
+    t.time     "last_commented_at"
   end
 
   create_table "comments", :force => true do |t|
@@ -303,6 +304,9 @@ ActiveRecord::Schema.define(:version => 20130807031715) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "max_grade"
+    t.time     "last_commented_at"
+    t.text     "correct_answers"
+    t.boolean  "select_all"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
