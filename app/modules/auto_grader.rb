@@ -1,5 +1,32 @@
 module AutoGrader
 
+  def AutoGrader.toz_mcq_select_all_grader(training_submission, question, std_sbm_ans)
+    grade = 0
+    subm_grading = training_submission.get_final_grading
+    std_ans = std_sbm_ans.answer
+
+    if std_ans.selected_choices != question.correct_answers
+      return false, grade
+    end
+
+    # correct answer
+    ags = subm_grading.answer_gradings.select { |g| g.student_answer.qn == question }
+    # keep only 1 answer grading per question
+    ag = ags.first || subm_grading.answer_gradings.build
+    std_answers = training_submission.std_mcq_all_answers.where(mcq_id: question.id)
+    puts std_answers.to_json
+    ag.grade = std_answers.count == 0 ? 2 : 1
+    ag.student_answer = std_ans
+    ag.save
+
+    std_sbm_ans.is_final = true
+    std_sbm_ans.save
+
+    grade = ag.grade
+
+    return true, grade
+  end
+
   def AutoGrader.mcq_select_all_grader(training_submission, question, std_sbm_ans)
     grade = 0
     subm_grading = training_submission.get_final_grading

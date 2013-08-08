@@ -237,7 +237,12 @@ class TrainingSubmissionsController < ApplicationController
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
     mcq_pos = @training.get_qn_pos(mcq)
-    is_correct, grade = AutoGrader.mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+
+    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+      is_correct, grade = AutoGrader.toz_mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+    else
+      is_correct, grade = AutoGrader.mcq_select_all_grader(@training_submission, mcq, sbm_ans)
+    end
 
     if is_correct && @training_submission.current_step == mcq_pos
       @training_submission.current_step = mcq_pos + 1
