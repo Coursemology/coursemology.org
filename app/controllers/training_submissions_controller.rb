@@ -161,11 +161,13 @@ class TrainingSubmissionsController < ApplicationController
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
     puts 'Update', params, current_user.to_json
-    #submit_mcq()
     @current_question = @training.questions[params[:current_step].to_i - 1]
 
     if @current_question.class == Mcq
-      submit_mcq()
+      if @current_question.select_all
+      else
+        submit_mcq()
+      end
     else
       submit_code()
     end
@@ -177,13 +179,15 @@ class TrainingSubmissionsController < ApplicationController
     require 'AutoGrader'
 
     mcq = Mcq.find(params[:qid])
-    mcqa = McqAnswer.find(params[:aid])
+    mcqa = McqAnswer.find(params[:aid].first)
     sma = StdMcqAnswer.new()
     sma.student = current_user
     sma.std_course = curr_user_course
     sma.mcq = mcq
     sma.mcq_answer = mcqa
     # TODO: record the choices
+
+    puts mcqa.to_json
 
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
