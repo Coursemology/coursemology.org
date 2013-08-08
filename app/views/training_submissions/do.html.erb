@@ -59,4 +59,11 @@
                     :id => 'continue-btn' %>
       </div>
     </form>
+
+    <%= render partial: "comments/list",
+           locals: { comments:  @current_question.comments_json,
+                     target:    @current_question,
+                     header:    "Comments on the Question",
+                     margin_left: "0px" } %>
+
 <% end %>

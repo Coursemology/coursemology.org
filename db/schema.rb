@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130808101129) do
+ActiveRecord::Schema.define(:version => 20130808173814) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -137,8 +137,21 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.string   "comments"
-    t.time     "last_commented_at"
+    t.datetime "last_commented_at"
   end
+
+  create_table "comment_subscriptions", :force => true do |t|
+    t.integer  "topic_id"
+    t.string   "topic_type"
+    t.integer  "course_id"
+    t.integer  "user_course_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "comment_subscriptions", ["course_id"], :name => "index_comment_subscriptions_on_course_id"
+  add_index "comment_subscriptions", ["topic_id", "topic_type"], :name => "index_comment_subscriptions_on_topic_id_and_topic_type"
+  add_index "comment_subscriptions", ["user_course_id"], :name => "index_comment_subscriptions_on_user_course_id"
 
   create_table "comments", :force => true do |t|
     t.integer  "user_course_id"
@@ -304,7 +317,7 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "max_grade"
-    t.time     "last_commented_at"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
   end
@@ -465,7 +478,7 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
     t.integer  "question_id"
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.time     "last_commented_at"
+    t.datetime "last_commented_at"
     t.integer  "std_course_id"
   end
 
@@ -481,7 +494,7 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
     t.datetime "updated_at",        :null => false
     t.boolean  "is_correct"
     t.integer  "std_course_id"
-    t.time     "last_commented_at"
+    t.datetime "last_commented_at"
   end
 
   add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"

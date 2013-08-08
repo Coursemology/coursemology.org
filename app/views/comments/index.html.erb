@@ -25,7 +25,11 @@
 
     <% # currently the topic of the comment is only student answer for a question %>
     <% ecid =  Digest::MD5.hexdigest(topic.class.to_s << topic.id.to_s) %>
-    <%= render partial: "modules/commentable/commentable_std_answer", locals: { std_answer: topic, ecid: ecid } %>
+    <% if topic.class == StdAnswer %>
+      <%= render partial: "modules/commentable/commentable_std_answer", locals: { std_answer: topic, ecid: ecid } %>
+    <% else topic.class == Mcq || topic.class == CodingQuestion %>
+      <%= render partial: "modules/commentable/commentable_training_question", locals: { question: topic, ecid: ecid } %>
+    <% end %>
 
     <%= render partial: "comments/list",
                locals: { comments: topic.comments_json,

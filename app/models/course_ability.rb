@@ -78,6 +78,8 @@ class CourseAbility
         training.open_at <= Time.now
       end
 
+      can :read, [Mcq, Question, CodingQuestion]
+
       can :read, Tag
       can :read, [Achievement, Title, Reward]
       can :students, Course
