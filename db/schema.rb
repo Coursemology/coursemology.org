@@ -131,13 +131,12 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.text     "description",       :limit => 255
+    t.text     "description", :limit => 255
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.string   "comments"
-    t.time     "last_commented_at"
   end
 
   create_table "comments", :force => true do |t|
@@ -304,7 +303,6 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "max_grade"
-    t.time     "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
   end
@@ -346,6 +344,15 @@ ActiveRecord::Schema.define(:version => 20130808101129) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
+
+  create_table "paths", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "steps"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "pending_comments", :force => true do |t|
     t.integer  "answer_id"
