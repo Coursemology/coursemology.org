@@ -46,7 +46,8 @@ $(document).ready(function(){
     console.log(url);
     // 2. get the list of ids
     var target = $(this).attr('data-target');
-    var selected_ids = $.map($(target), function(cb) { return $(cb).val(); });
+    var selected_cb = $.grep($(target), function(cb) {return $(cb).prop('checked') });
+    var selected_ids = $.map(selected_cb, function(cb) { return $(cb).val(); });
     var csrfName = $("meta[name='csrf-param']").attr('content');
     var csrfValue = $("meta[name='csrf-token']").attr('content');
     var inputs = {};
