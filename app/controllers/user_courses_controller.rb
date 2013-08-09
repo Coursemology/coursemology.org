@@ -23,26 +23,22 @@ class UserCoursesController < ApplicationController
       @user_course.role_id = params[:role_id]
     end
     if params[:name]
-      @user_course.user.name = params[:name]
+      @user_course.user.name = params[:name].strip
     end
     if params[:email]
-      @user_course.user.email = params[:email]
+      @user_course.user.email = params[:email].strip
     end
 
-    @user_course.tut_courses.map {|tc| tc.destroy }
+    tut_group_assign
 
-    if params[:tutor]
-      tg = @course.tutorial_groups.build
-      tg.std_course = @user_course
-      tg.tut_course_id =  params[:tutor].first
-      tg.save
-    end
     respond_to do |format|
       if @user_course.save && @user_course.user.save
         format.json { render json: { status: 'OK' }}
         format.html { redirect_to params[:redirect_back_url], notice: 'Updated successfully.' }
       else
         format.json { render json: {errors: @user_course.user.errors}}
+        flash[:error] ='Update failed. You may entered invalid name or email.'
+        format.html { redirect_to params[:redirect_back_url] }
       end
     end
   end
@@ -59,6 +55,32 @@ class UserCoursesController < ApplicationController
       else
         @students_courses << uc
       end
+    end
+  end
+
+  private
+
+  def tut_group_assign
+    #invalid
+    unless params[:tutor]
+      return
+    end
+    #didn't change
+    if @user_course.get_my_tutors.first.id == params[:tutor].first.to_i
+      return
+    end
+
+    #updated
+    @user_course.tut_courses.map {|tc| tc.destroy }
+
+    #unassigned to assigned
+    if params[:tutor].first.to_i > 0
+      tg = @course.tutorial_groups.build
+      tg.std_course = @user_course
+      tg.tut_course_id =  params[:tutor].first
+      tg.save
+    else
+
     end
   end
 end

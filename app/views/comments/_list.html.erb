@@ -1,6 +1,7 @@
 <% if header.size > 0 %>
     <h3><%= header %></h3>
 <% end %>
+<% ecid = Digest::MD5.hexdigest(target.class.to_s << target.id.to_s) %>
 <ul ecid="<%= ecid %>" class="code-comment-box" style="margin-left: <%= margin_left %>;">
 </ul>
 

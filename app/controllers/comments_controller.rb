@@ -9,9 +9,21 @@ class CommentsController < ApplicationController
     authorize! :read, @comment.commentable
     if @comment.save
       commentable = @comment.commentable
-      commentable.last_commented_at = Time.now
+      commentable.last_commented_at = @comment.created_at
       commentable.save
-      @comment.commentable.notify_user(curr_user_course, @comment, params[:origin])
+
+      CommentSubscription.populate_subscription(@comment)
+
+      if curr_user_course.is_student?
+        @comment.commentable.set_pending_comments(true)
+      else
+        @comment.commentable.set_pending_comments(false)
+      end
+
+      if @course.email_notify_enabled? PreferableItem.new_comment
+        @comment.commentable.notify_user(curr_user_course, @comment, params[:origin])
+      end
+
       respond_to do |format|
         #format.html { redirect_to params[:origin] }
         format.json {render json: @comment.commentable.comments_json}
@@ -23,28 +35,29 @@ class CommentsController < ApplicationController
     if can? :see, :pending_comments
       @tab = params[:_tab]
 
+      @all_topics = @course.commented_topics
       @pending_comments = @course.get_pending_comments
-      @mine_pending_coments = get_mystudent_pending_comments
+      @my_topics = curr_user_course.subscribed_topics
+      @mine_pending_comments = @my_topics.select(&:pending?)
 
       case @tab
         when 'all'
-          @topics = @course.get_all_comments
+          @topics = @all_topics
         when 'pending'
           @topics = @pending_comments
         when 'minepending'
-          @topics = @mine_pending_coments
+          @topics = @mine_pending_comments
         when 'mine'
-          @topics = get_mystudent_comments
+          @topics = @my_topics
         else
           @tab = 'pending'
           @topics = @pending_comments
       end
     else
-      @topics = @course.get_all_comments_by_ability(current_ability)
+      @topics = curr_user_course.subscribed_topics
     end
 
     @topics = sorting_and_paging(@topics)
-
   end
 
   def get_mystudent_pending_comments
@@ -59,9 +72,25 @@ class CommentsController < ApplicationController
     @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
   end
 
+  def pending_toggle
+    if !params[:cid] || !params[:ctype]
+      return
+    end
+    pending_comment = PendingComments.find_by_answer_id_and_answer_type(params[:cid], params[:ctype])
+    unless pending_comment
+      pending_comment = PendingComments.create(answer_id:params[:cid], answer_type:params[:ctype],pending: false)
+    end
+    pending_comment.pending = !pending_comment.pending
+    if pending_comment.save
+      respond_to do |format|
+        format.json {render json: {status: 'OK'}}
+      end
+    end
+  end
+
   private
   def sorting_and_paging(topics)
-    @topics = topics.sort_by { |ans| ans.last_commented_at }
+    @topics = topics.sort_by { |ans| ans.last_commented_at }.reverse
     @topics = Kaminari.paginate_array(@topics).page(params[:page]).per(10)
   end
 end

@@ -21,15 +21,16 @@ class UserCourse < ActiveRecord::Base
   has_many :user_achievements, dependent: :destroy
   has_many :user_titles
   has_many :user_rewards
-  has_many :exp_transactions
+  has_many :exp_transactions, dependent: :destroy
   has_many :seen_stuff, class_name: "SeenByUser"
-  has_many :comments
+  has_many :comments, dependent: :destroy
+  has_many :comment_subscriptions, dependent: :destroy
 
   has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
   has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
 
-  has_many :std_answers, foreign_key: "std_course_id"
-  has_many :std_coding_answers, foreign_key: "std_course_id"
+  has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
+  has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
 
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
@@ -70,16 +71,15 @@ class UserCourse < ActiveRecord::Base
       threshold = self.level.next_level.exp_threshold
       return threshold == 0? 0 : self.exp * 100 / self.level.next_level.exp_threshold
     end
-    return 0
+    0
   end
 
   def get_seen_sbms
-    seen_sbms = seen_submissions + seen_training_submissions
-    return seen_sbms
+    seen_submissions + seen_training_submissions
   end
 
   def get_unseen_notifications
-    return self.notifications - self.seen_notifications
+     self.notifications - self.seen_notifications
   end
 
   def mark_as_seen(obj)
@@ -169,7 +169,7 @@ class UserCourse < ActiveRecord::Base
     self.level = self.course.levels.find_by_level(0)
   end
 
-  def manual_exp_award(user_course_id,exp,reason)
+  def manual_exp_award(user_course_id, exp, reason)
     user_course = self.course.user_courses.find(user_course_id)
     puts user_course, exp, reason
     exp_transaction = ExpTransaction.new
@@ -210,6 +210,10 @@ class UserCourse < ActiveRecord::Base
 
   def get_path
     course_user_course_path(self.course, self)
+  end
+
+  def subscribed_topics
+    self.comment_subscriptions.map { |cs| cs.topic }.uniq
   end
 
 end

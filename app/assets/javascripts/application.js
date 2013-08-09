@@ -68,7 +68,10 @@ $(document).ready(function() {
         set_badge = $("#badge_"+page_name);
         if (new_items_seen >0 && set_badge.size() > 0) {
             update_count = badge_count.val() - new_items_seen;
-            set_badge[0].innerHTML = update_count > 0 ? update_count : "";
+            if (update_count > 0)
+                set_badge[0].innerHTML = update_count;
+            else
+                set_badge.addClass("hidden");
         }
     });
 

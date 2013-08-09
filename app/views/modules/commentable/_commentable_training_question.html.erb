@@ -1,0 +1,12 @@
+<% pos = question.asm_qns.first.pos %>
+<% training = question.asm_qns.first.asm %>
+
+<% if can? :see, :pending_comments %>
+    <div class="mission-pending"><a cid="<%= question.id %>" ctype ="<%= question.class.to_s %>" href="#"><%= if question.pending_comments && question.pending_comments.pending? then 'Unmark' else 'Mark' end %> as pending</a></div>
+<% end %>
+<input type="hidden" id="submission_url_<%=ecid%>" value="<%= course_training_url(@course, training) %>">
+<div class="mission-box" href="<%= course_training_url(@course, training) %>">
+  <!--<img class="small-mission-pic" width="54" height="54" src="public/images/mission_icons/mission22_small.jpg">-->
+  <div class="title">Training : <%= training.title %></div>
+  <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.html_safe.split(" ").first(13).join(" ") %>... </span></div>
+</div>

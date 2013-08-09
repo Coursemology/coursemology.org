@@ -43,7 +43,9 @@ JfdiAcademy::Application.routes.draw do
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
-    resources :user_courses
+    resources :user_courses do
+      resource  :exp_transactions
+    end
 
     resources :missions do
       resources :mission_coding_questions, as: :coding_questions
@@ -95,6 +97,7 @@ JfdiAcademy::Application.routes.draw do
     post "asm_tags/render_form_row" => "asm_tags#render_form_row"
 
     resources :comments
+    post "/comments/toggle" => "comments#pending_toggle"
 
     resources :annotations
 
@@ -130,6 +133,10 @@ JfdiAcademy::Application.routes.draw do
   end
 
   resources :missions do
+    resources :file_uploads
+  end
+
+  resources :submissions do
     resources :file_uploads
   end
 

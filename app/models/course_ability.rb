@@ -51,6 +51,10 @@ class CourseAbility
       cannot :modify, TrainingSubmission
     end
 
+    if user_course.is_lecturer? && !user.is_admin?
+      cannot :manage, :user
+    end
+
     if user_course.is_ta?
       cannot :manage, :user
       cannot :manage, :course_preference
@@ -74,12 +78,15 @@ class CourseAbility
         training.open_at <= Time.now
       end
 
+      can :read, [Mcq, Question, CodingQuestion]
+
       can :read, Tag
       can :read, [Achievement, Title, Reward]
       can :students, Course
 
       can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
+      can :manage, ExpTransaction, user_course_id: user_course.id
 
       cannot :modify, TrainingSubmission
 

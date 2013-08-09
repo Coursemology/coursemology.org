@@ -31,6 +31,8 @@
     <!--<td><%= @mission.attempt_limit %></td>-->
   <!--</tr>-->
 </table>
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @mission}%>
 <hr/>
 
 <%=render "form" %>

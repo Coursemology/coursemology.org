@@ -26,6 +26,8 @@
       <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
   <% end %>
 </table>
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @submission}%>
 <hr/>
 
 <div class="well"><%= @mission.description.html_safe %></div>
