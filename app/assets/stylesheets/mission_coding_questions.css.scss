@@ -3,5 +3,27 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #template_code .CodeMirror-scroll {
-  height: 470px !important;
+	height: 470px !important;
+}
+
+.missions-description-title {
+	margin-bottom: 10px;
+}
+
+.missions-details-table {
+	width: 300px;
+}
+
+.missions-questions-table {
+	h3 {
+		color: #666;
+		text-transform: uppercase;
+		font-weight: 700;
+		letter-spacing: 1px;
+		margin: 5px 0;
+		font-size: 1em;
+	}
+	td {
+		padding: 5px 0;
+	}
 }
