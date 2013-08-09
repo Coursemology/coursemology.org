@@ -9,6 +9,11 @@ class CommentSubscription < ActiveRecord::Base
     # add the commentator to the subscription list
     commentable = comment.commentable
     commentator = comment.user_course
+
+    if !commentable || !commentator
+      return
+    end
+
     CommentSubscription.subscribe(commentable, commentator)
     if commentable.respond_to?(:user_course)
       # add the owner of the topic to the subscription list
@@ -23,10 +28,6 @@ class CommentSubscription < ActiveRecord::Base
   end
 
   def self.subscribe(topic, user_course)
-    if !topic || !user_course
-      return
-    end
-
     old_cs = CommentSubscription.where(
       user_course_id: user_course.id,
       topic_id: topic.id,
