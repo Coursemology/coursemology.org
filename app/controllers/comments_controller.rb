@@ -38,7 +38,7 @@ class CommentsController < ApplicationController
       @all_topics = @course.commented_topics
       @pending_comments = @course.get_pending_comments
       @my_topics = curr_user_course.subscribed_topics
-      @mine_pending_coments = @my_topics.select(&:pending?)
+      @mine_pending_comments = @my_topics.select(&:pending?)
 
       case @tab
         when 'all'
@@ -46,7 +46,7 @@ class CommentsController < ApplicationController
         when 'pending'
           @topics = @pending_comments
         when 'minepending'
-          @topics = @mine_pending_coments
+          @topics = @mine_pending_comments
         when 'mine'
           @topics = @my_topics
         else
@@ -90,7 +90,7 @@ class CommentsController < ApplicationController
 
   private
   def sorting_and_paging(topics)
-    @topics = topics.sort_by { |ans| ans.last_commented_at }
+    @topics = topics.sort_by { |ans| ans.last_commented_at }.reverse
     @topics = Kaminari.paginate_array(@topics).page(params[:page]).per(10)
   end
 end

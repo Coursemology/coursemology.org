@@ -57,7 +57,7 @@ class FileUploadsController < ApplicationController
         }
       else
         resp = {
-            url: "#{request.scheme}://#{request.host_with_port}#{file_upload.file.url}"
+            url: file_upload.file.url
         }
       end
       respond_to do |format|

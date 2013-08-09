@@ -16,7 +16,7 @@ class CommentSubscription < ActiveRecord::Base
     end
     if commentator.is_student?
       # add the ta to the subscription list
-      commentator.get_staff_incharge.each do |uc|
+      commentator.get_my_tutors.each do |uc|
         CommentSubscription.subscribe(commentable, uc)
       end
     end
@@ -35,6 +35,16 @@ class CommentSubscription < ActiveRecord::Base
       cs.course = user_course.course
       cs.save
       puts cs.to_json
+    end
+  end
+
+  def self.unsubscribe(topic, user_course)
+    cs = CommentSubscription.where(
+        user_course_id: user_course.id,
+        topic_id: topic.id,
+        topic_type: topic.class)
+    if cs
+      cs.destroy_all
     end
   end
 end

@@ -29,8 +29,6 @@ class UserCoursesController < ApplicationController
       @user_course.user.email = params[:email].strip
     end
 
-    @user_course.tut_courses.map {|tc| tc.destroy }
-
     tut_group_assign
 
     respond_to do |format|
@@ -63,19 +61,26 @@ class UserCoursesController < ApplicationController
   private
 
   def tut_group_assign
+    #invalid
     unless params[:tutor]
       return
     end
+    #didn't change
+    if @user_course.get_my_tutors.first.id == params[:tutor].first.to_i
+      return
+    end
+
+    #updated
+    @user_course.tut_courses.map {|tc| tc.destroy }
+
+    #unassigned to assigned
     if params[:tutor].first.to_i > 0
       tg = @course.tutorial_groups.build
       tg.std_course = @user_course
       tg.tut_course_id =  params[:tutor].first
       tg.save
     else
-      tg = @course.tutorial_groups.find_by_tut_course_id_and_std_course_id(params[:tutor].first, @course.id)
-      if tg
-        tg.destroy
-      end
+
     end
   end
 end

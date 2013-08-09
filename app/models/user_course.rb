@@ -23,14 +23,14 @@ class UserCourse < ActiveRecord::Base
   has_many :user_rewards
   has_many :exp_transactions, dependent: :destroy
   has_many :seen_stuff, class_name: "SeenByUser"
-  has_many :comments
+  has_many :comments, dependent: :destroy
   has_many :comment_subscriptions, dependent: :destroy
 
   has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
   has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
 
-  has_many :std_answers, foreign_key: "std_course_id"
-  has_many :std_coding_answers, foreign_key: "std_course_id"
+  has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
+  has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
 
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130808173814) do
+ActiveRecord::Schema.define(:version => 20130809062153) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(:version => 20130808173814) do
     t.integer  "max_grade"
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.string   "comments"
+    t.string   "staff_comments"
     t.datetime "last_commented_at"
   end
 
