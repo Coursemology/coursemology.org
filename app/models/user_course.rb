@@ -71,16 +71,15 @@ class UserCourse < ActiveRecord::Base
       threshold = self.level.next_level.exp_threshold
       return threshold == 0? 0 : self.exp * 100 / self.level.next_level.exp_threshold
     end
-    return 0
+    0
   end
 
   def get_seen_sbms
-    seen_sbms = seen_submissions + seen_training_submissions
-    return seen_sbms
+    seen_submissions + seen_training_submissions
   end
 
   def get_unseen_notifications
-    return self.notifications - self.seen_notifications
+     self.notifications - self.seen_notifications
   end
 
   def mark_as_seen(obj)
