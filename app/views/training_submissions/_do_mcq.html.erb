@@ -6,11 +6,11 @@
   <% @current_question.mcq_answers.each do |ans| %>
       <li>
         <% if @current_question.select_all %>
-          <input class="choices" type="checkbox" name="answers[]" value="<%= ans.id %>" />
+          <input class="choices" type="checkbox" name="answers[]" value="<%= ans.id %>" id="value=<%= ans.id %>"/>
         <% else %>
-          <input class="choices" type="radio" name="answers" value="<%= ans.id %>" />
+          <input class="choices" type="radio" name="answers" value="<%= ans.id %>" id="value=<%= ans.id %>"/>
         <% end %>
-        <span><%= ans.text %></span>
+        <label for="value=<%= ans.id %>"> <%= ans.text %></label>
       </li>
   <% end %>
 </ul>
