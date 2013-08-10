@@ -1,0 +1,89 @@
+<div class="page-header">
+  <h1>Enrollment Invitations</h1>
+</div>
+
+<% num_of_invitation = @registered_stds.count + @unregistered_stds.count %>
+
+<% if num_of_invitation > 0 %>
+    <div class="row-fluid">
+      <div class="progress progress-success">
+        <div class="bar" style="width: <%= 100 * @registered_stds.count / num_of_invitation %>%"></div>
+      </div>
+    <span class="pull-right" style="font-size: 1.3em">
+        <strong style="font-size: 1.6em"><%= @registered_stds.count %> Registered</strong>
+        /
+      <%= num_of_invitation %> Invited</span>
+    </div>
+<% end %>
+
+<h3>Invite Students</h3>
+<br>
+<div class="row-fluid">
+  <span class="btn fileinput-button">
+    <i class="icon-plus icon-white"></i>
+    <span>Get emails from Gmail CVS file</span>
+    <input id="cvs_file" type="file" >
+  </span>
+  <input type="hidden" id="email-invitation-url" value="<%= course_send_enrollment_emails_path(@course) %>">
+  <br>
+  <br>
+  <h5 class="or-separator-small">--- OR ---</h5>
+  Manually add students:
+  <span class="btn" id="manually-add-student" style="margin: 10px 0px">
+    <i class="icon-plus icon-white"></i>
+    <span>Add</span>
+  </span>
+</div>
+<div style="width: 300px" id="add-student-div">
+</div>
+<br>
+
+<% if @registered_stds.count > 0 && @unregistered_stds.count <= 0%>
+    <h2>All invited students have registered.</h2>
+<% end %>
+
+<% if @unregistered_stds.count > 0 %>
+    <h3>Pending Students</h3>
+    <br>
+    <div class="row-fluid">
+      <a class="invite-update-selected" href="<%= course_resend_enrollment_emails_path(@course)%>" data-target=".checkbox-students">Resend to Selected</a> |
+      <a class="invite-update-selected" href="<%= course_delete_enrollment_invitations_path(@course) %>" data-target=".checkbox-students">Delete Selected</a> |
+      <%= link_to 'Resend to All', course_resend_enrollment_emails_path(@course),
+                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }%> |
+      <%= link_to 'Delete All', course_delete_enrollment_invitations_path(@course)  %> |
+    </div>
+    <table class="table">
+      <thead>
+      <tr>
+        <td><input type="checkbox" class="check-all" data-target=".checkbox-students"/></td>
+        <td> Name </td>
+        <td> Email </td>
+        <td> Status </td>
+        <td> Action </td>
+      </tr>
+      </thead>
+      <tbody>
+      <% @unregistered_stds.each do |std| %>
+          <tr>
+            <td><input type="checkbox" class="checkbox-students" value="<%= std.id %>"/></td>
+            <td><%= std.name %></td>
+            <td><%= std.email %></td>
+            <td><%= std.status %></td>
+            <td>
+              <%= link_to '#', class: "btn request-approve" do %>
+                  Resend
+              <% end %>
+              <%= link_to course_mass_enrollment_email_path(@course, std),
+                          method: :delete,
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          class: 'btn' do %>
+                  <i class="icon-remove"></i>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
+
+<%= render partial: "list_emails" %>

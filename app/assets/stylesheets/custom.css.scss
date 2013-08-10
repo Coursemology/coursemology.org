@@ -545,6 +545,10 @@ li .thumbnail {
   margin: 40px 0px;
 }
 
+.or-separator-small {
+  margin: 10px 0px;
+}
+
 .signin-form, .signup-form {
   margin-left: 20px;
 }
@@ -776,3 +780,7 @@ $grayMediumLight: #eaeaea;
   border-radius: 4px;
 }
 
+.modal-body {
+  max-height: 350px;
+  overflow-y: auto;
+}

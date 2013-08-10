@@ -8,7 +8,7 @@ class Mission < ActiveRecord::Base
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
-    :description, :exp, :open_at, :pos, :timelimit, :title
+                  :description, :exp, :open_at, :pos, :timelimit, :title
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
@@ -36,9 +36,11 @@ class Mission < ActiveRecord::Base
 
   def attach_files(files)
     files.each do |id|
-      file = FileUpload.find(id)
-      file.owner = self
-      file.save
+      file = FileUpload.where(id: id).first
+      if file
+        file.owner = self
+        file.save
+      end
     end
   end
 

@@ -121,6 +121,12 @@ JfdiAcademy::Application.routes.draw do
 
     post "preferences" => "course_preferences#update", as: :preferences
 
+    resources :mass_enrollment_emails
+
+    post "send_enrollment_emails" => "mass_enrollment_emails#send_enroll_emails"
+    match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
+    match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

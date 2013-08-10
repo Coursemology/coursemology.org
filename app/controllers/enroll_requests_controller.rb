@@ -46,16 +46,7 @@ class EnrollRequestsController < ApplicationController
 
   def approve_request(enroll_request)
     puts 'Approve request ', enroll_request.to_json
-    uc = UserCourse.new
-    uc.course = enroll_request.course
-    uc.user = enroll_request.user
-    uc.role = enroll_request.role
-    uc.exp = 0
-    uc.save
-
-    if @course.email_notify_enabled? PreferableItem.new_student
-      UserMailer.delay.new_student(uc.user, uc.course)
-    end
+    @course.enrol_user(enroll_request.user, enroll_request.role)
   end
 
   def approve_all

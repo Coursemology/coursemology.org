@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
   before_create :set_default_role
   before_create :set_default_profile_pic
+  after_create  :auto_enroll_for_invited
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -40,7 +41,7 @@ class User < ActiveRecord::Base
   def update_external_account(auth)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
 
-    if user && user != self 
+    if user && user != self
       return false
     end
 
@@ -71,7 +72,7 @@ class User < ActiveRecord::Base
                            email: auth.info.email,
                            password: Devise.friendly_token[0,20],
                            profile_photo_url: auth.info.image
-                          )
+        )
       end
       user.save
     end
@@ -114,6 +115,16 @@ class User < ActiveRecord::Base
     UserMailer.delay.email_changed(name, email, email_was)
   end
 
+  def auto_enroll_for_invited
+    invs = MassEnrollmentEmail.where(email: self.email)
+
+    invs.each do |inv|
+      inv.course.enrol_user(self, Role.find_by_name("student"))
+      inv.signed_up = true
+      inv.save
+    end
+  end
+
   private
   def set_default_role
     if !self.system_role
@@ -124,7 +135,7 @@ class User < ActiveRecord::Base
   def set_default_profile_pic
     if !self.profile_photo_url
       self.profile_photo_url =
-        'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
+          'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
     end
   end
 
