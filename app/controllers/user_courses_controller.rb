@@ -66,7 +66,7 @@ class UserCoursesController < ApplicationController
       return
     end
     #didn't change
-    if @user_course.get_my_tutors.first.id == params[:tutor].first.to_i
+    if @user_course.get_my_tutors.first and (@user_course.get_my_tutors.first.id == params[:tutor].first.to_i)
       return
     end
 
