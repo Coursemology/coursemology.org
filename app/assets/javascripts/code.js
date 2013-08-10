@@ -313,7 +313,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                     var $div = $('<div class="comment-text-container">');
                     $div.append('<div class="commentor">'+annotations[i].u+'</div>')
                         .append('<div class="comment">'+annotations[i].c.nl2br()+'</div>')
-                        .append('<div class="timestamp">'+annotations[i].t+'</div>')
+                        .append('<div class="timestamp">'+annotations[i].t+'</div>');
                     $li
                         .append('<img class="small-profile-pic" src="'+annotations[i].p+'" width="32" height="32" />')
                         .append($div)

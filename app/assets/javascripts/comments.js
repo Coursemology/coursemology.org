@@ -12,11 +12,12 @@ var Comment = (function(){
 
     self.makeComment = function(obj){
         var $li = $('<li class="comment"/>');
-        $li
-            .append('<img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" />')
+        $li.append('<img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" />');
+        var $div = $('<div class="comment-text-container">');
+        $div.append('<div class="commentor">'+obj.u+'</div>')
+            .append('<div class="comment">'+obj.c+'</div>')
             .append('<div class="timestamp">'+obj.t+'</div>')
-            .append('<div class="commentor">'+obj.u+'</div>')
-            .append('<div class="comment">'+obj.c+'</div>');
+            .appendTo($li);
         return $li;
     }
     self.makeHiddenBox = function(cnt,code_id){
