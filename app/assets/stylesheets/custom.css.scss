@@ -782,8 +782,8 @@ $grayMediumLight: #eaeaea;
 }
 
 .grading-block {
-  background-color: #363636;
-  color: #ffffff;
+  // background-color: #363636;
+  // color: #ffffff;
   position: relative;
   margin: 15px 0px;
   padding: 30px 10px 10px;
@@ -793,7 +793,7 @@ $grayMediumLight: #eaeaea;
   -moz-border-radius: 4px;
   border-radius: 4px;
   h4 {
-    color: floralwhite;
+    color: #666;
   }
 }
 
