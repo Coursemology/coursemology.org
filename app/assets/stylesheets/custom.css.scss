@@ -327,6 +327,15 @@ ul.sidenav {
   margin-top: 10px;
 }
 
+@media (min-width: 1200px) {
+  .row .span2 {
+    width: 180px;
+  }
+  .row .span10 {
+    width: 960px;
+  }
+}
+
 @media (min-width: 980px) {
   .sidenav-collapse.collapse {
     height: auto !important;
@@ -334,12 +343,7 @@ ul.sidenav {
   }
 }
 
-@media (max-width: 980px) {
-  .sidenav-collapse.collapse {
-    height: 0;
-    overflow: hidden;
-  }
-}
+
 @media (max-width: 768px) {
   .sidebar-course-logo {
     height: 0;
@@ -830,3 +834,5 @@ $grayMediumLight: #eaeaea;
   max-height: 350px;
   overflow-y: auto;
 }
+
+
