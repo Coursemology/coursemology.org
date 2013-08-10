@@ -3,12 +3,12 @@
   <!-- <h1>Mission : <%= @mission.title %></h1> -->
   <h1><%= @mission.title %></h1>
 </div>
-<h2 class="missions-description-title">Mission Description</h2>
+<h2 class="assignments-description-title">Mission Description</h2>
 <table class="table-top-align">
   <tr>
     <td>
       <p><%= @mission.description.html_safe %></p>
-      <table class="table table-bordered missions-details-table">
+      <table class="table table-bordered assignments-details-table">
         <tr>
           <td><%= model_class.human_attribute_name(:exp) %>:</td>
           <td><%= @mission.exp %></td>
@@ -84,8 +84,8 @@
         <%= render "mission_coding_questions/form" %>
       </div>
     </div>
-    <h2>Mission Questions</h2>
-    <table class="table missions-questions-table">
+    <h2 class="assignments-questsions-title">Mission Questions</h2>
+    <table class="table assignments-questions-table">
       <!-- <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>

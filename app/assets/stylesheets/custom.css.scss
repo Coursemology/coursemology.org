@@ -34,18 +34,6 @@ th {
   text-transform: uppercase;
 }
 
-tr .btn, {
-  display: none;
-}
-
-tr .btn.btn-success {
-  display: initial;
-}
-
-tr:hover .btn {
-  display: initial;
-}
-
 #site-logo {
   float: left;
   margin-right: 10px;
@@ -710,6 +698,39 @@ $grayMediumLight: #eaeaea;
 .assignments-blurb {
   color: red;
   float: right;
+}
+
+.assignments-description-title {
+  margin-bottom: 10px;
+}
+
+.assignments-details-table {
+  width: 300px;
+}
+
+.assignments-questions-title {
+  margin-top: 20px;
+}
+
+.assignments-questions-table {
+  h3 {
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 5px 0;
+    font-size: 1em;
+  }
+  td {
+    padding: 5px 0;
+  }
+}
+
+#training-step-form {
+  label {
+    display: inline;
+    margin-left: 5px;
+  }
 }
 
 .row .course-title {

@@ -2,13 +2,13 @@
 <div class="page-header">
   <h1>Training: <%= @training.title %></h1>
 </div>
-
+<h2 class="assignments-description-title">Training Description</h2>
 <table class="table-top-align">
   <tr>
     <td>
       <div class="pull-left">
         <p><%= @training.description.html_safe %></p>
-        <table>
+        <table class="table table-bordered assignments-details-table">
           <tr>
             <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
             <td><%= @training.exp %></td>
@@ -70,13 +70,13 @@
                     :class => 'btn btn-primary' %>
     <% end %>
 
-    <h2>Steps</h2>
-    <table class="table">
-      <thead>
+    <h2 class="assignments-questsions-title">Training Questions</h2>
+    <table class="table table assignments-questions-table">
+     <!--  <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
-      </thead>
+      </thead> -->
       <tbody>
       <% @steps.each_with_index do |q, index| %>
           <tr>
