@@ -125,19 +125,23 @@ div.error { color: #f55;}
   position: absolute;
   right: 0px;
   min-width:250px;
-  background-color: #353535;
+  background-color: #fff;
+  border: solid 1px #ccc;
   z-index: 12;
   max-height: 100px;
   overflow: hidden;
-  padding: 3px 8px 3px 8px;
+  // padding: 10px;
   color: #ffffff;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
 }
 
 .comment-box ul {
   margin: 0px;
 }
-.comment-box.hover { z-index: 14; background-color: #555; }
-.comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #4D4D4F; max-height: none; border-radius: 6px;}
+.comment-box.hover { z-index: 14; background-color: #f0f0f0; }
+.comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #fff; max-height: none; }
 
 .annotate-box {
   width: 95%;
@@ -205,8 +209,8 @@ div.error { color: #f55;}
 .annotate-code-lines pre.line { margin-left: 21px; }
 .annotate-code-lines .line-numbers { font-size: 0.8em; background-color: #151515; color: white; float: left; width: 19px; position: absolute; top: 0px; left: 0px;}
 
-.active .annotate-area { max-height: 450px; overflow: auto;}
-
+.active .annotate-area { max-height: 450px; overflow: auto; color: #000; }
+.annotate-message { color: #000; }
 
 #permissions { list-style-type: none; }
 #permissions li { float: right; padding: 3px 10px 3px 10px; border:1px solid #353535; background: #555; border-bottom: 0px; cursor: pointer; color: #333;}

@@ -89,13 +89,13 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
     function addAnnotateBox(){
         if (!_ca) return false;
         $("#annotate-area").remove();
+
         $ab = $('<div id="annotate-area"></div>')
-        $ab.append('Leave an annotation:');
+        $ab.append('<p class="annotate-message">Leave an annotation:</p>');
         $ta = $('<textarea class="annotate-box" id="annotate-box"></textarea>')
             .data('s', start_line+1).data('e', end_line+1)
             .appendTo($ab);
-        $ab.append('<input type="button" class="button" value="annotate" id="annotateButton" />');
-
+        $ab.append('<button class="btn" id="annotateButton">Annotate</button>');
         this.append($ab);
 
         $ta.focus();

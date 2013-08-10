@@ -39,7 +39,7 @@ var Comment = (function(){
         var $li = $('<li class="textarea" />');
         $li.append('<textarea class="annotate-box" style="margin-bottom: 9px" />');
 
-        var $but = $('<input type="button" value="comment" class="button" />').click(function(){
+        var $but = $('<button class="btn">Comment</button>').click(function(){
             var $ta = $(this).parent().find('textarea');
             if ($ta.attr('disabled') == 'disabled') return false;
 
