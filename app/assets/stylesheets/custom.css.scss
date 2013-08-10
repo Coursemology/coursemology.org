@@ -572,6 +572,10 @@ small {
 }
 
 //code formatting
+.cos_code {
+  display: inline;
+}
+
 .cos_code .CodeMirror {
   line-height: 1em;
   font-family: monospace;
@@ -644,6 +648,11 @@ small {
 }
 
 /** used in jfdiFormat multi-line code blocks **/
+span.jfdiCode{
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
 div.jfdiCode{
   padding:8px 7px;
 }

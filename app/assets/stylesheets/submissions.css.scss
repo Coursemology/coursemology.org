@@ -178,14 +178,11 @@ div.error { color: #f55;}
 
 }
 .code-comment-box li.comment, .code-comment-box li.hidden {
-  background-color: #353535;
   margin-top: 3px;
   padding: 5px;
-  color: #ffffff;
-  a:visited, a:link
-  {
+  color: #000;
+  a:visited, a:link {
     color:#FCDF9A;
-
     font-weight: bold;
   }
   a:hover {
@@ -199,7 +196,7 @@ div.error { color: #f55;}
 .code-comment-box li.textarea {background: transparent; padding: 0px; margin-top: 3px;}
 .code-comment-box li .commentor { float: left; margin-right: 8px;}
 .code-comment-box li .timestamp { font-size: 0.85em; }
-.code-comment-box li .small-profile-pic {float: left; margin-right: 5px;}
+.code-comment-box li .small-profile-pic {float: left; margin-right: 5px; border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px; }
 .code-comment-box li .hidden {font-style: italic;}
 .code-comment-box li .comment {margin-left: 38px;}
 .code-annotation { margin-left: 30px;}
