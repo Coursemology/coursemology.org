@@ -30,6 +30,10 @@ textarea {
   }
 }
 
+th {
+  text-transform: uppercase;
+}
+
 #site-logo {
   float: left;
   margin-right: 10px;
@@ -389,22 +393,7 @@ td.user-profile-pic-col {
   width: 60px;
   text-align: center;
 }
-
-.leaderboard-name {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.leaderboard-caption {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.leaderboard-top-row {
-  background-color: #ECF084;
-}
-
+f
 #popups {
   text-align: center
 }
@@ -421,6 +410,10 @@ td.user-profile-pic-col {
 .popup-ach-icon {
   width: 100px;
   height: 100px;
+}
+
+.alert {
+  margin: 20px;
 }
 
 .step {
@@ -492,6 +485,10 @@ a.user-thumb-profile {
   padding-top: 5px;
   vertical-align: middle;
   display: table-cell;
+}
+
+#user-profile-name a {
+  font-size: 18px;
 }
 
 .user-thumb-profile img {
@@ -583,6 +580,10 @@ small {
 }
 
 //code formatting
+.cos_code {
+  // display: inline;
+}
+
 .cos_code .CodeMirror {
   line-height: 1em;
   font-family: monospace;
@@ -655,6 +656,11 @@ small {
 }
 
 /** used in jfdiFormat multi-line code blocks **/
+span.jfdiCode{
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
 div.jfdiCode{
   padding:8px 7px;
 }
@@ -700,8 +706,48 @@ $grayMediumLight: #eaeaea;
 }
 
 .assignments thead {
-  font-size: 1.3em;
-  background-color: #f5f5f5;;
+  background-color: #333;
+  text-transform: uppercase;
+  font-size: 1em;
+  color: #fff;
+}
+
+.assignments-blurb {
+  color: red;
+  float: right;
+}
+
+.assignments-description-title {
+  margin-bottom: 10px;
+}
+
+.assignments-details-table {
+  width: 300px;
+}
+
+.assignments-questions-title {
+  margin-top: 20px;
+}
+
+.assignments-questions-table {
+  h3 {
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 5px 0;
+    font-size: 1em;
+  }
+  td {
+    padding: 5px 0;
+  }
+}
+
+#training-step-form {
+  label {
+    display: inline;
+    margin-left: 5px;
+  }
 }
 
 .row .course-title {
@@ -740,8 +786,8 @@ $grayMediumLight: #eaeaea;
 }
 
 .grading-block {
-  background-color: #363636;
-  color: #ffffff;
+  // background-color: #363636;
+  // color: #ffffff;
   position: relative;
   margin: 15px 0px;
   padding: 30px 10px 10px;
@@ -751,7 +797,7 @@ $grayMediumLight: #eaeaea;
   -moz-border-radius: 4px;
   border-radius: 4px;
   h4 {
-    color: floralwhite;
+    color: #666;
   }
 }
 

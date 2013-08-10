@@ -1,27 +1,28 @@
 <%- model_class = Mission -%>
 <div class="page-header">
-  <h1>Mission : <%= @mission.title %></h1>
+  <!-- <h1>Mission : <%= @mission.title %></h1> -->
+  <h1><%= @mission.title %></h1>
 </div>
-
+<h2 class="assignments-description-title">Mission Description</h2>
 <table class="table-top-align">
   <tr>
     <td>
       <p><%= @mission.description.html_safe %></p>
-      <table class="table table-bordered" style="width: 300px">
+      <table class="table table-bordered assignments-details-table">
         <tr>
-          <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+          <td><%= model_class.human_attribute_name(:exp) %>:</td>
           <td><%= @mission.exp %></td>
         </tr>
         <tr>
-          <td><strong><%= model_class.human_attribute_name(:max_grade) %>:</strong></td>
+          <td><%= model_class.human_attribute_name(:max_grade) %>:</td>
           <td><%= @mission.max_grade %></td>
         </tr>
         <tr>
-          <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+          <td><%= model_class.human_attribute_name(:open_at) %>:</td>
           <td><%= datetime_format(@mission.open_at) %></td>
         </tr>
         <tr>
-          <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
+          <td><%= model_class.human_attribute_name(:close_at) %>:</td>
           <td><%= datetime_format(@mission.close_at) %></td>
         </tr>
         <!--<tr>-->
@@ -83,13 +84,13 @@
         <%= render "mission_coding_questions/form" %>
       </div>
     </div>
-    <h2>Questions</h2>
-    <table class="table">
-      <thead>
+    <h2 class="assignments-questsions-title">Mission Questions</h2>
+    <table class="table assignments-questions-table">
+      <!-- <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
-      </thead>
+      </thead> -->
       <tbody>
       <% @questions.each_with_index do |q, i| %>
           <tr>

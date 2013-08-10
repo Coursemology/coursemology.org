@@ -89,13 +89,13 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
     function addAnnotateBox(){
         if (!_ca) return false;
         $("#annotate-area").remove();
+
         $ab = $('<div id="annotate-area"></div>')
-        $ab.append('Leave an annotation:');
+        $ab.append('<p class="annotate-message">Leave an annotation:</p>');
         $ta = $('<textarea class="annotate-box" id="annotate-box"></textarea>')
             .data('s', start_line+1).data('e', end_line+1)
             .appendTo($ab);
-        $ab.append('<input type="button" class="button" value="annotate" id="annotateButton" />');
-
+        $ab.append('<button class="btn" id="annotateButton">Annotate</button>');
         this.append($ab);
 
         $ta.focus();
@@ -310,11 +310,13 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                         this.prepend('<ul class="annotate-area code-comment-box">');
                     }
                     var $li = $('<li class="comment"/>');
+                    var $div = $('<div class="comment-text-container">');
+                    $div.append('<div class="commentor">'+annotations[i].u+'</div>')
+                        .append('<div class="comment">'+annotations[i].c.nl2br()+'</div>')
+                        .append('<div class="timestamp">'+annotations[i].t+'</div>')
                     $li
                         .append('<img class="small-profile-pic" src="'+annotations[i].p+'" width="32" height="32" />')
-                        .append('<div class="timestamp">'+annotations[i].t+'</div>')
-                        .append('<div class="commentor">'+annotations[i].u+'</div>')
-                        .append('<div class="comment">'+annotations[i].c.nl2br()+'</div>')
+                        .append($div)
                         .appendTo(this.find('.annotate-area'));
                     jfdiFormat($li.find('.comment').get(0));
                 });

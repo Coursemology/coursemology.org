@@ -1,3 +1,61 @@
 // Place all the styles related to the leaderboards controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// .leaderboard-table tr:first-child {
+// 	background-color: rgba(255, 248, 69, 0.53);
+// }
+
+// .leaderboard-table tr:nth-child(2) {
+// 	background-color: rgba(209, 209, 209, 0.53);
+// }
+
+// .leaderboard-table tr:nth-child(3) {
+// 	background-color: rgba(255, 210, 115, 0.53);
+// }
+
+.leaderboard-experience-table,
+.leaderboard-achievement-table {
+	counter-reset: leaderboard-counter;
+}
+
+.leaderboard-counter-container {
+	width: 20px;
+}
+
+.leaderboard-counter {
+	counter-increment: leaderboard-counter;
+	font-size: 2.5em;
+	padding-top: 10px;
+	line-height: 18px;
+	text-align: center;
+}
+
+.leaderboard-counter:before {
+	content: counter(leaderboard-counter);
+}
+
+.leaderboard-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.leaderboard-name:hover {
+	text-decoration: none;
+}
+
+.leaderboard-type {
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.leaderboard-top-row {
+  background-color: #ECF084;
+}
+
+.leaderboard-exp {
+	text-align: right;
+	color: #666;
+}

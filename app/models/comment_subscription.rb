@@ -28,7 +28,6 @@ class CommentSubscription < ActiveRecord::Base
   end
 
   def self.subscribe(topic, user_course)
-
     old_cs = CommentSubscription.where(
       user_course_id: user_course.id,
       topic_id: topic.id,

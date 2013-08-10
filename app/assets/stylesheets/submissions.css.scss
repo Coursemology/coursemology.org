@@ -125,24 +125,28 @@ div.error { color: #f55;}
   position: absolute;
   right: 0px;
   min-width:250px;
-  background-color: #353535;
+  background-color: #fff;
+  border: solid 1px #ccc;
   z-index: 12;
   max-height: 100px;
   overflow: hidden;
-  padding: 3px 8px 3px 8px;
+  // padding: 10px;
   color: #ffffff;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
 }
 
 .comment-box ul {
   margin: 0px;
 }
-.comment-box.hover { z-index: 14; background-color: #555; }
-.comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #4D4D4F; max-height: none; border-radius: 6px;}
+.comment-box.hover { z-index: 14; background-color: #f0f0f0; }
+.comment-box.active { min-width: 300px; z-index: 13; right: 10px; background-color: #fff; max-height: none; }
 
 .annotate-box {
-  width: 100%;
+  width: 95%;
   height: 100px;
-  padding: 0px;
+  padding: 5px;
 }
 
 
@@ -158,11 +162,10 @@ div.error { color: #f55;}
   a:visited, a:link
   {
     color:#FCDF9A;
-
     font-weight: bold;
   }
   a:hover {
-    color: #ffc;
+    color: #999;
   }
   a:link
   {
@@ -178,18 +181,14 @@ div.error { color: #f55;}
 
 }
 .code-comment-box li.comment, .code-comment-box li.hidden {
-  background-color: #353535;
   margin-top: 3px;
   padding: 5px;
-  color: #ffffff;
-  a:visited, a:link
-  {
-    color:#FCDF9A;
-
+  color: #000;
+  a:visited, a:link {
     font-weight: bold;
   }
   a:hover {
-    color: #ffc;
+    color: #666;
   }
   a:link
   {
@@ -197,11 +196,12 @@ div.error { color: #f55;}
   }
 }
 .code-comment-box li.textarea {background: transparent; padding: 0px; margin-top: 3px;}
-.code-comment-box li .commentor { float: left; margin-right: 8px;}
-.code-comment-box li .timestamp { font-size: 0.85em; }
-.code-comment-box li .small-profile-pic {float: left; margin-right: 5px;}
+.code-comment-box li .comment-text-container { padding-left: 40px; }
+.code-comment-box li .commentor { }
+.code-comment-box li .timestamp { font-size: 0.85em; color: #999; }
+.code-comment-box li .small-profile-pic {float: left; margin-right: 5px; border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px; }
 .code-comment-box li .hidden {font-style: italic;}
-.code-comment-box li .comment {margin-left: 38px;}
+.code-comment-box li .comment { }
 .code-annotation { margin-left: 30px;}
 .code-annotation ul.code-comment-box { margin-left: 15px;}
 
@@ -209,8 +209,8 @@ div.error { color: #f55;}
 .annotate-code-lines pre.line { margin-left: 21px; }
 .annotate-code-lines .line-numbers { font-size: 0.8em; background-color: #151515; color: white; float: left; width: 19px; position: absolute; top: 0px; left: 0px;}
 
-.active .annotate-area { max-height: 450px; overflow: auto;}
-
+.active .annotate-area { max-height: 450px; overflow: auto; color: #000; }
+.annotate-message { color: #000; }
 
 #permissions { list-style-type: none; }
 #permissions li { float: right; padding: 3px 10px 3px 10px; border:1px solid #353535; background: #555; border-bottom: 0px; cursor: pointer; color: #333;}
