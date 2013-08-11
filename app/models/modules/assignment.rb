@@ -91,15 +91,8 @@ module Assignment
     if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
       return
     end
-    ucs.each do |uc|
-      user = uc.user
-      if type == Mission
-        delayed_job = UserMailer.delay(:run_at => self.open_at).new_mission(user.name, user.email, self.title, course.title, redirect_to)
-      elsif type == Training
-        delayed_job = UserMailer.delay(:run_at => self.open_at).new_training(user.name, user.email, self.title, course.title, redirect_to)
-      end
-      self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    end
+    delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to), run_at: self.open_at)
+    self.queued_jobs.create(delayed_job_id: delayed_job.id)
   end
 
 end

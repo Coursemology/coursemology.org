@@ -40,9 +40,10 @@ class MassEnrollmentEmailsController < ApplicationController
         }
         next
       end
-      enroll_inv.send_email(current_user.name, new_user_registration_url)
       success_count += 1
     end
+
+    Delayed::Job.enqueue(MailingJob.new(@course.id, MassEnrollmentEmail.to_s, current_user.id, new_user_registration_url), run_at: 5.minutes.from_now)
 
     respond_to do |format|
       if existing_records > 0
@@ -75,9 +76,7 @@ class MassEnrollmentEmailsController < ApplicationController
       invs = MassEnrollmentEmail.where(course_id: @course, signed_up: false)
     end
 
-    invs.each do |inv|
-      inv.send_email(current_user.name, new_user_registration_url)
-    end
+    Delayed::Job.enqueue(MailingJob.new(@course.id, MassEnrollmentEmail.to_s, current_user.id, new_user_registration_url), run_at: 5.minutes.from_now)
 
     respond_to do |format|
       flash[:notice] = "#{invs.count} email(s) are queued!"

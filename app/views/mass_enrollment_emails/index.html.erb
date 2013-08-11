@@ -48,9 +48,9 @@
     <div class="row-fluid">
       <a class="invite-update-selected" href="<%= course_resend_enrollment_emails_path(@course)%>" data-target=".checkbox-students">Resend to Selected</a> |
       <a class="invite-update-selected" href="<%= course_delete_enrollment_invitations_path(@course) %>" data-target=".checkbox-students">Delete Selected</a> |
-      <%= link_to 'Resend to All', course_resend_enrollment_emails_path(@course),
+      <%= link_to 'Resend to All', course_resend_enrollment_emails_path(@course) %>|
+      <%= link_to 'Delete All', course_delete_enrollment_invitations_path(@course),
                   data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }%> |
-      <%= link_to 'Delete All', course_delete_enrollment_invitations_path(@course)  %> |
     </div>
     <table class="table">
       <thead>
@@ -70,9 +70,6 @@
             <td><%= std.email %></td>
             <td><%= std.status %></td>
             <td>
-              <%= link_to '#', class: "btn request-approve" do %>
-                  Resend
-              <% end %>
               <%= link_to course_mass_enrollment_email_path(@course, std),
                           method: :delete,
                           data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },

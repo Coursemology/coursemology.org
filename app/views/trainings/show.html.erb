@@ -21,6 +21,14 @@
             <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
             <td><%= datetime_format(@training.open_at) %></td>
           </tr>
+          <tr>
+            <td><strong><%= model_class.human_attribute_name(:bonus_exp)%>:</strong></td>
+            <td><%= @training.bonus_exp %></td>
+          </tr>
+          <tr><td><strong><%= model_class.human_attribute_name(:bonus_cutoff) %></strong></td>
+          <td><%= datetime_format(@training.bonus_cutoff || @training.open_at) %></td>
+          </tr>
+
         </table>
         <%= render partial: "file_uploads/download_files",
                    locals: {owner: @training}%>

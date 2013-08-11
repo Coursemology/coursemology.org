@@ -18,12 +18,8 @@ class Announcement < ActiveRecord::Base
       return
     end
 
-    ucs.each do |uc|
-      user = uc.user
-
-      delayed_job = UserMailer.delay(:run_at => self.publish_at).new_announcement(user.name, self.description, user.email, redirect_to, self.course.title)
-      self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    end
+    delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, Announcement.to_s, self.id, redirect_to), run_at: self.publish_at)
+    self.queued_jobs.create(delayed_job_id: delayed_job.id)
   end
 
 end

@@ -2,7 +2,7 @@ Hello, <%= @user_name %>!
 
 <p>New announcement from course: <%= @course_name %></p>
 <blockquote>
-  <%= @ann.html_safe %>
+  <%= @ann.description.html_safe %>
 </blockquote>
 
 <p><a href="<%= @redirect_url %>"> Click here</a> to view.</p>

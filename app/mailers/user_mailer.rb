@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "coursemology@gmail.com",
+  default from: "noreply@coursemology.com",
           'Content-Transfer-Encoding' => '7bit'
 
   def new_comment(user, comment, redirect_url)
@@ -61,7 +61,7 @@ class UserMailer < ActionMailer::Base
     @redirect_url = redirect_to
     @ann = ann
     @course_name = course_name
-    mail(to: user_email, subject: "#{course_name}: New Announcement")
+    mail(to: user_email, subject: "#{course_name} New Announcement: #{ann.title}")
   end
 
   def new_mission(user_name, user_email, mission_title, course_name, redirect_to)

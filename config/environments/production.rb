@@ -76,12 +76,12 @@ JfdiAcademy::Application.configure do
   config.action_mailer.default :charset => "utf-8"
 
   ActionMailer::Base.smtp_settings = {
-    :address => "smtp.gmail.com",
+    :address => "smtp.mandrillapp.com",
     :port => 587,
     :authentication => :plain,
-    :domain => ENV['GMAIL_SMTP_USER'],
-    :user_name => ENV['GMAIL_SMTP_USER'],
-    :password => ENV['GMAIL_SMTP_PASSWORD'],
+    :domain => ENV['MANDRILL_SMTP_USER'],
+    :user_name => ENV['MANDRILL_SMTP_USER'],
+    :password => ENV['MANDRILL_SMTP_PASSWORD'],
   }
 
   config.paperclip_defaults = {
