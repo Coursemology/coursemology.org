@@ -1,7 +1,6 @@
 <table width="100%">
   <col width="10%" />
   <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
-  <tr><td>Submited at: </td><td><%= datetime_format(@submission.created_at) %></td></tr>
   <% if @submission_grading.id %>
       <tr>
         <td>Total grade: </td>
@@ -15,12 +14,19 @@
           <tr><td>Grader: </td><td>Auto graded!</td></tr>
       <% end %>
   <% end %>
+  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submit_at || @submission.created_at) %></td></tr>
+  <tr><td>Mission due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
 </table>
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @submission}%>
 <hr/>
 
 <p class="well"><%= @mission.description.html_safe %></p>
+
+<% if (@submission.submit_at || @submission.created_at) > @mission.close_at %>
+    <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
+<% end %>
+
 
 <%= form_for [@course, @mission, @submission, @submission_grading],
              html: { class: "form-horizontal" } do |f| %>
