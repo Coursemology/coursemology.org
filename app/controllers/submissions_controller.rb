@@ -99,6 +99,7 @@ class SubmissionsController < ApplicationController
 
   def edit
     @questions = @mission.get_all_questions
+    @submission.build_initial_answers(current_user)
     @std_answers = {}
     @std_coding_answers = {}
     @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }

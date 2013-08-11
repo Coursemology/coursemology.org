@@ -43,6 +43,24 @@ class Submission < ActiveRecord::Base
     self.sbm_answers.map { |sbm| sbm.answer }
   end
 
+  def build_initial_answers(current_user)
+    self.mission.get_all_questions.each do |qn|
+      sa = nil
+      if qn.class == Question && !self.std_answers.where(question_id:qn.id).first
+        sa = self.std_answers.build({text: ''})
+        sa.question = qn
+      elsif qn.class == CodingQuestion && !self.std_coding_answers.where(qn_id:qn.id).first
+        sa = self.std_coding_answers.build({code: ''})
+        sa.qn = qn
+      end
+      if sa
+        sa.student = current_user
+        sa.std_course = self.std_course
+        self.save
+      end
+    end
+  end
+
   def fetch_params_answers(params,current_user)
     answers = params[:answers] ? params[:answers] : []
 
@@ -120,7 +138,7 @@ class Submission < ActiveRecord::Base
       return
     end
     std_course.get_staff_incharge.each do |uc|
-      puts 'notify tutors'
+      #TODO: logging
       UserMailer.delay.new_submission(
           uc.user,
           std_course.user,

@@ -19,6 +19,7 @@
             <% end %>
             </textarea>
         <% else %>
+            <% answer = @std_coding_answers[q.id] %>
             <%=render partial: "do_coding",
                       locals:{answer: @std_coding_answers[q.id],
                               qn: q,
@@ -26,6 +27,19 @@
                       }%>
         <% end %>
         <hr/>
+        <% require 'digest/md5' %>
+        <% ecid =  Digest::MD5.hexdigest(answer.class.to_s << answer.id.to_s) %>
+        <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+        <div class="row">
+          <div class="span8">
+            <%= render partial: "comments/list",
+                       locals: { comments:  answer.comments_json,
+                                 target:    answer,
+                                 header:    "Comments",
+                                 ecid:      ecid,
+                                 margin_left: "0px"} %>
+          </div>
+        </div>
     <% end %>
 
     <br/>

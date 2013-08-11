@@ -378,6 +378,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         setUpLines($("#output"));
         setUp();
     }else{
+        console.log(code_id);
         var $code = $('<textarea class="code" name="code" id="code"></textarea>').val(source).appendTo($wrapper);
 //        var $save = $('<input type="button" class="btn" value="Save Code" />').appendTo($wrapper);
         var editor = CodeMirror.fromTextArea($("#code").get(0), {

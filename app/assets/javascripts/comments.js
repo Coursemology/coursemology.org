@@ -40,7 +40,8 @@ var Comment = (function(){
         var $li = $('<li class="textarea" />');
         $li.append('<textarea class="annotate-box" style="margin-bottom: 9px" />');
 
-        var $but = $('<button class="btn">Comment</button>').click(function(){
+        var $but = $('<a href="#" class="btn">Comment</a>').click(function(evt){
+            evt.preventDefault();
             var $ta = $(this).parent().find('textarea');
             if ($ta.attr('disabled') == 'disabled') return false;
 
@@ -61,6 +62,7 @@ var Comment = (function(){
                 });
             }
         });
+
         $but.appendTo($li);
         return $li;
     }

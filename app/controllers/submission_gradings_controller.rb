@@ -20,6 +20,8 @@ class SubmissionGradingsController < ApplicationController
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
     end
 
+    @do_grading = true
+
   end
 
   def create

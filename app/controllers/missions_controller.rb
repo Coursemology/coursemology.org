@@ -142,12 +142,15 @@ class MissionsController < ApplicationController
       return
     end
     type = params[:answer_type] == 'code' ? CodingQuestion : Question
-    if type != @mission.get_all_questions.first.class
-      @mission.get_all_questions.first.destroy
+    previous_qn = @mission.get_all_questions.first
+    if type != previous_qn.class
       qn = type == CodingQuestion ? @mission.coding_questions.build : @mission.questions.build
       qn.max_grade = params[:max_grade]
       @mission.save
       @mission.update_grade
+    end
+    if previous_qn
+      previous_qn.destroy
     end
   end
 end

@@ -4,7 +4,10 @@
 <% require 'digest/md5' %>
 <table>
   <tr><td style="width: 100px">Student: </td><td><%= @submission.std_course.user.name %></td></tr>
-  <tr><td>Submited at:</td><td><%= datetime_format(@submission.updated_at) %> </td></tr>
+  <tr><td>Status:</td><td><strong><%= @submission.status  %></strong></td></tr>
+  <% if @submission.submitted? %>
+      <tr><td>Submited at:</td><td><%= datetime_format(@submission.updated_at) %> </td></tr>
+  <% end %>
   <% if @grading %>
       <tr>
         <td>Total grade: </td>
