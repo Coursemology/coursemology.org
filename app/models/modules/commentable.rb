@@ -45,6 +45,7 @@ module Commentable
 
   def comments_json
     responds = []
+
     self.comments.each do |c|
       responds.append({
                           c:  style_format(c.text),

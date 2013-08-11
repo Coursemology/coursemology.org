@@ -89,8 +89,6 @@ class TrainingSubmissionsController < ApplicationController
         end
       end
     end
-
-    puts @qadata
   end
 
   def new
