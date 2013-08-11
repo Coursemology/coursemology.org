@@ -325,3 +325,19 @@ if PreferableItem.count == 32
                          description:   "Enable Re-attempt allows students to do training again to get a fraction of the full EXP.",
                          default_display: true
 end
+
+if PreferableItem.count == 33
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "bonus-exp",
+                         default_value: "Bonus EXP",
+                         description:   "Bonus exp for finishing early",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Column",
+                         name:          "bonus-cutoff",
+                         default_value: "Bonus Cutoff",
+                         description:   "Bonus cutoff time",
+                         default_display: true
+end

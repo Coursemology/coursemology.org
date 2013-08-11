@@ -36,6 +36,7 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def update_grade
+    self.submit_at = DateTime.now
     subm_grading = self.get_final_grading
     subm_grading.update_grade
     subm_grading.update_exp_transaction

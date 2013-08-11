@@ -104,7 +104,6 @@ class TrainingSubmissionsController < ApplicationController
     @training_submission.std_course = curr_user_course
     @training_submission.training = @training
     @training_submission.open_at = DateTime.now
-    @training_submission.submit_at = DateTime.now
     @training_submission.current_step = 1
 
     # Is it the first submission? Otherwise set the multiplier to 1/5
@@ -121,7 +120,7 @@ class TrainingSubmissionsController < ApplicationController
     #      course_training_training_submission_url(@course, @training, @training_submission)
     #  )
     #end
-    if curr_user_course.is_student?
+    if curr_user_course.is_student? && sbm_count == 0
       Activity.started_asm(curr_user_course, @training)
     end
 

@@ -14,6 +14,7 @@ class SubmissionGrading < ActiveRecord::Base
   def update_exp_transaction
     puts 'update_exp'
     asm = self.sbm.get_asm
+    puts self.exp_transaction.to_json
     if !self.exp_transaction
       self.exp_transaction = ExpTransaction.new
       self.exp_transaction.giver = self.grader
@@ -28,6 +29,9 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.exp = self.total_grade * asm.exp / asm.max_grade
       if sbm.has_multiplier?
         self.exp_transaction.exp *= sbm.multiplier
+      else
+        puts "bonus!"
+        self.exp_transaction.exp += sbm.get_bonus
       end
     end
     self.exp_transaction.save

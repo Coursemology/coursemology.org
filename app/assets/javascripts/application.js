@@ -92,3 +92,11 @@ function jfdiFormat(element){
 String.prototype.nl2br = function(){
     return (this + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
 };
+
+function IsNumeric(input) {
+    return (input - 0) == input && input.length > 0;
+}
+
+function IsPositive(input) {
+    return IsNumeric(input) && (input - 0) >= 0
+}

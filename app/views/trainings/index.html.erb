@@ -109,6 +109,20 @@
             </td>
         <% end %>
 
+        <% if to_display.include? 'bonus-exp' %>
+            <td><%= training.bonus_exp %></td>
+        <% end %>
+        <% if to_display.include? 'bonus-cutoff' %>
+            <% cutoff_time  = training.bonus_cutoff || training.open_at %>
+            <td>
+            <% if @time_format.prefer_value == 'ago' %>
+                <%= if cutoff_time > Time.now then time_ago_in_words(cutoff_time) else '----' end%>
+            <% else %>
+                <%= cutoff_time.strftime(@time_format.prefer_value)  %>
+            <% end %>
+            </td>
+        <% end %>
+
         <% if curr_user_course.id && can?(:manage, TrainingSubmission) %>
             <td>
               <% if submission %>
@@ -117,15 +131,15 @@
                                   edit_course_training_training_submission_path(@course, training, submission,
                                                                                 anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
                   <% else %>
-                    <% if @reattempt && @reattempt.display %>
-                      <%= link_to "Revise",
-                                  new_course_training_training_submission_path(@course, training),
-                                  class: 'btn' %>
-                    <% else %>
-                      <%= link_to "Revise",
-                                  edit_course_training_training_submission_path(@course, training, submission,
-                                  anchor: 'training-stop-pos', step: 1), class: 'btn' %>
-                    <% end %>
+                      <% if @reattempt && @reattempt.display %>
+                          <%= link_to "Revise",
+                                      new_course_training_training_submission_path(@course, training),
+                                      class: 'btn' %>
+                      <% else %>
+                          <%= link_to "Revise",
+                                      edit_course_training_training_submission_path(@course, training, submission,
+                                                                                    anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+                      <% end %>
                   <% end %>
               <% else %>
                   <%= link_to 'Start',

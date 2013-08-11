@@ -8,7 +8,7 @@ class Training < ActiveRecord::Base
   include ActivityObject
   include Assignment
 
-  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title
+  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff
 
   belongs_to :creator, class_name: "User"
   belongs_to :course

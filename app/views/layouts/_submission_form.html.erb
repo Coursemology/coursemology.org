@@ -80,9 +80,6 @@
     <% end %>
 <% end %>
 <script>
-    function IsNumeric(input) {
-        return (input - 0) == input && input.length > 0;
-    }
 
     function suggestEXP(grade, max, exp, expId) {
         if (!IsNumeric(grade) || (grade > max)) {

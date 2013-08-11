@@ -14,7 +14,7 @@
     <div class="control-group">
       <%= f.label :exp, :class => 'control-label' %>
       <div class="controls">
-        <%= f.number_field :exp, :class => 'number_field input-medium', min:"1" %>
+        <%= f.text_field :exp, :class => 'number_field input-medium', id:'training-exp'%>
       </div>
     </div>
     <div class="control-group">
@@ -25,6 +25,26 @@
                            :value => datetime_format(@training.open_at),
                            :class => 'input-medium',
                            id: "open_at"%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :bonus_exp, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :bonus_exp, class: 'number_field input-medium', id: 'bonus-exp' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :bonus_cutoff, class: 'control-label' %>
+      <div class='controls'>
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :bonus_cutoff,
+                           value: datetime_format(@training.bonus_cutoff),
+                           class: 'input-medium',
+                           id: 'bonus-cutoff-time'%>
           <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
@@ -43,7 +63,7 @@
     <!--for file uploads-->
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: "assignment_update" %>
+      <%= f.submit nil, :class => 'btn btn-primary', id: "training-update" %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>

@@ -14,7 +14,7 @@
     <div class="control-group">
       <%= f.label :exp, :class => 'control-label' %>
       <div class="controls">
-        <%= f.number_field :exp, :class => 'number_field input-medium',min:"1" %>
+        <%= f.text_field :exp, :class => 'number_field input-medium',id:"mission-exp" %>
       </div>
     </div>
     <div class="control-group">
@@ -93,7 +93,7 @@
     </div>
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: "assignment_update" %>
+      <%= f.submit nil, :class => 'btn btn-primary', id: "mission-update" %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>

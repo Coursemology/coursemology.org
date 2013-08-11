@@ -40,4 +40,14 @@ module Sbm
   def has_multiplier?
     self.respond_to?(:multiplier) && self.multiplier
   end
+
+  def get_bonus
+    if self.class == TrainingSubmission
+      training = self.training
+      if training.bonus_cutoff > Time.now
+        return training.bonus_exp
+      end
+    end
+     0
+  end
 end

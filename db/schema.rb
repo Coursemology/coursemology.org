@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130811121721) do
+ActiveRecord::Schema.define(:version => 20130811190133) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -645,14 +645,16 @@ ActiveRecord::Schema.define(:version => 20130811121721) do
     t.integer  "course_id"
     t.integer  "creator_id"
     t.string   "title"
-    t.text     "description", :limit => 255
+    t.text     "description",  :limit => 255
     t.integer  "exp"
     t.datetime "open_at"
     t.integer  "pos"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.integer  "max_grade"
     t.time     "deleted_at"
+    t.integer  "bonus_exp"
+    t.datetime "bonus_cutoff"
   end
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"

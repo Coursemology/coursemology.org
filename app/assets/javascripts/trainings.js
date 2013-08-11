@@ -7,25 +7,80 @@
  */
 $(document).ready(function(){
 
-    $("#assignment_update").click(function(e){
+    $("#mission-update").click(function(e) {
         start = date_from_string($("#open_at").val());
         end = date_from_string($("#close_at").val());
 
+        error_msg = [];
         if((typeof start != 'undefined') && (typeof end != 'undefined')) {
             if(start >= end) {
-                e.preventDefault();
-                alert("Close time should be after open time!");
+                error_msg.push('Close time should be after open time.');
             }
         }
         grade = $("#mission-max-grade");
-        if (grade.size() > 0) {
-            checked = $("#mission-format-checkbox").is(':checked');
-              if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
-                  e.preventDefault();
-                  alert("Please specify a proper grade!");
-              }
+        checked = $("#mission-format-checkbox").is(':checked');
+        if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
+            error_msg.push('Please specify a proper grade.');
+        }
+
+        mission_exp = $("#mission-exp").val();
+        if(!IsPositive(mission_exp)) {
+            error_msg.push('Please specify a proper value for EXP.');
+        }
+
+        if (error_msg.length > 0) {
+            $('html,body').scrollTop(0);
+            e.preventDefault();
+            showErrorNotice(error_msg)
         }
     });
+
+    $("#training-update").click(function(e){
+        start = date_from_string($("#open_at").val());
+        bonus_cutoff = date_from_string($("#bonus-cutoff-time").val());
+
+        error_msg = [];
+        if((typeof start != 'undefined') && (typeof bonus_cutoff != 'undefined')) {
+            if(start >= bonus_cutoff) {
+                error_msg.push("Cutoff time should be after open time.");
+            }
+        }
+
+        training_exp = $('#training-exp').val();
+        if(!IsPositive(training_exp)) {
+            error_msg.push('Please specify a proper value for EXP.')
+        }
+
+        bonus_exp = $('#bonus-exp').val();
+        if(!IsPositive(bonus_exp) ) {
+            error_msg.push('Please specify a proper value for bonus EXP.')
+        }
+
+        if (error_msg.length > 0) {
+            e.preventDefault();
+            $('html,body').scrollTop(0);
+            showErrorNotice(error_msg)
+        }
+
+    });
+
+    function showErrorNotice(error_msg) {
+        if (error_msg.length == 0)
+            return
+
+        message = $('<ul style="margin: 0px 0px 0px 10px"></ul>');
+        for (var i = 0; i < error_msg.length; ++i) {
+            message.append('<li type="circle">'+error_msg[i]+'</li>')
+        }
+
+        var notice = $('.alert');
+        notice.text("");
+        notice._removeClass('hidden');
+        notice.removeClass("alert-success");
+        notice.addClass("alert-error");
+        message.appendTo(notice);
+        notice.slideDown();
+    }
     function date_from_string(str) {
         if (typeof str == 'undefined')
             return;

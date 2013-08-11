@@ -60,8 +60,10 @@ class TrainingsController < ApplicationController
   end
 
   def new
-    @training.exp = 1000
+    @training.exp = 200
     @training.open_at = DateTime.now.beginning_of_day
+    @training.bonus_exp = 0
+    @training.bonus_cutoff = DateTime.now.beginning_of_day + 1
     @tags = @course.tags
     @asm_tags = {}
   end
