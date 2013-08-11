@@ -29,6 +29,8 @@ class UserCoursesController < ApplicationController
       @user_course.user.email = params[:email].strip
     end
 
+    @user_course.is_phantom =  params[:is_phantom] || false
+
     tut_group_assign
 
     respond_to do |format|

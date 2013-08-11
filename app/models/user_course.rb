@@ -3,7 +3,7 @@ class UserCourse < ActiveRecord::Base
 
   include Rails.application.routes.url_helpers
 
-  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
+  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom
 
   before_create :init
   after_create  :notify_student
@@ -108,8 +108,10 @@ class UserCourse < ActiveRecord::Base
     if new_level && self.level != new_level && self.is_student?
       self.level = new_level
       self.save
-      Activity.reached_lvl(self, new_level)
-      Notification.leveledup(self, new_level)
+      unless self.is_phantom?
+        Activity.reached_lvl(self, new_level)
+        Notification.leveledup(self, new_level)
+      end
     end
 
     self.update_achievements
@@ -146,7 +148,7 @@ class UserCourse < ActiveRecord::Base
     if !uach && self.is_student?
       uach = self.user_achievements.build
       uach.achievement = ach
-      if should_notify
+      if should_notify && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
       end

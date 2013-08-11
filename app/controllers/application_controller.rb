@@ -154,18 +154,23 @@ class ApplicationController < ActionController::Base
 
     if can? :manage, Course
       @admin_nav_items = []
+      if curr_user_course.is_staff?
+        @admin_nav_items << {
+            text: "My Students",
+            url: course_manage_group_url(@course),
+            icon: "icon-group"
+        }
+      end
       @admin_nav_items << {
           text: "Manage Staff",
           url:  course_staff_url(@course),
           icon: "icon-user"
       }
-      if curr_user_course.is_staff?
-        @admin_nav_items << {
-            text: "My Students",
-            url: course_manage_students_url(@course),
-            icon: "icon-group"
-        }
-      end
+      @admin_nav_items << {
+          text: "Manage Students",
+          url:  course_manage_students_url(@course),
+          icon: "icon-user"
+      }
       @admin_nav_items << {
           text:   "Levels",
           url:    course_levels_url(@course),

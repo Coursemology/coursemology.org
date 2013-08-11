@@ -39,7 +39,7 @@
 
 <table class="activities">
   <% @activities.each do |act| %>
-      <% unless act.actor_course.nil? %>
+      <% unless act.actor_course.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? %>
           <tr>
             <td width="25px">
               <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">

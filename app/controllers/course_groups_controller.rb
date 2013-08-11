@@ -1,9 +1,9 @@
 class CourseGroupsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, only: [:manage_students,:add_student]
+  before_filter :load_general_course_data, only: [:manage_group,:add_student]
   before_filter :access_control
 
-  def manage_students
+  def manage_group
     puts "manage students"
     @students_courses = []
     uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
@@ -33,10 +33,10 @@ class CourseGroupsController < ApplicationController
 
     respond_to do |format|
       if tg_exist
-        format.html { redirect_to course_manage_students_url(@course),
+        format.html { redirect_to course_manage_group_url(@course),
                                   notice: "Student already in your group."}
       else
-        format.html { redirect_to course_manage_students_url(@course) }
+        format.html { redirect_to course_manage_group_url(@course) }
       end
     end
   end
@@ -45,10 +45,10 @@ class CourseGroupsController < ApplicationController
     respond_to do |format|
       if tutorial_group
         tutorial_group.destroy
-        format.html { redirect_to course_manage_students_url(@course),
+        format.html { redirect_to course_manage_group_url(@course),
                                   notice:"Student has been successfully removed." }
       else
-        format.html { redirect_to course_manage_students_url(@course),
+        format.html { redirect_to course_manage_group_url(@course),
                                   alert:"This student is not in your group!" }
       end
     end
@@ -68,7 +68,7 @@ class CourseGroupsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html { redirect_to course_manage_students_url,
+      format.html { redirect_to course_manage_group_url,
                                 notice: "EXPs have been awarded to #{count} students!"}
     end
   end

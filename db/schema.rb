@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130809154027) do
+ActiveRecord::Schema.define(:version => 20130810154632) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -682,10 +682,11 @@ ActiveRecord::Schema.define(:version => 20130809154027) do
     t.integer  "course_id"
     t.integer  "exp"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "level_id"
     t.time     "deleted_at"
+    t.boolean  "is_phantom", :default => false
   end
 
   add_index "user_courses", ["course_id"], :name => "index_user_courses_on_course_id"
