@@ -22,6 +22,8 @@
             <td><%= @training.open_at %></td>
           </tr>
         </table>
+        <%= render partial: "file_uploads/download_files",
+                   locals: {owner: @training}%>
       </div>
     </td>
 

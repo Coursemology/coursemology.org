@@ -93,9 +93,6 @@ class TrainingsController < ApplicationController
 
   def update
     @training.update_tags(params[:tags])
-    if params[:files]
-      @training.attach_files(params[:files].values)
-    end
     reschedule_email = Time.parse(params[:training][:open_at]) != @training.open_at
     respond_to do |format|
       if @training.update_attributes(params[:training])

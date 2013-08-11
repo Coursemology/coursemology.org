@@ -17,8 +17,7 @@ class FileUploadsController < ApplicationController
   end
 
   def create
-    puts "upload file",params
-    if !current_user
+    unless current_user
       respond_to do |format|
         format.html { render text: "Unauthorized access!" }
       end
@@ -29,22 +28,21 @@ class FileUploadsController < ApplicationController
       authorize! :upload_file, @course
     end
 
-    if params[:file_upload].to_s.size > 0
-      file_upload = FileUpload.create({
-                                          creator: current_user,
-                                          file: params[:file_upload]
-                                      })
-      puts file_upload
-      puts "end here",@course
-    else
-      file_upload = FileUpload.create({
-                                          creator: current_user,
-                                          owner: @course,
-                                          file: params[:files].first
-                                      })
-      puts params[:files].first
-      puts "end here"
+    owner = nil
+    if params[:mission_id]
+      owner =  Mission.find_by_id(params[:mission_id])
     end
+
+    if params[:training_id]
+      owner = Training.find_by_id(params[:training_id])
+    end
+
+
+    file_upload = FileUpload.create({
+                                        creator: current_user,
+                                        owner: owner || @course,
+                                        file: params[:files].class == Array ? params[:files].first : params[:files]
+                                    })
 
     if file_upload.save
       if file_upload.file_content_type == 'application/zip' && params[:_page_name] == "course_edit"

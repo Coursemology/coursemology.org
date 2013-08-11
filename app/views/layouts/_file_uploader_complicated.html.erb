@@ -10,12 +10,12 @@
         <span class="btn btn-success fileinput-button">
           <i class="icon-plus icon-white"></i>
           <span>Add files...</span>
-          <input id="file_upload_upload" type="file" name="file_upload" multiple>
+          <input id="file_upload_upload" type="file" name="files" multiple>
         </span>
-        <button type="submit" class="btn btn-primary start">
-          <i class="icon-upload icon-white"></i>
-          <span>Start upload</span>
-        </button>
+        <!--<button type="submit" class="btn btn-primary start">-->
+          <!--<i class="icon-upload icon-white"></i>-->
+          <!--<span>Start upload</span>-->
+        <!--</button>-->
         <button type="reset" class="btn btn-warning cancel">
           <i class="icon-ban-circle icon-white"></i>
           <span>Cancel upload</span>
@@ -129,6 +129,8 @@
         });
 
         $('#fileupload').fileupload({
+            maxFileSize: 5000000,
+            autoUpload: true,
             uploadTemplateId: 'template-upload-complicated',
             downloadTemplateId: 'template-download-complicated',
             formData: [

@@ -46,7 +46,7 @@ class MissionsController < ApplicationController
     @question.max_grade = 10
     @coding_question = CodingQuestion.new
     @coding_question.max_grade = 10
-    respond_to do |format|
+    respond_to   do |format|
       format.html # show.html.erb
     end
   end
@@ -92,9 +92,6 @@ class MissionsController < ApplicationController
 
   def update
     @mission.update_tags(params[:tags])
-    if params[:files]
-      @mission.attach_files(params[:files].values)
-    end
     reschedule_email = Time.parse(params[:mission][:open_at]) != @mission.open_at
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
