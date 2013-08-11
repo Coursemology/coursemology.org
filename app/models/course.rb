@@ -55,8 +55,7 @@ class Course < ActiveRecord::Base
   end
 
   def student_courses
-    std = Role.find_by_name("student")
-    self.user_courses.where(role_id: std.id)
+    self.user_courses.student
   end
 
   def get_pending_gradings(curr_user_course)
