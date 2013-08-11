@@ -8,7 +8,7 @@ class Mission < ActiveRecord::Base
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
-                  :description, :exp, :open_at, :pos, :timelimit, :title
+                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 

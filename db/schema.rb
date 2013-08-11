@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130810154632) do
+ActiveRecord::Schema.define(:version => 20130811121721) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -345,12 +345,13 @@ ActiveRecord::Schema.define(:version => 20130810154632) do
     t.integer  "attempt_limit"
     t.integer  "auto_graded"
     t.integer  "pos"
-    t.text     "description",   :limit => 255
+    t.text     "description",     :limit => 255
     t.integer  "creator_id"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.string   "title"
     t.integer  "max_grade"
+    t.boolean  "single_question",                :default => false
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"

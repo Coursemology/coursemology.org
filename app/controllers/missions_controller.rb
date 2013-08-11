@@ -71,16 +71,20 @@ class MissionsController < ApplicationController
   end
 
   def create
-    puts "params",params
     @mission.pos = @course.missions.count + 1
     @mission.creator = current_user
     @mission.update_tags(params[:tags])
-    puts "mission_saving",@mission
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
+    if  @mission.single_question?
+      qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
+      qn.max_grade = params[:max_grade]
+    end
+
     respond_to do |format|
       if @mission.save
+        @mission.update_grade
         @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
@@ -93,8 +97,18 @@ class MissionsController < ApplicationController
   def update
     @mission.update_tags(params[:tags])
     reschedule_email = Time.parse(params[:mission][:open_at]) != @mission.open_at
+
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
+
+        if @mission.single_question? && @mission.get_all_questions.count > 1
+          flash[:error] = "Mission already have several questions, can't change the format."
+          @mission.single_question = false
+          @mission.save
+        end
+        update_single_question_type
+        update_mission_max_grade
+
         if reschedule_email
           @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
         end
@@ -111,6 +125,29 @@ class MissionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_missions_url,
                                 notice: "The mission #{@mission.title} has been removed." }
+    end
+  end
+
+  def update_mission_max_grade
+    if @mission.single_question? && @mission.max_grade != params[:max_grade].to_i
+      qn = @mission.get_all_questions.first
+      qn.max_grade = params[:max_grade]
+      qn.save
+      @mission.update_grade
+    end
+  end
+
+  def update_single_question_type
+    unless @mission.single_question?
+      return
+    end
+    type = params[:answer_type] == 'code' ? CodingQuestion : Question
+    if type != @mission.get_all_questions.first.class
+      @mission.get_all_questions.first.destroy
+      qn = type == CodingQuestion ? @mission.coding_questions.build : @mission.questions.build
+      qn.max_grade = params[:max_grade]
+      @mission.save
+      @mission.update_grade
     end
   end
 end

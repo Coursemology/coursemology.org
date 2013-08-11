@@ -1,9 +1,11 @@
 <% @qadata.each do |qid, qa| %>
     <hr/>
-    <h3>Question <%= qa[:i] %>:</h3>
-    <div class="row-fluid">
-      <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
-    </div>
+    <% unless @mission.single_question? %>
+        <h3>Question <%= qa[:i] %>:</h3>
+        <div class="row-fluid">
+          <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
+        </div>
+    <% end %>
     <h3>Answer:</h3>
     <% if qa[:a] %>
         <% if qa[:q].class == CodingQuestion %>
@@ -43,13 +45,13 @@
               <% if mode == 'view' %>
                   <strong><%= qa[:g].exp if qa[:g] %></strong>
               <% else %>
-              <input id = "<%= qid %>"
-                     type="text"
-                     name="ags[<%= qa[:g].id if qa[:g] %>][exp]"
-                     value="<%= qa[:g].exp if qa[:g] %>"
-                     max="<%= exp %>"
-                     class="input-medium exp-input"
-                     required/>
+                  <input id = "<%= qid %>"
+                         type="text"
+                         name="ags[<%= qa[:g].id if qa[:g] %>][exp]"
+                         value="<%= qa[:g].exp if qa[:g] %>"
+                         max="<%= exp %>"
+                         class="input-medium exp-input"
+                         required/>
               <% end %>
               <strong> /  <%= exp %></strong>
               <br><br>

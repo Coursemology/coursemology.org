@@ -1,7 +1,7 @@
 <% sbm_answer = std_answer.sbm_answers.first %>
 <% submission = sbm_answer ? sbm_answer.sbm : nil %>
 <% if !submission %>
-  <% return %>
+    <% return %>
 <% end %>
 
 <% question = std_answer.question %>
@@ -22,5 +22,7 @@
     <!--<span class="student-tag common ">Chao Recruit</span>-->
     </span>
   </div>
-  <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.split(" ").first(13).join(" ").html_safe %>... </span></div>
+  <% unless mission.single_question? %>
+      <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.split(" ").first(13).join(" ").html_safe %>... </span></div>
+  <% end %>
 </div>

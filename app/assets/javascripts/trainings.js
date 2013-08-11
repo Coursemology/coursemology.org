@@ -17,6 +17,14 @@ $(document).ready(function(){
                 alert("Close time should be after open time!");
             }
         }
+        grade = $("#mission-max-grade");
+        if (grade.size() > 0) {
+            checked = $("#mission-format-checkbox").is(':checked');
+              if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
+                  e.preventDefault();
+                  alert("Please specify a proper grade!");
+              }
+        }
     });
     function date_from_string(str) {
         if (typeof str == 'undefined')

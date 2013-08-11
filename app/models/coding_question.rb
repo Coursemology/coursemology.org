@@ -11,7 +11,13 @@ class CodingQuestion < ActiveRecord::Base
   has_many :comments, as: :commentable
   has_one :pending_comments, as: :answer
 
+  before_create :set_default_data
+
   def data_hash
     JSON.parse(self.data)
+  end
+
+  def set_default_data
+    self.data = '{"type":"do","language":"python","prefill":""}'
   end
 end
