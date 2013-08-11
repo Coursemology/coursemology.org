@@ -108,13 +108,13 @@ class UserCourse < ActiveRecord::Base
     end
     if new_level && self.level != new_level && self.is_student?
       self.level = new_level
-      self.save
       unless self.is_phantom?
         Activity.reached_lvl(self, new_level)
         Notification.leveledup(self, new_level)
       end
     end
 
+    self.save
     self.update_achievements
   end
 
