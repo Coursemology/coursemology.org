@@ -40,6 +40,8 @@ class Course < ActiveRecord::Base
 
   has_many :comment_subscriptions, dependent: :destroy
 
+  has_many :mass_enrollment_emails, dependent: :destroy
+
   def asms
     missions + trainings
   end
@@ -143,5 +145,12 @@ class Course < ActiveRecord::Base
         pref.save
       end
     end
+  end
+
+  def enrol_user(user, role)
+    if UserCourse.where(course_id: self, user_id: user).first
+      return
+    end
+    self.user_courses.create(user_id: user.id, role_id: role.id)
   end
 end

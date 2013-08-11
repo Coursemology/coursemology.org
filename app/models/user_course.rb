@@ -3,9 +3,10 @@ class UserCourse < ActiveRecord::Base
 
   include Rails.application.routes.url_helpers
 
-  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id
+  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom
 
   before_create :init
+  after_create  :notify_student
 
   scope :lecturer, where(:role_id => Role.lecturer.first)
   scope :tutor, where(:role_id => Role.tutor.first)
@@ -79,7 +80,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_unseen_notifications
-     self.notifications - self.seen_notifications
+    self.notifications - self.seen_notifications
   end
 
   def mark_as_seen(obj)
@@ -107,8 +108,10 @@ class UserCourse < ActiveRecord::Base
     if new_level && self.level != new_level && self.is_student?
       self.level = new_level
       self.save
-      Activity.reached_lvl(self, new_level)
-      Notification.leveledup(self, new_level)
+      unless self.is_phantom?
+        Activity.reached_lvl(self, new_level)
+        Notification.leveledup(self, new_level)
+      end
     end
 
     self.update_achievements
@@ -145,7 +148,7 @@ class UserCourse < ActiveRecord::Base
     if !uach && self.is_student?
       uach = self.user_achievements.build
       uach.achievement = ach
-      if should_notify
+      if should_notify && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
       end
@@ -214,6 +217,14 @@ class UserCourse < ActiveRecord::Base
 
   def subscribed_topics
     self.comment_subscriptions.map { |cs| cs.topic }.uniq
+  end
+
+  def notify_student
+    if self.course.email_notify_enabled? PreferableItem.new_student
+      if self.role.name == 'student'
+        UserMailer.delay.new_student(self.user, self.course)
+      end
+    end
   end
 
 end

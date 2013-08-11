@@ -1,0 +1,59 @@
+<h1>Manage Students</h1>
+
+<% if @phantom %>
+    <% url = course_manage_students_path(@course) + '?phantom=true' %>
+    <a href="<%= course_manage_students_path(@course) %>?phantom=false" class="btn">Show Real Students</a>
+<% else %>
+    <% url = course_manage_students_path(@course) + '?phantom=false' %>
+    <a href="<%= course_manage_students_path(@course) %>?phantom=true" class="btn">Show Only Phantom Students</a>
+<% end %>
+
+<br><br>
+<% if can? :manage, UserCourse %>
+    <% tas = @staff_courses.map {|tac| [tac.user.name, tac.id] }.unshift(["Unassigned", -1]) %>
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th><%= sortable 'tutor', url %></th>
+        <th>Phantom</th>
+        <th></th>
+      </tr>
+      <% @student_courses.each_with_index do |student_course| %>
+          <% student = student_course.user %>
+          <%= form_for [@course,student_course],
+                       html: { method: :put, class: "form-horizontal" }  do |f| %>
+              <tr>
+                <td>
+                  <input type="text" name="name" value="<%= student.name %>" required>
+                </td>
+                <td>
+                  <input type="email" name="email" value="<%= student.email %>" required>
+                </td>
+                <td>
+                  <%tutor = student_course.get_my_tutors.first %>
+                  <% if tutor %>
+                      <%= select "tutor","", tas, {:selected => "#{tutor.id}" }%>
+                  <% else %>
+                      <%= select "tutor","", tas, {:selected => "#{-1}" }%>
+                  <% end %>
+                </td>
+                <td><input type="checkbox" name="is_phantom" <%= 'checked' if student_course.is_phantom? %>> </td>
+                <td>
+                  <input type="hidden" name="redirect_back_url" value="<%= url %>">
+                  <button type="submit" class="btn">
+                    <i class="icon-ok"></i>
+                  </button>
+                  <%= link_to course_user_course_path(@course, student_course),
+                              method: :delete,
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+                </td>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+    <%= paginate @student_courses %>
+<% end %>

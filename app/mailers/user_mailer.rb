@@ -92,4 +92,12 @@ class UserMailer < ActionMailer::Base
     @email_was = email_was
     mail(to: new_email, subject: "Your email has been updated.")
   end
+
+  def enrollment_invitation(std_email, std_name, lecturer, course_title, redirect_url)
+    @user_name = std_name
+    @lecturer = lecturer
+    @course_title = course_title
+    @redirect_url = redirect_url
+    mail(to: std_email, subject: "Invitation to enroll in: #{course_title}")
+  end
 end

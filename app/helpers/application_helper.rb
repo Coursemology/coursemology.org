@@ -75,4 +75,18 @@ module ApplicationHelper
 
     html.html_safe
   end
+
+  def sortable(column, url, title = nil)
+    title ||= column.titleize
+    css_class = "current #{sort_direction}"
+    direction = sort_direction == "desc" ? "asc" : "desc"
+    if sort_direction == "asc"
+      icon = '<i class="icon-chevron-up"></i>'
+    elsif sort_direction == 'desc'
+      icon = '<i class="icon-chevron-down"></i>'
+    else
+      icon = '(sortable)'
+    end
+    "<a href='#{url}&sort=#{column}&direction=#{direction}' >#{title} #{icon}</a>".html_safe
+  end
 end

@@ -39,9 +39,9 @@ JfdiAcademy::Application.routes.draw do
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
     match "/staff"            => "user_courses#staff", as: :staff
-    match "/manage_students"  => "course_groups#manage_students", as: :manage_students
+    match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
-    post "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
+    post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
     resources :user_courses do
       resource  :exp_transactions
@@ -121,9 +121,16 @@ JfdiAcademy::Application.routes.draw do
 
     post "preferences" => "course_preferences#update", as: :preferences
 
+    resources :mass_enrollment_emails
+
+    post "send_enrollment_emails" => "mass_enrollment_emails#send_enroll_emails"
+    match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
+    match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
+  match "courses/:id/manage_students" => "courses#manage_students", as: :course_manage_students
   match "courses/:id//pending_gradings"   => "courses#pending_gradings", as: :course_pending_gradings
 
   resources :file_uploads

@@ -29,6 +29,8 @@ class UserCoursesController < ApplicationController
       @user_course.user.email = params[:email].strip
     end
 
+    @user_course.is_phantom =  params[:is_phantom] || false
+
     tut_group_assign
 
     respond_to do |format|
@@ -66,7 +68,7 @@ class UserCoursesController < ApplicationController
       return
     end
     #didn't change
-    if @user_course.get_my_tutors.first.id == params[:tutor].first.to_i
+    if @user_course.get_my_tutors.first and (@user_course.get_my_tutors.first.id == params[:tutor].first.to_i)
       return
     end
 

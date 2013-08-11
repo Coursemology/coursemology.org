@@ -1,10 +1,9 @@
 <div id="html-editor-image-upload-tab" style="display:none">
   <li>
     <%= render partial: "layouts/image_uploader",
-      locals: { container_class: "bootstrap-wysihtml5-insert-image-modal",
-                image_url_class: "bootstrap-wysihtml5-insert-image-url",
-                upload_to: course_file_uploads_path(@course) } %>
+               locals: { container_class: "bootstrap-wysihtml5-insert-image-modal",
+                         image_url_class: "bootstrap-wysihtml5-insert-image-url",
+                         upload_to: course_file_uploads_path(@course) } %>
     <a class="btn" data-wysihtml5-command="insertImage"><i class="icon-picture"></i></a>
   </li>
 </div>
-

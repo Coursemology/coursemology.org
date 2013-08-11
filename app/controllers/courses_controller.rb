@@ -1,6 +1,8 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings]
+  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
+  helper_method :sort_direction
+
 
   def create
     @course = Course.new(params[:course])
@@ -98,24 +100,45 @@ class CoursesController < ApplicationController
   end
 
   def students
-    @lecturer_courses = []
-    @student_courses = []
-    @ta_courses = []
-    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
-    uc_sorted.each do |uc|
-      if uc.is_student?
-        @student_courses << uc
-      elsif uc.is_lecturer?
-        @lecturer_courses << uc
-      elsif uc.is_ta?
-        @ta_courses << uc
+    @lecturer_courses = @course.user_courses.lecturer
+    @student_courses = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
+    @ta_courses = @course.user_courses.tutor
+
+    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
+  end
+
+  def manage_students
+    authorize! :manage, UserCourse
+    if params[:phantom] && params[:phantom] == 'true'
+      @phantom = true
+    else
+      @phantom = false
+    end
+
+    @student_courses = @course.user_courses.student.where(is_phantom: @phantom).sort_by { |uc| uc.user.name.downcase }
+    if sort_column == 'tutor'
+      puts "sort by tutor "
+      @student_courses = @student_courses.sort_by {|uc| uc.tut_courses.first ? uc.tut_courses.first.tut_course_id : 0  }
+      if sort_direction == 'asc'
+        @student_courses = @student_courses.reverse
       end
     end
-    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(20)
+
+    @staff_courses = @course.user_courses.staff
+    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
   end
 
   def pending_gradings
     authorize! :see, :pending_gradings
     @pending_gradings = @course.get_pending_gradings(curr_user_course)
+  end
+
+  def sort_direction
+    params[:direction]
+  end
+
+
+  def sort_column
+    params[:sort]
   end
 end

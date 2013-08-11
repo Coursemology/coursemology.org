@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   if (imgUploadHtml) {
     var options = {
+        "html": true,
       customTemplates: {
         image: function(locale) {
           return imgUploadHtml;

@@ -154,18 +154,23 @@ class ApplicationController < ActionController::Base
 
     if can? :manage, Course
       @admin_nav_items = []
+      if curr_user_course.is_staff?
+        @admin_nav_items << {
+            text: "My Students",
+            url: course_manage_group_url(@course),
+            icon: "icon-group"
+        }
+      end
       @admin_nav_items << {
           text: "Manage Staff",
           url:  course_staff_url(@course),
           icon: "icon-user"
       }
-      if curr_user_course.is_staff?
-        @admin_nav_items << {
-            text: "My Students",
-            url: course_manage_students_url(@course),
-            icon: "icon-group"
-        }
-      end
+      @admin_nav_items << {
+          text: "Manage Students",
+          url:  course_manage_students_url(@course),
+          icon: "icon-user"
+      }
       @admin_nav_items << {
           text:   "Levels",
           url:    course_levels_url(@course),
@@ -188,13 +193,13 @@ class ApplicationController < ActionController::Base
           icon: "icon-bar-chart"
       }
       @admin_nav_items << {
-          text: "Settings",
-          url: edit_course_url(@course),
-          icon: "icon-cog"
-      }
-      @admin_nav_items << {
           text: "Enrollment",
           url: course_enroll_requests_url(@course),
+          icon: "icon-bolt"
+      }
+      @admin_nav_items << {
+          text: "Mass Enrollment",
+          url: course_mass_enrollment_emails_path(@course),
           icon: "icon-bolt"
       }
     end
@@ -203,6 +208,18 @@ class ApplicationController < ActionController::Base
           text: "Duplicate Data",
           url: course_duplicate_url(@course),
           icon: "icon-bolt"
+      }
+    end
+    if can? :manage, Course
+      @admin_nav_items << {
+          text: "Course Settings",
+          url: edit_course_url(@course),
+          icon: "icon-cog"
+      }
+      @admin_nav_items << {
+          text: "Preference Settings",
+          url: course_preferences_path(@course),
+          icon: "icon-cog"
       }
     end
 

@@ -30,9 +30,9 @@
   </tbody>
 </table>
 <div>
-  <a class="update-selected" href="<%= course_enroll_request_approve_selected_path(@course)%>" data-target="<%= ".checkbox-#{type}" %>"/>Approve Selected</a> |
-  <a class="update-selected" href="<%= course_enroll_request_delete_selected_path(@course) %>" data-target="<%= ".checkbox-#{type}" %>"/>Delete Selected</a> |
-  <%= link_to 'Approve All', course_enroll_request_approve_all_path(@course, req_type: type) %></a> |
-  <%= link_to 'Delete All', course_enroll_request_delete_all_path(@course, req_type: type) %></a> |
+  <a class="update-selected" href="<%= course_enroll_request_approve_selected_path(@course)%>" data-target="<%= ".checkbox-#{type}" %>">Approve Selected</a> |
+  <a class="update-selected" href="<%= course_enroll_request_delete_selected_path(@course) %>" data-target="<%= ".checkbox-#{type}" %>">Delete Selected</a> |
+  <%= link_to 'Approve All', course_enroll_request_approve_all_path(@course, req_type: type) %> |
+  <%= link_to 'Delete All', course_enroll_request_delete_all_path(@course, req_type: type) %> |
 </div>
 
