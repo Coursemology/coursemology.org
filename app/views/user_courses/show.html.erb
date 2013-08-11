@@ -14,7 +14,7 @@
         <p><%= @user_course.user.email %></p>
         <% if @user_course.level && (@user_course == curr_user_course || curr_user_course.is_staff?)%>
             <strong><%= @user_course.level.get_title %></strong>
-            <%= link_to  course_user_course_exp_transactions_path(@course, curr_user_course) do%>
+            <%= link_to  course_user_course_exp_transactions_path(@course, @user_course) do%>
                 (View Exp History)
             <% end %>
         <% end %>

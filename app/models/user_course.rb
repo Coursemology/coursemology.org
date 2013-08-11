@@ -96,6 +96,7 @@ class UserCourse < ActiveRecord::Base
     puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
 
     self.exp = self.exp_transactions.sum(&:exp)
+    self.exp = self.exp >= 0 ? self.exp : 0
 
     new_level = nil
     self.course.levels.each do |lvl|

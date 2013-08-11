@@ -61,7 +61,7 @@ class CourseGroupsController < ApplicationController
       count = 0
       exps.each do |std_course_id, exp_str|
         exp = exp_str.to_i
-        if exp > 0
+        if exp != 0
           curr_user_course.manual_exp_award(std_course_id,exp,params[:reason])
           count += 1
         end

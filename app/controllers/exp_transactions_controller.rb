@@ -7,5 +7,6 @@ class ExpTransactionsController < ApplicationController
 
   def show
     @exp_transactions = @user_course.exp_transactions.accessible_by(current_ability).order("created_at DESC")
+    @user = @user_course.user
   end
 end
