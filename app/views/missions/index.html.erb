@@ -116,7 +116,7 @@
         <% end %>
         <% if curr_user_course.id && can?(:manage, Submission) %>
             <td>
-              <% if mission.close_at > Time.now %>
+              <% if mission.open_at < Time.now %>
                   <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
                   <% if submission %>
                       <% if submission.attempting? %>
