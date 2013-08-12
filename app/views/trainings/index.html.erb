@@ -26,8 +26,10 @@
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>
-
-<p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+<% to_display = @display_columns.keys %>
+<% if to_display.include? 'tag' %>
+    <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+<% end %>
 
 <table class="table table-hover assignments">
   <thead>
@@ -48,7 +50,7 @@
   </tr>
   </thead>
   <tbody>
-  <% to_display = @display_columns.keys %>
+
   <% @trainings_with_sbm.each do |tws| %>
       <% training = tws[:training] %>
       <% submission = tws[:submission] %>
@@ -115,11 +117,11 @@
         <% if to_display.include? 'bonus-cutoff' %>
             <% cutoff_time  = training.bonus_cutoff || training.open_at %>
             <td>
-            <% if @time_format.prefer_value == 'ago' %>
-                <%= if cutoff_time > Time.now then time_ago_in_words(cutoff_time) else '----' end%>
-            <% else %>
-                <%= cutoff_time.strftime(@time_format.prefer_value)  %>
-            <% end %>
+              <% if @time_format.prefer_value == 'ago' %>
+                  <%= if cutoff_time > Time.now then time_ago_in_words(cutoff_time) else '----' end%>
+              <% else %>
+                  <%= cutoff_time.strftime(@time_format.prefer_value)  %>
+              <% end %>
             </td>
         <% end %>
 

@@ -25,32 +25,34 @@
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>
-
-<p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+<% to_display = @display_columns.keys %>
+<% if to_display.include? 'tag' %>
+    <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+<% end %>
 
 <table class="table table-hover assignments missions-list-table">
   <thead>
-    <tr>
-      <% @display_columns.each do |key, val| %>
-          <th width="<% if key == 'tag'  %>
+  <tr>
+    <% @display_columns.each do |key, val| %>
+        <th width="<% if key == 'tag'  %>
           15%
           <% elsif key == 'title' %>
           25%
           <% end %>
           "><%= val %></th>
-      <% end %>
+    <% end %>
 
-      <% if curr_user_course.id && can?(:manage, Submission) %>
-          <th width="10%"></th>
-      <% end %>
-      <% if can?(:view_detail, Mission) %>
-          <th width="10%"></th>
-      <% end %>
-    </tr>
+    <% if curr_user_course.id && can?(:manage, Submission) %>
+        <th width="10%"></th>
+    <% end %>
+    <% if can?(:view_detail, Mission) %>
+        <th width="10%"></th>
+    <% end %>
+  </tr>
   </thead>
 
   <tbody>
-  <% to_display = @display_columns.keys %>
+
   <% @missions.each do |mission| %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <% if to_display.include? 'title' %>
