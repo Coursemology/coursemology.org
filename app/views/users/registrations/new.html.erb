@@ -5,7 +5,7 @@
 <div class="span6">
 
   <%= link_to user_omniauth_authorize_path(:facebook) do %>
-    <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
+      <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
   <% end %>
 
   <h2 class="center or-separator">- OR -</h2>
@@ -15,14 +15,14 @@
       <!--TODO-->
       <%= devise_error_messages! %>
 
-    <div class="control-group">
-      <%= f.label :name, class: "control-label" %>
-      <div class="controls">
-        <%= f.text_field :name %>
+      <div class="control-group">
+        <%= f.label :name, class: "control-label" %>
+        <div class="controls">
+          <%= f.text_field :name %>
+        </div>
       </div>
-    </div>
 
-    <!--
+      <!--
     <div class="control-group">
       <%= f.label :display_name, class: "control-label" %>
       <div class="controls">
@@ -31,30 +31,31 @@
     </div>
     -->
 
-    <div class="control-group">
-      <%= f.label :email, class: "control-label" %>
-      <div class="controls">
-        <%= f.email_field :email %>
+      <div class="control-group">
+        <%= f.label :email, class: "control-label" %>
+        <div class="controls">
+          <%= f.email_field :email %>
+        </div>
       </div>
-    </div>
 
-    <div class="control-group">
-      <%= f.label :password, class: "control-label" %>
-      <div class="controls">
-        <%= f.password_field :password %>
+      <div class="control-group">
+        <%= f.label :password, class: "control-label" %>
+        <div class="controls">
+          <%= f.password_field :password %>
+        </div>
       </div>
-    </div>
 
-    <div class="control-group">
-      <%= f.label :password_confirmation, class: "control-label" %>
-      <div class="controls">
-        <%= f.password_field :password_confirmation %>
+      <div class="control-group">
+        <%= f.label :password_confirmation, class: "control-label" %>
+        <div class="controls">
+          <%= f.password_field :password_confirmation %>
+        </div>
       </div>
-    </div>
+      <input type="hidden" name="_token" value="<%= @token %>">
 
-    <div class="form-actions">
-      <%= f.submit "Sign up", class: "btn btn-primary" %>
-    </div>
+      <div class="form-actions">
+        <%= f.submit "Sign up", class: "btn btn-primary" %>
+      </div>
   <% end %>
 
 </div>

@@ -9,7 +9,7 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to)
       when Training.to_s
         new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
-        enrollment_invitations(MassEnrollmentEmail.find_all_by_course_id(course_id), course)
+        enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
     end
 
   end
@@ -38,8 +38,11 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to)
   def enrollment_invitations(enrols, course)
     lecturer = User.find(type_id)
     enrols.each do |enrol|
-      delayed_job = UserMailer.delay.enrollment_invitation(enrol.email, enrol.name, lecturer.name, course.title, redirect_to)
+      enrol.generate_confirm_token
+      url = redirect_to + "?_token="+ enrol.confirm_token
+      delayed_job = UserMailer.delay.enrollment_invitation(enrol.email, enrol.name, lecturer.name, course.title, url)
       enrol.delayed_job_id = delayed_job.id
+
       enrol.save
     end
   end

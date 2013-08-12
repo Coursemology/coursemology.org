@@ -2,12 +2,12 @@
 
 <body id="inner_body" class="inner_body">
 <div id="content" class="welcome_content">
+  <% if flash[:notice] %>
+      <div class="alert alert-info" style="position: absolute; z-index: 200">
+        <%= flash[:notice] %>
+      </div>
+  <% end %>
   <div class="container-fluid">
-    <% if flash[:notice] %>
-        <div class="alert alert-info">
-          <%= flash[:notice] %>
-        </div>
-    <% end %>
     <div id="_slogen" class="_slogen">
       <p style="text-align: center;"><span style="font-family: arial,helvetica,sans-serif;font-size: 14px;color: #707070;">
       Gamified Online Education Platform:
@@ -21,7 +21,6 @@
     </div><div id="_center_image">
     <img src="/images/teaching-wordle_316.png">
   </div>
-
 
     <div id="_sign_up">
       <div id="landerapp_conversionform">

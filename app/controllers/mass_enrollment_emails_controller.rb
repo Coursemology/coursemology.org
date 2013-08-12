@@ -33,6 +33,7 @@ class MassEnrollmentEmailsController < ApplicationController
       enroll_inv = @course.mass_enrollment_emails.build
       enroll_inv.name = std[:name]
       enroll_inv.email = std[:email]
+      enroll_inv.generate_confirm_token
       unless enroll_inv.save
         failed_emails << {
             email: std[:email],

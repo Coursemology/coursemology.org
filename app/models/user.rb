@@ -115,8 +115,12 @@ class User < ActiveRecord::Base
     UserMailer.delay.email_changed(name, email, email_was)
   end
 
-  def auto_enroll_for_invited
+  def auto_enroll_for_invited(confirm_token = nil)
+    puts "auto enroll", email, confirm_token
     invs = MassEnrollmentEmail.where(email: self.email)
+    if !invs.first and confirm_token
+      invs = MassEnrollmentEmail.where(confirm_token: confirm_token)
+    end
 
     invs.each do |inv|
       inv.course.enrol_user(self, Role.find_by_name("student"))
