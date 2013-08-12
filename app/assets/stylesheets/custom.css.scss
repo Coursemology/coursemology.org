@@ -864,6 +864,7 @@ table#studentlist_table{
 }
 .studentlist_box{
   padding:8px;
+  width: 50%;
 }
 .studentlist_box a img{
   border:none;
@@ -890,4 +891,15 @@ div#centre_container
   padding: 8px 18px;
 }
 
+
+a#student-large {
+  color: #0071BC;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+a:hover#student-large {
+  text-decoration: none;
+  color: #2f45bc;
+}
 

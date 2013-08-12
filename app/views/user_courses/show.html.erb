@@ -7,7 +7,7 @@
       </td>
       <td style="padding-left: 10px">
         <% if @user_course.user.uid %>
-            <a href="https://www.facebook.com/<%= @user_course.user.uid %>"><h3><%= @user_course.user.name %></h3></a>
+            <a id="student-large" href="https://www.facebook.com/<%= @user_course.user.uid %>"><%= @user_course.user.name %></a>
         <% else %>
             <h3><%= @user_course.user.name %></h3>
         <% end %>

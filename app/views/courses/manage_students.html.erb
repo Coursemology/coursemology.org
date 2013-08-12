@@ -1,4 +1,12 @@
-<h1>Manage Students</h1>
+<div class="page-header">
+  <h1>Manage Students</h1>
+</div>
+
+<div style="width:93%">
+    <span  class="pull-right" style="font-size: 1.3em">
+      Student Count:  <strong style="font-size: 1.6em"><%= @student_courses.count  %></strong>
+    </span>
+</div>
 
 <% if @phantom %>
     <% url = course_manage_students_path(@course) + '?phantom=true' %>
