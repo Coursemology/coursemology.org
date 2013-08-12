@@ -1,52 +1,25 @@
-<h1>Class Enrollment</h1>
+<div class="page-header">
+  <h1>Students</h1>
+</div>
 
-<h3>Lecturers:</h3>
-<br/>
-<ul>
-  <% @lecturer_courses.each do |lecturer_course| %>
-      <li>
-        <%= render partial: "layouts/user_thumb_profile", locals: { user_course: lecturer_course } %>
-      </li>
-  <% end %>
-</ul>
-<% if @ta_courses.size > 0 %>
-    <h3>Tutors:</h3>
-    <br/>
-    <table class="table table-bordered">
-      <tbody>
-      <% @ta_courses.each_with_index do |tut_course, i| %>
+<div id="centre_container">
+  <div class="inner_box">
+    <table id="studentlist_table">
+      <% @student_courses.each_with_index do |student_course, i| %>
           <% if i % 2 == 0 %>
               <tr>
           <% end %>
-          <td width="50%">
-            <%= render partial: "layouts/user_thumb_profile", locals: { user_course: tut_course } %>
+          <td class="studentlist_box">
+            <%= render partial: "layouts/user_thumb_profile", locals: { user_course: student_course } %>
           </td>
           <% if i % 2 == 1 %>
               </tr>
           <% end %>
       <% end %>
-      <% if @ta_courses.size % 2 == 1 %>
+      <% if @student_courses.size % 2 == 1 %>
           <td></td></tr>
       <% end %>
-      </tbody>
     </table>
-<% end %>
-<h3>Students:</h3>
-<br/>
-<table class="table table-bordered">
-  <% @student_courses.each_with_index do |student_course, i| %>
-      <% if i % 2 == 0 %>
-          <tr>
-      <% end %>
-      <td width="50%">
-        <%= render partial: "layouts/user_thumb_profile", locals: { user_course: student_course } %>
-      </td>
-      <% if i % 2 == 1 %>
-          </tr>
-      <% end %>
-  <% end %>
-  <% if @student_courses.size % 2 == 1 %>
-      <td></td></tr>
-  <% end %>
-</table>
-<%= paginate @student_courses %>
+    <%= paginate @student_courses %>
+  </div>
+</div>
