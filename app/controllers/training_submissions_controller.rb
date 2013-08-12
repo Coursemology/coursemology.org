@@ -250,9 +250,15 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     grade_str = grade > 0 ? " + #{grade}" : ""
+    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+      correct_str =  "Correct! #{grade_str}"
+    else
+      correct_str =  "Correct!"
+    end
+
     resp = {
         is_correct: is_correct,
-        result: is_correct ? "Correct! #{grade_str}" : "Incorrect!",
+        result: is_correct ? correct_str : "Incorrect!",
         explanation: ""
     }
 
