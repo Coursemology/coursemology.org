@@ -125,6 +125,7 @@ class CoursesController < ApplicationController
     end
 
     @staff_courses = @course.user_courses.staff
+    @student_count = @student_courses.count
     @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
   end
 
