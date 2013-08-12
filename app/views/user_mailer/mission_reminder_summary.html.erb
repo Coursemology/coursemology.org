@@ -1,0 +1,14 @@
+Hi,
+
+<p>Emails were sent to the following students to remind them that <%= @assignment %> is due on <%= @due_date %></p>
+
+<ul>
+<% @students.each do |student| %>
+  <li><%= student[:name] %> (<%= student[:email] %>)</li>
+<% end %>
+</ul>
+
+Best Regards,
+<br/>
+
+The Coursemology Team

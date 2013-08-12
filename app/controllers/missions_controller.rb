@@ -96,7 +96,6 @@ class MissionsController < ApplicationController
 
   def update
     @mission.update_tags(params[:tags])
-    reschedule_email = Time.parse(params[:mission][:open_at]) != @mission.open_at
 
     respond_to do |format|
       if @mission.update_attributes(params[:mission])
@@ -109,9 +108,7 @@ class MissionsController < ApplicationController
         update_single_question_type
         update_mission_max_grade
 
-        if reschedule_email
-          @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
-        end
+        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_url(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
       else

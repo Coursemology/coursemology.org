@@ -91,8 +91,14 @@ module Assignment
     if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
       return
     end
-    delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to), run_at: self.open_at)
-    self.queued_jobs.create(delayed_job_id: delayed_job.id)
-  end
+    if self.open_at >= Time.now
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to), run_at: self.open_at)
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
 
+    if type == Mission && self.close_at >= Time.now
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to, true), run_at: 1.day.ago(self.close_at))
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+  end
 end

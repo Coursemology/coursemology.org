@@ -95,12 +95,9 @@ class TrainingsController < ApplicationController
 
   def update
     @training.update_tags(params[:tags])
-    reschedule_email = Time.parse(params[:training][:open_at]) != @training.open_at
     respond_to do |format|
       if @training.update_attributes(params[:training])
-        if reschedule_email
-          @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
-        end
+        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
         format.html { redirect_to course_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else

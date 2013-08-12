@@ -78,12 +78,12 @@ class UserMailer < ActionMailer::Base
     mail(to: user_email, subject: "#{course_name}: New Training Available!")
   end
 
-  def mission_due(user_name, user_email, mission_title, course_name, due_time, redirect_to)
-    @user_name = user_name
-    @mission_title = mission_title
-    @due_time = due_time
-    @redirect_to = redirect_to
-    mail(to: user_email, subject: "#{course_name}: Reminder about mission due!")
+  def mission_due(user, mission, course, redirect_to)
+    @user_name = user.name
+    @mission_title = mission.title
+    @due_time = mission.close_at
+    @redirect_url = redirect_to
+    mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
   end
 
   def email_changed(user_name, new_email, email_was)
@@ -99,5 +99,12 @@ class UserMailer < ActionMailer::Base
     @course_title = course_title
     @redirect_url = redirect_url
     mail(to: std_email, subject: "Invitation to enroll in: #{course_title}")
+  end
+
+  def mission_reminder_summary(students, mission, staff)
+    @assignment = mission.title
+    @students = students
+    @due_date = mission.close_at
+    mail(to:staff.email,  subject: "Reminder about #{mission.title}")
   end
 end
