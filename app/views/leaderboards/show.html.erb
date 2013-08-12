@@ -4,7 +4,7 @@
 
 <div class="span4 leaderboard-table leaderboard-experience-table">
   <table class="table">
-    <caption class="leaderboard-type">By Experience Points</caption>
+    <caption class="leaderboard-type">By Level</caption>
     <% @top_10_exp.each_with_index do |std_course, index| %>
       <tr>
         <td class="leaderboard-counter-container"><p class="leaderboard-counter"></p></td>
@@ -18,10 +18,7 @@
             class="leaderboard-name"><%= std_course.user.name %>
           </a>
           <br/>
-          <span class="leaderboard-level"><%= std_course.level.get_title if std_course.level %></span><br/>
-          <div class="leaderboard-exp">
-            <strong><%= std_course.exp %></strong> pts
-          </div>
+          <span class="leaderboard-level"><%= std_course.level.get_title if std_course.level%></span><br/>
         </td>
       </tr>
     <% end %>
