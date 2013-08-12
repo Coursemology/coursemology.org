@@ -1,7 +1,14 @@
 class RegistrationsController < Devise::RegistrationsController
   def new
+
+    build_resource({})
     @token = params[:_token]
-    super
+
+    if @token and std = MassEnrollmentEmail.find_by_confirm_token(@token)
+      self.resource.name = std.name
+      self.resource.email =std.email
+    end
+    respond_with self.resource
   end
 
   def create
