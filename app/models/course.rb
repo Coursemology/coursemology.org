@@ -133,13 +133,46 @@ class Course < ActiveRecord::Base
     email_notifications.select {|pref| pref.display }.map { |pref| pref.preferable_item.name }
   end
 
-  def course_home_sections
+  def home_sections
     course_preferences.course_home_sections
   end
 
   def enabled_course_home_sections
     course_home_sections.select { |pref| pref.display }
   end
+
+  def course_home_events_no_pref
+    course_preferences.course_home_events_no
+  end
+
+  def leaderboard_no_pef
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Leaderboard" &&
+        pref.preferable_item.item_type == "Display" &&
+        pref.preferable_item.name == 'leaders' }.first
+  end
+
+  def home_announcement_pref
+    home_sections.select { |pref| pref.preferable_item.name == "announcements" }.first
+  end
+
+  def home_activities_pref
+    home_sections.select { |pref| pref.preferable_item.name == 'activities' }.first
+  end
+
+  def home_announcement_no_pref
+    course_home_events_no_pref.select  { |pref| pref.preferable_item.name == "announcements_no" }.first
+  end
+
+  def home_activities_no_pref
+    course_home_events_no_pref.select { |pref| pref.preferable_item.name == "activities_no" }.first
+  end
+
+  def announcements_paging_pref
+    course_preferences.select { |pref| pref.preferable_item.item == "Announcements" &&
+        pref.preferable_item.item_type == "List" &&
+        pref.preferable_item.name == "paging" }.first
+  end
+
 
   def populate_preference
     course_preferences.each do |pref|

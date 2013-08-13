@@ -80,7 +80,28 @@ class CoursesController < ApplicationController
 
   def show
     if can?(:participate, Course) || can?(:share, Course)
-      @activities = @course.activities.order("created_at DESC").first(30)
+
+      @announcement_pref = @course.home_announcement_pref
+      if @announcement_pref.display?
+        no_to_display = @course.home_announcement_no_pref.prefer_value.to_i
+        @announcements = @course.announcements.accessible_by(current_ability)
+        .order("publish_at DESC").first(no_to_display)
+        @is_new = {}
+        if curr_user_course.id
+          unseen = @announcements - curr_user_course.seen_announcements.first(no_to_display)
+          unseen.each do |ann|
+            @is_new[ann.id] = true
+            curr_user_course.mark_as_seen(ann)
+          end
+        end
+      end
+
+      @activities_pref = @course.home_activities_pref
+      if @activities_pref.display?
+        puts "--------", @course.home_activities_no_pref.prefer_value, @course.home_activities_no_pref.prefer_value.to_i
+        @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
+      end
+
       respond_to do |format|
         format.html
       end

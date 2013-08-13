@@ -24,6 +24,10 @@ class CoursePreferencesController < ApplicationController
       when 'email'
         @tab = "NotificationPreference"
         @preferences = @course.email_notifications
+      when 'other'
+        @tab = "OtherPreference"
+        @preferences = @course.home_sections
+        @no_preferences = @course.course_home_events_no_pref << @course.leaderboard_no_pef << @course.announcements_paging_pref
       else
         @tab = 'Sidebar'
         @preferences = @course.student_sidebar_items

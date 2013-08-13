@@ -27,37 +27,47 @@
     </div>
     <p><%= @course.description %></p>
 <% end %>
-
-<% if curr_user_course.id %>
-    <div class="page-header">
-      <h1>Updates</h1>
+<% if @announcements %>
+    <h2><%= @announcement_pref.prefer_value%></h2>
+    <div class="info-block">
+      <% @announcements.each do |announcement| %>
+          <div class="announcement">
+            <h4><%= announcement.title %>
+              <% if @is_new.has_key?(announcement.id) %>
+                  <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
+              <% end %>
+            </h4>
+            <i class="timestamp"><%= announcement.publish_at.to_formatted_s(:long) %></i>
+            <p class="announcement-content"><%= announcement.description.html_safe %></p>
+          </div>
+      <% end %>
     </div>
-<% else %>
-    <h2>Updates</h2>
-    <br/>
 <% end %>
 
-<table class="activities">
-  <% @activities.each do |act| %>
-      <% unless act.actor_course.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? %>
-          <tr>
-            <td width="25px">
-              <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
-                <img class="media-object"
-                     src="<%= act.actor_course.user.get_profile_photo_url %>">
-              </a>
-            </td>
-            <td>
-              <a href="<%= course_user_course_path(@course, act.actor_course) %>">
-                <%= act.actor_course.user.name %>
-              </a> <%= act.action.text %>
-              <strong><%= act.obj.get_title %></strong>
-              <br/>
-              <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
-              </div>
-            </td>
-          </tr>
+<% if @activities %>
+    <h2><%= @activities_pref.prefer_value%></h2>
+    <hr>
+    <table class="activities">
+      <% @activities.each do |act| %>
+          <% unless act.actor_course.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? %>
+              <tr>
+                <td width="25px">
+                  <a class="pull-left activity-icon" href="<%= course_user_course_path(@course, act.actor_course) %>">
+                    <img class="media-object"
+                         src="<%= act.actor_course.user.get_profile_photo_url %>">
+                  </a>
+                </td>
+                <td>
+                  <a href="<%= course_user_course_path(@course, act.actor_course) %>">
+                    <%= act.actor_course.user.name %>
+                  </a> <%= act.action.text %>
+                  <strong><%= act.obj.get_title %></strong>
+                  <br/>
+                  <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
+                  </div>
+                </td>
+              </tr>
+          <% end %>
       <% end %>
-  <% end %>
-</table>
-
+    </table>
+<% end %>

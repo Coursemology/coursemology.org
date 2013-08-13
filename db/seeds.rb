@@ -369,14 +369,42 @@ if PreferableItem.count == 35
                          item_type:     "Table",
                          name:          "paging",
                          default_value: "10",
-                         description:   "No of rows to display in training table",
+                         description:   "Number of rows to display in training table",
                          default_display: true
 
   PreferableItem.create! item:          "Mission",
                          item_type:     "Table",
                          name:          "paging",
                          default_value: "10",
-                         description:   "No of rows to display in mission table",
+                         description:   "Number of rows to display in mission table",
+                         default_display: true
+
+end
+
+if PreferableItem.count == 40
+
+  PreferableItem.create! item:            "CourseHome",
+                         item_type:       "SectionShow",
+                         name:            "announcements_no",
+                         default_value:   "3",
+                         description:     "No of recent announcements to show in course home page",
+                         default_display: true
+
+  PreferableItem.create! item:            "CourseHome",
+                         item_type:       "SectionShow",
+                         name:            "activities_no",
+                         default_value:   "50",
+                         description:     "No of recent activities to show in course home page",
+                         default_display: true
+end
+
+if PreferableItem.count == 42
+
+  PreferableItem.create! item:            "Announcements",
+                         item_type:       "List",
+                         name:            "paging",
+                         default_value:   "10",
+                         description:     "Number of announcements to display per page",
                          default_display: true
 
 end

@@ -15,12 +15,17 @@
   <li class="<%= "active" if @tab == "NotificationPreference" %>">
     <a href="<%= course_preferences_path(@course) %>?_tab=email" data-toggle="tab">Notification Preferences</a>
   </li>
+  <li class="<%= 'active' if @tab == "OtherPreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=other" data-toggle="tab">Other Preferences</a>
+  </li>
 </ul>
 
 <% if @tab == "NotificationPreference" %>
     <%= render partial: "email_form" %>
 <% elsif @tab == "McqPreference" %>
     <%= render partial: "mcq_form" %>
+<% elsif @tab == 'OtherPreference' %>
+    <%= render partial: "misc" %>
 <% else %>
     <%=render partial: "form" %>
 <% end %>
