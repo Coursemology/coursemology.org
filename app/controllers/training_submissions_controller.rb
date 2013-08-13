@@ -271,12 +271,11 @@ class TrainingSubmissionsController < ApplicationController
       correct_str =  "Correct!"
     end
 
-    puts "Explanations", mcqas.to_json, mcqas.map { |ans| ans.explanation }
 
     resp = {
         is_correct: is_correct,
         result: is_correct ? correct_str : "Incorrect!",
-        explanation: mcqas.reduce('') {|acc, n| acc << n.explanation + "<br>"}
+        explanation: mcqas.reduce('') {|acc, n| acc << (n.explanation.length > 0 ? (n.explanation + "<br>") : "")}
     }
 
     if @training_submission.save
