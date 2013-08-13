@@ -66,6 +66,11 @@ class TrainingSubmissionsController < ApplicationController
       mcq_id = sma.mcq_id
       @std_answers_for_questions[mcq_id] << sma
     end
+
+    @training_submission.std_mcq_all_answers.each do |sma|
+      mcq_id = sma.mcq_id
+      @std_answers_for_questions[mcq_id] << sma
+    end
     # puts '==='
     # puts @training.to_json
     # puts @training_submission.to_json
@@ -195,7 +200,8 @@ class TrainingSubmissionsController < ApplicationController
     is_correct = false
     grade = 0
 
-    if @course.mcq_auto_grader.prefer_value == 'two-one-zero'
+    pref_grader = @course.mcq_auto_grader.prefer_value
+    if pref_grader == 'two-one-zero'
       is_correct, grade = AutoGrader.toz_mcq_grader(@training_submission, mcq, sbm_ans)
     else
       is_correct, grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
@@ -209,9 +215,15 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     grade_str = grade > 0 ? " + #{grade}" : ""
+
+    if pref_grader == 'two-one-zero'
+      correct_str =  "Correct! #{grade_str}"
+    else
+      correct_str =  "Correct!"
+    end
     resp = {
         is_correct: mcqa.is_correct,
-        result: mcqa.is_correct ? "Correct! #{grade_str}" : "Incorrect!",
+        result: mcqa.is_correct ? correct_str : "Incorrect!",
         explanation: mcqa.explanation
     }
 
@@ -226,12 +238,14 @@ class TrainingSubmissionsController < ApplicationController
     require_dependency 'auto_grader'
 
     mcq = Mcq.find(params[:qid])
+    answers = params[:aid].map(&:to_i).to_json
     sma = StdMcqAllAnswer.new()
     sma.student = current_user
     sma.std_course = curr_user_course
     sma.mcq = mcq
-    sma.selected_choices = params[:aid].map(&:to_i).to_json
+    sma.selected_choices = answers
     sma.choices = params[:choices].map(&:to_i).to_json
+    mcqas = McqAnswer.where(id: eval(answers))
 
     sbm_ans = @training_submission.sbm_answers.build
     sbm_ans.answer = sma
@@ -257,10 +271,12 @@ class TrainingSubmissionsController < ApplicationController
       correct_str =  "Correct!"
     end
 
+    puts "Explanations", mcqas.to_json, mcqas.map { |ans| ans.explanation }
+
     resp = {
         is_correct: is_correct,
         result: is_correct ? correct_str : "Incorrect!",
-        explanation: ""
+        explanation: mcqas.reduce('') {|acc, n| acc << n.explanation + "<br>"}
     }
 
     if @training_submission.save

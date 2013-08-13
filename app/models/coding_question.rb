@@ -18,6 +18,8 @@ class CodingQuestion < ActiveRecord::Base
   end
 
   def set_default_data
-    self.data = '{"type":"do","language":"python","prefill":""}'
+    unless self.data
+      self.data = '{"type":"do","language":"python","prefill":""}'
+    end
   end
 end

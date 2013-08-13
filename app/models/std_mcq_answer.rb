@@ -13,4 +13,8 @@ class StdMcqAnswer < ActiveRecord::Base
   has_many :sbm_answers, as: :answer, dependent: :destroy
 
   alias_method :qn, :mcq
+
+  def mcq_answers
+    [mcq_answer]
+  end
 end

@@ -10,4 +10,8 @@ class StdMcqAllAnswer < ActiveRecord::Base
   has_many :sbm_answers, as: :answer, dependent: :destroy
 
   alias_method :qn, :mcq
+
+  def mcq_answers
+    McqAnswer.where(:id => eval(selected_choices))
+  end
 end
