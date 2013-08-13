@@ -51,7 +51,8 @@
                              value="<%= qa[:g].grade if qa[:g] %>"
                              class="input-medium grade-input"
                              max="<%= max_grade %>"
-                             onchange="suggestEXP(this.value, <%= max_grade %>, <%= exp %>, '<%= qid %>')"
+                             id="exp-awarded"
+                             onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
                              required/>
                   <% end %>
                   <strong> / <%= max_grade %> </strong>
@@ -69,6 +70,13 @@
                              required/>
                   <% end %>
                   <strong> /  <%= exp %></strong>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
+                  <input type="text"
+                         id="exp-multiplier"
+                         class="input-mini"
+                         value="1"
+                         onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
+                  >
                   <br><br>
 
                 </div>
@@ -81,11 +89,15 @@
 <% end %>
 <script>
 
-    function suggestEXP(grade, max, exp, expId) {
+    function suggestEXP(max, exp, expId) {
+        grade = $("#exp-awarded").val()
         if (!IsNumeric(grade) || (grade > max)) {
             return;
         }
-        var result = Math.round( Math.round((exp * grade / max) / 50) * 50);
+        multiplier = $("#exp-multiplier").val() - 0;
+        multiplier = multiplier > 1 ? 1 : multiplier;
+
+        var result = Math.round(Math.round(multiplier * (exp * grade / max) / 5) * 5);
 //        var result = Math.round( Math.round(exp * grade/ max));
         document.getElementById(expId).value = result;
     }
