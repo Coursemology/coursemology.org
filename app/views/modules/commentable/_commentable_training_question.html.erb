@@ -7,6 +7,6 @@
 <input type="hidden" id="submission_url_<%=ecid%>" value="<%= course_training_url(@course, training) %>">
 <div class="mission-box" href="<%= course_training_url(@course, training) %>">
   <!--<img class="small-mission-pic" width="54" height="54" src="public/images/mission_icons/mission22_small.jpg">-->
-  <div class="title">Training : <%= training.title %></div>
+  <div class="title"><%= training.title %></div>
   <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.html_safe.split(" ").first(13).join(" ") %>... </span></div>
 </div>
