@@ -47,6 +47,7 @@ class CourseAbility
       can :award_points, UserCourse
       can :see, :pending_grading
       can :see, :pending_comments
+      can :unsubmit, Submission
 
       cannot :modify, TrainingSubmission
     end

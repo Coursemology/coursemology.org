@@ -53,6 +53,7 @@ JfdiAcademy::Application.routes.draw do
       resources :submissions do
         resources :submission_gradings
       end
+      post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
     end
 
     resources :trainings do

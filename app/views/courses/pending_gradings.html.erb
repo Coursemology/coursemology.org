@@ -30,13 +30,11 @@
         </td>
         <% if can? :manage, SubmissionGrading %>
 
-            <% if sub.submission_gradings.count == 0 %>
-                <td>
-                  <%= link_to "Evaluate",
-                              sub.get_new_grading_path,
-                              class: "btn btn-primary" %>
-                </td>
-            <% end %>
+            <td>
+              <%= link_to "Evaluate",
+                          sub.get_new_grading_path,
+                          class: "btn btn-primary" %>
+            </td>
         <% end %>
 
       </tr>

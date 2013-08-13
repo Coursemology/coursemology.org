@@ -134,6 +134,12 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  def unsubmit
+    @submission.set_attempting
+    flash[:notice] = "Successfully unsubmited submission."
+    redirect_to course_mission_submission_path(@course, @mission, @submission)
+  end
+
   private
 
   def allow_only_one_submission

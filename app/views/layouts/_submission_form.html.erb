@@ -51,7 +51,7 @@
                              value="<%= qa[:g].grade if qa[:g] %>"
                              class="input-medium grade-input"
                              max="<%= max_grade %>"
-                             id="exp-awarded"
+                             id="grade-awarded"
                              onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
                              required/>
                   <% end %>
@@ -90,7 +90,7 @@
 <script>
 
     function suggestEXP(max, exp, expId) {
-        grade = $("#exp-awarded").val()
+        grade = $("#grade-awarded").val()
         if (!IsNumeric(grade) || (grade > max)) {
             return;
         }
