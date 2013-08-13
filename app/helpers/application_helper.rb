@@ -46,8 +46,9 @@ module ApplicationHelper
       str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
       str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<div class="cos_code"><pre class="jfdiCode"><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
 ') <<'</div></pre></div>'}
-      str.html_safe
+      return str.html_safe
     end
+    ""
   end
 
   def style_format(str, html_safe = true, lang='python')

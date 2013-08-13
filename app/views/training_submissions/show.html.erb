@@ -24,10 +24,10 @@
 </table>
 <hr/>
 
-<p class="well"><%= @training.description.html_safe %></p>
+<p class="well"><%= style_format(@training.description) %></p>
 <% @qadata.each do |qid, qa| %>
     <h4>Question:</h4>
-    <p><%= qa[:q].description.html_safe %></p>
+    <p><%= style_format(qa[:q].description.html_safe) %></p>
     <ul>
       <% qa[:q].mcq_answers.each do |ans| %>
           <li>
