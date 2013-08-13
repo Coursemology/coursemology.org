@@ -83,6 +83,8 @@ class CourseAbility
       can :read, Tag
       can :read, [Achievement, Title, Reward]
       can :students, Course
+      can :access_denied, Mission
+      can :access_denied, Training
 
       can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id

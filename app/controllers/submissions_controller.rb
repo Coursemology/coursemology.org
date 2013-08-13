@@ -6,9 +6,11 @@ class SubmissionsController < ApplicationController
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
+  before_filter :authorize, only: [:new, :create, :edit, :update]
   before_filter :allow_only_one_submission, only: [:new, :create]
   before_filter :no_update_after_submission, only: [:edit, :update]
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
+
 
   def listall
     @tab = "MissionSubmission"
@@ -152,4 +154,15 @@ class SubmissionsController < ApplicationController
       end
     end
   end
+
+  def authorize
+    if curr_user_course.is_staff?
+      return true
+    end
+
+    if @mission.open_at > Time.now
+      redirect_to course_mission_access_denied_path(@course, @mission)
+    end
+  end
+
 end

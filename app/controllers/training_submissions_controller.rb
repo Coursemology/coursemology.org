@@ -7,7 +7,8 @@ class TrainingSubmissionsController < ApplicationController
   skip_load_and_authorize_resource :training_submission, only: :listall
   skip_load_and_authorize_resource :training, only: :listall
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :listall]
+  before_filter :authorize, only: [:new, :edit]
+  before_filter :load_general_course_data, only: [:show, :edit, :listall]
 
   def listall
     @tab = "TrainingSubmission"
@@ -314,6 +315,17 @@ class TrainingSubmissionsController < ApplicationController
       respond_to do |format|
         format.html {render json: eval_summary }
       end
+    end
+  end
+
+  private
+  def authorize
+    if curr_user_course.is_staff?
+      return true
+    end
+
+    if @training.open_at > Time.now
+      redirect_to course_training_access_denied_path(@course, @training)
     end
   end
 end
