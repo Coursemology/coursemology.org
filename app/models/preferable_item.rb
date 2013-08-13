@@ -2,15 +2,12 @@ class PreferableItem < ActiveRecord::Base
   attr_accessible :item, :item_type, :name, :default_value, :description, :default_display
 
 
-  scope :training_reattempt, where(item: 'Training', item_type: 'Re-attempt')
-
-  def self.mission_columns
-    PreferableItem.where(item: "Mission", item_type: "Column")
-  end
-
-  def self.training_columns
-    PreferableItem.where(item: "Training", item_type: "Column")
-  end
+  scope :training_reattempt,    where(item: 'Training', item_type: 'Re-attempt')
+  scope :mission_columns,       where(item: "Mission", item_type: "Column")
+  scope :training_columns,      where(item: "Training", item_type: "Column")
+  scope :student_sidebar_items, where(item: "Sidebar", item_type: "Student")
+  scope :email_notifications,   where(item: "Email", item_type: "Course")
+  scope :course_home_sections,  where(item: "CourseHome", item_type: "Section")
 
   def self.new_comment
     'new_comment'

@@ -59,36 +59,50 @@
     <% if @tab != 'Sidebar' %>
         <div class="info-block">
           Current Format:
-            <% if @time_format && @time_format.prefer_value != 'ago' %>
+          <% if @time_format && @time_format.prefer_value != 'ago' %>
               <code><%= Time.now.strftime(@time_format.prefer_value) %> </code>
-        <% else %>
-                <code> <%= time_ago_in_words(Time.now) %></code> (Time ago in words)
-            <% end %>
-            <br><br>
-            <span>Customize:</span>
-            <select style="width: 180px" name="preferences[<%= if @time_format then @time_format.id else 0 end%>][prefer_value]">
-              <option value="">Please Select</option>
-              <option value="%d-%m-%Y"><%= Time.now.strftime('%d-%m-%Y') %></option>
-              <option value="%d %b %Y %H:%M"><%= Time.now.strftime('%d %b %Y %H:%M') %></option>
-              <option value="%d-%m-%Y %H:%M:%S"><%= Time.now.strftime('%d-%m-%Y %H:%M:%S') %></option>
-              <option value="ago"> <%= time_ago_in_words(Time.now.beginning_of_day) %></option>
-            </select>
-            </div>
+          <% else %>
+              <code> <%= time_ago_in_words(Time.now) %></code> (Time ago in words)
+          <% end %>
+          <br><br>
+          <span>Customize:</span>
+          <select style="width: 180px" name="preferences[<%= if @time_format then @time_format.id else 0 end%>][prefer_value]">
+            <option value="">Please Select</option>
+            <option value="%d-%m-%Y"><%= Time.now.strftime('%d-%m-%Y') %></option>
+            <option value="%d %b %Y %H:%M"><%= Time.now.strftime('%d %b %Y %H:%M') %></option>
+            <option value="%d-%m-%Y %H:%M:%S"><%= Time.now.strftime('%d-%m-%Y %H:%M:%S') %></option>
+            <option value="ago"> <%= time_ago_in_words(Time.now.beginning_of_day) %></option>
+          </select>
+        </div>
+        <h3>Table Paging:</h3>
+        <% if @tab == 'TrainingPreference'  %>
+            <p>Customize the number of trainings to display in each page.</p>
+        <% elsif @tab == 'MissionPreference' %>
+            <p>Customize the number of missions to display in each page.</p>
+        <% end %>
+        <div class="info-block">
+          <input type="checkbox"
+                 name="preferences[<%= @table_paging.id %>][display]"
+                 <%= "checked" if @table_paging.display %> >  Enable Paging
+          <br>
+          No of rows per page:
+          <input class="span1" type="number" min="1"  value="<%= @table_paging.prefer_value %>" name="preferences[<%=  @table_paging.id %>][prefer_value]" >
+        </div>
     <% end %>
     <% if @reattempt %>
-      <h3>Re-Attempt</h3>
-      <p><%= @reattempt.preferable_item.description %></p>
-      <div class="info-block">
-        <input type="checkbox"
-            name="preferences[<%= @reattempt.id %>][display]"
-             <%= "checked" if @reattempt.display %>>
-        </input>Enabled</span>
-        <br/>
-        <span>Percentage of the EXP earnable:</span>
-        <input class="span1" type="number" min="0" max="100"
-            name="preferences[<%= @reattempt.id %>][prefer_value]"
-            value="<%= @reattempt.prefer_value %>" col="20"></input>
-      </div>
+        <h3>Re-Attempt</h3>
+        <p><%= @reattempt.preferable_item.description %></p>
+        <div class="info-block">
+          <input type="checkbox"
+                 name="preferences[<%= @reattempt.id %>][display]"
+                 <%= "checked" if @reattempt.display %>>
+          </input>Enabled
+          <br/>
+          <span>Percentage of the EXP earnable:</span>
+          <input class="span1" type="number" min="0" max="100"
+                 name="preferences[<%= @reattempt.id %>][prefer_value]"
+                 value="<%= @reattempt.prefer_value %>" col="20">
+        </div>
     <% end %>
 
     <div class="center">

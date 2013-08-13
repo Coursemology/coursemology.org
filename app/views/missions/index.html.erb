@@ -52,7 +52,6 @@
   </thead>
 
   <tbody>
-
   <% @missions.each do |mission| %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <% if to_display.include? 'title' %>
@@ -156,6 +155,6 @@
   </tbody>
 </table>
 
-<% if @can_paginate %>
+<% if @paging.display? %>
     <%= paginate @missions %>
 <% end %>

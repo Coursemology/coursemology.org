@@ -173,6 +173,6 @@
   </tbody>
 </table>
 
-<% if @can_paginate %>
+<% if @paging.display? %>
     <%= paginate @trainings %>
 <% end %>

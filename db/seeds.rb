@@ -341,3 +341,42 @@ if PreferableItem.count == 33
                          description:   "Bonus cutoff time",
                          default_display: true
 end
+
+if PreferableItem.count == 35
+
+  PreferableItem.create!  item:          "Leaderboard",
+                          item_type:     "Display",
+                          name:          "leaders",
+                          default_value: "10",
+                          description:   "Number of students to show in leaderboard",
+                          default_display: true
+
+  PreferableItem.create! item:            "CourseHome",
+                         item_type:       "Section",
+                         name:            "announcements",
+                         default_value:   "Announcements",
+                         description:     "Show recent announcements in course home page",
+                         default_display: true
+
+  PreferableItem.create! item:            "CourseHome",
+                         item_type:       "Section",
+                         name:            "activities",
+                         default_value:   "Notable Happenings",
+                         description:     "Show recent student activities",
+                         default_display: true
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Table",
+                         name:          "paging",
+                         default_value: "10",
+                         description:   "No of rows to display in training table",
+                         default_display: true
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Table",
+                         name:          "paging",
+                         default_value: "10",
+                         description:   "No of rows to display in mission table",
+                         default_display: true
+
+end

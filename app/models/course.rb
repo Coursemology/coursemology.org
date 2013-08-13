@@ -6,41 +6,38 @@ class Course < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions, dependent: :destroy
-  has_many :announcements, dependent: :destroy
-  has_many :user_courses, dependent: :destroy
-  has_many :trainings, dependent: :destroy
+  has_many :missions,       dependent: :destroy
+  has_many :announcements,  dependent: :destroy
+  has_many :user_courses,   dependent: :destroy
+  has_many :trainings,      dependent: :destroy
 
-  has_many :mcqs, through: :trainings
+  has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
 
   has_many :users, through: :user_courses
 
-  has_many :std_answers, through: :user_courses
+  has_many :std_answers,        through: :user_courses
   has_many :std_coding_answers, through: :user_courses
 
-  has_many :submissions, through: :user_courses
+  has_many :submissions,          through: :user_courses
   has_many :training_submissions, through: :user_courses
 
   has_many :activities, dependent: :destroy
 
-  has_many :levels, dependent: :destroy
+  has_many :levels,       dependent: :destroy
   has_many :achievements, dependent: :destroy
 
-  has_many :enroll_requests, dependent: :destroy
-
-  has_many :tags, dependent: :destroy
+  has_many :tags,       dependent: :destroy
   has_many :tag_groups, dependent: :destroy
 
   has_many :course_themes, dependent: :destroy  # currently only has one though
 
-  has_many :tutorial_groups, dependent: :destroy
-  has_many :file_uploads, as: :owner
-  has_many :course_preferences, dependent: :destroy
-
-  has_many :comment_subscriptions, dependent: :destroy
-
+  has_many :tutorial_groups,        dependent: :destroy
+  has_many :file_uploads,           as: :owner
+  has_many :course_preferences,     dependent: :destroy
+  has_many :comment_subscriptions,  dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
+  has_many :enroll_requests,        dependent: :destroy
 
   def asms
     missions + trainings
@@ -75,11 +72,11 @@ class Course < ActiveRecord::Base
   end
 
   def mission_columns
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" && pref.preferable_item.item_type == "Column" }
+    self.course_preferences.mission_columns
   end
 
   def training_columns
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Column" }
+    self.course_preferences.training_columns
   end
 
   def mcq_auto_grader
@@ -87,7 +84,7 @@ class Course < ActiveRecord::Base
   end
 
   def student_sidebar_items
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Sidebar" && pref.preferable_item.item_type == "Student" }
+    self.course_preferences.student_sidebar_items
   end
 
   def student_sidebar_display
@@ -103,19 +100,29 @@ class Course < ActiveRecord::Base
   end
 
   def mission_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" && pref.preferable_item.item_type == "Time" }.first
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
+        pref.preferable_item.item_type == "Time" }.first
   end
 
   def training_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
+        pref.preferable_item.item_type == "Time" }.first
   end
 
-  def training_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" && pref.preferable_item.item_type == "Time" }.first
+  def training_table_paging
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
+        pref.preferable_item.item_type == "Table" &&
+        pref.preferable_item.name == 'paging' }.first
+  end
+
+  def mission_table_paging
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
+        pref.preferable_item.item_type == "Table" &&
+        pref.preferable_item.name == 'paging' }.first
   end
 
   def email_notifications
-    self.course_preferences.select {|pref| pref.preferable_item.item == "Email" && pref.preferable_item.item_type == "Course" }
+    course_preferences.email_notifications
   end
 
   def email_notify_enabled?(item)
@@ -124,6 +131,14 @@ class Course < ActiveRecord::Base
 
   def enabled_notifications
     email_notifications.select {|pref| pref.display }.map { |pref| pref.preferable_item.name }
+  end
+
+  def course_home_sections
+    course_preferences.course_home_sections
+  end
+
+  def enabled_course_home_sections
+    course_home_sections.select { |pref| pref.display }
   end
 
   def populate_preference
