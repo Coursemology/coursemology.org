@@ -14,7 +14,6 @@ class MissionsController < ApplicationController
     end
     @time_format =  @course.mission_time_format
 
-
     @missions = @course.missions.accessible_by(current_ability)
     @paging = @course.mission_table_paging
 
@@ -141,19 +140,21 @@ class MissionsController < ApplicationController
   end
 
   def update_single_question_type
+    puts "update single question"
     unless @mission.single_question?
       return
     end
+    puts "get single question type"
     type = params[:answer_type] == 'code' ? CodingQuestion : Question
     previous_qn = @mission.get_all_questions.first
     if type != previous_qn.class
+      if previous_qn
+        previous_qn.destroy
+      end
       qn = type == CodingQuestion ? @mission.coding_questions.build : @mission.questions.build
       qn.max_grade = params[:max_grade]
       @mission.save
       @mission.update_grade
-    end
-    if previous_qn
-      previous_qn.destroy
     end
   end
 
