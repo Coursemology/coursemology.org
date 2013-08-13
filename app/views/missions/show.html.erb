@@ -1,6 +1,5 @@
 <%- model_class = Mission -%>
 <div class="page-header">
-  <!-- <h1>Mission : <%= @mission.title %></h1> -->
   <h1><%= @mission.title %></h1>
 </div>
 <h2 class="assignments-description-title">Mission Description</h2>
@@ -26,27 +25,36 @@
           <td><%= datetime_format(@mission.close_at) %></td>
         </tr>
         <!--<tr>-->
-          <!--<td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>-->
-          <!--<td><%= @mission.deadline %></td>-->
+        <!--<td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>-->
+        <!--<td><%= @mission.deadline %></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>-->
-          <!--<td><%= @mission.timelimit %></td>-->
+        <!--<td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>-->
+        <!--<td><%= @mission.timelimit %></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>-->
-          <!--<td><%= @mission.attempt_limit %></td>-->
+        <!--<td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>-->
+        <!--<td><%= @mission.attempt_limit %></td>-->
         <!--</tr>-->
       </table>
     </td>
 
-    <% if can? :manage, Submission %>
-        <td>
+    <td>
+      <% submission = @mission.get_final_sbm_by_std(curr_user_course.id) %>
+      <% if submission %>
+          <% if submission.attempting? %>
+              <a href="<%= edit_course_mission_submission_path(@course, @mission, submission) %>" class="btn">Edit</a>
+          <% else %>
+              <%= link_to 'Review',
+                          submission.get_path,
+                          class: 'btn btn-info' %>
+          <% end %>
+      <% else %>
           <%= link_to 'Attempt',
                       new_course_mission_submission_path(@course, @mission),
                       class: 'btn btn-success' %>
-        </td>
-    <% end %>
+      <% end %>
+    </td>
 
     <% if can? :manage, @mission %>
         <td width="10%">

@@ -123,9 +123,11 @@ class User < ActiveRecord::Base
     end
 
     invs.each do |inv|
-      inv.course.enrol_user(self, Role.find_by_name("student"))
-      inv.signed_up = true
-      inv.save
+      unless inv.signed_up?
+        inv.course.enrol_user(self, Role.find_by_name("student"))
+        inv.signed_up = true
+        inv.save
+      end
     end
   end
 

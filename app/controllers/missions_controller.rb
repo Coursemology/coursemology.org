@@ -1,7 +1,8 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied]
 
   def index
     @is_new = {}
@@ -41,6 +42,10 @@ class MissionsController < ApplicationController
   end
 
   def show
+    if curr_user_course.is_student?
+      redirect_to course_missions_path
+      return
+    end
     @questions = @mission.get_all_questions
     @question = Question.new
     @question.max_grade = 10
@@ -148,6 +153,12 @@ class MissionsController < ApplicationController
     end
     if previous_qn
       previous_qn.destroy
+    end
+  end
+
+  def access_denied
+    respond_to   do |format|
+      format.html # show.html.erb
     end
   end
 end

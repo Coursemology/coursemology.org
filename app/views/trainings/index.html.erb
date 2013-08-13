@@ -127,26 +127,28 @@
 
         <% if curr_user_course.id && can?(:manage, TrainingSubmission) %>
             <td>
-              <% if submission %>
-                  <% if !submission.done? %>
-                      <%= link_to 'Continue',
-                                  edit_course_training_training_submission_path(@course, training, submission,
-                                                                                anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
-                  <% else %>
-                      <% if @reattempt && @reattempt.display %>
-                          <%= link_to "Revise",
-                                      new_course_training_training_submission_path(@course, training),
-                                      class: 'btn' %>
-                      <% else %>
-                          <%= link_to "Revise",
+              <% if training.open_at < Time.now || can?(:manage, Training)%>
+                  <% if submission %>
+                      <% if !submission.done? %>
+                          <%= link_to 'Continue',
                                       edit_course_training_training_submission_path(@course, training, submission,
-                                                                                    anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+                                                                                    anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
+                      <% else %>
+                          <% if @reattempt && @reattempt.display %>
+                              <%= link_to "Revise",
+                                          new_course_training_training_submission_path(@course, training),
+                                          class: 'btn' %>
+                          <% else %>
+                              <%= link_to "Revise",
+                                          edit_course_training_training_submission_path(@course, training, submission,
+                                                                                        anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+                          <% end %>
                       <% end %>
+                  <% else %>
+                      <%= link_to 'Start',
+                                  new_course_training_training_submission_path(@course, training),
+                                  class: 'btn btn-success' %>
                   <% end %>
-              <% else %>
-                  <%= link_to 'Start',
-                              new_course_training_training_submission_path(@course, training),
-                              class: 'btn btn-success' %>
               <% end %>
             </td>
         <% end %>

@@ -23,7 +23,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     @redirect_url = redirect_url
     @submitted_by = submitted_by
-    mail(to: user.email, subject: "New Submission on Mission: #{mission.title}!")
+    mail(to: user.email, subject: "New Submission on : #{mission.title}!")
   end
 
   def new_lecturer(user)

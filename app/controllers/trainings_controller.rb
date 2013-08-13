@@ -2,7 +2,7 @@ class TrainingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :training, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :new]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied]
 
   def index
     @is_new = {}
@@ -53,6 +53,11 @@ class TrainingsController < ApplicationController
   end
 
   def show
+    if curr_user_course.is_student?
+      redirect_to course_trainings_path
+      return
+    end
+
     @steps = @training.questions
     if curr_user_course.is_student?
       @submission = @training.get_final_sbm_by_std(curr_user_course)
@@ -115,4 +120,8 @@ class TrainingsController < ApplicationController
                                 notice: "The training '#{@training.title}' has been removed." }
     end
   end
+
+  def access_denied
+  end
+
 end
