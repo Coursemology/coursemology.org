@@ -14,8 +14,8 @@ class SubmissionGrading < ActiveRecord::Base
   def update_exp_transaction
     puts 'update_exp'
     asm = self.sbm.get_asm
-    puts self.exp_transaction.to_json
-    if !self.exp_transaction
+
+    unless self.exp_transaction
       self.exp_transaction = ExpTransaction.new
       self.exp_transaction.giver = self.grader
       self.exp_transaction.user_course = self.sbm.std_course

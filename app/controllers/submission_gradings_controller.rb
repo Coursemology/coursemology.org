@@ -22,6 +22,10 @@ class SubmissionGradingsController < ApplicationController
 
     @do_grading = true
 
+    if @submission.submission_gradings.count > 0
+      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
+    end
+
   end
 
   def create
@@ -100,6 +104,7 @@ class SubmissionGradingsController < ApplicationController
       @ag.grader = current_user
       @submission_grading.total_grade += ag[:grade].to_i
       @submission_grading.total_exp += ag[:exp].to_i
+      @submission_grading.last_grade_updated = Time.now
     end
     @submission_grading.grader = current_user
     if invalid_assign
