@@ -1,4 +1,5 @@
 class EnrollRequest < ActiveRecord::Base
+  acts_as_paranoid
   attr_accessible :course_id, :role_id, :user_id
 
   include Rails.application.routes.url_helpers

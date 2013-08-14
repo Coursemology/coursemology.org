@@ -14,7 +14,7 @@
       <input type="hidden" class="destroy-url"
           value="<%= course_enroll_request_path(@course, ec.id) %>" />
       <td><input type="checkbox" value="<%= ec.id %>" class="<%= "checkbox-#{type}" %>"/></td>
-      <td><%= ec.user.name %></td>
+      <td><label class="user-name"><%= ec.user.name %></label></td>
       <td><%= ec.user.email %></td>
       <td><%= ec.role.title %></td>
       <td>
