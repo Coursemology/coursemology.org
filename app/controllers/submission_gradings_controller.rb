@@ -131,11 +131,15 @@ class SubmissionGradingsController < ApplicationController
   private
 
   def validate_gradings(ag_record, ag)
+    grade = ag[:grade].strip
     max_grade = @mission.max_grade
+    unless ag[:exp]
+      return validate_grade(grade, max_grade)
+    end
+
     max_exp = @mission.exp
     qn_grade = ag_record.student_answer.qn.max_grade
     qn_exp = max_exp * (qn_grade.to_f / max_grade.to_f)
-    grade = ag[:grade].strip
     exp = ag[:exp].strip
     if !validate_grade(grade, qn_grade) || !validate_grade(exp, qn_exp.to_i)
       return false

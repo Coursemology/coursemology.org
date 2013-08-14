@@ -57,7 +57,7 @@ $(document).ready(function() {
         if (page_header.size() <= 0)
             return;
         page_name =page_header[0].innerHTML.replace(/\s/g,"-");
-        if (!page_name)
+        if (!page_name || page_name.indexOf('!') > 0 || page_name.indexOf(':') > 0)
             return;
         //<input type="hidden" id="<%= item[:text] %>_count" value="<%= item[:count] %>">
         badge_count = $("#"+page_name+"_count");

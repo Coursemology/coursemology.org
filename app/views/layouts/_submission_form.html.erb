@@ -56,28 +56,29 @@
                              required/>
                   <% end %>
                   <strong> / <%= max_grade %> </strong>
-
-                  <h4>EXP awarded</h4>
-                  <% if mode == 'view' %>
-                      <strong><%= qa[:g].exp if qa[:g] %></strong>
-                  <% else %>
-                      <input id = "<%= qid %>"
-                             type="text"
-                             name="ags[<%= qa[:g].id if qa[:g] %>][exp]"
-                             value="<%= qa[:g].exp if qa[:g] %>"
-                             max="<%= exp %>"
-                             class="input-medium exp-input"
-                             required/>
+                  <% if @mission.single_question? %>
+                      <h4>EXP awarded</h4>
+                      <% if mode == 'view' %>
+                          <strong><%= qa[:g].exp if qa[:g] %></strong>
+                      <% else %>
+                          <input id = "<%= qid %>"
+                                 type="text"
+                                 name="ags[<%= qa[:g].id if qa[:g] %>][exp]"
+                                 value="<%= qa[:g].exp if qa[:g] %>"
+                                 max="<%= exp %>"
+                                 class="input-medium exp-input"
+                                 required/>
+                      <% end %>
+                      <strong> /  <%= exp %></strong>
+                      <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
+                      <input type="text"
+                             id="exp-multiplier"
+                             class="input-mini"
+                             value="1"
+                             onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
+                      >
+                      <br><br>
                   <% end %>
-                  <strong> /  <%= exp %></strong>
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
-                  <input type="text"
-                         id="exp-multiplier"
-                         class="input-mini"
-                         value="1"
-                         onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
-                  >
-                  <br><br>
 
                 </div>
               </div>

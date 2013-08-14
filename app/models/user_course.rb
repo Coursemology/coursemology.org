@@ -209,7 +209,7 @@ class UserCourse < ActiveRecord::Base
 
   def get_my_stds
     if self.std_courses.size > 0
-      self.std_courses.map {|sg| sg.std_course}
+      self.get_only_tut_stds
     elsif self.is_lecturer?
       self.get_all_stds
     else
@@ -217,8 +217,12 @@ class UserCourse < ActiveRecord::Base
     end
   end
 
+  def get_only_tut_stds
+    self.std_courses.map {|sg| sg.std_course}.sort_by {|std| std.user.name.downcase}
+  end
+
   def get_all_stds
-    UserCourse.find_all_by_course_id_and_role_id(self.course, Role.student.first.id)
+    UserCourse.find_all_by_course_id_and_role_id(self.course, Role.student.first.id).sort_by {|std| std.user.name.downcase}
   end
 
   def get_path

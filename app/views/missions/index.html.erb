@@ -57,7 +57,7 @@
         <% if to_display.include? 'title' %>
             <td>
               <% if can? :manage, Mission %>
-                  <%= link_to course_mission_path(@course, mission) do %>
+                  <%= link_to course_mission_stats_path(@course, mission) do %>
                       <h4><%= mission.title %>
                         <% if @is_new[mission.id] %>
                             <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">

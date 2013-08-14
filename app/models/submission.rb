@@ -19,7 +19,7 @@ class Submission < ActiveRecord::Base
 
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
-  scope :graded, lambda { where("final_grading_id IS NOT NULL") }
+  scope :graded, where(status: 'graded')
 
   # implement method of Sbm interface
   def get_asm

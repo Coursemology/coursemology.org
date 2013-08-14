@@ -55,6 +55,7 @@ JfdiAcademy::Application.routes.draw do
       end
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
     end
+    match "missions/:id/stats" => "missions#stats", as: :mission_stats
 
     resources :trainings do
       resources :mcqs

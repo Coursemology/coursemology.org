@@ -2,7 +2,7 @@ class MissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied]
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats]
 
   def index
     @is_new = {}
@@ -156,6 +156,13 @@ class MissionsController < ApplicationController
       @mission.save
       @mission.update_grade
     end
+  end
+
+  def stats
+    #@mission
+    @submissions = @mission.submissions
+    @stds_coures = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
+    @my_std_coures = curr_user_course.get_only_tut_stds
   end
 
   def access_denied

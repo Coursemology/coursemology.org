@@ -24,20 +24,23 @@ class StatsController < ApplicationController
       grade_table.add_row(row)
     end
     opts   = { width: 600, height: 240, title: graph_title, hAxis: { title: key_label } }
-    chart = GoogleVisualr::Interactive::ColumnChart.new(grade_table, opts)
+     GoogleVisualr::Interactive::ColumnChart.new(grade_table, opts)
   end
 
   def mission
     @mission = Mission.find(params[:mission_id])
     authorize! :view_stat, @mission
 
-    @sbms = @mission.sbms
-    @submitted = @sbms.map { |sbm| sbm.std_course }
+    @sbms = @mission.sbms.student_submissions
+    @graded = @sbms.where(status: 'graded').map { |sbm| sbm.std_course }
+    @submitted = @sbms.where(status: 'submitted').map { |sbm| sbm.std_course }
+    @attempting = @sbms.where(status: 'attempting').map { |sbm| sbm.std_course }
+
     # TODO: split submitted to doing vs submitted
     # when saving mission is allowed
 
     all_std = @course.student_courses
-    @unsubmitted = all_std - @submitted
+    @unsubmitted = all_std -  @attempting -  @submitted - @graded
 
     sbms_graded = @sbms.graded
     sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_grading.total_grade }

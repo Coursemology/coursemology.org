@@ -11,12 +11,32 @@ to review all submission for this training.
 <br/>
 <table class="table">
   <tr>
+    <td>Graded</td>
+    <td><%= @graded.size %></td>
+    <td>
+      <% @graded.each do |uc| %>
+          <%= render partial: "user_courses/short_name_display",
+                     locals: { user_course: uc } %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
     <td>Submitted</td>
     <td><%= @submitted.size %></td>
     <td>
       <% @submitted.each do |uc| %>
         <%= render partial: "user_courses/short_name_display",
           locals: { user_course: uc } %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Attempting</td>
+    <td><%= @attempting.size %></td>
+    <td>
+      <% @attempting.each do |uc| %>
+          <%= render partial: "user_courses/short_name_display",
+                     locals: { user_course: uc } %>
       <% end %>
     </td>
   </tr>
