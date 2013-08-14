@@ -30,7 +30,7 @@ class AnnotationsController < ApplicationController
     responds = []
     @annotations.each do |anno|
       responds.append({
-                          c:  style_format(anno.text),
+                          c:  style_format(anno.text, false),
                           s:  anno.line_start,
                           e:  anno.line_end,
                           id: anno.id,

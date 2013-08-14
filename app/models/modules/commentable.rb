@@ -48,7 +48,7 @@ module Commentable
 
     self.comments.each do |c|
       responds.append({
-                          c:  style_format(c.text),
+                          c:  style_format(c.text, false),
                           s:  -1,
                           e:  -1,
                           id: c.id,
