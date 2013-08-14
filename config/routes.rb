@@ -130,6 +130,8 @@ JfdiAcademy::Application.routes.draw do
     match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
     match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
 
+    resources :student_summary
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

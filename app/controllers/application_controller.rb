@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  helper_method :sort_direction, :sort_column
 
   rescue_from CanCan::AccessDenied do |exception|
 
@@ -171,6 +172,12 @@ class ApplicationController < ActionController::Base
           url:  course_manage_students_url(@course),
           icon: "icon-user"
       }
+
+      @admin_nav_items << {
+          text: "Student Summary",
+          url:  course_student_summary_index_path(@course),
+          icon: "icon-user"
+      }
       @admin_nav_items << {
           text:   "Levels",
           url:    course_levels_url(@course),
@@ -247,6 +254,15 @@ class ApplicationController < ActionController::Base
     unless current_user
       redirect_to new_user_session_path, alert: "You need to sign in or sign up before continuing."
     end
+  end
+
+  def sort_direction
+    params[:direction]
+  end
+
+
+  def sort_column
+    params[:sort]
   end
 
   private

@@ -9,11 +9,11 @@
 </div>
 
 <% if @phantom %>
-    <% url = course_manage_students_path(@course) + '?phantom=true' %>
-    <a href="<%= course_manage_students_path(@course) %>?phantom=false" class="btn">Show Real Students</a>
+    <% url = course_manage_students_path + '?phantom=true' %>
+    <a href="<%= course_manage_students_path %>?phantom=false" class="btn">Show Real Students</a>
 <% else %>
-    <% url = course_manage_students_path(@course) + '?phantom=false' %>
-    <a href="<%= course_manage_students_path(@course) %>?phantom=true" class="btn">Show Only Phantom Students</a>
+    <% url = course_manage_students_path + '?phantom=false' %>
+    <a href="<%= course_manage_students_path %>?phantom=true" class="btn">Show Only Phantom Students</a>
 <% end %>
 
 <br><br>
@@ -23,7 +23,7 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th><%= sortable 'tutor', url %></th>
+        <th><%= sortable 'tutor', course_manage_students_path, @phantom ? 'phantom=true' : 'phantom=false' %></th>
         <th>Phantom</th>
         <th></th>
       </tr>

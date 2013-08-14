@@ -198,6 +198,15 @@ class UserCourse < ActiveRecord::Base
     self.tut_courses.map{|tg| tg.tut_course}
   end
 
+  def ge_my_tut_name
+    tut_course =  self.tut_courses.first
+    if tut_course
+      tut_course.tut_course.user.name
+    else
+      'Unassigned!'
+    end
+  end
+
   def get_my_stds
     if self.std_courses.size > 0
       self.std_courses.map {|sg| sg.std_course}

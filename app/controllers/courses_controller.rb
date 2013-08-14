@@ -1,7 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
   before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
-  helper_method :sort_direction
 
 
   def create
@@ -157,12 +156,4 @@ class CoursesController < ApplicationController
     @pending_gradings = @course.get_pending_gradings(curr_user_course)
   end
 
-  def sort_direction
-    params[:direction]
-  end
-
-
-  def sort_column
-    params[:sort]
-  end
 end

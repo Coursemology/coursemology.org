@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1>Student Summary</h1>
+</div>
+
+<table class="table">
+  <thead>
+  <th><%= sortable 'Name', course_student_summary_index_path %></th>
+  <th><%= sortable 'Level', course_student_summary_index_path %></th>
+  <th><%= sortable 'Exp', course_student_summary_index_path %></th>
+  <th>Exp Count</th>
+  </thead>
+  <tbody>
+  <% @students.each do |std| %>
+    <tr>
+      <td><%= std.user.name %></td>
+      <td><%= std.level.level %> </td>
+      <td><%= std.exp %> EXP</td>
+      <td><%= std.exp_transactions.count %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
