@@ -13,7 +13,7 @@
   <% @students.each do |std| %>
     <tr>
       <td><%= std.user.name %></td>
-      <td><%= std.level.level %> </td>
+      <td><%= std.level ? std.level.level : 0%> </td>
       <td><%= std.exp %> EXP</td>
       <td><%= std.exp_transactions.count %></td>
     </tr>
