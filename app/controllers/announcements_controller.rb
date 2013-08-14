@@ -19,7 +19,7 @@ class AnnouncementsController < ApplicationController
   end
 
   def new
-    @announcement.publish_at = DateTime.now.beginning_of_day
+    @announcement.publish_at = DateTime.now
   end
 
   def edit
