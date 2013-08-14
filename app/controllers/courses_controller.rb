@@ -148,7 +148,8 @@ class CoursesController < ApplicationController
 
     @staff_courses = @course.user_courses.staff
     @student_count = @student_courses.count
-    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
+    #disable temperarily
+    #@student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
   end
 
   def pending_gradings
