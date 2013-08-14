@@ -23,8 +23,11 @@ module Assignment
   end
 
   def get_title
-    "#{self.class.name} : #{self.title}"
-
+    if self.class ==  Mission
+      "#{self.title}"
+    else
+      "#{self.class.name} : #{self.title}"
+    end
   end
 
 
