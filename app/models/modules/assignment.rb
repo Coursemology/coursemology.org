@@ -24,7 +24,9 @@ module Assignment
 
   def get_title
     "#{self.class.name} : #{self.title}"
+
   end
+
 
   def get_path
     raise NotImplementedError
