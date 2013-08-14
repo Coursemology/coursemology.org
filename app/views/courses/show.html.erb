@@ -27,7 +27,7 @@
     </div>
     <p><%= @course.description %></p>
 <% end %>
-<% if @announcements %>
+<% if @announcements and @announcements.first %>
     <h2><%= @announcement_pref.prefer_value%></h2>
     <div class="info-block">
       <% @announcements.each do |announcement| %>
@@ -44,7 +44,7 @@
     </div>
 <% end %>
 
-<% if @activities %>
+<% if @activities and @activities.first %>
     <h2><%= @activities_pref.prefer_value%></h2>
     <hr>
     <table class="activities">

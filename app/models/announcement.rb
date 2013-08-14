@@ -1,7 +1,7 @@
 class Announcement < ActiveRecord::Base
   acts_as_paranoid
 
-  attr_accessible :course_id, :creator_id, :description, :important, :publish_at, :title
+  attr_accessible :course_id, :creator_id, :description, :important, :publish_at, :title, :expiry_at
 
   scope :published, lambda { where("publish_at <= ? ", Time.now) }
 

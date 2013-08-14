@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130813191719) do
+ActiveRecord::Schema.define(:version => 20130814080545) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20130813191719) do
     t.string   "title"
     t.text     "description", :limit => 255
     t.time     "deleted_at"
+    t.datetime "expiry_at"
   end
 
   add_index "announcements", ["course_id"], :name => "index_announcements_on_course_id"
@@ -245,6 +246,7 @@ ActiveRecord::Schema.define(:version => 20130813191719) do
     t.integer  "role_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.time     "deleted_at"
   end
 
   add_index "enroll_requests", ["course_id"], :name => "index_enroll_requests_on_course_id"

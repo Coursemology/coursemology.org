@@ -84,8 +84,9 @@ class CoursesController < ApplicationController
       @announcement_pref = @course.home_announcement_pref
       if @announcement_pref.display?
         no_to_display = @course.home_announcement_no_pref.prefer_value.to_i
-        @announcements = @course.announcements.accessible_by(current_ability)
-        .order("publish_at DESC").first(no_to_display)
+        @announcements = @course.announcements.accessible_by(current_ability).
+            where("expiry_at > ?", Time.now).
+            order("publish_at DESC").first(no_to_display)
         @is_new = {}
         if curr_user_course.id
           unseen = @announcements - curr_user_course.seen_announcements.first(no_to_display)

@@ -20,6 +20,7 @@ class AnnouncementsController < ApplicationController
 
   def new
     @announcement.publish_at = DateTime.now
+    @announcement.expiry_at = 3.days.from_now
   end
 
   def edit

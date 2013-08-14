@@ -1,31 +1,45 @@
 <%= form_for [@course, @announcement], :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :title, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :title, :class => 'text_field span7' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :publish_at, :class => 'control-label' %>
-    <div class="controls">
-      <div class="datetimepicker input-append date">
-        <%= f.text_field :publish_at,
-                         value: datetime_format(@announcement.publish_at),
-                         class: 'input-medium',
-                         id: "publish_time"%>
-        <span class="add-on">
-          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-        </span>
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field span7' %>
       </div>
     </div>
-  </div>
-  <!--
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :publish_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :publish_at,
+                           value: datetime_format(@announcement.publish_at),
+                           class: 'input-medium',
+                           id: "publish_time"%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :expiry_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :expiry_at,
+                           value: datetime_format(@announcement.expiry_at),
+                           class: 'input-medium',
+                           id: "publish_time"%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+    <!--
   <div class="control-group">
     <%= f.label :important, :class => 'control-label' %>
     <div class="controls">
@@ -33,13 +47,13 @@
     </div>
   </div>
   -->
-  <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary',id: 'submit_announcement' %>
-    <%= link_to t('.cancel',
-                  :default => t("helpers.links.cancel")),
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary',id: 'submit_announcement' %>
+      <%= link_to t('.cancel',
+                    :default => t("helpers.links.cancel")),
                   course_announcements_path,
                   :class => 'btn'%>
-  </div>
+    </div>
 <% end %>
 
 <%= render :partial => "layouts/html_editor" %>
