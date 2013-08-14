@@ -2,16 +2,18 @@
   <h1>Student Summary</h1>
 </div>
 
-<table class="table">
+<table class="table table-center">
   <thead>
+  <th>S/N</th>
   <th><%= sortable 'Name', course_student_summary_index_path %></th>
   <th><%= sortable 'Level', course_student_summary_index_path %></th>
   <th><%= sortable 'Exp', course_student_summary_index_path %></th>
   <th>Exp Count</th>
   </thead>
   <tbody>
-  <% @students.each do |std| %>
+  <% @students.each_with_index do |std, index| %>
     <tr>
+      <td><%= index + 1%></td>
       <td><a href="<%= course_user_course_path(@course, std)%>"><%= std.user.name %></a></td>
       <td><%= std.level ? std.level.level : 0%> </td>
       <td><a href="<%= course_user_course_exp_transactions_path(@course, std) %>"> <%= std.exp %> EXP</a></td>
