@@ -44,7 +44,7 @@ JfdiAcademy::Application.routes.draw do
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
     resources :user_courses do
-      resource  :exp_transactions
+      resources  :exp_transactions
     end
 
     resources :missions do

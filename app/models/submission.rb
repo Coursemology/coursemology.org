@@ -155,4 +155,5 @@ class Submission < ActiveRecord::Base
       file.save
     end
   end
+
 end

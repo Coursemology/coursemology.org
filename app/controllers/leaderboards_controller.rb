@@ -4,8 +4,7 @@ class LeaderboardsController < ApplicationController
   before_filter :load_general_course_data, only: [:show]
 
   def show
-    # 1 list for top 10 by EXP
-    # 1 list for top 10 by achievements
+
     top_pref = @course.leaderboard_no_pef.prefer_value.to_i
     student_courses = @course.student_courses
     @top_10_exp = student_courses.student.where(is_phantom: false).order('exp DESC').first(top_pref)
