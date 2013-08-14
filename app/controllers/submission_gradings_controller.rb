@@ -29,6 +29,11 @@ class SubmissionGradingsController < ApplicationController
   end
 
   def create
+    if @submission.graded?
+      flash[:error] = "Submission has already been graded by " + @submission.final_grading.grader.name
+      redirect_to course_mission_submission_path(@course, @mission, @submission)
+      return
+    end
     @submission_grading.total_grade = 0
     @submission_grading.total_exp = 0
     invalid_assign = false
