@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130814080545) do
+ActiveRecord::Schema.define(:version => 20130815160342) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
     t.text     "text"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.time     "deleted_at"
   end
 
   add_index "annotations", ["annotable_id"], :name => "index_annotations_on_annotable_id"
@@ -161,6 +162,7 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
     t.string   "commentable_type"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.time     "deleted_at"
   end
 
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"

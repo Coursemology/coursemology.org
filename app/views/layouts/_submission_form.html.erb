@@ -28,7 +28,7 @@
             <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
             <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
             <%= render partial: "comments/list",
-                       locals: { comments:  qa[:a].comments_json,
+                       locals: { comments:  qa[:a].comments_json(curr_user_course),
                                  target:    qa[:a],
                                  header:    "Comments",
                                  ecid:      ecid,

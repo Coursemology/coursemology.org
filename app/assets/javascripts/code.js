@@ -123,7 +123,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             }
         });
     }
-    function createComment(start, end, callback,temporary) {
+    function createComment(start, end, callback, temporary) {
         if (_vt!='view')return;
         if ( ($tcb = $("#temporary-comment-box")) && $tcb.size()){
             if (start != $tcb.data('s') || end != $tcb.data('e')){
@@ -208,16 +208,16 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
         if ($active) {
             if ($active == $com){
-                $active.css({
+                $active.animate({
                     'max-height': '100px'
-                });
+                }, 'slow');
                 $active.removeClass('active', 500);
                 $active = false;
                 $("#annotate-area").remove();
             }else{
-                $active.css({
+                $active.animate({
                     'max-height': '100px'
-                });
+                }, 'slow');
                 $active.removeClass('active', 500);
                 $com.css({
                     'max-height': 'none'
@@ -226,10 +226,13 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                 $active = $com;
             }
         } else {
-            $com.css({
-                'max-height': 'none'
-            });
-            $com.addClass('active');
+            var contentHeight = $('.annotate-area', $com).outerHeight(true);
+
+            $com.animate({
+                'max-height': contentHeight + 1000
+            }, 'slow');
+
+            $com.addClass('active', 300);
             $active = $com;
         }
 
@@ -306,23 +309,128 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                         this.attr('id', '');
                         _comments.push( {s: annotations[i].s-1, e: annotations[i].e-1} );
                     }
-                    if (this.find('.annotate-area').size() == 0){
-                        this.prepend('<ul class="annotate-area code-comment-box">');
-                    }
-                    var $li = $('<li class="comment"/>');
-                    var $div = $('<div class="comment-text-container">');
-                    $div.append('<div class="commentor">'+annotations[i].u+'</div>')
-                        .append('<div class="comment">'+annotations[i].c.nl2br()+'</div>')
-                        .append('<div class="timestamp">'+annotations[i].t+'</div>');
-                    $li
-                        .append('<img class="small-profile-pic" src="'+annotations[i].p+'" width="32" height="32" />')
-                        .append($div)
-                        .appendTo(this.find('.annotate-area'));
-                    jfdiFormat($li.find('.comment').get(0));
+                    makeComment(annotations[i], this)
                 });
             }
         }
         checkScroll.call($wrapper);
+    }
+
+    function del_annotation($li) {
+        $obj = $li.find('.comment-obj');
+        if(!confirm("TO DELETE: \n\n"+ $obj.attr('o') + "\n\nBY: " + $obj.attr('author') )) {
+            return;
+        }
+
+        $.ajax({
+                url:$("#annotation_path").val()+"/"+$obj.attr('cid'),
+                type: "DELETE",
+                dataType:"json",
+                success: function(e) {
+                    $li.hide('slow', function(){ $li.remove(); });
+                }
+            }
+        )
+
+    }
+
+    function edit_annotation($li) {
+        $edit = $li.find('.comment-edit-link');
+        $del = $li.find('.comment-del-link');
+        $obj = $li.find('.comment-obj');
+        original = $obj.attr('o');
+//        rendered = $obj.attr('c');
+        id = $obj.attr('cid');
+        var textarea = $li.find('.annotate-box');
+        comment = $li.find('.comment');
+        if(textarea.size() == 0) {
+            //edit clicked
+            textarea = $('<textarea class="annotate-box" style="margin-bottom: 9px; display: none" />');
+            textarea.val(original);
+            comment.empty().append(textarea);
+            textarea.show('slow');
+            $edit.empty().append('<i class="icon-ok"></i>');
+            $del.empty().append('<i class="icon-remove"></i>');
+            $del.unbind('click');
+            $del.bind('click', (function(e) {
+                e.preventDefault();
+                quit_edit_annotation($li);
+            }));
+        } else {
+            //save comment
+            $.ajax({
+                url:$("#annotation_path").val()+"/"+$obj.attr('cid'),
+                type: "PUT",
+                dataType:"json",
+                data: {
+                    text: textarea.val()
+                },
+                success: function(resp) {
+                    $obj.attr('o', resp.o);
+                    $obj.attr('c', resp.c);
+
+                    quit_edit_annotation($li)
+                }
+            });
+        }
+
+    }
+
+     function quit_edit_annotation($li) {
+         $edit = $li.find('.comment-edit-link');
+         $del = $li.find('.comment-del-link');
+         var textarea = $li.find('.annotate-box');
+         comment = $li.find('.comment');
+         if(textarea.size() > 0) {
+             //show save
+             textarea.hide('slow', function(){ comment.empty(); comment.html($li.find('.comment-obj').attr('c').nl2br()) });
+             $edit.attr("title", "Edit Comment");
+             $edit.empty().append('<i class="icon-pencil"></i>');
+             $del.empty().append('<i class="icon-trash"></i>');
+             $del.attr("title", "Delete Comment");
+             $del.unbind('click');
+             $del.bind('click', (function(e) {
+                 e.preventDefault();
+                 del_annotation($li);
+             }));
+         }
+     }
+
+
+
+
+    function makeComment(annotation, parent) {
+        if (parent.find('.annotate-area').size() == 0){
+            parent.prepend('<ul class="annotate-area code-comment-box">');
+        }
+        var $li = $('<li class="comment"/>');
+        var $div = $('<div class="comment-text-container">');
+
+        if (annotation.edit) {
+            var $hidden = $('<input class="comment-obj" type="hidden" o=\''+ annotation.o +'\' c=\'' + annotation.c + '\' cid="'+annotation.id+'" author=\''+annotation.name+'\'>');
+            var $edit = $('<a href="#" class="comment-edit-link"><i class="icon-pencil"></i></a>').click(function(evt){
+                evt.preventDefault();
+                edit_annotation($li)
+            });
+            var $del = $('<a href="#" class="comment-del-link"><i class="icon-trash"></i></a>').click(function(evt){
+                evt.preventDefault();
+                del_annotation($li)
+            })
+            var $edit_div = $('<div class="pull-right annotation-edit">')
+                .append($edit)
+                .append($del)
+                .append($hidden)
+            $edit_div.appendTo($div)
+        }
+
+        $div.append('<div class="commentor">'+annotation.u+'</div>')
+            .append('<div class="comment">'+annotation.c.nl2br()+'</div>')
+            .append('<div class="timestamp">'+annotation.t+'</div>');
+        $li
+            .append('<img class="small-profile-pic" src="'+annotation.p+'" width="32" height="32" />')
+            .append($div)
+            .appendTo(parent.find('.annotate-area'));
+        jfdiFormat($li.find('.comment').get(0));
     }
 
     function refreshComments(){
@@ -479,7 +587,6 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             window.getSelection().addRange(range);
         }
     }
-
 
     return {
         parseComments: parseComments,

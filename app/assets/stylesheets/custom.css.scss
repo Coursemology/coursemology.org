@@ -586,7 +586,7 @@ small {
 
 //code formatting
 .cos_code {
-  // display: inline;
+  display: inline;
 }
 
 .cos_code .CodeMirror {
@@ -918,4 +918,32 @@ a:hover#student-large {
 
 .table-center th {
   text-align: center;
+}
+
+.comment-edit {
+  font-size: 1.1em;
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  a:hover {
+    font-weight: bold;
+  }
+
+}
+
+.active .annotation-edit  {
+  display: block;
+}
+
+.annotation-edit {
+  font-size: 1.1em;
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  a:hover {
+    font-weight: bold;
+  }
+  display: none;
 }

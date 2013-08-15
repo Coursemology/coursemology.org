@@ -75,6 +75,7 @@ $(document).ready(function() {
         }
     });
 
+    $('[rel=tooltip]').tooltip();
 });
 
 var _jfdiFormatFunc = function(i, d){

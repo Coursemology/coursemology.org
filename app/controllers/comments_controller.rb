@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
 
       respond_to do |format|
         #format.html { redirect_to params[:origin] }
-        format.json {render json: @comment.commentable.comments_json}
+        format.json {render json: @comment.commentable.comments_json(curr_user_course)}
       end
     end
   end
@@ -85,6 +85,27 @@ class CommentsController < ApplicationController
       respond_to do |format|
         format.json {render json: {status: 'OK'}}
       end
+    end
+  end
+
+  def destroy
+    @comment = Comment.where(id: params[:id]).first
+    if @comment
+      @comment.destroy
+    end
+    respond_to do |format|
+      format.json {render json: {status: 'OK'}}
+    end
+  end
+
+  def update
+    @comment = Comment.where(id: params[:id]).first
+    if @comment
+      @comment.text = params[:text]
+      @comment.save
+    end
+    respond_to do |format|
+      format.json {render json: {c: ApplicationHelper::style_format(@comment.text, false), o: @comment.text }}
     end
   end
 
