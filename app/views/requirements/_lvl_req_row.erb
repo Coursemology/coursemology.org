@@ -5,7 +5,7 @@
     <input type="hidden" name="new_reqs[]" value="<%= lvl_req.to_json %>" />
   <% end %>
   <td><p>Reached
-    <%= link_to lvl_req.req.get_title, course_achievement_path(@course, lvl_req.req) %></p>
+    <strong><%= lvl_req.req.get_title %></strong></p>
   </td>
   <td>
     <a href="#" class="btn remove-req">

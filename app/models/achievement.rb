@@ -6,7 +6,7 @@ class Achievement < ActiveRecord::Base
   include HasRequirement
   include AsRequirement
 
-  attr_accessible :course_id, :creator_id, :description, :icon_url, :title
+  attr_accessible :course_id, :creator_id, :description, :icon_url, :title, :requirement_text, :auto_assign
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
@@ -16,26 +16,26 @@ class Achievement < ActiveRecord::Base
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case
     # it can only be assigned manually, since there is no condition to check
-    if !requirements || requirements.count == 0
+    if !requirements || requirements.count == 0 || !auto_assign
       return false
     end
 
     satisfied = true
     requirements.each do |req|
       satisfied &&= req.satisfied?(user_course)
-      if not satisfied
+      unless satisfied
         break
       end
     end
-    return satisfied
+     satisfied
   end
 
   def get_title
-    return "Achievement #{title}"
+     "Achievement #{title}"
   end
 
   def get_path
-    return course_achievement_path(course, self)
+     course_achievement_path(course, self)
   end
 
   def update_requirement(remaining_reqs, new_reqs)

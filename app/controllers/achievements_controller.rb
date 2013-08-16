@@ -31,6 +31,7 @@ class AchievementsController < ApplicationController
 
   def new
     fetch_data_for_form
+    @achievement.auto_assign = true
   end
 
   def edit

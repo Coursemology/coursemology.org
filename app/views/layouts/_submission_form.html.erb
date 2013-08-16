@@ -56,7 +56,7 @@
                              required/>
                   <% end %>
                   <strong> / <%= max_grade %> </strong>
-                  <% if @mission.single_question? %>
+                  <div class=" <%=  'hidden' unless @mission.single_question? %>">
                       <h4>EXP awarded</h4>
                       <% if mode == 'view' %>
                           <strong><%= qa[:g].exp if qa[:g] %></strong>
@@ -78,7 +78,7 @@
                              onchange="suggestEXP( <%= max_grade %>, <%= exp %>, '<%= qid %>')"
                       >
                       <br><br>
-                  <% end %>
+                  </div>
 
                 </div>
               </div>

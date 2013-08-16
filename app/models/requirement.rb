@@ -24,15 +24,13 @@ class Requirement < ActiveRecord::Base
       else
         return true
     end
-
-    return false;
   end
 
   def check_achievement(user_course)
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(
       user_course.id, req.id
     )
-    return !uach.nil?
+    !uach.nil?
   end
 
   def as_json(options={})
