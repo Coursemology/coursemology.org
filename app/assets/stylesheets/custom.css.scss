@@ -653,7 +653,20 @@ small {
 .cm-s-wombat span.cm-meta { color: #f37; }
 
 
+.cos_code pre {
+  background: transparent;
+  white-space: pre;
+  font-family:  monospace;
+}
 
+.cos_code pre, div {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: baseline;
+  text-align: left;
+  color: inherit;
+}
 
 .CodeMirror-gutter-text pre.hover {
   background-color: black;
@@ -947,3 +960,12 @@ a:hover#student-large {
   }
   display: none;
 }
+
+.annotation-summary {
+  div {
+    //display: inline;
+  }
+  margin: 5px;
+  background-color: #EDEDED;
+}
+

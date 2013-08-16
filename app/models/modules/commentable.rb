@@ -52,19 +52,6 @@ module Commentable
       resp = c.as_json
       resp[:edit] = edit
       responds.append(resp)
-      #responds.append({
-      #                    c:  style_format(c.text, false),
-      #                    s:  -1,
-      #                    e:  -1,
-      #                    id: c.id,
-      #                    t:  datetime_no_seconds(c.updated_at),
-      #                    u:  '<span class="student-link"><a href="'+c.user_course.get_path+'">'+name+'</a></span>',
-      #                    p:  c.user_course.user.get_profile_photo_url,
-      #                    edit: edit,
-      #                    del:  del,
-      #                    name: name,
-      #                    o: c.text
-      #                })
     end
     responds
   end
