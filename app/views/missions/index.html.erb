@@ -30,7 +30,7 @@
     <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
 <% end %>
 
-<table class="table table-hover assignments missions-list-table">
+<table class="table assignments missions-list-table">
   <thead>
   <tr>
     <% @display_columns.each do |key, val| %>
@@ -51,7 +51,7 @@
   </tr>
   </thead>
 
-  <tbody>
+  <tbody class="table-hover">
   <% @missions.each do |mission| %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <% if to_display.include? 'title' %>

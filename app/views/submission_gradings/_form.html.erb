@@ -1,5 +1,5 @@
 <table width="100%">
-  <col width="10%" />
+  <col width="15%" />
   <tr><td>Student: </td><td><%= @submission.std_course.user.name %></td></tr>
   <% if @submission_grading.id %>
       <tr>
@@ -12,6 +12,14 @@
           <tr><td>Grader: </td><td><%= @submission_grading.grader.name %></td></tr>
       <% else %>
           <tr><td>Grader: </td><td>Auto graded!</td></tr>
+      <% end %>
+      <tr>
+        <td>First graded at:</td><td><%=  datetime_format(@submission_grading.created_at) %></td>
+      </tr>
+      <% if @submission_grading.last_grade_updated  %>
+      <tr>
+       <td>Last updated at:</td> <td> <%= datetime_format(@submission_grading.last_grade_updated) %></td>
+      </tr>
       <% end %>
   <% end %>
   <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submit_at || @submission.created_at) %></td></tr>

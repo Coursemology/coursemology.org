@@ -31,7 +31,7 @@
     <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
 <% end %>
 
-<table class="table table-hover assignments">
+<table class="table assignments">
   <thead>
   <tr>
     <% @display_columns.each do |key, val| %>
@@ -49,7 +49,7 @@
     <% end %>
   </tr>
   </thead>
-  <tbody>
+  <tbody class="table-hover">
 
   <% @trainings_with_sbm.each do |tws| %>
       <% training = tws[:training] %>

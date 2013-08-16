@@ -5,7 +5,7 @@
 <% if @lecturer_requests.size == 0 %>
   There is no outstanding requests.
 <% else %>
-  <table class="table table-hover enroll-requests">
+  <table class="table enroll-requests">
     <thead>
       <tr>
         <td>Id</td>
@@ -14,7 +14,7 @@
         <td>Action</td>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-hover">
       <% @lecturer_requests.each do |rq| %>
         <tr>
           <input type="hidden" class="destroy-url"

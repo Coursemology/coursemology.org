@@ -969,3 +969,9 @@ a:hover#student-large {
   background-color: #EDEDED;
 }
 
+.table-hover {
+  tr:hover {
+    background-color: lightgray;
+  }
+}
+

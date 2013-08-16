@@ -110,6 +110,7 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.total_grade += ag[:grade].to_i
       @submission_grading.total_exp += ag[:exp].to_i
       @submission_grading.last_grade_updated = Time.now
+      @submission.set_graded
     end
     @submission_grading.grader = current_user
     if invalid_assign
