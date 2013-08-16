@@ -42,6 +42,9 @@ Update Devise configuration:
 Update Facebook App config (copy + edit with appropirate info):
         cp config/facebook.yml.sample config/facebook.yml
 
+Update database config( copy + edi twith appropriate info):
+        cp config/database.yml.sample config/database.yml
+
 
 Then update the email used, the facebook app info in the config file above.
 

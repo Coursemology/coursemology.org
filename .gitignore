@@ -32,3 +32,5 @@
 
 #.rvmrc perform certain actions when developer cd into the folder
 .rvmrc
+
+/config/database.yml
