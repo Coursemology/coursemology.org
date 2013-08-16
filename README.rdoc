@@ -45,6 +45,9 @@ Update Facebook App config (copy + edit with appropirate info):
 Update database config( copy + edi twith appropriate info):
         cp config/database.yml.sample config/database.yml
 
+If you will use Puma as the app server:
+        cp config/puma.rb.sample config/puma.rb
+
 
 Then update the email used, the facebook app info in the config file above.
 

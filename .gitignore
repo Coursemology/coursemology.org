@@ -34,3 +34,4 @@
 .rvmrc
 
 /config/database.yml
+/config/puma.rb
