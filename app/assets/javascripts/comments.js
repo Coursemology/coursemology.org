@@ -30,11 +30,11 @@ var Comment = (function(){
         $hidden.attr('c', obj.c);
         $hidden.attr('cid', obj.id);
         $hidden.attr('author', obj.name);
-        var $edit = $('<a href="#" class="comment-edit-link" rel="tooltip" title="Edit Comment"><i class="icon-pencil"></i></a>').click(function(evt){
+        var $edit = $('<a href="#" class="comment-edit-link" rel="tooltip" data-original-title="Edit Comment"><i class="icon-pencil"></i></a>').click(function(evt){
             evt.preventDefault();
             self.edit_comment($li, ecid)
         });
-        var $del = $('<a href="#" class="comment-del-link"  rel="tooltip" title="Delete Comment"><i class="icon-trash"></i></a>').click(function(evt){
+        var $del = $('<a href="#" class="comment-del-link"  rel="tooltip" data-original-title="Delete Comment"><i class="icon-trash"></i></a>').click(function(evt){
             evt.preventDefault();
             self.del_comment($li, ecid)
         })
@@ -64,10 +64,10 @@ var Comment = (function(){
             textarea.val(original);
             comment.empty().append(textarea);
             textarea.show('slow');
-            $edit.attr("title", "Save Comment");
+            $edit.attr("data-original-title", "Save Comment");
             $edit.empty().append('<i class="icon-ok"></i>');
             $del.empty().append('<i class="icon-remove"></i>');
-            $del.attr("title", "Cancel Edit");
+            $del.attr("data-original-title", "Cancel Edit");
             $del.unbind('click');
             $del.bind('click', (function(e) {
                 e.preventDefault();
@@ -101,10 +101,10 @@ var Comment = (function(){
             //show save
             console.log($li.find('.comment-obj').attr('c'));
             textarea.hide('slow', function(){ comment.empty(); comment.html($li.find('.comment-obj').attr('c').nl2br()) });
-            $edit.attr("title", "Edit Comment");
+            $edit.attr("data-original-title", "Edit Comment");
             $edit.empty().append('<i class="icon-pencil"></i>');
             $del.empty().append('<i class="icon-trash"></i>');
-            $del.attr("title", "Delete Comment");
+            $del.attr("data-original-title", "Delete Comment");
             $del.unbind('click');
             $del.bind('click', (function(e) {
                 e.preventDefault();
@@ -130,17 +130,22 @@ var Comment = (function(){
         )
     }
 
-    self.makeHiddenBox = function(cnt,code_id){
+    self.makeHiddenBox = function(cnt, ecid){
         var $li = $('<li class="hidden"/>');
 
         $a = $('<a cnt="'+cnt+'" class="hidden" href="#">'+cnt+' other comments hidden</a>')
             .appendTo($li)
             .one('click',function(){
-                $.post(makelink('code/_get_comments'), {cid: code_id}, function(s){
-                    s = JSON.parse(s);
-                    self.parseComment(s, code_id);
+                $.post($("#"+ecid+"_post_path").val()+"/get_comments",{
+                    origin: $("#submission_url_"+ecid).val(),
+                    comment:{
+                        commentable_id: $("#"+ecid+"_commentable_id").val(),
+                        commentable_type: $("#"+ecid+"_commentable_type").val(),
+                    },
+                    brief: true},
+                    function(s){
+                    self.parseComment(s, ecid);
                 });
-                return false;
             }).click(function(){return false;});
 
         return $li;
@@ -206,8 +211,10 @@ var Comment = (function(){
                 }
             }
             if ($obj.data('hasComment')){
+                console.log('inserting');
                 $li.insertBefore($obj.data('hasComment'));
             }else{
+                console.log('appending');
                 $li.appendTo($obj);
             }
             if ($li.find('.comment').size()){

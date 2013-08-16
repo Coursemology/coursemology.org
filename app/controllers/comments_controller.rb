@@ -109,6 +109,19 @@ class CommentsController < ApplicationController
     end
   end
 
+  def get_comments
+    commentable = nil
+    if params[:comment]
+      commentable = Comment.where(params[:comment]).first.commentable
+    end
+
+    respond_to do |format|
+      resp = commentable ? commentable.comments_json(curr_user_course, false) : {}
+      puts resp
+      format.json {render json:resp }
+    end
+  end
+
   private
   def sorting_and_paging(topics)
     @topics = topics.sort_by { |ans| ans.last_commented_at }.reverse

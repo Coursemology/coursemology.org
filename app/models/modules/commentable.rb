@@ -40,8 +40,9 @@ module Commentable
     end
   end
 
-  def comments_json(curr_user_course = nil)
+  def comments_json(curr_user_course = nil, brief = false)
     responds = []
+
 
     self.comments.each do |c|
       puts curr_user_course.to_json
@@ -52,6 +53,16 @@ module Commentable
       resp = c.as_json
       resp[:edit] = edit
       responds.append(resp)
+    end
+
+    sum = self.comments.count
+    brief_resp = []
+    if brief and sum > 5
+      brief_resp << responds[0]
+      brief_resp << { h: sum - 3 }
+      brief_resp << responds[sum - 2]
+      brief_resp << responds[sum - 1]
+      return brief_resp
     end
     responds
   end

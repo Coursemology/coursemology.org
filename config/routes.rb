@@ -102,6 +102,7 @@ JfdiAcademy::Application.routes.draw do
 
     resources :comments
     post "/comments/toggle" => "comments#pending_toggle"
+    post "/comments/get_comments" => "comments#get_comments"
 
     resources :annotations
 
