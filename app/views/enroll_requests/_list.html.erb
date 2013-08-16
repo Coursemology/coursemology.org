@@ -4,6 +4,7 @@
       <td><input type="checkbox" class="check-all" data-target="<%= ".checkbox-#{type}" %>"/></td>
       <td>Name</td>
       <td>Email</td>
+      <td>Requested At</td>
       <td>Role</td>
       <td>Action</td>
     </tr>
@@ -16,6 +17,7 @@
       <td><input type="checkbox" value="<%= ec.id %>" class="<%= "checkbox-#{type}" %>"/></td>
       <td><label class="user-name"><%= ec.user.name %></label></td>
       <td><%= ec.user.email %></td>
+      <td><%= datetime_no_seconds(ec.created_at) %></td>
       <td><%= ec.role.title %></td>
       <td>
         <%= link_to '#', class: "btn btn-primary request-approve" do %>
