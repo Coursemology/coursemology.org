@@ -146,10 +146,10 @@ class UserCourse < ActiveRecord::Base
 
   def give_achievement(ach, should_notify=true)
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    if !uach && self.is_student?
+    if !uach
       uach = self.user_achievements.build
       uach.achievement = ach
-      if should_notify && !self.is_phantom?
+      if should_notify && self.is_student? && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
       end
