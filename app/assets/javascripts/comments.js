@@ -25,7 +25,11 @@ var Comment = (function(){
         var $li = $('<li class="comment"/>');
         $li.append('<img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" />');
         var $div = $('<div class="comment-text-container">');
-        var $hidden = $('<input class="comment-obj" type="hidden" o=\''+ obj.o +'\' c=\'' + obj.c + '\' cid="'+obj.id+'" author=\''+obj.name+'\'>');
+        var $hidden = $('<input class="comment-obj" type="hidden" o="" c="" cid="" author="" >');
+        $hidden.attr('o', obj.o);
+        $hidden.attr('c', obj.c);
+        $hidden.attr('cid', obj.id);
+        $hidden.attr('author', obj.name);
         var $edit = $('<a href="#" class="comment-edit-link" rel="tooltip" title="Edit Comment"><i class="icon-pencil"></i></a>').click(function(evt){
             evt.preventDefault();
             self.edit_comment($li, ecid)

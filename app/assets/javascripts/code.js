@@ -407,7 +407,11 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         var $div = $('<div class="comment-text-container">');
 
         if (annotation.edit) {
-            var $hidden = $('<input class="comment-obj" type="hidden" o=\''+ annotation.o +'\' c=\'' + annotation.c + '\' cid="'+annotation.id+'" author=\''+annotation.name+'\'>');
+            var $hidden = $('<input class="comment-obj" type="hidden" o="" c="" cid="" author="" >');
+            $hidden.attr('o', annotation.o);
+            $hidden.attr('c', annotation.c);
+            $hidden.attr('cid', annotation.id);
+            $hidden.attr('author', annotation.name);
             var $edit = $('<a href="#" class="comment-edit-link"><i class="icon-pencil"></i></a>').click(function(evt){
                 evt.preventDefault();
                 edit_annotation($li)
