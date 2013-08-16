@@ -44,5 +44,9 @@ class Mission < ActiveRecord::Base
     end
   end
 
+  def total_exp
+    exp
+  end
+
   alias_method :sbms, :submissions
 end
