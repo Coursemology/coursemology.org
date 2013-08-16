@@ -60,6 +60,7 @@ class CourseAbility
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff
+      cannot :approve, EnrollRequest
     end
 
     if user.is_admin?  || user_course.is_staff?
