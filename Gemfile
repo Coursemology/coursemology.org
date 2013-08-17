@@ -62,7 +62,6 @@ gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
-gem 'acts_as_list', '0.3.0'
 
 
 # To use ActiveModel has_secure_password
