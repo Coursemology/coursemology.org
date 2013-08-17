@@ -18,8 +18,10 @@ class Announcement < ActiveRecord::Base
       return
     end
 
-    delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, Announcement.to_s, self.id, redirect_to), run_at: self.publish_at)
-    self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    if publish_at > Time.now
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, Announcement.to_s, self.id, redirect_to), run_at: self.publish_at)
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
   end
 
 end
