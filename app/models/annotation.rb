@@ -13,6 +13,10 @@ class Annotation < ActiveRecord::Base
   def get_code_lines
     code = annotable.code
     selected = code.split("\n")[line_start - 1, line_end - line_start + 1]
-    selected.join("\n")
+    if selected
+      selected.join("\n")
+    else
+      ""
+    end
   end
 end
