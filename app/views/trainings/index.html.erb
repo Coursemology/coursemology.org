@@ -58,7 +58,7 @@
         <% if to_display.include? 'title' %>
             <td>
               <% if can? :manage, Training %>
-                  <%= link_to course_training_path(@course, training) do %>
+                  <%= link_to course_training_stats_path(@course, training) do %>
                       <h4><%= training.title %>
                         <% if @is_new[training.id] %>
                             <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">

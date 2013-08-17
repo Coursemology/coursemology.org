@@ -63,6 +63,7 @@ JfdiAcademy::Application.routes.draw do
       resources :training_submissions
       post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
     end
+    match "trainings/:id/stats" => "trainings#stats", as: :training_stats
 
     resources :mcq_answers
 

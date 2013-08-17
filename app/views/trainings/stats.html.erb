@@ -1,0 +1,52 @@
+<div class="page-header">
+  <h1>Training Grading: <%= @training.title %></h1>
+</div>
+
+<% question_count = @training.questions.count %>
+
+<% if @my_std_coures.size > 0 %>
+    <h3>My Students</h3>
+    <table class="table">
+      <thead>
+      <th>Student</th>
+      <th>Current Step</th>
+      </thead>
+      <tbody>
+      <% @my_std_coures.each  do |std| %>
+          <% sub = @submissions.where(std_course_id: std.id).first %>
+          <tr>
+            <% if sub %>
+                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+            <% else %>
+                <td><%= std.user.name %></td>
+            <% end %>
+            <td><%= sub ? 0 : (sub.current_step > question_count ? "Finished!" : sub.current_step) %></td>
+          </tr>
+      <% end %>
+      </tbody>
+
+    </table>
+<% end %>
+
+<h3>All Students</h3>
+<table class="table">
+  <thead>
+  <th>Student</th>
+  <th>Tutor</th>
+  <th>Current Step</th>
+  </thead>
+  <tbody>
+  <% @stds_coures.each do |std| %>
+      <% sub = @submissions.where(std_course_id: std.id).first %>
+      <tr>
+        <% if sub %>
+            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+        <% else %>
+            <td><%= std.user.name %></td>
+        <% end %>
+        <td><%= std.ge_my_tut_name %></td>
+        <td><%= sub.nil? ? "0 / #{question_count}" : (sub.current_step > question_count ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

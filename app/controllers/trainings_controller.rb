@@ -2,7 +2,7 @@ class TrainingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :training, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied, :stats]
 
   def index
     @is_new = {}
@@ -121,6 +121,13 @@ class TrainingsController < ApplicationController
       format.html { redirect_to course_trainings_url,
                                 notice: "The training '#{@training.title}' has been removed." }
     end
+  end
+
+  def stats
+    #@mission
+    @submissions = @training.training_submissions
+    @stds_coures = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
+    @my_std_coures = curr_user_course.get_only_tut_stds
   end
 
   def access_denied
