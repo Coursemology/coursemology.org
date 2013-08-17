@@ -35,7 +35,7 @@
         <div class="controls">
           <select name="student">
             <option value="0">Any</option>
-            <% @student_courses.each do |sc| %>
+            <% @student_courses.sort_by {|sc| sc.user.name }.each do |sc| %>
                 <option name="student" value="<%= sc.id %>"
                         <%= "selected" if @selected_sc && sc.id = @selected_sc.id %>>
                   <%= sc.user.name %>
