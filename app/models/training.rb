@@ -29,7 +29,7 @@ class Training < ActiveRecord::Base
   end
 
   def questions
-    self.asm_qns.map {|q| q.qn}
+    self.asm_qns.order(:pos).map {|q| q.qn}
   end
 
   def attach_files(files)

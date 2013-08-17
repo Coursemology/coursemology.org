@@ -97,4 +97,20 @@ $(document).ready(function(){
         sec = hms[2];
         return new Date(year, month, day, hour, min, sec);
     }
+
+    // Make the table rows (the questions / asm-qns) sortable
+    $(".asm-qns").sortable({
+        update: function(event, ui){ 
+            // console.log("Changed");
+            var asm_qns_positions = $(this).sortable('serialize');
+            // console.log(asm_qns_positions);
+
+            var asm_qns_reorder_url = $(this).attr('url');
+            $.ajax({
+              url: asm_qns_reorder_url,
+              type: "POST",
+              data: asm_qns_positions
+            });
+        }
+    });
 });
