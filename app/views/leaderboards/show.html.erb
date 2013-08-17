@@ -5,7 +5,7 @@
 <div class="span4 leaderboard-table leaderboard-experience-table">
   <table class="table">
     <caption class="leaderboard-type">By Level</caption>
-    <% @top_10_exp.each_with_index do |std_course, index| %>
+    <% @top_exp.each_with_index do |std_course, index| %>
       <tr>
         <td class="leaderboard-counter-container"><p class="leaderboard-counter"></p></td>
         <td class="user-profile-pic-col">
@@ -28,7 +28,7 @@
 <div class="span4 leaderboard-table leaderboard-achievement-table">
   <table class="table">
     <caption class="leaderboard-type">By Achievement</caption>
-    <% @top_10_ach.each_with_index do |std_course, index| %>
+    <% @top_ach.each_with_index do |std_course, index| %>
       <!-- <tr class="<%= "leaderboard-top-row" if index == 0 %>"> -->
       <tr>
         <td class="leaderboard-counter"></td>

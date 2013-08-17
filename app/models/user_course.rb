@@ -114,6 +114,7 @@ class UserCourse < ActiveRecord::Base
       end
     end
 
+    self.exp_updated_at = Time.now
     self.save
     self.update_achievements
   end
