@@ -35,6 +35,10 @@
         <% start = -1 %>
         <% if annotations.count > 0 %>
             <% annotations.each_with_index do |anno, index| %>
+                <% code_lines = anno.get_code_lines %>
+                <% unless code_lines %>
+                    <% next %>
+                <% end %>
                 <% if start != anno.line_start %>
                     <% if index > 0%>
                         </ul>
@@ -42,9 +46,10 @@
                     <% end %>
 
                     <% start = anno.line_start %>
+
                     <div class="cos_code code-annotation">
                       <div class="annotate-code-lines cm-s-molokai">
-                        <div class="inner"><%= anno.get_code_lines %></div>
+                        <div class="inner"><%= code_lines %></div>
                         <div class="line-numbers">
                           <% for i in anno.line_start..anno.line_end %>
                               <pre class="line-number"><%= i %></pre>
