@@ -63,7 +63,7 @@
     <th>Students</th>
   </tr>
   <% @achievements.each do |ach| %>
-      <% std_ucs = ach.user_achievements.map(&:user_course).select { |uc| uc.is_student? && !uc.is_phantom?} %>
+      <% std_ucs = ach.user_achievements.map(&:user_course).select { |uc| uc && uc.is_student? && !uc.is_phantom?} %>
       <% if std_ucs.size > 0 %>
           <tr>
             <td><img src="<%= ach.icon_url %>" /></td>
