@@ -57,6 +57,7 @@ class MissionsController < ApplicationController
   end
 
   def new
+    @missions = @course.missions
     @mission.exp = 1000
     @mission.open_at = DateTime.now.beginning_of_day
     @mission.close_at = DateTime.now.end_of_day + 7  # 1 week from now
@@ -70,12 +71,14 @@ class MissionsController < ApplicationController
   end
 
   def edit
+    @missions = @course.missions
     @tags = @course.tags
     @asm_tags = {}
     @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def create
+    @missions = @course.missions
     @mission.pos = @course.missions.count + 1
     @mission.creator = current_user
     @mission.update_tags(params[:tags])

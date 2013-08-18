@@ -119,7 +119,7 @@
         <% end %>
         <% if curr_user_course.id && can?(:manage, Submission) %>
             <td>
-              <% if mission.open_at < Time.now || can?(:manage, Mission)%>
+              <% if mission.can_start?(curr_user_course).first || can?(:manage, Mission)%>
                   <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
                   <% if submission %>
                       <% if submission.attempting? %>

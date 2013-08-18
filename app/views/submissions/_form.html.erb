@@ -50,13 +50,14 @@
     </div>
 <% end %>
 
-
-<span class="btn" data-toggle="collapse" data-target="#submission-files">
-          <i class="icon-upload icon-white"></i>
-          <span>Add files for submission</span>
-</span>
-<br/><br/>
-<div id="submission-files" class="collapse out">
-  <%= render partial: "layouts/file_uploader_complicated",
-             locals: { owner: @submission } %>
-</div>
+<% if @mission.is_file_submission  %>
+    <span class="btn" data-toggle="collapse" data-target="#submission-files">
+      <i class="icon-upload icon-white"></i>
+      <span>Add files for submission</span>
+    </span>
+    <br/><br/>
+    <div id="submission-files" class="collapse out">
+      <%= render partial: "layouts/file_uploader_complicated",
+                 locals: { owner: @submission } %>
+    </div>
+<% end %>

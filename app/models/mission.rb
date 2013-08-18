@@ -8,13 +8,14 @@ class Mission < ActiveRecord::Base
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
-                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question
+                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question, :is_file_submission, :dependent_id
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
+  belongs_to :dependent_mission, class_name: "Mission", foreign_key: "dependent_id"
 
   has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
@@ -46,6 +47,19 @@ class Mission < ActiveRecord::Base
 
   def total_exp
     exp
+  end
+
+  def can_start?(curr_user_course)
+    if open_at > Time.now
+      return  false, "Mission hasn't open yet :)"
+    end
+    if dependent_mission
+      sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
+      if !sbm || sbm.attempting?
+        return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
+      end
+    end
+    return true, ""
   end
 
   alias_method :sbms, :submissions
