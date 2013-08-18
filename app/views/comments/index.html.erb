@@ -31,7 +31,7 @@
         <%= render partial: "modules/commentable/commentable_training_question", locals: { question: topic, ecid: ecid } %>
     <% end %>
     <% if topic.class == StdCodingAnswer %>
-        <% annotations = topic.annotations %>
+        <% annotations = topic.annotations.sort_by {|anno| anno.line_start } %>
         <% start = -1 %>
         <% if annotations.count > 0 %>
             <% annotations.each_with_index do |anno, index| %>
