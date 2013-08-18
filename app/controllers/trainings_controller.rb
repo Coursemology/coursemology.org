@@ -16,7 +16,7 @@ class TrainingsController < ApplicationController
     @reattempt = @course.course_preferences.training_reattempt.first
 
     @trainings = @course.trainings.accessible_by(current_ability).order(:open_at)
-    @paging = @course.training_table_paging
+    @paging = @course.trainings_paging_pref
 
     if @selected_tags
       tags = Tag.find(@selected_tags)

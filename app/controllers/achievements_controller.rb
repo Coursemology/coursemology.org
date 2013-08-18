@@ -21,6 +21,11 @@ class AchievementsController < ApplicationController
         req_check: req_check
       }
     end
+
+    @ach_paging = @course.achievements_paging_pref
+    if @ach_paging.display?
+      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
+    end
   end
 
   def fetch_data_for_form

@@ -46,7 +46,11 @@ class TrainingSubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.page(params[:page])
+    @sbms_paging = @course.training_sbm_paging_pref
+    if @sbms_paging.display?
+      @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
+    end
+
 
     respond_to do |format|
       format.html { render "submissions/listall" }

@@ -124,7 +124,13 @@ class CommentsController < ApplicationController
 
   private
   def sorting_and_paging(topics)
+
+    @comments_paging = @course.comments_paging_pref
     @topics = topics.sort_by { |ans| ans.last_commented_at }.reverse
-    @topics = Kaminari.paginate_array(@topics).page(params[:page]).per(10)
+
+    if @comments_paging.display?
+      @topics = Kaminari.paginate_array(@topics).page(params[:page]).per(@comments_paging.prefer_value.to_i)
+    end
+    @topics
   end
 end

@@ -82,7 +82,9 @@
 
 <% end %>
 
-<%= paginate @topics %>
+<% if @comments_paging.display? %>
+    <%= paginate @topics %>
+<% end %>
 
 <script>
     $('.mission-box').click(function(){

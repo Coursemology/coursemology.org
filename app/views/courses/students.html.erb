@@ -20,6 +20,8 @@
           <td></td></tr>
       <% end %>
     </table>
-    <%= paginate @student_courses %>
+    <% if @std_paging.display? %>
+        <%= paginate @student_courses %>
+    <% end %>
   </div>
 </div>

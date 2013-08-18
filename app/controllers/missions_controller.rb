@@ -15,7 +15,8 @@ class MissionsController < ApplicationController
     @time_format =  @course.mission_time_format
 
     @missions = @course.missions.accessible_by(current_ability).order(:open_at)
-    @paging = @course.mission_table_paging
+    @paging = @course.missions_paging_pref
+
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
@@ -163,9 +164,16 @@ class MissionsController < ApplicationController
 
   def stats
     #@mission
+    @stats_paging = @course.missions_stats_paging_pref
     @submissions = @mission.submissions
     @stds_coures = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
-    @my_std_coures = curr_user_course.get_only_tut_stds
+    @my_std_coures = curr_user_course.get_only_tut_stds.select { |uc| !uc.is_phantom? }
+
+    if @stats_paging.display?
+      @stds_coures = Kaminari.paginate_array(@stds_coures).page(params[:page]).per(@stats_paging.prefer_value.to_i)
+    end
+    @stds_coures_phantom = @course.user_courses.student.where(is_phantom: true).sort_by {|uc| uc.user.name.downcase }
+
   end
 
   def access_denied

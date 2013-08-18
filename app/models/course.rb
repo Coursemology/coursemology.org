@@ -110,16 +110,56 @@ class Course < ActiveRecord::Base
         pref.preferable_item.item_type == "Time" }.first
   end
 
-  def training_table_paging
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
-        pref.preferable_item.item_type == "Table" &&
-        pref.preferable_item.name == 'paging' }.first
+  def trainings_paging_pref
+    paging_pref('Trainings')
   end
 
-  def mission_table_paging
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
-        pref.preferable_item.item_type == "Table" &&
-        pref.preferable_item.name == 'paging' }.first
+  def missions_paging_pref
+    paging_pref('Missions')
+  end
+
+  def announcements_paging_pref
+    paging_pref('Announcements')
+  end
+
+  def missions_stats_paging_pref
+    paging_pref('MissionStats')
+  end
+
+  def mission_sbm_paging_pref
+    paging_pref('MissionSubmissions')
+  end
+
+  def training_stats_paging_pref
+    paging_pref('TrainingStats')
+  end
+
+  def training_sbm_paging_pref
+    paging_pref('TrainingSubmissions')
+  end
+
+  def comments_paging_pref
+    paging_pref('Comments')
+  end
+
+  def achievements_paging_pref
+    paging_pref('Achievements')
+  end
+
+  def students_paging_pref
+    paging_pref('Students')
+  end
+
+  def mgmt_std_paging_pref
+    paging_pref('ManageStudents')
+  end
+
+  def std_summary_paging_pref
+    paging_pref('StudentSummary')
+  end
+
+  def paging_pref(page)
+    self.course_preferences.course_paging_prefs.select { |pref| pref.preferable_item.item_type == page}.first
   end
 
   def achievements_locked_display
@@ -152,6 +192,10 @@ class Course < ActiveRecord::Base
     course_preferences.course_home_events_no
   end
 
+  def course_paging_prefs
+    course_preferences.course_paging_prefs
+  end
+
   def leaderboard_no_pef
     self.course_preferences.select { |pref| pref.preferable_item.item == "Leaderboard" &&
         pref.preferable_item.item_type == "Display" &&
@@ -173,13 +217,6 @@ class Course < ActiveRecord::Base
   def home_activities_no_pref
     course_home_events_no_pref.select { |pref| pref.preferable_item.name == "activities_no" }.first
   end
-
-  def announcements_paging_pref
-    course_preferences.select { |pref| pref.preferable_item.item == "Announcements" &&
-        pref.preferable_item.item_type == "List" &&
-        pref.preferable_item.name == "paging" }.first
-  end
-
 
   def populate_preference
     course_preferences.each do |pref|

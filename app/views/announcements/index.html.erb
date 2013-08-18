@@ -37,4 +37,6 @@
     <hr/>
 <% end %>
 
-<%= paginate @announcements %>
+<% if @paging_pref.display? %>
+    <%= paginate @announcements %>
+<% end %>

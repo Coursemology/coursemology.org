@@ -50,7 +50,12 @@ class SubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.page(params[:page])
+    @sbms_paging = @course.mission_sbm_paging_pref
+    if @sbms_paging.display?
+      @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
+    end
+
+
 
   end
 

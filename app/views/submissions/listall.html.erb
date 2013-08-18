@@ -117,4 +117,7 @@
   </tbody>
 </table>
 
-<%= paginate @sbms %>
+<% if @sbms_paging.display? %>
+    <%= paginate @sbms %>
+<% end %>
+

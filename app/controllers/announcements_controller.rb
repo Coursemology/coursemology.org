@@ -6,9 +6,12 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
-    paging_pref = @course.announcements_paging_pref.prefer_value.to_i
+    @paging_pref = @course.announcements_paging_pref
     @announcements = @course.announcements.accessible_by(current_ability)
-                        .order("publish_at DESC").page(params[:page]).per(paging_pref)
+                        .order("publish_at DESC")
+    if @paging_pref.display
+      @announcements = @announcements.page(params[:page]).per(@paging_pref.prefer_value.to_i)
+    end
     if curr_user_course.id
       unseen = @announcements - curr_user_course.seen_announcements.first(30)
       unseen.each do |ann|

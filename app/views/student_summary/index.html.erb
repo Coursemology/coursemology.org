@@ -22,3 +22,7 @@
   <% end %>
   </tbody>
 </table>
+
+<% if @std_summary_paging.display? %>
+    <%= paginate @students %>
+<% end %>

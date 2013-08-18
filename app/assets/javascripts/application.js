@@ -76,6 +76,7 @@ $(document).ready(function() {
     });
 
     $('[rel=tooltip]').tooltip();
+    $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
 });
 
 var _jfdiFormatFunc = function(i, d){

@@ -93,3 +93,8 @@
   <% end %>
   </tbody>
 </table>
+
+<% if @ach_paging.display? %>
+    <%= paginate @achievements %>
+<% end %>
+

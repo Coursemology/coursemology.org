@@ -408,3 +408,100 @@ if PreferableItem.count == 42
                          default_display: true
 
 end
+
+if PreferableItem.count == 43
+
+  PreferableItem.create! item:            "Achievements",
+                         item_type:       "Icon",
+                         name:            "locked",
+                         default_value:   "",
+                         description:     "Locked achievements icon display type",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Announcements",
+                         name:            "Announcements",
+                         default_value:   "50",
+                         description:     "Number of announcements to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Missions",
+                         name:            "Missions",
+                         default_value:   "50",
+                         description:     "Number of missions to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "MissionStats",
+                         name:            "Mission Statistics",
+                         default_value:   "50",
+                         description:     "Number of students to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Trainings",
+                         name:            "Trainings",
+                         default_value:   "50",
+                         description:     "Number of trainings to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "TrainingStats",
+                         name:            "Training Statistics",
+                         default_value:   "50",
+                         description:     "Number of students to display per page",
+                         default_display: true
+
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "MissionSubmissions",
+                         name:            "Mission Submissions",
+                         default_value:   "50",
+                         description:     "Number of mission submissions to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "TrainingSubmissions",
+                         name:            "Training Submissions",
+                         default_value:   "50",
+                         description:     "Number of training submissions to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Comments",
+                         name:            "Comments",
+                         default_value:   "50",
+                         description:     "Number of topics to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Achievements",
+                         name:            "Achievements",
+                         default_value:   "50",
+                         description:     "Number of achievements to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Students",
+                         name:            "Students",
+                         default_value:   "50",
+                         description:     "Number of students to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "ManageStudents",
+                         name:            "Manage Students",
+                         default_value:   "50",
+                         description:     "Number of students to display per page",
+                         default_display: true
+
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "StudentSummary",
+                         name:            "Student Summary",
+                         default_value:   "50",
+                         description:     "Number of students to display per page",
+                         default_display: true
+
+
+end
