@@ -28,6 +28,7 @@ class CoursePreferencesController < ApplicationController
         @tab = "OtherPreference"
         @preferences = @course.home_sections
         @no_preferences = @course.course_home_events_no_pref << @course.leaderboard_no_pef << @course.announcements_paging_pref
+        @achievement_pref = @course.achievements_locked_display
       else
         @tab = 'Sidebar'
         @preferences = @course.student_sidebar_items

@@ -39,6 +39,8 @@ class AchievementsController < ApplicationController
   end
 
   def show
+    @uach = UserAchievement.find_by_user_course_id_and_achievement_id(
+        curr_user_course.id, @achievement.id)
   end
 
   def create

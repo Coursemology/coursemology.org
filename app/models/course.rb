@@ -122,6 +122,12 @@ class Course < ActiveRecord::Base
         pref.preferable_item.name == 'paging' }.first
   end
 
+  def achievements_locked_display
+    self.course_preferences.select { |pref| pref.preferable_item.item == "Achievements" &&
+        pref.preferable_item.item_type == "Icon" &&
+        pref.preferable_item.name == 'locked' }.first
+  end
+
   def email_notifications
     course_preferences.email_notifications
   end

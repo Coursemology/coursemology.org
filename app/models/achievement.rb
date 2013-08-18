@@ -53,4 +53,5 @@ class Achievement < ActiveRecord::Base
     end
     self.save
   end
+
 end

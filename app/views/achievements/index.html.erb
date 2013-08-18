@@ -23,7 +23,11 @@
   <% @achievements_with_info.each do |ach_info| %>
       <% ach = ach_info[:ach] %>
       <tr class="<%= ach_info[:won] ? "ach-won" : "ach-normal" %>">
-        <td><img class="ach-icon" src="<%= ach.icon_url %>" /></td>
+        <% can_view = ach_info[:won] || (can? :manage, Achievement) %>
+        <% lock_display = @course.achievements_locked_display.display? %>
+        <td>
+          <img class="ach-icon" <%= 'id=grayed' if lock_display and !can_view %> src="<%=  can_view || lock_display ? ach.icon_url : "/images/lock.png" %>" />
+        </td>
         <td>
           <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
           <p><%= ach.description %></p>
@@ -69,7 +73,7 @@
                 <% end %>
               </ul>
           <% else %>
-          <%= if ach.requirement_text then ach.requirement_text.html_safe end %>
+              <%= if ach.requirement_text then ach.requirement_text.html_safe end %>
           <% end %>
         </td>
         <% if can? :manage, Achievement %>

@@ -79,6 +79,16 @@
       </tbody>
     </table>
 
+    <h3>Achievement Preferences</h3>
+    <p> Preference settings for achievements.</p>
+    <div class="info-block">
+      <p><%= @achievement_pref.preferable_item.description %>:</p>
+      <div style="padding-left:5em" class="checkbox-text">
+        <input name="preferences[<%= @achievement_pref.id%>][prefer_value]" value="<%= @achievement_pref.prefer_value %>" type="hidden">
+        <input name="preferences[<%= @achievement_pref.id%>][display]" type="checkbox" <% if @achievement_pref.display? %> checked <% end %>>  Display gray scaled icon( A locked icon will be displayed if unchecked)
+      </div>
+    </div>
+
     <div class="center">
       <button class="btn btn-large btn-primary">Update</button>
     </div>
