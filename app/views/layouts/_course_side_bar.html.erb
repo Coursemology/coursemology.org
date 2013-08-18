@@ -87,7 +87,7 @@
               <% end %>
             </span>
                 <%= item[:text] %>
-                <% if item.has_key?(:count) %>
+                <% if item.has_key?(:count) and item[:count] > 0 %>
                     <span class="sidenav-count" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
                 <% end %>
               </a>
