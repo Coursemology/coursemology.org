@@ -54,13 +54,21 @@ class SubmissionsController < ApplicationController
     if @sbms_paging.display?
       @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
     end
-
-
-
   end
 
   def show
     @qadata = {}
+    # if student is still attempting a mission, redirect to edit page
+    if @submission.attempting? and @submission.std_course == curr_user_course
+      redirect_to edit_course_mission_submission_path
+      return
+    end
+
+    #if staff is accessing the submitted mission, redirect to grading page
+    if @submission.submitted? and curr_user_course.is_staff?
+      redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)
+      return
+    end
 
     if params[:grading_id]
       @grading = SubmissionGrading.find(grading_id)

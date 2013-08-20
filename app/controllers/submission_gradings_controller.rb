@@ -129,6 +129,15 @@ class SubmissionGradingsController < ApplicationController
 
   end
 
+  rescue_from CanCan::AccessDenied do |exception|
+    if @submission.std_course == curr_user_course
+      redirect_to course_mission_submission_path(@course, @mission, @submission)
+    else
+      flash[:error] = "You are not authorized to access the page :("
+      redirect_to @course
+    end
+  end
+
   private
 
   def validate_gradings(ag_record, ag)
