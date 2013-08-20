@@ -59,8 +59,6 @@ class StatsController < ApplicationController
 
     @sbms = @training.sbms
     @submitted = @sbms.map { |sbm| sbm.std_course }
-    # TODO: split submitted to doing vs submitted
-    # when saving mission is allowed
 
     all_std = @course.student_courses
     @unsubmitted = all_std - @submitted
@@ -71,6 +69,9 @@ class StatsController < ApplicationController
 
     sbms_by_date = sbms_graded.group_by { |sbm| sbm.created_at.to_date.to_s }
     @date_chart = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
+
+    @sbms_by_progress = sbms_graded.group_by(&:current_step).sort.reverse
+    @progress_chart = produce_submission_graph(@sbms_by_progress, 'Step', 'Current step of students')
 
     @mcqs = @training.mcqs
     @coding_question = @training.coding_questions

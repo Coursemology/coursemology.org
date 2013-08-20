@@ -11,15 +11,22 @@ to review all submission for this training.
 <br/>
 <table class="table">
   <tr>
-    <td>Submitted</td>
-    <td><%= @submitted.size %></td>
-    <td>
-      <% @submitted.each do |uc| %>
-        <%= render partial: "user_courses/short_name_display",
-          locals: { user_course: uc } %>
-      <% end %>
-    </td>
+    <th width="15%">Current Step</th>
+    <th>Count</th>
+    <th>Students</th>
   </tr>
+  <% @sbms_by_progress.each do |current_step, sbms| %>
+    <tr>
+      <td><%= current_step > @training.questions.count ? 'Finished' : current_step %></td>
+      <td><%= sbms.size %></td>
+      <td>
+        <% sbms.each do |sbm| %>
+          <%= render partial: "user_courses/short_name_display",
+            locals: { user_course: sbm.std_course } %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
   <tr>
     <td>Not started</td>
     <td><%= @unsubmitted.size %></td>
@@ -39,6 +46,9 @@ to review all submission for this training.
 <h3>Start time</h3>
 <div id="asm_starttime_graph" class="graph"></div>
 <%= render_chart(@date_chart, "asm_starttime_graph") %>
+<h3>Progress</h3>
+<div id="asm_progress_graph" class="graph"></div>
+<%= render_chart(@progress_chart, "asm_progress_graph") %>
 <h3>Mcq stats</h3>
 <% @mcqs.each do |mcq| %>
   <p class="well"><%= mcq.description.html_safe %></p>

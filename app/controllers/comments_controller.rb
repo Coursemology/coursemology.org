@@ -1,7 +1,7 @@
 class CommentsController < ApplicationController
   load_and_authorize_resource :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :new]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :view_for_question]
 
   def create
     @comment = Comment.new(params[:comment])
@@ -122,9 +122,38 @@ class CommentsController < ApplicationController
     end
   end
 
+  def view_for_question
+    qn_type = params[:qn_type] || ''
+    qn_id = params[:qn_id].to_i || 0
+    @question = nil
+    case
+      when qn_type == 'Mcq'
+        @question = Mcq.find(qn_id)
+      when qn_type == 'CodingQuestion'
+        @question = CodingQuestion.find(qn_id)
+    end
+
+    if !@question
+      redirect_to course_url(@course)
+      return
+    end
+
+    # verify subscription exist
+    cs = CommentSubscription.where(
+        user_course_id: curr_user_course.id,
+        topic_id: @question.id,
+        topic_type: @question.class).count
+    if cs == 0
+      redirect_to access_denied_path
+      return
+    end
+
+    @asm = @question.asm_qns.first.asm
+    @current_question = @question
+  end
+
   private
   def sorting_and_paging(topics)
-
     @comments_paging = @course.comments_paging_pref
     @topics = topics.sort_by { |ans| ans.last_commented_at }.reverse
 

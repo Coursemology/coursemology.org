@@ -10,6 +10,8 @@ body {
 
 label {
   font-family: 'Lato', sans-serif;
+  display: inline-block;
+  margin-left: 5px;
 }
 
 @import "bootstrap-responsive";
@@ -761,13 +763,6 @@ $grayMediumLight: #eaeaea;
   }
 }
 
-#training-step-form {
-  label {
-    display: inline;
-    margin-left: 5px;
-  }
-}
-
 .row .course-title {
   background-color: #eee;
   padding: 20px 20px;
@@ -932,18 +927,19 @@ a:hover#student-large {
 .table-center th {
   text-align: center;
 }
+<<<<<<< HEAD
 
 .comment-edit {
-  font-size: 1.1em;
-  a {
-    text-decoration: none;
-    color: #000000;
-  }
-  a:hover {
-    font-weight: bold;
-  }
+          font-size: 1.1em;
+          a {
+            text-decoration: none;
+            color: #000000;
+          }
+          a:hover {
+            font-weight: bold;
+          }
 
-}
+        }
 
 .active .annotation-edit  {
   display: block;
@@ -980,4 +976,8 @@ img#grayed {
   filter: gray; /* IE6-9 */
   -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
   opacity:0.5;
+}
+
+a.mission-box {
+  text-decoration: none;
 }
