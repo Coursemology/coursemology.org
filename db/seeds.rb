@@ -505,3 +505,13 @@ if PreferableItem.count == 43
 
 
 end
+
+if PreferableItem.count == 56
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Submission",
+                         name:          "auto",
+                         default_value: "",
+                         description:   "Auto create submissions for missions, special feature for courses that just want to take advantage of Coursemology's social features",
+                         default_display: false
+
+end

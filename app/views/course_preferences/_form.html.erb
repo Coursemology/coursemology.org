@@ -76,10 +76,22 @@
         </div>
 
     <% end %>
+
+    <% if @auto_submit %>
+        <h3>Auto create submissions:</h3>
+        <p><%= @auto_submit.preferable_item.description %></p>
+        <div class="info-block checkbox-text">
+          <input type="checkbox"
+                 name="preferences[<%= @auto_submit.id %>][display]"
+                 <%= "checked" if @auto_submit.display %>>
+          </input>Enabled
+          <input type="hidden" name="preferences[<%= @auto_submit.id %>][prefer_value]" value="<%= @auto_submit.prefer_value %>" >
+        </div>
+    <% end %>
     <% if @reattempt %>
         <h3>Re-Attempt</h3>
         <p><%= @reattempt.preferable_item.description %></p>
-        <div class="info-block">
+        <div class="info-block checkbox-text">
           <input type="checkbox"
                  name="preferences[<%= @reattempt.id %>][display]"
                  <%= "checked" if @reattempt.display %>>

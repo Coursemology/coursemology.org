@@ -58,20 +58,14 @@
             <td>
               <% if can? :manage, Mission %>
                   <%= link_to course_mission_stats_path(@course, mission) do %>
-                      <h4>
-                        <% if @is_new[mission.id] %>
-                            <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
-                            <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
-                        <% end %>
-                        <%= mission.title %>
-                      </h4>
+                      <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
+                  <% end %>
+              <% elsif mission.can_start?(curr_user_course).first %>
+                  <%= link_to course_mission_path(@course, mission) do %>
+                      <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
                   <% end %>
               <% else %>
                   <h4>
-                    <% if @is_new[mission.id] %>
-                        <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
-                        <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png"/>
-                    <% end %>
                     <%= mission.title %>
                   </h4>
               <% end %>

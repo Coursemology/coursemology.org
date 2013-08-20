@@ -43,10 +43,11 @@ class MissionsController < ApplicationController
   end
 
   def show
-    if curr_user_course.is_student?
-      redirect_to course_missions_path
+    if curr_user_course.is_student? and !@mission.can_start?(curr_user_course).first
+       redirect_to course_missions_path
       return
     end
+
     @questions = @mission.get_all_questions
     @question = Question.new
     @question.max_grade = 10

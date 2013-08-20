@@ -218,6 +218,12 @@ class Course < ActiveRecord::Base
     course_home_events_no_pref.select { |pref| pref.preferable_item.name == "activities_no" }.first
   end
 
+  def auto_create_sbm_pref
+    course_preferences.select { |pref| pref.preferable_item.item == 'Mission' and
+        pref.preferable_item.item_type == 'Submission' and
+        pref.preferable_item.name == 'auto' }.first
+  end
+
   def populate_preference
     course_preferences.each do |pref|
       item = PreferableItem.where(id: pref.preferable_item_id).first

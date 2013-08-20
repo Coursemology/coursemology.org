@@ -14,4 +14,15 @@ class CoursePreference < ActiveRecord::Base
   scope :course_paging_prefs,   where(preferable_item_id: PreferableItem.paging_prefs)
 
 
+  before_update :schedule_auto_sbm_job, :if => :display_changed?
+
+  def schedule_auto_sbm_job
+    if preferable_item == PreferableItem.where(item: 'Mission', item_type: 'Submission', name: 'auto').first
+      if display?
+        Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create'))
+      else
+        Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel'))
+      end
+    end
+  end
 end

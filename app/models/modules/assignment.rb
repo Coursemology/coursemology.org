@@ -90,6 +90,13 @@ module Assignment
     type = self.class
     QueuedJob.destroy(self.queued_jobs)
     course = self.course
+
+    if self.open_at > Time.now && type == Mission && course.auto_create_sbm_pref.display?
+      BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel', self.id)
+      delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create', self.id), run_at: self.open_at)
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+
     if type == Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
       return
     end

@@ -11,13 +11,12 @@ class CoursePreferencesController < ApplicationController
         @tab = "MissionPreference"
         @preferences = @course.mission_columns
         @time_format =  @course.mission_time_format
-        @table_paging = @course.missions_paging_pref
+        @auto_submit = @course.auto_create_sbm_pref
       when 'training'
         @tab = "TrainingPreference"
         @preferences = @course.training_columns
         @time_format =  @course.training_time_format
         @reattempt = @course.course_preferences.training_reattempt.first
-        @table_paging = @course.trainings_paging_pref
       when 'mcq'
         @tab = "McqPreference"
         @mcq_auto_grader = @course.mcq_auto_grader
