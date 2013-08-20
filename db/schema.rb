@@ -11,17 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130814080545) do
+ActiveRecord::Schema.define(:version => 20130817204132) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
     t.string   "title"
-    t.text     "description", :limit => 255
+    t.text     "description",      :limit => 255
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.time     "deleted_at"
+    t.boolean  "auto_assign"
+    t.text     "requirement_text"
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
@@ -57,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
     t.text     "text"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.time     "deleted_at"
   end
 
   add_index "annotations", ["annotable_id"], :name => "index_annotations_on_annotable_id"
@@ -161,6 +164,7 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
     t.string   "commentable_type"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.time     "deleted_at"
   end
 
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
@@ -338,27 +342,8 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
   add_index "mcqs", ["creator_id"], :name => "index_mcqs_on_creator_id"
 
-  create_table "missions", :force => true do |t|
-    t.integer  "course_id"
-    t.integer  "exp"
-    t.datetime "open_at"
-    t.datetime "close_at"
-    t.datetime "deadline"
-    t.integer  "timelimit"
-    t.integer  "attempt_limit"
-    t.integer  "auto_graded"
-    t.integer  "pos"
-    t.text     "description",     :limit => 255
-    t.integer  "creator_id"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
-    t.string   "title"
-    t.integer  "max_grade"
-    t.boolean  "single_question",                :default => false
-  end
-
-  add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
-  add_index "missions", ["creator_id"], :name => "index_missions_on_creator_id"
+# Could not dump table "missions" because of following StandardError
+#   Unknown type 'bool' for column 'is_file_submission'
 
   create_table "notifications", :force => true do |t|
     t.integer  "target_course_id"
@@ -689,11 +674,12 @@ ActiveRecord::Schema.define(:version => 20130814080545) do
     t.integer  "course_id"
     t.integer  "exp"
     t.integer  "role_id"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "level_id"
     t.time     "deleted_at"
-    t.boolean  "is_phantom", :default => false
+    t.boolean  "is_phantom",     :default => false
+    t.datetime "exp_updated_at"
   end
 
   add_index "user_courses", ["course_id"], :name => "index_user_courses_on_course_id"

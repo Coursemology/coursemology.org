@@ -7,7 +7,7 @@ class StdTag < ActiveRecord::Base
   before_create :init
 
   def get_completion_percentage
-    return self.tag.max_exp == 0 ? 0 : self.exp * 100 / self.tag.max_exp
+     self.tag.max_exp == 0 ? 0 : self.exp * 100 / self.tag.max_exp
   end
 
   private

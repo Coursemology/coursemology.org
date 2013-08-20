@@ -17,7 +17,7 @@ class Tag < ActiveRecord::Base
   before_create :init
 
   def update_max_exp
-    self.max_exp = self.asm_tags.sum { |asm_tag| asm_tag.asm.exp }
+    self.max_exp = self.asm_tags.sum { |asm_tag| asm_tag.asm.total_exp }
     self.save
   end
 

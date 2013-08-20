@@ -35,27 +35,34 @@ module Commentable
   def notify_user(curr_user_course, comment, redirect_url)
     # notify everyone except the ones who made the comment
     user_courses = self.user_courses - [curr_user_course]
-    puts '----------------'
     user_courses.each do |uc|
-      puts 'Notify ', uc.to_json
       UserMailer.delay.new_comment(uc.user, comment, redirect_url)
     end
-    puts '----------------'
   end
 
-  def comments_json
+  def comments_json(curr_user_course = nil, brief = false)
     responds = []
 
+
     self.comments.each do |c|
-      responds.append({
-                          c:  style_format(c.text, false),
-                          s:  -1,
-                          e:  -1,
-                          id: c.id,
-                          t:  datetime_no_seconds(c.updated_at),
-                          u:  '<span class="student-link"><a href="'+c.user_course.get_path+'">'+c.user_course.user.name+'</a></span>',
-                          p:  c.user_course.user.get_profile_photo_url
-                      })
+      puts curr_user_course.to_json
+      edit  = false
+      if curr_user_course and (curr_user_course.is_staff? || curr_user_course == c.user_course)
+        edit = true
+      end
+      resp = c.as_json
+      resp[:edit] = edit
+      responds.append(resp)
+    end
+
+    sum = self.comments.count
+    brief_resp = []
+    if brief and sum > 5
+      brief_resp << responds[0]
+      brief_resp << { h: sum - 3 }
+      brief_resp << responds[sum - 2]
+      brief_resp << responds[sum - 1]
+      return brief_resp
     end
     responds
   end

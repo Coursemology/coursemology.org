@@ -1,22 +1,25 @@
 
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "Sidebar" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=sidebar" data-toggle="tab">Sidebar Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=sidebar" data-toggle="tab">Sidebar</a>
   </li>
   <li class="<%= "active" if @tab == "MissionPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=mission" data-toggle="tab">Mission Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=mission" data-toggle="tab">Mission</a>
   </li>
   <li class="<%= "active" if @tab == "TrainingPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=training" data-toggle="tab">Training Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=training" data-toggle="tab">Training</a>
   </li>
   <li class="<%= "active" if @tab == "McqPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=mcq" data-toggle="tab">MCQ Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=mcq" data-toggle="tab">MCQ</a>
   </li>
   <li class="<%= "active" if @tab == "NotificationPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=email" data-toggle="tab">Notification Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=email" data-toggle="tab">Notifications</a>
+  </li>
+  <li class="<%= "active" if @tab == "PagingPreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=paging" data-toggle="tab">Paging</a>
   </li>
   <li class="<%= 'active' if @tab == "OtherPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=other" data-toggle="tab">Other Preferences</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=other" data-toggle="tab">Others</a>
   </li>
 </ul>
 
@@ -24,6 +27,8 @@
     <%= render partial: "email_form" %>
 <% elsif @tab == "McqPreference" %>
     <%= render partial: "mcq_form" %>
+<% elsif @tab == "PagingPreference" %>
+    <%= render partial: "paging" %>
 <% elsif @tab == 'OtherPreference' %>
     <%= render partial: "misc" %>
 <% else %>

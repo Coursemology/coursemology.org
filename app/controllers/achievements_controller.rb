@@ -21,6 +21,11 @@ class AchievementsController < ApplicationController
         req_check: req_check
       }
     end
+
+    @ach_paging = @course.achievements_paging_pref
+    if @ach_paging.display?
+      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
+    end
   end
 
   def fetch_data_for_form
@@ -31,6 +36,7 @@ class AchievementsController < ApplicationController
 
   def new
     fetch_data_for_form
+    @achievement.auto_assign = true
   end
 
   def edit
@@ -38,6 +44,8 @@ class AchievementsController < ApplicationController
   end
 
   def show
+    @uach = UserAchievement.find_by_user_course_id_and_achievement_id(
+        curr_user_course.id, @achievement.id)
   end
 
   def create

@@ -11,13 +11,13 @@ class CoursePreferencesController < ApplicationController
         @tab = "MissionPreference"
         @preferences = @course.mission_columns
         @time_format =  @course.mission_time_format
-        @table_paging = @course.mission_table_paging
+        @table_paging = @course.missions_paging_pref
       when 'training'
         @tab = "TrainingPreference"
         @preferences = @course.training_columns
         @time_format =  @course.training_time_format
         @reattempt = @course.course_preferences.training_reattempt.first
-        @table_paging = @course.training_table_paging
+        @table_paging = @course.trainings_paging_pref
       when 'mcq'
         @tab = "McqPreference"
         @mcq_auto_grader = @course.mcq_auto_grader
@@ -27,7 +27,11 @@ class CoursePreferencesController < ApplicationController
       when 'other'
         @tab = "OtherPreference"
         @preferences = @course.home_sections
-        @no_preferences = @course.course_home_events_no_pref << @course.leaderboard_no_pef << @course.announcements_paging_pref
+        @no_preferences = @course.course_home_events_no_pref << @course.leaderboard_no_pef
+        @achievement_pref = @course.achievements_locked_display
+      when 'paging'
+        @tab = 'PagingPreference'
+        @preferences = @course.course_paging_prefs
       else
         @tab = 'Sidebar'
         @preferences = @course.student_sidebar_items

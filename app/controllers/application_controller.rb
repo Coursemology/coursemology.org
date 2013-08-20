@@ -78,6 +78,7 @@ class ApplicationController < ActionController::Base
       if can? :see, :pending_comments
         counts[:pending_comments] = @course.get_pending_comments.count
       end
+      counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings
     end
     # in the future, nav items can be loaded from the database
@@ -202,7 +203,8 @@ class ApplicationController < ActionController::Base
       @admin_nav_items << {
           text: "Enrollment",
           url: course_enroll_requests_url(@course),
-          icon: "icon-bolt"
+          icon: "icon-bolt",
+          count: counts[:pending_enrol] || 0
       }
       @admin_nav_items << {
           text: "Mass Enrollment",

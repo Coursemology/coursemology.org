@@ -74,20 +74,7 @@
             <option value="ago"> <%= time_ago_in_words(Time.now.beginning_of_day) %></option>
           </select>
         </div>
-        <h3>Table Paging:</h3>
-        <% if @tab == 'TrainingPreference'  %>
-            <p>Customize the number of trainings to display in each page.</p>
-        <% elsif @tab == 'MissionPreference' %>
-            <p>Customize the number of missions to display in each page.</p>
-        <% end %>
-        <div class="info-block">
-          <input type="checkbox"
-                 name="preferences[<%= @table_paging.id %>][display]"
-                 <%= "checked" if @table_paging.display %> >  Enable Paging
-          <br>
-          No of rows per page:
-          <input class="span1" type="number" min="1"  value="<%= @table_paging.prefer_value %>" name="preferences[<%=  @table_paging.id %>][prefer_value]" >
-        </div>
+
     <% end %>
     <% if @reattempt %>
         <h3>Re-Attempt</h3>

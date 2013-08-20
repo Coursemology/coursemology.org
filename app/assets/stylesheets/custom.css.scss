@@ -588,7 +588,7 @@ small {
 
 //code formatting
 .cos_code {
-  // display: inline;
+  display: inline;
 }
 
 .cos_code .CodeMirror {
@@ -655,7 +655,20 @@ small {
 .cm-s-wombat span.cm-meta { color: #f37; }
 
 
+.cos_code pre {
+  background: transparent;
+  white-space: pre;
+  font-family:  monospace;
+}
 
+.cos_code pre, div {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: baseline;
+  text-align: left;
+  color: inherit;
+}
 
 .CodeMirror-gutter-text pre.hover {
   background-color: black;
@@ -914,6 +927,56 @@ a:hover#student-large {
 .table-center th {
   text-align: center;
 }
+
+.comment-edit {
+          font-size: 1.1em;
+          a {
+            text-decoration: none;
+            color: #000000;
+          }
+          a:hover {
+            font-weight: bold;
+          }
+
+        }
+
+.active .annotation-edit  {
+  display: block;
+}
+
+.annotation-edit {
+  font-size: 1.1em;
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  a:hover {
+    font-weight: bold;
+  }
+  display: none;
+}
+
+.annotation-summary {
+  div {
+    //display: inline;
+  }
+  margin: 5px;
+  background-color: #EDEDED;
+}
+
+.table-hover {
+  tr:hover {
+    background-color: lightgray;
+  }
+}
+
+img#grayed {
+  filter: url(/images/filters.svg#grayscale); /* Firefox 3.5+ */
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+  opacity:0.5;
+}
+
 a.mission-box {
   text-decoration: none;
 }

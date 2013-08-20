@@ -72,6 +72,7 @@ div.error { color: #f55;}
   width: 100%;
   height: 500px;
   margin: 0 0 5px 0;
+  display: block;
 }
 
 .code-wrapper.fullscreen {
@@ -194,16 +195,24 @@ div.error { color: #f55;}
   {
     text-decoration: none;
   }
+  display: list-item;
 }
 .code-comment-box li.textarea {background: transparent; padding: 0px; margin-top: 3px;}
 .code-comment-box li .comment-text-container { padding-left: 40px; }
-.code-comment-box li .commentor { }
+.code-comment-box li .commentor { margin-right: 15px; float: left }
 .code-comment-box li .timestamp { font-size: 0.85em; color: #999; }
 .code-comment-box li .small-profile-pic {float: left; margin-right: 5px; border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px; }
-.code-comment-box li .hidden {font-style: italic;}
+.code-comment-box li .hidden {
+  font-style: italic;
+  display: list-item;
+  visibility: visible;
+}
 .code-comment-box li .comment { }
-.code-annotation { margin-left: 30px;}
-.code-annotation ul.code-comment-box { margin-left: 15px;}
+.code-annotation {
+  margin-left: 30px;
+  display: block;
+}
+.code-annotation ul.code-comment-box { margin-left: 15px; margin-bottom: 0px}
 
 .annotate-code-lines { position: relative;}
 .annotate-code-lines pre.line { margin-left: 21px; }

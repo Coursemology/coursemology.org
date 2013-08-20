@@ -4,20 +4,20 @@
 <% require 'digest/md5' %>
 
 <% if can? :see, :pending_comments %>
-  <ul class="nav nav-tabs">
-    <li class="<%= "active" if @tab == "pending" %>">
-      <a href="<%= course_comments_url(@course) %>?_tab=pending" data-toggle="tab">Pending Comments (<%= @pending_comments.count %>)</a>
-    </li>
-    <li class="<%= "active" if @tab == "all" %>">
-      <a href="<%= course_comments_url(@course) %>?_tab=all" data-toggle="tab">All Comments </a>
-    </li>
-    <li class="<%= "active" if @tab == "minepending" %>">
-      <a href="<%=  course_comments_url(@course) %>?_tab=minepending" data-toggle="tab">My Students Pending (<%= @mine_pending_comments.count %>)</a>
-    </li>
-    <li class="<%= "active" if @tab == "mine" %>">
-      <a href="<%=  course_comments_url(@course) %>?_tab=mine" data-toggle="tab">My Students</a>
-    </li>
-  </ul>
+    <ul class="nav nav-tabs">
+      <li class="<%= "active" if @tab == "pending" %>">
+        <a href="<%= course_comments_url(@course) %>?_tab=pending" data-toggle="tab">Pending Comments (<%= @pending_comments.count %>)</a>
+      </li>
+      <li class="<%= "active" if @tab == "all" %>">
+        <a href="<%= course_comments_url(@course) %>?_tab=all" data-toggle="tab">All Comments </a>
+      </li>
+      <li class="<%= "active" if @tab == "minepending" %>">
+        <a href="<%=  course_comments_url(@course) %>?_tab=minepending" data-toggle="tab">My Students Pending (<%= @mine_pending_comments.count %>)</a>
+      </li>
+      <li class="<%= "active" if @tab == "mine" %>">
+        <a href="<%=  course_comments_url(@course) %>?_tab=mine" data-toggle="tab">My Students</a>
+      </li>
+    </ul>
 <% end %>
 
 <input type="hidden" id="comments_togging_path" value="<%= course_comments_toggle_path(@course) %>">
@@ -26,13 +26,55 @@
     <% # currently the topic of the comment is only student answer for a question %>
     <% ecid =  Digest::MD5.hexdigest(topic.class.to_s << topic.id.to_s) %>
     <% if topic.class == StdAnswer || topic.class == StdCodingAnswer %>
-      <%= render partial: "modules/commentable/commentable_std_answer", locals: { std_answer: topic, ecid: ecid } %>
+        <%= render partial: "modules/commentable/commentable_std_answer", locals: { std_answer: topic, ecid: ecid } %>
     <% elsif topic.class == Mcq || topic.class == CodingQuestion %>
-      <%= render partial: "modules/commentable/commentable_training_question", locals: { question: topic, ecid: ecid } %>
+        <%= render partial: "modules/commentable/commentable_training_question", locals: { question: topic, ecid: ecid } %>
+    <% end %>
+    <% if topic.class == StdCodingAnswer %>
+        <% annotations = topic.annotations.sort_by {|anno| anno.line_start } %>
+        <% start = -1 %>
+        <% if annotations.count > 0 %>
+            <% annotations.each_with_index do |anno, index| %>
+                <% code_lines = anno.get_code_lines %>
+                <% unless code_lines %>
+                    <% next %>
+                <% end %>
+                <% if start != anno.line_start %>
+                    <% if index > 0%>
+                        </ul>
+                        </div>
+                    <% end %>
+
+                    <% start = anno.line_start %>
+
+                    <div class="cos_code code-annotation">
+                      <div class="annotate-code-lines cm-s-molokai">
+                        <div class="inner"><%= code_lines %></div>
+                        <div class="line-numbers">
+                          <% for i in anno.line_start..anno.line_end %>
+                              <pre class="line-number"><%= i %></pre>
+                          <% end %>
+                        </div>
+                      </div>
+                      <ul class="code-comment-box">
+                <% end %>
+
+                <li class="annotation-summary comment" >
+                  <div class="commentor" style="display: inline">
+                      <span class="student-link">
+                        <a href="<%= course_user_course_path(@course, curr_user_course)%>"><%= anno.user_course.user.name%></a>
+                      </span>
+                  </div>
+                  <div class="annotation-inner" ><%= style_format(anno.text, false) %></div>
+                </li>
+            <% end %>
+            </ul>
+            </div>
+        <% end %>
     <% end %>
 
     <%= render partial: "comments/list",
-               locals: { comments: topic.comments_json,
+               locals: { comments: topic.comments_json(curr_user_course, true),
                          target: topic,
                          header: "",
                          ecid: ecid,
@@ -40,7 +82,9 @@
 
 <% end %>
 
-<%= paginate @topics %>
+<% if @comments_paging.display? %>
+    <%= paginate @topics %>
+<% end %>
 
 <script>
     $('.mission-box').click(function(){
@@ -49,5 +93,29 @@
                 evt.stopPropagation();
                 return true;
             });
+    $(function(){
+        $('.annotate-code-lines .inner').each(function(){
+            var accum = [], zam = [];
+            CodeMirror.runMode($(this).text(), "python", function(string, style){
+                if (string == "\n"){
+                    str = accum.join("");
+                    if (str == '') str = '\x20';
+                    zam.push('<pre class="line">'+str+"\n"+'</pre>');
+                    accum = [];
+                }else if (style){
+                    accum.push("<span class=\"cm-" + style + "\">" + string + "</span>");
+                }else{
+                    accum.push(string);
+                }
+            });
+            if (accum.length){
+                str = accum.join("");
+                if (str == '') str = '\x20';
+                zam.push('<pre class="line">'+str+'</pre>');
+            }
+            var code = zam.join("");
+            $(this).html(code);
+        });
+    })
 
 </script>

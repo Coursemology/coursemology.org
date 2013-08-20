@@ -1,7 +1,9 @@
 <div class="page-header">
   <div class="media">
     <div class="pull-right">
-      <img class="achievement-icon" src="<%= @achievement.icon_url %>">
+      <% can_view = @uach || (can? :manage, Achievement) %>
+      <% lock_display = @course.achievements_locked_display.display? %>
+      <img class="achievement-icon" <%= 'id=grayed' if lock_display and !can_view %> src="<%=  can_view || lock_display ? @achievement.icon_url : "/images/lock.png" %>" />
     </div>
     <div class="media-body">
       <h2 class="media-heading"><%= @achievement.title %></h2>
@@ -14,5 +16,7 @@
 <% # TODO dependency %>
 
 <% # TODO students who has won the achievemnt %>
+
+
 
 

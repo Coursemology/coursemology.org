@@ -25,7 +25,7 @@ class Training < ActiveRecord::Base
   end
 
   def get_path
-    return course_training_path(course, self)
+     course_training_path(course, self)
   end
 
   def questions
@@ -38,6 +38,10 @@ class Training < ActiveRecord::Base
       file.owner = self
       file.save
     end
+  end
+
+  def total_exp
+    exp + bonus_exp.to_i
   end
 
   alias_method :sbms, :training_submissions

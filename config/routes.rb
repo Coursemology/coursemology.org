@@ -105,6 +105,7 @@ JfdiAcademy::Application.routes.draw do
     match "/comments/question" => "comments#view_for_question", as: :comments_question
     resources :comments
     post "/comments/toggle" => "comments#pending_toggle"
+    post "/comments/get_comments" => "comments#get_comments"
 
     resources :annotations
 

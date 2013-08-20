@@ -1,5 +1,5 @@
 <a href="<%= course_path(@course) %>">
-  <img class="sidebar-course-logo" src="<%= @course.logo_url %>" />
+  <img class="sidebar-course-logo"  src="<%= @course.logo_url %>" />
 </a>
 
 <% if curr_user_course.id %>
@@ -87,8 +87,8 @@
               <% end %>
             </span>
                 <%= item[:text] %>
-                <% if item.has_key?(:count) %>
-                    <span class="sidenav-count pull-right" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
+                <% if item.has_key?(:count) and item[:count] > 0 %>
+                    <span class="sidenav-count" id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
                 <% end %>
               </a>
             </li>

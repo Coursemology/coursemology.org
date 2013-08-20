@@ -63,5 +63,7 @@
           <% end %>
       <% end %>
     </table>
-
+    <% if @std_paging.display? %>
+        <%= paginate @student_courses %>
+    <% end %>
 <% end %>

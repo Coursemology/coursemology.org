@@ -45,11 +45,12 @@ class EnrollRequestsController < ApplicationController
   end
 
   def approve_request(enroll_request)
-    puts 'Approve request ', enroll_request.to_json
+    authorize! :approve, EnrollRequest
     @course.enrol_user(enroll_request.user, enroll_request.role)
   end
 
   def approve_all
+    authorize! :approve, EnrollRequest
     req_type = params[:req_type]
     std_role = Role.find_by_name("student")
     @enroll_requests = @course.enroll_requests

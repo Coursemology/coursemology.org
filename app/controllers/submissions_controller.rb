@@ -50,7 +50,12 @@ class SubmissionsController < ApplicationController
       end
     end
 
-    @sbms = @sbms.page(params[:page])
+    @sbms_paging = @course.mission_sbm_paging_pref
+    if @sbms_paging.display?
+      @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
+    end
+
+
 
   end
 
@@ -166,7 +171,8 @@ class SubmissionsController < ApplicationController
       return true
     end
 
-    if @mission.open_at > Time.now
+    can_start = @mission.can_start?(curr_user_course).first
+    unless can_start
       redirect_to course_mission_access_denied_path(@course, @mission)
     end
   end

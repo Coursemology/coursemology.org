@@ -2,8 +2,9 @@
   <h1>Submission:  <%= @mission.title %></h1>
 </div>
 <% require 'digest/md5' %>
-<table>
-  <tr><td style="width: 100px">Student: </td><td><%= @submission.std_course.user.name %></td></tr>
+<table class="table table-bordered" style="width: 300px">
+  <tbody class="table-hover">
+  <tr><td style="width: 100px">Student: </td><td><%= render partial: 'layouts/user_name_link', locals: {user_course: @submission.std_course}%></td></tr>
   <tr><td>Status:</td><td><strong><%= @submission.status  %></strong></td></tr>
   <% if @grading %>
       <tr>
@@ -24,12 +25,20 @@
         </td>
       </tr>
       <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+      <tr>
+        <td>Graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
+      </tr>
   <% end %>
   <% if @submission.submitted? || @submission.graded? %>
-      <tr><td>Submitted at:</td><td><%= datetime_format(@submission.updated_at) %> </td></tr>
+      <tr><td>Submitted at:</td><td><%= datetime_format(@submission.submit_at || @submission.updated_at) %> </td></tr>
   <% end %>
   <tr><td>Mission due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
+  </tbody>
 </table>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @mission}%>
+
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @submission}%>
 <hr/>

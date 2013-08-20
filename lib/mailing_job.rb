@@ -1,6 +1,10 @@
 class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :reminder)
   def perform
     course = Course.find_by_id(course_id)
+    if reminder
+      mission_reminder(Mission.find(type_id), course)
+      return
+    end
     case type
       when Announcement.to_s
         new_announcements(Announcement.find(type_id), course)
@@ -10,9 +14,6 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
         new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
-    end
-    if reminder
-        mission_reminder(Mission.find(type_id), course)
     end
   end
 

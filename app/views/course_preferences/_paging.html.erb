@@ -1,0 +1,58 @@
+<%= form_tag course_preferences_path(@course), :method => 'POST' do %>
+    <input type="hidden" name="origin" class="origin_url">
+    <h3>Table Paging:</h3>
+    <p>Allow customization of paging for tables.</p>
+
+    <table class="table table-bordered table-striped">
+      <th>
+        Page
+      </th>
+      <th>
+        Description
+      </th>
+      <th>
+        Current Value
+      </th>
+      <th>
+        Prefer Value
+      </th>
+      <th>
+        Enable Paging?
+      </th>
+      </thead>
+
+      <tbody >
+      <% @preferences.each do |pref| %>
+          <% item = pref.preferable_item %>
+          <tr>
+            <td>
+              <%= item.name %>
+            </td>
+            <td>
+              <%= item.description %>
+            </td>
+            <td style="text-align: center">
+              <%= pref.prefer_value %>
+            </td>
+            <td>
+              <div id="calculator-input">
+                <input name="preferences[<%= pref.id%>][prefer_value]" type="number" min="1" class="input-small">
+              </div>
+            </td>
+            <td style="text-align: center">
+              <input name="preferences[<%= pref.id%>][display]" type="checkbox" <% if pref.display? %> checked <% end %>>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <div class="center">
+      <button class="btn btn-large btn-primary">Update</button>
+    </div>
+<% end %>
+<script>
+    $(document).ready(function(){
+        $('.origin_url').val(document.URL);
+    });
+</script>

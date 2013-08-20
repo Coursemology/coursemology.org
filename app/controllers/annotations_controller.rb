@@ -24,20 +24,39 @@ class AnnotationsController < ApplicationController
     end
   end
 
+  def destroy
+    @annotation = Annotation.where(id: params[:id]).first
+    authorize! :manage, @annotation
+    if @annotation
+      @annotation.destroy
+    end
+    respond_to do |format|
+      format.json {render json: {ststus: 'OK'} }
+    end
+  end
+
+  def update
+    @annotation = Annotation.where(id: params[:id]).first
+    authorize! :manage, @annotation
+
+    if @annotation
+      @annotation.text = params[:text]
+      @annotation.save
+    end
+    respond_to do |format|
+      format.json {render json: {c: style_format(@annotation.text, false), o: @annotation.text }}
+    end
+  end
+
   private
   def get_all
     @annotations = Annotation.find_all_by_annotable_id_and_annotable_type(params[:annotation][:annotable_id],params[:annotation][:annotable_type])
     responds = []
     @annotations.each do |anno|
-      responds.append({
-                          c:  style_format(anno.text, false),
-                          s:  anno.line_start,
-                          e:  anno.line_end,
-                          id: anno.id,
-                          t:  time_ago_in_words(anno.updated_at),
-                          u:  '<span class="student-link"><a href="'+anno.user_course.get_path+'">'+anno.user_course.user.name+'</a></span>',
-                          p:  anno.user_course.user.get_profile_photo_url
-                      })
+      edit = curr_user_course.is_staff? || (curr_user_course == anno.user_course)
+      resp = anno.as_json
+      resp[:edit] = edit
+      responds.append(resp)
     end
     responds
   end

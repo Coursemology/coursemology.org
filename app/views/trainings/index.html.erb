@@ -31,7 +31,7 @@
     <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
 <% end %>
 
-<table class="table table-hover assignments">
+<table class="table assignments">
   <thead>
   <tr>
     <% @display_columns.each do |key, val| %>
@@ -49,7 +49,7 @@
     <% end %>
   </tr>
   </thead>
-  <tbody>
+  <tbody class="table-hover">
 
   <% @trainings_with_sbm.each do |tws| %>
       <% training = tws[:training] %>
@@ -65,15 +65,17 @@
                             <img class="asm-new-icon"
                                  src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
                         <% end %>
+                        <%= training.title %>
                       </h4>
                   <% end %>
               <% else %>
-                  <h4><%= training.title %>
+                  <h4>
                     <% if @is_new[training.id] %>
                         <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
                         <img class="asm-new-icon"
                              src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
                     <% end %>
+                    <%= training.title %>
                   </h4>
               <% end %>
             </td>

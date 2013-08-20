@@ -125,7 +125,11 @@ class CoursesController < ApplicationController
     @student_courses = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
     @ta_courses = @course.user_courses.tutor
 
-    @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
+    @std_paging = @course.students_paging_pref
+    if @std_paging.display?
+      @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
+    end
+
   end
 
   def manage_students
@@ -147,8 +151,12 @@ class CoursesController < ApplicationController
 
     @staff_courses = @course.user_courses.staff
     @student_count = @student_courses.count
-    #disable temperarily
-    #@student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(50)
+
+    @std_paging = @course.mgmt_std_paging_pref
+    if @std_paging.display?
+      @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
+    end
+
   end
 
   def pending_gradings

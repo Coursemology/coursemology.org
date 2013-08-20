@@ -60,6 +60,7 @@ class CourseAbility
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff
+      cannot :approve, EnrollRequest
     end
 
     if user.is_admin?  || user_course.is_staff?
@@ -87,7 +88,7 @@ class CourseAbility
       can :access_denied, Mission
       can :access_denied, Training
 
-      can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
+      can :manage, [Submission, TrainingSubmission, Annotation, Comment], std_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
       can :manage, ExpTransaction, user_course_id: user_course.id
 

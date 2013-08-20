@@ -1,38 +1,51 @@
 <table class="table enroll-requests">
   <thead>
-    <tr>
-      <td><input type="checkbox" class="check-all" data-target="<%= ".checkbox-#{type}" %>"/></td>
-      <td>Name</td>
-      <td>Email</td>
-      <td>Role</td>
-      <td>Action</td>
-    </tr>
+  <tr>
+    <% if can? :approve, EnrollRequest %>
+        <td><input type="checkbox" class="check-all" data-target="<%= ".checkbox-#{type}" %>"/></td>
+    <% end %>
+    <td>Name</td>
+    <td>Email</td>
+    <td>Requested At</td>
+    <td>Role</td>
+    <% if can? :approve, EnrollRequest %>
+        <td>Action</td>
+    <% end %>
+  </tr>
   </thead>
   <tbody>
-    <% requests.each do |ec| %>
-    <tr>
-      <input type="hidden" class="destroy-url"
-          value="<%= course_enroll_request_path(@course, ec.id) %>" />
-      <td><input type="checkbox" value="<%= ec.id %>" class="<%= "checkbox-#{type}" %>"/></td>
-      <td><label class="user-name"><%= ec.user.name %></label></td>
-      <td><%= ec.user.email %></td>
-      <td><%= ec.role.title %></td>
-      <td>
-        <%= link_to '#', class: "btn btn-primary request-approve" do %>
-          <i class="icon-ok"></i>
+  <% requests.each do |ec| %>
+      <tr>
+        <% if can? :approve, EnrollRequest %>
+            <input type="hidden" class="destroy-url"
+                   value="<%= course_enroll_request_path(@course, ec.id) %>" />
+            <td><input type="checkbox" value="<%= ec.id %>" class="<%= "checkbox-#{type}" %>"/></td>
         <% end %>
-        <%= link_to '#', class: "btn btn-danger request-del" do %>
-          <i class="icon-remove"></i>
+        <td><label class="user-name"><%= ec.user.name %></label></td>
+        <td><%= ec.user.email %></td>
+        <td><%= datetime_no_seconds(ec.created_at) %></td>
+        <td><%= ec.role.title %></td>
+        <% if can? :approve, EnrollRequest %>
+            <td>
+              <%= link_to '#', class: "btn btn-primary request-approve" do %>
+                  <i class="icon-ok"></i>
+              <% end %>
+              <%= link_to '#', class: "btn btn-danger request-del" do %>
+                  <i class="icon-remove"></i>
+              <% end %>
+            </td>
         <% end %>
-      </td>
-    </tr>
-    <% end %>
+      </tr>
+  <% end %>
   </tbody>
 </table>
 <div>
-  <a class="update-selected" href="<%= course_enroll_request_approve_selected_path(@course)%>" data-target="<%= ".checkbox-#{type}" %>">Approve Selected</a> |
-  <a class="update-selected" href="<%= course_enroll_request_delete_selected_path(@course) %>" data-target="<%= ".checkbox-#{type}" %>">Delete Selected</a> |
-  <%= link_to 'Approve All', course_enroll_request_approve_all_path(@course, req_type: type) %> |
-  <%= link_to 'Delete All', course_enroll_request_delete_all_path(@course, req_type: type) %> |
+
+  <% if can? :approve, EnrollRequest %>
+      <a class="update-selected" href="<%= course_enroll_request_approve_selected_path(@course)%>" data-target="<%= ".checkbox-#{type}" %>">Approve Selected</a> |
+      <a class="update-selected" href="<%= course_enroll_request_delete_selected_path(@course) %>" data-target="<%= ".checkbox-#{type}" %>">Delete Selected</a> |
+      <%= link_to 'Approve All', course_enroll_request_approve_all_path(@course, req_type: type) %> |
+      <%= link_to 'Delete All', course_enroll_request_delete_all_path(@course, req_type: type) %> |
+  <% end %>
 </div>
 

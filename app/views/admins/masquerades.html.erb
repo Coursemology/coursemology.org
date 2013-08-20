@@ -6,16 +6,17 @@
 <% end %>
 
 <% if @users %>
-    <table class="table table-hover assignments">
+    <table class="table assignments">
       <thead>
       <tr>
         <th>Name</th>
         <th>System Role</th>
+        <th>Email</th>
         <th>Action</th>
       </tr>
       </thead>
 
-      <tbody>
+      <tbody class="table-hover ">
       <% @users.each do |user| %>
           <tr>
             <td>
@@ -23,6 +24,9 @@
             </td>
             <td>
               <%= user.system_role.title %>
+            </td>
+            <td>
+              <%=user.email  %>
             </td>
             <td>
               <%= link_to 'Masquerade', new_user_masquerade_path(user), class: "btn" %>

@@ -11,6 +11,7 @@ class CoursePreference < ActiveRecord::Base
   scope :email_notifications,   where(preferable_item_id: PreferableItem.email_notifications)
   scope :course_home_sections,  where(preferable_item_id: PreferableItem.course_home_sections)
   scope :course_home_events_no, where(preferable_item_id: PreferableItem.home_sections_events_no)
+  scope :course_paging_prefs,   where(preferable_item_id: PreferableItem.paging_prefs)
 
 
 end

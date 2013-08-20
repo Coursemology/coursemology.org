@@ -52,3 +52,35 @@
   <% end %>
   </tbody>
 </table>
+
+<% if @stats_paging.display? %>
+    <%= paginate @stds_coures %>
+<% end %>
+
+<% if @stds_coures_phantom.count > 0 %>
+    <h3>Phantom Students</h3>
+    <table class="table">
+      <thead>
+      <th>Student</th>
+      <th>Tutor</th>
+      <th>Status</th>
+      <th>Grade</th>
+      </thead>
+      <tbody>
+      <% @stds_coures_phantom.each do |std| %>
+          <% sub = @submissions.where(std_course_id: std.id).first %>
+          <tr>
+            <% if sub %>
+                <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.user.name %></a> </td>
+            <% else %>
+                <td><%= std.user.name %></td>
+            <% end %>
+            <td><%= std.ge_my_tut_name %></td>
+            <td><%= sub ? sub.status : "Not Started" %></td>
+            <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+<% end %>
