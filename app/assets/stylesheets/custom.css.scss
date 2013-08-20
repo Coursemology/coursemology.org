@@ -10,6 +10,8 @@ body {
 
 label {
   font-family: 'Lato', sans-serif;
+  display: inline-block;
+  margin-left: 5px;
 }
 
 @import "bootstrap-responsive";
@@ -748,13 +750,6 @@ $grayMediumLight: #eaeaea;
   }
 }
 
-#training-step-form {
-  label {
-    display: inline;
-    margin-left: 5px;
-  }
-}
-
 .row .course-title {
   background-color: #eee;
   padding: 20px 20px;
@@ -918,4 +913,7 @@ a:hover#student-large {
 
 .table-center th {
   text-align: center;
+}
+a.mission-box {
+  text-decoration: none;
 }
