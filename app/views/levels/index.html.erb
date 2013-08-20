@@ -12,24 +12,32 @@
 <% else %>
   <h2>Number of level: <%= @levels.size %></h2>
 
-  <table class="table exp-table">
-    <thead>
-      <tr>
-        <th width="10%">Level</th>
-        <th>EXP required</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @levels.each_with_index do |lvl, k| %>
-        <%= render partial: "levels/level_row", locals: { lvl: lvl } %>
-      <% end %>
-    </tbody>
-  </table>
-  <% if can? :manage, Level %>
-    <div>
-      <span>Add new level: </span>
-      <input class="new-lvl-exp"></input>
-      <%= link_to 'Add', course_levels_path(@course), class: 'btn add-lvl' %>
+  <%= form_tag(course_levels_mass_update_path(@course)) do %>
+    <table class="table" id="exp-table">
+      <thead>
+        <tr>
+          <th width="80px">Level</th>
+          <th>EXP required</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @levels.each do |lvl| %>
+          <% if lvl.level > 0 %>
+            <tr>
+              <td><%= lvl.level %></td>
+              <td><input type="number" maxlength="15" name="exps[]" value="<%= lvl.exp_threshold %>"></td>
+            </tr>
+          <% end %>
+        <% end %>
+        <tr>
+          <td><a href="#" class="lvl-add-more">Add more</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="form-actions" width="340px">
+      <button class="btn btn-primary">Update</button>
     </div>
   <% end %>
+
 <% end %>
