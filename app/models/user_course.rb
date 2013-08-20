@@ -100,12 +100,15 @@ class UserCourse < ActiveRecord::Base
 
     new_level = nil
     self.course.levels.each do |lvl|
+      puts level.to_json
       if lvl.exp_threshold <= self.exp
         new_level = lvl
       else
         break
       end
     end
+    puts self.course.levels.to_json, self.exp
+    puts new_level.to_json
     if new_level && self.level != new_level && self.is_student?
       self.level = new_level
       unless self.is_phantom?
@@ -115,7 +118,7 @@ class UserCourse < ActiveRecord::Base
     end
 
     self.save
-    self.update_achievements
+    # self.update_achievements
   end
 
   def update_achievements
