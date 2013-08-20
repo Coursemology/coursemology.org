@@ -21,6 +21,7 @@ class Mission < ActiveRecord::Base
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
   has_many :submissions, dependent: :destroy
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
+  has_many :missions_dependent_on, class_name: "Mission", foreign_key: 'dependent_id'
 
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade) + self.coding_questions.sum(&:max_grade)
