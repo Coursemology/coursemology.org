@@ -31,16 +31,12 @@ class Submission < ActiveRecord::Base
   end
 
   def get_edit_path
-    return edit_course_mission_submission_path(mission.course, mission, self)
+     edit_course_mission_submission_path(mission.course, mission, self)
   end
 
   def get_new_grading_path
     new_course_mission_submission_submission_grading_path(
         mission.course, mission, self)
-  end
-
-  def get_all_answers
-    self.sbm_answers.map { |sbm| sbm.answer }
   end
 
   def build_initial_answers(current_user)
@@ -50,7 +46,7 @@ class Submission < ActiveRecord::Base
         sa = self.std_answers.build({text: ''})
         sa.question = qn
       elsif qn.class == CodingQuestion && !self.std_coding_answers.where(qn_id:qn.id).first
-        sa = self.std_coding_answers.build({code: "#Prefilled code \n#Auto generated for mission #{self.mission.title}"})
+        sa = self.std_coding_answers.build({code: "#Prefilled code \n#Auto generated for #{self.mission.title}"})
         sa.qn = qn
       end
       if sa

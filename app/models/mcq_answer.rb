@@ -5,4 +5,12 @@ class McqAnswer < ActiveRecord::Base
   belongs_to :mcq
 
   has_many :std_mcq_answers
+
+  def qn_id
+    mcq_id
+  end
+
+  def qn
+    mcq
+  end
 end

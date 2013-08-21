@@ -57,45 +57,45 @@ class TrainingSubmissionsController < ApplicationController
     end
   end
 
+  #@mission.get_all_questions.each_with_index do |q,i|
+  #  @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
+  #end
+  #
+  #@submission.get_all_answers.each do |sa|
+  #  qn = sa.qn
+  #  @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
+  #end
+  #
+  #if @grading
+  #  @grading.answer_gradings.each do |ag|
+  #    qn = ag.student_answer.qn
+  #    @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
+  #  end
+  #end
+
   def show
     @qadata = {}
     @grading = @training_submission.get_final_grading
-    @training.mcqs.each_with_index do |mcq, index|
+    @training.questions.each_with_index do |qn, index|
       break if @training_submission.current_step - 1 <= index
-      @qadata[mcq.id] = { q: mcq }
+      @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
     end
 
-    @std_answers_for_questions = Hash.new{ |h, k| h[k] = [] }
-    @training_submission.std_mcq_answers.each do |sma|
-      mcq_id = sma.mcq_id
-      @std_answers_for_questions[mcq_id] << sma
+    @std_answers_for_questions =  Hash.new{ |h, k| h[k] = [] }
+    @training_submission.get_all_answers.each do |sma|
+      @std_answers_for_questions[sma.qn_id.to_s + sma.qn.class.to_s] << sma
     end
 
-    @training_submission.std_mcq_all_answers.each do |sma|
-      mcq_id = sma.mcq_id
-      @std_answers_for_questions[mcq_id] << sma
-    end
-    # puts '==='
-    # puts @training.to_json
-    # puts @training_submission.to_json
-    # puts @grading.to_json
-    # puts @training_submission.std_mcq_answers.to_json
-    # puts @std_answers_for_questions.to_json
-
-    # one question can have many answers.
-    # collect all answers of one question in a list
-    # sort by order of created time
     @qadata.each do |qid, qa|
       if @std_answers_for_questions.has_key?(qid)
         @qadata[qid][:a] = @std_answers_for_questions[qid].sort_by(&:created_at)
       end
     end
 
-    #TODO: reviewing currently just for mcqs
     if @grading
       @grading.answer_gradings.each do |ag|
-        if ag.student_answer && ag.student_answer.class == StdMcqAnswer && @qadata.has_key?(ag.student_answer.mcq_id)
-          @qadata[ag.student_answer.mcq_id][:g] = ag
+        if sta = ag.student_answer
+          @qadata[sta.qn_id.to_s + sta.qn.class.to_s][:g] = ag
         end
       end
     end
