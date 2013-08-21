@@ -10,6 +10,7 @@
       <thead>
       <th>Student</th>
       <th>Current Step</th>
+      <th>Grade</th>
       </thead>
       <tbody>
       <% @my_std_coures.each  do |std| %>
@@ -20,7 +21,8 @@
             <% else %>
                 <td><%= std.user.name %></td>
             <% end %>
-            <td><%= sub.nil? ? "0 / #{question_count}" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+            <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+            <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
           </tr>
       <% end %>
       </tbody>
@@ -34,6 +36,7 @@
   <th>Student</th>
   <th>Tutor</th>
   <th>Current Step</th>
+  <th>Grade</th>
   </thead>
   <tbody>
   <% @stds_coures.each do |std| %>
@@ -45,7 +48,8 @@
             <td><%= std.user.name %></td>
         <% end %>
         <td><%= std.ge_my_tut_name %></td>
-        <td><%= sub.nil? ? "0 / #{question_count}" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+        <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+        <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
       </tr>
   <% end %>
   </tbody>
