@@ -13,8 +13,7 @@ class CourseGroupsController < ApplicationController
       end
     end
     @assigned_students = @course.tutorial_groups.map {|m| m.std_course}
-    @my_std_courses = @course.tutorial_groups.where(tut_course_id:curr_user_course).map {|m| m.std_course}
-    puts @my_std_courses
+    @my_std_courses = @course.tutorial_groups.where(tut_course_id:curr_user_course).map {|m| m.std_course}.sort_by { |std| std.user.name.downcase }
   end
 
   def add_student

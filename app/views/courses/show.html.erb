@@ -32,10 +32,11 @@
     <div class="info-block">
       <% @announcements.each do |announcement| %>
           <div class="announcement">
-            <h4><%= announcement.title %>
+            <h4>
               <% if @is_new.has_key?(announcement.id) %>
                   <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
               <% end %>
+              <%= announcement.title %>
             </h4>
             <i class="timestamp"><%= announcement.publish_at.to_formatted_s(:long) %></i>
             <p class="announcement-content"><%= announcement.description.html_safe %></p>

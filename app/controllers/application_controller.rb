@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
         counts[:pending_grading] = @course.get_pending_gradings(curr_user_course).count
       end
       if can? :see, :pending_comments
-        counts[:pending_comments] = @course.get_pending_comments.count
+        counts[:pending_comments] = @course.count_pending_comments
       end
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings

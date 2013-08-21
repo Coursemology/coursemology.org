@@ -38,6 +38,7 @@ class Course < ActiveRecord::Base
   has_many :comment_subscriptions,  dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
+  has_many :pending_comments, class_name: "PendingComments"
 
   def asms
     missions + trainings
@@ -70,6 +71,10 @@ class Course < ActiveRecord::Base
 
   def get_pending_comments
     self.commented_topics.select(&:pending?)
+  end
+
+  def count_pending_comments
+      self.pending_comments.where(pending: true).count
   end
 
   def mission_columns

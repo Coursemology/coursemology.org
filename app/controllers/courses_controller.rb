@@ -98,7 +98,6 @@ class CoursesController < ApplicationController
 
       @activities_pref = @course.home_activities_pref
       if @activities_pref.display?
-        puts "--------", @course.home_activities_no_pref.prefer_value, @course.home_activities_no_pref.prefer_value.to_i
         @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
       end
 

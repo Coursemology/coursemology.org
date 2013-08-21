@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130817204132) do
+ActiveRecord::Schema.define(:version => 20130821170422) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(:version => 20130817204132) do
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
   end
+
+  add_index "actions", ["text"], :name => "index_actions_on_text"
 
   create_table "activities", :force => true do |t|
     t.integer  "course_id"
@@ -63,6 +65,7 @@ ActiveRecord::Schema.define(:version => 20130817204132) do
   end
 
   add_index "annotations", ["annotable_id"], :name => "index_annotations_on_annotable_id"
+  add_index "annotations", ["annotable_type"], :name => "index_annotations_on_annotable_type"
   add_index "annotations", ["user_course_id"], :name => "index_annotations_on_user_course_id"
 
   create_table "announcements", :force => true do |t|
@@ -108,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20130817204132) do
   end
 
   add_index "asm_qns", ["asm_id"], :name => "index_asm_qns_on_asm_id"
+  add_index "asm_qns", ["asm_type"], :name => "index_asm_qns_on_asm_type"
   add_index "asm_qns", ["qn_id"], :name => "index_asm_qns_on_qn_id"
 
   create_table "asm_reqs", :force => true do |t|
@@ -119,6 +123,7 @@ ActiveRecord::Schema.define(:version => 20130817204132) do
   end
 
   add_index "asm_reqs", ["asm_id"], :name => "index_asm_reqs_on_asm_id"
+  add_index "asm_reqs", ["asm_type"], :name => "index_asm_reqs_on_asm_type"
 
   create_table "asm_tags", :force => true do |t|
     t.integer  "asm_id"
@@ -365,9 +370,11 @@ ActiveRecord::Schema.define(:version => 20130817204132) do
     t.boolean  "pending"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "course_id"
   end
 
   add_index "pending_comments", ["answer_id"], :name => "index_pending_comments_on_answer_id"
+  add_index "pending_comments", ["course_id"], :name => "index_pending_comments_on_course_id"
 
   create_table "preferable_items", :force => true do |t|
     t.string   "item"
