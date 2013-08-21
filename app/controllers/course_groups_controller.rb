@@ -6,7 +6,7 @@ class CourseGroupsController < ApplicationController
   def manage_group
     puts "manage students"
     @students_courses = []
-    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name }
+    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name.downcase }
     uc_sorted.each do |uc|
       if uc.is_student?
         @students_courses << uc
