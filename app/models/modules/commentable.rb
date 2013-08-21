@@ -23,7 +23,9 @@ module Commentable
       if self.pending_comments
         self.pending_comments.update_attribute(:pending, pending)
       else
-        self.build_pending_comments(pending:pending).save
+        pc = self.create_pending_comments(pending:pending)
+        pc.course = std_course.course
+        pc.save
       end
     end
   end
