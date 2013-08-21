@@ -9,10 +9,6 @@ module Commentable
     end
   end
 
-  def get_subscribed_user_courses
-    raise NotImplementedError
-  end
-
   def pending?
     if self.pending_comments
       self.pending_comments.pending?

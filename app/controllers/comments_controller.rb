@@ -14,14 +14,11 @@ class CommentsController < ApplicationController
 
       CommentSubscription.populate_subscription(@comment)
 
-      if curr_user_course.is_student?
-        @comment.commentable.set_pending_comments(true)
-      else
-        @comment.commentable.set_pending_comments(false)
-      end
+      commentable.set_pending_comments(curr_user_course.is_student?)
 
       if @course.email_notify_enabled? PreferableItem.new_comment
-        @comment.commentable.notify_user(curr_user_course, @comment, params[:origin])
+        commentable.notify_user(curr_user_course, @comment,
+                                get_comment_permalink(commentable))
       end
 
       respond_to do |format|
@@ -161,5 +158,24 @@ class CommentsController < ApplicationController
       @topics = Kaminari.paginate_array(@topics).page(params[:page]).per(@comments_paging.prefer_value.to_i)
     end
     @topics
+  end
+
+  def get_comment_permalink(commentable)
+    case commentable
+    when Mcq, CodingQuestion
+      return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
+    when StdAnswer, StdCodingAnswer
+      sbm_answer = commentable.sbm_answers.first
+      submission = sbm_answer ? sbm_answer.sbm : nil
+
+      question = commentable.question
+      asm_qn = question.asm_qns.first
+      mission = asm_qn ? asm_qn.asm : nil
+
+      if mission && submission
+        return course_mission_submission_url(@course, mission, submission)
+      end
+    end
+    return course_comments_url(@course)
   end
 end
