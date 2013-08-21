@@ -20,15 +20,15 @@ class TrainingSubmission < ActiveRecord::Base
            :source => :answer, :source_type => "StdCodingAnswer"
 
   def get_asm
-    return self.training
+     self.training
   end
 
   def get_path
-    return course_training_training_submission_path(training.course, training, self)
+     course_training_training_submission_path(training.course, training, self)
   end
 
   def get_new_grading_path
-    return '#'
+     '#'
   end
 
   def done?

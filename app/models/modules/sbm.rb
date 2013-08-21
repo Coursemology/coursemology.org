@@ -27,6 +27,10 @@ module Sbm
     end
   end
 
+  def get_all_answers
+    self.sbm_answers.map { |sbm| sbm.answer }
+  end
+
   def clear_final_answer(qn)
     self.sbm_answers.final.each do |sbm_ans|
       if sbm_ans.answer.qn == qn

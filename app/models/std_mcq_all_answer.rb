@@ -14,4 +14,8 @@ class StdMcqAllAnswer < ActiveRecord::Base
   def mcq_answers
     McqAnswer.where(:id => eval(selected_choices))
   end
+
+  def qn_id
+    mcq_id
+  end
 end

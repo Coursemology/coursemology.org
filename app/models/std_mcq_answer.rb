@@ -17,4 +17,9 @@ class StdMcqAnswer < ActiveRecord::Base
   def mcq_answers
     [mcq_answer]
   end
+
+  def qn_id
+    mcq_id
+  end
+
 end
