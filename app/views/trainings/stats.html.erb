@@ -20,7 +20,7 @@
             <% else %>
                 <td><%= std.user.name %></td>
             <% end %>
-            <td><%= sub.nil? ? "0 / #{question_count}" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+            <td><%= sub.nil? ? "Not Started" : (sub.done? ? "Finished" : "#{sub.current_step} / #{question_count}") %></td>
           </tr>
       <% end %>
       </tbody>
@@ -45,7 +45,7 @@
             <td><%= std.user.name %></td>
         <% end %>
         <td><%= std.ge_my_tut_name %></td>
-        <td><%= sub.nil? ? "0 / #{question_count}" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+        <td><%= sub.nil? ? "Not Started" : (sub.done? ? "Finished" : "#{sub.current_step} / #{question_count}") %></td>
       </tr>
   <% end %>
   </tbody>
