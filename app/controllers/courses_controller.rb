@@ -149,7 +149,7 @@ class CoursesController < ApplicationController
       end
     end
 
-    @staff_courses = @course.user_courses.staff
+    @staff_courses = @course.user_courses.staff.sort_by {|staff| staff.user.name.downcase }
     @student_count = @student_courses.count
 
     @std_paging = @course.mgmt_std_paging_pref
