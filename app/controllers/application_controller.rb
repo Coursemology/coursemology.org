@@ -179,6 +179,12 @@ class ApplicationController < ActionController::Base
           url:  course_student_summary_index_path(@course),
           icon: "icon-user"
       }
+
+      @admin_nav_items << {
+          text: "Tutor Summary",
+          url: course_staff_leaderboard_index_path(@course),
+          icon: "icon-trophy"
+      }
       @admin_nav_items << {
           text:   "Levels",
           url:    course_levels_url(@course),

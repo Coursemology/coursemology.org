@@ -91,4 +91,11 @@ module ApplicationHelper
     end
     "<a href='#{url}?#{params}&sort=#{column}&direction=#{direction}' >#{title} #{icon}</a>".html_safe
   end
+
+  def distance_of_time(seconds)
+    mm, ss = seconds.to_i.divmod(60)            #=> [4515, 21]
+    hh, mm = mm.divmod(60)           #=> [75, 15]
+    dd, hh = hh.divmod(24)
+    "#{dd} d #{hh}:#{mm}:#{ss}"
+  end
 end

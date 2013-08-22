@@ -1,3 +1,11 @@
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "Summary" %>">
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>" data-toggle="tab">Tutor Summary</a>
+  </li>
+  <li class="<%= "active" if @tab == "Monitoring" %>">
+    <a href="<%= course_staff_monitoring_path(@course) %>" data-toggle="tab">Tutor Monitoring</a>
+  </li>
+</ul>
 <% if @tutor_details %>
     <p><h4>View details for <%= @tutor_details[:tutor] %></h4>
     <br>
@@ -17,7 +25,7 @@
             <% sbm = grading.sbm %>
             <td><%=link_to sbm.mission.title, course_mission_submission_path(@course, sbm.mission, sbm) %></td>
             <td><%= sbm.std_course.name %></td>
-            <td><%= distance_of_time_in_words(grading.created_at - sbm.submit_at) %></td>
+            <td><%= distance_of_time(grading.created_at - sbm.submit_at) %></td>
             <td><%= datetime_format grading.created_at %></td>
             <!--<td></td>-->
           </tr>
@@ -42,8 +50,8 @@
         <% summary = @summaries[tutor.id] %>
         <td style="text-align: left"><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= tutor.name %></a></td>
         <td><%= summary[:count] %></td>
-        <td><%= distance_of_time_in_words(summary[:avg]) if summary[:avg] %></td>
-        <td><%= distance_of_time_in_words(summary[:std_dev]) if summary[:std_dev] %></td>
+        <td><%= distance_of_time(summary[:avg].to_i) if summary[:avg] != Float::INFINITY %></td>
+        <td><%= distance_of_time(summary[:std_dev].to_i) if summary[:std_dev] != Float::INFINITY %></td>
       </tr>
   <% end %>
   </tbody>

@@ -1,3 +1,12 @@
+
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "Summary" %>">
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>" data-toggle="tab">Tutor Summary</a>
+  </li>
+  <li class="<%= "active" if @tab == "MissionPreference" %>">
+    <a href="<%= course_staff_monitoring_path(@course) %>?_tab=mission" data-toggle="tab">Tutor Monitoring</a>
+  </li>
+</ul>
 <table class="table table-hover no-boarder">
   <thead>
   <th>Tutor Name</th>
@@ -6,11 +15,11 @@
   <th style="text-align: center">Top student</th>
   </thead>
   <tbody>
-  <% @tutors.each do |tutor| %>
-      <% students = tutor.get_only_tut_stds.sort_by {|std| -std.exp } %>
+  <% @result[:tutors].each do |tutor| %>
+      <% students = @result[tutor.id][:students].sort_by {|std| -std.exp } %>
       <tr class="success">
         <td><%= tutor.user.name %></td>
-        <td style="text-align: center"><%= @summaries[tutor.id][:achievements] %></td>
+        <td style="text-align: center"><%= @result[tutor.id][:achievements] %></td>
         <td style="text-align: center"><%= students.count %></td>
         <td style="text-align: center"><%= render partial: 'layouts/user_name_link', locals: {user_course: students.first} %></td>
       </tr>
