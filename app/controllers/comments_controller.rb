@@ -9,16 +9,29 @@ class CommentsController < ApplicationController
     authorize! :read, @comment.commentable
     if @comment.save
       commentable = @comment.commentable
-      commentable.last_commented_at = @comment.created_at
-      commentable.save
+
+      # update / create comment_topic
+      comment_topic = CommentTopic.where(
+        topic_id: commentable.id,
+        topic_type: commentable.class).first_or_create
+      comment_topic.course = @course
+      comment_topic.last_commented_at = @comment.created_at
+      comment_topic.permalink = comment_topic.permalink || get_comment_permalink(commentable)
+      comment_topic.pending = curr_user_course.is_student?
+      comment_topic.save
+
+      @comment.comment_topic = comment_topic
+      @comment.save
+
+      # commentable.last_commented_at = @comment.created_at
+      # commentable.save
 
       CommentSubscription.populate_subscription(@comment)
 
-      commentable.set_pending_comments(curr_user_course.is_student?)
+      # commentable.set_pending_comments(curr_user_course.is_student?)
 
       if @course.email_notify_enabled? PreferableItem.new_comment
-        commentable.notify_user(curr_user_course, @comment,
-                                get_comment_permalink(commentable))
+        commentable.notify_user(curr_user_course, @comment, comment_topic.permalink)
       end
 
       respond_to do |format|
@@ -32,10 +45,10 @@ class CommentsController < ApplicationController
     if can? :see, :pending_comments
       @tab = params[:_tab]
 
-      @all_topics = @course.commented_topics
+      @all_topics = @course.comment_topics
       @pending_comments = @course.get_pending_comments
-      @my_topics = curr_user_course.subscribed_topics
-      @mine_pending_comments = @my_topics.select(&:pending?)
+      @my_topics = curr_user_course.comment_topics
+      @mine_pending_comments = @my_topics.where(pending: true)
 
       case @tab
         when 'all'
@@ -51,22 +64,10 @@ class CommentsController < ApplicationController
           @topics = @pending_comments
       end
     else
-      @topics = curr_user_course.subscribed_topics
+      @topics = curr_user_course.comment_topics
     end
 
     @topics = sorting_and_paging(@topics)
-  end
-
-  def get_mystudent_pending_comments
-    @topics = @course.get_pending_comments
-    mystudents = curr_user_course.get_my_stds.map { |std| std.id }
-    @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
-  end
-
-  def get_mystudent_comments
-    @topics = @course.get_all_comments
-    mystudents = curr_user_course.get_my_stds.map { |std| std.id }
-    @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
   end
 
   def pending_toggle
@@ -88,7 +89,12 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.where(id: params[:id]).first
     if @comment
+      comment_topic = @comment.comment_topic
       @comment.destroy
+      # remove comment topic without comments
+      if comment_topic.comments.count == 0
+        comment_topic.destroy
+      end
     end
     respond_to do |format|
       format.json {render json: {status: 'OK'}}

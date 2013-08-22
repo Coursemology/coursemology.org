@@ -35,19 +35,18 @@ class Course < ActiveRecord::Base
   has_many :tutorial_groups,        dependent: :destroy
   has_many :file_uploads,           as: :owner
   has_many :course_preferences,     dependent: :destroy
-  has_many :comment_subscriptions,  dependent: :destroy
+  has_many :comment_topics,  dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
-  has_many :pending_comments, class_name: "PendingComments"
 
   def asms
     missions + trainings
   end
 
-  def commented_topics
-    # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq
-    self.comment_subscriptions.reduce([]) { |acc, cs| cs.topic.comments.count > 0 ? acc.push(cs.topic) : acc }.uniq
-  end
+  # def commented_topics
+  #  # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq
+  #  self.comment_subscriptions.reduce([]) { |acc, cs| cs.topic.comments.count > 0 ? acc.push(cs.topic) : acc }.uniq
+  #end
 
   def lect_courses
     user_courses.joins(:role).where('roles.name' => 'lecturer')
@@ -70,11 +69,11 @@ class Course < ActiveRecord::Base
   end
 
   def get_pending_comments
-    self.commented_topics.select(&:pending?)
+    self.comment_topics.where(pending: true)
   end
 
   def count_pending_comments
-      self.pending_comments.where(pending: true).count
+    self.comment_topics.where(pending: true).count
   end
 
   def mission_columns
