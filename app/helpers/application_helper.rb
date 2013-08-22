@@ -93,9 +93,10 @@ module ApplicationHelper
   end
 
   def distance_of_time(seconds)
-    mm, ss = seconds.to_i.divmod(60)            #=> [4515, 21]
-    hh, mm = mm.divmod(60)           #=> [75, 15]
+    mm, ss = seconds.to_i.divmod(60)
+    hh, mm = mm.divmod(60)
     dd, hh = hh.divmod(24)
-    "#{dd} d #{hh}:#{mm}:#{ss}"
+
+    "#{dd} d #{"%02d" % hh}:#{"%02d" % mm}:#{"%02d" % ss}"
   end
 end
