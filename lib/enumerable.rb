@@ -1,11 +1,11 @@
 module Enumerable
 
-  def sum
+  def sum_e
     self.reduce(0){|accum, i| accum + i }
   end
 
   def mean
-    self.sum/self.length.to_f
+    self.sum_e/self.length.to_f
   end
 
   def sample_variance
