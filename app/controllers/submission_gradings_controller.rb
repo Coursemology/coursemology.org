@@ -50,6 +50,7 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.total_exp += @ag.exp
     end
     @submission_grading.grader = current_user
+    @submission_grading.grader_course_id = curr_user_course
     if invalid_assign
       grade_error_response
     elsif @submission_grading.save
