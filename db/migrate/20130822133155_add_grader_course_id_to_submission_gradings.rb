@@ -4,6 +4,9 @@ class AddGraderCourseIdToSubmissionGradings < ActiveRecord::Migration
     add_index :submission_gradings, :grader_course_id
 
     SubmissionGrading.all.each do |grading|
+      unless grading.sbm
+        next
+      end
       course_id = grading.sbm.std_course.course_id
       user_id = grading.grader_id
       user_course = UserCourse.where(course_id: course_id, user_id:  user_id).first
