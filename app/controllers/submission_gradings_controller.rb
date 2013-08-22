@@ -50,7 +50,7 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.total_exp += @ag.exp
     end
     @submission_grading.grader = current_user
-    @submission_grading.grader_course_id = curr_user_course
+    @submission_grading.grader_course_id = curr_user_course.id
     if invalid_assign
       grade_error_response
     elsif @submission_grading.save
@@ -112,6 +112,9 @@ class SubmissionGradingsController < ApplicationController
       @submission.set_graded
     end
     #@submission_grading.grader = current_user
+    unless @submission_grading.grader_course_id
+      @submission_grading.grader_course_id = curr_user_course.id
+    end
     if invalid_assign
       grade_error_response(true)
     elsif @submission_grading.save
