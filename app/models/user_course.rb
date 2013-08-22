@@ -14,6 +14,7 @@ class UserCourse < ActiveRecord::Base
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first])
 
+
   belongs_to :role
   belongs_to :user
   belongs_to :course
@@ -46,6 +47,7 @@ class UserCourse < ActiveRecord::Base
   has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
   has_many :tut_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
+  has_many :submission_gradings, foreign_key: "grader_course_id"
 
   def is_student?
     self.role == Role.find_by_name('student')
@@ -241,6 +243,10 @@ class UserCourse < ActiveRecord::Base
         UserMailer.delay.new_student(self.user, self.course)
       end
     end
+  end
+
+  def name
+    self.user.name
   end
 
 end

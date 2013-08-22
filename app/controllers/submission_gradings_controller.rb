@@ -46,8 +46,6 @@ class SubmissionGradingsController < ApplicationController
       end
 
       @ag.grader = current_user
-      puts @ag.to_json
-      puts @submission_grading.to_json
       @submission_grading.total_grade += @ag.grade
       @submission_grading.total_exp += @ag.exp
     end
@@ -106,13 +104,13 @@ class SubmissionGradingsController < ApplicationController
         break
       end
       @ag.update_attributes(ag)
-      @ag.grader = current_user
+      #@ag.grader = current_user
       @submission_grading.total_grade += ag[:grade].to_i
       @submission_grading.total_exp += ag[:exp].to_i
       @submission_grading.last_grade_updated = Time.now
       @submission.set_graded
     end
-    @submission_grading.grader = current_user
+    #@submission_grading.grader = current_user
     if invalid_assign
       grade_error_response(true)
     elsif @submission_grading.save

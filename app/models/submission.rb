@@ -31,7 +31,7 @@ class Submission < ActiveRecord::Base
   end
 
   def get_edit_path
-     edit_course_mission_submission_path(mission.course, mission, self)
+    edit_course_mission_submission_path(mission.course, mission, self)
   end
 
   def get_new_grading_path
@@ -116,7 +116,9 @@ class Submission < ActiveRecord::Base
 
   def set_submitted(redirect_url)
     self.update_attribute(:status,'submitted')
-    self.update_attribute(:submit_at, updated_at)
+    unless self.submit_at
+      self.update_attribute(:submit_at, updated_at)
+    end
     notify_submission(redirect_url)
   end
 

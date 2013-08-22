@@ -1,0 +1,46 @@
+<table class="table table-hover no-boarder">
+  <thead>
+  <th>Tutor Name</th>
+  <th style="text-align: center">Average DG Achievements</th>
+  <th style="text-align: center">Number of students</th>
+  <th style="text-align: center">Top student</th>
+  </thead>
+  <tbody>
+  <% @tutors.each do |tutor| %>
+      <% students = tutor.get_only_tut_stds.sort_by {|std| -std.exp } %>
+      <tr class="success">
+        <td><%= tutor.user.name %></td>
+        <td style="text-align: center"><%= @summaries[tutor.id][:achievements] %></td>
+        <td style="text-align: center"><%= students.count %></td>
+        <td style="text-align: center"><%= render partial: 'layouts/user_name_link', locals: {user_course: students.first} %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="3">
+          <table width="80%" class="table table-bordered table-center">
+            <thead>
+            <tr >
+              <th width="46%" style="text-align: left">Student</th>
+              <th width="20%">Exp</th>
+              <th width="10%">Level</th>
+              <th width="24%"># Achievements</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% students.each do |std| %>
+                <tr >
+                  <td style="text-align: left"><%= render partial: 'layouts/user_name_link', locals: {user_course: std} %></td>
+                  <td><%= link_to std.exp, course_user_course_exp_transactions_path(@course, std) %></td>
+                  <td><%= std.level ? std.level.level : 0%></td>
+                  <td><%= std.user_achievements.count %></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+
+</table>

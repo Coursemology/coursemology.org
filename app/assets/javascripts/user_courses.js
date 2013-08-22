@@ -59,6 +59,7 @@ $(document).ready(function() {
         var curr_role_val = staff_row.find('.change-role').val();
         var name_field = staff_row.find('.change-name');
         var email_field = staff_row.find('.change-email');
+        var phantom = staff_row.find('.change-phantom');
         var old_name  = staff_row.find('.old-name');
         var notice = $('.alert');
         var name = name_field.val().trim();
@@ -86,7 +87,9 @@ $(document).ready(function() {
         $.ajax({
             url: url,
             type: 'PUT',
-            data: { role_id: curr_role_val,
+            data: {
+                role_id: curr_role_val,
+                is_phantom: phantom[0].checked,
                 name: name,
                 email: email },
             dataType: 'json',

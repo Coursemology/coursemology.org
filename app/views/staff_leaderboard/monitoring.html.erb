@@ -1,0 +1,50 @@
+<% if @tutor_details %>
+    <p><h4>View details for <%= @tutor_details[:tutor] %></h4>
+    <br>
+    <table class="table table-hover table-bordered">
+      <thead>
+      <tr>
+        <th>Mission Name</th>
+        <th>Student Name</th>
+        <th>Time taken to mark</th>
+        <th>Date Marked</th>
+        <!--<th>Update Count</th>-->
+      </tr>
+      </thead>
+      <tbody>
+      <% @tutor_details[:gradings].each do |grading| %>
+          <tr>
+            <% sbm = grading.sbm %>
+            <td><%=link_to sbm.mission.title, course_mission_submission_path(@course, sbm.mission, sbm) %></td>
+            <td><%= sbm.std_course.name %></td>
+            <td><%= distance_of_time_in_words(grading.created_at - sbm.submit_at) %></td>
+            <td><%= datetime_format grading.created_at %></td>
+            <!--<td></td>-->
+          </tr>
+      <% end %>
+
+      </tbody></table>
+
+<% end %>
+
+<table class="table table-hover table-center">
+  <thead>
+  <tr>
+    <th style="text-align: left">Tutor Name</th>
+    <th># Marked</th>
+    <th>Average Time Per Assignment</th>
+    <th>Stddev</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @tutors.each do |tutor| %>
+      <tr>
+        <% summary = @summaries[tutor.id] %>
+        <td style="text-align: left"><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= tutor.name %></a></td>
+        <td><%= summary[:count] %></td>
+        <td><%= distance_of_time_in_words(summary[:avg]) if summary[:avg] %></td>
+        <td><%= distance_of_time_in_words(summary[:std_dev]) if summary[:std_dev] %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
