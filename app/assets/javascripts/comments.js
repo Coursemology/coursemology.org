@@ -139,8 +139,9 @@ var Comment = (function(){
                 $.post($("#"+ecid+"_post_path").val()+"/get_comments",{
                     origin: $("#submission_url_"+ecid).val(),
                     comment:{
-                        commentable_id: $("#"+ecid+"_commentable_id").val(),
-                        commentable_type: $("#"+ecid+"_commentable_type").val(),
+                        // TODO: store the comment_topic id for easy retrieval
+                        topic_id: $("#"+ecid+"_commentable_id").val(),
+                        topic_type: $("#"+ecid+"_commentable_type").val(),
                     },
                     brief: true},
                     function(s){

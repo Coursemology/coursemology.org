@@ -107,14 +107,13 @@ class CommentsController < ApplicationController
   end
 
   def get_comments
-    commentable = nil
+    comment_topic = nil
     if params[:comment]
-      commentable = Comment.where(params[:comment]).first.commentable
+      comment_topic = CommentTopic.where(params[:comment]).first
     end
 
     respond_to do |format|
-      resp = commentable ? commentable.comments_json(curr_user_course, false) : {}
-      puts resp
+      resp = CommentTopic.comments_to_json(comment_topic, curr_user_course, false)
       format.json {render json:resp }
     end
   end
