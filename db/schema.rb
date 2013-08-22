@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130821170422) do
+ActiveRecord::Schema.define(:version => 20130822041144) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -172,6 +172,7 @@ ActiveRecord::Schema.define(:version => 20130821170422) do
     t.time     "deleted_at"
   end
 
+  add_index "comments", ["commentable_id", "commentable_type"], :name => "index_comments_on_commentable_id_and_commentable_type"
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_course_id"], :name => "index_comments_on_user_course_id"
 
