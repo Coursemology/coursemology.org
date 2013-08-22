@@ -3,6 +3,14 @@ class CommentsController < ApplicationController
 
   before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :view_for_question]
 
+  # TODO: the following are not necessary any more. to be removed once everything is verified to work.
+  # 1. remove last_commented_at in other classes
+  # 2. remove table pending_comments
+  # 3. remove commentable_id, commentable_type in comment_subscriptions and comments
+  #
+  # TODO:
+  # comment.js to take advantage of comment_topic (ex: in the get_comments function)
+
   def create
     @comment = Comment.new(params[:comment])
     @comment.user_course = curr_user_course
