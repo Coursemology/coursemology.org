@@ -23,20 +23,14 @@ class CommentsController < ApplicationController
       @comment.comment_topic = comment_topic
       @comment.save
 
-      # commentable.last_commented_at = @comment.created_at
-      # commentable.save
-
       CommentSubscription.populate_subscription(@comment)
 
-      # commentable.set_pending_comments(curr_user_course.is_student?)
-
       if @course.email_notify_enabled? PreferableItem.new_comment
-        commentable.notify_user(curr_user_course, @comment, comment_topic.permalink)
+        comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
       end
 
       respond_to do |format|
-        #format.html { redirect_to params[:origin] }
-        format.json {render json: @comment.commentable.comments_json(curr_user_course)}
+        format.json {render json: comment_topic.comments_json(curr_user_course)}
       end
     end
   end
@@ -71,17 +65,17 @@ class CommentsController < ApplicationController
   end
 
   def pending_toggle
-    if !params[:cid] || !params[:ctype]
+    if !params[:cid]
       return
     end
-    pending_comment = PendingComments.find_by_answer_id_and_answer_type(params[:cid], params[:ctype])
-    unless pending_comment
-      pending_comment = PendingComments.create(answer_id:params[:cid], answer_type:params[:ctype],pending: false)
-    end
-    pending_comment.pending = !pending_comment.pending
-    if pending_comment.save
-      respond_to do |format|
-        format.json {render json: {status: 'OK'}}
+    comment_topic = @course.comment_topics.find(params[:cid])
+    if comment_topic
+      comment_topic.pending = !comment_topic.pending
+      if comment_topic.save
+        puts comment_topic.to_json
+        respond_to do |format|
+          format.json {render json: {status: 'OK'}}
+        end
       end
     end
   end
@@ -142,11 +136,13 @@ class CommentsController < ApplicationController
     end
 
     # verify subscription exist
-    cs = CommentSubscription.where(
-        user_course_id: curr_user_course.id,
-        topic_id: @question.id,
-        topic_type: @question.class).count
-    if cs == 0
+    @comment_topic = @course.comment_topics.where(
+      topic_id: @question.id,
+      topic_type: @question.class).first
+
+    cs = ct ? ct.comment_subscriptions.where(user_course_id: curr_user_course.id).count : 0
+
+    if !@comment_topic || cs == 0
       redirect_to access_denied_path
       return
     end

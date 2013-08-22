@@ -9,27 +9,6 @@ module Commentable
     end
   end
 
-  def pending?
-    if self.pending_comments
-      self.pending_comments.pending?
-    else
-      false
-    end
-  end
-
-  def set_pending_comments(pending)
-    if self.respond_to?(:pending_comments)
-      # TODO support pending comments for mcq & coding question
-      if self.pending_comments
-        self.pending_comments.update_attribute(:pending, pending)
-      else
-        pc = self.create_pending_comments(pending:pending)
-        pc.course = std_course.course
-        pc.save
-      end
-    end
-  end
-
   def notify_user(curr_user_course, comment, redirect_url)
     # notify everyone except the ones who made the comment
     user_courses = self.user_courses - [curr_user_course]

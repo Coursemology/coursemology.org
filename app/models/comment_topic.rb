@@ -8,6 +8,15 @@ class CommentTopic < ActiveRecord::Base
 
   has_many :comments
   has_many :comment_subscriptions, dependent: :destroy
+  has_many :user_courses, through: :comment_subscriptions
+
+  def notify_user(curr_user_course, comment, redirect_url)
+    # notify everyone except the ones who made the comment
+    user_courses = self.user_courses - [curr_user_course]
+    user_courses.each do |uc|
+      UserMailer.delay.new_comment(uc.user, comment, redirect_url)
+    end
+  end
 
   def comments_json(curr_user_course = nil, brief = false)
     responds = []
@@ -35,4 +44,8 @@ class CommentTopic < ActiveRecord::Base
     responds
   end
 
+  def self.comments_to_json(comment_topic, curr_user_course=nil, brief=false)
+    # to handle the case when comment_topic is nil
+    comment_topic ? comment_topic.comments_json(curr_user_course, brief) : []
+  end
 end

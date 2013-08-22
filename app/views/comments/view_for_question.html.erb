@@ -13,7 +13,7 @@
 </form>
 
 <%= render partial: "comments/list",
-           locals: { comments:  @question.comments_json,
+           locals: { comments:  @comment_topic.comments_json,
                      target:    @question,
                      header:    "Comments on the Question",
                      margin_left: "0px" } %>

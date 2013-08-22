@@ -1,6 +1,4 @@
 class CodingQuestion < ActiveRecord::Base
-  include Commentable
-
   attr_accessible :creator_id, :step_name, :description,:max_grade, :staff_comments, :data
 
   belongs_to :creator, class_name: "User"
@@ -8,8 +6,7 @@ class CodingQuestion < ActiveRecord::Base
   has_many  :std_coding_answers, foreign_key: "qn_id", dependent: :destroy
   has_many  :asm_qns, as: :qn, dependent: :destroy
 
-  has_many :comments, as: :commentable
-  has_one :pending_comments, as: :answer
+  has_one :comment_topic, as: :topic
 
   before_create :set_default_data
 

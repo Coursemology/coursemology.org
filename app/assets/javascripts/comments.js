@@ -246,12 +246,11 @@ $(function(){
         $.post($("#comments_togging_path").val(),
             {
                 cid: $(this).attr('cid'),
-                ctype: $(this).attr('ctype')
             },
             function(s){
-                if ($this.text() == 'Mark as pending'){
+                if ($this.text().trim() == 'Mark as pending'){
                     $this.text('Unmark as pending');
-                }else{
+                } else {
                     $this.text('Mark as pending');
                 }
             });
