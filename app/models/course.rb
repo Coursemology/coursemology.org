@@ -46,7 +46,7 @@ class Course < ActiveRecord::Base
 
   def commented_topics
     # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq
-    self.comment_subscriptions.reduce([]) {|acc, cs|  if cs.topic.comments.count then acc.push(cs.topic) else acc end}.uniq
+    self.comment_subscriptions.reduce([]) { |acc, cs| cs.topic.comments.count > 0 ? acc.push(cs.topic) : acc }.uniq
   end
 
   def lect_courses
