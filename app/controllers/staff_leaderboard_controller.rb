@@ -26,6 +26,7 @@ class StaffLeaderboardController < ApplicationController
 
 
   def monitoring
+    authorize! :can, :view, :staff_leaderboard
     @tab = 'Monitoring'
     if params[:_tutor_id]
       tutor = UserCourse.find(params[:_tutor_id])
