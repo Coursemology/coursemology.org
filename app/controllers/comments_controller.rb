@@ -61,7 +61,12 @@ class CommentsController < ApplicationController
       @topics = curr_user_course.comment_topics
     end
 
-    @topics = sorting_and_paging(@topics)
+    @comments_paging = @course.comments_paging_pref
+    if @comments_paging.display?
+      @topics = @topics.page(params[:page]).per(@comments_paging.prefer_value.to_i)
+    end
+
+    @topics
   end
 
   def pending_toggle
@@ -139,7 +144,7 @@ class CommentsController < ApplicationController
       topic_id: @question.id,
       topic_type: @question.class).first
 
-    cs = ct ? ct.comment_subscriptions.where(user_course_id: curr_user_course.id).count : 0
+    cs = @comment_topic ? @comment_topic.comment_subscriptions.where(user_course_id: curr_user_course.id).count : 0
 
     if !@comment_topic || cs == 0
       redirect_to access_denied_path
