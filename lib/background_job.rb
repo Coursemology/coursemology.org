@@ -25,9 +25,12 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
   def create_submissions_mission(mission)
     cancel_submissions_mission(mission)
     mission.course.user_courses.student.each do |uc|
-      sbm = mission.submissions.build
-      sbm.std_course = uc
-      sbm.save
+      sbm = Submission.where(std_course_id: uc.id, mission_id: mission.id).first
+      unless sbm
+        sbm = mission.submissions.build
+        sbm.std_course = uc
+        sbm.save
+      end
       sbm.build_initial_answers(uc.user)
       sbm.update_attribute(:status,'submitted')
       sbm.update_attribute(:submit_at, Time.now)

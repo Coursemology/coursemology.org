@@ -34,9 +34,10 @@
 
 <table class="table staff-table table-striped">
   <thead>
-  <th width="30%">Staff Name</th>
+  <th width="25%">Staff Name</th>
   <th width="40%">Email</th>
-  <th width="15%">Role</th>
+  <th width="10%">Role</th>
+  <th>Phantom</th>
   <th width="15%"></th>
   </thead>
   <tbody>
@@ -65,6 +66,9 @@
           <% else %>
               <%= s_course.role.title %>
           <% end %>
+        </td>
+        <td style="text-align: center">
+          <input type="checkbox" name="user-phantom" class="change-phantom" <%= 'checked' if s_course.is_phantom? %>>
         </td>
         <td>
           <% if current_user.is_admin? or curr_user_course.is_lecturer? %>

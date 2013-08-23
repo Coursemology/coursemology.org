@@ -1,1 +1,3 @@
-<%= link_to  user_course.user.name, course_user_course_path(@course, user_course) %>
+<% if user_course %>
+    <%= link_to  user_course.user.name, course_user_course_path(@course, user_course) %>
+<% end %>

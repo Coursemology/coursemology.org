@@ -966,7 +966,7 @@ a:hover#student-large {
 
 .table-hover {
   tr:hover {
-    background-color: lightgray;
+    background-color: #f2f2f2;
   }
 }
 
@@ -987,3 +987,12 @@ a.mission-box {
   border-top: 1px solid #ddd;
   text-align: left;
 }
+
+.table tbody tr.success td{
+  background-color: #dff0d8;
+}
+
+.no-boarder td{
+  border: 0;
+}
+

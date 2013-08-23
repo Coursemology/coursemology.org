@@ -137,6 +137,10 @@ JfdiAcademy::Application.routes.draw do
 
     resources :student_summary
 
+    resources :staff_leaderboard
+
+    get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
+
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

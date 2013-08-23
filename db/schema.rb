@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130822041144) do
+ActiveRecord::Schema.define(:version => 20130822133155) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -554,9 +554,11 @@ ActiveRecord::Schema.define(:version => 20130822041144) do
     t.integer  "exp_transaction_id"
     t.integer  "total_exp"
     t.datetime "last_grade_updated"
+    t.integer  "grader_course_id"
   end
 
   add_index "submission_gradings", ["exp_transaction_id"], :name => "index_submission_gradings_on_exp_transaction_id"
+  add_index "submission_gradings", ["grader_course_id"], :name => "index_submission_gradings_on_grader_course_id"
   add_index "submission_gradings", ["grader_id"], :name => "index_submission_gradings_on_grader_id"
   add_index "submission_gradings", ["sbm_id"], :name => "index_submission_gradings_on_sbm_id"
 
