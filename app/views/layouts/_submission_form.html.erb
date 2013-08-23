@@ -118,16 +118,16 @@
 
     function suggestEXP(max, exp, sum) {
 
-        sum = 0;
+        var sum_grade = 0;
         if (typeof(sum) == 'undefined') {
             grade_input = $(".grade-input");
 
             grade_input.each(function(){
-                sum += $(this).val() - 0;
+                sum_grade += $(this).val() - 0;
             });
 
         } else {
-            sum = $('#grade-sum').val() - 0;
+            sum_grade = $('#grade-sum').val() - 0;
         }
 
         multiplier = $("#exp-multiplier").val() - 0;
@@ -136,8 +136,8 @@
         total_grade = $("#grade-sum");
 
 
-        var result = Math.round(Math.round(multiplier * (exp * sum / max) / 5) * 5);
+        var result = Math.round(Math.round(multiplier * (exp * sum_grade / max) / 5) * 5);
         $("#exp-sum").val(result);
-        total_grade.val(sum);
+        total_grade.val(sum_grade);
     }
 </script>

@@ -211,7 +211,6 @@ var Comment = (function(){
                 }
             }
             if ($obj.data('hasComment')){
-                console.log('inserting');
                 $li.insertBefore($obj.data('hasComment'));
             }else{
                 console.log('appending');
