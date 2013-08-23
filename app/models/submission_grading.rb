@@ -30,7 +30,6 @@ class SubmissionGrading < ActiveRecord::Base
       if sbm.has_multiplier?
         self.exp_transaction.exp *= sbm.multiplier
       else
-        puts "bonus!"
         self.exp_transaction.exp += sbm.get_bonus
       end
     end

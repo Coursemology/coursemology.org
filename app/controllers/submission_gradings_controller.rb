@@ -38,19 +38,27 @@ class SubmissionGradingsController < ApplicationController
     @submission_grading.total_exp = 0
     invalid_assign = false
 
-    params[:ags].each do |ag|
-      @ag = @submission_grading.answer_gradings.build(ag)
-      unless validate_gradings(@ag, ag)
-        invalid_assign = true
-        break
-      end
+    if @mission.single_question?
+      @submission_grading.total_grade = params[:grade_sum].to_i
+    else
+      params[:ags].each do |ag|
+        @ag = @submission_grading.answer_gradings.build(ag)
+        unless validate_gradings(@ag, ag)
+          invalid_assign = true
+          break                                          O
+        end
 
-      @ag.grader = current_user
-      @submission_grading.total_grade += @ag.grade
-      @submission_grading.total_exp += @ag.exp
+        @ag.grader = current_user
+        @submission_grading.total_grade += @ag.grade
+        #@submission_grading.total_exp += @ag.exp
+      end
     end
+    @submission_grading.total_exp = params[:exp_sum].to_i
     @submission_grading.grader = current_user
     @submission_grading.grader_course_id = curr_user_course.id
+    if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
+      invalid_assign = true
+    end
     if invalid_assign
       grade_error_response
     elsif @submission_grading.save
@@ -98,20 +106,28 @@ class SubmissionGradingsController < ApplicationController
     @submission_grading.total_grade = 0
     @submission_grading.total_exp = 0
     invalid_assign = false
-    params[:ags].each do |agid, ag|
-      @ag = AnswerGrading.find(agid)
-      unless validate_gradings(@ag, ag)
-        invalid_assign = true
-        break
+    if @mission.single_question?
+      @submission_grading.total_grade = params[:grade_sum].to_i
+    else
+      params[:ags].each do |agid, ag|
+        @ag = AnswerGrading.find(agid)
+        unless validate_gradings(@ag, ag)
+          invalid_assign = true
+          break
+        end
+        @ag.update_attributes(ag)
+        #@ag.grader = current_user
+        @submission_grading.total_grade += ag[:grade].to_i
+        #@submission_grading.total_exp += ag[:exp].to_i
+        @submission_grading.last_grade_updated = Time.now
+        @submission.set_graded
       end
-      @ag.update_attributes(ag)
-      #@ag.grader = current_user
-      @submission_grading.total_grade += ag[:grade].to_i
-      @submission_grading.total_exp += ag[:exp].to_i
-      @submission_grading.last_grade_updated = Time.now
-      @submission.set_graded
     end
     #@submission_grading.grader = current_user
+    @submission_grading.total_exp = params[:exp_sum].to_i
+    if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
+      invalid_assign = true
+    end
     unless @submission_grading.grader_course_id
       @submission_grading.grader_course_id = curr_user_course.id
     end
@@ -132,6 +148,10 @@ class SubmissionGradingsController < ApplicationController
   end
 
   rescue_from CanCan::AccessDenied do |exception|
+    unless current_user
+      redirect_to new_user_session_path
+      return
+    end
     if @submission.std_course == curr_user_course
       redirect_to course_mission_submission_path(@course, @mission, @submission)
     else

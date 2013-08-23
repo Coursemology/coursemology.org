@@ -996,3 +996,13 @@ a.mission-box {
   border: 0;
 }
 
+.grade-summary {
+  @extend  .grading-block;
+  //background-color: lightgoldenrodyellow;
+}
+
+.grade-summary:after {
+  @extend  .grading-block:after;
+  content: "Grade Summary";
+}
+

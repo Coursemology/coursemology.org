@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130822133155) do
+ActiveRecord::Schema.define(:version => 20130823094613) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -348,8 +348,29 @@ ActiveRecord::Schema.define(:version => 20130822133155) do
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
   add_index "mcqs", ["creator_id"], :name => "index_mcqs_on_creator_id"
 
-# Could not dump table "missions" because of following StandardError
-#   Unknown type 'bool' for column 'is_file_submission'
+  create_table "missions", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "exp"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.datetime "deadline"
+    t.integer  "timelimit"
+    t.integer  "attempt_limit"
+    t.integer  "auto_graded"
+    t.integer  "pos"
+    t.text     "description",        :limit => 255
+    t.integer  "creator_id"
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
+    t.string   "title"
+    t.integer  "max_grade"
+    t.boolean  "single_question",                   :default => false
+    t.boolean  "is_file_submission",                :default => false
+    t.integer  "dependent_id"
+  end
+
+  add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
+  add_index "missions", ["creator_id"], :name => "index_missions_on_creator_id"
 
   create_table "notifications", :force => true do |t|
     t.integer  "target_course_id"
