@@ -11,7 +11,11 @@ class AnnotationsController < ApplicationController
 
     authorize! :read, @annotation.annotable
     if @annotation.save
-      @annotation.annotable.notify_user(curr_user_course, @annotation, params[:origin])
+      # TODO: fix the notify_user function
+      # currently this method wouldn't find the correct users to notify, marking pending wouldn't work either
+      # I think it can be resolved by adding the annotable to the CommentTopic list. However, need to avoid
+      # it being removed (when comments count == 0, the topic is removed -- see CommentController#destroy)
+      # @annotation.annotable.notify_user(curr_user_course, @annotation, params[:origin])
       respond_to do |format|
         format.json {render json: get_all}
       end

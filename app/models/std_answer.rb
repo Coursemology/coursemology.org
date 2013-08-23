@@ -1,6 +1,4 @@
 class StdAnswer < ActiveRecord::Base
-  include Commentable
-
   # TODO: may need to store more information in the std_answer
   # in case a question is linked to more than one mission
 
@@ -10,10 +8,8 @@ class StdAnswer < ActiveRecord::Base
   belongs_to :question
   belongs_to :std_course, class_name: "UserCourse"
 
-  has_many :comments, as: :commentable, dependent: :destroy
-  has_one :pending_comments, as: :answer, dependent: :destroy
-
   has_many :sbm_answers, as: :answer, dependent: :destroy
+  has_one :comment_topic, as: :topic
 
   alias_method :qn, :question
 

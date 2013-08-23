@@ -62,7 +62,7 @@
 
     <% if curr_user_course.is_staff? %>
         <%= render partial: "comments/list",
-                   locals: { comments:  @current_question.comments_json(curr_user_course),
+                   locals: { comments:  CommentTopic.comments_to_json(@current_question.comment_topic, curr_user_course),
                              target:    @current_question,
                              header:    "Comments on the Question",
                              margin_left: "0px" } %>
