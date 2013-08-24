@@ -21,6 +21,8 @@ class Submission < ActiveRecord::Base
 
   scope :graded, where(status: 'graded')
 
+  default_scope includes(:mission, :std_course, :final_grading)
+
   # implement method of Sbm interface
   def get_asm
     self.mission

@@ -12,6 +12,9 @@ class Achievement < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :user_achievements, dependent: :destroy
+  has_many :user_courses, through: :user_achievements
+
+  default_scope includes(:requirements, :as_requirements)
 
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case

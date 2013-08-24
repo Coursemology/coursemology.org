@@ -11,6 +11,8 @@ class TutorialGroup < ActiveRecord::Base
   before_destroy :unsubscribe_comments
   before_create :subscribe_comments
 
+  default_scope includes(:std_course, :tut_course)
+
   def unsubscribe_comments
     # TODO: update subscription
     # unsubscribe everything related to this student
@@ -26,6 +28,14 @@ class TutorialGroup < ActiveRecord::Base
     # topics.each do |topic|
     #   CommentSubscription.subscribe(topic, tut_course)
     # end
+  end
+
+  def after_save
+    Rails.cache.delete("my_tutor_#{self.std_course_id}")
+  end
+
+  def after_destroy
+    Rails.cache.delete("my_tutor_#{self.std_course_id}")
   end
 
 end

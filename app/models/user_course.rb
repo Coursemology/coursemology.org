@@ -11,13 +11,18 @@ class UserCourse < ActiveRecord::Base
   scope :lecturer, where(:role_id => Role.lecturer.first)
   scope :tutor, where(:role_id => Role.tutor.first)
   scope :student, where(:role_id => Role.student.first)
+
   scope :shared, where(:role_id => Role.shared.first)
-  scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first])
+  scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).
+      joins('LEFT JOIN users on user_courses.user_id = users.id').
+      order('LCASE(users.name) ASC')
   scope :top_achievements,
-      joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
-      .select('user_courses.*, count(user_achievements.id) as ach_count')
-      .group('user_courses.id')
-      .order('ach_count DESC, exp_updated_at ASC, id ASC')
+        joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
+        .select('user_courses.*, count(user_achievements.id) as ach_count')
+        .group('user_courses.id')
+        .order('ach_count DESC, exp_updated_at ASC, id ASC')
+
+  default_scope includes(:user)
 
   belongs_to :role
   belongs_to :user
@@ -49,9 +54,12 @@ class UserCourse < ActiveRecord::Base
   has_many :notifications, foreign_key: "target_course_id"
 
   has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
-  has_many :std_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
-  has_many :tut_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
+  has_many :std_group_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
+  has_many :tut_group_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
   has_many :submission_gradings, foreign_key: "grader_course_id"
+  has_many :std_courses, through: :std_group_courses
+  has_many :tut_courses, through: :tut_group_courses
+
 
   def is_student?
     self.role == Role.find_by_name('student')
@@ -203,13 +211,14 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_my_tutors
-    self.tut_courses.map{|tg| tg.tut_course}
+    #self.tut_courses
+    Rails.cache.fetch("my_tutor_#{id}") { self.tut_courses }
   end
 
-  def ge_my_tut_name
-    tut_course =  self.tut_courses.first
+  def get_my_tutor_name
+    tut_course =  self.get_my_tutors.first
     if tut_course
-      tut_course.tut_course.user.name
+      tut_course.name
     else
       'Unassigned!'
     end
@@ -217,7 +226,7 @@ class UserCourse < ActiveRecord::Base
 
   def get_my_stds
     if self.std_courses.size > 0
-      self.get_only_tut_stds
+      self.std_courses
     elsif self.is_lecturer?
       self.get_all_stds
     else
@@ -225,12 +234,8 @@ class UserCourse < ActiveRecord::Base
     end
   end
 
-  def get_only_tut_stds
-    self.std_courses.map {|sg| sg.std_course}.sort_by {|std| std.user.name.downcase}
-  end
-
   def get_all_stds
-    UserCourse.find_all_by_course_id_and_role_id(self.course, Role.student.first.id).sort_by {|std| std.user.name.downcase}
+    UserCourse.where(course_id: self.course_id).student
   end
 
   def get_path
@@ -248,5 +253,4 @@ class UserCourse < ActiveRecord::Base
   def name
     self.user.name
   end
-
 end

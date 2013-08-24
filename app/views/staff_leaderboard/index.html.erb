@@ -20,7 +20,7 @@
       <tr class="success">
         <td><%= tutor.user.name %></td>
         <td style="text-align: center"><%= @result[tutor.id][:achievements] %></td>
-        <td style="text-align: center"><%= students.count %></td>
+        <td style="text-align: center"><%= students.length %></td>
         <td style="text-align: center"><%= render partial: 'layouts/user_name_link', locals: {user_course: students.first} %></td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
                   <td style="text-align: left"><%= render partial: 'layouts/user_name_link', locals: {user_course: std} %></td>
                   <td><%= link_to std.exp, course_user_course_exp_transactions_path(@course, std) %></td>
                   <td><%= std.level ? std.level.level : 0%></td>
-                  <td><%= std.user_achievements.count %></td>
+                  <td><%= std.user_achievements.length %></td>
                 </tr>
             <% end %>
             </tbody>

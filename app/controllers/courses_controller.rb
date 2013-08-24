@@ -121,7 +121,7 @@ class CoursesController < ApplicationController
 
   def students
     @lecturer_courses = @course.user_courses.lecturer
-    @student_courses = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
+    @student_courses = @course.user_courses.student.where(is_phantom: false)
     @ta_courses = @course.user_courses.tutor
 
     @std_paging = @course.students_paging_pref
@@ -139,7 +139,7 @@ class CoursesController < ApplicationController
       @phantom = false
     end
 
-    @student_courses = @course.user_courses.student.where(is_phantom: @phantom).sort_by { |uc| uc.user.name.downcase }
+    @student_courses = @course.user_courses.student.where(is_phantom: @phantom)
     if sort_column == 'tutor'
       puts "sort by tutor "
       @student_courses = @student_courses.sort_by {|uc| uc.tut_courses.first ? uc.tut_courses.first.tut_course_id : 0  }
@@ -148,8 +148,8 @@ class CoursesController < ApplicationController
       end
     end
 
-    @staff_courses = @course.user_courses.staff.sort_by {|staff| staff.user.name.downcase }
-    @student_count = @student_courses.count
+    @staff_courses = @course.user_courses.staff
+    @student_count = @student_courses.length
 
     @std_paging = @course.mgmt_std_paging_pref
     if @std_paging.display?
