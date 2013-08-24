@@ -154,13 +154,29 @@ ActiveRecord::Schema.define(:version => 20130823094613) do
     t.string   "topic_type"
     t.integer  "course_id"
     t.integer  "user_course_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "comment_topic_id"
   end
 
+  add_index "comment_subscriptions", ["comment_topic_id"], :name => "index_comment_subscriptions_on_comment_topic_id"
   add_index "comment_subscriptions", ["course_id"], :name => "index_comment_subscriptions_on_course_id"
   add_index "comment_subscriptions", ["topic_id", "topic_type"], :name => "index_comment_subscriptions_on_topic_id_and_topic_type"
   add_index "comment_subscriptions", ["user_course_id"], :name => "index_comment_subscriptions_on_user_course_id"
+
+  create_table "comment_topics", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "topic_id"
+    t.string   "topic_type"
+    t.datetime "last_commented_at"
+    t.boolean  "pending"
+    t.string   "permalink"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "comment_topics", ["pending"], :name => "index_comment_topics_on_pending"
+  add_index "comment_topics", ["topic_id", "topic_type"], :name => "index_comment_topics_on_topic_id_and_topic_type"
 
   create_table "comments", :force => true do |t|
     t.integer  "user_course_id"
@@ -170,8 +186,10 @@ ActiveRecord::Schema.define(:version => 20130823094613) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.time     "deleted_at"
+    t.integer  "comment_topic_id"
   end
 
+  add_index "comments", ["comment_topic_id"], :name => "index_comments_on_comment_topic_id"
   add_index "comments", ["commentable_id", "commentable_type"], :name => "index_comments_on_commentable_id_and_commentable_type"
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_course_id"], :name => "index_comments_on_user_course_id"
