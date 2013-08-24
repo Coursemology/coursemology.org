@@ -13,6 +13,8 @@ class CoursePreference < ActiveRecord::Base
   scope :course_home_events_no, where(preferable_item_id: PreferableItem.home_sections_events_no)
   scope :course_paging_prefs,   where(preferable_item_id: PreferableItem.paging_prefs)
 
+  default_scope includes(:preferable_item)
+
 
   before_update :schedule_auto_sbm_job, :if => :display_changed?
 
@@ -24,5 +26,9 @@ class CoursePreference < ActiveRecord::Base
         Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel'))
       end
     end
+  end
+
+  def self.fetch
+
   end
 end

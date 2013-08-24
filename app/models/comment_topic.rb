@@ -10,6 +10,8 @@ class CommentTopic < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :user_courses, through: :comment_subscriptions
 
+  default_scope includes(:topic, :comments)
+
   def notify_user(curr_user_course, comment, redirect_url)
     # notify everyone except the ones who made the comment
     user_courses = self.user_courses - [curr_user_course]

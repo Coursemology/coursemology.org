@@ -18,7 +18,7 @@
 
 <br><br>
 <% if can? :manage, UserCourse %>
-    <% tas = @staff_courses.map {|tac| [tac.user.name, tac.id] }.unshift(["Unassigned", -1]) %>
+    <% tas = @staff_courses.map {|tac| [tac.name, tac.id] }.unshift(["Unassigned", -1]) %>
     <table class="table">
       <tr>
         <th>Name</th>

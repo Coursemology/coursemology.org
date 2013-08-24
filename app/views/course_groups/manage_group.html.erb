@@ -27,7 +27,7 @@
       <tbody>
       <% @my_std_courses.each do |std_course| %>
           <tr>
-            <td><%= link_to std_course.user.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
+            <td><%= link_to std_course.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
             <td><%= std_course.level ? std_course.level.level : 0 %></td>
             <td><%= std_course.exp %></td>
             <td><%= std_course.user.email %></td>

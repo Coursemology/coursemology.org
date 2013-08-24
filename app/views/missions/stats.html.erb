@@ -2,7 +2,7 @@
   <h1>Mission Grading: <%= @mission.title %></h1>
 </div>
 
-<% if @my_std_coures.size > 0 %>
+<% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
     <table class="table">
       <thead>
@@ -11,13 +11,13 @@
       <th>Grade</th>
       </thead>
       <tbody>
-      <% @my_std_coures.each  do |std| %>
-          <% sub = @submissions.where(std_course_id: std.id).first %>
+      <% @my_std_courses.each  do |std| %>
+          <% sub = @submissions.select {|sub| sub.std_course == std }.first %>
           <tr>
             <% if sub %>
-                <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.user.name %></a> </td>
+                <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
             <td><%= sub ? sub.status : "Not Started" %></td>
             <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
@@ -37,15 +37,15 @@
   <th>Grade</th>
   </thead>
   <tbody>
-  <% @stds_coures.each do |std| %>
-      <% sub = @submissions.where(std_course_id: std.id).first %>
+  <% @std_courses.each do |std| %>
+      <% sub = @submissions.select {|sub| sub.std_course == std }.first %>
       <tr>
         <% if sub %>
-            <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.user.name %></a> </td>
+            <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
         <% else %>
-            <td><%= std.user.name %></td>
+            <td><%= std.name %></td>
         <% end %>
-        <td><%= std.ge_my_tut_name %></td>
+        <td><%= std.get_my_tutor_name %></td>
         <td><%= sub ? sub.status.capitalize : "Not Started" %></td>
         <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
       </tr>
@@ -54,10 +54,10 @@
 </table>
 
 <% if @stats_paging.display? %>
-    <%= paginate @stds_coures %>
+    <%= paginate @std_courses %>
 <% end %>
 
-<% if @stds_coures_phantom.count > 0 %>
+<% if @std_courses_phantom.length > 0 %>
     <h3>Phantom Students</h3>
     <table class="table">
       <thead>
@@ -67,15 +67,15 @@
       <th>Grade</th>
       </thead>
       <tbody>
-      <% @stds_coures_phantom.each do |std| %>
-          <% sub = @submissions.where(std_course_id: std.id).first %>
+      <% @std_courses_phantom.each do |std| %>
+          <% sub = @submissions.select {|sub| sub.std_course == std }.first %>
           <tr>
             <% if sub %>
-                <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.user.name %></a> </td>
+                <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
-            <td><%= std.ge_my_tut_name %></td>
+            <td><%= std.get_my_tutor_name %></td>
             <td><%= sub ? sub.status.capitalize : "Not Started" %></td>
             <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
           </tr>

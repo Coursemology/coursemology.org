@@ -15,7 +15,7 @@
   <!--<img class="small-mission-pic" width="54" height="54" src="public/images/mission_icons/mission22_small.jpg">-->
   <div class="title"><%= mission.title.html_safe %></div>
   <div class="student"><label>by:</label><span class="student-link">
-    <a href="<%= course_user_course_path(@course, std_course) %>"><%= std_course.user.name %></a>
+    <a href="<%= course_user_course_path(@course, std_course) %>"><%= std_course.name %></a>
     <!--<span class="student-tag common ">Chao Recruit</span>-->
     </span>
   </div>

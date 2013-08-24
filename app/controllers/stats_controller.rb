@@ -19,7 +19,7 @@ class StatsController < ApplicationController
       row = []
       row << k.to_s
       row << sbms.size
-      tooltip = sbms.map { |sbm| sbm.std_course.user.name }.join(", ")
+      tooltip = sbms.map { |sbm| sbm.std_course.name }.join(", ")
       row << tooltip
       grade_table.add_row(row)
     end

@@ -15,18 +15,12 @@
   <% @pending_gradings.each do |sub| %>
       <tr>
         <td>
-          <%= sub.std_course.user.name %>
+          <%= sub.std_course.name %>
         </td>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
-        <td><%= datetime_format sub.updated_at %> </td>
+        <td><%= datetime_format sub.submit_at %> </td>
         <td>
-          <%tutor = sub.std_course.get_my_tutors %>
-          <% if tutor.size > 0 %>
-              <%= tutor.first.user.name %>
-          <% else %>
-              Unassigned!
-          <% end %>
-
+          <%= sub.std_course.get_my_tutor_name %>
         </td>
         <% if can? :manage, SubmissionGrading %>
 

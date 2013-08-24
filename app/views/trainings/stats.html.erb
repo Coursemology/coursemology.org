@@ -4,7 +4,7 @@
 
 <% question_count = @training.questions.count %>
 
-<% if @my_std_coures.size > 0 %>
+<% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
     <table class="table">
       <thead>
@@ -13,13 +13,13 @@
       <th>Grade</th>
       </thead>
       <tbody>
-      <% @my_std_coures.each  do |std| %>
+      <% @my_std_courses.each  do |std| %>
           <% sub = @submissions.where(std_course_id: std.id).first %>
           <tr>
             <% if sub %>
-                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
             <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
             <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
@@ -39,15 +39,15 @@
   <th>Grade</th>
   </thead>
   <tbody>
-  <% @stds_coures.each do |std| %>
+  <% @std_courses.each do |std| %>
       <% sub = @submissions.where(std_course_id: std.id).first %>
       <tr>
         <% if sub %>
-            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
         <% else %>
-            <td><%= std.user.name %></td>
+            <td><%= std.name %></td>
         <% end %>
-        <td><%= std.ge_my_tut_name %></td>
+        <td><%= std.get_my_tutor_name %></td>
         <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
         <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
       </tr>

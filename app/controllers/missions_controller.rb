@@ -164,16 +164,17 @@ class MissionsController < ApplicationController
   end
 
   def stats
-    #@mission
     @stats_paging = @course.missions_stats_paging_pref
-    @submissions = @mission.submissions
-    @stds_coures = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
-    @my_std_coures = curr_user_course.get_only_tut_stds.select { |uc| !uc.is_phantom? }
+    @submissions = @mission.submissions.all
+    @std_courses = @course.user_courses.student.where(is_phantom: false)
+    @my_std_courses = curr_user_course.std_courses.student.where(is_phantom: false)
 
     if @stats_paging.display?
-      @stds_coures = Kaminari.paginate_array(@stds_coures).page(params[:page]).per(@stats_paging.prefer_value.to_i)
+      @std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
     end
-    @stds_coures_phantom = @course.user_courses.student.where(is_phantom: true).sort_by {|uc| uc.user.name.downcase }
+    @std_courses_phantom = @course.user_courses.student.where(is_phantom: true)
+
+
 
   end
 

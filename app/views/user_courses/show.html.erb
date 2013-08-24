@@ -7,9 +7,9 @@
       </td>
       <td style="padding-left: 10px">
         <% if @user_course.user.uid %>
-            <a id="student-large" href="https://www.facebook.com/<%= @user_course.user.uid %>"><%= @user_course.user.name %></a>
+            <a id="student-large" href="https://www.facebook.com/<%= @user_course.user.uid %>"><%= @user_course.name %></a>
         <% else %>
-            <h3><%= @user_course.user.name %></h3>
+            <h3><%= @user_course.name %></h3>
         <% end %>
         <p><%= @user_course.user.email %></p>
         <% if @user_course.level && (@user_course == curr_user_course || curr_user_course.is_staff?)%>

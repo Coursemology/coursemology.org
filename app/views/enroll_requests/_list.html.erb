@@ -21,7 +21,7 @@
                    value="<%= course_enroll_request_path(@course, ec.id) %>" />
             <td><input type="checkbox" value="<%= ec.id %>" class="<%= "checkbox-#{type}" %>"/></td>
         <% end %>
-        <td><label class="user-name"><%= ec.user.name %></label></td>
+        <td><label class="user-name"><%= ec.name %></label></td>
         <td><%= ec.user.email %></td>
         <td><%= datetime_no_seconds(ec.created_at) %></td>
         <td><%= ec.role.title %></td>

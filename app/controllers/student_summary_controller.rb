@@ -10,7 +10,7 @@ class StudentSummaryController < ApplicationController
       when 'Level'
         @students = @course.user_courses.student.where(is_phantom: false).order("level_id " + sort_direction)
       when 'Name'
-        @students = @course.user_courses.student.where(is_phantom: false).sort_by { |std| std.user.name.downcase }
+        @students = @course.user_courses.student.where(is_phantom: false)
         @students = sort_direction == 'asc' ? @students : @students.reverse
       else
         @students = @course.user_courses.student.where(is_phantom: false).order("exp desc")
@@ -18,7 +18,7 @@ class StudentSummaryController < ApplicationController
 
     @std_summary_paging = @course.std_summary_paging_pref
     if @std_summary_paging.display?
-      @students = Kaminari.paginate_array(@students).page(params[:page]).per(@std_summary_paging.prefer_value.to_i)
+      @students = @students.page(params[:page]).per(@std_summary_paging.prefer_value.to_i)
     end
   end
 end

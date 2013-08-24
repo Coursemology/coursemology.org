@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130823094613) do
+ActiveRecord::Schema.define(:version => 20130824164123) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -715,6 +715,7 @@ ActiveRecord::Schema.define(:version => 20130823094613) do
     t.datetime "updated_at",     :null => false
   end
 
+  add_index "user_achievements", ["achievement_id", "user_course_id"], :name => "index_user_achievements_on_achievement_id_and_user_course_id"
   add_index "user_achievements", ["achievement_id"], :name => "index_user_achievements_on_achievement_id"
   add_index "user_achievements", ["user_course_id"], :name => "index_user_achievements_on_user_course_id"
 
@@ -729,6 +730,7 @@ ActiveRecord::Schema.define(:version => 20130823094613) do
     t.time     "deleted_at"
     t.boolean  "is_phantom",     :default => false
     t.datetime "exp_updated_at"
+    t.string   "name"
   end
 
   add_index "user_courses", ["course_id"], :name => "index_user_courses_on_course_id"

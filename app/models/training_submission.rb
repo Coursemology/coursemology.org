@@ -19,6 +19,8 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_coding_answers, through: :sbm_answers,
            :source => :answer, :source_type => "StdCodingAnswer"
 
+  default_scope includes(:std_course, :training)
+
   def get_asm
      self.training
   end
@@ -32,7 +34,7 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def done?
-    current_step > self.training.questions.count
+    current_step > self.training.asm_qns.count
   end
 
   def update_grade

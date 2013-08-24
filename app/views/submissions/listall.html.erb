@@ -35,10 +35,10 @@
         <div class="controls">
           <select name="student">
             <option value="0">Any</option>
-            <% @student_courses.sort_by {|sc| sc.user.name.downcase }.each do |sc| %>
+            <% @student_courses.each do |sc| %>
                 <option name="student" value="<%= sc.id %>"
                         <%= "selected" if @selected_sc && sc.id = @selected_sc.id %>>
-                  <%= sc.user.name %>
+                  <%= sc.name %>
                 </option>
             <% end %>
           </select>
@@ -80,7 +80,7 @@
                   <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
                   <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
               <% end %>
-              <%= sub.std_course.user.name %>
+              <%= render partial: 'layouts/user_name_link', locals: {user_course: sub.std_course} %>
             </td>
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
@@ -91,7 +91,7 @@
                   <%= link_to sg.get_name, sub.get_path %><br/>
               <% end %>
             </td>
-            <% if sub.submission_gradings.count == 0 %>
+            <% if sub.submission_gradings.length == 0 %>
                 <td>
                   <%= link_to "Evaluate",
                               sub.get_new_grading_path,

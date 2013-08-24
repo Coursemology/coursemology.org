@@ -48,7 +48,7 @@ class UserCoursesController < ApplicationController
   def staff
     @staff_courses = []
     @students_courses = []
-    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name.downcase }
+    uc_sorted = @course.user_courses.order('lower(name)')
     uc_sorted.each do |uc|
       if uc.is_ta?
         @staff_courses << uc
