@@ -13,7 +13,11 @@ class UserCourse < ActiveRecord::Base
   scope :student, where(:role_id => Role.student.first)
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first])
-
+  scope :top_achievements,
+      joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
+      .select('user_courses.*, count(user_achievements.id) as ach_count')
+      .group('user_courses.id')
+      .order('ach_count DESC, exp_updated_at ASC, id ASC')
 
   belongs_to :role
   belongs_to :user
