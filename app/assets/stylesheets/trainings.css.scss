@@ -2,12 +2,4 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-
-.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler {
-  background-color: #E6E6E6;
-  cursor: pointer;
-}
-
-.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-icon, .asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-text {
-  display: inline;  
-}
+// Refer to asm_qn.scss for details of question table's style
