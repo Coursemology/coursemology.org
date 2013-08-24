@@ -6,6 +6,7 @@
   <thead>
   <th>S/N</th>
   <th style="text-align: left"><%= sortable 'Name', course_student_summary_index_path %></th>
+  <th style="text-align: left">Tutor</th>
   <th><%= sortable 'Level', course_student_summary_index_path %></th>
   <th><%= sortable 'Exp', course_student_summary_index_path %></th>
   <th>Exp Count</th>
@@ -15,6 +16,7 @@
     <tr>
       <td><%= index + 1%></td>
       <td style="text-align: left"><a href="<%= course_user_course_path(@course, std)%>"><%= std.name %></a></td>
+      <td style="text-align: left"> <%= std.get_my_tutor_name %></td>
       <td><%= std.level ? std.level.level : 0%> </td>
       <td><a href="<%= course_user_course_exp_transactions_path(@course, std) %>"> <%= std.exp %> EXP</a></td>
       <td><%= std.exp_transactions.count %></td>
