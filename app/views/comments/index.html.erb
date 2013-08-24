@@ -68,7 +68,7 @@
                 <li class="annotation-summary comment" >
                   <div class="commentor" style="display: inline">
                       <span class="student-link">
-                        <a href="<%= course_user_course_path(@course, curr_user_course)%>"><%= anno.user_course.user.name%></a>
+                        <a href="<%= course_user_course_path(@course, curr_user_course)%>"><%= anno.user_course.name if anno.user_course%></a>
                       </span>
                   </div>
                   <div class="annotation-inner" ><%= style_format(anno.text, false) %></div>
