@@ -72,7 +72,6 @@ module TrainingSubmissionsHelper
 
       end
     end
-    puts ">>>>>>>>>>>>", summary
     summary
   end
 
