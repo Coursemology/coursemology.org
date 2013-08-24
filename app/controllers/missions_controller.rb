@@ -166,13 +166,13 @@ class MissionsController < ApplicationController
   def stats
     @stats_paging = @course.missions_stats_paging_pref
     @submissions = @mission.submissions.all
-    @stds_coures = @course.user_courses.student.where(is_phantom: false)
-    @my_std_coures = curr_user_course.std_courses.student.where(is_phantom: false)
+    @std_courses = @course.user_courses.student.where(is_phantom: false)
+    @my_std_courses = curr_user_course.std_courses.student.where(is_phantom: false)
 
     if @stats_paging.display?
-      @stds_coures = @stds_coures.page([:page]).per(@stats_paging.prefer_value.to_i)
+      @std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
     end
-    @stds_coures_phantom = @course.user_courses.student.where(is_phantom: true)
+    @std_courses_phantom = @course.user_courses.student.where(is_phantom: true)
 
 
 

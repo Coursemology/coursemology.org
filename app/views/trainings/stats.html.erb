@@ -4,7 +4,7 @@
 
 <% question_count = @training.questions.count %>
 
-<% if @my_std_coures.size > 0 %>
+<% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
     <table class="table">
       <thead>
@@ -13,7 +13,7 @@
       <th>Grade</th>
       </thead>
       <tbody>
-      <% @my_std_coures.each  do |std| %>
+      <% @my_std_courses.each  do |std| %>
           <% sub = @submissions.where(std_course_id: std.id).first %>
           <tr>
             <% if sub %>
@@ -39,7 +39,7 @@
   <th>Grade</th>
   </thead>
   <tbody>
-  <% @stds_coures.each do |std| %>
+  <% @std_courses.each do |std| %>
       <% sub = @submissions.where(std_course_id: std.id).first %>
       <tr>
         <% if sub %>

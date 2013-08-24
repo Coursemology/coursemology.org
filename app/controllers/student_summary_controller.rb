@@ -13,7 +13,7 @@ class StudentSummaryController < ApplicationController
         @students = @course.user_courses.student.where(is_phantom: false)
         @students = sort_direction == 'asc' ? @students : @students.reverse
       else
-        @students = @course.user_courses.student.where(is_phantom: false).order(:exp)
+        @students = @course.user_courses.student.where(is_phantom: false).order("exp desc")
     end
 
     @std_summary_paging = @course.std_summary_paging_pref
