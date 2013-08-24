@@ -33,7 +33,7 @@
         <div class="row">
           <div class="span8">
             <%= render partial: "comments/list",
-                       locals: { comments:  answer.comments_json(curr_user_course),
+                       locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
                                  target:    answer,
                                  header:    "Comments",
                                  ecid:      ecid,

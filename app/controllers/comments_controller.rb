@@ -3,27 +3,42 @@ class CommentsController < ApplicationController
 
   before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :view_for_question]
 
+  # TODO: the following are not necessary any more. to be removed once everything is verified to work.
+  # 1. remove last_commented_at in other classes
+  # 2. remove table pending_comments
+  # 3. remove commentable_id, commentable_type in comment_subscriptions and comments
+  #
+  # TODO:
+  # comment.js to take advantage of comment_topic (ex: in the get_comments function)
+
   def create
     @comment = Comment.new(params[:comment])
     @comment.user_course = curr_user_course
     authorize! :read, @comment.commentable
     if @comment.save
       commentable = @comment.commentable
-      commentable.last_commented_at = @comment.created_at
-      commentable.save
+
+      # update / create comment_topic
+      comment_topic = CommentTopic.where(
+        topic_id: commentable.id,
+        topic_type: commentable.class).first_or_create
+      comment_topic.course = @course
+      comment_topic.last_commented_at = @comment.created_at
+      comment_topic.permalink = comment_topic.permalink || get_comment_permalink(commentable)
+      comment_topic.pending = curr_user_course.is_student?
+      comment_topic.save
+
+      @comment.comment_topic = comment_topic
+      @comment.save
 
       CommentSubscription.populate_subscription(@comment)
 
-      commentable.set_pending_comments(curr_user_course.is_student?)
-
       if @course.email_notify_enabled? PreferableItem.new_comment
-        commentable.notify_user(curr_user_course, @comment,
-                                get_comment_permalink(commentable))
+        comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
       end
 
       respond_to do |format|
-        #format.html { redirect_to params[:origin] }
-        format.json {render json: @comment.commentable.comments_json(curr_user_course)}
+        format.json {render json: comment_topic.comments_json(curr_user_course)}
       end
     end
   end
@@ -32,10 +47,10 @@ class CommentsController < ApplicationController
     if can? :see, :pending_comments
       @tab = params[:_tab]
 
-      @all_topics = @course.commented_topics
+      @all_topics = @course.comment_topics
       @pending_comments = @course.get_pending_comments
-      @my_topics = curr_user_course.subscribed_topics
-      @mine_pending_comments = @my_topics.select(&:pending?)
+      @my_topics = curr_user_course.comment_topics
+      @mine_pending_comments = @my_topics.where(pending: true)
 
       case @tab
         when 'all'
@@ -51,36 +66,29 @@ class CommentsController < ApplicationController
           @topics = @pending_comments
       end
     else
-      @topics = curr_user_course.subscribed_topics
+      @topics = curr_user_course.comment_topics
     end
 
-    @topics = sorting_and_paging(@topics)
-  end
+    @comments_paging = @course.comments_paging_pref
+    if @comments_paging.display?
+      @topics = @topics.page(params[:page]).per(@comments_paging.prefer_value.to_i)
+    end
 
-  def get_mystudent_pending_comments
-    @topics = @course.get_pending_comments
-    mystudents = curr_user_course.get_my_stds.map { |std| std.id }
-    @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
-  end
-
-  def get_mystudent_comments
-    @topics = @course.get_all_comments
-    mystudents = curr_user_course.get_my_stds.map { |std| std.id }
-    @topics = @topics.select { |ans| mystudents.include? ans.std_course_id }
+    @topics
   end
 
   def pending_toggle
-    if !params[:cid] || !params[:ctype]
+    if !params[:cid]
       return
     end
-    pending_comment = PendingComments.find_by_answer_id_and_answer_type(params[:cid], params[:ctype])
-    unless pending_comment
-      pending_comment = PendingComments.create(answer_id:params[:cid], answer_type:params[:ctype],pending: false)
-    end
-    pending_comment.pending = !pending_comment.pending
-    if pending_comment.save
-      respond_to do |format|
-        format.json {render json: {status: 'OK'}}
+    comment_topic = @course.comment_topics.find(params[:cid])
+    if comment_topic
+      comment_topic.pending = !comment_topic.pending
+      if comment_topic.save
+        puts comment_topic.to_json
+        respond_to do |format|
+          format.json {render json: {status: 'OK'}}
+        end
       end
     end
   end
@@ -88,7 +96,12 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.where(id: params[:id]).first
     if @comment
+      comment_topic = @comment.comment_topic
       @comment.destroy
+      # remove comment topic without comments
+      if comment_topic.comments.count == 0
+        comment_topic.destroy
+      end
     end
     respond_to do |format|
       format.json {render json: {status: 'OK'}}
@@ -107,14 +120,13 @@ class CommentsController < ApplicationController
   end
 
   def get_comments
-    commentable = nil
+    comment_topic = nil
     if params[:comment]
-      commentable = Comment.where(params[:comment]).first.commentable
+      comment_topic = CommentTopic.where(params[:comment]).first
     end
 
     respond_to do |format|
-      resp = commentable ? commentable.comments_json(curr_user_course, false) : {}
-      puts resp
+      resp = CommentTopic.comments_to_json(comment_topic, curr_user_course, false)
       format.json {render json:resp }
     end
   end
@@ -136,11 +148,13 @@ class CommentsController < ApplicationController
     end
 
     # verify subscription exist
-    cs = CommentSubscription.where(
-        user_course_id: curr_user_course.id,
-        topic_id: @question.id,
-        topic_type: @question.class).count
-    if cs == 0
+    @comment_topic = @course.comment_topics.where(
+      topic_id: @question.id,
+      topic_type: @question.class).first
+
+    cs = @comment_topic ? @comment_topic.comment_subscriptions.where(user_course_id: curr_user_course.id).count : 0
+
+    if !@comment_topic || cs == 0
       redirect_to access_denied_path
       return
     end

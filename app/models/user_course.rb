@@ -13,7 +13,11 @@ class UserCourse < ActiveRecord::Base
   scope :student, where(:role_id => Role.student.first)
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first])
-
+  scope :top_achievements,
+      joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
+      .select('user_courses.*, count(user_achievements.id) as ach_count')
+      .group('user_courses.id')
+      .order('ach_count DESC, exp_updated_at ASC, id ASC')
 
   belongs_to :role
   belongs_to :user
@@ -27,13 +31,13 @@ class UserCourse < ActiveRecord::Base
   has_many :seen_stuff, class_name: "SeenByUser"
   has_many :comments, dependent: :destroy
   has_many :comment_subscriptions, dependent: :destroy
+  has_many :comment_topics, through: :comment_subscriptions
 
   has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
   has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
 
   has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
-
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
   has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
@@ -231,10 +235,6 @@ class UserCourse < ActiveRecord::Base
 
   def get_path
     course_user_course_path(self.course, self)
-  end
-
-  def subscribed_topics
-    self.comment_subscriptions.map { |cs| cs.topic }.uniq
   end
 
   def notify_student
