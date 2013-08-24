@@ -15,7 +15,7 @@
   <% @pending_gradings.each do |sub| %>
       <tr>
         <td>
-          <%= sub.std_course.user.name %>
+          <%= sub.std_course.name %>
         </td>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= datetime_format sub.submit_at %> </td>

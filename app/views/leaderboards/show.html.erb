@@ -15,7 +15,7 @@
         </td>
         <td>
           <a href="<%= course_user_course_path(@course, std_course) %>"
-            class="leaderboard-name"><%= std_course.user.name %>
+            class="leaderboard-name"><%= std_course.name %>
           </a>
           <br/>
           <span class="leaderboard-level"><%= std_course.level.get_title if std_course.level%></span><br/>
@@ -39,7 +39,7 @@
         </td>
         <td>
           <a href="<%= course_user_course_path(@course, std_course) %>"
-            class="leaderboard-name"><%= std_course.user.name %>
+            class="leaderboard-name"><%= std_course.name %>
           </a><br/>
           <% std_course.user_achievements.each do |uach| %>
             <a href='#' title="<%= uach.achievement.title %>">

@@ -17,9 +17,9 @@
           <% sub = @submissions.where(std_course_id: std.id).first %>
           <tr>
             <% if sub %>
-                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
             <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
             <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
@@ -43,9 +43,9 @@
       <% sub = @submissions.where(std_course_id: std.id).first %>
       <tr>
         <% if sub %>
-            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.user.name %></a> </td>
+            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
         <% else %>
-            <td><%= std.user.name %></td>
+            <td><%= std.name %></td>
         <% end %>
         <td><%= std.get_my_tutor_name %></td>
         <td><%= sub.nil? ?  "Not Started" : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>

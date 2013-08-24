@@ -8,7 +8,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     @comment = comment
     @redirect_url = redirect_url
-    mail(to: user.email, subject: "New comment by #{@comment.user_course.user.name}!")
+    mail(to: user.email, subject: "New comment by #{@comment.user_course.name}!")
   end
 
   def new_grading(user, redirect_url)

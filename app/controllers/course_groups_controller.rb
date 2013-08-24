@@ -5,15 +5,10 @@ class CourseGroupsController < ApplicationController
 
   def manage_group
     puts "manage students"
-    @students_courses = []
-    uc_sorted = @course.user_courses.sort_by { |uc| uc.user.name.downcase }
-    uc_sorted.each do |uc|
-      if uc.is_student?
-        @students_courses << uc
-      end
-    end
+    @students_courses = @course.user_courses.student.order('lower(name)')
+
     @assigned_students = @course.tutorial_groups.map {|m| m.std_course}
-    @my_std_courses = @course.tutorial_groups.where(tut_course_id:curr_user_course).map {|m| m.std_course}.sort_by { |std| std.user.name.downcase }
+    @my_std_courses = curr_user_course.std_courses.order('lower(name)')
   end
 
   def add_student

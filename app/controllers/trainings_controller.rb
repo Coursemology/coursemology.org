@@ -126,8 +126,8 @@ class TrainingsController < ApplicationController
   def stats
     #@mission
     @submissions = @training.training_submissions
-    @stds_coures = @course.user_courses.student.where(is_phantom: false).sort_by {|uc| uc.user.name.downcase }
-    @my_std_coures = curr_user_course.get_only_tut_stds
+    @stds_coures = @course.user_courses.student.where(is_phantom: false).order('lower(name)')
+    @my_std_coures = curr_user_course.std_courses
   end
 
   def access_denied

@@ -17,7 +17,7 @@
             <% if sub %>
                 <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
             <td><%= sub ? sub.status : "Not Started" %></td>
             <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
@@ -73,7 +73,7 @@
             <% if sub %>
                 <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
             <% else %>
-                <td><%= std.user.name %></td>
+                <td><%= std.name %></td>
             <% end %>
             <td><%= std.get_my_tutor_name %></td>
             <td><%= sub ? sub.status.capitalize : "Not Started" %></td>

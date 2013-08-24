@@ -9,7 +9,7 @@
               <select id="attemptingstudent" name="user_course_id">
                 <% @students_courses.each do |student_course|  %>
                     <option value="<%= student_course.id %>">
-                      <%= student_course.user.name %>
+                      <%= student_course.name %>
                     </option>
                 <% end %>
               </select>
@@ -44,12 +44,12 @@
   <% @staff_courses.each do |s_course| %>
       <tr>
 
-        <input type="hidden" class="old-name" value="<%= s_course.user.name  %>">
+        <input type="hidden" class="old-name" value="<%= s_course.name  %>">
         <% if can? :manage, :staff %>
-            <td>  <input type="text" value="<%= s_course.user.name  %>" name="user-name" class="change-name" required> </td>
+            <td>  <input type="text" value="<%= s_course.name  %>" name="user-name" class="change-name" required> </td>
             <td>  <input type="email" value="<%= s_course.user.email  %>" name="user-email" class="change-email" required> </td>
         <% else %>
-            <td>  <%= link_to s_course.user.name, course_user_course_path(@course,s_course),id:s_course.id %> </td>
+            <td>  <%= link_to s_course.name, course_user_course_path(@course,s_course),id:s_course.id %> </td>
             <td><%= s_course.user.email %></td>
         <% end %>
         <td>

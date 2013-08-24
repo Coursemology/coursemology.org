@@ -15,7 +15,7 @@ class UserCourse < ActiveRecord::Base
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).
       joins('LEFT JOIN users on user_courses.user_id = users.id').
-      order('LCASE(users.name) ASC')
+      order('lower(users.name) ASC')
   scope :top_achievements,
         joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
         .select('user_courses.*, count(user_achievements.id) as ach_count')
@@ -248,9 +248,5 @@ class UserCourse < ActiveRecord::Base
         UserMailer.delay.new_student(self.user, self.course)
       end
     end
-  end
-
-  def name
-    self.user.name
   end
 end

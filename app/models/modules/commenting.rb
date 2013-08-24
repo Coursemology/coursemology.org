@@ -4,7 +4,7 @@ module Commenting
 
     def as_json
         uc = self.user_course
-        name =  uc.user.name
+        name =  uc.name
         {
                 c: style_format(self.text, false),
                 o: self.text,
