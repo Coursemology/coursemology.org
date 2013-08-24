@@ -4,6 +4,9 @@ class MigrateToCommentTopic < ActiveRecord::Migration
       comment_topic = CommentTopic.where(
         topic_id: comment.commentable_id,
         topic_type: comment.commentable_type).first_or_create
+      unless comment.user_course
+        next
+      end
       comment_topic.course = comment.user_course.course
       comment_topic.last_commented_at = comment.created_at
       comment_topic.save
