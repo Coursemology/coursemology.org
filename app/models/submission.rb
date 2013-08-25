@@ -118,9 +118,7 @@ class Submission < ActiveRecord::Base
 
   def set_submitted(redirect_url)
     self.update_attribute(:status,'submitted')
-    unless self.submit_at
-      self.update_attribute(:submit_at, updated_at)
-    end
+    self.update_attribute(:submit_at, updated_at)
     notify_submission(redirect_url)
   end
 
