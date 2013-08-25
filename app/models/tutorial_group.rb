@@ -11,6 +11,9 @@ class TutorialGroup < ActiveRecord::Base
   before_destroy :unsubscribe_comments
   before_create :subscribe_comments
 
+  after_save :after_save
+  after_destroy :after_destroy
+
   default_scope includes(:std_course, :tut_course)
 
   def unsubscribe_comments
@@ -32,6 +35,7 @@ class TutorialGroup < ActiveRecord::Base
 
   def after_save
     Rails.cache.delete("my_tutor_#{self.std_course_id}")
+
   end
 
   def after_destroy

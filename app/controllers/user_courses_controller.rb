@@ -73,7 +73,7 @@ class UserCoursesController < ApplicationController
     end
 
     #updated
-    @user_course.tut_courses.map {|tc| tc.destroy }
+    @user_course.tut_group_courses.map {|tc| tc.destroy }
 
     #unassigned to assigned
     if params[:tutor].first.to_i > 0
