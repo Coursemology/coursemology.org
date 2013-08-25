@@ -10,7 +10,7 @@ class CommentTopic < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :user_courses, through: :comment_subscriptions
 
-  default_scope includes(:topic, :comments)
+  default_scope includes(:topic)
 
   def notify_user(curr_user_course, comment, redirect_url)
     # notify everyone except the ones who made the comment
@@ -24,7 +24,6 @@ class CommentTopic < ActiveRecord::Base
     responds = []
 
     self.comments.each do |c|
-      puts curr_user_course.to_json
       edit  = false
       if curr_user_course and (curr_user_course.is_staff? || curr_user_course == c.user_course)
         edit = true

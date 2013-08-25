@@ -15,32 +15,32 @@ class CommentsController < ApplicationController
     @comment = Comment.new(params[:comment])
     @comment.user_course = curr_user_course
     authorize! :read, @comment.commentable
-    if @comment.save
-      commentable = @comment.commentable
+    #if @comment.save
+    commentable = @comment.commentable
 
-      # update / create comment_topic
-      comment_topic = CommentTopic.where(
+    # update / create comment_topic
+    comment_topic = CommentTopic.where(
         topic_id: commentable.id,
         topic_type: commentable.class).first_or_create
-      comment_topic.course = @course
-      comment_topic.last_commented_at = @comment.created_at
-      comment_topic.permalink = comment_topic.permalink || get_comment_permalink(commentable)
-      comment_topic.pending = curr_user_course.is_student?
-      comment_topic.save
+    comment_topic.course = @course
+    comment_topic.last_commented_at = @comment.created_at
+    comment_topic.permalink = comment_topic.permalink || get_comment_permalink(commentable)
+    comment_topic.pending = curr_user_course.is_student?
+    comment_topic.save
 
-      @comment.comment_topic = comment_topic
-      @comment.save
+    @comment.comment_topic = comment_topic
+    @comment.save
 
-      CommentSubscription.populate_subscription(@comment)
+    CommentSubscription.populate_subscription(@comment)
 
-      if @course.email_notify_enabled? PreferableItem.new_comment
-        comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
-      end
-
-      respond_to do |format|
-        format.json {render json: comment_topic.comments_json(curr_user_course)}
-      end
+    if @course.email_notify_enabled? PreferableItem.new_comment
+      comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
     end
+
+    respond_to do |format|
+      format.json {render json: comment_topic.comments_json(curr_user_course)}
+    end
+    #end
   end
 
   def index
@@ -149,8 +149,8 @@ class CommentsController < ApplicationController
 
     # verify subscription exist
     @comment_topic = @course.comment_topics.where(
-      topic_id: @question.id,
-      topic_type: @question.class).first
+        topic_id: @question.id,
+        topic_type: @question.class).first
 
     cs = @comment_topic ? @comment_topic.comment_subscriptions.where(user_course_id: curr_user_course.id).count : 0
 
@@ -176,19 +176,19 @@ class CommentsController < ApplicationController
 
   def get_comment_permalink(commentable)
     case commentable
-    when Mcq, CodingQuestion
-      return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
-    when StdAnswer, StdCodingAnswer
-      sbm_answer = commentable.sbm_answers.first
-      submission = sbm_answer ? sbm_answer.sbm : nil
+      when Mcq, CodingQuestion
+        return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
+      when StdAnswer, StdCodingAnswer
+        sbm_answer = commentable.sbm_answers.first
+        submission = sbm_answer ? sbm_answer.sbm : nil
 
-      question = commentable.question
-      asm_qn = question.asm_qns.first
-      mission = asm_qn ? asm_qn.asm : nil
+        question = commentable.question
+        asm_qn = question.asm_qns.first
+        mission = asm_qn ? asm_qn.asm : nil
 
-      if mission && submission
-        return course_mission_submission_url(@course, mission, submission)
-      end
+        if mission && submission
+          return course_mission_submission_url(@course, mission, submission)
+        end
     end
     return course_comments_url(@course)
   end
