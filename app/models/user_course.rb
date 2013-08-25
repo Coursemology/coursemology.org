@@ -24,6 +24,8 @@ class UserCourse < ActiveRecord::Base
 
   default_scope includes(:user)
 
+  after_create :fetch_name
+
   belongs_to :role
   belongs_to :user
   belongs_to :course
@@ -240,6 +242,11 @@ class UserCourse < ActiveRecord::Base
 
   def get_path
     course_user_course_path(self.course, self)
+  end
+
+  def fetch_name
+    self.name = user.name
+    self.save
   end
 
   def notify_student
