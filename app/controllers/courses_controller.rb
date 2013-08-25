@@ -139,7 +139,7 @@ class CoursesController < ApplicationController
       @phantom = false
     end
 
-    @student_courses = @course.user_courses.student.where(is_phantom: @phantom)
+    @student_courses = @course.user_courses.student.where(is_phantom: @phantom).order('lower(name)')
     if sort_column == 'tutor'
       puts "sort by tutor "
       @student_courses = @student_courses.sort_by {|uc| uc.tut_courses.first ? uc.tut_courses.first.id : 0  }
