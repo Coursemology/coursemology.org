@@ -1,9 +1,9 @@
 <ul class="nav nav-tabs">
-  <li class="<%= "active" if @tab == "Summary" %>">
-    <a href="<%= course_staff_leaderboard_index_path(@course) %>" data-toggle="tab">Tutor Summary</a>
-  </li>
   <li class="<%= "active" if @tab == "Monitoring" %>">
     <a href="<%= course_staff_monitoring_path(@course) %>" data-toggle="tab">Tutor Monitoring</a>
+  </li>
+  <li class="<%= "active" if @tab == "Summary" %>">
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>" data-toggle="tab">Tutor Summary</a>
   </li>
 </ul>
 <% if @tutor_details %>
@@ -40,6 +40,7 @@
   <tr>
     <th style="text-align: left">Tutor Name</th>
     <th># Marked</th>
+    <th># Students</th>
     <th>Average Time Per Assignment</th>
     <th>Stddev</th>
   </tr>
@@ -50,6 +51,7 @@
         <% summary = @summaries[tutor.id] %>
         <td style="text-align: left"><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= tutor.name %></a></td>
         <td><%= summary[:count] %></td>
+        <td><%= summary[:std_count] %></td>
         <td><%= distance_of_time(summary[:avg].to_i) if summary[:avg] != Float::INFINITY %></td>
         <td><%= distance_of_time(summary[:std_dev].to_i) if summary[:std_dev] != Float::INFINITY %></td>
       </tr>

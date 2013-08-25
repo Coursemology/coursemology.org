@@ -182,7 +182,7 @@ class ApplicationController < ActionController::Base
 
       @admin_nav_items << {
           text: "Tutor Summary",
-          url: course_staff_leaderboard_index_path(@course),
+          url: course_staff_monitoring_path(@course),
           icon: "icon-trophy"
       }
       @admin_nav_items << {
