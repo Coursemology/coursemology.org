@@ -16,11 +16,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
     t.string   "title"
-    t.text     "description",      :limit => 255
+    t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.time     "deleted_at"
     t.boolean  "auto_assign"
     t.text     "requirement_text"
@@ -31,9 +31,9 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "actions", :force => true do |t|
     t.string   "text"
-    t.text     "description", :limit => 255
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "actions", ["text"], :name => "index_actions_on_text"
@@ -73,10 +73,10 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
     t.integer  "course_id"
     t.datetime "publish_at"
     t.integer  "important"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "title"
-    t.text     "description", :limit => 255
+    t.text     "description"
     t.time     "deleted_at"
     t.datetime "expiry_at"
   end
@@ -87,11 +87,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "answer_gradings", :force => true do |t|
     t.integer  "grader_id"
     t.integer  "grade"
-    t.text     "comment",               :limit => 255
+    t.text     "comment"
     t.integer  "student_answer_id"
     t.integer  "submission_grading_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.string   "student_answer_type"
     t.integer  "exp"
   end
@@ -140,11 +140,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
     t.string   "step_name"
-    t.text     "description",       :limit => 255
+    t.text     "description"
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
   end
@@ -230,9 +230,9 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "courses", :force => true do |t|
     t.string   "title"
     t.integer  "creator_id"
-    t.text     "description", :limit => 255
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "logo_url"
     t.string   "banner_url"
     t.time     "deleted_at"
@@ -340,12 +340,12 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "mcq_answers", :force => true do |t|
     t.integer  "mcq_id"
-    t.text     "text",        :limit => 255
+    t.text     "text"
     t.integer  "creator_id"
-    t.text     "explanation", :limit => 255
+    t.text     "explanation"
     t.boolean  "is_correct"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "mcq_answers", ["creator_id"], :name => "index_mcq_answers_on_creator_id"
@@ -353,14 +353,14 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "mcqs", :force => true do |t|
     t.integer  "creator_id"
-    t.text     "description",       :limit => 255
+    t.text     "description"
     t.integer  "correct_answer_id"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
-    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
+    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
@@ -376,14 +376,14 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
     t.integer  "attempt_limit"
     t.integer  "auto_graded"
     t.integer  "pos"
-    t.text     "description",        :limit => 255
+    t.text     "description"
     t.integer  "creator_id"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.string   "title"
     t.integer  "max_grade"
-    t.boolean  "single_question",                   :default => false
-    t.boolean  "is_file_submission",                :default => false
+    t.boolean  "single_question",    :default => false
+    t.boolean  "is_file_submission", :default => false
     t.integer  "dependent_id"
   end
 
@@ -429,9 +429,9 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
-    t.text     "description", :limit => 255
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "max_grade"
   end
 
@@ -464,11 +464,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "rewards", :force => true do |t|
     t.string   "icon_url"
     t.string   "title"
-    t.text     "description", :limit => 255
+    t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "rewards", ["course_id"], :name => "index_rewards_on_course_id"
@@ -487,9 +487,9 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "title"
-    t.text     "description", :limit => 255
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "roles", ["name"], :name => "index_roles_on_name"
@@ -519,11 +519,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
 
   create_table "std_answers", :force => true do |t|
-    t.text     "text",              :limit => 255
+    t.text     "text"
     t.integer  "student_id"
     t.integer  "question_id"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.datetime "last_commented_at"
     t.integer  "std_course_id"
   end
@@ -584,11 +584,11 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
   create_table "submission_gradings", :force => true do |t|
     t.integer  "grader_id"
     t.integer  "total_grade"
-    t.text     "comment",            :limit => 255
+    t.text     "comment"
     t.integer  "sbm_id"
     t.datetime "publish_at"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.string   "sbm_type"
     t.integer  "exp_transaction_id"
     t.integer  "total_exp"
@@ -620,10 +620,10 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "tag_groups", :force => true do |t|
     t.string   "name"
-    t.text     "description", :limit => 255
+    t.text     "description"
     t.integer  "course_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.time     "deleted_at"
   end
 
@@ -631,12 +631,12 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "tags", :force => true do |t|
     t.string   "name"
-    t.text     "description",  :limit => 255
+    t.text     "description"
     t.integer  "course_id"
     t.string   "icon_url"
     t.integer  "max_exp"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "tag_group_id"
     t.time     "deleted_at"
   end
@@ -646,19 +646,19 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   create_table "theme_attributes", :force => true do |t|
     t.string   "name"
-    t.text     "description", :limit => 255
+    t.text     "description"
     t.string   "value_type"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "titles", :force => true do |t|
     t.string   "title"
-    t.text     "description", :limit => 255
+    t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "titles", ["course_id"], :name => "index_titles_on_course_id"
@@ -683,12 +683,12 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
     t.integer  "course_id"
     t.integer  "creator_id"
     t.string   "title"
-    t.text     "description",  :limit => 255
+    t.text     "description"
     t.integer  "exp"
     t.datetime "open_at"
     t.integer  "pos"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "max_grade"
     t.time     "deleted_at"
     t.integer  "bonus_exp"
