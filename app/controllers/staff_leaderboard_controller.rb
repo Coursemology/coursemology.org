@@ -50,6 +50,8 @@ class StaffLeaderboardController < ApplicationController
       summary[:count] = gradings.length
       summary[:avg] = avg
       summary[:std_dev] = std_dev
+      students = tutor.std_courses.where(is_phantom: false)
+      summary[:std_count] = students.count
     end
     @tutors = @tutors.sort_by! { |tutor| [@summaries[tutor.id][:avg], @summaries[tutor.id][:std_dev]] }
   end
@@ -58,7 +60,6 @@ class StaffLeaderboardController < ApplicationController
   private
   #staff with students assigned to them (tutor or lecturer)
   def get_tutors
-
     staff = @course.user_courses.staff.where(is_phantom: false)
     tutors = []
     staff.each do |tutor|
