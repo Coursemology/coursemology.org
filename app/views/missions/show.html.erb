@@ -110,11 +110,14 @@
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
       </thead> -->
-      <tbody>
+      <tbody class="asm-qns" url="<%= reorder_course_mission_asm_qns_path(@course, @mission) %>">
       <% @questions.each_with_index do |q, i| %>
-          <tr>
+          <tr class="asm-qn" id="asm-qn_<%= q.asm_qns.first.id %>">
             <td>
-              <h3>Question <%= i + 1 %></h3>
+              <div class="asm-qn-handler">
+                <i class="icon-move handler-icon"></i>
+                <h3 class="handler-text">Question <%= i + 1 %></h3>
+              </div>
               <%= style_format(q.description) %>
             </td>
             <% if can? :manage, @mission %>
