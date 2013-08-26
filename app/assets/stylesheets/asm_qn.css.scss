@@ -1,0 +1,32 @@
+/* Assignment questions is the basic unit of all questions types
+(mission question, training question, mcq, coding question, etc)
+
+In many places, like training/show & mission/show, the questions are put into a table
+this table is styled based on the rules here*/
+
+
+.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler,
+.assignments-questions-table > .asm-qns > .asm-qn .asm-qn-handler {
+  background-color: #E6E6E6;
+  cursor: pointer;
+}
+
+.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-icon,
+.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-text,
+.assignments-questions-table > .asm-qns > .asm-qn .asm-qn-handler .handler-icon,
+.assignments-questions-table > .asm-qns > .asm-qn .asm-qn-handler .handler-text {
+  display: inline;
+}
+
+.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-text,
+.assignments-questions-table > .asm-qns > .asm-qn .asm-qn-handler .handler-text {
+  font-size: 1em;
+  color: #333333;
+  text-transform: uppercase;
+}
+
+.asm-qns-table > .asm-qns > .asm-qn .asm-qn-handler .handler-icon,
+.assignments-questions-table > .asm-qns > .asm-qn .asm-qn-handler .handler-icon {
+  margin-left: 10px;
+  margin-top: 5px;
+}
