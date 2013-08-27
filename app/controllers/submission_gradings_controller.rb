@@ -119,10 +119,10 @@ class SubmissionGradingsController < ApplicationController
         #@ag.grader = current_user
         @submission_grading.total_grade += ag[:grade].to_i
         #@submission_grading.total_exp += ag[:exp].to_i
-        @submission_grading.last_grade_updated = Time.now
-        @submission.set_graded
       end
     end
+    @submission_grading.last_grade_updated = Time.now
+    @submission.set_graded
     #@submission_grading.grader = current_user
     @submission_grading.total_exp = params[:exp_sum].to_i
     if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
