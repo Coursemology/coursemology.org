@@ -19,18 +19,16 @@ class TutorialGroup < ActiveRecord::Base
   def unsubscribe_comments
     # TODO: update subscription
     # unsubscribe everything related to this student
-    # topics = (std_course.std_answers + std_course.std_coding_answers).select { |sa| sa.comments.count > 0}
-    # topics.each do |topic|
-    #   CommentSubscription.unsubscribe(topic, tut_course)
-    # end
+    std_course.comment_topics.each do |topic|
+      CommentSubscription.unsubscribe(topic, tut_course)
+    end
   end
 
   def subscribe_comments
     # TODO: update subscription
-    # topics = (std_course.std_answers + std_course.std_coding_answers).select { |sa| sa.comments.count > 0}
-    # topics.each do |topic|
-    #   CommentSubscription.subscribe(topic, tut_course)
-    # end
+    std_course.comment_topics.each do |topic|
+      CommentSubscription.subscribe(topic, tut_course)
+    end
   end
 
   def after_save
