@@ -33,7 +33,7 @@ class Mission < ActiveRecord::Base
   end
 
   def get_all_questions
-    self.asm_qns.map {|q| q.qn}
+    self.asm_qns.order(:pos).map {|q| q.qn}
   end
 
   def attach_files(files)

@@ -77,7 +77,7 @@ class TrainingSubmissionsController < ApplicationController
     @qadata = {}
     @grading = @training_submission.get_final_grading
     @training.questions.each_with_index do |qn, index|
-      break if @training_submission.current_step - 1 <= index
+      break if @training_submission.current_step <= index
       @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
     end
 
