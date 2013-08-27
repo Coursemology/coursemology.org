@@ -151,11 +151,11 @@ class TrainingSubmissionsController < ApplicationController
     @current_step = @training_submission.current_step
     @step = @current_step
     @max_step = @training.questions.count
-    puts "edit",@step,@max_step
+
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
-    puts "fetch",@step,@max_step
+
     if @step <= @max_step
       @current_question = @training.questions[@step - 1]
     end

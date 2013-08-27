@@ -14,8 +14,8 @@ module TrainingSubmissionsHelper
 
   def get_code_to_write(included_code,code_to_run)
 'import resource
-resource.setrlimit(resource.RLIMIT_AS, (%d, %d))
-resource.setrlimit(resource.RLIMIT_CPU, (%d, %d))
+resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
+resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
 resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
 ' << code_to_run  << '
 ' << included_code
@@ -31,7 +31,7 @@ resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
     summary ={publicTests:[],privateTests:[],errors:[]}
     for i in 0..1
       file = File.open(file_path, 'w+')
-      code = code % [memoryLimit.to_i * 1024, memoryLimit.to_i * 1024, timeLimit, timeLimit]
+      #code = code % [memoryLimit.to_i * 1024, memoryLimit.to_i * 1024, timeLimit, timeLimit]
       if file
         file.write(code)
         case i
@@ -64,12 +64,15 @@ resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
         results = stdout.split("\n").map{|r| if r.gsub("\n",'') == "True" then true else false end}
         File.delete(file_path)
 
-        resource_limit = false
+        exec_fail = !status.success?
 
         if  status.to_s.include?('(signal 24)')
-          puts '------>',results, errors, stdout, status.to_s
-          resource_limit = true
           errors = "CPU time limit exceeded: running time limit set to #{timeLimit} second to prevent possible infinite loop."
+        end
+
+        puts '----', status.success?, status.to_s
+        unless status.success?
+           errors = "You might have an infinite loop or your recursion level is too deep."
         end
 
         test_type = if i == 0 then :publicTests else :privateTests end
@@ -81,7 +84,7 @@ resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
             #don't display super long error message
             error_message = error_array.last.split("\n")
           end
-          summary[:errors] = resource_limit ? errors : error_message.join
+          summary[:errors] = exec_fail ? errors : error_message.join
           break
         end
 
