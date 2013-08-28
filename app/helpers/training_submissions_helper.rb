@@ -64,16 +64,16 @@ resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
         results = stdout.split("\n").map{|r| if r.gsub("\n",'') == "True" then true else false end}
         File.delete(file_path)
 
-        exec_fail = !status.success?
+        exec_fail = (!status.success? and errors.length == 0)
 
         if  status.to_s.include?('(signal 24)')
           errors = "CPU time limit exceeded: running time limit set to #{timeLimit} second to prevent possible infinite loop."
         end
 
-        puts '----', status.success?, status.to_s
-        unless status.success?
+        if exec_fail
            errors = "You might have an infinite loop or your recursion level is too deep."
         end
+
 
         test_type = if i == 0 then :publicTests else :privateTests end
         summary[test_type] = results
@@ -123,6 +123,7 @@ resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
         @stderr.close
         @stdout.close
         File.delete(file_path)
+
 
         if output.size == 1
           summary[:errors] = "Your solution was rejected as it exceeded the time limit for this question."
