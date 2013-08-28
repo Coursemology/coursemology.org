@@ -256,4 +256,8 @@ class UserCourse < ActiveRecord::Base
       end
     end
   end
+
+  def leaderboard_achievements
+    self.user_achievements.order('created_at desc').first(6)
+  end
 end
