@@ -42,7 +42,9 @@
             class="leaderboard-name"><%= std_course.name %>
           </a><br/>
           <% std_course.user_achievements.each do |uach| %>
-            <a href='#' title="<%= uach.achievement.title %>">
+            <a href='<%= course_achievement_path(@course, uach.achievement) %>'
+               rel="tooltip"
+               title="<%= uach.achievement.title %>">
               <img class="asm-ach-icon" src="<%= uach.achievement.icon_url %>" >
             </a>
           <% end %>
