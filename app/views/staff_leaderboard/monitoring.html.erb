@@ -49,8 +49,8 @@
   <% @tutors.each do |tutor| %>
       <tr>
         <% summary = @summaries[tutor.id] %>
-        <td style="text-align: left"><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= tutor.name %></a></td>
-        <td><%= summary[:count] %></td>
+        <td style="text-align: left"><%= tutor.name %></td>
+        <td><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= summary[:count] %> </a></td>
         <td><%= summary[:std_count] %></td>
         <td><%= distance_of_time(summary[:avg].to_i) if summary[:avg] != Float::INFINITY %></td>
         <td><%= distance_of_time(summary[:std_dev].to_i) if summary[:std_dev] != Float::INFINITY %></td>

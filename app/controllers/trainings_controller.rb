@@ -15,20 +15,27 @@ class TrainingsController < ApplicationController
     @time_format =  @course.training_time_format
     @reattempt = @course.course_preferences.training_reattempt.first
 
-    @trainings = @course.trainings.accessible_by(current_ability).order(:open_at)
+    @trainings = @course.trainings.accessible_by(current_ability)
     @paging = @course.trainings_paging_pref
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
       training_ids = tags.map{ |tag| tag.trainings.map { |t| t.id } }.reduce(:&)
-      @trainings = @trainings.find(training_ids)
+      @trainings = @trainings.where(id: training_ids).accessible_by(current_ability)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     end
 
+    if params['_tab'] == 'extra'
+      @tab='extra'
+      @trainings = @trainings.where(t_type: AssignmentType.extra)
+    else
+      @tab='main'
+      @trainings = @trainings.where(t_type: AssignmentType.main)
+    end
+
     if @paging.display?
-      @trainings = @selected_tags ? Kaminari.paginate_array(@trainings).page(params[:page]).per(@paging.prefer_value.to_i) :
-          @trainings.page(params[:page]).per(@paging.prefer_value.to_i)
+      @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
     end
 
     if curr_user_course.id

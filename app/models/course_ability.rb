@@ -79,14 +79,10 @@ class CourseAbility
       can :read, Announcement, Announcement.published do |ann|
         ann.publish_at <= Time.now
       end
-      #can :read, Mission, Mission.opened do |mission|
-      #  mission.open_at <= Time.now
-      #end
-      #can :read, Training, Training.opened do |training|
-      #  training.open_at <= Time.now
-      #end
 
-      can :read, [Mission, Training, Mcq, Question, CodingQuestion]
+      can :read, [Mission, Training], publish: true
+
+      can :read, [Mcq, Question, CodingQuestion]
 
       can :read, Tag
       can :read, [Achievement, Title, Reward]
