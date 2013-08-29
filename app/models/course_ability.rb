@@ -53,7 +53,7 @@ class CourseAbility
       cannot :modify, TrainingSubmission
     end
 
-    if user.is_admin?
+    if user.is_admin? || user_course.is_creator?
       can :destroy, Course
     end
 

@@ -80,7 +80,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def is_creator?
-    self.user == self.course.creator
+    self.user and self.user == self.course.creator
   end
 
   def level_percentage
