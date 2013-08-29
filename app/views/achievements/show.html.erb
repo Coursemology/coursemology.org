@@ -15,34 +15,38 @@
 
 <h3>Requirements:</h3>
 <br>
-<% if @achievement.auto_assign? %>
-    <ul style="font-size: 1.3em">
-      <% @achievement.requirements.asm_req.each do |asm_req| %>
-          <li>
-            <i class="icon-lock"></i>
-            Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
-            <%= link_to asm_req.req.asm.get_title, asm_req.req.asm.get_path %>
-          </li>
-      <% end %>
-      <% @achievement.requirements.ach_req.each do |ach_req| %>
-          <li>
-            <i class="icon-lock"></i>
-            Earn
-            <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %>
-          </li>
-      <% end %>
-      <% @achievement.requirements.lvl_req.each do |lvl_req| %>
-          <li>
-            <i class="icon-lock"></i>
-            Reach
-            <%= lvl_req.req.get_title  %>
-          </li>
-      <% end %>
-    </ul>
-<% else %>
-    <%= if @achievement.requirement_text then @achievement.requirement_text.html_safe end %>
-    <br><br>
-<% end %>
+<div style="font-size: 1.3em">
+  <% if @achievement.auto_assign? %>
+      <ul>
+        <% @achievement.requirements.asm_req.each do |asm_req| %>
+            <li>
+              <i class="icon-lock"></i>
+              Get more than <strong><%= asm_req.req.min_grade %>%</strong> in
+              <%= link_to asm_req.req.asm.get_title, asm_req.req.asm.get_path %>
+            </li>
+        <% end %>
+        <% @achievement.requirements.ach_req.each do |ach_req| %>
+            <li>
+              <i class="icon-lock"></i>
+              Earn
+              <%= link_to ach_req.req.title, course_achievement_path(@course, ach_req.req) %>
+            </li>
+        <% end %>
+        <% @achievement.requirements.lvl_req.each do |lvl_req| %>
+            <li>
+              <i class="icon-lock"></i>
+              Reach
+              <%= lvl_req.req.get_title  %>
+            </li>
+        <% end %>
+      </ul>
+  <% elsif  @achievement.requirement_text %>
+      <%= @achievement.requirement_text.html_safe %>
+      <br><br>
+  <% else %>
+      No requirement specified.
+  <% end %>
+</div>
 
 <hr>
 
