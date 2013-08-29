@@ -26,7 +26,7 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     @all_asm = @course.trainings
-    @student_courses = @course.student_courses
+    @student_courses = @course.student_courses.order(:name)
 
     if @selected_asm
       @sbms = @selected_asm.sbms
