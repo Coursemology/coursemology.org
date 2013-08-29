@@ -53,6 +53,10 @@ class CourseAbility
       cannot :modify, TrainingSubmission
     end
 
+    if user.is_admin? || user_course.is_creator?
+      can :destroy, Course
+    end
+
     if user_course.is_lecturer? && !user.is_admin?
       cannot :manage, :user
     end
@@ -62,6 +66,7 @@ class CourseAbility
       cannot :manage, :course_preference
       cannot :manage, :staff
       cannot :approve, EnrollRequest
+      cannot :destroy, Course
     end
 
     if user.is_admin?  || user_course.is_staff?
