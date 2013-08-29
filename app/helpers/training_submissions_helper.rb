@@ -17,8 +17,8 @@ module TrainingSubmissionsHelper
 resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
 resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
 resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
-' << code_to_run  << '
-' << included_code
+' << included_code  << '
+' << code_to_run
 
   end
 
