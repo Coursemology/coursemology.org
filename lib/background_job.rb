@@ -9,6 +9,10 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
         item_id ? cancel_submissions_mission(Mission.find(item_id)) : cancel_submissions_course(course)
       end
     end
+
+    if name == 'RewardAchievement'
+      check_achievement(course, Achievement.find(item_id))
+    end
   end
 
   def create_submissions_course(course)
@@ -47,4 +51,13 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
     q = QueuedJob.where(owner_id: mission.id, owner_type: mission.class.to_s)
     q.destroy_all
   end
+
+  def check_achievement(course, achievement)
+    course.user_courses.each do |user_course|
+      if user_course.is_student?
+        user_course.check_achievement(achievement)
+      end
+    end
+  end
+
 end
