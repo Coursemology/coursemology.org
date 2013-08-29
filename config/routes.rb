@@ -54,6 +54,12 @@ JfdiAcademy::Application.routes.draw do
         resources :submission_gradings
       end
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
+
+      resources :asm_qns do
+        collection do
+          post 'reorder'
+        end
+      end
     end
     match "missions/:id/stats" => "missions#stats", as: :mission_stats
 
@@ -62,6 +68,12 @@ JfdiAcademy::Application.routes.draw do
       resources :coding_questions
       resources :training_submissions
       post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
+
+      resources :asm_qns do
+        collection do
+          post 'reorder'
+        end
+      end
     end
     match "trainings/:id/stats" => "trainings#stats", as: :training_stats
 

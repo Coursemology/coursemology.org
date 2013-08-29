@@ -13,8 +13,12 @@ module TrainingSubmissionsHelper
   end
 
   def get_code_to_write(included_code,code_to_run)
-    code_to_run  << '
-' << included_code
+'import resource
+resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
+resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
+resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
+' << included_code  << '
+' << code_to_run
 
   end
 
@@ -27,6 +31,7 @@ module TrainingSubmissionsHelper
     summary ={publicTests:[],privateTests:[],errors:[]}
     for i in 0..1
       file = File.open(file_path, 'w+')
+      #code = code % [memoryLimit.to_i * 1024, memoryLimit.to_i * 1024, timeLimit, timeLimit]
       if file
         file.write(code)
         case i
@@ -46,27 +51,40 @@ module TrainingSubmissionsHelper
         #puts "out: ", stdout
         #puts "err: ", stderr
         #puts "status: ", status
-        #Open3.pipeline_start("python3 #{file_path}") {|ts|
-        #  sleep 10
+        #@stdin,@stdout,@stderr = Open3.pipeline_start("python3 #{file_path}") {|ts|
+        #  sleep 2
         #  t = ts[0]
         #  Process.kill("TERM", t.pid)
         #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
         #}
-        @stdin,@stdout,@stderr = Open3.popen3("python3 #{file_path}")
-        errors = @stderr.readlines
-        stdout = @stdout.readlines
-        results = stdout.map{|r| if r.gsub("\n",'') == "True" then true else false end}
-        @stdin.close
-        @stderr.close
-        @stdout.close
+        #@stderr, @stderw = IO.pipe
+        @stdout,@stderr, status = Open3.capture3("python3 #{file_path}")
+        errors = @stderr
+        stdout = @stdout
+        results = stdout.split("\n").map{|r| if r.gsub("\n",'') == "True" then true else false end}
         File.delete(file_path)
+
+        exec_fail = (!status.success? and errors.length == 0)
+
+        if  status.to_s.include?('(signal 24)')
+          errors = "CPU time limit exceeded: running time limit set to #{timeLimit} second to prevent possible infinite loop."
+        end
+
+        if exec_fail
+           errors = "You might have an infinite loop or your recursion level is too deep."
+        end
 
 
         test_type = if i == 0 then :publicTests else :privateTests end
         summary[test_type] = results
         if errors.length > 0
-          error_message = errors.join.scan(/", line \d*.(.*)/m).map{ |m| m}
-          summary[:errors] = error_message.join
+          error_message = errors.scan(/", line \d*.(.*)/m).map{ |m| m}
+          error_array = errors.split("\n")
+          if error_array.length > 10
+            #don't display super long error message
+            error_message = error_array.last.split("\n")
+          end
+          summary[:errors] = exec_fail ? errors : error_message.join
           break
         end
 
@@ -105,6 +123,7 @@ module TrainingSubmissionsHelper
         @stderr.close
         @stdout.close
         File.delete(file_path)
+
 
         if output.size == 1
           summary[:errors] = "Your solution was rejected as it exceeded the time limit for this question."

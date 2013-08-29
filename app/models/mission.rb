@@ -8,10 +8,9 @@ class Mission < ActiveRecord::Base
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
-                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question, :is_file_submission, :dependent_id
+                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question, :is_file_submission, :dependent_id, :publish
 
   validates_with DateValidator, fields: [:open_at, :close_at]
-
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
@@ -33,7 +32,7 @@ class Mission < ActiveRecord::Base
   end
 
   def get_all_questions
-    self.asm_qns.map {|q| q.qn}
+    self.asm_qns.order(:pos).map {|q| q.qn}
   end
 
   def attach_files(files)

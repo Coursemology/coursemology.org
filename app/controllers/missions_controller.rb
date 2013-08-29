@@ -14,20 +14,19 @@ class MissionsController < ApplicationController
     end
     @time_format =  @course.mission_time_format
 
-    @missions = @course.missions.accessible_by(current_ability).order(:open_at)
+    @missions = @course.missions.accessible_by(current_ability)
     @paging = @course.missions_paging_pref
 
 
     if @selected_tags
       tags = Tag.find(@selected_tags)
       mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
-      @missions = @missions.find(mission_ids)
+      @missions = @missions.where(id: mission_ids).accessible_by(current_ability)
       tags.each { |tag| @tags_map[tag.id] = true }
     end
 
     if @paging.display?
-      @missions = @selected_tags ? Kaminari.paginate_array(@missions).page(params[:page]).per(@paging.prefer_value.to_i) :
-          @missions.page(params[:page]).per(@paging.prefer_value.to_i)
+      @missions = @missions.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
     end
 
     if curr_user_course.id

@@ -46,6 +46,12 @@
       </div>
     </div>
     <div class="control-group">
+      <%= f.label "Publish?", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :publish %> Check to publish mission
+      </div>
+    </div>
+    <div class="control-group">
       <label>Submission Type</label>
       <div class="controls checkbox-text">
         <%= f.check_box :is_file_submission %> Allow File Submission
@@ -111,7 +117,7 @@
     </div>
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: "mission-update" %>
+      <%= f.submit nil, :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>

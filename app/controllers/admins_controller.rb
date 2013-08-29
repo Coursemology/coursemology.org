@@ -15,8 +15,7 @@ class AdminsController < ApplicationController
 
   def search
     unless params[:search].nil?
-      @users = User.search(params[:search].strip).sort_by { |user| user.name.downcase }
-      @users = Kaminari.paginate_array(@users).page(params[:page]).per(50)
+      @users = User.search(params[:search].strip).order(:name).page(params[:page]).per(50)
     end
     if params[:origin]
       redirect_to params[:origin]

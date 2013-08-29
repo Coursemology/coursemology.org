@@ -80,24 +80,27 @@
                     :class => 'btn btn-primary' %>
     <% end %>
 
-    <h2 class="assignments-questsions-title">Training Questions</h2>
-    <table class="table table assignments-questions-table">
+    <h2 class="asm-qns-title">Training Questions</h2>
+    <table class="table table asm-qns-table">
      <!--  <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
       </thead> -->
-      <tbody>
+      <tbody class="asm-qns" url="<%= reorder_course_training_asm_qns_path(@course, @training) %>">
       <% @steps.each_with_index do |q, index| %>
-          <tr>
+          <tr class="asm-qn" id="asm-qn_<%= q.asm_qns.first.id %>" >
             <td>
-              <h3>Question <%= index + 1 %>
-                <% if q.class == CodingQuestion %>
-                    <% if !q.step_name.to_s.strip.empty? %>
-                        : <%=q.step_name %>
-                    <% end %>
-                <% end %>
-              </h3>
+              <div class="asm-qn-handler">
+                <i class="icon-move handler-icon"></i>
+                <h3 class="handler-text">Question <%= index + 1 %>
+                  <% if q.class == CodingQuestion %>
+                      <% if !q.step_name.to_s.strip.empty? %>
+                          : <%=q.step_name %>
+                      <% end %>
+                  <% end %>
+                </h3>
+              </div>
               <% if q.class == Mcq %>
                   <%= render partial: "mcqs/one", locals: { q: q } %>
               <% elsif q.class == CodingQuestion %>

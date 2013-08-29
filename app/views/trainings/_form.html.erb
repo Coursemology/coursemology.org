@@ -31,6 +31,18 @@
         </div>
       </div>
     </div>
+
+    <div class="control-group">
+      <label>Type</label>
+      <div class="controls">
+        <select name="training[t_type]" class="input-medium" >
+          <% AssignmentType.all.each do  |assign_type| %>
+              <option value="<%= assign_type.id %>" <%= 'selected="selected"' if @training.t_type == assign_type.id  %>> <%= assign_type.title  %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
     <div class="control-group">
       <%= f.label :bonus_exp, :class => 'control-label' %>
       <div class="controls">
@@ -49,6 +61,12 @@
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
         </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label "Publish?", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :publish %> Check to publish training
       </div>
     </div>
     <div class="control-group">

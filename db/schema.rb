@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130825075032) do
+ActiveRecord::Schema.define(:version => 20130829075227) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -136,6 +136,13 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
 
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
+
+  create_table "assignment_types", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "coding_questions", :force => true do |t|
     t.integer  "creator_id"
@@ -385,6 +392,7 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
     t.boolean  "single_question",    :default => false
     t.boolean  "is_file_submission", :default => false
     t.integer  "dependent_id"
+    t.boolean  "publish",            :default => true
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
@@ -687,12 +695,14 @@ ActiveRecord::Schema.define(:version => 20130825075032) do
     t.integer  "exp"
     t.datetime "open_at"
     t.integer  "pos"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "max_grade"
     t.time     "deleted_at"
     t.integer  "bonus_exp"
     t.datetime "bonus_cutoff"
+    t.boolean  "publish",      :default => true
+    t.integer  "t_type",       :default => 1
   end
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"

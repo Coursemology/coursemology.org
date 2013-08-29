@@ -8,7 +8,7 @@ class Training < ActiveRecord::Base
   include ActivityObject
   include Assignment
 
-  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff
+  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff, :publish, :t_type
 
   belongs_to :creator, class_name: "User"
   belongs_to :course
@@ -29,7 +29,7 @@ class Training < ActiveRecord::Base
   end
 
   def questions
-    self.asm_qns.map {|q| q.qn}
+    self.asm_qns.order(:pos).map {|q| q.qn}
   end
 
   def attach_files(files)

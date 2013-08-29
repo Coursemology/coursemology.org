@@ -112,6 +112,7 @@ class CoursesController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, @course
     @course.destroy
     respond_to do |format|
       format.html { redirect_to courses_url }

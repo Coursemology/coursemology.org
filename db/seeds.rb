@@ -515,3 +515,11 @@ if PreferableItem.count == 56
                          default_display: false
 
 end
+
+if AssignmentType.count == 0
+  AssignmentType.create!  title:        "Main",
+                          description:  "Main mission or training"
+
+  AssignmentType.create! title:         "Extra",
+                         description:   "Extra mission or training"
+end
