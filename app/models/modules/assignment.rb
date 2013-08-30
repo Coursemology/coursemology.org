@@ -6,6 +6,7 @@ module Assignment
       scope :still_open, lambda { where("close_at >= ? ", Time.now) }
       scope :opened, lambda { where("open_at <= ? ", Time.now) }
       scope :future, lambda { where("open_at > ? ", Time.now) }
+      scope :published, where(publish: true)
 
       has_many :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
       has_many :as_requirements, through: :as_asm_reqs, source: :as_requirements
@@ -103,12 +104,12 @@ module Assignment
     if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
       return
     end
-    if self.open_at >= Time.now
+    if self.open_at >= Time.now and self.publish?
       delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to), run_at: self.open_at)
       self.queued_jobs.create(delayed_job_id: delayed_job.id)
     end
 
-    if type == Mission && self.close_at >= Time.now
+    if type == Mission and self.close_at >= Time.now and self.publish?
       delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to, true), run_at: 1.day.ago(self.close_at))
       self.queued_jobs.create(delayed_job_id: delayed_job.id)
     end

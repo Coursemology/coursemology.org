@@ -26,7 +26,7 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     @all_asm = @course.trainings
-    @student_courses = @course.student_courses
+    @student_courses = @course.student_courses.order(:name)
 
     if @selected_asm
       @sbms = @selected_asm.sbms
@@ -77,7 +77,7 @@ class TrainingSubmissionsController < ApplicationController
     @qadata = {}
     @grading = @training_submission.get_final_grading
     @training.questions.each_with_index do |qn, index|
-      break if @training_submission.current_step - 1 <= index
+      break if @training_submission.current_step <= index
       @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
     end
 
@@ -151,11 +151,11 @@ class TrainingSubmissionsController < ApplicationController
     @current_step = @training_submission.current_step
     @step = @current_step
     @max_step = @training.questions.count
-    puts "edit",@step,@max_step
+
     if params[:step] && params[:step].to_i >= 1
       @step = [@step, params[:step].to_i].min
     end
-    puts "fetch",@step,@max_step
+
     if @step <= @max_step
       @current_question = @training.questions[@step - 1]
     end

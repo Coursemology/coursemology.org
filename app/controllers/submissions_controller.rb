@@ -28,7 +28,7 @@ class SubmissionsController < ApplicationController
     end
 
     @all_asm = @course.missions
-    @student_courses = @course.student_courses
+    @student_courses = @course.student_courses.order(:name)
 
     if @selected_asm
       @sbms = @selected_asm.sbms
@@ -65,7 +65,7 @@ class SubmissionsController < ApplicationController
     end
 
     #if staff is accessing the submitted mission, redirect to grading page
-    if @submission.submitted? and curr_user_course.is_staff?
+    if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
       redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)
       return
     end

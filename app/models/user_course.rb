@@ -80,7 +80,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def is_creator?
-    self.user == self.course.creator
+    self.user and self.user == self.course.creator
   end
 
   def level_percentage
@@ -255,5 +255,9 @@ class UserCourse < ActiveRecord::Base
         UserMailer.delay.new_student(self.user, self.course)
       end
     end
+  end
+
+  def leaderboard_achievements
+    self.user_achievements.order('created_at desc').first(6)
   end
 end

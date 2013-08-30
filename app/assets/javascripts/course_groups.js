@@ -13,7 +13,7 @@ $(document).ready(function(){
     btn_add_std.click(function(evt) {
 //        evt.preventDefault();
         if(assigned_std.indexOf(selected_std) >= 0) {
-            confirm("That student has already been assigned to a tutor! Are you sure you want to add him/her?");
+            confirm("That student has already been assigned to a tutor! Are you sure you want to add him/her? \n\nTHIS WON'T REMOVE HIM/HER FROM THE CURRENT TUTOR.");
         }
     });
 //    btn_remove_std.click(function(evt){
