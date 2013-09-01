@@ -1,7 +1,6 @@
 class CommentSubscription < ActiveRecord::Base
   attr_accessible :course_id, :comment_topic_id, :topic_id, :topic_type, :user_course_id
 
-  belongs_to :topic, polymorphic: true
   belongs_to :comment_topic
   belongs_to :course
   belongs_to :user_course
