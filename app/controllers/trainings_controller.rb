@@ -133,8 +133,8 @@ class TrainingsController < ApplicationController
   def stats
     #@mission
     @submissions = @training.training_submissions
-    @std_courses = @course.user_courses.student.where(is_phantom: false).order('lower(name)')
-    @my_std_courses = curr_user_course.std_courses
+    @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false).order('lower(name)')
+    @my_std_courses = curr_user_course.std_courses.order(:name)
   end
 
   def access_denied
