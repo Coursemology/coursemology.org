@@ -13,11 +13,11 @@ module TrainingSubmissionsHelper
   end
 
   def get_code_to_write(included_code,code_to_run)
-'import resource
+included_code << '
+import resource
 resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
 resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
 resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
-' << included_code  << '
 ' << code_to_run
 
   end
