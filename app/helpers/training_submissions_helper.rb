@@ -16,8 +16,7 @@ module TrainingSubmissionsHelper
 included_code << '
 import resource
 resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
-resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
-resource.setrlimit(resource.RLIMIT_NOFILE, (0, 0))' <<'
+resource.setrlimit(resource.RLIMIT_CPU, (2, 2))' <<'
 ' << code_to_run
 
   end
