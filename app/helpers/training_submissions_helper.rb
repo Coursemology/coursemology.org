@@ -15,7 +15,7 @@ module TrainingSubmissionsHelper
   def get_code_to_write(included_code,code_to_run)
 included_code << '
 import resource
-resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
+#resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
 resource.setrlimit(resource.RLIMIT_CPU, (2, 2))' <<'
 ' << code_to_run
 
