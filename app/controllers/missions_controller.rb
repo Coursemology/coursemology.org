@@ -183,7 +183,7 @@ class MissionsController < ApplicationController
       @display_columns[cp.preferable_item.name] = cp.prefer_value
     end
 
-    @missions = @course.missions.accessible_by(current_ability)
+    @missions = @course.missions.accessible_by(current_ability).order(:open_at)
   end
 
   def bulk_update

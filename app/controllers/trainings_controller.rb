@@ -139,7 +139,7 @@ class TrainingsController < ApplicationController
   def overview
     authorize! :manage, :bulk_update
     @tab = 'overview'
-    @trainings = @course.trainings.order(:t_type)
+    @trainings = @course.trainings.order(:t_type, :open_at)
     @display_columns = {}
     @course.training_columns_display.each do |cp|
       @display_columns[cp.preferable_item.name] = cp.prefer_value
