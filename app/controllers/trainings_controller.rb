@@ -2,7 +2,7 @@ class TrainingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :training, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied, :stats]
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied, :stats, :overview]
 
   def index
     @is_new = {}
@@ -131,10 +131,43 @@ class TrainingsController < ApplicationController
   end
 
   def stats
-    #@mission
     @submissions = @training.training_submissions
     @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false).order('lower(name)')
     @my_std_courses = curr_user_course.std_courses.order(:name)
+  end
+
+  def overview
+    authorize! :manage, :bulk_update
+    @tab = 'overview'
+    @trainings = @course.trainings.order(:t_type)
+    @display_columns = {}
+    @course.training_columns_display.each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
+  end
+
+  def bulk_update
+    authorize! :manage, :bulk_update
+    trainings = params[:trainings]
+    success = 0
+    fail = 0
+    trainings.each do |key, val|
+      training = @course.trainings.find(key)
+      training.assign_attributes(val)
+      unless training.changed?
+        next
+      end
+      if training.save
+        success += 1
+      else
+        fail += 1
+      end
+    end
+    flash[:notice] = "#{success} training(s) updated successfully."
+    if fail > 0
+      flash[:error] = "#{fail} training(s) failed to update."
+    end
+    redirect_to course_trainings_overview_path
   end
 
   def access_denied

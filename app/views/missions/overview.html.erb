@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h1>Update Missions</h1>
+</div>
+<% if can? :manage, :bulk_update %>
+    <ul class="nav nav-tabs">
+      <li class="<%= "active" if @tab == 'missions' %>">
+        <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4>Missions</h4></a>
+      </li>
+      <li class="<%= "active" if @tab == 'overview' %>">
+        <a href="<%= course_missions_overview_path %>" data-toggle="tab"><h4>Bulk Updates</h4></a>
+      </li>
+    </ul>
+<% end %>
+
+<%= form_tag course_missions_bulk_update_path(@course), :method => 'POST' do %>
+<table class="table">
+  <thead>
+  <tr>
+    <th><%= @display_columns['title'] %></th>
+    <th><%= @display_columns['exp'] %></th>
+    <th><%= @display_columns['start'] %></th>
+    <th><%= @display_columns['end'] %></th>
+    <th>Publish?</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @missions.each do |mission| %>
+      <tr>
+        <td>
+          <input name="missions[<%= mission.id %>][title]" type="text"  value="<%= mission.title %>" required>
+        </td>
+        <td>
+          <input name="missions[<%= mission.id %>][exp]" type="number" value="<%= mission.exp %>" min="0" class="input-small" required>
+        </td>
+        <td>
+          <div class="datetimepicker input-append date">
+            <input name="missions[<%= mission.id %>][open_at]" type="text" value="<%= datetime_format(mission.open_at) %>" class="input-medium" required="true">
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+          </div>
+        </td>
+        <td>
+          <div class="datetimepicker input-append date">
+            <input name="missions[<%= mission.id %>][close_at]" type="text" value="<%= datetime_format(mission.close_at) %>" class="input-medium" required="true">
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+          </div>
+        </td>
+        <td style="text-align: center">
+          <input type="hidden" name="missions[<%= mission.id %>][publish]" value="0">
+          <input name="missions[<%= mission.id %>][publish]" type="checkbox" <%= 'checked' if mission.publish? %>>
+        </td>
+      </tr>
+  <% end%>
+  </tbody>
+</table>
+    <div class="center">
+      <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
+    </div>
+<% end %>
