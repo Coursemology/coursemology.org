@@ -44,6 +44,8 @@ JfdiAcademy::Application.routes.draw do
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
     match "missions/overview" => "missions#overview", as: :missions_overview
     post  "missions/bulk_update" => "missions#bulk_update", as: :missions_bulk_update
+    match "trainings/overview" => "trainings#overview", as: :trainings_overview
+    post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
       resources  :exp_transactions

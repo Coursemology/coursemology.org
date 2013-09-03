@@ -1,3 +1,6 @@
+<div class="page-header">
+  <h1>Update Missions</h1>
+</div>
 <% if can? :manage, :bulk_update %>
     <ul class="nav nav-tabs">
       <li class="<%= "active" if @tab == 'missions' %>">
@@ -8,9 +11,6 @@
       </li>
     </ul>
 <% end %>
-<div class="page-header">
-  <h1>Update Missions</h1>
-</div>
 
 <%= form_tag course_missions_bulk_update_path(@course), :method => 'POST' do %>
 <table class="table">

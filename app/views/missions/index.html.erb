@@ -1,3 +1,8 @@
+<%- model_class = Mission -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+</div>
+
 <% if can? :manage, :bulk_update %>
     <ul class="nav nav-tabs">
       <li class="<%= "active" if @tab == 'missions' %>">
@@ -9,10 +14,6 @@
     </ul>
 <% end %>
 
-<%- model_class = Mission -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
-</div>
 
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>

@@ -10,6 +10,11 @@
   <li class="<%= "active" if @tab == 'extra' %>">
     <a href="<%= course_trainings_path %>?_tab=extra" data-toggle="tab"><h4>Extra (Optional)</h4></a>
   </li>
+  <% if can? :manage, :bulk_update %>
+      <li class="<%= "active" if @tab == 'overview' %>">
+        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Bulk Updates</h4></a>
+      </li>
+  <% end %>
 </ul>
 
 <div>
