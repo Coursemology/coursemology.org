@@ -38,6 +38,7 @@
 <table class="table table-hover table-center">
   <thead>
   <tr>
+    <th>No.</th>
     <th style="text-align: left">Tutor Name</th>
     <th># Marked</th>
     <th># Students</th>
@@ -46,8 +47,9 @@
   </tr>
   </thead>
   <tbody>
-  <% @tutors.each do |tutor| %>
+  <% @tutors.each_with_index do |tutor, index| %>
       <tr>
+        <td><%= index + 1 %></td>
         <% summary = @summaries[tutor.id] %>
         <td style="text-align: left"><%= tutor.name %></td>
         <td><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= summary[:count] %> </a></td>
