@@ -2,9 +2,10 @@ class MissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats]
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
   def index
+    @tab = 'missions'
     @is_new = {}
     @tags_map = {}
     @selected_tags = params[:tags]
@@ -43,7 +44,7 @@ class MissionsController < ApplicationController
 
   def show
     if curr_user_course.is_student? and !@mission.can_start?(curr_user_course).first
-       redirect_to course_missions_path
+      redirect_to course_missions_path
       return
     end
 
@@ -172,9 +173,41 @@ class MissionsController < ApplicationController
       @std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
     end
     @std_courses_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
+  end
 
+  def overview
+    authorize! :manage, :bulk_update
+    @tab = 'overview'
+    @display_columns = {}
+    @course.mission_columns_display.each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
 
+    @missions = @course.missions.accessible_by(current_ability)
+  end
 
+  def bulk_update
+    authorize! :manage, :bulk_update
+    missions = params[:missions]
+    success = 0
+    fail = 0
+    missions.each do |key, val|
+      mission = @course.missions.where(id:key).first
+      mission.assign_attributes(val)
+      unless mission.changed?
+        next
+      end
+      if mission.save
+        success += 1
+      else
+        fail += 1
+      end
+    end
+    flash[:notice] = "#{success} mission(s) updated successfully."
+    if fail > 0
+      flash[:error] = "#{fail} mission(s) failed to update. You may have put an open time that is after end time."
+    end
+    redirect_to course_missions_overview_path
   end
 
   def access_denied
