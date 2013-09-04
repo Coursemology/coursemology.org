@@ -23,7 +23,7 @@ class CommentsController < ApplicationController
         topic_id: commentable.id,
         topic_type: commentable.class).first_or_create
     comment_topic.course = @course
-    comment_topic.last_commented_at = @comment.created_at
+    comment_topic.last_commented_at = Time.now
     comment_topic.permalink = comment_topic.permalink || get_comment_permalink(commentable)
     comment_topic.pending = curr_user_course.is_student?
     comment_topic.save
