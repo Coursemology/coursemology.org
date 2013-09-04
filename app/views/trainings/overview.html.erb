@@ -11,7 +11,7 @@
   </li>
   <% if can? :manage, :bulk_update %>
       <li class="<%= "active" if @tab == 'overview' %>">
-        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Bulk Updates</h4></a>
+        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
       </li>
   <% end %>
 </ul>
