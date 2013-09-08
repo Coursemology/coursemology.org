@@ -1,4 +1,5 @@
 class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
+  require 'enumerable'
   def perform
     course = Course.find(course_id)
 
@@ -60,4 +61,20 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
     end
   end
 
+  def update_tutor_monitoring(user_course_id)
+    ta = UserCourse.find(user_course_id)
+    gradings = ta.submission_gradings.includes(:sbm).order(:created_at)
+    time_diff = gradings.reduce([]) { |acc, g| (g.created_at - g.sbm.submit_at > 0) ? (acc << g.created_at - g.sbm.submit_at) : acc }
+    avg = time_diff.mean
+    std_dev = time_diff.standard_deviation
+    monitoring = TutorMonitoring.where(user_course_id: user_course_id).first
+    if monitoring
+      monitoring.average_time = avg
+      monitoring.std_dev = std_dev
+      monitoring.save
+    else
+      monitoring = TutorMonitoring.create(course_id. ta.course, user_course_id: user_course_id, average_time: avg, std_dev: std_dev)
+      monitoring.save
+    end
+  end
 end

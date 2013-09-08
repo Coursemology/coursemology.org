@@ -100,9 +100,12 @@ class UserCourse < ActiveRecord::Base
   end
 
   def mark_as_seen(obj)
-    s = self.seen_stuff.build()
-    s.obj = obj
-    s.save
+    seen = self.seen_stuff.where(obj_id:obj, obj_type:obj.class.to_s).first
+    unless seen
+      s = self.seen_stuff.build()
+      s.obj = obj
+      s.save
+    end
   end
 
   def update_exp_and_level
