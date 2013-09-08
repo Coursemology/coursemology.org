@@ -198,6 +198,7 @@ class MissionsController < ApplicationController
         next
       end
       if mission.save
+        puts mission.to_json
         success += 1
       else
         fail += 1

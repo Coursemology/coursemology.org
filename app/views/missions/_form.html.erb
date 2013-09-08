@@ -101,7 +101,7 @@
       <div class="controls">
         <select id="select-mission" name="mission[dependent_id]">
           <option >No Dependency</option>
-          <%= @missions.each do |asm| %>
+          <%= (@missions - [@mission]).each do |asm| %>
               <option value="<%= asm.id %>" <%= 'selected' if asm == @mission.dependent_mission %>><%= asm.title %></option>
           <% end %>
         </select>
