@@ -20,6 +20,7 @@
     <th><%= @display_columns['exp'] %></th>
     <th><%= @display_columns['start'] %></th>
     <th><%= @display_columns['end'] %></th>
+    <th>Dependency</th>
     <th>Publish?</th>
   </tr>
   </thead>
@@ -27,10 +28,10 @@
   <% @missions.each do |mission| %>
       <tr>
         <td>
-          <input name="missions[<%= mission.id %>][title]" type="text"  value="<%= mission.title %>" required>
+          <input name="missions[<%= mission.id %>][title]" class="input-medium" type="text"  value="<%= mission.title %>" required>
         </td>
         <td>
-          <input name="missions[<%= mission.id %>][exp]" type="number" value="<%= mission.exp %>" min="0" class="input-small" required>
+          <input name="missions[<%= mission.id %>][exp]" type="number" value="<%= mission.exp %>" min="0" class="input-mini" required>
         </td>
         <td>
           <div class="datetimepicker input-append date">
@@ -47,6 +48,14 @@
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
           </div>
+        </td>
+        <td>
+          <select id="select-mission" name="missions[<%= mission.id %>][dependent_id]" class="input-medium">
+            <option value="0" >No Dependency</option>
+            <%= (@missions - [mission]).each do |asm| %>
+                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent_mission %>><%= asm.title %></option>
+            <% end %>
+          </select>
         </td>
         <td style="text-align: center">
           <input type="hidden" name="missions[<%= mission.id %>][publish]" value="0">
