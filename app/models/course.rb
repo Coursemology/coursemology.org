@@ -38,6 +38,7 @@ class Course < ActiveRecord::Base
   has_many :comment_topics,  dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
+  has_many :tutor_monitorings,      dependent: :destroy
 
   def asms
     missions + trainings

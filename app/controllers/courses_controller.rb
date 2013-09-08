@@ -88,7 +88,7 @@ class CoursesController < ApplicationController
             order("publish_at DESC").first(no_to_display)
         @is_new = {}
         if curr_user_course.id
-          unseen = @announcements - curr_user_course.seen_announcements.first(no_to_display)
+          unseen = @announcements - curr_user_course.seen_announcements
           unseen.each do |ann|
             @is_new[ann.id] = true
             curr_user_course.mark_as_seen(ann)

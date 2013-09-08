@@ -13,7 +13,8 @@ class AnnouncementsController < ApplicationController
       @announcements = @announcements.page(params[:page]).per(@paging_pref.prefer_value.to_i)
     end
     if curr_user_course.id
-      unseen = @announcements - curr_user_course.seen_announcements.first(30)
+      unseen = @announcements - curr_user_course.seen_announcements
+      puts "seen:", curr_user_course.seen_announcements.first(30).to_json
       unseen.each do |ann|
         @is_new[ann.id] = true
         curr_user_course.mark_as_seen(ann)
