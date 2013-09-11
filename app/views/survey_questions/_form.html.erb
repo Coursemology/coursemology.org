@@ -82,8 +82,9 @@
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary' %>
       &nbsp;&nbsp;&nbsp;&nbsp;
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  nil, :class => 'btn' %>
+      <%= link_to   "Cancel",
+                    course_survey_path(@course, @survey),
+                    :class => 'btn' %>
     </div>
 <% end %>
 <%= render :partial => "layouts/html_editor" %>

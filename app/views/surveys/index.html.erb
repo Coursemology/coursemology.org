@@ -47,7 +47,7 @@
               <% elsif submission.submitted? and survey.allow_modify? %>
                   <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Update</a>
               <% else %>
-
+                  <a href="<%= course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Review</a>
               <% end %>
           <% end %>
         </td>
