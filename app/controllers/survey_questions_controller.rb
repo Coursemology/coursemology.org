@@ -5,6 +5,7 @@ class SurveyQuestionsController < ApplicationController
   load_and_authorize_resource :survey_question, through: :survey
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+  require 'digest/md5'
 
   def new
     @survey_question.type_id = 2
@@ -67,8 +68,6 @@ class SurveyQuestionsController < ApplicationController
     files.each do |id|
       file = FileUpload.where(id:id).first
       if file
-        puts file.to_json
-        puts file.file_content_type
         if file.file_content_type.start_with?('image')
           create_option(file, question)
         elsif file.file_content_type == 'application/zip'
@@ -81,10 +80,9 @@ class SurveyQuestionsController < ApplicationController
   def create_option(file, question)
     puts file.to_json
     option = question.options.build
-    option.description = file.file_file_name[0,file.file_file_name.index('.')]
+    option.description = File.basename(file.original_name, File.extname(file.original_name)).gsub("_", " ")
     option.save
     file.owner = option
-    #file.name = random_file_name +
     file.save
   end
 
@@ -96,10 +94,6 @@ class SurveyQuestionsController < ApplicationController
         end
       end
     end
-  end
-
-  def random_file_name
-      (0...20).map{ ('a'..'z').to_a[rand(26)] }.join
   end
 
   def update_options(question)
@@ -124,3 +118,4 @@ class SurveyQuestionsController < ApplicationController
     end
   end
 end
+

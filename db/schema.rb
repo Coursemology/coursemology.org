@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130911174012) do
+ActiveRecord::Schema.define(:version => 20130911180832) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(:version => 20130911174012) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.string   "owner_type"
+    t.string   "original_name"
   end
 
   create_table "levels", :force => true do |t|
