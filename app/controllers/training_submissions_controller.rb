@@ -1,3 +1,4 @@
+
 class TrainingSubmissionsController < ApplicationController
   include TrainingSubmissionsHelper
   load_and_authorize_resource :course

@@ -35,10 +35,11 @@ class Course < ActiveRecord::Base
   has_many :tutorial_groups,        dependent: :destroy
   has_many :file_uploads,           as: :owner
   has_many :course_preferences,     dependent: :destroy
-  has_many :comment_topics,  dependent: :destroy
+  has_many :comment_topics,         dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
   has_many :tutor_monitorings,      dependent: :destroy
+  has_many :surveys,                dependent: :destroy
 
   def asms
     missions + trainings

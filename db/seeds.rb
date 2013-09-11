@@ -523,3 +523,15 @@ if AssignmentType.count == 0
   AssignmentType.create! title:         "Extra",
                          description:   "Extra mission or training"
 end
+
+if SurveyQuestionType.count == 0
+  SurveyQuestionType.create! title:         "MCQ",
+                             description:   "Multiple Choice Question"
+
+  SurveyQuestionType.create! title:         "MRQ",
+                             description:   "Multiple Response Question"
+
+  SurveyQuestionType.create! title:         "Essay",
+                             description:   "Essay"
+
+end

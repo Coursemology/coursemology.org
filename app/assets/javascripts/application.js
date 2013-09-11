@@ -74,8 +74,6 @@ $(document).ready(function() {
                 set_badge.addClass("hidden");
         }
     });
-
-    $('[rel=tooltip]').tooltip();
     $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
 });
 

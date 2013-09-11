@@ -1,0 +1,61 @@
+<div class="step-list">
+  <% (1..@survey.survey_questions.count).each do |i| %>
+      <% if i <= @current_qn %>
+          <% if i == @step %>
+              <%= link_to i, "?_pos=#{i}", class: "step step-current" %>
+          <% else %>
+              <%= link_to i, "?_pos=#{i}", class: "step step-done" %>
+          <% end %>
+      <% else %>
+          <%= link_to i, '#', class: "step" %>
+      <% end %>
+  <% end %>
+</div>
+<% if @step > @survey.questions.count  %>
+    <h2>Congratulations, you're done!</h2>
+    <p>
+      <a href="<%= edit_course_survey_survey_submission_path(@course, @survey, @survey_submission)%>">
+        Click here
+      </a> to view your answers.
+    </p>
+<% else %>
+
+    <% question = @survey.questions[@step -1] %>
+    <% answer = question.survey_mrq_answers.where(user_course_id: curr_user_course).first %>
+    <% selected_options = answer ? answer.options : [] %>
+    <%= form_for([@course, @survey, @survey_submission], url:course_survey_survey_submission_submit_path,
+                 html: { method: :POST, class: "form-horizontal" } ) do |f| %>
+        <input type="hidden" name="question" value="<%= question.id %>">
+        <input type="hidden" name="step" value="<%= @step %>">
+        <input type="hidden" id="max-allowed" value="<%= question.max_response %>">
+        <div class="runes-container survey" ng-controller="VotesController">
+          <div class="large-12 columns">
+            <h1><%= question.description.html_safe %></h1>
+            <br>
+            <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= selected_options.count  %></span> entries.</p>
+            <br>
+            <% if !@survey_submission.done? || @survey.allow_modify? %>
+                <button class="survey-submit" type="submit">Submit</button>
+            <% end %>
+            <hr>
+            <div class="large-12 columns">
+              <ul>
+                <% question.options.each do |option| %>
+                    <li class="<%= 'rune-voted' if  selected_options.include? option %>">
+                      <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
+                      <div class="checkbox-container">
+                        <input type="checkbox" name="option[<%= option.id %>]" class="checked" <%= 'checked' if  selected_options.include? option %>/>
+                      </div>
+                    </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+    <% end %>
+<% end %>
+<script>
+    $(document).ready(function() {
+        lightboxinit();
+    })
+</script>

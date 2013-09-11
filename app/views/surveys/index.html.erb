@@ -1,0 +1,72 @@
+<%- model_class = Survey -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+</div>
+
+
+<% if can? :manage, Survey %>
+    <p>
+      <%= link_to "New Survey",
+                  new_course_survey_path(@course),
+                  :class => 'btn btn-primary' %>
+    </p>
+<% end %>
+
+<table class="table assignments missions-list-table">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Open At</th>
+    <th>Expire At</th>
+    <th></th>
+    <% if can? :view_detail, Survey %>
+        <th></th>
+    <% end %>
+  </tr>
+  </thead>
+
+  <tbody class="table-hover">
+  <% @surveys.each do |survey| %>
+      <tr class="<%= "future" if survey.open_at > Time.now %>">
+        <td>
+          <%= survey.title %>
+        </td>
+        <td>
+          <%= survey.open_at.strftime(@time_format.prefer_value) %>
+        </td>
+        <td>
+          <%= survey.expire_at.strftime(@time_format.prefer_value) %>
+        </td>
+        <td>
+          <% if survey.can_start? ||  can?(:manage, Survey) %>
+              <% submission = survey.submission_by(curr_user_course.id) %>
+              <% if  !submission %>
+                  <a href="<%= new_course_survey_survey_submission_path(@course, survey) %>" class="btn">Start</a>
+              <% elsif submission.started? %>
+                  <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Continue</a>
+              <% elsif submission.submitted? and survey.allow_modify? %>
+                  <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Update</a>
+              <% else %>
+
+              <% end %>
+          <% end %>
+        </td>
+        <% if can? :view_detail, Survey %>
+            <td>
+              <%= link_to course_survey_path(@course, survey), class: 'btn' do %>
+                  <i class="icon-external-link"></i>
+              <% end %>
+              <% if can? :manage, Survey %>
+                  <%= link_to course_survey_path(@course, survey),
+                              method: :delete,
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+              <% end %>
+            </td>
+        <% end %>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

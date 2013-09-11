@@ -207,11 +207,17 @@ class ApplicationController < ActionController::Base
           icon: "icon-bar-chart"
       }
       @admin_nav_items << {
+          text: "Survey",
+          url: course_surveys_path(@course),
+          icon: "icon-edit"
+      }
+      @admin_nav_items << {
           text: "Enrollment",
           url: course_enroll_requests_url(@course),
           icon: "icon-bolt",
           count: counts[:pending_enrol] || 0
       }
+
       @admin_nav_items << {
           text: "Mass Enrollment",
           url: course_mass_enrollment_emails_path(@course),

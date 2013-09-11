@@ -37,7 +37,6 @@ class FileUploadsController < ApplicationController
       owner = Training.find_by_id(params[:training_id])
     end
 
-
     file_upload = FileUpload.create({
                                         creator: current_user,
                                         owner: owner || @course,

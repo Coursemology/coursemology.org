@@ -1,0 +1,105 @@
+<%= form_for [@course, @survey, @survey_question], :html => { :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
+
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>Question Type</label>
+      <div class="controls">
+        <select name="survey_question[type_id]" id="type-select" disabled>
+          <% SurveyQuestionType.all.each do |type| %>
+              <option value="<%= type.id %>" <%= 'selected' if type.id == @survey_question.type_id %>> <%= type.title %></option>
+          <% end %>
+        </select>
+        <ul style="margin-left: 5px">
+          <% SurveyQuestionType.all.each do |type| %>
+              <li></p><i class="icon-lightbulb"></i> <%= type.title %>:   <%= type.description %><p></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>Maximum Response</label>
+      <div class="controls">
+        <input type="number" name="survey_question[max_response]" value="<%= @survey_question.max_response %>" class="input-small">
+      </div>
+    </div>
+    <div class="control-group" id="sq-options">
+      <%= f.label "Options", :class => 'control-label' %>
+      <div class="controls" >
+        <table class="table table-no-border" style="margin-left: 0">
+          <thead>
+          <tr>
+            <th style="width: 10px">
+
+            </th>
+            <th>
+
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <% i = 0 %>
+          <% @survey_question.options.each do |option| %>
+              <% i += 1 %>
+              <tr>
+                <input type="hidden" name="options[<%= i %>][id]" value="<%= option.id %>" />
+                <td><strong style="font-size: 14px"><%= i %></strong></td>
+                <td>
+                  <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
+                  <% if option.file %>
+                     <img src="<%= option.file.file.url %>" style="width: 300px">
+                  <% end %>
+                  <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/><%= option.description %></textarea>
+                </td>
+              </tr>
+          <% end %>
+          <% if @survey_question.options.size < 4 %>
+              <% (4 - @survey_question.options.size).times.each do %>
+                  <% i += 1 %>
+                  <tr>
+                    <td><strong style="font-size: 14px"><%= i %></strong></td>
+                    <td>
+                      <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
+                      <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/></textarea>
+                    </td>
+                  </tr>
+              <% end %>
+          <% end %>
+          <tr><td></td><td><a href='#' id="add-survey-option">Add more options</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="uploaded_files_div"></div>
+
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  nil, :class => 'btn' %>
+    </div>
+<% end %>
+<%= render :partial => "layouts/html_editor" %>
+
+<h3>Auto Generate Options From Images</h3>
+<br/>
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: @survey_question } %>
+
+<script>
+    $(document).ready(function() {
+        $("#type-select").change(function(evt){
+            console.log($(this).children(":selected").text());
+            if($(this).children(":selected").text() == "Essay") {
+
+            }
+        })
+    })
+</script>

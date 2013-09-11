@@ -155,6 +155,12 @@ JfdiAcademy::Application.routes.draw do
 
     resources :staff_leaderboard
 
+    resources :surveys do
+      resources :survey_questions
+      resources :survey_submissions
+      post "survey_submissions/:id/submit" => "survey_submissions#submit", as: :survey_submission_submit
+    end
+
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
   end
@@ -174,6 +180,10 @@ JfdiAcademy::Application.routes.draw do
   end
 
   resources :submissions do
+    resources :file_uploads
+  end
+
+  resources :survey_questions do
     resources :file_uploads
   end
 

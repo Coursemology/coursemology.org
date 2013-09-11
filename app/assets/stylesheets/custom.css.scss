@@ -844,6 +844,9 @@ $grayMediumLight: #eaeaea;
   overflow-y: auto;
 }
 
+.checkbox-text {
+  padding-top: 5px;
+}
 .checkbox-text label {
   display: block;
   padding-left: 15px;
@@ -1008,5 +1011,11 @@ a.mission-box {
 
 a:hover, .leaderboard-achivement {
   text-decoration: none;
+}
+
+.pagination-large ul > li > a,
+.pagination-large ul > li > span {
+  padding: 11px 19px;
+  font-size: 17.5px;
 }
 
