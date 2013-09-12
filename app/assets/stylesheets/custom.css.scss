@@ -423,6 +423,8 @@ f
   margin: 20px;
 }
 
+
+
 .step {
   background-color: gray;
   -webkit-border-radius: 25px;
@@ -433,6 +435,19 @@ f
   font-size: 1.7em;
   padding: 10px 12px;
   margin: 3px;
+}
+
+
+.survey-question {
+  background-color: #2ba6cb;
+}
+
+.survey-current {
+  color: #ffffff;
+}
+
+.survey-not-current {
+  color: lightgray;
 }
 
 .step-current {

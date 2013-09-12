@@ -23,7 +23,7 @@ class SurveySubmissionsController < ApplicationController
     @step = @current_qn
 
     if params[:_pos] && params[:_pos].to_i >= 1
-      @step = [@step, params[:_pos].to_i].min
+      @step = params[:_pos].to_i
     else
       @step = 1
     end

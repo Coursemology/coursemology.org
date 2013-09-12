@@ -11,6 +11,8 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :survey_mrq_answers, foreign_key: "question_id"
   has_many :files, through: :options
 
-
+  def answer_for_user(user_course)
+      self.survey_mrq_answers.where(user_course_id: user_course).first
+  end
 
 end

@@ -1,14 +1,19 @@
+<div class="page-header">
+  <h1><%= @survey.title %></h1>
+</div>
+
+<p><%= @survey.description.html_safe %></p>
+
 <div class="step-list">
-  <% (1..@survey.survey_questions.count).each do |i| %>
-      <% if i <= @current_qn %>
-          <% if i == @step %>
-              <%= link_to i, "?_pos=#{i}", class: "step step-current" %>
-          <% else %>
-              <%= link_to i, "?_pos=#{i}", class: "step step-done" %>
-          <% end %>
+  <% @survey.survey_questions.each_with_index do |q, index| %>
+      <% i = index + 1 %>
+      <% color = q.answer_for_user(curr_user_course) ? "step-done" : "survey-question"   %>
+      <% if i == @step %>
+          <%= link_to i, "?_pos=#{i}", class: "step survey-current " + color %>
       <% else %>
-          <%= link_to i, '#', class: "step" %>
+          <%= link_to i, "?_pos=#{i}", class: "step survey-not-current " + color  %>
       <% end %>
+
   <% end %>
 </div>
 <% if @step > @survey.questions.count  %>
@@ -21,7 +26,7 @@
 <% else %>
 
     <% question = @survey.questions[@step -1] %>
-    <% answer = question.survey_mrq_answers.where(user_course_id: curr_user_course).first %>
+    <% answer = question.answer_for_user(curr_user_course) %>
     <% selected_options = answer ? answer.options : [] %>
     <%= form_for([@course, @survey, @survey_submission], url:course_survey_survey_submission_submit_path,
                  html: { method: :POST, class: "form-horizontal" } ) do |f| %>
