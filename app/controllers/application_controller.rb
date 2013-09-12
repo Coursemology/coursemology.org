@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
       when 'comments'
         url = course_comments_url(@course)
         icon = 'icon-comments'
-      when 'survey'
+      when 'surveys'
         url = course_surveys_path(@course)
         icon = 'icon-edit'
     end
