@@ -103,6 +103,11 @@ class FileUploadsController < ApplicationController
 
   def destroy
     @upload = FileUpload.find(params[:id])
+    puts @upload.owner.to_json
+    if @upload.owner.class == SurveyQuestionOption
+      puts "destroy"
+      @upload.owner.destroy
+    end
     @upload.destroy
 
     respond_to do |format|

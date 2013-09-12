@@ -535,3 +535,12 @@ if SurveyQuestionType.count == 0
                              description:   "Essay"
 
 end
+
+if PreferableItem.count == 57
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "surveys",
+                         default_value: "Surveys",
+                         description:   "Course surveys",
+                         default_display: true
+end

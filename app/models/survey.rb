@@ -1,5 +1,6 @@
 class Survey < ActiveRecord::Base
   acts_as_paranoid
+  default_scope { order("open_at") }
   attr_accessible :course_id, :title, :creator_id, :description,
                   :open_at, :expire_at, :anonymous, :publish,
                   :allow_modify, :has_section
@@ -17,11 +18,10 @@ class Survey < ActiveRecord::Base
   end
 
   def can_start?
-    open_at >= Time.now
+    open_at <= Time.now
   end
 
-  def submission_by(user_course_id)
-    self.survey_submissions.where(user_course_id: user_course_id).first
+  def submission_by(user_course)
+    self.survey_submissions.where(user_course_id: user_course).first
   end
-
 end

@@ -27,9 +27,6 @@ class SurveySubmissionsController < ApplicationController
     else
       @step = 1
     end
-
-
-
   end
 
   def update
@@ -37,7 +34,7 @@ class SurveySubmissionsController < ApplicationController
   end
 
   def show
-
+    edit
   end
 
   def submit
