@@ -1,0 +1,7 @@
+<div class="page-header">
+  <h1>Survey Summary: <%=  @survey.title %></h1>
+</div>
+<% @charts.each_with_index do |chart, index| %>
+    <div class="graph" id="chart_<%= index %>"></div>
+    <%= render_chart chart, "chart_#{index}" %>
+<% end %>

@@ -27,6 +27,7 @@
 
   <tbody class="table-hover">
   <% @surveys.each do |survey| %>
+
       <tr class="<%= "future" if survey.open_at > Time.now %>">
         <td>
           <%= survey.title %>

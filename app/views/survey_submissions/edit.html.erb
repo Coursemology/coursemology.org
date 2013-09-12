@@ -40,7 +40,7 @@
             <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= selected_options.count  %></span> entries.</p>
             <br>
             <% if !@survey_submission.done? || @survey.allow_modify? %>
-                <button class="btn btn-success" type="submit">Next</button>
+                <button class="btn btn-success survey-submit" type="submit">Next</button>
             <% end %>
             <hr>
             <div class="large-12 columns">
