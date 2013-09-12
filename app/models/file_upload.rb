@@ -17,6 +17,8 @@ class FileUpload < ActiveRecord::Base
         "name"  => read_attribute(:file_file_name),
         "size"  => read_attribute(:file_file_size),
         "url"   => file.url(:original),
+        "original" => read_attribute(:original_name),
+        "timestamp" => created_at.strftime("%d-%m-%Y %H:%M:%S"),
         "delete_url"  => file_upload_path(self),
         "delete_type" => "DELETE"
     }

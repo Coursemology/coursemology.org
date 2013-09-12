@@ -9,6 +9,7 @@ class SurveyQuestion < ActiveRecord::Base
 
   has_many :options, class_name:"SurveyQuestionOption", foreign_key: "question_id"
   has_many :survey_mrq_answers, foreign_key: "question_id"
+  has_many :files, through: :options
 
 
 

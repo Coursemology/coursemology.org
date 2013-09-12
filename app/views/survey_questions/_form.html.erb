@@ -53,7 +53,7 @@
                 <td>
                   <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
                   <% if option.file %>
-                     <img src="<%= option.file.file.url %>" style="width: 300px">
+                      <img src="<%= option.file.file.url %>" style="width: 300px">
                   <% end %>
                   <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/><%= option.description %></textarea>
                 </td>
@@ -87,13 +87,13 @@
                     :class => 'btn' %>
     </div>
 <% end %>
-<%= render :partial => "layouts/html_editor" %>
 
 <h3>Auto Generate Options From Images</h3>
 <br/>
 <%= render partial: "layouts/file_uploader_complicated",
            locals: { owner: @survey_question } %>
 
+<%= render :partial => "layouts/html_editor" %>
 <script>
     $(document).ready(function() {
         $("#type-select").change(function(evt){
