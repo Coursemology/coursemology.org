@@ -2,7 +2,7 @@ class SurveysController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :survey, through: :course
 
-  before_filter :load_general_course_data, only: [:index, :new, :show, :edit]
+  before_filter :load_general_course_data, only: [:index, :new, :show, :edit, :stats, :summary]
   def index
     @surveys = @course.surveys
     @time_format =  @course.mission_time_format
@@ -41,6 +41,17 @@ class SurveysController < ApplicationController
         format.html { render action: "edit" }
       end
     end
+
+  end
+
+  def stats
+    @submissions = @survey.survey_submissions.all
+    @staff_courses = @course.user_courses.staff.order(:name)
+    @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
+    @std_courses_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
+  end
+
+  def summary
 
   end
 

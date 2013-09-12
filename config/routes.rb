@@ -161,6 +161,9 @@ JfdiAcademy::Application.routes.draw do
       post "survey_submissions/:id/submit" => "survey_submissions#submit", as: :survey_submission_submit
     end
 
+    match "surveys/:id/stats" => "surveys#stats", as: :survey_stats
+    match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
+
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
   end

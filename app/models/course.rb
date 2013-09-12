@@ -258,6 +258,10 @@ class Course < ActiveRecord::Base
   end
 
   def pending_surveys(user_course)
-    self.surveys.where("open_at < ? and expire_at > ? ", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
+    if user_course.is_student?
+      self.surveys.where("open_at < ? and expire_at > ? ", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
+    else
+      []
+    end
   end
 end
