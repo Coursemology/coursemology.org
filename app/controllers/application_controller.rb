@@ -65,8 +65,7 @@ class ApplicationController < ActionController::Base
       all_missions = @course.missions.accessible_by(current_ability)
       unseen_missions = all_missions - curr_user_course.seen_missions
       counts[:missions] = unseen_missions.count
-      counts[:survey]  = @course.pending_surveys(curr_user_course).count
-      puts counts
+      counts[:surveys]  = @course.pending_surveys(curr_user_course).count
       #if can? :see_all, Submission
       #  # lecturers see number of new submissions of all students in the course
       #  all_sbms = @course.submissions.accessible_by(current_ability) +
