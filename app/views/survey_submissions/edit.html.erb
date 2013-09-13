@@ -7,7 +7,7 @@
 <div class="step-list">
   <% @survey.survey_questions.each_with_index do |q, index| %>
       <% i = index + 1 %>
-      <% color = q.answer_for_user(curr_user_course) ? "step-done" : "survey-question"   %>
+      <% color = q.answer_for_user(curr_user_course).first ? "step-done" : "survey-question"   %>
       <% if i == @step %>
           <%= link_to i, "?_pos=#{i}", class: "step survey-current " + color %>
       <% else %>
