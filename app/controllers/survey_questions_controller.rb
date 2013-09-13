@@ -31,7 +31,6 @@ class SurveyQuestionsController < ApplicationController
       if @survey_question.save
 
         if params[:files]
-          puts params[:files]
           process_files(params[:files].values, @survey_question)
         else
           update_options(@survey_question)
@@ -47,7 +46,6 @@ class SurveyQuestionsController < ApplicationController
 
   def update
     if params[:files]
-      puts params[:files]
       process_files(params[:files].values, @survey_question)
     else
       update_options(@survey_question)
@@ -100,7 +98,10 @@ class SurveyQuestionsController < ApplicationController
     if params[:options]
       params[:options].each do |i, option|
         if option.has_key?('id')
-          opt = question.options.find(option['id'])
+          opt = question.options.where(id:option['id']).first
+          unless opt
+            break
+          end
           opt.survey_question = question
           opt.update_attributes(option)
         elsif option['description'] && option['description'].strip != ''

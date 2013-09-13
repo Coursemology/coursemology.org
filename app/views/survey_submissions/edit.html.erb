@@ -26,8 +26,7 @@
 <% else %>
 
     <% question = @survey.questions[@step -1] %>
-    <% answer = question.answer_for_user(curr_user_course) %>
-    <% selected_options = answer ? answer.options : [] %>
+    <% answers = question.answer_for_user(curr_user_course).map { |ans| ans.option_id } %>
     <%= form_for([@course, @survey, @survey_submission], url:course_survey_survey_submission_submit_path,
                  html: { method: :POST, class: "form-horizontal" } ) do |f| %>
         <input type="hidden" name="question" value="<%= question.id %>">
@@ -37,7 +36,7 @@
           <div class="large-12 columns">
             <h1><%= question.description.html_safe %></h1>
             <br>
-            <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= selected_options.count  %></span> entries.</p>
+            <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= answers.count  %></span> entries.</p>
             <br>
             <% if !@survey_submission.done? || @survey.allow_modify? %>
                 <button class="btn btn-success survey-submit" type="submit">Next</button>
@@ -45,13 +44,25 @@
             <hr>
             <div class="large-12 columns">
               <ul>
-                <% question.options.each do |option| %>
-                    <li class="<%= 'rune-voted' if  selected_options.include? option %>">
-                      <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
-                      <div class="checkbox-container">
-                        <input type="checkbox" name="option[<%= option.id %>]" class="checked" <%= 'checked' if  selected_options.include? option %>/>
-                      </div>
-                    </li>
+                <% question.options.each_with_index do |option, index| %>
+                    <% if option.file %>
+                        <li class="<%= 'rune-voted' if  answers.include? option.id %>">
+
+                          <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
+                          <div class="checkbox-container">
+                            <input type="checkbox" name="option[<%= option.id %>]" class="checked" <%= 'checked' if  answers.include? option.id %>/>
+                          </div>
+                        </li>
+                    <% else %>
+                        <li class="checkbox-text <%= 'rune-voted' if  answers.include? option.id %>">
+                          <span>
+                          <input type="checkbox" name="option[<%= option.id %>]" class="checked" <%= 'checked' if  answers.include? option.id %>/>
+                          </span>
+
+                            <%= " #{index + 1}. #{option.description.html_safe}" %>
+
+                        </li>
+                    <% end %>
                 <% end %>
               </ul>
             </div>

@@ -2,5 +2,100 @@
   <h1>Survey Summary: <%=  @survey.title %></h1>
 </div>
 
-<% @summaries.each_with_index do |summary| %>
+<% @summaries.each_with_index do |summary, i| %>
+    <h3><%= "#{i + 1}. #{summary[:question].description}" %></h3>
+
+    <% if summary[:total] == 0 %>
+        <p>No one responded yet:|</p>
+    <% else %>
+        <span class="pull-right" style="font-size: 1.3em; font-style: italic">No of respondents: <strong><%= summary[:total] %></strong></span>
+        <table class="table table-hover no-boarder" style="margin-left: 5%; width: 90%; margin-top: 50px" >
+          <% top = summary[:options][0].count %>
+          <% summary[:options].each_with_index do |option, index| %>
+              <tr>
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td>
+                  <% if option.file %>
+                      <a href="<%= option.file.file.url %>"  class="preview" title="<%= option.description %>"><%= option.description %></a>
+                  <% else %>
+                      <%= option.description %>
+                  <% end %>
+
+                </td>
+                <td style="width: 70%" >
+                  <div class="progress progress-success">
+                    <div class="bar" style="width: <%= 100 * (option.count || 0) / (top * 1.1) %>%"><%= option.count %></div>
+                  </div>
+                  <div class="progress progress-danger">
+                    <div class="bar" style="width: <%= 100 * (option.count || 0) / summary[:total] %>%">
+                      <%= number_with_precision (100 * (option.count || 0).to_f / summary[:total]), precision:2 %>%
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+          <% end %>
+        </table>
+    <% end %>
 <% end %>
+
+<style>
+    #preview{
+        position:absolute;
+        border:1px solid #ccc;
+        background:#333;
+        padding:5px;
+        display:none;
+        max-width: 400px;
+        color:#fff;
+    }
+</style>
+<script>
+    /*
+     * Image preview script
+     * powered by jQuery (http://www.jquery.com)
+     *
+     * written by Alen Grakalic (http://cssglobe.com)
+     *
+     * for more info visit http://cssglobe.com/post/1695/easiest-tooltip-and-image-preview-using-jquery
+     *
+     */
+
+    imagePreview = function(){
+        /* CONFIG */
+
+        xOffset = 10;
+        yOffset = 30;
+
+        // these 2 variable determine popup's distance from the cursor
+        // you might want to adjust to get the right result
+
+        /* END CONFIG */
+        $("a.preview").hover(function(e){
+                    this.t = this.title;
+                    this.title = "";
+                    var c = (this.t != "") ? "<br/>" + this.t : "";
+                    $("body").append("<p id='preview'><img src='"+ this.href +"' alt='Image preview' />"+ c +"</p>");
+                    $("#preview")
+                            .css("top",(e.pageY - xOffset) + "px")
+                            .css("left",(e.pageX + yOffset) + "px")
+                            .fadeIn("fast");
+                },
+                function(){
+                    this.title = this.t;
+                    $("#preview").remove();
+                });
+        $("a.preview").mousemove(function(e){
+            $("#preview")
+                    .css("top",(e.pageY - xOffset) + "px")
+                    .css("left",(e.pageX + yOffset) + "px");
+        });
+    };
+
+
+    $(document).ready(function(){
+        imagePreview();
+    });
+</script>

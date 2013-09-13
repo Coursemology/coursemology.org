@@ -12,19 +12,19 @@ namespace :db do
         sb.save
         sv.questions.each do |qn|
           options = qn.options
-          selected_options = []
+
           (1..qn.max_response).each do |i|
+             sample_id = 1
             if rand(10) < 2
-              selected_options <<  options[0,10].sample.id
+              sample_id = options[0,10].sample.id
             else
-              selected_options <<  options.sample.id
+              sample_id = options.sample.id
             end
+            ans = qn.survey_mrq_answers.build
+            ans.option_id = sample_id
+            ans.user_course = uc
+            ans.save
           end
-          ans = qn.survey_mrq_answers.where(user_course_id: uc).first
-          ans ||= qn.survey_mrq_answers.build
-          ans.selected_options = selected_options.to_s
-          ans.user_course = uc
-          ans.save
         end
       end
     end

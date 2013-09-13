@@ -18,8 +18,7 @@
 </div>
 
 <% question = @survey.questions[@step -1] %>
-<% answer = question.answer_for_user(curr_user_course) %>
-<% selected_options = answer ? answer.options : [] %>
+<% answers = question.answer_for_user(curr_user_course).map {|ans| ans.option_id} %>
 
 <input type="hidden" name="question" value="<%= question.id %>">
 <input type="hidden" name="step" value="<%= @step %>">
@@ -29,12 +28,12 @@
   <div class="large-12 columns">
     <h1><%= question.description.html_safe %></h1>
     <br>
-    <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= selected_options.count  %></span> entries.</p>
+    <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= answers.count  %></span> entries.</p>
     <hr>
     <div class="large-12 columns">
       <ul>
         <% question.options.each do |option| %>
-            <li class="<%= 'rune-voted' if  selected_options.include? option %>">
+            <li class="<%= 'rune-voted' if  answers.include? option.id %>">
               <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
             </li>
         <% end %>

@@ -49,21 +49,29 @@ class SurveySubmissionsController < ApplicationController
     end
 
     question = @survey.survey_questions.where(id:params[:question]).first
-    options = params[:option].keys
+    options = params[:option].keys.map {|k| k.to_i}
     if question.max_response < options.count
       flash[:error] ="Max response allowed is #{question.max_response}, but #{options.count} have been selected."
     else
-      answer = question.survey_mrq_answers.where(user_course_id:curr_user_course).first
-      new = false
-      unless answer
-        answer = question.survey_mrq_answers.build()
-        new = true
+      answers = question.survey_mrq_answers.where(user_course_id:curr_user_course)
+
+      was_selected = answers.map{|ans| ans.option_id }
+      was_selected.each_with_index do |id, index|
+        unless options.include? id
+          answers[index].option.decrease_count
+          answers[index].destroy
+        end
       end
-      answer.selected_options = options.to_s
-      answer.user_course = curr_user_course
-      answer.save
+      (options - was_selected).each do |id|
+        answer = question.survey_mrq_answers.build
+        answer.option_id = id
+        answer.user_course = curr_user_course
+        answer.save
+        answer.option.increase_count
+      end
+
       step += 1
-      if new
+      if answers.count == 0
         @survey_submission.current_qn = (@survey_submission.current_qn || 1) + 1
         @survey_submission.save
 
@@ -78,8 +86,6 @@ class SurveySubmissionsController < ApplicationController
   end
 
   private
-
-
   def allow_only_one_submission
     sub = @survey.submission_by(curr_user_course.id)
     if sub

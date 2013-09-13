@@ -30,7 +30,13 @@
 
       <tr class="<%= "future" if survey.open_at > Time.now %>">
         <td>
-          <%= survey.title %>
+          <% if can? :manage, Survey %>
+          <a href="<%= course_survey_summary_path(@course, survey) %>" rel="tooltip" title="Survey Summary">
+            <%= survey.title %>
+          </a>
+          <% else %>
+              <%= survey.title %>
+          <% end %>
         </td>
         <td>
           <%= survey.open_at.strftime(@time_format.prefer_value) %>

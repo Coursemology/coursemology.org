@@ -56,19 +56,12 @@ class SurveysController < ApplicationController
     @survey.questions.each do |question|
       rows = {}
       summary = {}
-      answers = question.survey_mrq_answers
-      summary[:total] = answers.count
-      answers.each do |answer|
-        answer.options.each do |option|
-          if rows[option]
-            rows[option] += 1
-          else
-            rows[option] = 1
-          end
-        end
-      end
+      summary[:question] = question
+      summary[:total] = question.no_unique_voters
+
+
       #TODO: hardcoded 10
-      summary[:options] = rows.sort_by{|k, v| v}.reverse[0, 10]
+      summary[:options] = question.options.order("count desc").first(10)
       @summaries << summary
     end
   end
