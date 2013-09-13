@@ -61,7 +61,7 @@ class CourseAbility
       cannot :manage, :user
     end
 
-    if user_course.is_ta?
+    if user_course.is_ta? && !user.is_admin?
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff

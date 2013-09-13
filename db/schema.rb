@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130911180832) do
+ActiveRecord::Schema.define(:version => 20130912165150) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -637,6 +637,7 @@ ActiveRecord::Schema.define(:version => 20130911180832) do
     t.time     "deleted_at"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "option_id"
   end
 
   add_index "survey_mrq_answers", ["question_id"], :name => "index_survey_mrq_answers_on_question_id"
@@ -649,6 +650,7 @@ ActiveRecord::Schema.define(:version => 20130911180832) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "pos"
+    t.integer  "count"
   end
 
   add_index "survey_question_options", ["question_id"], :name => "index_survey_question_options_on_question_id"
