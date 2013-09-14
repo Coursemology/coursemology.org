@@ -44,7 +44,7 @@
             <hr>
             <div class="large-12 columns">
               <ul>
-                <% question.options.each_with_index do |option, index| %>
+                <% question.options.all.shuffle.each_with_index do |option, index| %>
                     <% if option.file %>
                         <li class="<%= 'rune-voted' if  answers.include? option.id %>">
 
