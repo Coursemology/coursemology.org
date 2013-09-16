@@ -423,6 +423,8 @@ f
   margin: 20px;
 }
 
+
+
 .step {
   background-color: gray;
   -webkit-border-radius: 25px;
@@ -433,6 +435,19 @@ f
   font-size: 1.7em;
   padding: 10px 12px;
   margin: 3px;
+}
+
+
+.survey-question {
+  background-color: #2ba6cb;
+}
+
+.survey-current {
+  color: #ffffff;
+}
+
+.survey-not-current {
+  color: lightgray;
 }
 
 .step-current {
@@ -844,6 +859,9 @@ $grayMediumLight: #eaeaea;
   overflow-y: auto;
 }
 
+.checkbox-text {
+  padding-top: 5px;
+}
 .checkbox-text label {
   display: block;
   padding-left: 15px;
@@ -1008,5 +1026,11 @@ a.mission-box {
 
 a:hover, .leaderboard-achivement {
   text-decoration: none;
+}
+
+.pagination-large ul > li > a,
+.pagination-large ul > li > span {
+  padding: 11px 19px;
+  font-size: 17.5px;
 }
 

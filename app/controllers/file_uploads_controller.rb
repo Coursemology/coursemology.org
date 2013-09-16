@@ -37,7 +37,6 @@ class FileUploadsController < ApplicationController
       owner = Training.find_by_id(params[:training_id])
     end
 
-
     file_upload = FileUpload.create({
                                         creator: current_user,
                                         owner: owner || @course,
@@ -82,6 +81,8 @@ class FileUploadsController < ApplicationController
       owner = Mission.find(params[:mission_id])
     elsif params[:submission_id]
       owner = Submission.find(params[:submission_id])
+    elsif params[:survey_question_id]
+      owner = SurveyQuestion.find(params[:survey_question_id])
     end
 
     @uploads = owner ? owner.files : []
@@ -102,6 +103,11 @@ class FileUploadsController < ApplicationController
 
   def destroy
     @upload = FileUpload.find(params[:id])
+    puts @upload.owner.to_json
+    if @upload.owner.class == SurveyQuestionOption
+      puts "destroy"
+      @upload.owner.destroy
+    end
     @upload.destroy
 
     respond_to do |format|

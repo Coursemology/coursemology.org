@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130908091224) do
+ActiveRecord::Schema.define(:version => 20130912165150) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(:version => 20130908091224) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.string   "owner_type"
+    t.string   "original_name"
   end
 
   create_table "levels", :force => true do |t|
@@ -628,6 +629,107 @@ ActiveRecord::Schema.define(:version => 20130908091224) do
   add_index "submissions", ["final_grading_id"], :name => "index_submissions_on_final_grading_id"
   add_index "submissions", ["mission_id"], :name => "index_submissions_on_mission_id"
   add_index "submissions", ["std_course_id"], :name => "index_submissions_on_std_course_id"
+
+  create_table "survey_mrq_answers", :force => true do |t|
+    t.text     "selected_options"
+    t.integer  "user_course_id"
+    t.integer  "question_id"
+    t.time     "deleted_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "option_id"
+  end
+
+  add_index "survey_mrq_answers", ["question_id"], :name => "index_survey_mrq_answers_on_question_id"
+  add_index "survey_mrq_answers", ["user_course_id"], :name => "index_survey_mrq_answers_on_user_course_id"
+
+  create_table "survey_question_options", :force => true do |t|
+    t.integer  "question_id"
+    t.text     "description"
+    t.time     "deleted_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "pos"
+    t.integer  "count"
+  end
+
+  add_index "survey_question_options", ["question_id"], :name => "index_survey_question_options_on_question_id"
+
+  create_table "survey_question_types", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "survey_questions", :force => true do |t|
+    t.integer  "type_id"
+    t.integer  "survey_id"
+    t.integer  "survey_section_id"
+    t.text     "description"
+    t.boolean  "publish",           :default => true
+    t.integer  "max_response"
+    t.integer  "pos"
+    t.time     "deleted_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+  end
+
+  add_index "survey_questions", ["survey_id"], :name => "index_survey_questions_on_survey_id"
+  add_index "survey_questions", ["survey_section_id"], :name => "index_survey_questions_on_survey_section_id"
+
+  create_table "survey_sections", :force => true do |t|
+    t.integer  "survey_id"
+    t.string   "title"
+    t.text     "description"
+    t.integer  "pos"
+    t.boolean  "publish",     :default => true
+    t.time     "deleted_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "survey_sections", ["survey_id"], :name => "index_survey_sections_on_survey_id"
+
+  create_table "survey_submissions", :force => true do |t|
+    t.integer  "user_course_id"
+    t.integer  "survey_id"
+    t.datetime "open_at"
+    t.datetime "submitted_at"
+    t.string   "status"
+    t.time     "deleted_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "current_qn"
+  end
+
+  add_index "survey_submissions", ["survey_id"], :name => "index_survey_submissions_on_survey_id"
+  add_index "survey_submissions", ["user_course_id"], :name => "index_survey_submissions_on_user_course_id"
+
+  create_table "survey_types", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "surveys", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "open_at"
+    t.datetime "expire_at"
+    t.boolean  "anonymous",    :default => false
+    t.boolean  "publish",      :default => true
+    t.boolean  "allow_modify", :default => true
+    t.boolean  "has_section",  :default => true
+    t.time     "deleted_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
+  add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"
 
   create_table "tag_groups", :force => true do |t|
     t.string   "name"

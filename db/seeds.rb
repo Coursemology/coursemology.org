@@ -523,3 +523,24 @@ if AssignmentType.count == 0
   AssignmentType.create! title:         "Extra",
                          description:   "Extra mission or training"
 end
+
+if SurveyQuestionType.count == 0
+  SurveyQuestionType.create! title:         "MCQ",
+                             description:   "Multiple Choice Question"
+
+  SurveyQuestionType.create! title:         "MRQ",
+                             description:   "Multiple Response Question"
+
+  SurveyQuestionType.create! title:         "Essay",
+                             description:   "Essay"
+
+end
+
+if PreferableItem.count == 57
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "surveys",
+                         default_value: "Surveys",
+                         description:   "Course surveys",
+                         default_display: true
+end

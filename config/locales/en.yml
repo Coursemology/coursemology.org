@@ -6,3 +6,5 @@ en:
     links:
       new_mcq:  "New MCQ Question"
       new_cq:   "New Coding Question"
+      new_mrq:  "New MRQ Question"
+      new_qn:   "New Question"

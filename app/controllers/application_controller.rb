@@ -65,6 +65,7 @@ class ApplicationController < ActionController::Base
       all_missions = @course.missions.accessible_by(current_ability)
       unseen_missions = all_missions - curr_user_course.seen_missions
       counts[:missions] = unseen_missions.count
+      counts[:surveys]  = @course.pending_surveys(curr_user_course).count
       #if can? :see_all, Submission
       #  # lecturers see number of new submissions of all students in the course
       #  all_sbms = @course.submissions.accessible_by(current_ability) +
@@ -152,6 +153,11 @@ class ApplicationController < ActionController::Base
           url:    course_students_url(@course),
           icon:   "icon-group",
       }
+      @nav_items << {
+          text: "Survey",
+          url: course_surveys_path(@course),
+          icon: "icon-edit"
+      }
     end
 
     if can? :manage, Course
@@ -206,12 +212,14 @@ class ApplicationController < ActionController::Base
           url: course_stats_url(@course),
           icon: "icon-bar-chart"
       }
+
       @admin_nav_items << {
           text: "Enrollment",
           url: course_enroll_requests_url(@course),
           icon: "icon-bolt",
           count: counts[:pending_enrol] || 0
       }
+
       @admin_nav_items << {
           text: "Mass Enrollment",
           url: course_mass_enrollment_emails_path(@course),
@@ -315,6 +323,9 @@ class ApplicationController < ActionController::Base
       when 'comments'
         url = course_comments_url(@course)
         icon = 'icon-comments'
+      when 'surveys'
+        url = course_surveys_path(@course)
+        icon = 'icon-edit'
     end
     [url, icon]
   end

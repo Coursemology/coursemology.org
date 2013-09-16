@@ -1,0 +1,10 @@
+// Place all the styles related to the survey_submissions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.runes-container ul li { list-style-type: none; display: inline-block; margin: 5px; padding: 5px; border-radius: 5px; }
+.rune-entry { width: 200px; height: 200px; margin: 10px; }
+.rune-voted { background-color: #ccc; }
+.vote-count { color: red;}
+.checkbox-container { text-align: center; }
+input[type=checkbox] { margin: 0 auto; }

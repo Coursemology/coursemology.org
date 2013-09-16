@@ -1,0 +1,78 @@
+<%= form_for [@course, @survey], :html => { :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field span7' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :open_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :open_at,
+                           :value => datetime_format(@survey.open_at),
+                           :class => 'input-medium',
+                           id: "open_at"%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :expire_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :expire_at,
+                           :value => datetime_format(@survey.expire_at),
+                           :class => 'input-medium',
+                           id: "expire_at"%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "Publish?", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :publish %> Check to publish training
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "Anonymous?", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :anonymous %> Check not to show respondents
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "Modification", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :allow_modify %> Check to allow modification after submission
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "Sections", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :has_section %> Check to allow sections, questions are under sections
+      </div>
+    </div>
+
+    <div class="form-actions" >
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  course_path(@course), :class => 'btn' %>
+    </div>
+    <%= render :partial => "layouts/html_editor" %>
+<% end %>

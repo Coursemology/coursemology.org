@@ -2,7 +2,7 @@
    <% owner = nil %>
 <% end %>
 
-<%= form_for [owner,FileUpload.new], :html => { :multipart => true, :id => "fileupload"  } do |f| %>
+<%= form_for [owner, FileUpload.new], :html => { :multipart => true, :id => "fileupload"  } do |f| %>
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
       <div class="span7">
@@ -87,7 +87,6 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-download fade">
     {% if (file.error) { %}
-    <td></td>
     <td class="name"><span>{%=file.name%}</span></td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
@@ -95,11 +94,15 @@
     <td class="preview">{% if (file.thumbnail_url) { %}
       <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
       {% } %}</td>
+    {% if (file.original) { %}
+    <td class="name"><span>{%=file.original%}</span></td>
+    {% } %}
     <td class="name">
       <input type="hidden" name="files[{%=file.name%}]" class="uploaded-files" value="{%=file.id%}">
       <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
     </td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+    <td class="timestamp"><span>{%= file.timestamp %}</span></td>
     <td colspan="2"></td>
     {% } %}
     <td class="delete">
@@ -116,9 +119,7 @@
 <script type="text/javascript" charset="utf-8">
     $(function () {
         // Initialize the jQuery File Upload widget:
-        function testMe() {
-            console.log("test is called")
-        }
+
 
         $('#fileupload').bind('fileuploaddone', function (e, data) {
             // Log the current bitrate for this upload:

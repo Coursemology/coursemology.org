@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>Survey Statistics: <%= @survey.title %></h1>
+</div>
+
+
+<% [@staff_courses, @std_courses, @std_courses_phantom].each_with_index do |user_courses, index| %>
+    <% case index  %>
+    <% when 0 %>
+        <h3>Staff</h3>
+    <% when 1 %>
+        <h3>All Students</h3>
+    <% when 2 %>
+        <h3>Phantom Students </h3>
+    <% end %>
+
+    <table class="table">
+      <thead>
+      <th style="width: 50%">Name</th>
+      <th >Status</th>
+      <th>Progress</th>
+      </thead>
+      <tbody>
+      <% user_courses.each do |std| %>
+          <% sub = @submissions.select {|sub| sub.user_course == std }.first %>
+          <tr>
+            <% if sub %>
+                <td><%= std.name %> </td>
+            <% else %>
+                <td><%= std.name %></td>
+            <% end %>
+
+            <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
+            <td><%= sub  ? ((sub.current_qn || 1) - 1) : 0 %>/ <%= @survey.survey_questions.count %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
+

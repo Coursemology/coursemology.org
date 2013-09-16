@@ -118,7 +118,6 @@ class TrainingsController < ApplicationController
         format.html { render action: "edit" }
       end
     end
-
   end
 
   def destroy

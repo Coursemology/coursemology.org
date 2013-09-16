@@ -35,10 +35,11 @@ class Course < ActiveRecord::Base
   has_many :tutorial_groups,        dependent: :destroy
   has_many :file_uploads,           as: :owner
   has_many :course_preferences,     dependent: :destroy
-  has_many :comment_topics,  dependent: :destroy
+  has_many :comment_topics,         dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
   has_many :tutor_monitorings,      dependent: :destroy
+  has_many :surveys,                dependent: :destroy
 
   def asms
     missions + trainings
@@ -254,5 +255,13 @@ class Course < ActiveRecord::Base
       return
     end
     self.user_courses.create(user_id: user.id, role_id: role.id)
+  end
+
+  def pending_surveys(user_course)
+    if user_course.is_student?
+      self.surveys.where("open_at < ? and expire_at > ? and publish = true", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
+    else
+      []
+    end
   end
 end

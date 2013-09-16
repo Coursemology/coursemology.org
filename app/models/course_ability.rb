@@ -61,7 +61,7 @@ class CourseAbility
       cannot :manage, :user
     end
 
-    if user_course.is_ta?
+    if user_course.is_ta? && !user.is_admin?
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff
@@ -80,7 +80,7 @@ class CourseAbility
         ann.publish_at <= Time.now
       end
 
-      can :read, [Mission, Training], publish: true
+      can :read, [Mission, Training, Survey], publish: true
 
       can :read, [Mcq, Question, CodingQuestion]
 
@@ -91,6 +91,8 @@ class CourseAbility
       can :access_denied, Training
 
       can :manage, [Submission, TrainingSubmission, Annotation, Comment], std_course_id: user_course.id
+      can :manage, SurveySubmission, user_course_id: user_course.id
+      can :manage, SurveyMrqAnswer, user_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
       can :manage, ExpTransaction, user_course_id: user_course.id
 
