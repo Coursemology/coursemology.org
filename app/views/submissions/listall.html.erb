@@ -59,7 +59,7 @@
         <th width="20%">Student</th>
     <% end %>
     <th>Mission</th>
-    <th width="20%">Submitted at </th>
+    <th>Submitted at </th>
 
     <th width="15%">
       <% if can? :manage, SubmissionGrading %>
@@ -67,6 +67,9 @@
       <% else %>
           Status
       <% end %>
+    </th>
+    <th>
+      Grade
     </th>
     <th width="10%">Action</th>
   </tr>
@@ -85,10 +88,17 @@
         <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.submit_at || sub.created_at) %> ago</td>
+        <!--TODO: refactoring-->
         <% if can? :manage, SubmissionGrading %>
             <td>
               <% sub.submission_gradings.each do |sg| %>
                   <%= link_to sg.get_name, sub.get_path %><br/>
+              <% end %>
+            </td>
+            <td>
+              <% grade = sub.submission_gradings.last %>
+              <% if grade %>
+                  <%= grade.total_grade %> / <%= sub.get_asm.max_grade %>
               <% end %>
             </td>
             <% if sub.submission_gradings.length == 0 %>
@@ -105,6 +115,12 @@
         <% else %>
             <td>
               <%= sub.status %>
+            </td>
+            <td>
+              <% grade = sub.submission_gradings.last %>
+              <% if grade %>
+                  <%= grade.total_grade %> / <%= sub.get_asm.max_grade %>
+              <% end %>
             </td>
             <td>
               <%= link_to "Review", sub.get_path,
