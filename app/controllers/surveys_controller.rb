@@ -6,6 +6,15 @@ class SurveysController < ApplicationController
   def index
     @surveys = @course.surveys.accessible_by(current_ability)
     @time_format =  @course.mission_time_format
+
+    if can? :manage, Survey
+      @stats = {}
+      total = @course.user_courses.real_students.count
+      @surveys.each do |survey|
+        sub = survey.survey_submissions.select {|s| s.user_course.is_student? and !s.user_course.is_phantom? }.count
+        @stats[survey] = {started: sub, total: total}
+      end
+    end
   end
 
   def new

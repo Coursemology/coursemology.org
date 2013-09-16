@@ -7,6 +7,10 @@ class SurveySubmission < ActiveRecord::Base
   has_many   :survey_mrq_answers, dependent: :destroy
 
 
+
+  default_scope includes(:user_course)
+
+
   def set_started
     self.status = 'started'
     self.save

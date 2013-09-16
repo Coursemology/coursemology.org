@@ -20,6 +20,7 @@
     <th>Expire At</th>
     <th></th>
     <% if can? :view_detail, Survey %>
+        <th>Stats</th>
         <th></th>
     <% end %>
   </tr>
@@ -59,6 +60,7 @@
           <% end %>
         </td>
         <% if can? :view_detail, Survey %>
+            <td><%= @stats[survey][:started] %> / <%= @stats[survey][:total] %></td>
             <td>
               <%= link_to course_survey_path(@course, survey), class: 'btn' do %>
                   <i class="icon-external-link"></i>
