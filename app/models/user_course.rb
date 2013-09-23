@@ -179,6 +179,13 @@ class UserCourse < ActiveRecord::Base
     end
   end
 
+  def remove_achievement(ach)
+    uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
+    if uach
+      uach.destroy
+    end
+  end
+
   def create_all_std_tags
     # in case there are tags that are not associated with the student, create new std_tag record
     self.course.tags.each do |tag|

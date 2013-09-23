@@ -9,6 +9,9 @@
   <li>
     <a href='<%= course_manual_achievement_path(@course) %>'>Giving Achievements</a>
   </li>
+  <li>
+    <a href="<%= course_remove_achievement_path(@course) %>">Take Away Achievements</a>
+  </li>
 </ul>
 
 <%= form_tag course_manual_exp_path(@course), method: "POST" do %>

@@ -141,6 +141,8 @@ JfdiAcademy::Application.routes.draw do
 
     match "award_achievement" => "manual_rewards#manual_achievement", as: :manual_achievement
 
+    match "remove_achievement" => "manual_rewards#remove_achievement", as: :remove_achievement
+
     get "preferences" => "course_preferences#edit", as: :preferences
 
     post "preferences" => "course_preferences#update", as: :preferences

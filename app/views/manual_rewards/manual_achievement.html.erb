@@ -9,6 +9,9 @@
   <li class="active">
     <a href='<%= course_manual_achievement_path(@course) %>'>Giving Achievements</a>
   </li>
+  <li>
+    <a href="<%= course_remove_achievement_path(@course) %>">Take Away Achievements</a>
+  </li>
 </ul>
 
 <h3>Give Achievements</h3>
@@ -58,7 +61,8 @@
       </td>
       <td class="ach-icon box-middle">
         <label for="std-<%= std_course.id %>">
-          <img class="ach-icon" src="<%= std_course.user.get_profile_photo_url %>" />
+          <img class="user-profile-pic" src="<%= std_course.user.get_profile_photo_url %>" />
+
         </label>
       </td>
       <td class="box-right">
