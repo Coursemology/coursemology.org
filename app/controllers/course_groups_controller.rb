@@ -4,11 +4,28 @@ class CourseGroupsController < ApplicationController
   before_filter :access_control
 
   def manage_group
-    puts "manage students"
     @students_courses = @course.user_courses.student.order('lower(name)')
 
     @assigned_students = @course.tutorial_groups.map {|m| m.std_course}
     @my_std_courses = curr_user_course.std_courses.order('lower(name)')
+
+    sort_key = ''
+
+    if sort_column == 'Name'
+      sort_key = 'lower(name) '
+    end
+
+    if sort_column == 'Level'
+      sort_key = 'level_id '
+    end
+
+    if sort_column == 'Exp'
+      sort_key = 'exp '
+    end
+
+    if  sort_column
+      @my_std_courses = curr_user_course.std_courses.order(sort_key + sort_direction)
+    end
   end
 
   def add_student
