@@ -10,20 +10,25 @@
         <h1><%= @course.title %></h1>
       </td>
       <td>
-        <%= link_to new_course_enroll_request_path(@course), class: "btn btn-primary" do %>
-          Request to<br/>Enroll
+        <% if @course.is_open? %>
+            <%= link_to new_course_enroll_request_path(@course), class: "btn btn-primary" do %>
+                Request to<br/>Enroll
+            <% end %>
         <% end %>
       </td>
       <% if can? :ask_for_share, Course %>
-        <td>
-          <%= link_to new_course_enroll_request_path(@course, role: Role.shared.first.name),
-            class:"btn btn-info" do %>
-              Request to<br/>Observe</a>
-          <% end %>
-        </td>
+          <td>
+            <%= link_to new_course_enroll_request_path(@course, role: Role.shared.first.name),
+                        class:"btn btn-info" do %>
+                Request to<br/>Observe</a>
+            <% end %>
+          </td>
       <% end %>
     </tr>
   </table>
+  <% unless @course.is_open? %>
+      <span style="color: #ff0000; font-size: 1.2em; font-style: bold">This course has been closed for enrollment.</span>
+  <% end %>
   <hr/>
   <h2>About</h2>
   <br/>
@@ -34,15 +39,15 @@
   <h2>Lecturers</h2>
   <br/>
   <ul>
-  <% @course.lect_courses.each do |lecturer_course| %>
-    <li>
-      <% user = lecturer_course.user %>
-      <a class="user-thumb-profile" href="#">
-        <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
-        <strong><%= user.name %></strong>
-      </a>
-      <div class="clearfix"></div>
-    </li>
-  <% end %>
+    <% @course.lect_courses.each do |lecturer_course| %>
+        <li>
+          <% user = lecturer_course.user %>
+          <a class="user-thumb-profile" href="#">
+            <img class="user-profile-pic" src="<%= user.profile_photo_url %>" />
+            <strong><%= user.name %></strong>
+          </a>
+          <div class="clearfix"></div>
+        </li>
+    <% end %>
   </ul>
 </div>
