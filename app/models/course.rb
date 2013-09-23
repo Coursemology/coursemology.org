@@ -1,7 +1,7 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
 
-  attr_accessible :creator_id, :description, :logo_url, :title
+  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open
   before_create :populate_preference
 
   belongs_to :creator, class_name: "User"
@@ -263,5 +263,9 @@ class Course < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def self.online_course
+    Course.where(is_publish: true)
   end
 end

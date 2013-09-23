@@ -1,6 +1,6 @@
 class StaticPagesController < ApplicationController
   def welcome
-    @courses = Course.limit(10)
+    #@courses = Course.online_course.limit(10)
   end
 
   def about
