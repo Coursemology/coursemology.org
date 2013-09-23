@@ -11,17 +11,16 @@ class Announcement < ActiveRecord::Base
 
   #before_destroy :delete_jobs
 
-  def schedule_mail(ucs, redirect_to)
+  def schedule_mail(ucs, redirect_to, send = false)
     QueuedJob.destroy(self.queued_jobs)
 
     unless course.email_notify_enabled? PreferableItem.new_announcement
       return
     end
 
-    if publish_at > Time.now
+    if publish_at > Time.now || send
       delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, Announcement.to_s, self.id, redirect_to), run_at: self.publish_at)
       self.queued_jobs.create(delayed_job_id: delayed_job.id)
     end
   end
-
 end
