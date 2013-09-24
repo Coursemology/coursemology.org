@@ -6,6 +6,9 @@ class StaticPagesController < ApplicationController
   def about
   end
 
+  def privacy_policy
+  end
+
   def access_denied
     if current_user && session[:request_url] && request.url == access_denied_url && session[:request_url] != request.url
       url = session[:request_url]

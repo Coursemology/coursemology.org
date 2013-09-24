@@ -7,6 +7,7 @@ JfdiAcademy::Application.routes.draw do
   root :to => "static_pages#welcome"
   get "welcome" => "static_pages#welcome"
   get "about" => "static_pages#about"
+  get "privacy_policy" => "static_pages#privacy_policy"
   get "access_denied" => "static_pages#access_denied"
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
