@@ -4,6 +4,14 @@ class CourseAbility
   # checkout:
   # https://github.com/ryanb/cancan/wiki/Changing-Defaults
   # https://github.com/ryanb/cancan/wiki/Accessing-request-data
+
+=begin
+    TODO:
+        The right way for authorization here should be:
+        First authorize staff
+        Then authorize lecturer
+        Then authorize admin(manage all)
+=end
   def initialize(user, user_course)
     user ||= User.new
     user_course ||= UserCourse.new
@@ -67,6 +75,7 @@ class CourseAbility
       cannot :manage, :staff
       cannot :approve, EnrollRequest
       cannot :destroy, Course
+      cannot :manage, :course_admin
     end
 
     if user.is_admin?  || user_course.is_staff?

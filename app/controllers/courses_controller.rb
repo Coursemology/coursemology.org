@@ -2,6 +2,9 @@ class CoursesController < ApplicationController
   load_and_authorize_resource
   before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
 
+  def index
+    @courses = Course.online_course
+  end
 
   def create
     @course = Course.new(params[:course])
@@ -25,7 +28,6 @@ class CoursesController < ApplicationController
   end
 
   def update
-    puts params
     if params[:user_course_id]
       uc = @course.user_courses.where(id:params[:user_course_id]).first
       uc.role_id = params[:role_id]
@@ -36,6 +38,15 @@ class CoursesController < ApplicationController
         ca = CourseThemeAttribute.find(id)
         ca.value = val
         ca.save
+      end
+    end
+    if params[:course]
+      if params[:course][:is_publish] || params[:course][:is_open]
+        is_publish = params[:course][:is_publish].to_i == 1 ? true : false
+        is_open = params[:course][:is_open].to_i == 1 ? true : false
+        if is_publish != @course.is_publish? || is_open != @course.is_open?
+          authorize! :manage, :course_admin
+        end
       end
     end
     respond_to do |format|

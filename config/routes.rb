@@ -7,6 +7,7 @@ JfdiAcademy::Application.routes.draw do
   root :to => "static_pages#welcome"
   get "welcome" => "static_pages#welcome"
   get "about" => "static_pages#about"
+  get "privacy_policy" => "static_pages#privacy_policy"
   get "access_denied" => "static_pages#access_denied"
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
@@ -140,6 +141,8 @@ JfdiAcademy::Application.routes.draw do
     match "award_exp" => "manual_rewards#manual_exp", as: :manual_exp
 
     match "award_achievement" => "manual_rewards#manual_achievement", as: :manual_achievement
+
+    match "remove_achievement" => "manual_rewards#remove_achievement", as: :remove_achievement
 
     get "preferences" => "course_preferences#edit", as: :preferences
 

@@ -34,7 +34,7 @@ class AnnouncementsController < ApplicationController
     @announcement.creator = current_user
     respond_to do |format|
       if @announcement.save
-        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course))
+        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course), true)
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been created." }
       else
