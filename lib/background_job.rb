@@ -77,4 +77,5 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
       monitoring.save
     end
   end
+
 end

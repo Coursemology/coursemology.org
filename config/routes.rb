@@ -67,6 +67,7 @@ JfdiAcademy::Application.routes.draw do
       end
     end
     match "missions/:id/stats" => "missions#stats", as: :mission_stats
+    match "missions/:id/dump_code" => "missions#dump_code", as: :mission_dump_code
 
     resources :trainings do
       resources :mcqs
