@@ -2,8 +2,14 @@
   <h1>Mission Grading: <%= @mission.title %></h1>
 </div>
 
+<input type="hidden" value="<%= course_mission_dump_code_path %>" id="dump_url">
+
 <% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
+    <br>
+    <% if @mission.single_question? and @mission.coding_questions.first %>
+        <input type="button" id="dump_sub_mine" class="btn dump_sub" value="Download Submissions">
+    <% end %>
     <table class="table">
       <thead>
       <th>Student</th>
@@ -29,6 +35,10 @@
 <% end %>
 
 <h3>All Students</h3>
+<br>
+<% if @mission.single_question? and @mission.coding_questions.first %>
+    <input type="button" id="dump_sub_all" class="btn dump_sub" value="Download Submissions">
+<% end %>
 <table class="table">
   <thead>
   <th>Student</th>
@@ -59,6 +69,10 @@
 
 <% if @std_courses_phantom.length > 0 %>
     <h3>Phantom Students</h3>
+    <br>
+    <% if @mission.single_question? and @mission.coding_questions.first %>
+        <input type="button" id="dump_sub_phantom" class="btn dump_sub" value="Download Submissions">
+    <% end %>
     <table class="table">
       <thead>
       <th>Student</th>

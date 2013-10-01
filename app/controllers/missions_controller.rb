@@ -4,6 +4,8 @@ class MissionsController < ApplicationController
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
+  require 'zip/zipfilesystem'
+
   def index
     @tab = 'missions'
     @is_new = {}
@@ -214,6 +216,55 @@ class MissionsController < ApplicationController
   def access_denied
     respond_to   do |format|
       format.html # show.html.erb
+    end
+  end
+
+  def dump_code
+
+    case params[:_type]
+      when 'mine'
+        std_courses =  curr_user_course.std_courses
+      when 'phantom'
+        std_courses = @course.user_courses.student.where(is_phantom: true)
+      else
+        std_courses = @course.user_courses.student.where(is_phantom: false)
+    end
+
+    sbms = @mission.submissions.
+        where("std_course_id IN (?)", std_courses.select("user_courses.id")).includes(:std_coding_answers)
+
+    temp_folder = "#{Rails.root}/paths/tmp/"
+
+    t = Tempfile.new("my-temp-filename-#{Time.now}")
+
+    Zip::ZipOutputStream.open(t.path) do |z|
+      sbms.each do |sbm|
+        ans = sbm.std_coding_answers.first
+        unless ans
+          next
+        end
+        #TODO: hardcoded
+        title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
+        file = File.open(temp_folder + title, 'w+')
+        file.write(ans.code)
+        file.close
+
+        z.put_next_entry(title)
+        z.print IO.read(file.path)
+        File.delete(file.path)
+      end
+    end
+
+    file_upload = FileUpload.create({
+                                        creator: current_user,
+                                        owner: @course,
+                                        file: t
+                                    })
+    t.close
+    if file_upload.save
+      respond_to do |format|
+        format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file.url} }
+      end
     end
   end
 end
