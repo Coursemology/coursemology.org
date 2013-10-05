@@ -6,6 +6,6 @@ test:
   app_id: 'abcxyz'
   secret_key: 'abcxyz'
 
-producttion:
+production:
   app_id: 'abcxyz'
   secret_key: 'abcxyz'
