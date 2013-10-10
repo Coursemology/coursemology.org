@@ -1,0 +1,2 @@
+<i class="timestamp"><%= announcement.publish_at.to_formatted_s(:long) %> by <%= announcement.creator.name %></i>
+<p class="announcement-content"><%= announcement.description.html_safe %></p>
