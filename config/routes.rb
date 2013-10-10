@@ -49,7 +49,8 @@ JfdiAcademy::Application.routes.draw do
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
-      resources  :exp_transactions
+      resources :exp_transactions
+      resources :user_achievements
     end
 
     resources :missions do
