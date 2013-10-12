@@ -9,6 +9,7 @@ JfdiAcademy::Application.routes.draw do
   get "about" => "static_pages#about"
   get "privacy_policy" => "static_pages#privacy_policy"
   get "access_denied" => "static_pages#access_denied"
+  get "contact_us" => "static_pages#contact_us"
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
                                        :registrations => "registrations" }
@@ -49,7 +50,8 @@ JfdiAcademy::Application.routes.draw do
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
-      resources  :exp_transactions
+      resources :exp_transactions
+      resources :user_achievements
     end
 
     resources :missions do

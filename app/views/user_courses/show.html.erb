@@ -12,10 +12,21 @@
             <h3><%= @user_course.name %></h3>
         <% end %>
         <p><%= @user_course.user.email %></p>
-        <% if @user_course.level && (@user_course == curr_user_course || curr_user_course.is_staff?)%>
-            <strong><%= @user_course.level.get_title %></strong>
-            <%= link_to  course_user_course_exp_transactions_path(@course, @user_course) do%>
-                (View Exp History)
+        <% if @user_course == curr_user_course || curr_user_course.is_staff?%>
+            <% if @user_course.level %>
+                <strong><%= @user_course.level.get_title %></strong>
+                <%= link_to  course_user_course_exp_transactions_path(@course, @user_course) do%>
+                    (View Exp History)
+                <% end %>
+            <% end %>
+            <% if can?(:manage, UserAchievement) and !@user_course.user_achievements.empty? %>
+                <div>
+                  <strong>Achievements:
+                    <%= link_to course_user_course_user_achievements_path(@course, @user_course) do %>
+                        <%= @user_course.user_achievements.count %> (Click to view details)
+                    <% end %>
+                  </strong>
+                </div>
             <% end %>
         <% end %>
       </td>

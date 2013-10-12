@@ -21,7 +21,7 @@ class RoleRequestsController < ApplicationController
       @lecturer_role.id
     )
     if current_user && !current_user.is_lecturer? && !@request
-      User.admins.each { |u| UserMailer.delay.new_lecturer_request(u) }
+      User.admins.each { |u| UserMailer.delay.new_lecturer_request(u, current_user) }
       @request = RoleRequest.new
       @request.user = current_user
       @request.role = @lecturer_role
