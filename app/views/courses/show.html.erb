@@ -38,8 +38,7 @@
               <% end %>
               <%= announcement.title %>
             </h4>
-            <i class="timestamp"><%= announcement.publish_at.to_formatted_s(:long) %></i>
-            <p class="announcement-content"><%= announcement.description.html_safe %></p>
+            <%= render partial: "announcements/announcement", locals: { announcement:announcement } %>
           </div>
       <% end %>
     </div>

@@ -37,8 +37,9 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "You are enrolled in to the course #{course.title}!")
   end
 
-  def new_lecturer_request(user)
+  def new_lecturer_request(user, request_user)
     @user = user
+    @request_user = request_user
     mail(to: user.email, subject: "New lecturer request!")
   end
 
