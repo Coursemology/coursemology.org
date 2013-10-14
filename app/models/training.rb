@@ -44,5 +44,9 @@ class Training < ActiveRecord::Base
     exp + bonus_exp.to_i
   end
 
+  def coding_questions_before(pos)
+    coding_questions.where("pos < ?", pos)
+  end
+
   alias_method :sbms, :training_submissions
 end

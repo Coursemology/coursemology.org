@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923064303) do
+ActiveRecord::Schema.define(:version => 20131014100625) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.datetime "updated_at",        :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
+    t.integer  "include_sol_qn_id"
   end
 
   create_table "comment_subscriptions", :force => true do |t|
