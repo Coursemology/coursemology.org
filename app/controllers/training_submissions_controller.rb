@@ -160,6 +160,15 @@ class TrainingSubmissionsController < ApplicationController
     if @step <= @max_step
       @current_question = @training.questions[@step - 1]
     end
+
+    if @current_question.class == CodingQuestion
+      @prefilled_code = @current_question.data_hash["prefill"]
+      if @current_question.include_sol_qn
+        std_answer = @current_question.include_sol_qn.std_coding_answers.where("is_correct is TRUE AND std_course_id = ?", curr_user_course.id).last
+        @prefilled_code = "#Answer from your previous question \n" + std_answer.code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
+
+      end
+    end
     respond_to do |format|
       format.html { render template: "training_submissions/do.html.erb" }
     end

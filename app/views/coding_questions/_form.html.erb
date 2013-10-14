@@ -13,6 +13,24 @@
           <%= f.text_field :step_name, :class => 'text_field' %>
         </div>
       </div>
+
+      <div class="control-group">
+        <label>Include student code from question:</label>
+        <div class="controls">
+          <select id="select-question" name="coding_question[include_sol_qn_id]">
+            <option >None</option>
+            <% if @coding_question.new_record? %>
+            <% qns = @asm.coding_questions - [@coding_question] %>
+            <% else %>
+            <% qns = @asm.coding_questions_before(@coding_question.asm_qns.first.pos) - [@coding_question] %>
+            <% end %>
+
+            <%= qns.each do |cq| %>
+                <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.step_name %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
       <div class="control-group">
         <%= f.label :description, :class => 'control-label' %>
         <div class="controls">
