@@ -81,8 +81,7 @@
         </td>
 
         <td>
-          <%= material.filesize %>
-          <%= get_file_size_suffix(material.filesize) %>
+          <%= human_file_size(material.filesize) %>
         </td>
 
         <% if can? :manage, Material %>
