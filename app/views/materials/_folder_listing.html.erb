@@ -1,0 +1,10 @@
+<%- model_class = MaterialFolder -%>
+<div class="page-header">
+  <h1>Materials: <%= @folder.name %> <% if @folder.description %><small><%= @folder.description %></small><% end %></h1>
+  <% if can? :manage, Material %>
+      <%= link_to t('.new', :default => t("helpers.links.new")),
+                  new_course_material_path(@course, @folder),
+                  :class => 'btn btn-primary' %>
+
+  <% end %>
+</div>
