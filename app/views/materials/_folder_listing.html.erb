@@ -6,7 +6,7 @@
 <div>
 <h2 class="materials-description-title">Folder Description</h2>
   <p><%= @folder.description %></p>
-  <hr>
+  <hr />
 </div>
 <% end %>
 <div>
@@ -19,3 +19,46 @@
                   :class => 'btn btn-primary' %>
   <% end %>
 </div>
+
+<table class="table assignments materials-list-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="width: 15%">Date uploaded</th>
+      <% if can? :manage, Material %>
+      <th style="width: 10%">&nbsp;</th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody class="table-hover">
+    <% @folder.subfolders.each do |subfolder| %>
+      <tr>
+        <td>
+          <%= link_to course_material_subfolder_path(@course, subfolder) do %>
+            <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
+          <% end %>
+        </td>
+
+        <td>
+          <%= subfolder.updated_at %>
+        </td>
+
+        <% if can? :manage, Material %>
+          <td>
+            <%= link_to course_material_subfolder_path(@course, subfolder), class: 'btn' do %>
+              <i class="icon-edit"></i>
+            <% end %>
+            <%= link_to course_material_subfolder_path(@course, subfolder),
+              method: :delete,
+              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              class: 'btn btn-danger' do %>
+                <i class="icon-trash"></i>
+            <% end %>
+          </td>
+        <% end %>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
