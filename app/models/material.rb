@@ -6,4 +6,8 @@ class Material < ActiveRecord::Base
   def filename
     self.file.original_name || self.file.file_file_name
   end
+
+  def filesize
+    self.file.file_file_size
+  end
 end

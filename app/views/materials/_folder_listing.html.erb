@@ -25,6 +25,7 @@
     <tr>
       <th>Name</th>
       <th style="width: 20%">Date uploaded</th>
+      <th style="width: 7%">Size</th>
       <% if can? :manage, Material %>
       <th style="width: 10%">&nbsp;</th>
       <% end %>
@@ -42,6 +43,10 @@
 
         <td>
           <%= subfolder.updated_at %>
+        </td>
+
+        <td>
+          &nbsp;
         </td>
 
         <% if can? :manage, Material %>
@@ -71,6 +76,10 @@
 
         <td>
           <%= material.updated_at %>
+        </td>
+
+        <td>
+          <%= material.filesize %>
         </td>
 
         <% if can? :manage, Material %>
