@@ -1,4 +1,5 @@
 class MaterialsController < ApplicationController
+  include MaterialsHelper
   load_and_authorize_resource :course
   #load_and_authorize_resource :material, through: :course, except: [:index]
 
