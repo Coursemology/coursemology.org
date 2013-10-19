@@ -8,7 +8,7 @@ class MaterialFolder < ActiveRecord::Base
 
   def materials
     result = []
-    #self.subfolders.each { |f| result += f.materials }
+    self.subfolders.each { |f| result += f.materials }
     self.files.each { |f| result += [f] }
     
     result
