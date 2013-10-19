@@ -1,5 +1,8 @@
 class MaterialsController < ApplicationController
   load_and_authorize_resource :course
+  #load_and_authorize_resource :material, through: :course, except: [:index]
+
+  before_filter :load_general_course_data, only: [:show, :index, :edit, :new]
 
   def show
     @folder = if params["id"] then
