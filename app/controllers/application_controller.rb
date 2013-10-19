@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
 
-      all_materials = @course.materials
+      all_materials = @course.material_folders.reduce [] { |left, f| left + f.materials }
       unseen_materials = all_materials - curr_user_course.seen_materials
       counts[:materials] = unseen_materials.count
 

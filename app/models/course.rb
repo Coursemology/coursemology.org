@@ -6,11 +6,11 @@ class Course < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions,       dependent: :destroy
-  has_many :announcements,  dependent: :destroy
-  has_many :user_courses,   dependent: :destroy
-  has_many :trainings,      dependent: :destroy
-  has_many :materials,      dependent: :destroy
+  has_many :missions,          dependent: :destroy
+  has_many :announcements,     dependent: :destroy
+  has_many :user_courses ,     dependent: :destroy
+  has_many :trainings,         dependent: :destroy
+  has_many :material_folders,  dependent: :destroy
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings

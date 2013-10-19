@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131019100355) do
+ActiveRecord::Schema.define(:version => 20131019110754) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -350,15 +350,19 @@ ActiveRecord::Schema.define(:version => 20131019100355) do
   end
 
   create_table "material_folders", :force => true do |t|
-    t.integer "parent_folder_id"
-    t.integer "course_id"
-    t.string  "name"
-    t.text    "description"
+    t.integer  "parent_folder_id"
+    t.integer  "course_id"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "materials", :force => true do |t|
-    t.integer "folder_id"
-    t.text    "description"
+    t.integer  "folder_id"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "mcq_answers", :force => true do |t|
