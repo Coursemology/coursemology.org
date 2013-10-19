@@ -90,7 +90,10 @@ JfdiAcademy::Application.routes.draw do
     get "materials/new/subfolder/:parent", to: "materials#new_subfolder", as: :new_material_folder
     get "materials/new/:parent", to: "materials#new", as: :new_material
     get "materials/subfolder/:id", to: "materials#index", as: :material_folder
-    resources :materials, except: [:new]
+    post "materials/subfolder/:id", to: "materials#create", as: :material_create
+    resources :materials, except: [:new, :create] do
+      #resources :file_uploads
+    end
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
