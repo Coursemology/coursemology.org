@@ -13,4 +13,18 @@ class MaterialFolder < ActiveRecord::Base
     
     result
   end
+
+  def attach_files(files)
+    files.each do |id|
+      # Create a material record
+      material = Material.create(folder: self)
+
+      # Associate the file upload with the record
+      file = FileUpload.find_by_id(id)
+      if file
+        material.attach(file)
+      end
+      material.save
+    end
+  end
 end

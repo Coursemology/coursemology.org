@@ -90,7 +90,7 @@ JfdiAcademy::Application.routes.draw do
     get "materials/new/subfolder/:parent", to: "materials#new_subfolder", as: :new_material_folder
     get "materials/new/:parent", to: "materials#new", as: :new_material
     get "materials/subfolder/:id", to: "materials#index", as: :material_folder
-    post "materials/subfolder/:id", to: "materials#create", as: :material_create
+    put "materials/subfolder/:parent", to: "materials#create", as: :material_create
     resources :materials, except: [:new, :create] do
       #resources :file_uploads
     end
