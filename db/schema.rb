@@ -370,9 +370,9 @@ ActiveRecord::Schema.define(:version => 20131014100625) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
