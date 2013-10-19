@@ -87,6 +87,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
+    resources :materials
+
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
     match "missions/:id/access_denied" => "missions#access_denied", as: :mission_access_denied
