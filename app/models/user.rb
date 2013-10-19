@@ -140,6 +140,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def to_s
+    self.name
+  end
+
   private
   def set_default_role
     if !self.system_role

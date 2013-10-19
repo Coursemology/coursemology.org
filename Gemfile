@@ -62,6 +62,7 @@ gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
+gem 'forem', :github => "radar/forem"
 
 
 # To use ActiveModel has_secure_password
