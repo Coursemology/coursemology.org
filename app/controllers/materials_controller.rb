@@ -1,11 +1,7 @@
 class MaterialsController < ApplicationController
   load_and_authorize_resource :course
 
-  def index
-    show nil
-  end
-  
-  def show id
+  def show(id=nil)
     @folder = if id then
                 MaterialFolder.find_by_id(id)
               else

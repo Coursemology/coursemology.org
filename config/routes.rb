@@ -87,10 +87,8 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
-    resources :materials do
-      get "new/:in" => "materials#new", as: :materials_new
-      get ":id" => "materials#index", as: :materials_list
-    end
+    resources :materials, only: [:show, :edit, :update, :destroy]
+    get "materials", to: "materials#show"
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
