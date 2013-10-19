@@ -88,6 +88,7 @@ JfdiAcademy::Application.routes.draw do
     resources :announcements
 
     get "materials", to: "materials#show"
+    get "materials/new/subfolder/:parent", to: "materials#new_subfolder", as: :new_material_subfolder
     get "materials/new/:parent", to: "materials#new", as: :new_material
     resources :materials, except: [:index, :new]
 

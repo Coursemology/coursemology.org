@@ -15,4 +15,8 @@ class MaterialsController < ApplicationController
   def new
     
   end
+
+  def new_subfolder
+    
+  end
 end
