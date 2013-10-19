@@ -88,7 +88,7 @@ JfdiAcademy::Application.routes.draw do
     resources :announcements
 
     get "materials", to: "materials#show"
-    get "materials/new/:parent", to: "materials#new"
+    get "materials/new/:parent", to: "materials#new", as: :new_material
     resources :materials, except: [:index, :new]
 
     post "levels/populate" => "levels#populate", as: :levels_populate
