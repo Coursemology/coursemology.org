@@ -1,7 +1,4 @@
-<%= link_to t('.new', :default => t("Upload files")), 
-  course_new_material_path(@course, @folder),
-  :class => 'btn btn-primary' %>
-<%= link_to t('.new', :default => t("Create folder")),
-  course_new_material_folder_path(@course, @folder),
-  :class => 'btn btn-primary' %>
+<%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
+<%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-primary' %>
 
+<%= render partial:"subfolder_form" %>
