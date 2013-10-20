@@ -36,7 +36,7 @@ class MaterialsController < ApplicationController
       notice = "The files were successfully uploaded."
     elsif params[:type] == "subfolder" && params[:material_folder][:name] then
       @parent.new_subfolder(params[:material_folder][:name])
-      notice = "The subfolder was successfully created."
+      notice = "The subfolder #{params[:material_folder][:name]} was successfully created."
     end
 
     respond_to do |format|
