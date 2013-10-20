@@ -96,7 +96,21 @@ class MaterialsController < ApplicationController
   end
 
   def update
+    material = Material.find_by_id(params[:id])
+    if not material then
+      redirect_to :action => "index"
+      return
+    end
 
+    material.update_attributes(params[:material])
+    respond_to do |format|
+      if material.save
+        format.html { redirect_to course_material_folders_url(@course, material.folder),
+                                  notice: "The file #{material.filename} was successfully updated." }
+      else
+        format.html { render action: "edit", params: {id: material.id} }
+      end
+    end
   end
 
   def update_folder
