@@ -96,7 +96,21 @@ class MaterialsController < ApplicationController
   end
 
   def update_folder
+    folder = MaterialFolder.find_by_id(params[:id])
+    if not folder then
+      redirect_to :action => "index"
+      return
+    end
 
+    folder.update_attributes(params[:material_folder])
+    respond_to do |format|
+      if folder.save
+        format.html { redirect_to course_material_folders_url(@course, folder.parent_folder),
+                                  notice: "The subfolder #{folder.name} was successfully updated." }
+      else
+        format.html { render action: "edit_folder", params: {id: folder.id} }
+      end
+    end
   end
   
   def destroy

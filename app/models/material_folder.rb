@@ -7,7 +7,7 @@ class MaterialFolder < ActiveRecord::Base
   has_many :subfolders, dependent: :destroy, class_name: "MaterialFolder", foreign_key: "parent_folder_id"
   has_many :files, dependent: :destroy, class_name: "Material", foreign_key: "folder_id"
 
-  attr_accessible :parent_folder, :course, :course_id, :name
+  attr_accessible :parent_folder, :course, :course_id, :name, :description
 
   def materials
     result = []
