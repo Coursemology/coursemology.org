@@ -103,6 +103,12 @@ class MaterialsController < ApplicationController
     end
 
     material.update_attributes(params[:material])
+
+    # check if we have a new file version
+    if params[:new_file_id] != '' then
+      material.attach(FileUpload.find_by_id(params[:new_file_id]))
+    end
+
     respond_to do |format|
       if material.save
         format.html { redirect_to course_material_folders_url(@course, material.folder),

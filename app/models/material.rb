@@ -22,8 +22,15 @@ class Material < ActiveRecord::Base
     self.file.file_file_size
   end
 
+  # Attaches the given file to this material; if an existing file is linked, the
+  # link is broken.
   def attach(file)
+    existing_file = self.file
+
     file.owner = self
-    file.save
+    if file.save then
+      existing_file.owner = nil
+      existing_file.save
+    end
   end
 end

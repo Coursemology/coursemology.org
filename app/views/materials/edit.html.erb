@@ -22,17 +22,17 @@
   <label>Upload new version</label>
   <div class="controls">
     <div class="upload-target-done" style="display:none">Uploaded!</div>
-    <input type="hidden" name="upload_url"
+    <input type="hidden" name="new_file_id"
            class="upload-target-input"
            value="" />
     <a href="#file-uploader-modal"
        class="file-uploader-trigger"
-       data-target=".theme-zip-target"
+       data-target=".upload-target"
        data-toggle="modal">Upload Zip File</a>
   </div>
 </div>
 <div class="form-actions">
-  <%= f.submit nil, :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
+  <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
               course_material_folders_url(@course, @material.folder), :class => 'btn' %>
 </div>
@@ -40,3 +40,7 @@
 
 <%= render partial: "layouts/file_uploader",
            locals: { upload_to: course_file_uploads_path(@course) } %>
+<script id="template-upload" type="text/x-tmpl">
+</script>
+<script id="template-download" type="text/x-tmpl">
+</script>
