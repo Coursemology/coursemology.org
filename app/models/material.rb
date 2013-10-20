@@ -27,7 +27,7 @@ class Material < ActiveRecord::Base
   def attach(file)
     existing_file = self.file
 
-    file.owner_id = self
+    file.owner_id = self.id
     file.owner_type = self.class
     if file.save and existing_file then
       existing_file.owner_type = nil
