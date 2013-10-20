@@ -84,7 +84,11 @@ class MaterialsController < ApplicationController
   end
 
   def edit_folder
-    
+    @folder = MaterialFolder.find_by_id(params[:id])
+    if not @folder then
+      redirect_to :action => "index"
+      return
+    end
   end
 
   def destroy

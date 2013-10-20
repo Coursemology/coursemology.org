@@ -1,12 +1,20 @@
-<div id="create-subfolder-modal" class="modal hide fade">
-  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => :post do |f| %>
+<div id="create-subfolder-modal" class="<%= "modal hide fade" if modal %>">
+  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
+  <% if modal  %>
   <div class="modal-header">
     Create Subfolder
   </div>
+  <% end %>
   <div class="modal-body control-group">
     <%= f.label :name, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :name, :class => 'text_field span3' %>
+    </div>
+  </div>
+  <div class="modal-body control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :description, :class => 'text_field span3' %>
     </div>
   </div>
   <div class="modal-footer">
