@@ -1,1 +1,25 @@
+<%- model_class = MaterialFolder -%>
+<div class="page-header">
+  <h1>Materials: <%= @folder.name %></h1>
+</div>
+<% if @folder.description %>
+<div>
+<h2 class="materials-description-title">Folder Description</h2>
+  <p><%= @folder.description %></p>
+  <hr />
+</div>
+<% end %>
+<div>
+  <% if can? :manage, Material %>
+      <%= link_to t('.new', :default => t("Upload files")),
+                  course_new_material_path(@course, @folder),
+                  :class => 'btn btn-primary' %>
+      <%= link_to t('.new', :default => t("Create folder")),
+                  course_new_material_folder_path(@course, @folder),
+                  :class => 'btn btn-primary' %>
+  <% end %>
+</div>
+<div>
+  <p></p>
+</div>
 <%= render :partial => 'folder_listing' %>
