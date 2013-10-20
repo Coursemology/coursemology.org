@@ -1,5 +1,5 @@
 <div id="create-subfolder-modal" class="modal hide fade">
-  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => :course_new_material_folder, :method => :post do |f| %>
+  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => :course_material_create, :method => :post do |f| %>
   <div class="modal-header">
     Create Subfolder
   </div>
@@ -11,6 +11,7 @@
   </div>
   <div class="modal-footer">
     <%= hidden_field_tag :type, :subfolder %>
+    <%= hidden_field_tag :parent, @folder.id %>
     <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
   </div>

@@ -6,6 +6,7 @@ class MaterialsController < ApplicationController
   before_filter :load_general_course_data, only: [:index, :edit, :new]
 
   def index
+    @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
               else
@@ -57,13 +58,5 @@ class MaterialsController < ApplicationController
       end
     end
   end
-  
-  def new_subfolder
-    @parent = MaterialFolder.find_by_id(params[:parent])
-    if not @parent then
-      redirect_to :action => "index"
-    end
-
-    @folder = MaterialFolder.new()
-  end
+    
 end
