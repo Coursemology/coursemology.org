@@ -50,6 +50,9 @@
           <%= link_to course_material_path(@course, material) do %>
             <%= render partial: "layouts/material_title", locals: {material: material} %>
           <% end %>
+          <% if material.description %>
+            <p><%= material.description %></p>
+          <% end %>
         </td>
 
         <td>
