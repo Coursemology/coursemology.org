@@ -16,7 +16,14 @@ class MaterialsController < ApplicationController
   end
 
   def show
+    material = Material.find_by_id(params[:id])
+    if not material then
+      redirect_to :action => "index"
+    end
 
+    if curr_user_course then
+      curr_user_course.mark_as_seen(material)
+    end
   end
 
   def new
