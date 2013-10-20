@@ -3,6 +3,7 @@ class Course < ActiveRecord::Base
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open
   before_create :populate_preference
+  after_create :create_materials_root
 
   belongs_to :creator, class_name: "User"
 
@@ -249,6 +250,10 @@ class Course < ActiveRecord::Base
         pref.save
       end
     end
+  end
+
+  def create_materials_root
+    MaterialFolder.create(:course => self, :name => "Root")
   end
 
   def enrol_user(user, role)
