@@ -21,6 +21,9 @@ class MaterialsController < ApplicationController
 
   def new
     @folder = MaterialFolder.find_by_id(params[:parent])
+    if not @folder then
+      redirect_to :action => "index"
+    end
   end
 
   def create
@@ -48,6 +51,9 @@ class MaterialsController < ApplicationController
   
   def new_subfolder
     @parent = MaterialFolder.find_by_id(params[:parent])
+    if not @parent then
+      redirect_to :action => "index"
+    end
 
     @folder = MaterialFolder.new()
   end
