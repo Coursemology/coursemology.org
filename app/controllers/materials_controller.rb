@@ -111,6 +111,9 @@ class MaterialsController < ApplicationController
     
     respond_to do |format|
       if material.save
+        # mark all the seen entries as unseen.
+        SeenByUser.delete_all(obj_id: material, obj_type: material.class)
+
         format.html { redirect_to course_material_folders_url(@course, material.folder),
                                   notice: "The file #{material.filename} was successfully updated." }
       else
