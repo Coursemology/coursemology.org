@@ -30,7 +30,9 @@ $(document).ready(function(){
                 value: $('#page_name').val()
             }],
         done: function(e, data) {
-            $(target_el + '-input').attr('value', data.result.url);
+            $(target_el + '-input').attr('value',
+                typeof data.result.id === undefined ?
+                    data.result.url : data.result.id);
             $(target_el + '-done').css('display', 'block');
             $('.file-uploader-insert-btn').click();
         }
