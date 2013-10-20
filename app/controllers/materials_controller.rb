@@ -24,6 +24,8 @@ class MaterialsController < ApplicationController
     if curr_user_course then
       curr_user_course.mark_as_seen(material)
     end
+
+    redirect_to material.file.file.url
   end
 
   def new
