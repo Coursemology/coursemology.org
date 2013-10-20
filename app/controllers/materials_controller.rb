@@ -25,7 +25,7 @@ class MaterialsController < ApplicationController
     @is_subfolder_new = {}
     @folder.subfolders.each {|subfolder|
       subfolder.materials.each {|material|
-        if @curr_user_course.seen_materials.exists?(material.id) then
+        if not @curr_user_course.seen_materials.exists?(material.id) then
           @is_subfolder_new[subfolder.id] = true
           break
         end
