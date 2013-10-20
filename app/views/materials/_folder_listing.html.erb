@@ -11,7 +11,7 @@
 <% end %>
 <div>
   <% if can? :manage, Material %>
-      <%= link_to t('.new', :default => t("Upload file")),
+      <%= link_to t('.new', :default => t("Upload files")),
                   course_new_material_path(@course, @folder),
                   :class => 'btn btn-primary' %>
       <%= link_to t('.new', :default => t("Create folder")),
