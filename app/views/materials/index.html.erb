@@ -1,6 +1,18 @@
 <%- model_class = MaterialFolder -%>
 <div class="page-header">
   <h1>Materials: <%= @folder.name %></h1>
+  <%
+  current = @folder
+  parents = []
+  while current do
+    parents << current
+    current = current.parent_folder
+  end
+
+  parents.reverse_each { |folder|
+  %>
+  / <%= link_to folder.name, course_material_folders_path(@course, folder) %>
+  <% } %>
 </div>
 <% if @folder.description %>
 <div>
