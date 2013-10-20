@@ -23,6 +23,15 @@ class MaterialsController < ApplicationController
 
     # Then any subfolders with new materials (so users can drill down to see what's new)
     @is_subfolder_new = {}
+    @folder.subfolders.each {|subfolder|
+      subfolder.materials.each {|material|
+        if @curr_user_course.seen_materials.exists?(material.id) then
+          @is_subfolder_new[subfolder.id] = true
+          break
+        end
+        material.id
+      }
+    }
   end
 
   def show
