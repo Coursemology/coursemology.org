@@ -78,4 +78,36 @@ class MaterialsController < ApplicationController
       end
     end
   end
+
+  def destroy
+    file = Material.find_by_id(params[:id])
+    if not file then
+      redirect_to :action => "index"
+      return
+    end
+
+    folder = file.folder
+    filename = file.filename
+    file.destroy
+    respond_to do |format|
+      format.html { redirect_to course_material_folders_url(@course, folder),
+                                notice: "The file #{filename} was successfully deleted." }
+    end
+  end
+
+  def destroy_folder
+    folder = MaterialFolder.find_by_id(params[:id])
+    if not folder then
+      redirect_to :action => "index"
+      return
+    end
+
+    parent = folder.parent_folder
+    foldername = folder.name
+    folder.destroy
+    respond_to do |format|
+      format.html { redirect_to course_material_folders_url(@course, parent),
+                                notice: "The folder #{foldername} was successfully deleted." }
+    end
+  end
 end
