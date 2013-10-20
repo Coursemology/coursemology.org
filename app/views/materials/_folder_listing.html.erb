@@ -29,7 +29,7 @@
 
         <% if can? :manage, Material %>
           <td>
-            <%= link_to course_material_folders_path(@course, subfolder), class: 'btn' do %>
+            <%= link_to course_edit_material_folders_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
             <%= link_to course_material_folders_path(@course, subfolder),

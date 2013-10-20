@@ -79,6 +79,14 @@ class MaterialsController < ApplicationController
     end
   end
 
+  def edit
+
+  end
+
+  def edit_folder
+    
+  end
+
   def destroy
     file = Material.find_by_id(params[:id])
     if not file then
