@@ -32,8 +32,8 @@ class MaterialsController < ApplicationController
 
     respond_to do |format|
       if @parent.save
-        format.html { redirect_to course_material_folder_url(@course, @parent),
-                                  notice: "The files were successfully uploaded." }
+        format.html { redirect_to course_material_folders_url(@course, @parent),
+                                  notice: notice }
       else
         format.html { render action: "new", params: {parent: @parent} }
       end
@@ -41,6 +41,6 @@ class MaterialsController < ApplicationController
   end
   
   def new_subfolder
-    
+    @parent = MaterialFolder.find_by_id(params[:parent])
   end
 end
