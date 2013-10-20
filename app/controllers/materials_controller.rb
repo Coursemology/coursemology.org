@@ -38,6 +38,7 @@ class MaterialsController < ApplicationController
     material = Material.find_by_id(params[:id])
     if not material then
       redirect_to :action => "index"
+      return
     end
 
     if curr_user_course then
@@ -51,6 +52,7 @@ class MaterialsController < ApplicationController
     @folder = MaterialFolder.find_by_id(params[:parent])
     if not @folder then
       redirect_to :action => "index"
+      return
     end
   end
 
