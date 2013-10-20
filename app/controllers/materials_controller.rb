@@ -58,5 +58,4 @@ class MaterialsController < ApplicationController
       end
     end
   end
-    
 end
