@@ -28,6 +28,7 @@ class Material < ActiveRecord::Base
     existing_file = self.file
 
     file.owner = self
+    file.original_name = existing_file.original_name if existing_file
     if file.save and existing_file then
       existing_file.owner_type = nil
       existing_file.owner_id = nil
