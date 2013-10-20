@@ -65,7 +65,7 @@ class MaterialsController < ApplicationController
       @parent.attach_files(params[:files].values)
       notice = "The files were successfully uploaded."
     elsif params[:type] == "subfolder" && params[:material_folder][:name] then
-      @parent.new_subfolder(params[:material_folder][:name])
+      @parent.new_subfolder(params[:material_folder][:name], params[:material_folder][:description])
       notice = "The subfolder #{params[:material_folder][:name]} was successfully created."
     end
 
@@ -91,6 +91,14 @@ class MaterialsController < ApplicationController
     end
   end
 
+  def update
+
+  end
+
+  def update_folder
+
+  end
+  
   def destroy
     file = Material.find_by_id(params[:id])
     if not file then

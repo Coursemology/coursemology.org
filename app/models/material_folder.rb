@@ -31,8 +31,8 @@ class MaterialFolder < ActiveRecord::Base
     end
   end
 
-  def new_subfolder(name)
-    subfolder = MaterialFolder.create(:parent_folder => self, :course_id => course_id, :name => name)
+  def new_subfolder(name, description = nil)
+    subfolder = MaterialFolder.create(:parent_folder => self, :course_id => course_id, :name => name, :description => description)
     subfolder.save
   end
 end
