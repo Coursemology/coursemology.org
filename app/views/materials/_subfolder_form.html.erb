@@ -1,0 +1,14 @@
+<%= form_for [@course, @folder], :html => { :class => 'form-horizontal' }, :url => :course_material_create, :method => :post do |f| %>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field span7' %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= hidden_field_tag :type, :subfolder  %>
+    <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                course_material_folders_url(@course, @parent), :class => 'btn' %>
+  </div>
+<% end %>

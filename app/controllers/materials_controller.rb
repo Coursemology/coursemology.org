@@ -26,8 +26,14 @@ class MaterialsController < ApplicationController
   def create
     #TODO Make sure that we get a valid folder ID to upload to
     @parent = MaterialFolder.find_by_id(params[:parent])
-    if params[:files]
+    
+    notice = nil
+    if params[:type] == "files" && params[:files] then
       @parent.attach_files(params[:files].values)
+      notice = "The files were successfully uploaded."
+    elsif params[:type] == "subfolder" && params[:material_folder][:name] then
+      @parent.new_subfolder(params[:material_folder][:name])
+      notice = "The subfolder was successfully created."
     end
 
     respond_to do |format|
@@ -42,5 +48,7 @@ class MaterialsController < ApplicationController
   
   def new_subfolder
     @parent = MaterialFolder.find_by_id(params[:parent])
+
+    @folder = MaterialFolder.new()
   end
 end
