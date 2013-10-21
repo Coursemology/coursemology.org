@@ -1,10 +1,16 @@
 ---
 rails.png: rails-a3386665c05a2d82f711a4aaa72d247c.png
 rails/index.png: rails-a3386665c05a2d82f711a4aaa72d247c.png
-application.js: application-4889f0a2bcb8219f11170bedcf761b6b.js
-application/index.js: application-4889f0a2bcb8219f11170bedcf761b6b.js
-application.css: application-1dd86d40973a45edcdaf2c351a70faf1.css
-application/index.css: application-1dd86d40973a45edcdaf2c351a70faf1.css
+application.js: application-e24883492ac4a8f6d252d261be192973.js
+application/index.js: application-e24883492ac4a8f6d252d261be192973.js
+application.css: application-ca2471da8a74bce3df0f34d197c9726f.css
+application/index.css: application-ca2471da8a74bce3df0f34d197c9726f.css
+select2/select2-spinner.gif: select2/select2-spinner-efec87a6e4d665ab02c27f9049095490.gif
+select2/select2-spinner/index.gif: select2/select2-spinner-efec87a6e4d665ab02c27f9049095490.gif
+select2/select2.png: select2/select2-dd52d2a9fb1c9fa4a36a773d90c1a549.png
+select2/select2/index.png: select2/select2-dd52d2a9fb1c9fa4a36a773d90c1a549.png
+select2/select2x2.png: select2/select2x2-3433af868bf93f068bda1dbe96a5c9de.png
+select2/select2x2/index.png: select2/select2x2-3433af868bf93f068bda1dbe96a5c9de.png
 alpha.png: alpha-932f5a0406e65532a0a6fd4f7228bddb.png
 alpha/index.png: alpha-932f5a0406e65532a0a6fd4f7228bddb.png
 hue.png: hue-5442c4a1b533c80e045ba26a142c1e48.png
@@ -15,8 +21,8 @@ loading.gif: loading-b7ff30d20adcf2b850f420d17048930c.gif
 loading/index.gif: loading-b7ff30d20adcf2b850f420d17048930c.gif
 progressbar.gif: progressbar-bc538af0ba6ff3d792217a96651cd58a.gif
 progressbar/index.gif: progressbar-bc538af0ba6ff3d792217a96651cd58a.gif
-bootstrap-wysihtml5.js: bootstrap-wysihtml5-d8e3837ccf9ce7a0883e9330d7fbc286.js
-bootstrap-wysihtml5/index.js: bootstrap-wysihtml5-d8e3837ccf9ce7a0883e9330d7fbc286.js
+bootstrap-wysihtml5.js: bootstrap-wysihtml5-97ca93941829fd141902c464f4b226a0.js
+bootstrap-wysihtml5/index.js: bootstrap-wysihtml5-97ca93941829fd141902c464f4b226a0.js
 bootstrap-wysihtml5.css: bootstrap-wysihtml5-757ecf6fbb670d36519a49c514ec3ea5.css
 bootstrap-wysihtml5/index.css: bootstrap-wysihtml5-757ecf6fbb670d36519a49c514ec3ea5.css
 bootstrap-wysihtml5/wysiwyg-color.css: bootstrap-wysihtml5/wysiwyg-color-302f69eedfbd67c993f8ce2bc64c971c.css
