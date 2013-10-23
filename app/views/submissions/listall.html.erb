@@ -23,11 +23,19 @@
             <option value="0">Any</option>
             <% @all_asm.each do |asm| %>
                 <option value="<%= asm.id %>"
-                        <%= "selected" if @selected_asm && asm == @selected_asm %>>
+                        <%= "selected" if @selected[:asm] && asm == @selected[:asm] %>>
                   <%= asm.get_title %>
                 </option>
             <% end %>
           </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Tutors</label>
+        <div class="controls">
+          <% tas = @staff_courses.map {|tac| [tac.name, tac.id] }.unshift(["Any", 0]) %>
+          <% tutor_id = @selected[:tutor] ? @selected[:tutor].id : 0 %>
+          <%= select "tutor","", tas, {:selected => "#{tutor_id}" } %>
         </div>
       </div>
       <div class="control-group">
@@ -37,7 +45,7 @@
             <option value="0">Any</option>
             <% @student_courses.each do |sc| %>
                 <option name="student" value="<%= sc.id %>"
-                        <%= "selected" if @selected_sc && sc.id = @selected_sc.id %>>
+                        <%= "selected" if @selected[:student] && sc.id == @selected[:student].id %>>
                   <%= sc.name %>
                 </option>
             <% end %>
