@@ -77,6 +77,11 @@
   <tbody>
   <% @sbms.each do |sub| %>
       <tr>
+        <% if can? :see_all, Submission %>
+            <td>
+              <%= render partial: 'layouts/user_name_link', locals: {user_course: sub.std_course} %>
+            </td>
+        <% end %>
         <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
         <td><%= time_ago_in_words(sub.submit_at || sub.created_at) %> ago</td>
         <!--TODO: refactoring-->
