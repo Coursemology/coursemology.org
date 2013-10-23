@@ -39,13 +39,13 @@ class TrainingSubmissionsController < ApplicationController
       @sbms = @sbms.where('std_course_id = ?', @selected_sc)
     end
 
-    @unseen = []
-    if curr_user_course.id
-      @unseen = @sbms - curr_user_course.get_seen_sbms
-      @unseen.each do |sbm|
-        curr_user_course.mark_as_seen(sbm)
-      end
-    end
+    #@unseen = []
+    #if curr_user_course.id
+    #  @unseen = @sbms - curr_user_course.get_seen_sbms
+    #  @unseen.each do |sbm|
+    #    curr_user_course.mark_as_seen(sbm)
+    #  end
+    #end
 
     @sbms_paging = @course.training_sbm_paging_pref
     if @sbms_paging.display?
