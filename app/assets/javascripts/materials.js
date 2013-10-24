@@ -43,8 +43,8 @@ $(document).ready(function() {
   var currentFolderNode = treeElement.tree('getNodeById', currentId);
   treeElement.tree('selectNode', currentFolderNode);
   
-  // Set up click bindings on the tree.
-  treeElement.bind('tree.click', function(event) {
+  // Set up bindings on the tree.
+  treeElement.bind('tree.select', function(event) {
     var selectedNode = treeElement.tree('getSelectedNode');
     var selectedFolderId = selectedNode.id;
     
