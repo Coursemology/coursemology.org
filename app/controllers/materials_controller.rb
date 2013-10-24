@@ -2,7 +2,7 @@ class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
   #load_and_authorize_resource :material, through: :course, except: [:index]
-
+  
   before_filter :load_general_course_data, only: [:index, :edit, :new]
 
   def index
@@ -32,6 +32,20 @@ class MaterialsController < ApplicationController
         material.id
       }
     }
+   
+      # Get the directory structure.
+      root_folder = @folder
+      while root_folder.parent_folder do
+        root_folder = MaterialFolder.find_by_id(root_folder.parent_folder)
+      end
+        folder_queue = [root_folder]
+        folder_queue.each { |folder|
+          folder.subfolders.each { |subfolder|
+            folder_queue.push(subfolder)
+          }
+        }
+        gon.folders = folder_queue
+        gon.currentFolder = @folder
   end
 
   def show
