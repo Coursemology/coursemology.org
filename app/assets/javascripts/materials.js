@@ -36,7 +36,7 @@ $(document).ready(function() {
   var treeElement = $('#file-tree');
   treeElement.tree({
     data: treeData,
-    autoOpen: 0
+    autoOpen: true
   });
   
   // Select the folder we're currently in.
