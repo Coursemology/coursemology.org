@@ -2,8 +2,8 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th style="width: 25%">Date uploaded</th>
       <th style="width: 12%">Size</th>
+      <th style="width: 25%">Date uploaded</th>
       <% if can? :manage, Material %>
       <th style="width: 13%">&nbsp;</th>
       <% end %>
@@ -20,11 +20,11 @@
         </td>
 
         <td>
-          <%= datetime_format(subfolder.updated_at) %>
-        </td>
-
-        <td>
           <%= t('materials.subfolder_items', :count => subfolder.files.count + subfolder.subfolders.count) %>
+        </td>
+        
+        <td>
+          <%= datetime_format(subfolder.updated_at) %>
         </td>
 
         <% if can? :manage, Material %>
@@ -54,13 +54,13 @@
             <p><%= material.description %></p>
           <% end %>
         </td>
-
+        
         <td>
-          <%= datetime_format(material.updated_at) %>
+          <%= get_pretty_file_size(material.filesize) %>
         </td>
 
         <td>
-          <%= get_pretty_file_size(material.filesize) %>
+          <%= datetime_format(material.updated_at) %>
         </td>
 
         <% if can? :manage, Material %>
