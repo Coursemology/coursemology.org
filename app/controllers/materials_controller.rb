@@ -1,11 +1,14 @@
 class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
-  #load_and_authorize_resource :material, through: :course, except: [:index]
+  # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
+  load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :edit, :new]
 
   def index
+    authorize! :index, Material
     @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
