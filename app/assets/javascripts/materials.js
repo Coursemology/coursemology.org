@@ -2,8 +2,11 @@
 
 $(document).ready(function() {
   var rubyFolders = gon.folders;
+  if (!rubyFolders) {
+      return;
+  }
+
   var folders = {};
-  
   var currentId = gon.currentFolder.id;
   
   // Convert all the folders to tree nodes.
