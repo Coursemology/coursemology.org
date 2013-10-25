@@ -6,7 +6,7 @@ $(document).ready(function() {
   
   var currentId = gon.currentFolder.id;
   
-  // Convert all the folders to objects.
+  // Convert all the folders to tree nodes.
   rubyFolders.forEach(function(folder) {
     var nameAndCount = folder.name + " (" + folder.count + ")";
     folders[folder.id] = {
