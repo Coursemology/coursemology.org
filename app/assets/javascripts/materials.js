@@ -8,9 +8,11 @@ $(document).ready(function() {
   
   // Convert all the folders to objects.
   rubyFolders.forEach(function(folder) {
+    var nameAndCount = folder.name + " (" + folder.count + ")";
     folders[folder.id] = {
       id: folder.id,
-      label: folder.name,
+      label: nameAndCount,
+      url: folder.url,
       parentId: folder.parent_folder_id,
       children: []
     };
@@ -46,7 +48,8 @@ $(document).ready(function() {
   // Set up bindings on the tree.
   treeElement.bind('tree.select', function(event) {
     var selectedNode = treeElement.tree('getSelectedNode');
-    var selectedFolderId = selectedNode.id;
+    var selectedFolderUrl = selectedNode.url;
     
+    window.location.href = selectedFolderUrl;
   });
 });
