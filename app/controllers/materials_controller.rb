@@ -51,7 +51,7 @@ class MaterialsController < ApplicationController
       folder_metadata = {}
       folder_metadata['id'] = folder.id
       folder_metadata['name'] = folder.name
-      folder_metadata['url'] = course_material_folders_path(@course, folder)
+      folder_metadata['url'] = course_material_folder_path(@course, folder)
       folder_metadata['parent_folder_id'] = folder.parent_folder_id
       folder_metadata['count'] = folder.materials.length
       
@@ -100,7 +100,7 @@ class MaterialsController < ApplicationController
 
     respond_to do |format|
       if @parent.save
-        format.html { redirect_to course_material_folders_url(@course, @parent),
+        format.html { redirect_to course_material_folder_path(@course, @parent),
                                   notice: notice }
       else
         format.html { render action: "new", params: {parent: @parent} }
@@ -143,7 +143,7 @@ class MaterialsController < ApplicationController
         # mark all the seen entries as unseen.
         SeenByUser.delete_all(obj_id: material, obj_type: material.class)
 
-        format.html { redirect_to course_material_folders_url(@course, material.folder),
+        format.html { redirect_to course_material_folder_path(@course, material.folder),
                                   notice: "The file #{material.filename} was successfully updated." }
       else
         format.html { render action: "edit", params: {id: material.id} }
@@ -161,7 +161,7 @@ class MaterialsController < ApplicationController
     folder.update_attributes(params[:material_folder])
     respond_to do |format|
       if folder.save
-        format.html { redirect_to course_material_folders_url(@course, folder.parent_folder),
+        format.html { redirect_to course_material_folder_path(@course, folder.parent_folder),
                                   notice: "The subfolder #{folder.name} was successfully updated." }
       else
         format.html { render action: "edit_folder", params: {id: folder.id} }
@@ -180,7 +180,7 @@ class MaterialsController < ApplicationController
     filename = file.filename
     file.destroy
     respond_to do |format|
-      format.html { redirect_to course_material_folders_url(@course, folder),
+      format.html { redirect_to course_material_folder_path(@course, folder),
                                 notice: "The file #{filename} was successfully deleted." }
     end
   end
@@ -196,7 +196,7 @@ class MaterialsController < ApplicationController
     foldername = folder.name
     folder.destroy
     respond_to do |format|
-      format.html { redirect_to course_material_folders_url(@course, parent),
+      format.html { redirect_to course_material_folder_path(@course, parent),
                                 notice: "The folder #{foldername} was successfully deleted." }
     end
   end

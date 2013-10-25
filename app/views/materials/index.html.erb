@@ -12,7 +12,7 @@
   end
 
   parents.reverse_each { |folder|
-  %>/<%= link_to folder.name, course_material_folders_path(@course, folder) %><% } %>
+  %>/<%= link_to folder.name, course_material_folder_path(@course, folder) %><% } %>
 </div>
 <% if @folder.description %>
 <div>

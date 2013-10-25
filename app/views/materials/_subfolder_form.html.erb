@@ -24,7 +24,7 @@
     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
     <% else %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_material_folders_url(@course, @folder.parent_folder), :class => 'btn' %>
+                course_material_folder_path(@course, @folder.parent_folder), :class => 'btn' %>
     <% end %>
   </div>
 <% end %>

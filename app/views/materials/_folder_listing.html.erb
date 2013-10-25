@@ -14,7 +14,7 @@
     <% @folder.subfolders.each do |subfolder| %>
       <tr>
         <td>
-          <%= link_to course_material_folders_path(@course, subfolder) do %>
+          <%= link_to course_material_folder_path(@course, subfolder) do %>
             <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
           <% end %>
         </td>
@@ -29,10 +29,10 @@
 
         <% if can? :manage, Material %>
           <td>
-            <%= link_to course_edit_material_folders_path(@course, subfolder), class: 'btn' do %>
+            <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
-            <%= link_to course_material_folders_path(@course, subfolder),
+            <%= link_to course_material_folder_path(@course, subfolder),
               method: :delete,
               data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               class: 'btn btn-danger' do %>

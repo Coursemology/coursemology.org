@@ -88,8 +88,8 @@ JfdiAcademy::Application.routes.draw do
     resources :announcements
 
     get "materials/new/:parent", to: "materials#new", as: :new_material
-    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folders
-    get "materials/subfolder/:id", to: "materials#index", as: :material_folders
+    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
+    get "materials/subfolder/:id", to: "materials#index", as: :material_folder
     put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
     post "materials/subfolder/:parent", to: "materials#create", as: :material_create
     delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
