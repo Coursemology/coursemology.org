@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923064303) do
+ActiveRecord::Schema.define(:version => 20131019100355) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -349,6 +349,18 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.string   "confirm_token"
   end
 
+  create_table "material_folders", :force => true do |t|
+    t.integer "parent_folder_id"
+    t.integer "course_id"
+    t.string  "name"
+    t.text    "description"
+  end
+
+  create_table "materials", :force => true do |t|
+    t.integer "folder_id"
+    t.text    "description"
+  end
+
   create_table "mcq_answers", :force => true do |t|
     t.integer  "mcq_id"
     t.text     "text"
@@ -369,9 +381,9 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
