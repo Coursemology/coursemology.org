@@ -135,7 +135,7 @@ class ApplicationController < ActionController::Base
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
                     }, {
-                        text:   "Materials",
+                        text:   "Workbin",
                         url:    course_materials_url(@course),
                         img:    @theme_settings["Materials Icon"],
                         icon:   "icon-download",
@@ -342,6 +342,9 @@ class ApplicationController < ActionController::Base
       when 'surveys'
         url = course_surveys_path(@course)
         icon = 'icon-edit'
+      when 'materials'
+        url = course_materials_path(@course)
+        icon = 'icon-download'
     end
     [url, icon]
   end
