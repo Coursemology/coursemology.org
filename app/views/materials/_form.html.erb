@@ -5,6 +5,8 @@
   <div id="uploaded_files_div"></div>
   <div class="form-actions">
     <%= f.submit "Done", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+    <%= hidden_field_tag :type, :files  %>
+    <%= hidden_field_tag :parent, @folder.id %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 course_material_folders_url(@course, @folder), :class => 'btn' %>
   </div>
