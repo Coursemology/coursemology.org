@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20131019110754) do
     t.datetime "updated_at",        :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
+    t.integer  "include_sol_qn_id"
   end
 
   create_table "comment_subscriptions", :force => true do |t|
