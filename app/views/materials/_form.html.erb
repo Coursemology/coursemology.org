@@ -1,7 +1,7 @@
 <%= render partial: "layouts/file_uploader_complicated",
            locals: { owner: nil } %>
 
-<%= form_for [@course, @folder], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @folder], :html => { :class => 'form-horizontal' }, :method => :post do |f| %>
   <div id="uploaded_files_div"></div>
   <div class="form-actions">
     <%= f.submit "Done", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
