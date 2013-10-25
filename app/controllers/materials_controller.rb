@@ -23,8 +23,8 @@ class MaterialsController < ApplicationController
 
     # Then any subfolders with new materials (so users can drill down to see what's new)
     @is_subfolder_new = {}
-    @folder.subfolders.each {|subfolder|
-      subfolder.materials.each {|material|
+    @folder.subfolders.each { |subfolder|
+      subfolder.materials.each { |material|
         if not @curr_user_course.seen_materials.exists?(material.id) then
           @is_subfolder_new[subfolder.id] = true
           break
@@ -32,20 +32,32 @@ class MaterialsController < ApplicationController
         material.id
       }
     }
-   
-      # Get the directory structure.
-      root_folder = @folder
-      while root_folder.parent_folder do
-        root_folder = MaterialFolder.find_by_id(root_folder.parent_folder)
-      end
-        folder_queue = [root_folder]
-        folder_queue.each { |folder|
-          folder.subfolders.each { |subfolder|
-            folder_queue.push(subfolder)
-          }
-        }
-        gon.folders = folder_queue
-        gon.currentFolder = @folder
+    
+    # Get the directory structure.
+    root_folder = @folder
+    while root_folder.parent_folder do
+      root_folder = MaterialFolder.find_by_id(root_folder.parent_folder)
+    end
+    
+    processed_folders = []
+    folders_to_process = [root_folder]
+      
+    folder_queue.each { |folder|
+      folder.subfolders.each { |subfolder|
+        folder_queue.push(subfolder)
+      }
+       
+      folder_metadata = {}
+      folder_metadata['id'] = folder.id
+      folder_metadata['name'] = folder.name
+      folder_metadata['url'] = course_material_folders_path(@course, folder)
+      folder_metadata['parent_folder_id'] = folder.parent_folder_id
+      folder_metadata['count'] = folder.subfolders.length + folder.materials.length
+      processed_folders.push(folder_metadata)
+    }
+      
+    gon.folders = processed_folders
+    gon.currentFolder = @folder
   end
 
   def show
