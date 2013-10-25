@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :sort_direction, :sort_column
+  before_filter :init_gon
 
   rescue_from CanCan::AccessDenied do |exception|
 
@@ -20,6 +21,10 @@ class ApplicationController < ActionController::Base
       )
     end
     @curr_user_course ||= UserCourse.new
+  end
+
+  def init_gon
+    gon.push :gon => true
   end
 
   def load_theme_setting
