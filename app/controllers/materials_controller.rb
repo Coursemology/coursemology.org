@@ -42,9 +42,9 @@ class MaterialsController < ApplicationController
     processed_folders = []
     folders_to_process = [root_folder]
       
-    folder_queue.each { |folder|
+    folders_to_process.each { |folder|
       folder.subfolders.each { |subfolder|
-        folder_queue.push(subfolder)
+        folders_to_process.push(subfolder)
       }
        
       folder_metadata = {}
