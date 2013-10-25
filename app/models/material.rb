@@ -7,7 +7,9 @@ class Material < ActiveRecord::Base
   after_save :save_file
 
   def save_file
-    self.file.save
+    if self.file then
+      self.file.save
+    end
   end
 
   def filename
