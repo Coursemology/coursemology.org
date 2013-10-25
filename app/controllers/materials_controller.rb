@@ -41,7 +41,8 @@ class MaterialsController < ApplicationController
     
     processed_folders = []
     folders_to_process = [root_folder]
-      
+    
+    # Create hashes to represent each folder's metadata.
     folders_to_process.each { |folder|
       folder.subfolders.each { |subfolder|
         folders_to_process.push(subfolder)
@@ -56,7 +57,8 @@ class MaterialsController < ApplicationController
       
       processed_folders.push(folder_metadata)
     }
-      
+    
+    # Pass the hashes to the front-end JS.
     gon.folders = processed_folders
     gon.currentFolder = @folder
   end
