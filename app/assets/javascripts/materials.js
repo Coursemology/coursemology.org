@@ -19,7 +19,6 @@ $(document).ready(function() {
   });
   
   
-  var treeData = [];
   var rootFolder;
   
   // Generate the tree we need for jqTree.
@@ -32,7 +31,7 @@ $(document).ready(function() {
       folders[parentId].children.push(folder);
     }
   }
-  treeData.push(rootFolder);
+  var treeData = [rootFolder];
   
   // Set up the tree.
   var treeElement = $('#file-tree');
