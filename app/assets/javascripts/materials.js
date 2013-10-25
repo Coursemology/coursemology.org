@@ -49,9 +49,10 @@ $(document).ready(function() {
   
   // Set up bindings on the tree.
   treeElement.bind('tree.select', function(event) {
-    var selectedNode = treeElement.tree('getSelectedNode');
-    var selectedFolderUrl = selectedNode.url;
-    
-    window.location.href = selectedFolderUrl;
+    var selectedNode = event.node;
+    if (selectedNode) {
+      var selectedFolderUrl = selectedNode.url;
+      window.location.href = selectedFolderUrl;
+    }
   });
 });
