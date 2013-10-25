@@ -40,7 +40,8 @@ $(document).ready(function() {
   var treeElement = $('#file-tree');
   treeElement.tree({
     data: treeData,
-    autoOpen: true
+    autoOpen: true,
+    keyboardSupport: false
   });
   
   // Select the folder we're currently in.
