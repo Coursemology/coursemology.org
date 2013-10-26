@@ -3,7 +3,7 @@
     <h1>
       <small>
         <% if entry.is_virtual %>
-          Assignment
+          <%= entry.entry_real_type %>
         <% else %>
           <%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
         <% end %>

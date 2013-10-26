@@ -65,8 +65,9 @@ class Mission < ActiveRecord::Base
   # Converts this mission into a format that can be used by the lesson plan component
   def as_lesson_plan_entry
     entry = LessonPlanEntry.create_virtual
-    entry.title = "Mission: #{self.title}"
+    entry.title = self.title
     entry.description = self.description
+    entry.entry_real_type = "Mission"
     entry.start_at = self.open_at
     entry.end_at = self.close_at
     entry.url = course_mission_path(self.course, self)

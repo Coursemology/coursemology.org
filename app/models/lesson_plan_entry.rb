@@ -11,7 +11,7 @@ class LessonPlanEntry < ActiveRecord::Base
   def self.create_virtual
     (Class.new do
       def initialize
-        @title = @description = @start_at = @end_at = nil
+        @title = @description = @real_type = @start_at = @end_at = nil
       end
 
       def title
@@ -22,6 +22,12 @@ class LessonPlanEntry < ActiveRecord::Base
       end
       def entry_type
         3
+      end
+      def entry_real_type
+        @real_type
+      end
+      def entry_real_type=(type)
+        @real_type = type
       end
       def description
         @description

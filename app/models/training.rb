@@ -47,8 +47,9 @@ class Training < ActiveRecord::Base
   # Converts this training into a format that can be used by the lesson plan component
   def as_lesson_plan_entry
     entry = LessonPlanEntry.create_virtual
-    entry.title = "Training: #{self.title}"
+    entry.title = self.title
     entry.description = self.description
+    entry.entry_real_type = "Training"
     entry.start_at = self.open_at
     entry.end_at = nil
     entry.url = course_training_path(self.course, self)
