@@ -11,7 +11,8 @@
       <i class="icon-trash"></i>
   <% end %>
 <% end %>
-<%= milestone.description  %>
+
+<div><%= milestone.description.html_safe %></div>
 <table>
   <% milestone.entries.each {|entry| %>
   <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
