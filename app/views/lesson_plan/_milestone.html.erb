@@ -13,7 +13,8 @@
   <% end %>
   <table class="table">
     <tbody>
-    <% milestone.entries.each {|entry| %>
+    <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
+    <% entries.each {|entry| %>
     <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
     <% } %>
     </tbody>
