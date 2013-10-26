@@ -168,9 +168,9 @@ JfdiAcademy::Application.routes.draw do
     match "surveys/:id/stats" => "surveys#stats", as: :survey_stats
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
 
-    resources :lesson_plan do
-      resources :lesson_plan_milestones
-    end
+    get "lesson_plan" => 'lesson_plan#index', as: :lesson_plan
+    resources :lesson_plan_entries, path: 'lesson_plan/entries'
+    resources :lesson_plan_milestones, path: 'lesson_plan/milestones'
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
