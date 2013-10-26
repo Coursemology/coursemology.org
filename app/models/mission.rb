@@ -62,7 +62,7 @@ class Mission < ActiveRecord::Base
     return true, ""
   end
 
-  # Gets all missions which are within the given date range, as lesson plan entries.
+  # Converts this mission into a format that can be used by the lesson plan component
   def as_lesson_plan_entry
     entry = LessonPlanEntry.create_virtual
     entry.title = "Mission: #{self.title}"

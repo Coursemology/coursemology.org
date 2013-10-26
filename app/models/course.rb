@@ -278,6 +278,14 @@ class Course < ActiveRecord::Base
       :from => from, :to => to
     )
 
-    missions.map { |m| m.as_lesson_plan_entry }
+    entries = missions.map { |m| m.as_lesson_plan_entry }
+
+    trainings = self.trainings.where("TRUE " +
+      (if from then "AND open_at >= :from " else "" end) +
+      (if to then "AND open_at <= :to" else "" end),
+      :from => from, :to => to
+    )
+
+    entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 end
