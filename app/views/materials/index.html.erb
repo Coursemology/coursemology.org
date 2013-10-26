@@ -1,37 +1,23 @@
 <%- model_class = MaterialFolder -%>
 <div class="page-header">
   <h1>Materials: <%= @folder.name %></h1>
-  <%
-  current = @folder
-  parents = []
-  while current do
-    parents << current
-    current = current.parent_folder
-  end
-
-  parents.reverse_each { |folder|
-  %>/<%= link_to folder.name, course_material_folder_path(@course, folder) %><% } %>
 </div>
 <% if @folder.description %>
 <div>
 <h2 class="materials-description-title">Folder Description</h2>
   <p><%= @folder.description %></p>
-  <hr />
+  <% if can? :manage, Material %>
+    <%= render :partial => 'folder_controls' %>
+  <% end %>
+  <hr>
 </div>
 <% end %>
+
 <div class="container">
   <div class="span2">
     <%= render :partial => 'folder_tree' %>
   </div>
   <div class="span7">
-  <div>
-    <% if can? :manage, Material %>
-    <%= render :partial => 'folder_controls' %>
-    <% end %>
-  </div>
-  <div>
-    <p></p>
-  </div>
   <%= render :partial => 'folder_listing' %>
   </div>
 </div>
