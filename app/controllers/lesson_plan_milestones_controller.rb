@@ -40,6 +40,14 @@ class LessonPlanMilestonesController < ApplicationController
     end
   end
 
+  def destroy
+    @lesson_plan_milestone.destroy
+    respond_to do |format|
+      format.html { redirect_to course_lesson_plan_path(@course),
+                    notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been removed." }
+    end
+  end
+
 private
   def render(*args)
     options = args.extract_options!
