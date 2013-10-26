@@ -1,6 +1,8 @@
 class LessonPlanEntry < ActiveRecord::Base
   attr_accessible :title, :entry_type, :description, :start_at, :end_at, :location
 
+  validates_with DateValidator, fields: [:start_at, :end_at]
+
   belongs_to :course
   belongs_to :creator, class_name: "User"
   has_many :resources, class_name: "LessonPlanResource"
