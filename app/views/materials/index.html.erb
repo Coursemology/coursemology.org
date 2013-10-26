@@ -21,17 +21,17 @@
 <% end %>
 <div class="container">
   <div class="span2">
+    <div>
+      <% if can? :manage, Material %>
+      <%= render :partial => 'folder_controls' %>
+      <% end %>
+    </div>
+    <div>
+      <p></p>
+    </div>
     <%= render :partial => 'folder_tree' %>
   </div>
   <div class="span7">
-  <div>
-    <% if can? :manage, Material %>
-    <%= render :partial => 'folder_controls' %>
-    <% end %>
-  </div>
-  <div>
-    <p></p>
-  </div>
   <%= render :partial => 'folder_listing' %>
   </div>
 </div>
