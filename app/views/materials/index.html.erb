@@ -6,19 +6,15 @@
 <div>
 <h2 class="materials-description-title">Folder Description</h2>
   <p><%= @folder.description %></p>
-  <hr />
+  <% if can? :manage, Material %>
+    <%= render :partial => 'folder_controls' %>
+  <% end %>
+  <hr>
 </div>
 <% end %>
+
 <div class="container">
   <div class="span2">
-    <div>
-      <% if can? :manage, Material %>
-      <%= render :partial => 'folder_controls' %>
-      <% end %>
-    </div>
-    <div>
-      <p></p>
-    </div>
     <%= render :partial => 'folder_tree' %>
   </div>
   <div class="span7">
