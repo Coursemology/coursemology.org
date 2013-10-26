@@ -544,3 +544,12 @@ if PreferableItem.count == 57
                          description:   "Course surveys",
                          default_display: true
 end
+
+if PreferableItem.count == 58
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "lesson_plan",
+                         default_value: "Lesson Plan",
+                         description:   "Lesson Plan",
+                         default_display: true
+end

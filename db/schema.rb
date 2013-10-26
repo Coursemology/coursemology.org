@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923064303) do
+ActiveRecord::Schema.define(:version => 20131026083724) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.datetime "updated_at",        :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
+    t.integer  "include_sol_qn_id"
   end
 
   create_table "comment_subscriptions", :force => true do |t|
@@ -317,6 +318,31 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.string   "original_name"
   end
 
+  create_table "lesson_plan_entries", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.integer  "type"
+    t.text     "description"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.string   "location"
+  end
+
+  create_table "lesson_plan_milestones", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "end_at"
+  end
+
+  create_table "lesson_plan_resources", :force => true do |t|
+    t.integer "lesson_plan_entry_id"
+    t.integer "obj_id"
+    t.string  "obj_type"
+  end
+
   create_table "levels", :force => true do |t|
     t.integer  "level"
     t.integer  "exp_threshold"
@@ -349,6 +375,22 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.string   "confirm_token"
   end
 
+  create_table "material_folders", :force => true do |t|
+    t.integer  "parent_folder_id"
+    t.integer  "course_id"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "materials", :force => true do |t|
+    t.integer  "folder_id"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "mcq_answers", :force => true do |t|
     t.integer  "mcq_id"
     t.text     "text"
@@ -369,9 +411,9 @@ ActiveRecord::Schema.define(:version => 20130923064303) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
