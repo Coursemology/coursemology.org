@@ -20,7 +20,8 @@
     </h4>
     <p><%= entry.description.html_safe %></p>
   </td>
-<% if can? :manage, LessonPlanEntry %>
+<% if (can? :manage, LessonPlanEntry) %>
+<% if not entry.is_virtual %>
   <td>
     <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
       <i class="icon-edit"></i>
@@ -34,5 +35,12 @@
         <i class="icon-trash"></i>
     <% end %>
   </td>
+<% elsif %>
+  <td colspan="2">
+    <%= link_to entry.url, class: 'btn' do %>
+      <i class="icon-external-link"></i>
+    <% end %>
+  </td>
+<% end %>
 <% end %>
 </tr>

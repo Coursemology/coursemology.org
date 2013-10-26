@@ -43,6 +43,14 @@ class LessonPlanEntry < ActiveRecord::Base
         nil
       end
 
+      # Extra property that real entries do not have, so we can jump to them.
+      def url
+        @url
+      end
+      def url=(url)
+        @url = url
+      end
+      
       def is_virtual
         true
       end
