@@ -11,6 +11,7 @@ class Course < ActiveRecord::Base
   has_many :user_courses,   dependent: :destroy
   has_many :trainings,      dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
+  has_many :lesson_plan_milestones, dependent: :destroy
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings

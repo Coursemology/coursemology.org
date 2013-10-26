@@ -1,1 +1,6 @@
-index.html
+<h1>Lesson plan?</h1>
+<table>
+  <% @milestones.each { |milestone| %>
+    <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+  <% } %>
+</table>
