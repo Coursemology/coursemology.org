@@ -61,6 +61,14 @@ class LessonPlanEntriesController < ApplicationController
     end
   end
 
+  def destroy
+    @lesson_plan_entry.destroy
+    respond_to do |format|
+      format.html { redirect_to course_lesson_plan_path(@course),
+                    notice: "The lesson plan entry #{@lesson_plan_entry.title} has been removed." }
+    end
+  end
+
 private
   def render(*args)
     options = args.extract_options!
