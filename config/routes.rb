@@ -170,7 +170,7 @@ JfdiAcademy::Application.routes.draw do
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
     resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
-    resources :lesson_plan_milestones, path: 'lesson_plan/milestones'
+    resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 

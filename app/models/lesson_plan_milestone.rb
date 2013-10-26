@@ -1,5 +1,5 @@
 class LessonPlanMilestone < ActiveRecord::Base
-  attr_accessible
+  attr_accessible :title, :description, :end_at
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
@@ -14,7 +14,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     previous_milestone = self.previous_milestone
     start_at = if previous_milestone then previous_milestone.end_at else nil end
     LessonPlanEntry.where("end_at <= :end_at " +
-      (if previous_milestone then "end_at > :start_at" else "" end),
+      (if previous_milestone then "AND end_at > :start_at" else "" end),
       :end_at => self.end_at, :start_at => start_at)
   end
 end

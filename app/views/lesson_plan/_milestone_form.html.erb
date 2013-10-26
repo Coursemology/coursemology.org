@@ -1,0 +1,31 @@
+    <p>Milestones are effective from the time the previous milestone ends.</p>
+    
+<%= form_for [@course, @lesson_plan_milestone], :html => { :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field span7' %>
+      </div>
+    </div>
+
+    <% #Change to HTML input box later. %>
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :description, :class => 'text_field span7' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :end_at, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :end_at, :class => 'text_field span7' %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  course_lesson_plan_path(@course), :class => 'btn' %>
+    </div>
+<% end %>
