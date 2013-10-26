@@ -168,8 +168,8 @@ JfdiAcademy::Application.routes.draw do
     match "surveys/:id/stats" => "surveys#stats", as: :survey_stats
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
 
-    get "lesson_plan" => 'lesson_plan#index', as: :lesson_plan
-    resources :lesson_plan_entries, path: 'lesson_plan/entries'
+    get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
+    resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index]
     resources :lesson_plan_milestones, path: 'lesson_plan/milestones'
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
