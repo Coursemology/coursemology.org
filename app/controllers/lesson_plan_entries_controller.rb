@@ -26,7 +26,9 @@ class LessonPlanEntriesController < ApplicationController
         def title
           "Uncategorised Entries"
         end
-
+        def description
+          nil
+        end
         def entries
           @other_entries
         end
