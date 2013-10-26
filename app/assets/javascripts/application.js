@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui.min
 //= require jquery-fileupload
+//= require tree.jquery.js
 //= require_tree .
 //
 //= require bootstrap-dropdown
