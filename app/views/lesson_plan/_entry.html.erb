@@ -11,7 +11,11 @@
     </h1>
   </td>
   <td>
+    <% if entry.is_virtual %>
+    <h3><%= entry.title %></h3>
+    <% else %>
     <h2><%= entry.title %></h2>
+    <% end %>
     <h3><%= entry.location %></h3>
     <h4>
       <% if entry.start_at %>
