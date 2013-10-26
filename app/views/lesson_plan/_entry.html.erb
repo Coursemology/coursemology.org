@@ -18,7 +18,7 @@
         <% end %>
       <% end %>
     </h4>
-    <%= entry.description %>
+    <p><%= entry.description.html_safe %></p>
   </td>
 <% if can? :manage, LessonPlanEntry %>
   <td>
