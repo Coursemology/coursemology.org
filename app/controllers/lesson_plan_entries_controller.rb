@@ -24,7 +24,7 @@ class LessonPlanEntriesController < ApplicationController
         end
 
         def title
-          "Uncategorised Entries"
+          "Other Items"
         end
         def description
           nil
