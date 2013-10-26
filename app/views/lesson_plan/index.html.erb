@@ -1,4 +1,8 @@
-<h1>Lesson plan?</h1>
+<h1>Lesson Plan</h1>
+<% if can? :manage, LessonPlanEntry %>
+<%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
+<%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
+<% end %>
 <table>
   <% @milestones.each { |milestone| %>
     <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
