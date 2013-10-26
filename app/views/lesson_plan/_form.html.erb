@@ -46,6 +46,6 @@
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  course_path(@course), :class => 'btn' %>
+                  course_lesson_plan_path(@course), :class => 'btn' %>
     </div>
 <% end %>
