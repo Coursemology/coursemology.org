@@ -11,6 +11,8 @@ class Course < ActiveRecord::Base
   has_many :announcements,     dependent: :destroy
   has_many :user_courses ,     dependent: :destroy
   has_many :trainings,         dependent: :destroy
+  has_many :lesson_plan_entries, dependent: :destroy
+  has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
   has_many :mcqs,             through: :trainings
@@ -273,5 +275,23 @@ class Course < ActiveRecord::Base
 
   def self.online_course
     Course.where(is_publish: true)
+  end
+
+  def lesson_plan_virtual_entries(from = nil, to = nil)
+    missions = self.missions.where("TRUE " +
+      (if from then "AND open_at >= :from " else "" end) +
+      (if to then "AND close_at <= :to" else "" end),
+      :from => from, :to => to
+    )
+
+    entries = missions.map { |m| m.as_lesson_plan_entry }
+
+    trainings = self.trainings.where("TRUE " +
+      (if from then "AND open_at >= :from " else "" end) +
+      (if to then "AND open_at <= :to" else "" end),
+      :from => from, :to => to
+    )
+
+    entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 end
