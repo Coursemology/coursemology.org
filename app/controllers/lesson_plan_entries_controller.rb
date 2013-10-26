@@ -21,7 +21,7 @@ class LessonPlanEntriesController < ApplicationController
         end
 
         def title
-          "Uncategorised entries"
+          "Uncategorised Entries"
         end
 
         def entries
