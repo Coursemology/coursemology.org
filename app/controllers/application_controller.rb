@@ -124,6 +124,11 @@ class ApplicationController < ActionController::Base
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
+                    }, {
+                        text:   "Lesson Plan",
+                        url:    course_lesson_plan_url(@course),
+                        img:    @theme_settings["Lesson Plan Icon"],
+                        icon:   "icon-time"
                     }]
       @nav_items <<   {
           text:   "Comments",
@@ -326,6 +331,9 @@ class ApplicationController < ActionController::Base
       when 'surveys'
         url = course_surveys_path(@course)
         icon = 'icon-edit'
+      when 'lesson_plan'
+        url = course_lesson_plan_path(@course)
+        icon = 'icon-time'
     end
     [url, icon]
   end
