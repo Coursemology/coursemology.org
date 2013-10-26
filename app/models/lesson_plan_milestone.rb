@@ -13,8 +13,12 @@ class LessonPlanMilestone < ActiveRecord::Base
     # and less than or equal to this milestone's end time.
     previous_milestone = self.previous_milestone
     start_at = if previous_milestone then previous_milestone.end_at else nil end
-    LessonPlanEntry.where("end_at <= :end_at " +
+    real_entries = LessonPlanEntry.where("end_at <= :end_at " +
       (if previous_milestone then "AND end_at > :start_at" else "" end),
       :end_at => self.end_at, :start_at => start_at)
+
+    virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
+    logger.info virtual_entries
+    real_entries + virtual_entries
   end
 end
