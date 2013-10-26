@@ -9,12 +9,15 @@ class LessonPlanEntriesController < ApplicationController
 
     # Add the entries which don't belong in any milestone
     other_entries = if @milestones.length > 0 then
+        from = @milestones[@milestones.length - 1].end_at
         @course.lesson_plan_entries.where("end_at > :end_at",
-          :end_at => @milestones[@milestones.length - 1].end_at)
+          :end_at => from) +
+        @course.lesson_plan_virtual_entries(from)
       else
-        @course.lesson_plan_entries.all
+        @course.lesson_plan_entries.all +
+        @course.lesson_plan_virtual_entries
       end
-    
+
     other_entries_milestone = (Class.new do
         def initialize(other_entries)
           @other_entries = other_entries

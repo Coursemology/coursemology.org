@@ -62,5 +62,15 @@ class Mission < ActiveRecord::Base
     return true, ""
   end
 
+  # Gets all missions which are within the given date range, as lesson plan entries.
+  def as_lesson_plan_entry
+    entry = LessonPlanEntry.create_virtual
+    entry.title = "Mission: #{self.title}"
+    entry.description = self.description
+    entry.start_at = self.open_at
+    entry.end_at = self.close_at
+    entry
+  end
+
   alias_method :sbms, :submissions
 end
