@@ -18,21 +18,7 @@ class LessonPlanEntriesController < ApplicationController
         @course.lesson_plan_virtual_entries
       end
 
-    other_entries_milestone = (Class.new do
-        def initialize(other_entries)
-          @other_entries = other_entries
-        end
-
-        def title
-          "Other Items"
-        end
-        def description
-          nil
-        end
-        def entries
-          @other_entries
-        end
-    end).new(other_entries)
+    other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
     @milestones <<= other_entries_milestone
   end
 
