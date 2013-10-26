@@ -38,11 +38,25 @@ class LessonPlanEntriesController < ApplicationController
     @lesson_plan_entry.creator = current_user
 
     respond_to do |format|
-      if @lesson_plan_entry.save
+      if @lesson_plan_entry.save then
         format.html { redirect_to course_lesson_plan_path(@course),
                       notice: "The lesson plan entry #{@lesson_plan_entry.title} has been created." }
       else
         format.html { render action: "new" }
+      end
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    respond_to do |format|
+      if @lesson_plan_entry.update_attributes(params[:lesson_plan_entry]) && @lesson_plan_entry.save then
+        format.html { redirect_to course_lesson_plan_path(@course),
+                      notice: "The lesson plan entry #{@lesson_plan_entry.title} has been updated." }
+      else
+        format.html { render action: "index" }
       end
     end
   end
