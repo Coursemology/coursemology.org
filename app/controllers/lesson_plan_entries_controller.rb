@@ -8,6 +8,10 @@ class LessonPlanEntriesController < ApplicationController
     
   end
 
+  def new
+    @lesson_plan_entry = LessonPlanEntry.new
+  end
+
 private
   def render(*args)
     options = args.extract_options!
