@@ -6,8 +6,6 @@
 
 <hr>
 
-<table>
-  <% @milestones.each { |milestone| %>
-    <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
-  <% } %>
-</table>
+<% @milestones.each { |milestone| %>
+  <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+<% } %>
