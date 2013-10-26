@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131026083724) do
+ActiveRecord::Schema.define(:version => 20131026104847) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -322,7 +322,7 @@ ActiveRecord::Schema.define(:version => 20131026083724) do
     t.integer  "course_id"
     t.integer  "creator_id"
     t.string   "title"
-    t.integer  "type"
+    t.integer  "entry_type"
     t.text     "description"
     t.datetime "start_at"
     t.datetime "end_at"
