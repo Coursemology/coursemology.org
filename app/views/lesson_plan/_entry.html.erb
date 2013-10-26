@@ -1,11 +1,13 @@
 <tr>
   <td>
-    <h2><%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %></h2>
+    <h1><small><%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %></small></h1>
   </td>
   <td>
     <h2><%= entry.title %></h2>
     <h3><%= entry.location %></h3>
-    <h4><span class="icon-calendar"></span> <%= entry.start_at.strftime("%A, %d %B %Y %I:%M %p") %> to 
+    <h4>
+      <span class="icon-calendar"></span>
+      <%= entry.start_at.strftime("%A, %d %B %Y %I:%M %p") %> to 
       <% if entry.start_at.yday == entry.end_at.yday and entry.start_at.year == entry.end_at.year %>
       <%= entry.end_at.strftime("%I:%M %p") %>
       <% else %>
