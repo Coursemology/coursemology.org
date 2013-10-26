@@ -1,4 +1,10 @@
-<thead><tr><td><%= milestone.title %></td></tr></thead>
+<thead>
+  <tr>
+    <td>
+      <h2><%= milestone.title %></h2>
+    </td>
+  </tr>
+</thead>
 <tbody>
   <% milestone.entries.each {|entry| %>
   <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
