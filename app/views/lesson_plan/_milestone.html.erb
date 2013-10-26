@@ -1,5 +1,10 @@
 <div>
   <h2><%= milestone.title %></h2>
+  <% if milestone.description %>
+    <p>
+      <%= milestone.description.html_safe %>
+    </p>
+  <% end %>
   <% if can? :manage, LessonPlanEntry %>
       <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
         <i class="icon-edit"></i>
