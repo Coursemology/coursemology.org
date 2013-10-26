@@ -22,12 +22,10 @@
   </td>
 <% if (can? :manage, LessonPlanEntry) %>
 <% if not entry.is_virtual %>
-  <td>
+  <td width="10%">
     <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
       <i class="icon-edit"></i>
     <% end %>
-  </td>
-  <td>
     <%= link_to course_lesson_plan_entry_path(@course, entry),
                 method: :delete,
                 data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
