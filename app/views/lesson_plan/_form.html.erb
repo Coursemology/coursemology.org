@@ -1,5 +1,12 @@
 <%= form_for [@course, @lesson_plan_entry], :html => { :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
+      <%= f.label "Type", :class => 'control-label' %>
+      <div class="controls">
+        <%= f.select :entry_type, LessonPlanEntry::ENTRY_TYPES, :class => 'span7' %>
+      </div>
+    </div>
+
+    <div class="control-group">
       <%= f.label :title, :class => 'control-label' %>
       <div class="controls">
         <%= f.text_field :title, :class => 'text_field span7', :placeholder => "What's this session about?" %>
@@ -7,9 +14,9 @@
     </div>
 
     <div class="control-group">
-      <%= f.label "Type", :class => 'control-label' %>
+      <%= f.label :location, :class => 'control-label' %>
       <div class="controls">
-        <%= f.select :entry_type, LessonPlanEntry::ENTRY_TYPES, :class => 'span7' %>
+        <%= f.text_field :location, :class => 'text_field span7', :placeholder => "Where's this session held?" %>
       </div>
     </div>
 
