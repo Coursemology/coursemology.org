@@ -1,6 +1,14 @@
 <tr>
   <td>
-    <h1><small><%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %></small></h1>
+    <h1>
+      <small>
+        <% if entry.is_virtual %>
+          Assignment
+        <% else %>
+          <%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
+        <% end %>
+      </small>
+    </h1>
   </td>
   <td>
     <h2><%= entry.title %></h2>
