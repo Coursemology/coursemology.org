@@ -24,7 +24,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
     <button data-dismiss="modal" class="btn">\
       Cancel\
     </button>\
-  </div>\";
+  </div>\';
 
   $(div).html(htmlContent);
   
