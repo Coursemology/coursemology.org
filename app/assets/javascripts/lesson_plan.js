@@ -9,7 +9,7 @@ $(document).ready(function() {
 
   LessonPlanEntryFormType.prototype.pick = function() {
     if (this.$modal) {
-        $this.$modal.remove();
+        this.$modal.remove();
     }
     
     this.$modal = $('<div class="modal hide fade" />');
