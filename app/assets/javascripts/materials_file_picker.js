@@ -13,8 +13,8 @@ function MaterialsFilePicker(callback) {
 
 MaterialsFilePicker.prototype.onSelectionCompleted = function() {
   var selectedItems = [];
-  for (var id in selectedMaterials) {
-    var currentTuple = selectedMaterials[id];
+  for (var id in this.selectedMaterials) {
+    var currentTuple = this.selectedMaterials[id];
     selectedItems.push(currentTuple);
   }
   
@@ -25,7 +25,7 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   var shouldIncludeFiles = true;
   var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
   
-  treeElement.tree({
+  this.treeElement.tree({
     data: treeData,
     autoOpen: true,
     keyboardSupport: false    
@@ -39,7 +39,7 @@ MaterialsFilePicker.prototype.onNodeClicked = function(event) {
   var selectedNode = event.node;
   var nodeId = selectedNode.id;
   
-  var isNodeSelected = treeElement.tree('isNodeSelected', selectedNode);
+  var isNodeSelected = this.treeElement.tree('isNodeSelected', selectedNode);
   var isNodeAFile = nodeId.indexOf("file") !== -1;
   
   // We don't bother with folders - only individual files.
@@ -49,13 +49,13 @@ MaterialsFilePicker.prototype.onNodeClicked = function(event) {
     
     // <ID, Type, Name, URL>
     if (isNodeSelected) {
-      treeElement.tree('removeFromSelection', selectedNode);
+      this.treeElement.tree('removeFromSelection', selectedNode);
       
       var tuple = [id, "Material", selectedNode.label, selectedNode.url];
-      selectedMaterials[id] = tuple;
+      this.selectedMaterials[id] = tuple;
     } else {
-      treeElement.tree('addToSelection', selectedNode);
-      delete selectedMaterials[id];
+      this.treeElement.tree('addToSelection', selectedNode);
+      delete this.selectedMaterials[id];
     }
   }
 };
