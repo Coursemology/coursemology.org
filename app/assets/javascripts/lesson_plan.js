@@ -14,12 +14,18 @@ LessonPlanEntryFormType.prototype.pick = function() {
 
 LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
   idTypePairList.forEach(function(x) {
-    $("#linked_resources tbody").append(
-      '<tr>\n\
-         <td>' + x + '<input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" /></td>\n\
+    $element = $('<tr>\n\
+         <td>' + x[2] + '</td>\n\
          <td>&nbsp;</td>\n\
-         <td><span class="btn btn-danger"><i class="icon-trash"></i></span></td>\n\
+         <td>\n\
+           <span class="btn btn-danger resource-delete"><i class="icon-trash"></i></span>\n\
+           <input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" />\n\
+         </td>\n\
        </tr>');
+    $('.resource-delete', $element).click(function() {
+        $(this).parents('tr').remove();
+    })
+    $("#linked_resources tbody").append($element);
   });
 };
 
