@@ -1,8 +1,8 @@
 // Auto-magically referenced. Yay.
 
 $(document).ready(function() {
-  var rubyFolders = gon.folders;
-  if (!rubyFolders) {
+  var rootNode = gon.folders;
+  if (!rootNode) {
       return;
   }
 
@@ -10,17 +10,26 @@ $(document).ready(function() {
   var currentId = gon.currentFolder.id;
   
   // Convert all the folders to tree nodes.
-  rubyFolders.forEach(function(folder) {
-    var nameAndCount = folder.name + " (" + folder.count + ")";
-    folders[folder.id] = {
-      id: folder.id,
+  var foldersToProcess = [rootNode];
+  while (foldersToProcess.length) {
+    var currentFolder = foldersToProcess.shift();
+    if (currentFolder.subfolders) {
+      for (var i = 0; i < currentFolder.subfolders.length; i++) {
+        foldersToProcess.push(currentFolder.subfolders[i]);
+      }
+    }
+    
+    var count = currentFolder.files ? currentFolder.files.length : 0;
+    
+    var nameAndCount = currentFolder.name + " (" + count + ")";
+    folders[currentFolder.id] = {
+      id: currentFolder.id,
       label: nameAndCount,
-      url: folder.url,
-      parentId: folder.parent_folder_id,
+      url: currentFolder.url,
+      parentId: currentFolder.parent_folder_id,
       children: []
-    };
-  });
-  
+    }
+  }  
   
   var rootFolder;
   
