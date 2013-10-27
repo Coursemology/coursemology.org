@@ -43,10 +43,11 @@ $(document).ready(function() {
         startDate: new Date()
     });
     
-    $('.datepicker').datetimepicker({
+    $('.datetime').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'pt-BR',
-        startDate: new Date()
+        startDate: new Date(),
+        pickTime: false
     });
     
     $('.datetimepicker-past').datetimepicker({
@@ -56,7 +57,8 @@ $(document).ready(function() {
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
-        language: 'pt-BR'
+        language: 'pt-BR',
+        pickTime: false
     });
 
     $('a[rel=tooltip]').tooltip();
