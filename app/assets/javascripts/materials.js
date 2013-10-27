@@ -18,7 +18,8 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
         var currentFile = currentFolder.files[i];
         var fileTreeNode = {
           label: currentFile.name,
-          id: "file_" + currentFile.id
+          id: "file_" + currentFile.id,
+          url: currentFile.url
         };
         files.push(fileTreeNode);
       }
