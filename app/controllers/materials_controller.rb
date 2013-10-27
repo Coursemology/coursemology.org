@@ -200,7 +200,16 @@ private
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.materials.length
     if include_files then
-      folder_metadata['files'] = folder.files
+      folder_metadata['files'] = folder.files.map { |file|
+        current_file = {}
+        
+        current_file['id'] = file.id
+        current_file['name'] = file.filename
+        current_file['description'] = file.description
+        current_file['folder_id'] = file.folder_id
+        current_file['url'] = course_material_path(@course, file)
+        current_file
+      }
     end
 
     folder_metadata
