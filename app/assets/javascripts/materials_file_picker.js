@@ -28,17 +28,21 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $(div).html(htmlContent);
   this.treeElement = $('#file-picker-tree', div);
   
-  $("#done-picking").click(function() { that.onDone(); });
+  $("#done-picking").on('click', this.onDone(this));
 }
 
-MaterialsFilePicker.prototype.onDone = function() {
-  var selectedItems = [];
-  for (var id in this.selectedMaterials) {
-    var currentTuple = this.selectedMaterials[id];
-    selectedItems.push(currentTuple);
-  }
+MaterialsFilePicker.prototype.onDone = function(context) {
+  var that = context;
+  return function() {
+    console.log("Test.");
+    var selectedItems = [];
+    for (var id in that.selectedMaterials) {
+      var currentTuple = that.selectedMaterials[id];
+      selectedItems.push(currentTuple);
+    }
   
-  this.onSelectionCompleted(selectedItems);
+    that.onSelectionCompleted(selectedItems);
+  };
 };
 
 MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
