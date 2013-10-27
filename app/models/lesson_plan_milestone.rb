@@ -20,6 +20,9 @@ class LessonPlanMilestone < ActiveRecord::Base
         def entries
           @other_entries
         end
+        def end_at
+          nil
+        end
 
         def is_virtual
           true
