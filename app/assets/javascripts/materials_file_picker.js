@@ -32,7 +32,6 @@ MaterialsFilePicker.prototype.pick = function(div) {
 }
 
 MaterialsFilePicker.prototype.onDone = function() {
-  console.log("Test.");
   var selectedItems = [];
   for (var id in this.selectedMaterials) {
     var currentTuple = this.selectedMaterials[id];
@@ -52,7 +51,7 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
     keyboardSupport: false
   });
   var that = this;
-  this.treeElement.bind('tree.click', function() { that.onNodeClicked(); } );
+  this.treeElement.bind('tree.click', function(event) { that.onNodeClicked(event); });
 };
 
 MaterialsFilePicker.prototype.onNodeClicked = function(event) {
