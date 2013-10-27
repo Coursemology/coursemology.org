@@ -42,6 +42,22 @@ $(document).ready(function() {
         language: 'pt-BR',
         startDate: new Date()
     });
+    
+    $('.datepicker').datetimepicker({
+        format: 'dd-MM-yyyy',
+        language: 'pt-BR',
+        startDate: new Date()
+    });
+    
+    $('.datetimepicker-past').datetimepicker({
+        format: 'dd-MM-yyyy hh:mm:ss',
+        language: 'pt-BR'
+    });
+
+    $('.datepicker-past').datetimepicker({
+        format: 'dd-MM-yyyy',
+        language: 'pt-BR'
+    });
 
     $('a[rel=tooltip]').tooltip();
 
