@@ -36,34 +36,16 @@ class MaterialsController < ApplicationController
       }
     }
     
-    # Get the directory structure.
-    root_folder = @folder
-    while root_folder.parent_folder do
-      root_folder = MaterialFolder.find_by_id(root_folder.parent_folder)
-    end
-    
-    processed_folders = []
-    folders_to_process = [root_folder]
-    
-    # Create hashes to represent each folder's metadata.
-    folders_to_process.each { |folder|
-      folder.subfolders.each { |subfolder|
-        folders_to_process.push(subfolder)
+    # Get the directory structure to the front-end JS.
+    respond_to do |format|
+      format.html {
+        gon.currentFolder = @folder
+        gon.folders = build_subtree(@course.material_folder)
       }
-       
-      folder_metadata = {}
-      folder_metadata['id'] = folder.id
-      folder_metadata['name'] = folder.name
-      folder_metadata['url'] = course_material_folder_path(@course, folder)
-      folder_metadata['parent_folder_id'] = folder.parent_folder_id
-      folder_metadata['count'] = folder.materials.length
-      
-      processed_folders.push(folder_metadata)
-    }
-    
-    # Pass the hashes to the front-end JS.
-    gon.folders = processed_folders
-    gon.currentFolder = @folder
+      format.json {
+        render :json => build_subtree(@folder, true)
+      }
+    end
   end
 
   def show
@@ -202,5 +184,25 @@ class MaterialsController < ApplicationController
       format.html { redirect_to course_material_folder_path(@course, parent),
                                 notice: "The folder #{foldername} was successfully deleted." }
     end
+  end
+
+private
+  # Builds a hash containing the given folder and all files in it, as a tree.
+  def build_subtree(folder, include_files = true)
+    folder_metadata = {}
+    folder_metadata['subfolders'] = folder.subfolders.each { |subfolder|
+      build_subtree(subfolder, include_files)
+    }
+
+    folder_metadata['id'] = folder.id
+    folder_metadata['name'] = folder.name
+    folder_metadata['url'] = course_material_folder_path(@course, folder)
+    folder_metadata['parent_folder_id'] = folder.parent_folder_id
+    folder_metadata['count'] = folder.materials.length
+    if include_files then
+      folder_metadata['files'] = folder.files
+    end
+
+    folder_metadata
   end
 end
