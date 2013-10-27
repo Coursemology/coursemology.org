@@ -12,7 +12,9 @@
   </td>
   <td>
     <% if entry.is_virtual %>
-    <h3><%= entry.title %></h3>
+      <%= link_to entry.url do %>
+        <h3 class="link"><%= entry.title %></h3>
+      <% end %>
     <% else %>
     <h2><%= entry.title %></h2>
     <% end %>
@@ -40,25 +42,17 @@
     </ul>
 <% end %>
   </td>
-<% if (can? :manage, LessonPlanEntry) %>
-<% if not entry.is_virtual %>
   <td width="10%">
-    <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
-      <i class="icon-edit"></i>
-    <% end %>
-    <%= link_to course_lesson_plan_entry_path(@course, entry),
-                method: :delete,
-                data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                class: 'btn btn-danger' do %>
-        <i class="icon-trash"></i>
-    <% end %>
-  </td>
-<% elsif %>
-  <td colspan="2">
-    <%= link_to entry.url, class: 'btn' do %>
-      <i class="icon-external-link"></i>
-    <% end %>
-  </td>
-<% end %>
-<% end %>
+  <% if can? :manage, LessonPlanEntry and not entry.is_virtual %>
+      <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to course_lesson_plan_entry_path(@course, entry),
+                  method: :delete,
+                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  class: 'btn btn-danger' do %>
+          <i class="icon-trash"></i>
+      <% end %>
+  <% end %>
+    </td>
 </tr>
