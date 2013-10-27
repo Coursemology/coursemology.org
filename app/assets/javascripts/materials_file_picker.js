@@ -12,8 +12,14 @@ function MaterialsFilePicker(callback) {
 }
 
 MaterialsFilePicker.prototype.onSelectionCompleted = function() {
-  this.doneCallback(this.selectedMaterials);
-}
+  var selectedItems = [];
+  for (var id in selectedMaterials) {
+    var currentTuple = selectedMaterials[id];
+    selectedItems.push(currentTuple);
+  }
+  
+  this.doneCallback(selectedItems);
+};
 
 MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   
