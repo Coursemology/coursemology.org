@@ -22,8 +22,12 @@
     <div class="control-group">
       <%= f.label "End Date", :class => 'control-label' %>
       <div class="controls">
-        <div class="datepicker-past input-append datetime">
-        <%= f.text_field :end_at, :class => 'text_field' %>
+        <div class="datepicker-past input-append date">
+          <% if @lesson_plan_milestone.end_at %>
+          <%= f.text_field :end_at, :class => 'text_field', :value => @lesson_plan_milestone.end_at.strftime("%d-%m-%Y") %>
+          <% else %>
+          <%= f.text_field :end_at, :class=> 'text_field' %>
+          <% end %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
           </span>
