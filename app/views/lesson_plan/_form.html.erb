@@ -21,9 +21,9 @@
     </div>
 
     <div class="control-group">
-        <label class="control-label">
-            Description&#47;Objectives
-        </label>
+      <label class="control-label">
+          Description&#47;Objectives
+      </label>
       <div class="controls">
         <%= f.text_area :description, :class => 'text_field span7 html-editor', :placeholder => "(Optional) What's going to happen? What will students know after attending?" %>
       </div>
@@ -49,9 +49,28 @@
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
           </span>
+        </div>
       </div>
     </div>
 
+    <div class="control-group" id="linked_resources">
+      <%= f.label :resources, :class => 'control-label' %>
+      <div class="controls">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Resource</th>
+              <th>Type</th>
+              <th><span class="btn btn-primary addresource-button"><i class="icon-plus"></i>Add Resource</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
     <div class="form-actions">
       <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
