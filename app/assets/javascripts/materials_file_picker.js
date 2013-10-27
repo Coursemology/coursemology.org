@@ -72,12 +72,11 @@ MaterialsFilePicker.prototype.onNodeClicked = function(event) {
     // <ID, Type, Name, URL>
     if (isNodeSelected) {
       this.treeElement.tree('removeFromSelection', selectedNode);
-      
-      var tuple = [id, "Material", selectedNode.label, selectedNode.url];
-      this.selectedMaterials[id] = tuple;
+      delete this.selectedMaterials[id];
     } else {
       this.treeElement.tree('addToSelection', selectedNode);
-      delete this.selectedMaterials[id];
+      var tuple = [id, "Material", selectedNode.name, selectedNode.url];
+      this.selectedMaterials[id] = tuple;
     }
   }
 };
