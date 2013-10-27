@@ -27,16 +27,11 @@ class LessonPlanEntriesController < ApplicationController
 
   def create
     @lesson_plan_entry.creator = current_user
-    
-    resources = []
-    params[:resources].each { |r|
-      obj_parts = r.split(',')
-      res = LessonPlanResource.new
-      res.obj_id = obj_parts[0]
-      res.obj_type = obj_parts[1]
-      resources.push(res)
-    }
-    @lesson_plan_entry.resources = resources
+    @lesson_plan_entry.resources = if params[:resources] then
+                                     build_resources(params[:resources])
+                                   else
+                                     []
+                                   end
     
     respond_to do |format|
       if @lesson_plan_entry.save then
@@ -52,6 +47,12 @@ class LessonPlanEntriesController < ApplicationController
   end
 
   def update
+    @lesson_plan_entry.resources = if params[:resources] then
+                                     build_resources(params[:resources])
+                                   else
+                                     []
+                                   end
+    
     respond_to do |format|
       if @lesson_plan_entry.update_attributes(params[:lesson_plan_entry]) && @lesson_plan_entry.save then
         format.html { redirect_to course_lesson_plan_path(@course),
@@ -75,5 +76,19 @@ private
     options = args.extract_options!
     options[:template] = "/lesson_plan/#{params[:action]}"
     super(*(args << options))
+  end
+
+  # Builds the resource array to be assigned to a model from form parameters
+  def build_resources(param)
+    resources = []
+    param.each { |r|
+      obj_parts = r.split(',')
+      res = LessonPlanResource.new
+      res.obj_id = obj_parts[0]
+      res.obj_type = obj_parts[1]
+      resources.push(res)
+    }
+
+    resources
   end
 end

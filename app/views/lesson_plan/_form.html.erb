@@ -65,7 +65,16 @@
             </tr>
           </thead>
           <tbody>
-            
+            <% @lesson_plan_entry.resources.each { |r| %>
+            <tr>
+              <td><%= r.obj.title %></td>
+              <td>&nbsp;</td>
+              <td>
+                <span class="btn btn-danger resource-delete"><i class="icon-trash"></i></span>
+                <input type="hidden" name="resources[]" value="<%= r.obj_id %>,<%= r.obj_type %>" />
+              </td>
+            </tr>
+            <% } %>
           </tbody>
         </table>
       </div>

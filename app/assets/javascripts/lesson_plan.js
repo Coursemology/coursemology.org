@@ -22,9 +22,6 @@ LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
            <input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" />\n\
          </td>\n\
        </tr>');
-    $('.resource-delete', $element).click(function() {
-        $(this).parents('tr').remove();
-    })
     $("#linked_resources tbody").append($element);
   });
 };
@@ -34,5 +31,8 @@ var LessonPlanEntryForm = new LessonPlanEntryFormType([]);
 $(document).ready(function() {
   $('.addresource-button').click(function() {
     LessonPlanEntryForm.pick();
+  });
+  $(document).on('click', '.resource-delete', null, function() {
+    $(this).parents('tr').remove();
   });
 });
