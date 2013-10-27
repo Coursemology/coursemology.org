@@ -12,6 +12,7 @@ class LessonPlanEntry < ActiveRecord::Base
     (Class.new do
       def initialize
         @title = @description = @real_type = @start_at = @end_at = nil
+        @resources = []
       end
 
       def title
@@ -46,6 +47,12 @@ class LessonPlanEntry < ActiveRecord::Base
       end
       def end_at=(end_at)
         @end_at = end_at
+      end
+      def resources
+        @resources
+      end
+      def resources=(resources)
+        @resources = resources
       end
       def location
         nil

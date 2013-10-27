@@ -31,6 +31,14 @@
       <% end %>
     </h4>
     <p><%= entry.description.html_safe %></p>
+<% if entry.resources.length > 0 %>
+    <h4>Instructional Resources</h4>
+    <ul>
+    <% entry.resources.each { |r| %>
+      <li><%= link_to r.obj.title, url_for([@course, r.obj]) %></li>
+    <% } %>
+    </ul>
+<% end %>
   </td>
 <% if (can? :manage, LessonPlanEntry) %>
 <% if not entry.is_virtual %>

@@ -44,7 +44,6 @@ class LessonPlanMilestone < ActiveRecord::Base
       :end_at => self.end_at, :start_at => start_at)
 
     virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
-    logger.info virtual_entries
     real_entries + virtual_entries
   end
 
