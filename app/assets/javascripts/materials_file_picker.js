@@ -22,5 +22,12 @@ MaterialsFilePicker.prototype.onSelectionCompleted = function() {
 };
 
 MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
+  var shouldIncludeFiles = true;
+  var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
   
-}
+  treeElement.tree({
+    data: treeData,
+    autoOpen: true,
+    keyboardSupport: false    
+  });
+};
