@@ -1,4 +1,7 @@
-    <p>Milestones start at the time the previous milestone (if any) ends.</p>
+<p>
+  Milestones start at the time the previous milestone (if any) ends. 
+  Events, Missions, or Trainings that fall between a milestone's date will appear as part of that milestone.
+</p>
     
 <%= form_for [@course, @lesson_plan_milestone], :html => { :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
@@ -17,7 +20,7 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :end_at, :class => 'control-label' %>
+      <%= f.label "End Date", :class => 'control-label' %>
       <div class="controls">
         <div class="datepicker-past input-append datetime">
         <%= f.text_field :end_at, :class => 'text_field' %>
