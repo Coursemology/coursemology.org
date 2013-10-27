@@ -19,6 +19,10 @@ class Material < ActiveRecord::Base
   def filename=(filename)
     self.file.original_name = filename
   end
+    
+  def title
+    self.filename
+  end
 
   def filesize
     self.file.file_file_size
