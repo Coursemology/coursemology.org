@@ -1,11 +1,21 @@
 class LessonPlanEntry < ActiveRecord::Base
-  attr_accessible :title, :entry_type, :description, :start_at, :end_at, :location
+  attr_accessible :title, :entry_type, :description, :start_at, :end_at, :location, :resources
 
   validates_with DateValidator, fields: [:start_at, :end_at]
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
   has_many :resources, class_name: "LessonPlanResource"
+
+  after_save :save_resources
+  
+  def save_resources
+    if self.resources then
+      self.resources.each { |r|
+        r.save
+      }
+    end
+  end
 
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual
@@ -79,7 +89,7 @@ class LessonPlanEntry < ActiveRecord::Base
     ['Tutorial', 2],
     ['Other', 3]
   ]
-
+  
   def is_virtual
     false
   end

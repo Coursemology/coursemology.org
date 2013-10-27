@@ -27,7 +27,17 @@ class LessonPlanEntriesController < ApplicationController
 
   def create
     @lesson_plan_entry.creator = current_user
-
+    
+    resources = []
+    params[:resources].each { |r|
+      obj_parts = r.split(',')
+      res = LessonPlanResource.new
+      res.obj_id = obj_parts[0]
+      res.obj_type = obj_parts[1]
+      resources.push(res)
+    }
+    @lesson_plan_entry.resources = resources
+    
     respond_to do |format|
       if @lesson_plan_entry.save then
         format.html { redirect_to course_lesson_plan_path(@course),
