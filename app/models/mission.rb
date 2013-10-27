@@ -62,5 +62,17 @@ class Mission < ActiveRecord::Base
     return true, ""
   end
 
+  # Converts this mission into a format that can be used by the lesson plan component
+  def as_lesson_plan_entry
+    entry = LessonPlanEntry.create_virtual
+    entry.title = self.title
+    entry.description = self.description
+    entry.entry_real_type = "Mission"
+    entry.start_at = self.open_at
+    entry.end_at = self.close_at
+    entry.url = course_mission_path(self.course, self)
+    entry
+  end
+
   alias_method :sbms, :submissions
 end

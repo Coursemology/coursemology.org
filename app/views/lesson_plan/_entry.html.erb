@@ -1,0 +1,58 @@
+<tr>
+  <td>
+    <h1>
+      <small>
+        <% if entry.is_virtual %>
+          <%= entry.entry_real_type %>
+        <% else %>
+          <%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
+        <% end %>
+      </small>
+    </h1>
+  </td>
+  <td>
+    <% if entry.is_virtual %>
+      <%= link_to entry.url do %>
+        <h3 class="link"><%= entry.title %></h3>
+      <% end %>
+    <% else %>
+    <h2><%= entry.title %></h2>
+    <% end %>
+    <h3><%= entry.location %></h3>
+    <h4>
+      <% if entry.start_at %>
+        <span class="icon-calendar"></span>
+        <%= entry.start_at.strftime("%A, %d %B %Y %I:%M %p") %>
+        <% if entry.end_at %> to 
+          <% if entry.start_at.yday == entry.end_at.yday and entry.start_at.year == entry.end_at.year %>
+            <%= entry.end_at.strftime("%I:%M %p") %>
+          <% else %>
+            <%= entry.end_at.strftime("%A, %d %B %Y %I:%M %p") %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </h4>
+    <p><%= entry.description.html_safe %></p>
+<% if entry.resources.length > 0 %>
+    <h4>Instructional Resources</h4>
+    <ul>
+    <% entry.resources.each { |r| %>
+      <li><%= link_to r.obj.title, url_for([@course, r.obj]) %></li>
+    <% } %>
+    </ul>
+<% end %>
+  </td>
+  <td width="10%">
+  <% if can? :manage, LessonPlanEntry and not entry.is_virtual %>
+      <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to course_lesson_plan_entry_path(@course, entry),
+                  method: :delete,
+                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  class: 'btn btn-danger' do %>
+          <i class="icon-trash"></i>
+      <% end %>
+  <% end %>
+    </td>
+</tr>

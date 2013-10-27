@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131019110754) do
+ActiveRecord::Schema.define(:version => 20131026104847) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -316,6 +316,31 @@ ActiveRecord::Schema.define(:version => 20131019110754) do
     t.datetime "file_updated_at"
     t.string   "owner_type"
     t.string   "original_name"
+  end
+
+  create_table "lesson_plan_entries", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.integer  "entry_type"
+    t.text     "description"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.string   "location"
+  end
+
+  create_table "lesson_plan_milestones", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "end_at"
+  end
+
+  create_table "lesson_plan_resources", :force => true do |t|
+    t.integer "lesson_plan_entry_id"
+    t.integer "obj_id"
+    t.string  "obj_type"
   end
 
   create_table "levels", :force => true do |t|
