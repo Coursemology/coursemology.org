@@ -1,17 +1,16 @@
 <%- model_class = MaterialFolder -%>
 <div class="page-header">
   <h1>Materials: <%= @folder.name %></h1>
-</div>
 <% if @folder.description %>
 <div>
 <h2 class="materials-description-title">Folder Description</h2>
-  <p><%= @folder.description %></p>
-  <% if can? :manage, Material %>
-    <%= render :partial => 'folder_controls' %>
-  <% end %>
-  <hr>
+<p><%= @folder.description %></p>  
 </div>
 <% end %>
+<% if can? :manage, Material %>
+    <%= render :partial => 'folder_controls' %>
+<% end %>
+</div>
 
 <div class="container">
   <div class="span2">
