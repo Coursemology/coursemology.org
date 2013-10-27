@@ -1,25 +1,30 @@
 // Auto-magically referenced. Yay.
 
-$(document).ready(function() {
-  var rootNode = gon.folders;
-  if (!rootNode) {
-      return;
-  }
-
+function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
   var folders = {};
-  var currentId = gon.currentFolder.id;
-  
+    
   // Convert all the folders to tree nodes.
   var foldersToProcess = [rootNode];
   while (foldersToProcess.length) {
     var currentFolder = foldersToProcess.shift();
-    if (currentFolder.subfolders) {
-      for (var i = 0; i < currentFolder.subfolders.length; i++) {
-        foldersToProcess.push(currentFolder.subfolders[i]);
+    
+    for (var i = 0; i < currentFolder.subfolders.length; i++) {
+      foldersToProcess.push(currentFolder.subfolders[i]);
+    }
+    
+    var files = [];
+    if (shouldIncludeFiles) {
+      for (var i = 0; i < currentFolder.files.length; i++) {
+        var currentFile = currentFolder.files[i];
+        var fileTreeNode = {
+          label: currentFile.name,
+          id: "file_" + currentFile.id
+        };
+        files.push(fileTreeNode);
       }
     }
     
-    var count = currentFolder.files ? currentFolder.files.length : 0;
+    var count = currentFolder.files.length;
     
     var nameAndCount = currentFolder.name + " (" + count + ")";
     folders[currentFolder.id] = {
@@ -27,7 +32,7 @@ $(document).ready(function() {
       label: nameAndCount,
       url: currentFolder.url,
       parentId: currentFolder.parent_folder_id,
-      children: []
+      children: files
     }
   }  
   
@@ -43,7 +48,17 @@ $(document).ready(function() {
       folders[parentId].children.push(folder);
     }
   }
-  var treeData = [rootFolder];
+  
+  return [rootFolder];
+}
+
+$(document).ready(function() {
+  var rootNode = gon.folders;
+  if (!rootNode) {
+      return;
+  }
+  
+  var treeData = parseFileJsonForJqTree(rootNode, false);
   
   // Set up the tree.
   var treeElement = $('#file-tree');
@@ -54,6 +69,7 @@ $(document).ready(function() {
   });
   
   // Select the folder we're currently in.
+  var currentId = gon.currentFolder.id;
   var currentFolderNode = treeElement.tree('getNodeById', currentId);
   treeElement.tree('selectNode', currentFolderNode);
   
