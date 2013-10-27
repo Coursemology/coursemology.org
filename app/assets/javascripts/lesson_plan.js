@@ -8,9 +8,13 @@ $(document).ready(function() {
   }
 
   LessonPlanEntryFormType.prototype.pick = function() {
-  var $modal = $('<div class="modal hide fade" />');
-  this.pickers[0].pick($modal[0]);
-  $modal.modal();
+    if (this.$modal) {
+        $this.$modal.remove();
+    }
+    
+    this.$modal = $('<div class="modal hide fade" />');
+    this.pickers[0].pick(this.$modal[0]);
+    this.$modal.modal();
   }
 
   LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
