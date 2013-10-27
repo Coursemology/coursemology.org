@@ -3,6 +3,6 @@ function MaterialsFilePicker(callback) {
   this.selectedMaterials = [];
 }
 
-MaterialsFilePicker.prototype.done = function() {
+MaterialsFilePicker.prototype.onSelectionCompleted = function() {
   this.doneCallback(this.selectedMaterials);
 }
