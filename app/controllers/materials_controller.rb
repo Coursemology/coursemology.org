@@ -190,7 +190,7 @@ private
   # Builds a hash containing the given folder and all files in it, as a tree.
   def build_subtree(folder, include_files = true)
     folder_metadata = {}
-    folder_metadata['subfolders'] = folder.subfolders.each { |subfolder|
+    folder_metadata['subfolders'] = folder.subfolders.map { |subfolder|
       build_subtree(subfolder, include_files)
     }
 
