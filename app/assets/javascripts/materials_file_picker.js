@@ -1,31 +1,51 @@
-function MaterialsFilePicker(callback) {
-  this.doneCallback = callback;
+function MaterialsFilePicker() {
   this.selectedMaterials = {};
   this.treeElement = $('#file-picker-tree');
-  
+}
+
+MaterialsFilePicker.prototype.pick = function(div) {
   var courseId = gon.course;
   var that = this;
   $.ajax({
     url: '/courses/' + courseId + '/materials.json',
     success: that.onWorkbinStructureReceived
   });
+  
+  var htmlContent = '<div class="modal-header">\
+  <h3>Select Files</h3>\
+  </div>\
+  <div class="modal-body">\
+  <div id="#file-picker-tree"></div>\
+  </div>\
+  <div class="modal-footer">\
+    <button id="#done-picking" data-dismiss="modal" class="btn btn-primary">\
+      Done\
+    </button>\
+    <button data-dismiss="modal" class="btn">\
+      Cancel\
+    </button>\
+  </div>\";
+
+  $(div).html(htmlContent);
+  
+  $("#done-picking").click(this.onDone);
 }
 
-MaterialsFilePicker.prototype.onSelectionCompleted = function() {
+MaterialsFilePicker.prototype.onDone = function() {
   var selectedItems = [];
-  for (var id in selectedMaterials) {
-    var currentTuple = selectedMaterials[id];
+  for (var id in this.selectedMaterials) {
+    var currentTuple = this.selectedMaterials[id];
     selectedItems.push(currentTuple);
   }
   
-  this.doneCallback(selectedItems);
+  this.onSelectionCompleted(selectedItems);
 };
 
 MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   var shouldIncludeFiles = true;
   var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
   
-  treeElement.tree({
+  this.treeElement.tree({
     data: treeData,
     autoOpen: true,
     keyboardSupport: false    
@@ -39,7 +59,7 @@ MaterialsFilePicker.prototype.onNodeClicked = function(event) {
   var selectedNode = event.node;
   var nodeId = selectedNode.id;
   
-  var isNodeSelected = treeElement.tree('isNodeSelected', selectedNode);
+  var isNodeSelected = this.treeElement.tree('isNodeSelected', selectedNode);
   var isNodeAFile = nodeId.indexOf("file") !== -1;
   
   // We don't bother with folders - only individual files.
@@ -49,13 +69,13 @@ MaterialsFilePicker.prototype.onNodeClicked = function(event) {
     
     // <ID, Type, Name, URL>
     if (isNodeSelected) {
-      treeElement.tree('removeFromSelection', selectedNode);
+      this.treeElement.tree('removeFromSelection', selectedNode);
       
       var tuple = [id, "Material", selectedNode.label, selectedNode.url];
-      selectedMaterials[id] = tuple;
+      this.selectedMaterials[id] = tuple;
     } else {
-      treeElement.tree('addToSelection', selectedNode);
-      delete selectedMaterials[id];
+      this.treeElement.tree('addToSelection', selectedNode);
+      delete this.selectedMaterials[id];
     }
   }
 };
