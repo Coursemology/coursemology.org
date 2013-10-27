@@ -1,6 +1,7 @@
 function MaterialsFilePicker(callback) {
   this.doneCallback = callback;
-  this.selectedMaterials = [];
+  this.selectedMaterials = {};
+  this.treeElement = $('#file-picker-tree');
   
   var courseId = gon.course;
   var that = this;
