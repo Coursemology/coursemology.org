@@ -14,12 +14,12 @@ MaterialsFilePicker.prototype.pick = function(div) {
   <h3>Select Files</h3>\
   </div>\
   <div class="modal-body">\
-  <div id="#file-picker-tree"></div>\
+  <div id="file-picker-tree"></div>\
   </div>\
   <div class="modal-footer">\
-    <button id="#done-picking" data-dismiss="modal" class="btn btn-primary">\
+    <div id="done-picking" data-dismiss="modal" class="btn btn-primary">\
       Done\
-    </button>\
+    </div>\
     <button data-dismiss="modal" class="btn">\
       Cancel\
     </button>\
