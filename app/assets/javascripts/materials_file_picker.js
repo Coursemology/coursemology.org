@@ -1,8 +1,9 @@
-function MaterialsFilePicker(callback) {
-  this.doneCallback = callback;
+function MaterialsFilePicker() {
   this.selectedMaterials = {};
   this.treeElement = $('#file-picker-tree');
-  
+}
+
+MaterialsFilePicker.prototype.pick = function(div) {
   var courseId = gon.course;
   var that = this;
   $.ajax({
@@ -11,14 +12,14 @@ function MaterialsFilePicker(callback) {
   });
 }
 
-MaterialsFilePicker.prototype.onSelectionCompleted = function() {
+MaterialsFilePicker.prototype.onDone = function() {
   var selectedItems = [];
   for (var id in this.selectedMaterials) {
     var currentTuple = this.selectedMaterials[id];
     selectedItems.push(currentTuple);
   }
   
-  this.doneCallback(selectedItems);
+  this.onSelectionCompleted(selectedItems);
 };
 
 MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
