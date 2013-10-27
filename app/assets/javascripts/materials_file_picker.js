@@ -28,7 +28,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $(div).html(htmlContent);
   this.treeElement = $('#file-picker-tree', div);
   
-  $("#done-picking", div).on('click', function() { that.onDone() });
+  $("#done-picking", div).on('click', function() { that.onDone(); });
 }
 
 MaterialsFilePicker.prototype.onDone = function() {
@@ -52,7 +52,7 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
     keyboardSupport: false
   });
   var that = this;
-  this.treeElement.bind('tree.click', function() { that.onNodeClicked() } );
+  this.treeElement.bind('tree.click', function() { that.onNodeClicked(); } );
 };
 
 MaterialsFilePicker.prototype.onNodeClicked = function(event) {
