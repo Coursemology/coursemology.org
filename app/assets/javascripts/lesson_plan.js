@@ -7,3 +7,6 @@ function LessonPlanEntryForm(pickers) {
 LessonPlanEntryForm.prototype.doneCallback = function(idTypePairList) {
   
 };
+
+var pickers = [new MaterialsFilePicker()];
+var LessonPlanForm = new LessonPlanEntryForm(pickers);
