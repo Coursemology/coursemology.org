@@ -3,6 +3,9 @@
     <tr>
       <td>
       <h2><%= milestone.title %></h2>
+      <% if milestone.end_at %>
+          <h3>Period ending on <%= milestone.end_at.strftime("%A, %d %B %Y") %></h3>
+      <% end %>
       <% if milestone.description %>
       <p>
         <%= milestone.description.html_safe %>
