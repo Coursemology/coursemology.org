@@ -28,7 +28,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $(div).html(htmlContent);
   this.treeElement = $('#file-picker-tree', div);
   
-  $("#done-picking").on('click', this.onDone(this));
+  $("#done-picking", div).on('click', this.onDone(this));
 }
 
 MaterialsFilePicker.prototype.onDone = function(context) {
