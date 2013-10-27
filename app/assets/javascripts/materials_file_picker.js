@@ -1,6 +1,5 @@
 function MaterialsFilePicker() {
   this.selectedMaterials = {};
-  this.treeElement = $('#file-picker-tree');
 }
 
 MaterialsFilePicker.prototype.pick = function(div) {
@@ -27,6 +26,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   </div>';
 
   $(div).html(htmlContent);
+  this.treeElement = $('#file-picker-tree', div);
   
   $("#done-picking").click(this.onDone);
 }
