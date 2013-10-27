@@ -7,7 +7,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   var that = this;
   $.ajax({
     url: '/courses/' + courseId + '/materials.json',
-    success: that.onWorkbinStructureReceived
+    success: function(rootNode) { that.onWorkbinStructureReceived(rootNode); }
   });
   
   var htmlContent = '<div class="modal-header">\
@@ -28,7 +28,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $(div).html(htmlContent);
   this.treeElement = $('#file-picker-tree', div);
   
-  $("#done-picking").click(this.onDone);
+  $("#done-picking").click(function() { that.onDone(); });
 }
 
 MaterialsFilePicker.prototype.onDone = function() {
