@@ -1,7 +1,8 @@
 function LessonPlanEntryFormType(pickers) {
+  var self = this;
   this.pickers = pickers;
   pickers.forEach(function(picker) {
-    picker.onSelectionCompleted = this.doneCallback;
+    picker.onSelectionCompleted = function() { self.doneCallback.apply(self, arguments); }
   });
 }
 
@@ -13,8 +14,12 @@ LessonPlanEntryFormType.prototype.pick = function() {
 
 LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
   idTypePairList.forEach(function(x) {
-    $("#uploaded_files_div").append(
-      '<input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" />');
+    $("#linked_resources tbody").append(
+      '<tr>\n\
+         <td>' + x + '<input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" /></td>\n\
+         <td>&nbsp;</td>\n\
+         <td><span class="btn btn-danger"><i class="icon-trash"></i></span></td>\n\
+       </tr>');
   });
 };
 
