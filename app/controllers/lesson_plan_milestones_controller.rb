@@ -14,6 +14,7 @@ class LessonPlanMilestonesController < ApplicationController
 
   def create
     @lesson_plan_milestone.creator = current_user
+    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
@@ -30,8 +31,11 @@ class LessonPlanMilestonesController < ApplicationController
   end
 
   def update
+    @lesson_plan_milestone.update_attributes(params[:lesson_plan_milestone])
+    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+
     respond_to do |format|
-      if @lesson_plan_milestone.update_attributes(params[:lesson_plan_milestone]) && @lesson_plan_milestone.save then
+      if @lesson_plan_milestone.save then
         format.html { redirect_to course_lesson_plan_milestone_path(@course, @lesson_plan_milestone),
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been updated." }
       else
