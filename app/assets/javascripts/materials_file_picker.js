@@ -10,6 +10,25 @@ MaterialsFilePicker.prototype.pick = function(div) {
     url: '/courses/' + courseId + '/materials.json',
     success: that.onWorkbinStructureReceived
   });
+  
+  var htmlContent = '<div class="modal-header">\
+  <h3>Select Files</h3>\
+  </div>\
+  <div class="modal-body">\
+  <div id="#file-picker-tree"></div>\
+  </div>\
+  <div class="modal-footer">\
+    <button id="#done-picking" data-dismiss="modal" class="btn btn-primary">\
+      Done\
+    </button>\
+    <button data-dismiss="modal" class="btn">\
+      Cancel\
+    </button>\
+  </div>\";
+
+  $(div).html(htmlContent);
+  
+  $("#done-picking").click(this.onDone);
 }
 
 MaterialsFilePicker.prototype.onDone = function() {
