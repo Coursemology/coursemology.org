@@ -1,18 +1,19 @@
-function LessonPlanEntryFormType(pickers) {
+$(document).ready(function() {
+  function LessonPlanEntryFormType(pickers) {
   var self = this;
   this.pickers = pickers;
   pickers.forEach(function(picker) {
     picker.onSelectionCompleted = function() { self.doneCallback.apply(self, arguments); }
   });
-}
+  }
 
-LessonPlanEntryFormType.prototype.pick = function() {
+  LessonPlanEntryFormType.prototype.pick = function() {
   var $modal = $('<div class="modal hide fade" />');
   this.pickers[0].pick($modal[0]);
   $modal.modal();
-}
+  }
 
-LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
+  LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
   idTypePairList.forEach(function(x) {
     $element = $('<tr>\n\
          <td>' + x[2] + '</td>\n\
@@ -24,11 +25,10 @@ LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
        </tr>');
     $("#linked_resources tbody").append($element);
   });
-};
+  };
 
-var LessonPlanEntryForm = new LessonPlanEntryFormType([new MaterialsFilePicker()]);
+  var LessonPlanEntryForm = new LessonPlanEntryFormType([new MaterialsFilePicker()]);
 
-$(document).ready(function() {
   $('.addresource-button').click(function() {
     LessonPlanEntryForm.pick();
   });
