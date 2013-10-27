@@ -31,3 +31,31 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
     keyboardSupport: false    
   });
 };
+
+MaterialsFilePicker.prototype.onNodeClicked = function(event) {
+  // Disable single selection: click to select for everything.
+  event.preventDefault();
+  
+  var selectedNode = event.node;
+  var nodeId = selectedNode.id;
+  
+  var isNodeSelected = treeElement.tree('isNodeSelected', selectedNode);
+  var isNodeAFile = nodeId.indexOf("file") !== -1;
+  
+  // We don't bother with folders - only individual files.
+  if (isNodeAFile) {
+    var indexAfterPrefix = nodeId.indexOf("_") + 1;
+    var id = nodeId.slice(indexAfterPrefix);
+    
+    // <ID, Type, Name, URL>
+    if (isNodeSelected) {
+      treeElement.tree('removeFromSelection', selectedNode);
+      
+      var tuple = [id, "Material", selectedNode.label, selectedNode.url];
+      selectedMaterials[id] = tuple;
+    } else {
+      treeElement.tree('addToSelection', selectedNode);
+      delete selectedMaterials[id];
+    }
+  }
+};
