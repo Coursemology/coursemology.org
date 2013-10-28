@@ -55,14 +55,14 @@ $(document).ready(function() {
   $('.lesson-plan-hide-entries').click(function() {
     $(this).hide();
     var parent = $(this).parent();
-    $(parent).children('.lesson-plan-body').fadeOut();
+    $(parent).children('.lesson-plan-body').slideUp();
     $(parent).children('.lesson-plan-show-entries').show();
   });
   
   $('.lesson-plan-show-entries').click(function() {
     $(this).hide();
     var parent = $(this).parent();
-    $(parent).children('.lesson-plan-body').fadeIn();
+    $(parent).children('.lesson-plan-body').slideDown();
     $(parent).children('.lesson-plan-hide-entries').show();
   });
 });

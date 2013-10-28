@@ -31,12 +31,14 @@
     <a class="lesson-plan-hide-entries">Hide Entries</a>
     <a class="lesson-plan-show-entries" style="display: none;">Show Entries</a>
   <% end %>
-  <table class="table lesson-plan-body">
+  <div class="lesson-plan-body">
+  <table class="table">
     <tbody>
     <% entries.each {|entry| %>
     <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
     <% } %>
     </tbody>
   </table>
+  </div>
   <hr>
 </div>
