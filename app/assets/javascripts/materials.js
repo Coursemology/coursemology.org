@@ -33,7 +33,8 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
       label: nameAndCount,
       url: currentFolder.url,
       parentId: currentFolder.parent_folder_id,
-      children: files
+      children: files,
+      isNodeFolder: true
     }
   }  
   
