@@ -6,9 +6,6 @@ JfdiAcademy::Application.routes.draw do
   #
   # We ask that you don't use the :as option here, as Forem relies on it being the default of "forem"
   mount Forem::Engine, :at => '/forums'
-  Forem::Engine.routes.draw do
-
-  end
 
   authenticated :user do
     root :to => "home#index"
@@ -48,6 +45,7 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     match "/submissions" => "submissions#listall", as: :submissions
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
+    match "/forums" => "forums#index", as: :forums
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
     match "/staff"            => "user_courses#staff", as: :staff
