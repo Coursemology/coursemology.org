@@ -67,7 +67,11 @@ $(document).ready(function() {
   treeElement.tree({
     data: treeData,
     autoOpen: true,
-    keyboardSupport: false
+    keyboardSupport: false,
+    onCreateLi: function(node, $li) {
+      var iconHtml = '<i class="icon-folder-open"></i>';
+      $li.find('.jqtree-element').prepend(iconHtml);
+    }
   });
   
   // Select the folder we're currently in.
