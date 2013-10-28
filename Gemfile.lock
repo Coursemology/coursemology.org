@@ -106,6 +106,9 @@ GEM
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
     formatador (0.2.4)
+    gon (4.1.1)
+      actionpack (>= 2.3.0)
+      json
     google_visualr (2.1.7)
     guard (1.8.0)
       formatador (>= 0.2.4)
@@ -301,6 +304,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   font-awesome-sass-rails
+  gon
   google_visualr (>= 2.1)
   guard-rspec
   htmlentities

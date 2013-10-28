@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :sort_direction, :sort_column
+  before_filter :init_gon
 
   rescue_from CanCan::AccessDenied do |exception|
 
@@ -20,6 +21,10 @@ class ApplicationController < ActionController::Base
       )
     end
     @curr_user_course ||= UserCourse.new
+  end
+
+  def init_gon
+    gon.push :gon => true
   end
 
   def load_theme_setting
@@ -66,6 +71,11 @@ class ApplicationController < ActionController::Base
       unseen_missions = all_missions - curr_user_course.seen_missions
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
+
+      all_materials = @course.material_folder.materials
+      unseen_materials = all_materials - curr_user_course.seen_materials
+      counts[:materials] = unseen_materials.count
+
       #if can? :see_all, Submission
       #  # lecturers see number of new submissions of all students in the course
       #  all_sbms = @course.submissions.accessible_by(current_ability) +
@@ -129,6 +139,12 @@ class ApplicationController < ActionController::Base
                         url:    course_lesson_plan_url(@course),
                         img:    @theme_settings["Lesson Plan Icon"],
                         icon:   "icon-time"
+                    }, {
+                        text:   "Workbin",
+                        url:    course_materials_url(@course),
+                        img:    @theme_settings["Materials Icon"],
+                        icon:   "icon-download",
+                        count:  counts[:materials] || 0
                     }]
       @nav_items <<   {
           text:   "Comments",
@@ -334,6 +350,9 @@ class ApplicationController < ActionController::Base
       when 'lesson_plan'
         url = course_lesson_plan_path(@course)
         icon = 'icon-time'
+      when 'materials'
+        url = course_materials_path(@course)
+        icon = 'icon-download'
     end
     [url, icon]
   end

@@ -1,0 +1,12 @@
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: nil } %>
+
+<%= form_for [@course, @folder], :html => { :class => 'form-horizontal' }, :method => :post do |f| %>
+  <div id="uploaded_files_div"></div>
+  <div class="form-actions">
+    <%= f.submit "Done", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+    <%= hidden_field_tag :type, :files  %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                course_material_folder_url(@course, @folder), :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,7 @@
+<h4>
+  <% if @is_new[material.id] %>
+      <input type="hidden" class="new_<%= material.class.model_name.human.pluralize %>" />
+      <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png" alt="New!" />
+  <% end %>
+  <i class="icon-file"></i> <%= material.filename %>
+</h4>

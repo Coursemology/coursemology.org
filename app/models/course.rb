@@ -3,15 +3,17 @@ class Course < ActiveRecord::Base
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open
   before_create :populate_preference
+  after_create :create_materials_root
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions,       dependent: :destroy
-  has_many :announcements,  dependent: :destroy
-  has_many :user_courses,   dependent: :destroy
-  has_many :trainings,      dependent: :destroy
+  has_many :missions,          dependent: :destroy
+  has_many :announcements,     dependent: :destroy
+  has_many :user_courses ,     dependent: :destroy
+  has_many :trainings,         dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
+  has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
@@ -250,6 +252,10 @@ class Course < ActiveRecord::Base
         pref.save
       end
     end
+  end
+
+  def create_materials_root
+    MaterialFolder.create(:course => self, :name => "Root")
   end
 
   def enrol_user(user, role)
