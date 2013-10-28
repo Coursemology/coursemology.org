@@ -48,7 +48,16 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   this.treeElement.tree({
     data: treeData,
     autoOpen: 0,
-    keyboardSupport: false
+    keyboardSupport: false,
+    onCreateLi: function(node, $li) {
+      // Stick a file icon next to each entry.
+      var iconClass = "icon-file";
+      if (node.isNodeFolder) {
+        iconClass = "icon-folder-open";
+      }
+      var iconHtml = '<i class="' + iconClass + '"></i>';
+      $li.find('.jqtree-element').prepend(iconHtml);
+    }
   });
   var that = this;
   this.treeElement.bind('tree.click', function(event) { that.onNodeClicked(event); });
