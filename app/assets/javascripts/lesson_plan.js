@@ -39,4 +39,16 @@ $(document).ready(function() {
   $(document).on('click', '.resource-delete', null, function() {
     $(this).parents('tr').remove();
   });
+  
+  $('#lesson-plan-hide-all').click(function() {
+    $(this).hide();
+    $('.lesson-plan-body').fadeOut();
+    $('#lesson-plan-show-all').show();
+  });
+  
+  $('#lesson-plan-show-all').click(function() {
+    $(this).hide();
+    $('.lesson-plan-body').fadeIn();
+    $('#lesson-plan-hide-all').show();
+  });
 });
