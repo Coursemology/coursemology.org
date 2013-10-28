@@ -41,13 +41,13 @@ $(document).ready(function() {
   });
   
   $('#lesson-plan-hide-all').click(function() {
-    $('.lesson-plan-body').fadeOut();
+    $('.lesson-plan-body').slideUp();
     $('.lesson-plan-show-entries').show();
     $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
-    $('.lesson-plan-body').fadeIn();
+    $('.lesson-plan-body').slideDown();
     $('.lesson-plan-show-entries').hide();
     $('.lesson-plan-hide-entries').show();
   });
