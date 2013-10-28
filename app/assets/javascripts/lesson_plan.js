@@ -41,14 +41,28 @@ $(document).ready(function() {
   });
   
   $('#lesson-plan-hide-all').click(function() {
-    $(this).hide();
     $('.lesson-plan-body').fadeOut();
-    $('#lesson-plan-show-all').show();
+    $('.lesson-plan-show-entries').show();
+    $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
-    $(this).hide();
     $('.lesson-plan-body').fadeIn();
-    $('#lesson-plan-hide-all').show();
+    $('.lesson-plan-show-entries').hide();
+    $('.lesson-plan-hide-entries').show();
+  });
+  
+  $('.lesson-plan-hide-entries').click(function() {
+    $(this).hide();
+    var parent = $(this).parent();
+    $(parent).children('.lesson-plan-body').fadeOut();
+    $(parent).children('.lesson-plan-show-entries').show();
+  });
+  
+  $('.lesson-plan-show-entries').click(function() {
+    $(this).hide();
+    var parent = $(this).parent();
+    $(parent).children('.lesson-plan-body').fadeIn();
+    $(parent).children('.lesson-plan-hide-entries').show();
   });
 });

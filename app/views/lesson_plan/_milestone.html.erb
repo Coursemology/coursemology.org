@@ -2,7 +2,7 @@
   <table class="table-top-align">
     <tr>
       <td>
-      <h2><%= milestone.title %></h2>
+        <h2><%= milestone.title %></h2>
       <% if milestone.end_at %>
           <h3>Period ending on <%= milestone.end_at.strftime("%A, %d %B %Y") %></h3>
       <% end %>
@@ -26,9 +26,13 @@
       </td>
     <% end %>
   </table>
+  <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
+  <% if entries.length > 0 %>
+    <a class="lesson-plan-hide-entries">Hide Entries</a>
+    <a class="lesson-plan-show-entries" style="display: none;">Show Entries</a>
+  <% end %>
   <table class="table lesson-plan-body">
     <tbody>
-    <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
     <% entries.each {|entry| %>
     <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
     <% } %>
