@@ -47,7 +47,7 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   
   this.treeElement.tree({
     data: treeData,
-    autoOpen: true,
+    autoOpen: 0,
     keyboardSupport: false
   });
   var that = this;
