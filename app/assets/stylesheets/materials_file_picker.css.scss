@@ -1,0 +1,12 @@
+#file-picker-tree ul.jqtree-tree {
+    margin-left: 24px;
+}
+
+#file-picker-tree ul.jqtree-tree .jqtree-element {
+  width: 100%; /* todo: why is this in here? */
+  *width: auto; /* ie7 fix; issue 41 */
+  position: relative;
+  
+  font-size: 14px;
+  padding: 4px;
+}

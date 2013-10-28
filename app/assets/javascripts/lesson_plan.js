@@ -39,4 +39,30 @@ $(document).ready(function() {
   $(document).on('click', '.resource-delete', null, function() {
     $(this).parents('tr').remove();
   });
+  
+  $('#lesson-plan-hide-all').click(function() {
+    $('.lesson-plan-body').slideUp();
+    $('.lesson-plan-show-entries').show();
+    $('.lesson-plan-hide-entries').hide();
+  });
+  
+  $('#lesson-plan-show-all').click(function() {
+    $('.lesson-plan-body').slideDown();
+    $('.lesson-plan-show-entries').hide();
+    $('.lesson-plan-hide-entries').show();
+  });
+  
+  $('.lesson-plan-hide-entries').click(function() {
+    $(this).hide();
+    var parent = $(this).parent();
+    $(parent).children('.lesson-plan-body').slideUp();
+    $(parent).children('.lesson-plan-show-entries').show();
+  });
+  
+  $('.lesson-plan-show-entries').click(function() {
+    $(this).hide();
+    var parent = $(this).parent();
+    $(parent).children('.lesson-plan-body').slideDown();
+    $(parent).children('.lesson-plan-hide-entries').show();
+  });
 });

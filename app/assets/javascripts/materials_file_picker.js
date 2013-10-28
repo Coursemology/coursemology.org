@@ -5,15 +5,17 @@ function MaterialsFilePicker() {
 MaterialsFilePicker.prototype.pick = function(div) {
   var courseId = gon.course;
   var that = this;
-  $.ajax({
-    url: '/courses/' + courseId + '/materials.json',
-    success: function(rootNode) { that.onWorkbinStructureReceived(rootNode); }
-  });
   
   var htmlContent = '<div class="modal-header">\
   <h3>Select Files</h3>\
   </div>\
   <div class="modal-body">\
+  <div id="file-picker-loading">\
+    <h2>Loading...</h2>\
+    <div class="progress progress-striped active">\
+      <div class="bar" style="width: 100%;"></div>\
+    </div>\
+  </div>\
   <div id="file-picker-tree"></div>\
   </div>\
   <div class="modal-footer">\
@@ -26,6 +28,20 @@ MaterialsFilePicker.prototype.pick = function(div) {
   </div>';
 
   $(div).html(htmlContent);
+  
+  $.ajax({
+    url: '/courses/' + courseId + '/materials.json',
+    success: function(rootNode) { 
+      that.onWorkbinStructureReceived(rootNode); 
+    },
+    beforeSend: function() {
+      $('#file-picker-loading', div).show();
+    },
+    complete: function() {
+      $('#file-picker-loading', div).hide();
+    }
+  });
+  
   this.treeElement = $('#file-picker-tree', div);
   
   $("#done-picking", div).on('click', function() { that.onDone(); });
@@ -47,8 +63,17 @@ MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
   
   this.treeElement.tree({
     data: treeData,
-    autoOpen: true,
-    keyboardSupport: false
+    autoOpen: 0,
+    keyboardSupport: false,
+    onCreateLi: function(node, $li) {
+      // Stick a file icon next to each entry.
+      var iconClass = "icon-file";
+      if (node.isNodeFolder) {
+        iconClass = "icon-folder-open";
+      }
+      var iconHtml = '<i class="' + iconClass + '"></i>';
+      $li.find('.jqtree-element').prepend(iconHtml);
+    }
   });
   var that = this;
   this.treeElement.bind('tree.click', function(event) { that.onNodeClicked(event); });

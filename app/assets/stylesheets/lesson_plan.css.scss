@@ -12,5 +12,9 @@
 th#linked_resource_name {
 }
 th#linked_resource_type, th#linked_resource_actions {
-    width: 20%;
+  width: 20%;
+}
+
+.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover {
+  cursor: pointer;
 }
