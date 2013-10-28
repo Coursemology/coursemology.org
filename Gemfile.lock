@@ -255,7 +255,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    rubyzip (1.0.0)
+    rubyzip (0.9.9)
     sass (3.2.12)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -342,7 +342,7 @@ DEPENDENCIES
   puma
   rails (= 3.2.11)
   rspec-rails
-  rubyzip
+  rubyzip (~> 0.9.9)
   sass-rails (~> 3.2.3)
   sqlite3
   uglifier (>= 1.0.3)
