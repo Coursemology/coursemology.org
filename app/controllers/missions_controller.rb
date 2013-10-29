@@ -231,7 +231,7 @@ class MissionsController < ApplicationController
     end
 
     sbms = @mission.submissions.
-        where("std_course_id IN (?)", std_courses.select("user_courses.id")).includes(:std_coding_answers)
+        where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:std_coding_answers)
 
     temp_folder = "#{Rails.root}/paths/tmp/"
 
