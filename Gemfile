@@ -63,6 +63,7 @@ gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
 gem 'forem', :github => "radar/forem"
+gem "forem-kramdown"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
