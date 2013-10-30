@@ -546,3 +546,13 @@ if PreferableItem.count == 57
                          description:   "Course surveys",
                          default_display: true
 end
+
+if PreferableItem.count == 58
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "forums",
+                         default_value: "Forums",
+                         description:   "Discussion Forums",
+                         default_display: true
+end
+

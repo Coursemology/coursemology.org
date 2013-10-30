@@ -337,6 +337,9 @@ class ApplicationController < ActionController::Base
       when 'surveys'
         url = main_app.course_surveys_path(@course)
         icon = 'icon-edit'
+      when 'forums'
+        url = main_app.course_forums_url(@course)
+        icon = 'icon-th-list'
     end
     [url, icon]
   end
