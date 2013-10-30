@@ -28,15 +28,15 @@ class ForumsController < ApplicationController
   end
   helper_method :forem_admin_or_moderator?
 
-  def authorize
-    if curr_user_course.is_staff?
-      return true
-    end
-
-    can_start = @mission.can_start?(curr_user_course).first
-    unless can_start
-      redirect_to course_mission_access_denied_path(@course, @mission)
-    end
-  end
+  #def authorize
+  #  if curr_user_course.is_staff?
+  #    return true
+  #  end
+  #
+  #  can_start = @mission.can_start?(curr_user_course).first
+  #  unless can_start
+  #    redirect_to course_mission_access_denied_path(@course, @mission)
+  #  end
+  #end
 
 end
