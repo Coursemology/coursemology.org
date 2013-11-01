@@ -233,6 +233,7 @@ private
     folder_metadata['url'] = folder.is_virtual ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.materials.length
+    folder_metadata['is_virtual'] = folder.is_virtual
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}

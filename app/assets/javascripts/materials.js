@@ -1,6 +1,6 @@
 // Auto-magically referenced. Yay.
 
-function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
+function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtualFolders) {
   var folders = {};
     
   // Convert all the folders to tree nodes.
@@ -9,6 +9,9 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
     var currentFolder = foldersToProcess.shift();
     
     for (var i = 0; i < currentFolder.subfolders.length; i++) {
+      if (!shouldIncludeVirtualFolders && currentFolder.subfolders[i].is_virtual) {
+        continue;
+      }
       foldersToProcess.push(currentFolder.subfolders[i]);
     }
     
@@ -60,7 +63,7 @@ $(document).ready(function() {
       return;
   }
   
-  var treeData = parseFileJsonForJqTree(rootNode, false);
+  var treeData = parseFileJsonForJqTree(rootNode, false, true);
   
   // Set up the tree.
   var treeElement = $('#file-tree');
