@@ -222,6 +222,11 @@ private
     folder_metadata['subfolders'] = folder.subfolders.map { |subfolder|
       build_subtree(subfolder, include_files)
     }
+    if (folder.parent_folder == nil) and not (folder.is_virtual) then
+      folder_metadata['subfolders'] += @course.workbin_virtual_entries.map { |subfolder|
+        build_subtree(subfolder, include_files)
+    }
+    end
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name

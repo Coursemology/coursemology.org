@@ -40,6 +40,17 @@ class MaterialFolder < ActiveRecord::Base
       def files=(files)
         @files = files
       end
+      
+      # For now virtual folders can't have subfolders, so we merge them
+      def materials
+        files
+      end
+      def parent_folder
+        nil
+      end
+      def parent_folder_id
+        -1
+      end
       def subfolders
         []
       end

@@ -50,6 +50,12 @@ class Material < ActiveRecord::Base
       def url=(url)
         @url = url
       end
+      def folder
+        nil
+      end
+      def folder_id
+        -1
+      end
 
       def is_virtual
         true
