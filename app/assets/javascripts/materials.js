@@ -9,10 +9,11 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
     var currentFolder = foldersToProcess.shift();
     
     for (var i = 0; i < currentFolder.subfolders.length; i++) {
-      if (!shouldIncludeVirtualFolders && currentFolder.subfolders[i].is_virtual) {
+      var currentSubfolder = currentFolder.subfolders[i];
+      if (!shouldIncludeVirtualFolders && currentSubfolder.is_virtual) {
         continue;
       }
-      foldersToProcess.push(currentFolder.subfolders[i]);
+      foldersToProcess.push(currentSubfolder);
     }
     
     var files = [];
