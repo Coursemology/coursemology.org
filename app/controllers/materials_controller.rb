@@ -5,7 +5,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
   load_and_authorize_resource :material, :parent => false, :except => [:index, :edit_folder, :update_folder, :destroy_folder]
   
-  before_filter :load_general_course_data, only: [:index, :edit, :new]
+  before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new]
 
   def index
     authorize! :index, Material
@@ -63,7 +63,10 @@ class MaterialsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
+    # Template variables defined by index.
     @virtual_folders = []
+    @is_subfolder_new = []
+    @is_new = []
 
     respond_to do |format|
       format.html {
