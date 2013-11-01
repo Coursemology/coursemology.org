@@ -1,8 +1,5 @@
-<div class="control-group">
-  <%= f.label :text, :class => 'control-label' %>
-  <div class="controls">
-    <%= f.input :text , label: false, input_html: {:class => 'text_area span7 html-editor'} %>
-  </div>
+<div class="post-content">
+  <%= f.input :text , label: false, required: false, input_html: {:class => 'text_area span7 html-editor'} %>
 </div>
 
 <% if params[:reply_to_id] %>

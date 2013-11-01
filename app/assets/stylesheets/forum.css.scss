@@ -3,13 +3,10 @@
   clear: both; /* Required for Webkit, but not for Gecko */
 }
 
-.simple_form div.controls {
+.simple_form .post-content {
   margin-left: 120px;
 }
 
-.simple_form div.control-group {
-  margin-bottom: 18px;
-}
 
 .simple_form label {
   float: left;
