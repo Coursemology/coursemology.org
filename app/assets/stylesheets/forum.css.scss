@@ -1,14 +1,14 @@
-
 .simple_form div.input {
   margin-bottom: 10px;
   clear: both; /* Required for Webkit, but not for Gecko */
 }
-.simple_form div input {
-  width: 70%;
+
+.simple_form div.controls {
+  margin-left: 120px;
 }
 
-.simple_form div textarea {
-  width: 70%;
+.simple_form div.control-group {
+  margin-bottom: 18px;
 }
 
 .simple_form label {
