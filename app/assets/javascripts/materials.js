@@ -38,7 +38,8 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
       url: currentFolder.url,
       parentId: currentFolder.parent_folder_id,
       children: files,
-      isNodeFolder: true
+      isNodeFolder: true,
+      isVirtual: currentFolder.is_virtual
     }
   }  
   
@@ -53,6 +54,20 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
     } else {
       folders[parentId].children.push(folder);
     }
+  }
+  
+  // Sort the entries within each tree.
+  for (var id in folders) {
+    var folder = folders[id];
+    folder.children.sort(function(a, b) {
+      if (a.isVirtual && !b.isVirtual) {
+        return -1;
+      } else if (!a.isVirtual && b.isVirtual) {
+        return 1;
+      } else {
+        return a.label.localeCompare(b.label);
+      }
+    });
   }
   
   return [rootFolder];
