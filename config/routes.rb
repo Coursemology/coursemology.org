@@ -45,7 +45,6 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     match "/submissions" => "submissions#listall", as: :submissions
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
-    match "/forums" => "forums#index", as: :forums
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
     match "/staff"            => "user_courses#staff", as: :staff
@@ -180,6 +179,24 @@ JfdiAcademy::Application.routes.draw do
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
+    match "/forums" => "forem/categories#show", as: :forums
+    resources :forums, :controller => "forem/forums" do
+      resources :topics, :controller => "forem/topics" do
+        resources :posts, :controller => "forem/posts"
+        get :subscribe
+        get :unsubscribe
+      end
+    end
+    namespace :admin do
+      resources :forums, :controller => "forem/admin/forums" do
+        resources :topics, :controller => "forem/admin/topics" do
+          resources :posts, :controller => "forem/admin/posts"
+          put :toggle_hide
+          put :toggle_lock
+          put :toggle_pin
+        end
+      end
+    end
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

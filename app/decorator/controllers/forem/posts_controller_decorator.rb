@@ -1,52 +1,15 @@
 Forem::PostsController.class_eval do
-  before_filter :find_forum
-  def new
-    @post = @topic.posts.build
-    find_reply_to_post
+  load_and_authorize_resource :topic
 
-    @post.text = view_context.forem_quote(@reply_to_post.text) if params[:quote]
-    @course = Course.find(@forum.category.id)
-    load_general_course_data
-  end
-
-  def create
-    @post = @topic.posts.build(params[:post])
-    @post.user = forem_user
-    @course = Course.find(@forum.category.id)
-    load_general_course_data
-
-    if @post.save
-      create_successful
-    else
-      create_failed
-    end
-  end
-
-  def edit
-    @course = Course.find(@forum.category.id)
-    load_general_course_data
-  end
-
-  def update
-    @course = Course.find(@forum.category.id)
-    load_general_course_data
-    if @post.owner_or_admin?(forem_user) && @post.update_attributes(params[:post])
-      update_successful
-    else
-      update_failed
-    end
-  end
-
-  def destroy
-    @course = Course.find(@forum.category.id)
-    load_general_course_data
-    @post.destroy
-    destroy_successful
-  end
+  before_filter :shim
 
   private
-  def find_forum
-    @forum = Forem::Forum.find(@topic.forum_id)
-    authorize! :read, @forum
+
+  def shim
+    @forum = Forem::Forum.find(params[:forum_id])
+    @course = Course.find(@forum.category.id)
+    @current_ability = CourseAbility.new(current_user, curr_user_course)
+    load_general_course_data
+    @current_ability = Forem::Ability.new(forem_user)
   end
 end

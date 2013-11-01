@@ -130,11 +130,6 @@ class ApplicationController < ActionController::Base
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
-                    }, {
-                        text:   "Forums",
-                        url:    main_app.course_forums_url(@course),
-                        img:    @theme_settings["Forums Icon"],
-                        icon:   "icon-th-list",
                     }]
       @nav_items <<   {
           text:   "Comments",
@@ -168,6 +163,11 @@ class ApplicationController < ActionController::Base
           text: "Survey",
           url: main_app.course_surveys_path(@course),
           icon: "icon-edit"
+      }
+      @nav_items << {
+          text:   "Forums",
+          url:    main_app.course_forums_url(@course),
+          icon:   "icon-th-list",
       }
     end
 

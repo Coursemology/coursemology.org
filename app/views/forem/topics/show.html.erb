@@ -2,16 +2,16 @@
   <div id='menu' class="pull-right">
     <div class='btn-group'>
       <% if @topic.can_be_replied_to? %>
-        <%= link_to t(".reply"), forem.new_topic_post_path(@topic), :class => "btn" %>
+        <%= link_to t(".reply"), main_app.new_course_forum_topic_post_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
       <% if @topic.user == forem_user || forem_admin? %>
-        <%= link_to t(".delete"), forem.forum_topic_path(@forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
+        <%= link_to t(".delete"), main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
       <% end %>
       <% if forem_user %>
         <% if !@topic.subscriber?(forem_user.id) %>
-          <%= link_to t(".subscribe"), forem.subscribe_forum_topic_path(@forum, @topic), :class => "btn btn-success" %>
+          <%= link_to t(".subscribe"), main_app.course_forum_topic_subscribe_path(@course, @forum, @topic), :class => "btn btn-success" %>
         <% else %>
-          <%= link_to t(".unsubscribe"), forem.unsubscribe_forum_topic_path(@forum, @topic), :class => "btn btn-danger" %>
+          <%= link_to t(".unsubscribe"), main_app.course_forum_topic_unsubscribe_path(@course, @forum, @topic), :class => "btn btn-danger" %>
         <% end %>
       <% end %>
       <% if forem_admin? %>

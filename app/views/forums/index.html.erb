@@ -1,5 +1,0 @@
-<%- @category = Forem::Category.find(@course) %>
-<div class="page-header">
-  <h1><%=t '.title', :default => "Forums" %></h1>
-</div>
-<%= render :action => 'forem/forum#index', :template => "forem/categories/show" %>
