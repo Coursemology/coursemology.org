@@ -92,4 +92,8 @@ class Material < ActiveRecord::Base
       existing_file.save
     end
   end
+
+  def is_virtual
+    false
+  end
 end
