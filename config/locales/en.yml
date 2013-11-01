@@ -14,3 +14,16 @@ en:
     post:
       buttons:
         edit: "Save"
+    topics:
+      show:
+        links:
+          edit: Edit
+        hide:
+          'true': Show
+          'false': Hide
+        lock:
+          'true': Unlock
+          'false': Lock
+        pin:
+          'true': Unpin
+          'false': Pin
