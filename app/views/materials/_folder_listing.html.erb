@@ -11,7 +11,7 @@
   </thead>
 
   <tbody class="table-hover">
-    <% (@virtual_folders + @folder.subfolders).each do |subfolder| %>
+    <% (@virtual_folders.sort_by{|folder| folder.name} + @folder.subfolders.sort_by {|folder| folder.name}).each do |subfolder| %>
       <tr>
         <td>
           <% link = if subfolder.is_virtual then
@@ -51,7 +51,7 @@
       </tr>
     <% end %>
 
-    <% @folder.files.each do |material| %>
+    <% @folder.files.sort_by{|file| file.title.downcase}.each do |material| %>
       <tr>
         <td>
           <% link = if material.is_virtual then
