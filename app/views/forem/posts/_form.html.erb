@@ -1,4 +1,9 @@
-<%= f.input :text %>
+<div class="control-group">
+  <%= f.label :text, :class => 'control-label' %>
+  <div class="controls">
+    <%= f.input :text , label: false, input_html: {:class => 'text_area span7 html-editor'} %>
+  </div>
+</div>
 
 <% if params[:reply_to_id] %>
   <%= f.hidden_field :reply_to_id, :value => params[:reply_to_id] %>
