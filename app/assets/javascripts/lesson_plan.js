@@ -54,15 +54,15 @@ $(document).ready(function() {
   
   $('.lesson-plan-hide-entries').click(function() {
     $(this).hide();
-    var parent = $(this).parent();
-    $(parent).children('.lesson-plan-body').slideUp();
-    $(parent).children('.lesson-plan-show-entries').show();
+    var parent = $(this).parents('.lesson-plan-item');
+    $('.lesson-plan-body', parent).slideUp();
+    $('.lesson-plan-show-entries', parent).show();
   });
   
   $('.lesson-plan-show-entries').click(function() {
     $(this).hide();
-    var parent = $(this).parent();
-    $(parent).children('.lesson-plan-body').slideDown();
-    $(parent).children('.lesson-plan-hide-entries').show();
+    var parent = $(this).parents('.lesson-plan-item');
+    $('.lesson-plan-body', parent).slideDown();
+    $('.lesson-plan-hide-entries', parent).show();
   });
 });
