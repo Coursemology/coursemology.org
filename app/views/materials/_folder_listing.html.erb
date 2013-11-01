@@ -11,10 +11,15 @@
   </thead>
 
   <tbody class="table-hover">
-    <% @folder.subfolders.each do |subfolder| %>
+    <% (@virtual_folders + @folder.subfolders).each do |subfolder| %>
       <tr>
         <td>
-          <%= link_to course_material_folder_path(@course, subfolder) do %>
+          <% link = if subfolder.is_virtual then
+              course_material_virtual_folder_path(@course, subfolder.id)
+            else
+              course_material_folder_path(@course, subfolder)
+            end %>
+          <%= link_to link do %>
             <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
           <% end %>
         </td>
@@ -27,8 +32,8 @@
           <%= datetime_format(subfolder.updated_at) %>
         </td>
 
-        <% if can? :manage, Material %>
-          <td>
+        <td>
+          <% if (can? :manage, Material) && not(subfolder.is_virtual) %>
             <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -38,8 +43,10 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
-          </td>
-        <% end %>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
 
       </tr>
     <% end %>
@@ -47,7 +54,12 @@
     <% @folder.files.each do |material| %>
       <tr>
         <td>
-          <%= link_to course_material_path(@course, material) do %>
+          <% link = if material.is_virtual then
+              material.url
+            else
+              course_material_path(@course, material)
+            end %>
+          <%= link_to link do %>
             <%= render partial: "layouts/material_title", locals: {material: material} %>
           <% end %>
           <% if material.description %>
@@ -63,8 +75,8 @@
           <%= datetime_format(material.updated_at) %>
         </td>
 
-        <% if can? :manage, Material %>
-          <td>
+        <td>
+          <% if (can? :manage, Material) && not(material.is_virtual) %>
             <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -74,8 +86,10 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
-          </td>
-        <% end %>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
 
       </tr>
     <% end %>
