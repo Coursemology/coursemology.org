@@ -1,15 +1,12 @@
-
 .simple_form div.input {
   margin-bottom: 10px;
   clear: both; /* Required for Webkit, but not for Gecko */
 }
-.simple_form div input {
-  width: 70%;
+
+.simple_form .post-content {
+  margin-left: 120px;
 }
 
-.simple_form div textarea {
-  width: 70%;
-}
 
 .simple_form label {
   float: left;
