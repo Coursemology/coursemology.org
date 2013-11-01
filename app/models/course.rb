@@ -309,7 +309,7 @@ class Course < ActiveRecord::Base
       })
       .reduce { |mission, files| mission + files }
 
-    missions = MaterialFolder.create_virtual("missions")
+    missions = MaterialFolder.create_virtual("missions", material_folder.id)
     missions.name = "Missions"
     missions.description = "Mission descriptions and other files"
     missions.files = mission_files
@@ -327,7 +327,7 @@ class Course < ActiveRecord::Base
       })
       .reduce { |training, files| training + files }
 
-    trainings = MaterialFolder.create_virtual("trainings")
+    trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
     trainings.name = "Trainings"
     trainings.description = "Training descriptions and other files"
     trainings.files = training_files

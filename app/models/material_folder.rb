@@ -10,13 +10,14 @@ class MaterialFolder < ActiveRecord::Base
   attr_accessible :parent_folder, :course, :course_id, :name, :description
 
   # Creates a virtual item of this class that is backed by some other data store.
-  def self.create_virtual(id)
+  def self.create_virtual(id, parent_id)
     (Class.new do
       # Give the ID of this virtual folder. Should be the module name.
-      def initialize(id)
+      def initialize(id, parent_id)
         @id = id
         @name = @description = nil
         @files = []
+        @parent_folder = MaterialFolder.find_by_id(parent_id)
       end
 
       def id
@@ -46,10 +47,10 @@ class MaterialFolder < ActiveRecord::Base
         files
       end
       def parent_folder
-        nil
+        @parent_folder
       end
       def parent_folder_id
-        -1
+        @parent_folder.id
       end
       def subfolders
         []
@@ -61,7 +62,7 @@ class MaterialFolder < ActiveRecord::Base
       def is_virtual
         true
       end
-    end).new(id)
+    end).new(id, parent_id)
   end
 
   def materials
