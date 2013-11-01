@@ -297,7 +297,7 @@ class Course < ActiveRecord::Base
 
   def workbin_virtual_entries
     mission_files =
-      # Get the mission's files, and map it to the virtual entries.
+      # Get the missions' files, and map it to the virtual entries.
       (self.missions.map { |m| m.files.map { |f| 
           material = Material.create_virtual
           material.filename = m.title + ": " + f.original_name
@@ -314,6 +314,24 @@ class Course < ActiveRecord::Base
     missions.description = "Mission descriptions and other files"
     missions.files = mission_files
 
-    [missions]
+    training_files =
+      # Get the trainings' files, and map it to the virtual entries.
+      (self.trainings.map { |t| t.files.map { |f|
+          material = Material.create_virtual
+          material.filename = t.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.url = f.file.url
+
+          material
+        }
+      })
+      .reduce { |training, files| training + files }
+
+    trainings = MaterialFolder.create_virtual("trainings")
+    trainings.name = "Trainings"
+    trainings.description = "Training descriptions and other files"
+    trainings.files = training_files
+
+    [missions, trainings]
   end
 end
