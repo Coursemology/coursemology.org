@@ -294,4 +294,44 @@ class Course < ActiveRecord::Base
 
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
+
+  def workbin_virtual_entries(ability)
+    mission_files =
+      # Get the missions' files, and map it to the virtual entries.
+      (self.missions.accessible_by(ability).map { |m| m.files.map { |f|
+          material = Material.create_virtual
+          material.filename = m.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.url = f.file.url
+
+          material
+        }
+      })
+      .reduce { |mission, files| mission + files }
+
+    missions = MaterialFolder.create_virtual("missions", material_folder.id)
+    missions.name = "Missions"
+    missions.description = "Mission descriptions and other files"
+    missions.files = mission_files
+
+    training_files =
+      # Get the trainings' files, and map it to the virtual entries.
+      (self.trainings.accessible_by(ability).map { |t| t.files.map { |f|
+          material = Material.create_virtual
+          material.filename = t.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.url = f.file.url
+
+          material
+        }
+      })
+      .reduce { |training, files| training + files }
+
+    trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
+    trainings.name = "Trainings"
+    trainings.description = "Training descriptions and other files"
+    trainings.files = training_files
+
+    [missions, trainings]
+  end
 end

@@ -1,6 +1,6 @@
 // Auto-magically referenced. Yay.
 
-function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
+function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtualFolders) {
   var folders = {};
     
   // Convert all the folders to tree nodes.
@@ -9,7 +9,11 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
     var currentFolder = foldersToProcess.shift();
     
     for (var i = 0; i < currentFolder.subfolders.length; i++) {
-      foldersToProcess.push(currentFolder.subfolders[i]);
+      var currentSubfolder = currentFolder.subfolders[i];
+      if (!shouldIncludeVirtualFolders && currentSubfolder.is_virtual) {
+        continue;
+      }
+      foldersToProcess.push(currentSubfolder);
     }
     
     var files = [];
@@ -33,7 +37,9 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
       label: nameAndCount,
       url: currentFolder.url,
       parentId: currentFolder.parent_folder_id,
-      children: files
+      children: files,
+      isNodeFolder: true,
+      isVirtual: currentFolder.is_virtual
     }
   }  
   
@@ -50,6 +56,29 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles) {
     }
   }
   
+  // Sort the entries within each folder.
+  for (var id in folders) {
+    var folder = folders[id];
+    folder.children.sort(function(a, b) {
+      // Prioritize folders.
+      if (a.children && !b.children) {
+        return -1;
+      } else if (!a.children && b.children) {
+        return 1;
+      }
+      
+      // Prioritize virtual folders.
+      if (a.isVirtual && !b.isVirtual) {
+        return -1;
+      } else if (!a.isVirtual && b.isVirtual) {
+        return 1;
+      } else {
+        // Sort by name.
+        return a.label.localeCompare(b.label);
+      }
+    });
+  }
+  
   return [rootFolder];
 }
 
@@ -59,14 +88,18 @@ $(document).ready(function() {
       return;
   }
   
-  var treeData = parseFileJsonForJqTree(rootNode, false);
+  var treeData = parseFileJsonForJqTree(rootNode, false, true);
   
   // Set up the tree.
   var treeElement = $('#file-tree');
   treeElement.tree({
     data: treeData,
     autoOpen: true,
-    keyboardSupport: false
+    keyboardSupport: false,
+    onCreateLi: function(node, $li) {
+      var iconHtml = '<i class="icon-folder-open"></i>';
+      $li.find('.jqtree-element').prepend(iconHtml);
+    }
   });
   
   // Select the folder we're currently in.

@@ -5,7 +5,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
   load_and_authorize_resource :material, :parent => false, :except => [:index, :edit_folder, :update_folder, :destroy_folder]
   
-  before_filter :load_general_course_data, only: [:index, :edit, :new]
+  before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new]
 
   def index
     authorize! :index, Material
@@ -35,6 +35,14 @@ class MaterialsController < ApplicationController
         material.id
       }
     }
+
+    # If we are the root directory, we need to include the virtual entries for
+    # this course
+    if @folder.parent_folder == nil then
+      @virtual_folders = @course.workbin_virtual_entries(current_ability)
+    else
+      @virtual_folders = []
+    end
     
     # Get the directory structure to the front-end JS.
     respond_to do |format|
@@ -44,6 +52,27 @@ class MaterialsController < ApplicationController
       }
       format.json {
         render :json => build_subtree(@folder, true)
+      }
+    end
+  end
+
+  def index_virtual
+    # Find the virtual folder matching the specified ID
+    @folder = (@course.workbin_virtual_entries(current_ability).select {
+        |folder| folder.id == params[:virtual] })
+    raise ActiveRecord::RecordNotFound if @folder.length == 0
+    @folder = @folder[0]
+
+    # Template variables defined by index.
+    @virtual_folders = []
+    @is_subfolder_new = []
+    @is_new = []
+
+    respond_to do |format|
+      format.html {
+        gon.currentFolder = @folder
+        gon.folders = build_subtree(@course.material_folder)
+        render "materials/index"
       }
     end
   end
@@ -193,12 +222,18 @@ private
     folder_metadata['subfolders'] = folder.subfolders.map { |subfolder|
       build_subtree(subfolder, include_files)
     }
+    if (folder.parent_folder == nil) and not (folder.is_virtual) then
+      folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability).map { |subfolder|
+        build_subtree(subfolder, include_files)
+    }
+    end
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name
-    folder_metadata['url'] = course_material_folder_path(@course, folder)
+    folder_metadata['url'] = folder.is_virtual ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.materials.length
+    folder_metadata['is_virtual'] = folder.is_virtual
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}

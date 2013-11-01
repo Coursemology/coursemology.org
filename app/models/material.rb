@@ -12,6 +12,57 @@ class Material < ActiveRecord::Base
     end
   end
 
+  # Creates a virtual item of this class that is backed by some other data store.
+  def self.create_virtual
+    (Class.new do
+      # Give the ID of this virtual folder. Should be the module name.
+      def initialize
+        @name = @description = @url = nil
+      end
+
+      def id
+        -1
+      end
+      def filename
+        @filename
+      end
+      def filename=(name)
+        @filename = name
+      end
+      def filesize
+        @filesize
+      end
+      def filesize=(size)
+        @filesize = size
+      end
+      def description
+        @description
+      end
+      def description=(description)
+        @description = description
+      end
+      def updated_at
+        nil
+      end
+      def url
+        @url
+      end
+      def url=(url)
+        @url = url
+      end
+      def folder
+        nil
+      end
+      def folder_id
+        -1
+      end
+
+      def is_virtual
+        true
+      end
+    end).new
+  end
+
   def filename
     self.file.original_name || self.file.file_file_name
   end
@@ -40,5 +91,9 @@ class Material < ActiveRecord::Base
       existing_file.owner_id = nil
       existing_file.save
     end
+  end
+
+  def is_virtual
+    false
   end
 end

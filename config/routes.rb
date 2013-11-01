@@ -93,6 +93,7 @@ JfdiAcademy::Application.routes.draw do
     put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
     post "materials/subfolder/:parent", to: "materials#create", as: :material_create
     delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
+    get "materials/virtual/:virtual", to: "materials#index_virtual", as: :material_virtual_folder
     resources :materials, except: [:new, :create] do
       #resources :file_uploads
     end
