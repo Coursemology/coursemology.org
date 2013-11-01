@@ -294,4 +294,17 @@ class Course < ActiveRecord::Base
 
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
+
+  def workbin_virtual_entries
+    mission_files = (self.missions.map { |m| m.files }).reduce { |mission, files|
+      mission + files
+    }
+
+    missions = MaterialFolder.create_virtual("missions")
+    missions.name = "Missions"
+    missions.description = "Mission descriptions and other files"
+    missions.files = mission_files
+
+    [missions]
+  end
 end

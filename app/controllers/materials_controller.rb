@@ -35,6 +35,14 @@ class MaterialsController < ApplicationController
         material.id
       }
     }
+
+    # If we are the root directory, we need to include the virtual entries for
+    # this course
+    if @folder.parent_folder == nil then
+      @virtual_folders = @course.workbin_virtual_entries
+    else
+      @virtual_folders = []
+    end
     
     # Get the directory structure to the front-end JS.
     respond_to do |format|
@@ -44,6 +52,24 @@ class MaterialsController < ApplicationController
       }
       format.json {
         render :json => build_subtree(@folder, true)
+      }
+    end
+  end
+
+  def index_virtual
+    # Find the virtual folder matching the specified ID
+    @folder = (@course.workbin_virtual_entries.select {
+        |folder| folder.id == params[:virtual] })
+    raise ActiveRecord::RecordNotFound if @folder.length == 0
+    @folder = @folder[0]
+
+    @virtual_folders = []
+
+    respond_to do |format|
+      format.html {
+        gon.currentFolder = @folder
+        gon.folders = build_subtree(@course.material_folder)
+        render "materials/index"
       }
     end
   end
