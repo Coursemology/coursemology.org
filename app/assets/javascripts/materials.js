@@ -56,15 +56,24 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
     }
   }
   
-  // Sort the entries within each tree.
+  // Sort the entries within each folder.
   for (var id in folders) {
     var folder = folders[id];
     folder.children.sort(function(a, b) {
+      // Prioritize folders.
+      if (a.children && !b.children) {
+        return -1;
+      } else if (!a.children && b.children) {
+        return 1;
+      }
+      
+      // Prioritize virtual folders.
       if (a.isVirtual && !b.isVirtual) {
         return -1;
       } else if (!a.isVirtual && b.isVirtual) {
         return 1;
       } else {
+        // Sort by name.
         return a.label.localeCompare(b.label);
       }
     });
