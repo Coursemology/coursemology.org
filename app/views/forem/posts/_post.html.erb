@@ -20,7 +20,9 @@
       <h3 class='username'>
         <%= link_to_if Forem.user_profile_links, post.user, [main_app, post.user] %>
       </h3>
-      <div class='icon' style="float:right;"><%= forem_avatar(post.user, :size => 60) %></div>
+      <div class='icon' style="float:right;">
+        <img class="user-profile-pic" src="<%= post.user.get_profile_photo_url %>"/>
+      </div>
     </div>
 
     <div class='contents span7 thumbnail' style="padding:20px;">
