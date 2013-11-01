@@ -11,6 +11,7 @@ Rails.application.config.to_prepare do
 #
 #   If you want to add your own cancan Abilities to Forem, uncomment and customize the next line:
   Forem::Ability.register_ability(Ability)
+  Forem.formatter = CoursemologyFormatter
 end
 #
 # By default, these lines will use the layout located at app/views/layouts/forem.html.erb in your application.

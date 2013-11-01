@@ -26,7 +26,7 @@
     </div>
 
     <div class='contents span7 thumbnail' style="padding:20px;">
-      <%= forem_format(post.text) %>
+      <%=raw forem_format(post.text) %>
 
       <% if post.reply_to %>
         <!--<div class='in-reply-to'>
