@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>Forum Participation</h1>
+</div>
+
+<%= form_for(@course, url: course_manage_update_exp_path,
+             html: { method: :post, class: "form-horizontal" } ) do |f| %>
+  <table class="table" id="dg-std-table">
+    <thead>
+    <th>
+      <%= sortable 'Name', course_forum_participation_path %>
+    </th>
+    <th>
+      <%= sortable 'Level', course_forum_participation_path %>
+    </th>
+    <th>
+      <%= sortable 'Exp', course_forum_participation_path %>
+    </th>
+    <th>
+      Post Count
+    </th>
+    <th>
+      Add Exp
+    </th>
+    </thead>
+    <tbody>
+    <% @students_courses.each do |std_course| %>
+      <tr>
+        <td><%= link_to std_course.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
+        <td><%= std_course.level ? std_course.level.level : 0 %></td>
+        <td><%= link_to std_course.exp, course_user_course_exp_transactions_path(@course, std_course) %></td>
+        <td>
+          <%= @post_count[std_course.user_id] || 0 %>
+        </td>
+        <td><input type="number" name="EXP[<%= std_course.id %>]" title="EXP amount" class="input-mini"> </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= f.label :Reason, style:"display: inline-block;"%>
+  <input type="text" class="text_field" name="reason" value="Forum participation"/>
+  <%= f.submit "Update EXP", :class => 'btn btn-primary', "data-disable-with" => "Submitting..."%>
+<% end %>
