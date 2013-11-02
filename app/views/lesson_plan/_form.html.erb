@@ -87,3 +87,14 @@
                   course_lesson_plan_path(@course), :class => 'btn' %>
     </div>
 <% end %>
+
+<script type="text/x-tmpl" id="lesson-plan-resource">
+<tr>
+  <td>{%= o[2] %}</td>
+  <td>&nbsp;</td>
+  <td>
+    <span class="btn btn-danger resource-delete"><i class="icon-trash"></i></span>
+    <input type="hidden" name="resources[]" value="{%= o[0] %},{%= o[1] %}" />
+  </td>
+</tr>
+</script>
