@@ -11,16 +11,25 @@ class LessonPlanEntriesController < ApplicationController
 
   def index
     @milestones = @course.lesson_plan_milestones.order("end_at")
+    
+    if @milestones.length > 0
+      from = @milestones[@milestones.length - 1].end_at
+    end
+    
+    if can? :manage, Mission
+      virtual_entries = @course.lesson_plan_virtual_entries(from)
+    else
+      virtual_entries = @course.lesson_plan_virtual_entries(from).select { |entry| entry.is_published }
+    end
 
     # Add the entries which don't belong in any milestone
-    other_entries = if @milestones.length > 0 then
-        from = @milestones[@milestones.length - 1].end_at
+    other_entries = if from then
         @course.lesson_plan_entries.where("end_at > :end_at",
           :end_at => from) +
-        @course.lesson_plan_virtual_entries(from)
+        virtual_entries
       else
         @course.lesson_plan_entries.all +
-        @course.lesson_plan_virtual_entries
+        virtual_entries
       end
 
     other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
