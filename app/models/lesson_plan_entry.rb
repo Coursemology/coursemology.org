@@ -79,6 +79,14 @@ class LessonPlanEntry < ActiveRecord::Base
       def is_virtual
         true
       end
+      
+      def is_published
+        @is_published
+      end
+      
+      def is_published=(is_published)
+        @is_published = is_published
+      end
     end).new
   end
 
@@ -92,5 +100,8 @@ class LessonPlanEntry < ActiveRecord::Base
   
   def is_virtual
     false
+  end
+  def is_published
+    true
   end
 end
