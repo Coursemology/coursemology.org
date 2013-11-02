@@ -40,7 +40,8 @@ class LessonPlanEntriesController < ApplicationController
     
     respond_to do |format|
       if @lesson_plan_entry.save then
-        format.html { redirect_to course_lesson_plan_path(@course),
+        path = course_lesson_plan_path(@course) + "#entry-" + @lesson_plan_entry.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan entry #{@lesson_plan_entry.title} has been created." }
       else
         format.html { render action: "new" }
@@ -60,7 +61,8 @@ class LessonPlanEntriesController < ApplicationController
     
     respond_to do |format|
       if @lesson_plan_entry.update_attributes(params[:lesson_plan_entry]) && @lesson_plan_entry.save then
-        format.html { redirect_to course_lesson_plan_path(@course),
+        path = course_lesson_plan_path(@course) + "#entry-" + @lesson_plan_entry.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan entry #{@lesson_plan_entry.title} has been updated." }
       else
         format.html { render action: "index" }
