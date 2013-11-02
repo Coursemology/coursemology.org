@@ -180,6 +180,8 @@ JfdiAcademy::Application.routes.draw do
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
     match "/forums" => "forem/categories#show", as: :forums
+    match "/forums/admin" => "forem/admin/forums#show", as: :forums_admin
+    match "/forums/admin/new" => "forem/admin/forums#new", as: :forums_admin_new
     resources :forums, :controller => "forem/forums" do
       resources :topics, :controller => "forem/topics" do
         resources :posts, :controller => "forem/posts"
