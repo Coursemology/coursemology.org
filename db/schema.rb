@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131102064208) do
+ActiveRecord::Schema.define(:version => 20131102174954) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -337,6 +337,8 @@ ActiveRecord::Schema.define(:version => 20131102064208) do
     t.datetime "end_at"
   end
 
+  add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
+
   create_table "lesson_plan_resources", :force => true do |t|
     t.integer "lesson_plan_entry_id"
     t.integer "obj_id"
@@ -411,9 +413,9 @@ ActiveRecord::Schema.define(:version => 20131102064208) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"

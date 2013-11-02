@@ -295,17 +295,23 @@ class Course < ActiveRecord::Base
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 
-  def workbin_virtual_entries(ability)
+  def workbin_virtual_entries(ability, curr_user_course)
     mission_files =
       # Get the missions' files, and map it to the virtual entries.
-      (self.missions.accessible_by(ability).map { |m| m.files.map { |f|
-          material = Material.create_virtual
-          material.filename = m.title + ": " + f.original_name
-          material.filesize = f.file_file_size
-          material.url = f.file.url
+      (self.missions.accessible_by(ability).map { |m|
+        # Make sure the user is able to access this mission.
+        if m.can_start?(curr_user_course).first then
+          m.files.map { |f|
+            material = Material.create_virtual
+            material.filename = m.title + ": " + f.original_name
+            material.filesize = f.file_file_size
+            material.url = f.file.url
 
-          material
-        }
+            material
+          }
+        else
+          []
+        end
       })
       .reduce { |mission, files| mission + files }
 
@@ -316,14 +322,19 @@ class Course < ActiveRecord::Base
 
     training_files =
       # Get the trainings' files, and map it to the virtual entries.
-      (self.trainings.accessible_by(ability).map { |t| t.files.map { |f|
-          material = Material.create_virtual
-          material.filename = t.title + ": " + f.original_name
-          material.filesize = f.file_file_size
-          material.url = f.file.url
+      (self.trainings.accessible_by(ability).map { |t|
+        if t.open_at <= Time.now then
+          t.files.map { |f|
+            material = Material.create_virtual
+            material.filename = t.title + ": " + f.original_name
+            material.filesize = f.file_file_size
+            material.url = f.file.url
 
-          material
-        }
+            material
+          }
+        else
+          []
+        end
       })
       .reduce { |training, files| training + files }
 

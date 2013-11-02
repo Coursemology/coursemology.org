@@ -3,7 +3,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
   load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new]
 
@@ -39,7 +39,7 @@ class MaterialsController < ApplicationController
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
-      @virtual_folders = @course.workbin_virtual_entries(current_ability)
+      @virtual_folders = @course.workbin_virtual_entries(current_ability, curr_user_course)
     else
       @virtual_folders = []
     end
@@ -58,7 +58,7 @@ class MaterialsController < ApplicationController
 
   def index_virtual
     # Find the virtual folder matching the specified ID
-    @folder = (@course.workbin_virtual_entries(current_ability).select {
+    @folder = (@course.workbin_virtual_entries(current_ability, curr_user_course).select {
         |folder| folder.id == params[:virtual] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
@@ -228,7 +228,7 @@ private
       build_subtree(subfolder, include_files)
     }
     if (folder.parent_folder == nil) and not (folder.is_virtual) then
-      folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability).map { |subfolder|
+      folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability, curr_user_course).map { |subfolder|
         build_subtree(subfolder, include_files)
       }
     end
