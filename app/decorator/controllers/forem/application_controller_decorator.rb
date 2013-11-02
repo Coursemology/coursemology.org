@@ -6,4 +6,14 @@ Forem::ApplicationController.class_eval do
       @current_ability ||= Forem::Ability.new(forem_user)
     end
   end
+
+  def forem_admin?
+    can? :manage, Course
+  end
+  helper_method :forem_admin?
+
+  def forem_admin_or_moderator?(forum)
+    can? :manage, Course
+  end
+  helper_method :forem_admin_or_moderator?
 end
