@@ -22,6 +22,9 @@
           <%= link_to link do %>
             <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
           <% end %>
+          <% if subfolder.description %>
+          <p><%= subfolder.description.truncate(100, :separator => ' ') %></p>
+          <% end %>
         </td>
 
         <td>

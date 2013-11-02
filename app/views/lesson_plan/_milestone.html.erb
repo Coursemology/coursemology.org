@@ -1,7 +1,8 @@
 <% if milestone.is_virtual == false %>
-  <a name="<%= milestone.id %>"></a>
+  <a class="lesson-plan-anchor" name="<%= milestone.id %>"></a>
 <% end %>
 <div class="lesson-plan-item">
+  <a href="#top">Back to Top</a>
   <table class="table-top-align">
     <tr>
       <td>
@@ -12,12 +13,11 @@
         <% end %>
         <% if milestone.description %>
         <p>
-        <%= milestone.description.html_safe %>
+          <%= milestone.description.html_safe %>
         </p>
         <% end %>
       </td>
-      <td style="width: 20%; text-align: right">
-        <a href="#top">Back to Top</a>
+      <td style="width: 13%; text-align: right">
         <% if entries.length > 0 %>
           <a class="lesson-plan-hide-entries btn"><i class="icon-minus-sign"></i></a>
           <a class="lesson-plan-show-entries btn" style="display: none;"><i class="icon-plus-sign"></i></a>
@@ -36,6 +36,7 @@
     <% end %>
     </tr>
   </table>
+  <% if entries.length > 0 then %>
   <div class="lesson-plan-body">
   <table class="table">
     <tbody>
@@ -45,5 +46,6 @@
     </tbody>
   </table>
   </div>
+  <% end %>
   <hr />
 </div>

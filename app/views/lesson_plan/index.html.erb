@@ -1,14 +1,16 @@
-<a name="top"></a>
+<a class="lesson-plan-anchor" name="top"></a>
 <h1>Lesson Plan</h1>
 <% if can? :manage, LessonPlanEntry %>
+<%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
+<%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
 <a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
   Generate Milestones
 </a>
-<%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
-<%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
 <% end %>
+<span class="pull-right">
 <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
 <a id="lesson-plan-show-all" class="btn">Expand All</a>
+</span>
 
 <hr>
 

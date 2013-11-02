@@ -1,12 +1,14 @@
-<tr>
+<% if entry.is_virtual %>
+  <% entry_type = entry.entry_real_type %>
+<% else %>
+  <% entry_type = LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
+<% end %>
+
+<tr class="lesson-plan-<%= entry_type %>">
   <td>
     <h1>
       <small>
-        <% if entry.is_virtual %>
-          <%= entry.entry_real_type %>
-        <% else %>
-          <%= LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
-        <% end %>
+        <%= entry_type %>
       </small>
     </h1>
   </td>
@@ -32,7 +34,14 @@
         <% end %>
       <% end %>
     </h4>
-    <p><%= entry.description.html_safe %></p>
+    <p>
+      <% if entry.is_virtual %>
+        <%= entry.description.html_safe.truncate(140, :separator => ' ') %>
+      <% else %>
+        <%= entry.description.html_safe %>
+      <% end %>
+    </p>
+    
 <% if entry.resources.length > 0 %>
     <h4>Instructional Resources</h4>
     <ul>

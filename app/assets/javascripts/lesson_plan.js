@@ -19,14 +19,7 @@ $(document).ready(function() {
 
   LessonPlanEntryFormType.prototype.doneCallback = function(idTypePairList) {
     idTypePairList.forEach(function(x) {
-      $element = $('<tr>\n\
-        <td>' + x[2] + '</td>\n\
-        <td>&nbsp;</td>\n\
-        <td>\n\
-          <span class="btn btn-danger resource-delete"><i class="icon-trash"></i></span>\n\
-          <input type="hidden" name="resources[]" value="' + x[0] + ',' + x[1] + '" />\n\
-        </td>\n\
-      </tr>');
+      $element = $(tmpl('lesson-plan-resource', x));
       $("#linked_resources tbody").append($element);
     });
   };
