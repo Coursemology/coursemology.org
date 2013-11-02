@@ -105,7 +105,7 @@ class MaterialsController < ApplicationController
     
     notice = nil
     if params[:type] == "files" && params[:files] then
-      @parent.attach_files(params[:files].values)
+      @parent.attach_files(params[:files], params[:descriptions])
       notice = "The files were successfully uploaded."
     elsif params[:type] == "subfolder" && params[:material_folder][:name] then
       @parent.new_subfolder(params[:material_folder][:name], params[:material_folder][:description])
