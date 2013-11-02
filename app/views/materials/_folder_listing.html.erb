@@ -33,7 +33,7 @@
         </td>
 
         <td>
-          <% if (can? :manage, Material) && not(subfolder.is_virtual) %>
+          <% if (can? :manage, Material) and not(subfolder.is_virtual) %>
             <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
