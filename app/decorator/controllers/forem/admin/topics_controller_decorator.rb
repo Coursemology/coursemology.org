@@ -1,6 +1,8 @@
 Forem::Admin::TopicsController.class_eval do
-  #load_and_authorize_resource :course
-  #before_filter :shim
+  load_and_authorize_resource :course
+  load_and_authorize_resource :class => "Forem::Forum"
+  load_and_authorize_resource :class => "Forem::Topic"
+  before_filter :shim
 
   def update
     if @topic.update_attributes(params[:topic], :as => :admin)
