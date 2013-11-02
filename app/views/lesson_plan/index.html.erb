@@ -1,5 +1,8 @@
 <h1>Lesson Plan</h1>
 <% if can? :manage, LessonPlanEntry %>
+<a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
+  Generate Milestones
+</a>
 <%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
 <%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
 <% end %>
@@ -13,3 +16,63 @@
 <% sorted_milestones.each { |milestone| %>
   <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
 <% } %>
+
+<% if can? :manage, LessonPlanEntry %>
+  <div id="lesson-plan-multi-milestone" class="modal hide fade">
+    <div class="modal-header">
+      <h3>Milestone Generator</h3>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="control-group">
+          <label class="control-label" for="input-number-milestones">
+            How many milestones should we create?
+          </label>
+          <div class="controls">
+            <input type="number" id="input-number-milestones">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label" for="input-length-milestones">
+            How long is each milestone, in days?
+          </label>
+          <div class="controls">
+            <input type="number" id="input-length-milestones">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label" for="input-prefix-milestones">
+            What should each milestone be prefixed with?
+            <br>(For example, "Week" will generate "Week 1", "Week 2", and so on.)
+          </label>
+          <div class="controls">
+            <input id="input-prefix-milestones">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label" for="input-start-milestones">
+            What day should the first milestone start on?
+          </label>
+          <div class="controls">
+            <div class="datepicker-past input-append date">
+              <input type="text" class="text_field">
+              <span class="add-on">
+                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div id="done-generating" data-dismiss="modal" class="btn btn-primary">
+        Done
+      </div>
+      <button data-dismiss="modal" class="btn">
+        Cancel
+      </button>
+  </div>
+<% end %>
