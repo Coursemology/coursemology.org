@@ -19,7 +19,7 @@
     <div id='topic_<%= topic_counter + 1 %>' class='topic <%= cycle('odd', 'even') -%>'>
       <div class='moderation alert'>
         <%= link_to forem_emojify(topic.subject),
-                    forem.forum_topic_path(forum, topic) %>
+                    main_app.course_forum_topic_path(@course, forum, topic) %>
       </div>
     </div>
   <% end %>
