@@ -29,9 +29,9 @@
       <%=raw forem_format(post.text) %>
 
       <% if post.reply_to %>
-        <!--<div class='in-reply-to'>
+        <div class='in-reply-to'>
           <%= link_to "#{t("forem.post.in_reply_to")} #{post.reply_to.user}", "#post-#{post.reply_to.id}" %>
-        </div>-->
+        </div>
       <% end %>
 
       <div>
