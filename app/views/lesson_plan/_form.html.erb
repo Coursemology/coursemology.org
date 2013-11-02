@@ -32,7 +32,7 @@
     <div class="control-group">
       <%= f.label :start_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append datetime">
+        <div class="datetimepicker-past input-append datetime">
           <%= f.text_field :start_at, :value => datetime_format(@lesson_plan_entry.start_at), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
@@ -44,7 +44,7 @@
     <div class="control-group">
       <%= f.label :end_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append datetime">
+        <div class="datetimepicker-past input-append datetime">
           <%= f.text_field :end_at, :value => datetime_format(@lesson_plan_entry.end_at), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
