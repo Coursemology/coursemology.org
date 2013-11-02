@@ -40,8 +40,9 @@ class LessonPlanMilestone < ActiveRecord::Base
     previous_milestone = self.previous_milestone
     start_at = if previous_milestone then previous_milestone.end_at else nil end
     real_entries = LessonPlanEntry.where("end_at <= :end_at " +
-      (if previous_milestone then "AND end_at > :start_at" else "" end),
-      :end_at => self.end_at, :start_at => start_at)
+      (if previous_milestone then "AND end_at > :start_at" else "" end) +
+      " AND course_id = :course_id",
+      :end_at => self.end_at, :start_at => start_at, :course_id => self.course_id)
 
     virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
     real_entries + virtual_entries
