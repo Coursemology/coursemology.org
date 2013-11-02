@@ -12,6 +12,8 @@
 <hr>
 
 <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual } %>
+<% grouped_milestones[false] = [] unless grouped_milestones[false] %>
+<% grouped_milestones[true] = [] unless grouped_milestones[true] %>
 <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
 <% sorted_milestones.each { |milestone| %>
   <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
