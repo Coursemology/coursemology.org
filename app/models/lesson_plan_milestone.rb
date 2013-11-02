@@ -45,7 +45,9 @@ class LessonPlanMilestone < ActiveRecord::Base
       :end_at => self.end_at, :start_at => start_at, :course_id => self.course_id)
 
     virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
-    real_entries + virtual_entries
+    
+    viewable_entries = virtual_entries.select { |entry| entry.is_published }
+    real_entries + viewable_entries
   end
 
   def is_virtual
