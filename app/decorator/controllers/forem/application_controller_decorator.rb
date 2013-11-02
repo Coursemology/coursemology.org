@@ -8,7 +8,12 @@ Forem::ApplicationController.class_eval do
   end
 
   def forem_admin?
-    return can? :manage, Course
+    can? :manage, Course
   end
   helper_method :forem_admin?
+
+  def forem_admin_or_moderator?(forum)
+    can? :manage, Course
+  end
+  helper_method :forem_admin_or_moderator?
 end
