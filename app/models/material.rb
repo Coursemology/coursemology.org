@@ -13,15 +13,23 @@ class Material < ActiveRecord::Base
   end
 
   # Creates a virtual item of this class that is backed by some other data store.
-  def self.create_virtual
+  def self.create_virtual(parent, obj)
     (Class.new do
       # Give the ID of this virtual folder. Should be the module name.
-      def initialize
+      def initialize(parent, obj)
+        @parent = parent
+        @obj = obj
         @name = @description = @url = nil
       end
 
       def id
         -1
+      end
+      def obj
+        @obj
+      end
+      def parent
+        @parent
       end
       def filename
         @filename
@@ -60,7 +68,7 @@ class Material < ActiveRecord::Base
       def is_virtual
         true
       end
-    end).new
+    end).new(parent, obj)
   end
 
   def filename
