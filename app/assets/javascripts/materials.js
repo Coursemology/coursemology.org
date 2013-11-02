@@ -2,6 +2,8 @@
 
 function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtualFolders) {
   var folders = {};
+  
+  var NEW_FILE_INDICATOR = "*";
     
   // Convert all the folders to tree nodes.
   var foldersToProcess = [rootNode];
@@ -20,8 +22,9 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
     if (shouldIncludeFiles) {
       for (var i = 0; i < currentFolder.files.length; i++) {
         var currentFile = currentFolder.files[i];
+        var fileNewIndicator = currentFile.is_new ? NEW_FILE_INDICATOR : "";
         var fileTreeNode = {
-          label: currentFile.name,
+          label: currentFile.name + fileNewIndicator,
           id: "file_" + currentFile.id,
           url: currentFile.url
         };
@@ -30,8 +33,9 @@ function parseFileJsonForJqTree(rootNode, shouldIncludeFiles, shouldIncludeVirtu
     }
     
     var count = currentFolder.files.length;
+    var newIndicator = currentFolder.contains_new ? NEW_FILE_INDICATOR : "";
     
-    var nameAndCount = currentFolder.name + " (" + count + ")";
+    var nameAndCount = currentFolder.name + " (" + count + newIndicator +")";
     folders[currentFolder.id] = {
       id: currentFolder.id,
       label: nameAndCount,

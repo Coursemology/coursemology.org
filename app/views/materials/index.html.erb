@@ -4,7 +4,7 @@
 <% if @folder.description %>
 <div>
 <h2 class="materials-description-title">Folder Description</h2>
-<p><%= @folder.description %></p>  
+<p><%= @folder.description.html_safe %></p>
 </div>
 <% end %>
 <% if (can? :manage, Material) && not(@folder.is_virtual) %>

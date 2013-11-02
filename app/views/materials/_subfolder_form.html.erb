@@ -5,16 +5,16 @@
     Create Subfolder
   </div>
   <% end %>
-  <div class="<%= "modal-body" if modal %> control-group">
+  <div class="<%= "modal-body row-fluid" if modal %> control-group">
     <%= f.label :name, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'text_field span3' %>
+      <%= f.text_field :name, :class => 'text_field span7' %>
     </div>
   </div>
-  <div class="<%= "modal-body" if modal %> control-group">
+  <div class="<%= "modal-body row-fluid" if modal %> control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :description, :class => 'text_field span3' %>
+      <%= f.text_area :description, :class => 'text_field html-editor span7', :rows => 10 %>
     </div>
   </div>
   <div class="<%= if modal then "modal-footer" else "form-actions" end %>">

@@ -73,8 +73,8 @@ class MaterialFolder < ActiveRecord::Base
     result
   end
 
-  def attach_files(files)
-    files.each do |id|
+  def attach_files(files, descriptions)
+    files.each do |key, id|
       # Create a material record
       material = Material.create(folder: self)
 
@@ -83,6 +83,7 @@ class MaterialFolder < ActiveRecord::Base
       if file
         material.attach(file)
       end
+      material.description = descriptions[key]
       material.save
     end
   end
