@@ -62,6 +62,8 @@ gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
+gem 'gon'
+gem 'momentjs-rails'
 
 
 # To use ActiveModel has_secure_password

@@ -1,0 +1,20 @@
+.link {
+  color: #0088cc;
+  text-decoration: none;
+}
+
+.link:hover,
+.link:focus {
+  color: #005580;
+  text-decoration: underline;
+}
+
+th#linked_resource_name {
+}
+th#linked_resource_type, th#linked_resource_actions {
+  width: 20%;
+}
+
+.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover {
+  cursor: pointer;
+}

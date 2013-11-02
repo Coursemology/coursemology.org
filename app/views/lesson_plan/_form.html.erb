@@ -1,0 +1,89 @@
+<%= form_for [@course, @lesson_plan_entry], :html => { :class => 'form-horizontal' } do |f| %>
+    <div class="control-group">
+      <%= f.label "Type", :class => 'control-label' %>
+      <div class="controls">
+        <%= f.select :entry_type, LessonPlanEntry::ENTRY_TYPES, :class => 'span7' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field span7', :placeholder => "What's this session about?" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :location, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :location, :class => 'text_field span7', :placeholder => "(Optional) Where's this session held?" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+          Description&#47;Objectives
+      </label>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_field span7 html-editor', :placeholder => "(Optional) What's going to happen? What will students know after attending?" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :start_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append datetime">
+          <%= f.text_field :start_at, :value => datetime_format(@lesson_plan_entry.start_at) %>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :end_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append datetime">
+          <%= f.text_field :end_at, :value => datetime_format(@lesson_plan_entry.end_at) %>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group" id="linked_resources">
+      <%= f.label :resources, :class => 'control-label' %>
+      <div class="controls">
+        <span class="btn btn-primary addresource-button">Add Resources</span>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th id="linked_resource_name">Resource</th>
+              <th id="linked_resource_type">Type</th>
+              <th id="linked_resource_actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @lesson_plan_entry.resources.each { |r| %>
+            <tr>
+              <td><%= r.obj.title %></td>
+              <td>&nbsp;</td>
+              <td>
+                <span class="btn btn-danger resource-delete"><i class="icon-trash"></i></span>
+                <input type="hidden" name="resources[]" value="<%= r.obj_id %>,<%= r.obj_type %>" />
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  course_lesson_plan_path(@course), :class => 'btn' %>
+    </div>
+<% end %>

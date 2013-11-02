@@ -54,7 +54,8 @@ class FileUploadsController < ApplicationController
         }
       else
         resp = {
-            url: file_upload.file.url
+            url: file_upload.file.url,
+            id: file_upload.id
         }
       end
       respond_to do |format|

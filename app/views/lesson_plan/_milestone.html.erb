@@ -1,0 +1,45 @@
+<div class="lesson-plan-item">
+  <table class="table-top-align">
+    <tr>
+      <td>
+        <h2><%= milestone.title %></h2>
+        <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
+        <% if milestone.end_at %>
+          <h3>Period ending on <%= milestone.end_at.strftime("%A, %d %B %Y") %></h3>
+        <% end %>
+        <% if milestone.description %>
+        <p>
+        <%= milestone.description.html_safe %>
+        </p>
+        <% end %>
+      </td>
+      <td style="width: 13%; text-align: right">
+        <% if entries.length > 0 %>
+          <a class="lesson-plan-hide-entries btn"><i class="icon-minus-sign"></i></a>
+          <a class="lesson-plan-show-entries btn" style="display: none;"><i class="icon-plus-sign"></i></a>
+        <% end %>
+        <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual != true %>
+          <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to course_lesson_plan_milestone_path(@course, milestone),
+                method: :delete,
+                data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                class: 'btn btn-danger' do %>
+              <i class="icon-trash"></i>
+          <% end %>
+      </td>
+    <% end %>
+    </tr>
+  </table>
+  <div class="lesson-plan-body">
+  <table class="table">
+    <tbody>
+    <% entries.each {|entry| %>
+    <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
+    <% } %>
+    </tbody>
+  </table>
+  </div>
+  <hr />
+</div>
