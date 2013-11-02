@@ -1,6 +1,7 @@
 $(document).ready(function() {
   // setup html editor
   var imgUploadHtml = $('#html-editor-image-upload-tab').html();
+  var handler;
 
   if (imgUploadHtml) {
     var options = {
@@ -11,8 +12,12 @@ $(document).ready(function() {
         }
       }
     };
-    $('textarea.html-editor').wysihtml5(options);
+    handler = function() { $(this).wysihtml5(options); };
   } else {
-    $("textarea.html-editor").each(function(){$(this).wysihtml5();});
+    handler = function() { $(this).wysihtml5(); };
   }
+  $('textarea.html-editor').each(handler);
+  $(document).on('DOMNodeInserted', function(e) {
+      $('textarea.html-editor', e.target).each(handler);
+  })
 });
