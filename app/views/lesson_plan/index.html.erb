@@ -1,3 +1,4 @@
+<a name="top"></a>
 <h1>Lesson Plan</h1>
 <% if can? :manage, LessonPlanEntry %>
 <a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
@@ -12,15 +13,27 @@
 <hr>
 
 <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual } %>
+<% grouped_milestones[false] = [] unless grouped_milestones[false] %>
+<% grouped_milestones[true] = [] unless grouped_milestones[true] %>
 <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
 <% sorted_milestones.each { |milestone| %>
-  <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+  <% if !milestone.is_virtual || milestone.entries.length  > 0 %>
+    <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+  <% end %>
 <% } %>
 
 <% if can? :manage, LessonPlanEntry %>
-  <div id="lesson-plan-multi-milestone" class="modal hide fade">
+  <div id="lesson-plan-multi-milestone" class="modal hide fade" data-backdrop="static">
     <div class="modal-header">
       <h3>Milestone Generator</h3>
+    </div>
+    <div class="modal-body hidden">
+      <div id="modal-loading">
+        <h2>Loading...</h2>
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 100%;"></div>
+        </div>
+      </div>
     </div>
     <div class="modal-body">
       <form>
@@ -29,7 +42,8 @@
             How many milestones should we create?
           </label>
           <div class="controls">
-            <input type="number" id="input-number-milestones">
+            <input type="number" id="input-number-milestones" required="required">
+            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -38,7 +52,8 @@
             How long is each milestone, in days?
           </label>
           <div class="controls">
-            <input type="number" id="input-length-milestones">
+            <input type="number" id="input-length-milestones" required="required">
+            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -48,7 +63,7 @@
             <br>(For example, "Week" will generate "Week 1", "Week 2", and so on.)
           </label>
           <div class="controls">
-            <input id="input-prefix-milestones">
+            <input id="input-prefix-milestones" class="text_field">
           </div>
         </div>
         
@@ -58,19 +73,20 @@
           </label>
           <div class="controls">
             <div class="datepicker-past input-append date">
-              <input type="text" class="text_field">
+              <input type="text" class="text_field" id="input-start-milestones" required="required">
               <span class="add-on">
                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
               </span>
+              <span class="help-inline"></span>
             </div>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <div id="done-generating" data-dismiss="modal" class="btn btn-primary">
+      <button id="lesson-plan-done-generating" class="btn btn-primary">
         Done
-      </div>
+      </button>
       <button data-dismiss="modal" class="btn">
         Cancel
       </button>

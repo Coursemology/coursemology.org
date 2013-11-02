@@ -1,3 +1,6 @@
+<% if milestone.is_virtual == false %>
+  <a name="<%= milestone.id %>"></a>
+<% end %>
 <div class="lesson-plan-item">
   <table class="table-top-align">
     <tr>
@@ -13,7 +16,8 @@
         </p>
         <% end %>
       </td>
-      <td style="width: 13%; text-align: right">
+      <td style="width: 20%; text-align: right">
+        <a href="#top">Back to Top</a>
         <% if entries.length > 0 %>
           <a class="lesson-plan-hide-entries btn"><i class="icon-minus-sign"></i></a>
           <a class="lesson-plan-show-entries btn" style="display: none;"><i class="icon-plus-sign"></i></a>

@@ -175,8 +175,13 @@ class MaterialsController < ApplicationController
     folder.update_attributes(params[:material_folder])
     respond_to do |format|
       if folder.save
-        format.html { redirect_to course_material_folder_path(@course, folder.parent_folder),
-                                  notice: "The subfolder #{folder.name} was successfully updated." }
+        if folder.parent_folder
+          format.html { redirect_to course_material_folder_path(@course, folder.parent_folder),
+                                    notice: "The subfolder #{folder.name} was successfully updated." }
+        else
+          format.html { redirect_to course_material_folder_path(@course, folder),
+            notice: "#{folder.name} was successfully updated." }
+        end
       else
         format.html { render action: "edit_folder", params: {id: folder.id} }
       end
@@ -225,7 +230,7 @@ private
     if (folder.parent_folder == nil) and not (folder.is_virtual) then
       folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability).map { |subfolder|
         build_subtree(subfolder, include_files)
-    }
+      }
     end
 
     folder_metadata['id'] = folder.id
@@ -244,9 +249,9 @@ private
         current_file['folder_id'] = file.folder_id
         current_file['url'] = course_material_path(@course, file)
         
-        if (@is_new[file.id]) then
-          folder_metadata['contains_new'] = true
+        if (not @curr_user_course.seen_materials.exists?(file.id)) then
           current_file['is_new'] = true
+          folder_metadata['contains_new'] = true
         end
         
         current_file
