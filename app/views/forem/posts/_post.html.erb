@@ -18,7 +18,7 @@
 
     <div class='user span1' style="text-align:right;">
       <h5 class='username'>
-        <%= link_to_if Forem.user_profile_links, post.user, [main_app, post.user] %>
+        <a href="<%= main_app.course_user_course_path(@course, post.user.get_user_course(@course).id) %>"><%= post.user %></a>
       </h5>
       <div class='icon' style="float:right;">
         <img class="user-profile-pic" src="<%= post.user.get_profile_photo_url %>"/>

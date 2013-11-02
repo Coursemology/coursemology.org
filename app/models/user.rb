@@ -144,6 +144,13 @@ class User < ActiveRecord::Base
     self.name
   end
 
+  def get_user_course(course)
+    UserCourse.find_by_user_id_and_course_id(
+      self.id,
+      course.id
+    )
+  end
+
   private
   def set_default_role
     if !self.system_role
