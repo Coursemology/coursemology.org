@@ -10,9 +10,9 @@
         <% if topic.hidden? %>
         <span class='label label-info'>Hidden</span>
       <% end %>
-        <% if forem_user && view = topic.view_for(forem_user) %>
+      <% if forem_user && view = topic.view_for(forem_user) %>
         <% if topic.posts.exists?(["created_at > ?", view.updated_at]) %>
-          <span class='label label-info'>New</span>
+          <i class='icon-envelope' title='Update!'></i>
         <% end %>
       <% end %>
     </span>
