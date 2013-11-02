@@ -18,7 +18,8 @@ class LessonPlanMilestonesController < ApplicationController
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
-        format.html { redirect_to course_lesson_plan_milestone_path(@course, @lesson_plan_milestone),
+        path = course_lesson_plan_path(@course) + '#' + @lesson_plan_milestone.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been created." }
       else
         format.html { render action: "new" }
@@ -36,7 +37,8 @@ class LessonPlanMilestonesController < ApplicationController
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
-        format.html { redirect_to course_lesson_plan_milestone_path(@course, @lesson_plan_milestone),
+        path = course_lesson_plan_path(@course) + '#' + @lesson_plan_milestone.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been updated." }
       else
         format.html { render action: "new" }
