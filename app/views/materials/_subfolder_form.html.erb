@@ -1,0 +1,24 @@
+<div id="create-subfolder-modal">
+  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
+  <div>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field span7', :required => 'required' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'text_field html-editor span7', :rows => 10 %>
+    </div>
+  </div>
+  </div>
+  <div class="form-actions">
+    <%= hidden_field_tag :type, :subfolder %>
+    <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                course_material_folder_path(@course, @folder.parent_folder), :class => 'btn' %>
+  </div>
+<% end %>
+</div>

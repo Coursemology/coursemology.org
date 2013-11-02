@@ -244,7 +244,9 @@ class MissionsController < ApplicationController
           next
         end
         #TODO: hardcoded
-        title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
+        #title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
+        #only student name
+        title = "#{ sbm.std_course.name.gsub(/\//,"_") }.py"
         file = File.open(temp_folder + title, 'w+')
         file.write(ans.code)
         file.close

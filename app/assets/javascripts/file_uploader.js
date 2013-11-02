@@ -4,6 +4,10 @@ $(document).ready(function(){
 
     $('.file-uploader-trigger').click(function() {
         target_el = $(this).attr('data-target');
+        $('#file-upload-form').fileupload({
+            acceptFileTypes: new RegExp(
+                $(this).attr('data-accepts-filetypes') || '.*', 'i')
+        });
         var modal = $(this).attr('href');
         $(modal).modal('show');
         return false;
@@ -12,7 +16,6 @@ $(document).ready(function(){
     // setup fileuploader
     $('#file-upload-form').fileupload({
         maxFileSize: 5000000,
-        acceptFileTypes: '/(\.|\/)(zip)$/i',
         autoUpload: true,
         dropZone: $('#dropzone'),
         dataType: 'json',
@@ -27,7 +30,9 @@ $(document).ready(function(){
                 value: $('#page_name').val()
             }],
         done: function(e, data) {
-            $(target_el + '-input').attr('value', data.result.url);
+            $(target_el + '-input').attr('value',
+                typeof data.result.id === undefined ?
+                    data.result.url : data.result.id);
             $(target_el + '-done').css('display', 'block');
             $('.file-uploader-insert-btn').click();
         }
