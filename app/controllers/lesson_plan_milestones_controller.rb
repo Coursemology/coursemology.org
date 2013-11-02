@@ -21,6 +21,7 @@ class LessonPlanMilestonesController < ApplicationController
         path = course_lesson_plan_path(@course) + '#' + @lesson_plan_milestone.id.to_s
         format.html { redirect_to path,
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been created." }
+        format.json { render json: {status: 'OK'} }
       else
         format.html { render action: "new" }
       end

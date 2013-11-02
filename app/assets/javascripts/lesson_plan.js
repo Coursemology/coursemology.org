@@ -65,4 +65,81 @@ $(document).ready(function() {
     $('.lesson-plan-body', parent).slideDown();
     $('.lesson-plan-hide-entries', parent).show();
   });
+
+  $('#lesson-plan-done-generating').click(function() {
+    /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
+    var has_errors = false;
+
+    // Get the values from the form; make sure all fields are filled up.
+    var milestone_count = $('input#input-number-milestones').val();
+    if (!milestone_count) {
+      var group = $('input#input-number-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
+    var milestone_length_in_days = $('input#input-length-milestones').val();
+    if (!milestone_length_in_days) {
+      var group = $('input#input-length-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
+    var milestone_prefix = $('input#input-prefix-milestones').val();
+    var first_milestone = $('input#input-start-milestones').val();
+    if (!first_milestone) {
+      var group = $('input#input-start-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
+
+    if (has_errors) {
+      return false;
+    }
+
+    var current_milestone = moment(first_milestone, DATE_FORMAT);
+    var milestones = [];
+    for (var i = 0; i < milestone_count; ++i) {
+      current_milestone.add('days', parseInt(milestone_length_in_days));
+      milestones.push({
+        title: milestone_prefix + ' ' + (i + 1),
+        end_at: current_milestone.clone()
+      });
+    }
+
+    var promises = [];
+    for (var i = 0; i < milestones.length; ++i) {
+      var milestone = milestones[i];
+      promises.push($.ajax({
+        type: 'POST',
+        url: 'lesson_plan/milestones.json',
+        data: {
+          lesson_plan_milestone: {
+            title: milestone.title,
+            description: '',
+            end_at: milestone.end_at.format(DATE_FORMAT)
+          }
+        },
+        dataType: 'json'
+      }));
+    }
+
+    // Show the progress bar.
+    var $modal = $(this).parents('.modal');
+    $('.modal-body', $modal).addClass('hidden');
+    $('#modal-loading', $modal).parent().removeClass('hidden');
+    $('button.btn', $modal).addClass('disabled').prop('disabled', true);
+
+    // Wait for all the requests to come back before closing the dialog.
+    $.when.apply($, promises).then(function() {
+      $modal.modal('hide');
+      location.href = location.href;
+    }, function() {
+      alert('An error occurred while processing your request.');
+      $modal.modal('hide');
+      location.href = location.href;
+    });
+    return false;
+  });
 });

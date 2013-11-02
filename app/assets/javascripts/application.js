@@ -35,6 +35,7 @@
 //= require codemirror/modes/python
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
+//= require moment
 
 $(document).ready(function() {
 
