@@ -179,6 +179,11 @@ class ApplicationController < ActionController::Base
             url: main_app.course_manage_group_url(@course),
             icon: "icon-group"
         }
+        @admin_nav_items << {
+            text: "Forum Participation",
+            url:  main_app.course_forum_participation_url(@course),
+            icon: "icon-group"
+        }
       end
       @admin_nav_items << {
           text: "Manage Staff",
