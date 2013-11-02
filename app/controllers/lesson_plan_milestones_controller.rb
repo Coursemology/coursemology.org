@@ -18,7 +18,7 @@ class LessonPlanMilestonesController < ApplicationController
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
-        path = course_lesson_plan_path(@course) + '#' + @lesson_plan_milestone.id.to_s
+        path = course_lesson_plan_path(@course) + '#milestone-' + @lesson_plan_milestone.id.to_s
         format.html { redirect_to path,
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been created." }
         format.json { render json: {status: 'OK'} }
@@ -38,7 +38,7 @@ class LessonPlanMilestonesController < ApplicationController
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
-        path = course_lesson_plan_path(@course) + '#' + @lesson_plan_milestone.id.to_s
+        path = course_lesson_plan_path(@course) + '#milestone-' + @lesson_plan_milestone.id.to_s
         format.html { redirect_to path,
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been updated." }
       else

@@ -78,8 +78,9 @@
           <%= datetime_format(material.updated_at) %>
         </td>
 
-        <% if (can? :manage, Material) && not(material.is_virtual) %>
+        <% if (can? :manage, Material) %>
         <td>
+          <% if not material.is_virtual %>
             <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -89,6 +90,7 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
+          <% end %>
         </td>
         <% end %>
 
