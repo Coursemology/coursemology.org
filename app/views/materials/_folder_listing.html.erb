@@ -23,7 +23,7 @@
             <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
           <% end %>
           <% if subfolder.description %>
-          <p><%= subfolder.description.truncate(100, :separator => ' ') %></p>
+          <p><%= truncate_html subfolder.description, :length => 100 %></p>
           <% end %>
         </td>
 
