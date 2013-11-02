@@ -35,8 +35,8 @@
           <%= datetime_format(subfolder.updated_at) %>
         </td>
 
+        <% if (can? :manage, Material) && not(subfolder.is_virtual) %>
         <td>
-          <% if (can? :manage, Material) && not(subfolder.is_virtual) %>
             <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -46,10 +46,8 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
-          <% else %>
-            &nbsp;
-          <% end %>
         </td>
+        <% end %>
 
       </tr>
     <% end %>
@@ -78,8 +76,8 @@
           <%= datetime_format(material.updated_at) %>
         </td>
 
+        <% if (can? :manage, Material) && not(material.is_virtual) %>
         <td>
-          <% if (can? :manage, Material) && not(material.is_virtual) %>
             <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -89,10 +87,8 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
-          <% else %>
-            &nbsp;
-          <% end %>
         </td>
+        <% end %>
 
       </tr>
     <% end %>
