@@ -243,6 +243,12 @@ private
         current_file['description'] = file.description
         current_file['folder_id'] = file.folder_id
         current_file['url'] = course_material_path(@course, file)
+        
+        if (@is_new[file.id]) then
+          folder_metadata['contains_new'] = true
+          current_file['is_new'] = true
+        end
+        
         current_file
       }
     end
