@@ -271,6 +271,7 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
+    truncate_html (0.9.2)
     tzinfo (0.3.37)
     uglifier (2.1.1)
       execjs (>= 0.3.0)
@@ -329,5 +330,6 @@ DEPENDENCIES
   rubyzip
   sass-rails (~> 3.2.3)
   sqlite3
+  truncate_html
   uglifier (>= 1.0.3)
   yaml_db

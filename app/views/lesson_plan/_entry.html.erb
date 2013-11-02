@@ -36,7 +36,7 @@
     </h4>
     <p>
       <% if entry.is_virtual %>
-        <%= entry.description.html_safe.truncate(140, :separator => ' ') %>
+        <%= truncate_html entry.description, :length => 140 %>
       <% else %>
         <%= entry.description.html_safe %>
       <% end %>
