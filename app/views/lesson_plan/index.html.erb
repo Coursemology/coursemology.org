@@ -1,3 +1,4 @@
+<a name="top"></a>
 <h1>Lesson Plan</h1>
 <% if can? :manage, LessonPlanEntry %>
 <a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
@@ -18,6 +19,7 @@
     <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
   <% end %>
 <% } %>
+<a href="#top">Back to Top</a>
 
 <% if can? :manage, LessonPlanEntry %>
   <div id="lesson-plan-multi-milestone" class="modal hide fade">
