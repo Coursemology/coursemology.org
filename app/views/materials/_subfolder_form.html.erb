@@ -21,7 +21,7 @@
   </div>
   <div class="<%= if modal then "modal-footer" else "form-actions" end %>">
     <%= hidden_field_tag :type, :subfolder %>
-    <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+    <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
     <% if modal then %>
     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
     <% else %>
