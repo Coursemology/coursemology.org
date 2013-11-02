@@ -3,6 +3,21 @@ Forem::TopicsController.class_eval do
 
   append_before_filter :shim
 
+  def new
+    @topic = @forum.topics.build
+    @topic.posts.build
+  end
+
+  def create
+    @topic = @forum.topics.build(params[:topic], :as => :default)
+    @topic.user = forem_user
+    if @topic.save
+      create_successful
+    else
+      create_unsuccessful
+    end
+  end
+
   protected
 
   def create_successful
