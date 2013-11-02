@@ -45,7 +45,7 @@ $(document).ready(function() {
         startDate: new Date()
     });
     
-    $('.datetime').datetimepicker({
+    $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'pt-BR',
         startDate: new Date(),
