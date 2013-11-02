@@ -1,7 +1,7 @@
 Forem::ApplicationHelper.class_eval do
-  #def forem_format(text, *options)
-  #  forem_no_escape_emojify(Forem.formatter.format(text))
-  #end
+  def forem_format(text, *options)
+    forem_no_escape_emojify(Forem.formatter.format(text))
+  end
 
   def forem_no_escape_emojify(content)
     content.gsub(/:([a-z0-9\+\-_]+):/) do |match|
