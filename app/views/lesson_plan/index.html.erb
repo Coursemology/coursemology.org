@@ -39,7 +39,8 @@
             How many milestones should we create?
           </label>
           <div class="controls">
-            <input type="number" id="input-number-milestones">
+            <input type="number" id="input-number-milestones" required="required">
+            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -48,7 +49,8 @@
             How long is each milestone, in days?
           </label>
           <div class="controls">
-            <input type="number" id="input-length-milestones">
+            <input type="number" id="input-length-milestones" required="required">
+            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -58,7 +60,7 @@
             <br>(For example, "Week" will generate "Week 1", "Week 2", and so on.)
           </label>
           <div class="controls">
-            <input id="input-prefix-milestones">
+            <input id="input-prefix-milestones" class="text_field">
           </div>
         </div>
         
@@ -68,10 +70,11 @@
           </label>
           <div class="controls">
             <div class="datepicker-past input-append date">
-              <input type="text" class="text_field" id="input-start-milestones">
+              <input type="text" class="text_field" id="input-start-milestones" required="required">
               <span class="add-on">
                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
               </span>
+              <span class="help-inline"></span>
             </div>
           </div>
         </div>

@@ -68,17 +68,44 @@ $(document).ready(function() {
 
   $('#lesson-plan-done-generating').click(function() {
     /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
+    var has_errors = false;
 
+    // Get the values from the form; make sure all fields are filled up.
     var milestone_count = $('input#input-number-milestones').val();
+    if (!milestone_count) {
+      var group = $('input#input-number-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
     var milestone_length_in_days = $('input#input-length-milestones').val();
+    if (!milestone_length_in_days) {
+      var group = $('input#input-length-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
     var milestone_prefix = $('input#input-prefix-milestones').val();
     var first_milestone = $('input#input-start-milestones').val();
+    if (!first_milestone) {
+      var group = $('input#input-start-milestones').parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text('This field is required')
+      has_errors = true;
+    }
+
+    if (has_errors) {
+      return false;
+    }
 
     var current_milestone = moment(first_milestone, DATE_FORMAT);
     var milestones = [];
     for (var i = 0; i < milestone_count; ++i) {
       current_milestone.add('days', parseInt(milestone_length_in_days));
-      milestones.push({title: milestone_prefix + ' ' + (i + 1), end_at: current_milestone.clone() });
+      milestones.push({
+        title: milestone_prefix + ' ' + (i + 1),
+        end_at: current_milestone.clone()
+      });
     }
 
     var promises = [];
