@@ -2,6 +2,7 @@ class Material < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   belongs_to :folder, class_name: "MaterialFolder"
   has_one :file, as: :owner, class_name: "FileUpload", dependent: :destroy
+  has_many :lesson_plan_resources, as: :obj, dependent: :destroy
 
   attr_accessible :folder, :description, :filename
   after_save :save_file
