@@ -62,29 +62,41 @@ $(document).ready(function() {
   $('#lesson-plan-done-generating').click(function() {
     /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
     var has_errors = false;
+    function show_error(id, error) {
+      var group = $(id).parents('.control-group');
+      group.addClass('error');
+      $('.help-inline', group).text(error);
+      has_errors = true;
+    }
+    function remove_error(id) {
+      var group = $(id).parents('.control-group');
+      group.removeClass('error');
+      $('.help-inline', group).text('');
+    }
 
     // Get the values from the form; make sure all fields are filled up.
     var milestone_count = $('input#input-number-milestones').val();
     if (!milestone_count) {
-      var group = $('input#input-number-milestones').parents('.control-group');
-      group.addClass('error');
-      $('.help-inline', group).text('This field is required')
-      has_errors = true;
+      show_error('input#input-number-milestones', 'This field is required');
+    } else if (milestone_count <= 0) {
+      show_error('input#input-number-milestones', 'The number of milestones to create should be a positive integer');
+    } else {
+      remove_error('input#input-number-milestones');
     }
     var milestone_length_in_days = $('input#input-length-milestones').val();
     if (!milestone_length_in_days) {
-      var group = $('input#input-length-milestones').parents('.control-group');
-      group.addClass('error');
-      $('.help-inline', group).text('This field is required')
-      has_errors = true;
+      show_error('input#input-length-milestones', 'This field is required');
+    } else if (milestone_length_in_days <= 0) {
+      show_error('input#input-length-milestones', 'The length of a milestone should be a positive integer');
+    } else {
+      remove_error('input#input-length-milestones');
     }
     var milestone_prefix = $('input#input-prefix-milestones').val();
     var first_milestone = $('input#input-start-milestones').val();
     if (!first_milestone) {
-      var group = $('input#input-start-milestones').parents('.control-group');
-      group.addClass('error');
-      $('.help-inline', group).text('This field is required')
-      has_errors = true;
+      show_error('input#input-start-milestones', 'This field is required');
+    } else {
+      remove_error('input#input-start-milestones');
     }
 
     if (has_errors) {
