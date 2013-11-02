@@ -242,7 +242,7 @@ private
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}
-        unless file
+        unless file.file
           next
         end
         
