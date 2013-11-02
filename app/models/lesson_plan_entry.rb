@@ -101,4 +101,7 @@ class LessonPlanEntry < ActiveRecord::Base
   def is_virtual
     false
   end
+  def is_published
+    true
+  end
 end
