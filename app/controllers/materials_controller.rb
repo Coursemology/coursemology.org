@@ -39,7 +39,7 @@ class MaterialsController < ApplicationController
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
-      @virtual_folders = @course.workbin_virtual_entries(current_ability, curr_user_course)
+      @virtual_folders = virtual_folders
     else
       @virtual_folders = []
     end
@@ -58,7 +58,7 @@ class MaterialsController < ApplicationController
 
   def index_virtual
     # Find the virtual folder matching the specified ID
-    @folder = (@course.workbin_virtual_entries(current_ability, curr_user_course).select {
+    @folder = (virtual_folders.select {
         |folder| folder.id == params[:virtual] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
@@ -228,7 +228,7 @@ private
       build_subtree(subfolder, include_files)
     }
     if (folder.parent_folder == nil) and not (folder.is_virtual) then
-      folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability, curr_user_course).map { |subfolder|
+      folder_metadata['subfolders'] += virtual_folders.map { |subfolder|
         build_subtree(subfolder, include_files)
       }
     end
@@ -242,10 +242,6 @@ private
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}
-
-        if file.class == Material and !file.file
-          next
-        end
 
         current_file['id'] = file.id
         current_file['name'] = file.filename
@@ -263,5 +259,15 @@ private
     end
 
     folder_metadata
+  end
+
+  # Builds the list of virtual folders which are accessible
+  def virtual_folders
+    entries = @course.workbin_virtual_entries
+    entries.each { |entry|
+      entry.files = entry.files.select { |file|
+        file.parent.can_start?(curr_user_course) && can?(:read, file)
+      }
+    }
   end
 end
