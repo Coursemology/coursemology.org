@@ -80,9 +80,10 @@ class MaterialFolder < ActiveRecord::Base
 
       # Associate the file upload with the record
       file = FileUpload.find_by_id(id)
-      if file
-        material.attach(file)
+      if not(file)
+        next
       end
+      material.attach(file)
       material.description = descriptions[key]
       material.save
     end
