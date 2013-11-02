@@ -300,7 +300,7 @@ class Course < ActiveRecord::Base
       # Get the missions' files, and map it to the virtual entries.
       (self.missions.accessible_by(ability).map { |m|
         # Make sure the user is able to access this mission.
-        if m.can_start?(curr_user_course) then
+        if m.can_start?(curr_user_course).first then
           m.files.map { |f|
             material = Material.create_virtual
             material.filename = m.title + ": " + f.original_name
