@@ -57,6 +57,7 @@ class Training < ActiveRecord::Base
     entry.start_at = self.open_at
     entry.end_at = nil
     entry.url = course_training_path(self.course, self)
+    entry.is_published = self.publish
     entry
   end
 
