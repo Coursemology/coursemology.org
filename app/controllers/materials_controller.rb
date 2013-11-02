@@ -266,7 +266,8 @@ private
     entries = @course.workbin_virtual_entries
     entries.each { |entry|
       entry.files = entry.files.select { |file|
-        file.parent.can_start?(curr_user_course) && can?(:read, file)
+        can?(:manage, file.parent) ||
+        (file.parent.can_start?(curr_user_course) && can?(:read, file.parent))
       }
     }
   end
