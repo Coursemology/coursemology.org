@@ -20,9 +20,17 @@
 <% } %>
 
 <% if can? :manage, LessonPlanEntry %>
-  <div id="lesson-plan-multi-milestone" class="modal hide fade">
+  <div id="lesson-plan-multi-milestone" class="modal hide fade" data-backdrop="static">
     <div class="modal-header">
       <h3>Milestone Generator</h3>
+    </div>
+    <div class="modal-body hidden">
+      <div id="modal-loading">
+        <h2>Loading...</h2>
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 100%;"></div>
+        </div>
+      </div>
     </div>
     <div class="modal-body">
       <form>
@@ -70,9 +78,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <div id="lesson-plan-done-generating" data-dismiss="modal" class="btn btn-primary">
+      <button id="lesson-plan-done-generating" class="btn btn-primary">
         Done
-      </div>
+      </button>
       <button data-dismiss="modal" class="btn">
         Cancel
       </button>

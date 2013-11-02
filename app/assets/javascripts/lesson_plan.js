@@ -98,8 +98,18 @@ $(document).ready(function() {
       }));
     }
 
+    // Show the progress bar.
     var $modal = $(this).parents('.modal');
-    $.when.apply($, promises).done(function() {
+    $('.modal-body', $modal).addClass('hidden');
+    $('#modal-loading', $modal).parent().removeClass('hidden');
+    $('button.btn', $modal).addClass('disabled').prop('disabled', true);
+
+    // Wait for all the requests to come back before closing the dialog.
+    $.when.apply($, promises).then(function() {
+      $modal.modal('hide');
+      location.href = location.href;
+    }, function() {
+      alert('An error occurred while processing your request.');
       $modal.modal('hide');
       location.href = location.href;
     });
