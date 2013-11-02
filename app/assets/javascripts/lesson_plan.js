@@ -65,4 +65,44 @@ $(document).ready(function() {
     $('.lesson-plan-body', parent).slideDown();
     $('.lesson-plan-hide-entries', parent).show();
   });
+
+  $('#lesson-plan-done-generating').click(function() {
+    /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
+
+    var milestone_count = $('input#input-number-milestones').val();
+    var milestone_length_in_days = $('input#input-length-milestones').val();
+    var milestone_prefix = $('input#input-prefix-milestones').val();
+    var first_milestone = $('input#input-start-milestones').val();
+
+    var current_milestone = moment(first_milestone, DATE_FORMAT);
+    var milestones = [];
+    for (var i = 0; i < milestone_count; ++i) {
+      current_milestone.add('days', parseInt(milestone_length_in_days));
+      milestones.push({title: milestone_prefix + ' ' + (i + 1), end_at: current_milestone.clone() });
+    }
+
+    var promises = [];
+    for (var i = 0; i < milestones.length; ++i) {
+      var milestone = milestones[i];
+      promises.push($.ajax({
+        type: 'POST',
+        url: 'lesson_plan/milestones.json',
+        data: {
+          lesson_plan_milestone: {
+            title: milestone.title,
+            description: '',
+            end_at: milestone.end_at.format(DATE_FORMAT)
+          }
+        },
+        dataType: 'json'
+      }));
+    }
+
+    var $modal = $(this).parents('.modal');
+    $.when.apply($, promises).done(function() {
+      $modal.modal('hide');
+      location.href = location.href;
+    });
+    return false;
+  });
 });

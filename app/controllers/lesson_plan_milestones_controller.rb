@@ -20,6 +20,7 @@ class LessonPlanMilestonesController < ApplicationController
       if @lesson_plan_milestone.save then
         format.html { redirect_to course_lesson_plan_milestone_path(@course, @lesson_plan_milestone),
                       notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been created." }
+        format.json { render json: {status: 'OK'} }
       else
         format.html { render action: "new" }
       end
