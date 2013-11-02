@@ -182,21 +182,15 @@ JfdiAcademy::Application.routes.draw do
     match "/forums" => "forem/categories#show", as: :forums
     match "/forums/admin" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/admin/new" => "forem/admin/forums#new", as: :forums_admin_new
+    match "/forums/:forum_id/topics/:id/admin" => "forem/admin/topics#index", as: :forums_topics_admin
+    put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
+    put "/forums/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
+    put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin
     resources :forums, :controller => "forem/forums" do
       resources :topics, :controller => "forem/topics" do
         resources :posts, :controller => "forem/posts"
         get :subscribe
         get :unsubscribe
-      end
-    end
-    namespace :admin do
-      resources :forums, :controller => "forem/admin/forums" do
-        resources :topics, :controller => "forem/admin/topics" do
-          resources :posts, :controller => "forem/admin/posts"
-          put :toggle_hide
-          put :toggle_lock
-          put :toggle_pin
-        end
       end
     end
   end
