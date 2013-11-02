@@ -10,7 +10,10 @@ class ForumParticipationController < ApplicationController
     result = posts.select('COUNT(*) as post_count, forem_posts.user_id').group('forem_posts.user_id')
     @post_count = {}
     result.each {|i| @post_count[i.user_id] = i.post_count}
+    @range_selection = {}
 
+    @from_date = params[:from] || '11-01-2013'
+    @to_date = params[:to] || '31-01-2013'
     sort_key = ''
 
     if sort_column == 'Name'

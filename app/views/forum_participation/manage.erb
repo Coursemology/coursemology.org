@@ -2,6 +2,8 @@
   <h1>Forum Participation</h1>
 </div>
 
+<%= render :partial => "date_range" %>
+
 <%= form_for(@course, url: course_manage_update_exp_path,
              html: { method: :post, class: "form-horizontal" } ) do |f| %>
   <table class="table" id="dg-std-table">

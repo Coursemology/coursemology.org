@@ -1,0 +1,35 @@
+<%= form_tag course_forum_participation_path, class: 'form-horizontal', method: 'get' do  %>
+  <div class="control-group">
+    <%= label_tag :from, 'From', class: 'control-label' %>
+    <div class="controls">
+      <div class="datepicker-past input-append">
+        <%= text_field_tag :from, '' ,
+                           value: @from_date,
+                           class: 'input-medium',
+                           id: "from_date"
+        %>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= label_tag :to, 'To', class: 'control-label' %>
+    <div class="controls">
+      <div class="datepicker-past input-append">
+        <%= text_field_tag :to, '' ,
+                           value: @to_date,
+                           class: 'input-medium',
+                           id: "to-date"
+        %>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= submit_tag 'Search', :class => 'btn btn-primary',id: 'submit_date_range' %>
+  </div>
+<% end %>
