@@ -16,7 +16,7 @@ $(document).ready(function() {
   } else {
     handler = function() { $(this).wysihtml5(); };
   }
-  $('textarea.html-editor').each(handler);
+
   $(document).on('DOMNodeInserted', function(e) {
       $('textarea.html-editor', e.target).each(handler);
   })
