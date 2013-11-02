@@ -242,6 +242,9 @@ private
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}
+        unless file
+          next
+        end
         
         current_file['id'] = file.id
         current_file['name'] = file.filename

@@ -10,7 +10,7 @@ class LessonPlanEntriesController < ApplicationController
   end
 
   def index
-    @milestones = @course.lesson_plan_milestones.all
+    @milestones = @course.lesson_plan_milestones.order("end_at")
 
     # Add the entries which don't belong in any milestone
     other_entries = if @milestones.length > 0 then
