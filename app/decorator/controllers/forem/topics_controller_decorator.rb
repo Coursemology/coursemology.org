@@ -46,7 +46,6 @@ Forem::TopicsController.class_eval do
   def find_topic
     begin
       @topic = forum_topics(@forum, forem_user).find(params[:id])
-      authorize! :read, @topic
     rescue ActiveRecord::RecordNotFound
       flash.alert = t("forem.topic.not_found")
       redirect_to main_app.course_forum_url(@course, @forum) and return
