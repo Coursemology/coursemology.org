@@ -1,4 +1,4 @@
-<%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
+<%= form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
   <div class="modal-body">
   <div class="row-fluid control-group">
     <%= f.label :name, :class => 'control-label' %>
@@ -14,7 +14,7 @@
   </div>
   </div>
   <div class="modal-footer">
-    <%= hidden_field_tag :type, :subfolder %>
+    <%= hidden_field_tag :type, :folder_to_change %>
     <%= f.submit nil, :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
     <button type="button" class="btn" data-dismiss="modal">Cancel</button>
   </div>

@@ -175,8 +175,13 @@ class MaterialsController < ApplicationController
     folder.update_attributes(params[:material_folder])
     respond_to do |format|
       if folder.save
-        format.html { redirect_to course_material_folder_path(@course, folder.parent_folder),
-                                  notice: "The subfolder #{folder.name} was successfully updated." }
+        if folder.parent_folder
+          format.html { redirect_to course_material_folder_path(@course, folder.parent_folder),
+                                    notice: "The subfolder #{folder.name} was successfully updated." }
+        else
+          format.html { redirect_to course_material_folder_path(@course, folder),
+            notice: "#{folder.name} was successfully updated." }
+        end
       else
         format.html { render action: "edit_folder", params: {id: folder.id} }
       end

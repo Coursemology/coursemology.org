@@ -1,9 +1,17 @@
 <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
 <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+<%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
 
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     Create Subfolder
   </div>
-  <%= render partial: "subfolder_modal_form", locals: { :subfolder_method => :post } %>
+  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @subfolder, :subfolder_method => :post } %>
+</div>
+
+<div id="edit-subfolder-modal" class="modal hide fade">
+  <div class="modal-header">
+    Edit Folder
+  </div>
+  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @folder,  :subfolder_method => :put } %>
 </div>
