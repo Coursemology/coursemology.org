@@ -18,6 +18,7 @@
         <h3 class="link"><%= entry.title %></h3>
       <% end %>
     <% else %>
+    <a class="lesson-plan-anchor" name="entry-<%= entry.id %>"></a>
     <h2><%= entry.title %></h2>
     <% end %>
     <h3><%= entry.location %></h3>
