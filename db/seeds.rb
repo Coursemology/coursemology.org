@@ -23,6 +23,8 @@ if User.count == 0
                        password: "supersecretpass",
                        password_confirmation: "supersecretpass",
                        system_role_id: super_role.id)
+  admin.skip_confirmation!
+  admin.save!
 end
 
 if Action.count == 0

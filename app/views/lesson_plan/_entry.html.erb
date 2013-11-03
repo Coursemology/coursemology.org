@@ -15,10 +15,18 @@
   <td>
     <% if entry.is_virtual %>
       <%= link_to entry.url do %>
-        <h3 class="link"><%= entry.title %></h3>
+        <h3 class="link">
+          <% if not entry.is_published %>
+             <span class="label label-info">Unpublished</span>
+          <% end %>
+          <%= entry.title %>
+        </h3>
       <% end %>
     <% else %>
-    <h2><%= entry.title %></h2>
+    <a class="lesson-plan-anchor" name="entry-<%= entry.id %>"></a>
+    <h2>
+      <%= entry.title %>
+    </h2>
     <% end %>
     <h3><%= entry.location %></h3>
     <h4>

@@ -10,17 +10,26 @@ class LessonPlanEntriesController < ApplicationController
   end
 
   def index
-    @milestones = @course.lesson_plan_milestones.all
+    @milestones = @course.lesson_plan_milestones.order("end_at")
+    
+    if @milestones.length > 0
+      from = @milestones[@milestones.length - 1].end_at
+    end
+    
+    if can? :manage, Mission
+      virtual_entries = @course.lesson_plan_virtual_entries(from)
+    else
+      virtual_entries = @course.lesson_plan_virtual_entries(from).select { |entry| entry.is_published }
+    end
 
     # Add the entries which don't belong in any milestone
-    other_entries = if @milestones.length > 0 then
-        from = @milestones[@milestones.length - 1].end_at
+    other_entries = if from then
         @course.lesson_plan_entries.where("end_at > :end_at",
           :end_at => from) +
-        @course.lesson_plan_virtual_entries(from)
+        virtual_entries
       else
         @course.lesson_plan_entries.all +
-        @course.lesson_plan_virtual_entries
+        virtual_entries
       end
 
     other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
@@ -40,7 +49,8 @@ class LessonPlanEntriesController < ApplicationController
     
     respond_to do |format|
       if @lesson_plan_entry.save then
-        format.html { redirect_to course_lesson_plan_path(@course),
+        path = course_lesson_plan_path(@course) + "#entry-" + @lesson_plan_entry.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan entry #{@lesson_plan_entry.title} has been created." }
       else
         format.html { render action: "new" }
@@ -60,7 +70,8 @@ class LessonPlanEntriesController < ApplicationController
     
     respond_to do |format|
       if @lesson_plan_entry.update_attributes(params[:lesson_plan_entry]) && @lesson_plan_entry.save then
-        format.html { redirect_to course_lesson_plan_path(@course),
+        path = course_lesson_plan_path(@course) + "#entry-" + @lesson_plan_entry.id.to_s
+        format.html { redirect_to path,
                       notice: "The lesson plan entry #{@lesson_plan_entry.title} has been updated." }
       else
         format.html { render action: "index" }

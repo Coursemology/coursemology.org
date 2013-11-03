@@ -2,6 +2,7 @@ class Material < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   belongs_to :folder, class_name: "MaterialFolder"
   has_one :file, as: :owner, class_name: "FileUpload", dependent: :destroy
+  has_many :lesson_plan_resources, as: :obj, dependent: :destroy
 
   attr_accessible :folder, :description, :filename
   after_save :save_file
@@ -13,15 +14,23 @@ class Material < ActiveRecord::Base
   end
 
   # Creates a virtual item of this class that is backed by some other data store.
-  def self.create_virtual
+  def self.create_virtual(parent, obj)
     (Class.new do
       # Give the ID of this virtual folder. Should be the module name.
-      def initialize
-        @name = @description = @url = nil
+      def initialize(parent, obj)
+        @parent = parent
+        @obj = obj
+        @name = @description = @updated_at = @url = nil
       end
 
       def id
         -1
+      end
+      def obj
+        @obj
+      end
+      def parent
+        @parent
       end
       def filename
         @filename
@@ -42,7 +51,10 @@ class Material < ActiveRecord::Base
         @description = description
       end
       def updated_at
-        nil
+        @updated_at
+      end
+      def updated_at=(updated_at)
+        @updated_at = updated_at
       end
       def url
         @url
@@ -60,7 +72,7 @@ class Material < ActiveRecord::Base
       def is_virtual
         true
       end
-    end).new
+    end).new(parent, obj)
   end
 
   def filename

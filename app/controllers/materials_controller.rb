@@ -2,8 +2,8 @@ class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
-  load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new]
 
@@ -39,7 +39,7 @@ class MaterialsController < ApplicationController
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
-      @virtual_folders = @course.workbin_virtual_entries(current_ability, curr_user_course)
+      @virtual_folders = virtual_folders
     else
       @virtual_folders = []
     end
@@ -58,7 +58,7 @@ class MaterialsController < ApplicationController
 
   def index_virtual
     # Find the virtual folder matching the specified ID
-    @folder = (@course.workbin_virtual_entries(current_ability, curr_user_course).select {
+    @folder = (virtual_folders.select {
         |folder| folder.id == params[:virtual] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
@@ -74,6 +74,22 @@ class MaterialsController < ApplicationController
         gon.folders = build_subtree(@course.material_folder)
         render "materials/index"
       }
+    end
+  end
+
+  def mark_folder_read
+    if not @material_folder then
+      redirect_to course_material_path(@course)
+      return
+    end
+
+    @material_folder.materials.each { |m|
+      curr_user_course.mark_as_seen(m)
+    }
+
+    respond_to do |format|
+      format.html { redirect_to course_material_folder_path(@course, @material_folder) }
+      format.json { render json: {status: 'OK'} }
     end
   end
 
@@ -228,7 +244,7 @@ private
       build_subtree(subfolder, include_files)
     }
     if (folder.parent_folder == nil) and not (folder.is_virtual) then
-      folder_metadata['subfolders'] += @course.workbin_virtual_entries(current_ability, curr_user_course).map { |subfolder|
+      folder_metadata['subfolders'] += virtual_folders.map { |subfolder|
         build_subtree(subfolder, include_files)
       }
     end
@@ -242,7 +258,7 @@ private
     if include_files then
       folder_metadata['files'] = folder.files.map { |file|
         current_file = {}
-        
+
         current_file['id'] = file.id
         current_file['name'] = file.filename
         current_file['description'] = file.description
@@ -259,5 +275,16 @@ private
     end
 
     folder_metadata
+  end
+
+  # Builds the list of virtual folders which are accessible
+  def virtual_folders
+    entries = @course.workbin_virtual_entries
+    entries.each { |entry|
+      entry.files = entry.files.select { |file|
+        can?(:manage, file.parent) ||
+        (file.parent.can_start?(curr_user_course) && can?(:read, file.parent))
+      }
+    }
   end
 end

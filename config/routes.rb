@@ -9,6 +9,7 @@ JfdiAcademy::Application.routes.draw do
   get "about" => "static_pages#about"
   get "privacy_policy" => "static_pages#privacy_policy"
   get "access_denied" => "static_pages#access_denied"
+  get "contact_us" => "static_pages#contact_us"
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
                                        :registrations => "registrations" }
@@ -49,7 +50,8 @@ JfdiAcademy::Application.routes.draw do
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
-      resources  :exp_transactions
+      resources :exp_transactions
+      resources :user_achievements
     end
 
     resources :missions do
@@ -89,6 +91,7 @@ JfdiAcademy::Application.routes.draw do
 
     get "materials/new/:parent", to: "materials#new", as: :new_material
     get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
+    get "materials/subfolder/:id/mark_read", to: "materials#mark_folder_read", as: :material_mark_folder_read
     get "materials/subfolder/:id", to: "materials#index", as: :material_folder
     put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
     post "materials/subfolder/:parent", to: "materials#create", as: :material_create

@@ -1,5 +1,5 @@
 <% if milestone.is_virtual == false %>
-  <a class="lesson-plan-anchor" name="<%= milestone.id %>"></a>
+  <a class="lesson-plan-anchor" name="milestone-<%= milestone.id %>"></a>
 <% end %>
 <div class="lesson-plan-item">
   <a href="#top">Back to Top</a>
@@ -8,6 +8,9 @@
       <td>
         <h2><%= milestone.title %></h2>
         <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
+        <% if cannot? :manage, Mission %>
+        <% entries = entries.select { |entry| entry.is_published } %>
+        <% end %>
         <% if milestone.end_at %>
           <h3>Period ending on <%= milestone.end_at.strftime("%A, %d %B %Y") %></h3>
         <% end %>

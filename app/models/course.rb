@@ -295,25 +295,26 @@ class Course < ActiveRecord::Base
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 
-  def workbin_virtual_entries(ability, curr_user_course)
+  def workbin_virtual_entries
     mission_files =
       # Get the missions' files, and map it to the virtual entries.
-      (self.missions.accessible_by(ability).map { |m|
-        # Make sure the user is able to access this mission.
-        if m.can_start?(curr_user_course).first then
-          m.files.map { |f|
-            material = Material.create_virtual
-            material.filename = m.title + ": " + f.original_name
-            material.filesize = f.file_file_size
-            material.url = f.file.url
+      (self.missions.map { |m|
+        m.files.map { |f|
+          material = Material.create_virtual(m, f)
+          material.filename = m.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
+          material.url = f.file.url
 
-            material
-          }
-        else
-          []
-        end
+          material
+        }
       })
       .reduce { |mission, files| mission + files }
+
+    # Make sure we return at least an empty list, in case there are no missions.
+    if mission_files == nil
+      mission_files = []
+    end
 
     missions = MaterialFolder.create_virtual("missions", material_folder.id)
     missions.name = "Missions"
@@ -322,21 +323,23 @@ class Course < ActiveRecord::Base
 
     training_files =
       # Get the trainings' files, and map it to the virtual entries.
-      (self.trainings.accessible_by(ability).map { |t|
-        if t.open_at <= Time.now then
-          t.files.map { |f|
-            material = Material.create_virtual
-            material.filename = t.title + ": " + f.original_name
-            material.filesize = f.file_file_size
-            material.url = f.file.url
+      (self.trainings.map { |t|
+        t.files.map { |f|
+          material = Material.create_virtual(t, f)
+          material.filename = t.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
+          material.url = f.file.url
 
-            material
-          }
-        else
-          []
-        end
+          material
+        }
       })
       .reduce { |training, files| training + files }
+
+    # Make sure we return at least an empty list, in case there are no trainings.
+    if training_files == nil
+      training_files = []
+    end
 
     trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
     trainings.name = "Trainings"

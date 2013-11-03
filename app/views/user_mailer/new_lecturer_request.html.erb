@@ -1,6 +1,6 @@
 Hello, <%= @user.name %>!
 
-<p>There is a new request to become a lecturer.</p>
+<p><%= @request_user.name %>(<%= @request_user.email %>) requests to become a lecturer.</p>
 
 <p>Please <%= link_to "click here", role_requests_url %> to review the request.</p>
 

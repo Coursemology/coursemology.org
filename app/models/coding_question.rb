@@ -1,5 +1,5 @@
 class CodingQuestion < ActiveRecord::Base
-  attr_accessible :creator_id, :step_name, :description,:max_grade, :staff_comments, :data
+  attr_accessible :creator_id, :step_name, :description,:max_grade, :staff_comments, :data, :include_sol_qn_id
 
   belongs_to :creator, class_name: "User"
 
@@ -7,6 +7,7 @@ class CodingQuestion < ActiveRecord::Base
   has_many  :asm_qns, as: :qn, dependent: :destroy
 
   has_one :comment_topic, as: :topic
+  belongs_to :include_sol_qn, class_name: "CodingQuestion"
 
   before_create :set_default_data
 
