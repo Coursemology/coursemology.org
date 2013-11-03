@@ -303,12 +303,18 @@ class Course < ActiveRecord::Base
           material = Material.create_virtual(m, f)
           material.filename = m.title + ": " + f.original_name
           material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
           material.url = f.file.url
 
           material
         }
       })
       .reduce { |mission, files| mission + files }
+
+    # Make sure we return at least an empty list, in case there are no missions.
+    if mission_files == nil
+      mission_files = []
+    end
 
     missions = MaterialFolder.create_virtual("missions", material_folder.id)
     missions.name = "Missions"
@@ -322,12 +328,18 @@ class Course < ActiveRecord::Base
           material = Material.create_virtual(t, f)
           material.filename = t.title + ": " + f.original_name
           material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
           material.url = f.file.url
 
           material
         }
       })
       .reduce { |training, files| training + files }
+
+    # Make sure we return at least an empty list, in case there are no trainings.
+    if training_files == nil
+      training_files = []
+    end
 
     trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
     trainings.name = "Trainings"

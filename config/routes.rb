@@ -91,6 +91,7 @@ JfdiAcademy::Application.routes.draw do
 
     get "materials/new/:parent", to: "materials#new", as: :new_material
     get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
+    get "materials/subfolder/:id/mark_read", to: "materials#mark_folder_read", as: :material_mark_folder_read
     get "materials/subfolder/:id", to: "materials#index", as: :material_folder
     put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
     post "materials/subfolder/:parent", to: "materials#create", as: :material_create

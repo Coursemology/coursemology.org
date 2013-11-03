@@ -20,7 +20,7 @@ class Material < ActiveRecord::Base
       def initialize(parent, obj)
         @parent = parent
         @obj = obj
-        @name = @description = @url = nil
+        @name = @description = @updated_at = @url = nil
       end
 
       def id
@@ -51,7 +51,10 @@ class Material < ActiveRecord::Base
         @description = description
       end
       def updated_at
-        nil
+        @updated_at
+      end
+      def updated_at=(updated_at)
+        @updated_at = updated_at
       end
       def url
         @url
