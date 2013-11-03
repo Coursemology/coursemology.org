@@ -310,6 +310,11 @@ class Course < ActiveRecord::Base
       })
       .reduce { |mission, files| mission + files }
 
+    # Make sure we return at least an empty list, in case there are no missions.
+    if mission_files == nil
+      mission_files = []
+    end
+
     missions = MaterialFolder.create_virtual("missions", material_folder.id)
     missions.name = "Missions"
     missions.description = "Mission descriptions and other files"
@@ -328,6 +333,11 @@ class Course < ActiveRecord::Base
         }
       })
       .reduce { |training, files| training + files }
+
+    # Make sure we return at least an empty list, in case there are no trainings.
+    if training_files == nil
+      training_files = []
+    end
 
     trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
     trainings.name = "Trainings"
