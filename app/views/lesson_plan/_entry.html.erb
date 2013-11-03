@@ -17,7 +17,7 @@
       <%= link_to entry.url do %>
         <h3 class="link">
           <% if not entry.is_published %>
-             [Unpublished]
+             <span class="label label-info">Unpublished</span>
           <% end %>
           <%= entry.title %>
         </h3>
