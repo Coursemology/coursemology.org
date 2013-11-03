@@ -303,6 +303,7 @@ class Course < ActiveRecord::Base
           material = Material.create_virtual(m, f)
           material.filename = m.title + ": " + f.original_name
           material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
           material.url = f.file.url
 
           material
@@ -327,6 +328,7 @@ class Course < ActiveRecord::Base
           material = Material.create_virtual(t, f)
           material.filename = t.title + ": " + f.original_name
           material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
           material.url = f.file.url
 
           material
