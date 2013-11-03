@@ -1,7 +1,9 @@
 <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
 <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
-<%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn pull-right' %>
-<%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn pull-right' %>
+<span class="pull-right">
+  <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
+  <%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
+</span>
 
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
