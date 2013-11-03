@@ -76,7 +76,7 @@ class Mission < ActiveRecord::Base
   end
 
   def published?
-    publish
+    publish?
   end
 
   alias_method :sbms, :submissions
