@@ -285,7 +285,7 @@ private
         can?(:manage, file.parent) ||
         (
           file.parent.can_start?(curr_user_course).first && # User has satisfied achievements
-          file.parent.published && # Staff has published
+          file.parent.published? && # Staff has published
           can?(:read, file.parent) # Permissions allowed
         )
       }
