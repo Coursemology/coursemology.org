@@ -1,4 +1,4 @@
-<a name='post-<%= post.id %>'></a>
+<a class='post-anchor' name='post-<%= post.id %>'></a>
 <div class="row" style="padding:5px;">
   <div id='post_<%= post_counter + 1 %>' class='post <%= cycle('odd', 'even') -%> span12'>
       <% if post.pending_review? %>

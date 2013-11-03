@@ -69,3 +69,10 @@ label.collection_check_boxes {
 span.post-status-icons {
   white-space: nowrap;
 }
+
+a.post-anchor {
+  display: block;
+  position: relative;
+  top: -43px;
+  visibility: hidden;
+}
