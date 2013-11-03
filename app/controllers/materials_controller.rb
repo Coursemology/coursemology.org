@@ -2,8 +2,8 @@ class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
-  load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new, :edit_folder]
 
@@ -74,6 +74,22 @@ class MaterialsController < ApplicationController
         gon.folders = build_subtree(@course.material_folder)
         render "materials/index"
       }
+    end
+  end
+
+  def mark_folder_read
+    if not @material_folder then
+      redirect_to course_material_path(@course)
+      return
+    end
+
+    @material_folder.materials.each { |m|
+      curr_user_course.mark_as_seen(m)
+    }
+
+    respond_to do |format|
+      format.html { redirect_to course_material_folder_path(@course, @material_folder) }
+      format.json { render json: {status: 'OK'} }
     end
   end
 
