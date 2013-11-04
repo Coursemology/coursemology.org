@@ -68,5 +68,9 @@ class Training < ActiveRecord::Base
     entry
   end
 
+  def published?
+    publish?
+  end
+
   alias_method :sbms, :training_submissions
 end

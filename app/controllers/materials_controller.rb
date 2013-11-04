@@ -5,7 +5,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
-  before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new]
+  before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new, :edit_folder]
 
   def index
     authorize! :index, Material
@@ -283,7 +283,11 @@ private
     entries.each { |entry|
       entry.files = entry.files.select { |file|
         can?(:manage, file.parent) ||
-        (file.parent.can_start?(curr_user_course) && can?(:read, file.parent))
+        (
+          file.parent.can_start?(curr_user_course).first && # User has satisfied achievements
+          file.parent.published? && # Staff has published
+          can?(:read, file.parent) # Permissions allowed
+        )
       }
     }
   end
