@@ -1,3 +1,7 @@
 <div class="page-header">
-  <h1><%= link_to forem_emojify(topic.forum.title), main_app.course_forum_path(@course, topic.forum) %> &raquo; <%= forem_emojify(topic.subject) %></h1>
+  <h1>Forums</h1>
+  <h3><%= link_to main_app.course_forums_path(@course) do %>
+        <%= content_tag :i, '', :class => 'icon-home' %>
+    <% end %> &raquo; <%= link_to forem_emojify(topic.forum.title), main_app.course_forum_path(@course, topic.forum) %> &raquo; <%= forem_emojify(topic.subject) %>
+  </h3>
 </div>
