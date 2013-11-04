@@ -3,6 +3,14 @@ Forem::PostsController.class_eval do
 
   append_before_filter :shim
 
+  def update
+    if (@post.owner_or_admin?(forem_user) || curr_user_course.is_staff?) && @post.update_attributes(params[:post])
+      update_successful
+    else
+      update_failed
+    end
+  end
+
   private
 
   def shim

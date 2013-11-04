@@ -18,6 +18,16 @@ Forem::TopicsController.class_eval do
     end
   end
 
+  def destroy
+    @topic = @forum.topics.find(params[:id])
+    if forem_user == @topic.user || curr_user_course.is_staff?
+      @topic.destroy
+      destroy_successful
+    else
+      destroy_unsuccessful
+    end
+  end
+
   protected
 
   def create_successful
