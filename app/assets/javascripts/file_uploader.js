@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     // setup fileuploader
     $('#file-upload-form').fileupload({
-        maxFileSize: 5000000,
+        maxFileSize: 50000000,
         autoUpload: true,
         dropZone: $('#dropzone'),
         dataType: 'json',
