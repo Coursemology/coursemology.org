@@ -24,3 +24,8 @@ th#linked_resource_type, th#linked_resource_actions {
   padding-top: 40px;
   margin-top: -40px;
 }
+  
+/* Show bullet points on the lesson plan */
+.lesson-plan-description ul {
+  list-style: disc;
+}

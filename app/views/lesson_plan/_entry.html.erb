@@ -42,13 +42,13 @@
         <% end %>
       <% end %>
     </h4>
-    <p>
+    <div class="lesson-plan-description">
       <% if entry.is_virtual %>
         <%= truncate_html entry.description, :length => 140 %>
       <% else %>
         <%= entry.description.html_safe %>
       <% end %>
-    </p>
+    </div>
     
 <% if entry.resources.length > 0 %>
     <h4>Instructional Resources</h4>
