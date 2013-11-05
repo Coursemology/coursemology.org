@@ -25,7 +25,7 @@ th#linked_resource_type, th#linked_resource_actions {
   margin-top: -40px;
 }
   
-/* Show bullet points on the lesson plan */
-.lesson-plan-description ul {
+/* Use this class whenever bullet points need to be displayed. */
+.show-bullet-points ul {
   list-style: disc;
 }
