@@ -24,7 +24,7 @@
 <table class="table" id="dg-std-table">
   <thead>
   <th>
-    Post title
+    Post Content
   </th>
   <th>
     Date Posted
@@ -42,10 +42,13 @@
     <% topic.posts.each do |post| %>
       <tr>
         <td>
-          <%=raw forem_format(post.text) %>
+          <h5>Thread: <%= topic.subject %></h5>
+
+          <%=raw forem_format post.text %>
         </td>
         <td>
-          <%= link_to datetime_no_seconds(post.created_at) , main_app.course_forum_topic_path(@course, topic.forum, topic.id) %>
+          <%= link_to datetime_no_seconds(post.created_at),
+                      main_app.course_forum_topic_path(@course, topic.forum, topic.id, :anchor => 'post-' + post.id.to_s) %>
         </td>
       </tr>
     <% end %>

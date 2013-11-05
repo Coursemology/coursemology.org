@@ -59,7 +59,7 @@ class ForumParticipationController < ApplicationController
 
     category ||= Forem::Category.find(@course.id)
     result = Forem::Topic.
-        joins(:forum, :posts).where(forem_forums: {category_id: category.id}) #.includes(:posts)
+        joins(:forum).where(forem_forums: {category_id: category.id}).includes(:posts)
     if (from_date_db)
       puts from_date_db
       result = result.where('forem_posts.created_at >= ?', from_date_db)
