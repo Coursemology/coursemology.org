@@ -31,7 +31,10 @@
         <td><%= std_course.level ? std_course.level.level : 0 %></td>
         <td><%= link_to std_course.exp, course_user_course_exp_transactions_path(@course, std_course) %></td>
         <td>
-          <%= @post_count[std_course.user_id] || 0 %>
+          <%= link_to @post_count[std_course.user_id] || 0,
+                      course_forum_participation_individual_path(@course, std_course,
+                                                                 from_date: @from_date,
+                                                                 to_date: @to_date) %>
         </td>
         <td><input type="number" name="EXP[<%= std_course.id %>]" title="EXP amount" class="input-mini"> </td>
       </tr>

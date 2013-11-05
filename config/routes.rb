@@ -180,7 +180,7 @@ JfdiAcademy::Application.routes.draw do
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
-
+    match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
     match "/forums" => "forem/categories#show", as: :forums
     match "/forums/admin" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/admin/new" => "forem/admin/forums#new", as: :forums_admin_new
