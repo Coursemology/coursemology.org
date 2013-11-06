@@ -38,9 +38,16 @@
       <a href='#post-<%= post.id %>'>
         <time datetime="<%= post.created_at.to_s(:db) -%>"><%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %></time>
       </a>
-
       <% if forem_user %>
         <div class="pull-right">
+          <span style="padding:5px;">
+            <%= post.likes.size %> Likes
+          </span>
+          <% if !forem_user.voted_for? post %>
+            <%= link_to "Like", main_app.course_forum_topic_post_like_path(@course, @forum, @topic, post), :class => "btn btn-primary" %>
+          <% else %>
+            <%= link_to "Unlike", main_app.course_forum_topic_post_unlike_path(@course, @forum, @topic, post), :class => "btn" %>
+          <% end %>
           <% if post.topic.can_be_replied_to? || curr_user_course.is_staff? %>
             <%= link_to t('reply', :scope => 'forem.topic'), main_app.new_course_forum_topic_post_path(@course, @forum, post.topic, :reply_to_id => post.id), :class => "btn" %>
           <% end %>

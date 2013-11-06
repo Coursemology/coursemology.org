@@ -11,6 +11,18 @@ Forem::PostsController.class_eval do
     end
   end
 
+  def like
+    @post = Forem::Post.find(params[:post_id])
+    @post.liked_by forem_user
+    redirect_to main_app.course_forum_topic_path(@course, @forum, @topic)
+  end
+
+  def unlike
+    @post = Forem::Post.find(params[:post_id])
+    @post.unliked_by forem_user
+    redirect_to main_app.course_forum_topic_path(@course, @forum, @topic)
+  end
+
   private
 
   def shim

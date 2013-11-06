@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_voter
 
   before_create :set_default_role
   before_create :set_default_profile_pic

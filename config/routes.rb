@@ -190,7 +190,10 @@ JfdiAcademy::Application.routes.draw do
     put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin
     resources :forums, :controller => "forem/forums" do
       resources :topics, :controller => "forem/topics" do
-        resources :posts, :controller => "forem/posts"
+        resources :posts, :controller => "forem/posts" do
+          get :like
+          get :unlike
+        end
         get :subscribe
         get :unsubscribe
       end

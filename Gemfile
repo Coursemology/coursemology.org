@@ -64,6 +64,7 @@ gem 'newrelic_rpm'
 gem 'aws-sdk'
 gem 'forem', :github => "radar/forem"
 gem 'sanitize'
+gem 'acts_as_votable', '~> 0.7.1'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
