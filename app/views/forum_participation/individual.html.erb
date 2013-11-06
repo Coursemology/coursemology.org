@@ -13,10 +13,10 @@
       </tr>
     </table>
     <h3>
-      <%= date_dmy_to_readable_format @from_date %> to <%= date_dmy_to_readable_format @to_date %>
-    </h3>
-    <h4>
-      Post count: <%= @result.length %>
+      <%= @from_date ? date_dmy_to_readable_format(@from_date) : '' %> to <%= @to_date ? date_dmy_to_readable_format(@to_date) : ''%>
+      </h3>
+      <h4>
+        Post count: <%= @result.length %>
     </h4>
   </div>
 <% end %>
