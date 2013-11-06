@@ -10,41 +10,25 @@ class ForumParticipationController < ApplicationController
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
-    @students_courses = @course.user_courses.student.order('lower(name)')
-    category ||= Forem::Category.find(@course.id)
-    result = Forem::Forum.
-        joins(topics: :posts).
-        where('category_id = ?', category.id)
+    #@students_courses = @course.user_courses.student
+    category = Forem::Category.find(@course.id)
+    result = Forem::Post
+      .joins(topic: :forum)
+      .where(forem_forums: {category_id: category.id})#.includes(:topic)
+      .joins(user: :user_courses)
+      .where(user_courses: {course_id: @course.id, is_phantom: false, role_id: Role.student.first})
+      .joins('LEFT JOIN levels ON levels.id = user_courses.level_id')
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
     if (to_date_db)
       result = result.where('forem_posts.created_at <= ?', to_date_db)
     end
-    result = result.
-        select('COUNT(*) as post_count, forem_posts.user_id').
-        group('forem_posts.user_id')
-    @post_count = {}
-    result.each {|i| @post_count[i.user_id] = i.post_count}
-    @range_selection = {}
-
-    sort_key = ''
-
-    if sort_column == 'Name'
-      sort_key = 'lower(name) '
-    end
-
-    if sort_column == 'Level'
-      sort_key = 'level_id '
-    end
-
-    if sort_column == 'Exp'
-      sort_key = 'exp '
-    end
-
-    if  sort_column
-      @students_courses = @course.user_courses.student.order(sort_key + sort_direction)
-    end
+    @post_count = result
+        .select('COUNT(*) as post_count, forem_posts.user_id as user_id, user_courses.exp as exp, ' +
+               'user_courses.name as name, levels.level as level, user_courses.id as user_course_id')
+       .group('forem_posts.user_id')
+       .order('post_count')
   end
 
 
@@ -57,21 +41,20 @@ class ForumParticipationController < ApplicationController
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
-    category ||= Forem::Category.find(@course.id)
-    result = Forem::Topic.
-        joins(:forum).where(forem_forums: {category_id: category.id}).includes(:posts)
+    category = Forem::Category.find(@course.id)
+    result = Forem::Post
+        .joins(topic: :forum).where(forem_forums: {category_id: category.id})#.includes(:topic)
     if (from_date_db)
-      puts from_date_db
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
     if (to_date_db)
-      puts to_date_db
       result = result.where('forem_posts.created_at <= ?', to_date_db)
     end
     @result = result.where('forem_posts.user_id = ?', @user_course.user_id)
-
-
-
+    @is_raw = params[:raw] ? true : false
+    if (@is_raw)
+      render :layout => false
+    end
   end
 
   private

@@ -9,13 +9,13 @@
   <table class="table" id="dg-std-table">
     <thead>
     <th>
-      <%= sortable 'Name', course_forum_participation_path %>
+      Name
     </th>
     <th>
-      <%= sortable 'Level', course_forum_participation_path %>
+      Level
     </th>
     <th>
-      <%= sortable 'Exp', course_forum_participation_path %>
+      Exp
     </th>
     <th>
       Post Count
@@ -25,18 +25,25 @@
     </th>
     </thead>
     <tbody>
-    <% @students_courses.each do |std_course| %>
+    <% @post_count.each do |std| %>
       <tr>
-        <td><%= link_to std_course.name,course_user_course_path(@course,std_course),id:std_course.id %></td>
-        <td><%= std_course.level ? std_course.level.level : 0 %></td>
-        <td><%= link_to std_course.exp, course_user_course_exp_transactions_path(@course, std_course) %></td>
+        <td><%= link_to std.name,course_user_course_path(@course,std.user_course_id),id:std.user_course_id %></td>
+        <td><%= std.level ? std.level : 0 %></td>
+        <td><%= link_to std.exp, course_user_course_exp_transactions_path(@course, std.user_course_id) %></td>
         <td>
-          <%= link_to @post_count[std_course.user_id] || 0,
-                      course_forum_participation_individual_path(@course, std_course,
+          <%= link_to std.post_count || 0,
+                      course_forum_participation_individual_path(@course, std.user_course_id,
                                                                  from_date: @from_date,
-                                                                 to_date: @to_date) %>
+                                                                 to_date: @to_date),
+                      :class => 'post-count-link'
+          %>
         </td>
-        <td><input type="number" name="EXP[<%= std_course.id %>]" title="EXP amount" class="input-mini"> </td>
+        <td><input type="number" name="EXP[<%= std.user_course_id %>]" title="EXP amount" class="input-mini"> </td>
+      </tr>
+      <tr class="post-details-container">
+        <td colspan="5">
+          <div class="post-details">...Loading Post Summary... </div>
+        </td>
       </tr>
     <% end %>
     </tbody>
