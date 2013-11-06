@@ -32,12 +32,12 @@
     <h4>
       <% if entry.start_at %>
         <span class="icon-calendar"></span>
-        <%= entry.start_at.strftime("%A, %d %B %Y %I:%M %p") %>
+        <%= entry.start_at.strftime("%A, %d %b %Y %I:%M %p") %>
         <% if entry.end_at %> to 
           <% if entry.start_at.yday == entry.end_at.yday and entry.start_at.year == entry.end_at.year %>
             <%= entry.end_at.strftime("%I:%M %p") %>
           <% else %>
-            <%= entry.end_at.strftime("%A, %d %B %Y %I:%M %p") %>
+            <%= entry.end_at.strftime("%A, %d %b %Y %I:%M %p") %>
           <% end %>
         <% end %>
       <% end %>
