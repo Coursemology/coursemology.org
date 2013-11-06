@@ -1,6 +1,5 @@
 <% if (!@is_raw) %>
   <div class="page-header">
-
     <table>
       <tr>
         <td>
@@ -27,13 +26,16 @@
     Post Content
   </th>
   <th>
+    Likes Earned
+  </th>
+  <th>
     Date Posted
   </th>
   </thead>
   <tbody>
   <% if (@result.length == 0) %>
     <tr>
-      <td colspan="2">
+      <td colspan="3">
         No posts found.
       </td>
     </tr>
@@ -44,6 +46,9 @@
           <h5>Thread: <%= post.topic.subject %></h5>
 
           <%=raw forem_format post.text %>
+        </td>
+        <td>
+          <%= post.likes.size %>
         </td>
         <td>
           <%= link_to datetime_no_seconds(post.created_at),

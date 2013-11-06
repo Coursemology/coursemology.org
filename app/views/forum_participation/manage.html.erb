@@ -21,6 +21,9 @@
       Post Count
     </th>
     <th>
+      Likes Earned
+    </th>
+    <th>
       Add Exp
     </th>
     </thead>
@@ -37,6 +40,9 @@
                                                                  to_date: @to_date),
                       :class => 'post-count-link'
           %>
+        </td>
+        <td>
+          <%= entry[:likes] %>
         </td>
         <td><input type="number" name="EXP[<%= entry[:std_course_id] %>]" title="EXP amount" class="input-mini"> </td>
       </tr>

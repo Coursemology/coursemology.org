@@ -30,15 +30,19 @@ class ForumParticipationController < ApplicationController
       if std_index = std_courses.index {|i| i.user_id == post.user_id}
         if post_index = @post_count.index {|i| i[:std_course_id] == std_courses[std_index].id}
           @post_count[post_index][:count] += 1
+          @post_count[post_index][:likes] += post.likes.size
         else
           @post_count << {std_course_id: std_courses[std_index].id,
                           name: std_courses[std_index].name,
                           level: std_courses[std_index].level ? std_courses[std_index].level.level : 0,
                           exp: std_courses[std_index].exp,
+                          likes: post.likes.size,
                           count: 1}
         end
       end
     end
+
+    @post_count.sort! {|a, b| b[:count] <=> a[:count]}
   end
 
   def individual
