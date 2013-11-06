@@ -1,3 +1,6 @@
+<script>
+  forum.topicPath = "<%= main_app.course_forum_topic_path(@course, @forum, @topic) %>";
+</script>
 <div id='topic' class='<%= 'un' unless @topic.locked? %>locked'>
   <div id='menu' class="pull-right">
     <div class='btn-group'>
