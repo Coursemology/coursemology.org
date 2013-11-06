@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131106070836) do
+ActiveRecord::Schema.define(:version => 20131106085007) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -361,13 +361,21 @@ ActiveRecord::Schema.define(:version => 20131106070836) do
     t.integer  "topic_id"
     t.text     "text"
     t.integer  "user_id"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
     t.integer  "reply_to_id"
-    t.string   "state",       :default => "pending_review"
-    t.boolean  "notified",    :default => false
+    t.string   "state",              :default => "pending_review"
+    t.boolean  "notified",           :default => false
+    t.integer  "cached_votes_total", :default => 0
+    t.integer  "cached_votes_score", :default => 0
+    t.integer  "cached_votes_up",    :default => 0
+    t.integer  "cached_votes_down",  :default => 0
   end
 
+  add_index "forem_posts", ["cached_votes_down"], :name => "index_forem_posts_on_cached_votes_down"
+  add_index "forem_posts", ["cached_votes_score"], :name => "index_forem_posts_on_cached_votes_score"
+  add_index "forem_posts", ["cached_votes_total"], :name => "index_forem_posts_on_cached_votes_total"
+  add_index "forem_posts", ["cached_votes_up"], :name => "index_forem_posts_on_cached_votes_up"
   add_index "forem_posts", ["reply_to_id"], :name => "index_forem_posts_on_reply_to_id"
   add_index "forem_posts", ["state"], :name => "index_forem_posts_on_state"
   add_index "forem_posts", ["topic_id"], :name => "index_forem_posts_on_topic_id"
