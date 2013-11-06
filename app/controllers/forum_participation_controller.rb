@@ -10,7 +10,7 @@ class ForumParticipationController < ApplicationController
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
-    @students_courses = @course.user_courses.student
+    #@students_courses = @course.user_courses.student
     category = Forem::Category.find(@course.id)
     result = Forem::Post
       .joins(topic: :forum)
@@ -51,7 +51,10 @@ class ForumParticipationController < ApplicationController
       result = result.where('forem_posts.created_at <= ?', to_date_db)
     end
     @result = result.where('forem_posts.user_id = ?', @user_course.user_id)
-    puts @result.to_sql
+    @is_raw = params[:raw] ? true : false
+    if (@is_raw)
+      render :layout => false
+    end
   end
 
   private

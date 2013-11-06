@@ -34,9 +34,16 @@
           <%= link_to std.post_count || 0,
                       course_forum_participation_individual_path(@course, std.user_course_id,
                                                                  from_date: @from_date,
-                                                                 to_date: @to_date) %>
+                                                                 to_date: @to_date),
+                      :class => 'post-count-link'
+          %>
         </td>
         <td><input type="number" name="EXP[<%= std.user_course_id %>]" title="EXP amount" class="input-mini"> </td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <div class='post-details'></div>
+        </td>
       </tr>
     <% end %>
     </tbody>

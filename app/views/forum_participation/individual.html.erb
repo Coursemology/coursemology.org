@@ -1,25 +1,26 @@
-<div class="page-header">
+<% if (!@is_raw) %>
+  <div class="page-header">
 
-  <table>
-    <tr>
-      <td>
-        <img class="user-profile-pic"
-             src="<%= @user_course.user.get_profile_photo_url %>" />
-      </td>
-      <td style="padding-left: 10px">
-        <a id="student-large" href="<%= course_user_course_path(@course, @user_course)%>"><%= @user_course.name %></a>
-        <p><%= @user_course.user.email %></p>
-      </td>
-    </tr>
-  </table>
-  <h3>
-    <%= date_dmy_to_readable_format @from_date %> to <%= date_dmy_to_readable_format @to_date %>
-  </h3>
-  <h4>
-    Post count: <%= @result.length %>
-  </h4>
-</div>
-
+    <table>
+      <tr>
+        <td>
+          <img class="user-profile-pic"
+               src="<%= @user_course.user.get_profile_photo_url %>" />
+        </td>
+        <td style="padding-left: 10px">
+          <a id="student-large" href="<%= course_user_course_path(@course, @user_course)%>"><%= @user_course.name %></a>
+          <p><%= @user_course.user.email %></p>
+        </td>
+      </tr>
+    </table>
+    <h3>
+      <%= date_dmy_to_readable_format @from_date %> to <%= date_dmy_to_readable_format @to_date %>
+    </h3>
+    <h4>
+      Post count: <%= @result.length %>
+    </h4>
+  </div>
+<% end %>
 <table class="table" id="dg-std-table">
   <thead>
   <th>
