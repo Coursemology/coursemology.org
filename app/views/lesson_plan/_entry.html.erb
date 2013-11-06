@@ -4,7 +4,7 @@
   <% entry_type = LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
 <% end %>
 
-<tr class="lesson-plan-<%= entry_type %>">
+<tr class="<% if entry.is_virtual %>lesson-plan-virtual-entry<% else %>lesson-plan-entry<% end %>">
   <td>
     <h1>
       <small>
@@ -42,7 +42,7 @@
         <% end %>
       <% end %>
     </h4>
-    <div class="show-bullet-points">
+    <div class="show-bullet-points lesson-plan-entry-description">
       <% if entry.is_virtual %>
         <%= truncate_html entry.description, :length => 140 %>
       <% else %>
