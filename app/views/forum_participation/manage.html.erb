@@ -25,20 +25,20 @@
     </th>
     </thead>
     <tbody>
-    <% @post_count.each do |std| %>
+    <% @post_count.each do |entry| %>
       <tr>
-        <td><%= link_to std.name,course_user_course_path(@course,std.user_course_id),id:std.user_course_id %></td>
-        <td><%= std.level ? std.level : 0 %></td>
-        <td><%= link_to std.exp, course_user_course_exp_transactions_path(@course, std.user_course_id) %></td>
+        <td><%= link_to entry[:name], course_user_course_path(@course, entry[:std_course_id]), id: entry[:std_course_id] %></td>
+        <td><%= entry[:level] %></td>
+        <td><%= link_to entry[:exp], course_user_course_exp_transactions_path(@course, entry[:std_course_id]) %></td>
         <td>
-          <%= link_to std.post_count || 0,
-                      course_forum_participation_individual_path(@course, std.user_course_id,
+          <%= link_to entry[:count] || 0,
+                      course_forum_participation_individual_path(@course, entry[:std_course_id],
                                                                  from_date: @from_date,
                                                                  to_date: @to_date),
                       :class => 'post-count-link'
           %>
         </td>
-        <td><input type="number" name="EXP[<%= std.user_course_id %>]" title="EXP amount" class="input-mini"> </td>
+        <td><input type="number" name="EXP[<%= entry[:std_course_id] %>]" title="EXP amount" class="input-mini"> </td>
       </tr>
       <tr class="post-details-container">
         <td colspan="5">

@@ -10,27 +10,36 @@ class ForumParticipationController < ApplicationController
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
-    #@students_courses = @course.user_courses.student
+    @students_courses = @course.user_courses.student.real_students
     category = Forem::Category.find(@course.id)
     result = Forem::Post
-      .joins(topic: :forum)
-      .where(forem_forums: {category_id: category.id})#.includes(:topic)
-      .joins(user: :user_courses)
-      .where(user_courses: {course_id: @course.id, is_phantom: false, role_id: Role.student.first})
-      .joins('LEFT JOIN levels ON levels.id = user_courses.level_id')
+    .joins(topic: :forum)
+    .where(forem_forums: {category_id: category.id})
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
     if (to_date_db)
       result = result.where('forem_posts.created_at <= ?', to_date_db)
     end
-    @post_count = result
-        .select('COUNT(*) as post_count, forem_posts.user_id as user_id, user_courses.exp as exp, ' +
-               'user_courses.name as name, levels.level as level, user_courses.id as user_course_id')
-       .group('forem_posts.user_id')
-       .order('post_count')
-  end
 
+    std_courses = @students_courses.collect {|i| i} # array of UserCourses
+
+    @post_count = Array.new # array of hashes
+
+    result.each do |post|
+      if std_index = std_courses.index {|i| i.user_id == post.user_id}
+        if post_index = @post_count.index {|i| i[:std_course_id] == std_courses[std_index].id}
+          @post_count[post_index][:count] += 1
+        else
+          @post_count << {std_course_id: std_courses[std_index].id,
+                          name: std_courses[std_index].name,
+                          level: std_courses[std_index].level ? std_courses[std_index].level.level : 0,
+                          exp: std_courses[std_index].exp,
+                          count: 1}
+        end
+      end
+    end
+  end
 
   def individual
 
