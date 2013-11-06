@@ -61,6 +61,23 @@ $(document).ready(function() {
         pickTime: false
     });
 
+    var today = new Date();
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    $('.datetimepicker-past-only').datetimepicker({
+        format: 'dd-MM-yyyy hh:mm:ss',
+        language: 'pt-BR',
+        endDate: yesterday
+    });
+
+    $('.datepicker-past-only').datetimepicker({
+        format: 'dd-MM-yyyy',
+        language: 'pt-BR',
+        pickTime: false,
+        endDate: yesterday
+    });
+
     $('a[rel=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();

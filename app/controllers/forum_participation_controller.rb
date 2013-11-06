@@ -5,8 +5,8 @@ class ForumParticipationController < ApplicationController
   before_filter :load_general_course_data, only: [:manage, :individual]
 
   def manage
-    @from_date = params[:from] || '01-10-2013'
-    @to_date = params[:to] || '30-11-2013'
+    @from_date = params[:from]
+    @to_date = params[:to]
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
@@ -49,8 +49,8 @@ class ForumParticipationController < ApplicationController
 
     @user_course = @course.user_courses.find(params[:poster_id])
 
-    @from_date =  params[:from_date] || '01-10-2013'
-    @to_date = params[:to_date] || '30-10-2013'
+    @from_date =  params[:from_date]
+    @to_date = params[:to_date]
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
@@ -85,7 +85,7 @@ class ForumParticipationController < ApplicationController
   def date_dmy_to_db(date)
     begin
       if date.nil?
-        ""
+        nil
       else
         Date.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d')
       end
@@ -95,7 +95,12 @@ class ForumParticipationController < ApplicationController
   end
 
   def date_dmy_to_readable_format(date)
-    Date.strptime(date, '%d-%m-%Y').strftime('%e %b')
+    begin
+      Date.strptime(date, '%d-%m-%Y').strftime('%e %b')
+    rescue
+      false
+    end
+
   end
   helper_method :date_dmy_to_readable_format
 end
