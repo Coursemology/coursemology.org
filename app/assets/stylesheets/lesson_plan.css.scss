@@ -15,7 +15,7 @@ th#linked_resource_type, th#linked_resource_actions {
   width: 20%;
 }
 
-.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover {
+.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover, .lesson-plan-header:hover {
   cursor: pointer;
 }
 
@@ -23,4 +23,17 @@ th#linked_resource_type, th#linked_resource_actions {
 .lesson-plan-anchor {
   padding-top: 40px;
   margin-top: -40px;
+}
+  
+/* Use this class whenever bullet points need to be displayed. */
+.show-bullet-points ul {
+  list-style: disc;
+}
+
+.lesson-plan-virtual-entry .lesson-plan-entry-description {
+  color: #888;
+}
+
+.lesson-plan-virtual-entry:hover .lesson-plan-entry-description {
+  color: #000000;
 }

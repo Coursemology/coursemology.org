@@ -281,6 +281,7 @@ class ApplicationController < ActionController::Base
 
   def load_general_course_data
     if @course
+      gon.course = { id: @course.id }
       load_theme_setting
       load_sidebar_data
       load_popup_notifications

@@ -35,28 +35,30 @@ $(document).ready(function() {
   
   $('#lesson-plan-hide-all').click(function() {
     $('.lesson-plan-body').slideUp();
+    $('.lesson-plan-body').data("hidden", "true");
     $('.lesson-plan-show-entries').show();
     $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
     $('.lesson-plan-body').slideDown();
+    $('.lesson-plan-body').data("hidden", "false");
     $('.lesson-plan-show-entries').hide();
     $('.lesson-plan-hide-entries').show();
   });
   
-  $('.lesson-plan-hide-entries').click(function() {
-    $(this).hide();
+  $('.lesson-plan-header').click(function() {
     var parent = $(this).parents('.lesson-plan-item');
-    $('.lesson-plan-body', parent).slideUp();
-    $('.lesson-plan-show-entries', parent).show();
-  });
-  
-  $('.lesson-plan-show-entries').click(function() {
-    $(this).hide();
-    var parent = $(this).parents('.lesson-plan-item');
-    $('.lesson-plan-body', parent).slideDown();
-    $('.lesson-plan-hide-entries', parent).show();
+    var isHidden = $('.lesson-plan-body', parent).data("hidden");
+    if (isHidden === "true") {
+      $('.lesson-plan-body', parent).slideDown().data("hidden", "false");
+      $('.lesson-plan-hide-entries', this).show();
+      $('.lesson-plan-show-entries', this).hide();
+    } else {
+      $('.lesson-plan-body', parent).slideUp().data("hidden", "true");
+      $('.lesson-plan-hide-entries', this).hide();
+      $('.lesson-plan-show-entries', this).show();
+    }
   });
 
   $('#lesson-plan-done-generating').click(function() {
