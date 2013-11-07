@@ -157,4 +157,14 @@ $(document).ready(function() {
           });
     }
   });
+
+  var handleValidation = function(e) {
+    if ($('.error', this).length > 0) {
+      e.preventDefault();
+    }
+  };
+  $('.materials-edit-form').submit(handleValidation);
+  $('.materials-edit-form input[type="submit"]').click(function() {
+    handleValidation.apply($('.materials-edit-form')[0], arguments);
+  });
 });
