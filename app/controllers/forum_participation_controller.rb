@@ -7,15 +7,18 @@ class ForumParticipationController < ApplicationController
   def manage
     @from_date = params[:from]
     @to_date = params[:to]
+
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
+    @weekly = params[:weekly].blank? ? 100 : params[:weekly] # defaults to 100 EXP per week for now
+    @actual_cap = actual_exp_cap(@from_date, @to_date, @weekly.to_i)
 
-    @students_courses = @course.user_courses.student.real_students
+    @students_courses = @course.user_courses.real_students
     category = Forem::Category.find(@course.id)
     result = Forem::Post
-    .joins(topic: :forum)
-    .where(forem_forums: {category_id: category.id})
-    .includes(:votes)
+      .joins(topic: :forum)
+      .where(forem_forums: {category_id: category.id})
+      .includes(:votes)
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
@@ -126,4 +129,19 @@ class ForumParticipationController < ApplicationController
 
   end
   helper_method :date_dmy_to_readable_format
+
+  def number_of_days(from, to)
+    begin
+      from_date = Date.strptime(from, '%d-%m-%Y')
+      to_date = Date.strptime(to, '%d-%m-%Y')
+      to_date - from_date + 1
+    rescue
+      -1
+    end
+  end
+
+  def actual_exp_cap(from, to, weekly)
+    days = number_of_days(from, to).to_i
+    days > 0 ? (weekly * days / 7).floor : weekly
+  end
 end

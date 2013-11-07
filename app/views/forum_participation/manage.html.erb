@@ -1,8 +1,8 @@
 <div class="page-header">
-  <h1>Forum Participation</h1>
+  <h1>Forum Participation </h1>
 </div>
 
-<%= render :partial => "date_range" %>
+<%= render :partial => "prefs" %>
 
 <%= form_for(@course, url: course_manage_update_exp_path,
              html: { method: :post, class: "form-horizontal" } ) do |f| %>
@@ -50,7 +50,7 @@
         <td>
           <button type="button" class="btn btn-info view-post-btn">View</button>
         </td>
-        <td><input type="number" name="EXP[<%= entry[:std_course_id] %>]" title="EXP amount" class="input-mini"> </td>
+        <td><input type="number" name="EXP[<%= entry[:std_course_id] %>]" title="EXP amount" class="input-mini" value="<%= @actual_cap %>"> </td>
       </tr>
       <tr class="post-details-container">
         <td colspan="7">

@@ -29,7 +29,21 @@
       </div>
     </div>
   </div>
+  <div class="control-group">
+    <%= label_tag :weekly, 'Weekly Max EXP', class: 'control-label' %>
+    <div class="controls">
+      <%= text_field_tag :weekly, '' ,
+                         value: @weekly,
+                         class: 'input-medium',
+                         id: "weekly-cap"
+      %>
+      <div class="help-block">
+        <p>Actual EXP cap will be calculated based on date range specified.</p>
+        <p>If date range is incomplete, this value becomes the default EXP cap.</p>
+      </div>
+    </div>
+  </div>
   <div class="form-actions">
-    <%= submit_tag 'Search', :class => 'btn btn-primary',id: 'submit_date_range' %>
+    <%= submit_tag 'Search', :class => 'btn btn-primary', id: 'submit_date_range' %>
   </div>
 <% end %>
