@@ -26,7 +26,7 @@
     Post Content
   </th>
   <th>
-    Likes Earned
+    Likes
   </th>
   <th>
     Date Posted
@@ -50,7 +50,7 @@
         <td>
           <%= post.likes.size %>
         </td>
-        <td>
+        <td style="white-space: nowrap">
           <%= link_to datetime_no_seconds(post.created_at),
                       main_app.course_forum_topic_path(@course, post.topic.forum, post.topic.id, :anchor => 'post-' + post.id.to_s) %>
         </td>
