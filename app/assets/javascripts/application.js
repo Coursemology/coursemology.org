@@ -95,6 +95,12 @@ $(document).ready(function() {
         }
     });
     $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
+
+    // Make sure that all links with the disabled tag or disabled attribute
+    // do not trigger a navigation
+    $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
+      e.preventDefault();
+    });
 });
 
 var _jfdiFormatFunc = function(i, d){

@@ -10,6 +10,9 @@
     <% if (can? :manage, Material) %>
     <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => ('btn' + (@folder.is_virtual ? ' disabled' : '')), :title => (@folder.is_virtual ? 'Cannot edit virtual folders.' : nil) %>
     <% end %>
+    <%= link_to "Download .zip", (@folder.is_virtual ?
+        course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
+        course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
     <% if not(@folder.is_virtual) %>
     <%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
