@@ -7,14 +7,26 @@ function forumToggleLike(post_id) {
             url: (forum.topicPath+"/posts/"+post_id+"/unlike")
         }).done(function(){
             e.text('Like');
-            c.text(parseInt(c.text())-1);
+            var count = parseInt(c.text())-1;
+            c.text(count);
+            if (count > 0) {
+                c.parent().show();
+            } else {
+                c.parent().hide();
+            }
         })
     } else {
         $.ajax({
             url: (forum.topicPath+"/posts/"+post_id+"/like")
         }).done(function(){
             e.text('Unlike');
-            c.text(parseInt(c.text())+1);
+                var count = parseInt(c.text())+1;
+                c.text(count);
+                if (count > 0) {
+                    c.parent().show();
+                } else {
+                    c.parent().hide();
+                }
         })
     }
 }
