@@ -3,7 +3,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
   load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :show_by_name, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new, :edit_folder]
 
@@ -125,6 +125,20 @@ class MaterialsController < ApplicationController
     end
 
     redirect_to material.file.file.url
+  end
+
+  def show_by_name
+    # Resolve the subfolder ID + file name to an ID
+    folder = MaterialFolder.find_by_id(params[:id])
+    files = folder.files.select {|f|
+      f.filename == params[:filename]
+    }
+
+    raise ActiveRecord::RecordNotFound if files.length == 0
+    authorize! :index, files[0]
+    params[:id] = files[0].id
+
+    show
   end
 
   def new
