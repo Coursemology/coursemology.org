@@ -57,7 +57,7 @@ class ForumParticipationController < ApplicationController
 
     category = Forem::Category.find(@course.id)
     result = Forem::Post
-        .joins(topic: :forum).where(forem_forums: {category_id: category.id})
+        .includes(topic: :forum).where(forem_forums: {category_id: category.id})
         .includes(:votes)
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
@@ -65,7 +65,23 @@ class ForumParticipationController < ApplicationController
     if (to_date_db)
       result = result.where('forem_posts.created_at <= ?', to_date_db)
     end
-    @result = result.where('forem_posts.user_id = ?', @user_course.user_id)
+    result = result.where('forem_posts.user_id = ?', @user_course.user_id)
+
+    @result = Array.new
+
+    result.each do |post|
+      @result << {subject: post.topic.subject,
+                  text: post.text,
+                  likes: post.likes.size,
+                  created: post.created_at,
+                  id: post.id,
+                  topic_id: post.topic.id,
+                  forum: post.topic.forum
+                  }
+    end
+
+    @result.sort! {|a, b| b[:likes] <=> a[:likes]}
+
     @is_raw = params[:raw] ? true : false
     if (@is_raw)
       render :layout => false

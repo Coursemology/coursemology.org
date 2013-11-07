@@ -43,16 +43,16 @@
   <% @result.each do |post| %>
       <tr>
         <td>
-          <h5>Thread: <%= post.topic.subject %></h5>
+          <h5>Thread: <%= post[:subject] %></h5>
 
-          <%=raw forem_format post.text %>
+          <%=raw forem_format post[:text] %>
         </td>
         <td>
-          <%= post.likes.size %>
+          <%= post[:likes] %>
         </td>
         <td style="white-space: nowrap">
-          <%= link_to datetime_no_seconds(post.created_at),
-                      main_app.course_forum_topic_path(@course, post.topic.forum, post.topic.id, :anchor => 'post-' + post.id.to_s) %>
+          <%= link_to datetime_no_seconds(post[:created]),
+                      main_app.course_forum_topic_path(@course, post[:forum], post[:topic_id], :anchor => 'post-' + post[:id].to_s) %>
         </td>
       </tr>
   <% end %>
