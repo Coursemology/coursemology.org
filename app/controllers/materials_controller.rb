@@ -53,6 +53,10 @@ class MaterialsController < ApplicationController
       format.json {
         render :json => build_subtree(@folder, true)
       }
+      format.zip {
+        filename = build_zip @folder
+        send_file(filename, :type => 'application/zip, application/octet-stream', :disposition => 'attachment', :filename => filename)
+      }
     end
   end
 
@@ -288,6 +292,26 @@ private
           file.parent.published? && # Staff has published
           can?(:read, file.parent) # Permissions allowed
         )
+      }
+    }
+  end
+
+  def build_zip folder
+    Dir.mktmpdir("coursemology-mat-temp") { |dir|
+      # Extract all the files from AWS
+      # TODO: Preserve directory structure
+      folder.materials.each { |m|
+        m.file.file.copy_to_local_file :original, File.join(dir, m.filename)
+      }
+
+      # Generate a file name to store the zip while we build it.
+      zip_name = File.join(File.dirname(dir),
+        Dir::Tmpname.make_tmpname(["coursemology-mat-temp-zip", ".zip"], nil))
+      Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
+        # Add every file in the directory to the zip file, preserving structure.
+        Dir[File.join(dir, '**', '**')].each {|file|
+          zipfile.add(file.sub(dir + '/', ''), file)
+        }
       }
     }
   end
