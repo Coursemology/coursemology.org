@@ -72,16 +72,27 @@ class MaterialsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
-    # Template variables defined by index.
-    @virtual_folders = []
-    @is_subfolder_new = []
-    @is_new = []
 
     respond_to do |format|
       format.html {
+        # Template variables defined by index.
+        @virtual_folders = []
+        @is_subfolder_new = []
+        @is_new = []
+
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
         render "materials/index"
+      }
+
+      format.zip {
+        filename = build_zip @folder
+        send_file(filename, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => @folder.name + ".zip"
+        }
+        )
       }
     end
   end
@@ -307,7 +318,7 @@ private
       # Extract all the files from AWS
       # TODO: Preserve directory structure
       folder.materials.each { |m|
-        temp_path = File.join(dir, m.filename)
+        temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
 
         # Create the directory structure for this file.
@@ -325,7 +336,7 @@ private
 
           prefix
         }
-        prefix = parent_traversal.call(m.folder)
+        prefix = m.folder ? parent_traversal.call(m.folder) : ''
 
         if prefix.length > 0 then
           File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))

@@ -301,6 +301,7 @@ class Course < ActiveRecord::Base
       (self.missions.map { |m|
         m.files.map { |f|
           material = Material.create_virtual(m, f)
+          material.file = f
           material.filename = m.title + ": " + f.original_name
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
@@ -326,6 +327,7 @@ class Course < ActiveRecord::Base
       (self.trainings.map { |t|
         t.files.map { |f|
           material = Material.create_virtual(t, f)
+          material.file = f
           material.filename = t.title + ": " + f.original_name
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
