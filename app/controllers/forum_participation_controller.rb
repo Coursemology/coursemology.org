@@ -46,7 +46,7 @@ class ForumParticipationController < ApplicationController
       end
     end
 
-    @post_count.sort! {|a, b| b[:count] <=> a[:count]}
+    @post_count.sort! {|a, b| (b[:count] + b[:likes]) <=> (a[:count] + a[:likes])}
   end
 
   def individual
