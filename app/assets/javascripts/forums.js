@@ -20,13 +20,13 @@ function forumToggleLike(post_id) {
             url: (forum.topicPath+"/posts/"+post_id+"/like")
         }).done(function(){
             e.text('Unlike');
-                var count = parseInt(c.text())+1;
-                c.text(count);
-                if (count > 0) {
-                    c.parent().show();
-                } else {
-                    c.parent().hide();
-                }
+            var count = parseInt(c.text())+1;
+            c.text(count);
+            if (count > 0) {
+                c.parent().show();
+            } else {
+                c.parent().hide();
+            }
         })
     }
 }
