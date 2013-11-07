@@ -2,12 +2,7 @@ class LessonPlanEntriesController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :lesson_plan_entry, through: :course
 
-  before_filter :load_general_course_data, :only => [:index]
-  before_filter :specify_course_id, :only => [:new, :edit]
-
-  def specify_course_id
-    gon.course = @course.id
-  end
+  before_filter :load_general_course_data, :only => [:index, :new, :edit]
 
   def index
     @milestones = @course.lesson_plan_milestones.order("end_at")

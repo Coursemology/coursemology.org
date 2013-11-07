@@ -3,7 +3,7 @@ function MaterialsFilePicker() {
 }
 
 MaterialsFilePicker.prototype.pick = function(div) {
-  var courseId = gon.course;
+  var courseId = gon.course.id;
   var that = this;
   
   var htmlContent = '<div class="modal-header">\
