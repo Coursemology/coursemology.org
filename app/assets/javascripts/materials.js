@@ -119,4 +119,7 @@ $(document).ready(function() {
       window.location.href = selectedFolderUrl;
     }
   });
+  
+  // Set up the disabled controls tooltip.
+  $('.workbin-disabled-controls').tooltip();
 });
