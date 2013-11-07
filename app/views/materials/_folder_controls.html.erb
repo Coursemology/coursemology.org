@@ -1,14 +1,22 @@
 <div class="materials-folder-controls">
+  <% if (can? :manage, Material) %>
   <span>
-    <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
-    <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+    <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => ('btn btn-primary' + (@folder.is_virtual ? ' disabled' : '')), :title => (@folder.is_virtual ? 'Cannot upload to a virtual folder.' : nil) %>
+    <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => ('btn btn-success' + (@folder.is_virtual ? ' disabled' : '')), :title => (@folder.is_virtual ? 'Cannot edit virtual folders.' : nil) %>
   </span>
+  <% end %>
+
   <span class="pull-right btn-group">
-    <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
+    <% if (can? :manage, Material) %>
+    <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => ('btn' + (@folder.is_virtual ? ' disabled' : '')), :title => (@folder.is_virtual ? 'Cannot edit virtual folders.' : nil) %>
+    <% end %>
+    <% if not(@folder.is_virtual) %>
     <%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
+    <% end %>
   </span>
 </div>
 
+<% if (can? :manage, Material) && not(@folder.is_virtual) %>
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     Create Subfolder
@@ -22,3 +30,4 @@
   </div>
   <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @folder,  :subfolder_method => :put } %>
 </div>
+<% end %>
