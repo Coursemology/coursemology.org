@@ -323,7 +323,7 @@ private
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
-          if d.parent_folder then
+          if d.parent_folder && d.id != folder.id then
             prefix = parent_traversal.call(d.parent_folder)
           else
             # Root should not require a separate folder.
