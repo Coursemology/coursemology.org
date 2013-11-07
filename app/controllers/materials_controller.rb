@@ -16,26 +16,6 @@ class MaterialsController < ApplicationController
                 MaterialFolder.find_by_course_id_and_parent_folder_id(@course.id, nil)
               end
 
-    # Compute the new files in this directory
-    @is_new = {}
-    @folder.files.each {|file|
-      unless @curr_user_course.seen_materials.exists?(file)
-        @is_new[file.id] = true
-      end
-    }
-
-    # Then any subfolders with new materials (so users can drill down to see what's new)
-    @is_subfolder_new = {}
-    @folder.subfolders.each { |subfolder|
-      subfolder.materials.each { |material|
-        if not @curr_user_course.seen_materials.exists?(material.id) then
-          @is_subfolder_new[subfolder.id] = true
-          break
-        end
-        material.id
-      }
-    }
-
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
@@ -47,6 +27,26 @@ class MaterialsController < ApplicationController
     # Get the directory structure to the front-end JS.
     respond_to do |format|
       format.html {
+        # Compute the new files in this directory
+        @is_new = {}
+        @folder.files.each {|file|
+          unless @curr_user_course.seen_materials.exists?(file)
+            @is_new[file.id] = true
+          end
+        }
+
+        # Then any subfolders with new materials (so users can drill down to see what's new)
+        @is_subfolder_new = {}
+        @folder.subfolders.each { |subfolder|
+          subfolder.materials.each { |material|
+            if not @curr_user_course.seen_materials.exists?(material.id) then
+              @is_subfolder_new[subfolder.id] = true
+              break
+            end
+            material.id
+          }
+        }
+
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
       }
