@@ -18,8 +18,15 @@
     </span>
   </td>
   <td class='byline'>
-    <div class='subject'><%= new_since_last_view_text(topic) %> <%= link_to forem_emojify(topic.subject), main_app.course_forum_topic_path(@course, @forum, topic) %></div>
-    <div class='started-by'><%= t "started_by" %><%= relevant_posts(topic).first.user %></div>
+    <div class='subject'>
+      <%= new_since_last_view_text(topic) %>
+      <%= link_to forem_emojify(topic.subject), main_app.course_forum_topic_path(@course, @forum, topic) %>
+      <% relevant = relevant_posts(topic) %>
+      <% if (likes = relevant.first.likes.size) > 0 %>
+        &nbsp;&nbsp;<i class="icon-thumbs-up"></i>&nbsp;<%= likes %>
+      <% end %>
+    </div>
+    <div class='started-by'><%= t "started_by" %><%= relevant.first.user %></div>
   </td>
   <td class='latest-post text-center'>
     <%= link_to_latest_post(topic) -%>
