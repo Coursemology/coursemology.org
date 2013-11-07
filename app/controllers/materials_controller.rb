@@ -55,7 +55,12 @@ class MaterialsController < ApplicationController
       }
       format.zip {
         filename = build_zip @folder
-        send_file(filename, :type => 'application/zip, application/octet-stream', :disposition => 'attachment', :filename => filename)
+        send_file(filename, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => File.join(@folder.name, ".zip")
+          }
+        )
       }
     end
   end
@@ -297,6 +302,7 @@ private
   end
 
   def build_zip folder
+    result = nil
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
       # TODO: Preserve directory structure
@@ -313,6 +319,10 @@ private
           zipfile.add(file.sub(dir + '/', ''), file)
         }
       }
+
+      result = zip_name
     }
+
+    result
   end
 end
