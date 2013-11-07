@@ -173,11 +173,7 @@ class MaterialsController < ApplicationController
   end
 
   def edit
-    @material = Material.find_by_id(params[:id])
-    if not @material then
-      redirect_to :action => "index"
-      return
-    end
+    gon.currentFolder = @material.folder
   end
 
   def edit_folder

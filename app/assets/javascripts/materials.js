@@ -123,3 +123,38 @@ $(document).ready(function() {
   // Set up the disabled controls tooltip.
   $('.workbin-disabled-controls').tooltip();
 });
+
+$(document).ready(function() {
+  function show_error($this, error) {
+    var group = $this.parents('.control-group');
+    group.addClass('error');
+    $('.help-inline', group).text(error);
+    has_errors = true;
+  }
+  function remove_error($this) {
+    var group = $this.parents('.control-group');
+    group.removeClass('error');
+    $('.help-inline', group).text('');
+  }
+
+  var original_filename = $('input#material_filename').val();
+  $('input#material_filename').change(function() {
+    var $this = $(this);
+    if (this.value === original_filename) {
+      remove_error($this);
+    } else {
+      // Check against the server.
+      $.post('/courses/' + gon.course.id + '/materials/subfolder/' + gon.currentFolder.id + '/' + this.value,
+          {_method: 'HEAD'})
+          .done(function() {
+            //This is supposed to fail! There's a file already.
+            show_error($this, 'Another file with the same name already exists.');
+          })
+          .fail(function(e) {
+            if (e.status === 404) {
+              remove_error($this);
+            }
+          });
+    }
+  });
+});
