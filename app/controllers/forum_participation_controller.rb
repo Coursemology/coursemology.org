@@ -47,6 +47,11 @@ class ForumParticipationController < ApplicationController
     end
 
     @post_count.sort! {|a, b| (b[:count] + b[:likes]) <=> (a[:count] + a[:likes])}
+
+    @post_count.each_with_index do |student, index|
+      # divides students up to 10 groups, top 10% gets full exp, top 20% gets 90% exp... last 10% gets 10% exp
+      student[:proposed_exp] = ((1.0 - index.to_f / @post_count.size).round(1) * @actual_cap).to_i
+    end
   end
 
   def individual
