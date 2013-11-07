@@ -58,7 +58,7 @@ class MaterialsController < ApplicationController
         send_file(filename, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
-            :filename => File.join(@folder.name, ".zip")
+            :filename => @folder.name + ".zip"
           }
         )
       }
