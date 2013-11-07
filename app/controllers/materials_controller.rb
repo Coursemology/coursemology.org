@@ -307,7 +307,29 @@ private
       # Extract all the files from AWS
       # TODO: Preserve directory structure
       folder.materials.each { |m|
-        m.file.file.copy_to_local_file :original, File.join(dir, m.filename)
+        temp_path = File.join(dir, m.filename)
+        m.file.file.copy_to_local_file :original, temp_path
+
+        # Create the directory structure for this file.
+        parent_traversal = lambda {|d|
+          if d.parent_folder then
+            prefix = parent_traversal.call(d.parent_folder)
+          else
+            # Root should not require a separate folder.
+            return ''
+          end
+
+          prefix = File.join(prefix, d.name)
+          dir_path = File.join(dir, prefix)
+          Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
+
+          prefix
+        }
+        prefix = parent_traversal.call(m.folder)
+
+        if prefix.length > 0 then
+          File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
+        end
       }
 
       # Generate a file name to store the zip while we build it.
