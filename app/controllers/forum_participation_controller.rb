@@ -15,6 +15,7 @@ class ForumParticipationController < ApplicationController
     result = Forem::Post
     .joins(topic: :forum)
     .where(forem_forums: {category_id: category.id})
+    .includes(:votes)
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
@@ -26,7 +27,7 @@ class ForumParticipationController < ApplicationController
 
     @post_count = Array.new # array of hashes
 
-    result.each do |post|
+    result.each do |post| # to save memory, this can be changed to find_each
       if std_index = std_courses.index {|i| i.user_id == post.user_id}
         if post_index = @post_count.index {|i| i[:std_course_id] == std_courses[std_index].id}
           @post_count[post_index][:count] += 1
@@ -56,7 +57,8 @@ class ForumParticipationController < ApplicationController
 
     category = Forem::Category.find(@course.id)
     result = Forem::Post
-        .joins(topic: :forum).where(forem_forums: {category_id: category.id})#.includes(:topic)
+        .joins(topic: :forum).where(forem_forums: {category_id: category.id})
+        .includes(:votes)
     if (from_date_db)
       result = result.where('forem_posts.created_at >= ?', from_date_db)
     end
