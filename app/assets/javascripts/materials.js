@@ -153,6 +153,8 @@ $(document).ready(function() {
           .fail(function(e) {
             if (e.status === 404) {
               remove_error($this);
+            } else if (!e.status) {
+              show_error($this, 'Another file with the same name already exists.');
             }
           });
     }
