@@ -24,21 +24,26 @@ $(function(){
           // hide all other containers and mark the button as not opened
           $container = $(that).closest('tr').next();
           $('.post-details-container').not($container).hide();
-          $('.view-post-btn').not(this).data('opened', false);
+          $('.view-post-btn').not(this).data('opened', false).text('View');
 
           // toggles the corresponding container
           $container.fadeToggle();
 
           // toggles the current button's opened value
-          $(this).data('opened', !$(this).data('opened'));
-          var offset = $(this).offset().top - 50; // offset for nav bar
-
-          // scrollTop only if it is to open the container
           if ($(this).data('opened')) {
+              $(this).data('opened', false).text('View');
+          } else {
+              $(this).data('opened', true).text('Hide');
+              // scrollTop only if it is to open the container
+
+              var offset = $(this).offset().top - 50; // offset for nav bar
+
               $('html, body').animate({
                   scrollTop: offset
               }, 200);
           }
+
+
       }
   )
 })
