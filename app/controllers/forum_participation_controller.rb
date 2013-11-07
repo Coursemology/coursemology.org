@@ -81,6 +81,11 @@ class ForumParticipationController < ApplicationController
     end
 
     @result.sort! {|a, b| b[:likes] <=> a[:likes]}
+    puts @result.length
+    if params[:limit]
+      @result = @result.slice(0, params[:limit].to_i)
+    end
+    puts @result.length
 
     @is_raw = params[:raw] ? true : false
     if (@is_raw)

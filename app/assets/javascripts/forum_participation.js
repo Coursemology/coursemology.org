@@ -7,12 +7,12 @@ $(function(){
       }
 
   }
-  $('.post-count-link').click(
+  $('.view-post-btn').click(
       function() {
           var that = this;
           if (! $(that).data('loaded')) {
               $.ajax({
-                  url: append_query($(that).attr('href'), 'raw=1'),
+                  url: append_query($(that).closest('tr').find('.post-count-link').attr('href'), 'raw=1&limit=10'),
                   cache: false,
                   success: function(html){
                       $(that).closest('tr').next().find('.post-details').html(html);
@@ -20,8 +20,25 @@ $(function(){
                   }
               });
           }
-          $(that).closest('tr').next().fadeToggle();
-          return false; // no link
+
+          // hide all other containers and mark the button as not opened
+          $container = $(that).closest('tr').next();
+          $('.post-details-container').not($container).hide();
+          $('.view-post-btn').not(this).data('opened', false);
+
+          // toggles the corresponding container
+          $container.fadeToggle();
+
+          // toggles the current button's opened value
+          $(this).data('opened', !$(this).data('opened'));
+          var offset = $(this).offset().top - 50; // offset for nav bar
+
+          // scrollTop only if it is to open the container
+          if ($(this).data('opened')) {
+              $('html, body').animate({
+                  scrollTop: offset
+              }, 200);
+          }
       }
   )
 })
