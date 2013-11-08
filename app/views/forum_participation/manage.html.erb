@@ -58,6 +58,13 @@
         </td>
       </tr>
     <% end %>
+    <% if @post_count.size == 0 %>
+      <tr>
+        <td colspan="7">
+          <i>No posts found during the time range specified.</i>
+        </td>
+      </tr>
+    <% end %>
     </tbody>
   </table>
   <%= f.label :Reason, style:"display: inline-block;"%>
