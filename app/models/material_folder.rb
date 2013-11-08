@@ -74,7 +74,7 @@ class MaterialFolder < ActiveRecord::Base
   end
 
   def find_material_by_filename!(filename)
-    f = find_material_by_name(filename)
+    f = find_material_by_filename(filename)
 
     raise ActiveRecord::RecordNotFound if not(f)
     f
