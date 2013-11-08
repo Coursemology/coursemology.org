@@ -46,18 +46,18 @@ class ForumParticipationController < ApplicationController
       end
     end
 
-    @post_count.sort! {|a, b| (b[:count] + b[:likes]) <=> (a[:count] + a[:likes])}
+    @post_count.sort! {|a, b| post_score(b) <=> post_score(a) }
 
     prev_score = -1
     prev_exp = -1
     @post_count.each_with_index do |student, index|
-      if student[:count] + student[:likes] == prev_score
+      if post_score(student) == prev_score
         # student with same score must have the same EXP to be fair
         student[:proposed_exp] = prev_exp
       else
         # divides students up to 10 groups, top 10% gets full exp, top 20% gets 90% exp... last 10% gets 10% exp
         student[:proposed_exp] = ((1.0 - index.to_f / @post_count.size).round(1) * @actual_cap).to_i
-        prev_score = student[:count] + student[:likes]
+        prev_score = post_score(student)
         prev_exp = student[:proposed_exp]
       end
     end
@@ -110,7 +110,21 @@ class ForumParticipationController < ApplicationController
     end
   end
 
+  def date_dmy_to_readable_format(date)
+    begin
+      Date.strptime(date, '%d-%m-%Y').strftime('%e %b')
+    rescue
+      false
+    end
+
+  end
+  helper_method :date_dmy_to_readable_format
+
   private
+
+  def post_score(student)
+    student[:count] + student[:likes]
+  end
 
   def parse_start_date(date)
     result = date_dmy_to_db(date)
@@ -134,16 +148,6 @@ class ForumParticipationController < ApplicationController
     end
   end
 
-  def date_dmy_to_readable_format(date)
-    begin
-      Date.strptime(date, '%d-%m-%Y').strftime('%e %b')
-    rescue
-      false
-    end
-
-  end
-  helper_method :date_dmy_to_readable_format
-
   def number_of_days(from, to)
     begin
       from_date = Date.strptime(from, '%d-%m-%Y')
@@ -158,4 +162,5 @@ class ForumParticipationController < ApplicationController
     days = number_of_days(from, to).to_i
     days > 0 ? (weekly * days / 7).floor : weekly
   end
+
 end
