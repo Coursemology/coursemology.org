@@ -16,7 +16,7 @@
         <% end %>
         <%= milestone.title %>
         <% if milestone.end_at %>
-        <small>Ending on <%= milestone.end_at.strftime("%A, %d %B %Y") %></small>
+        <small>Ending on <%= milestone.end_at.strftime("%d %b %Y") %></small>
         <% end %>
         <span class="pull-right">
           <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual != true %>
