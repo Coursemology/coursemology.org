@@ -6,7 +6,6 @@
 <br/>
 
 <%= form_for [@course, @material], :html => { :class => 'form-horizontal materials-edit-form' } do |f| %>
-<%= render :partial => 'layouts/form_error', locals: { target: @material } %>
 <div class="control-group">
   <%= f.label :filename, :class => 'control-label' %>
   <div class="controls">

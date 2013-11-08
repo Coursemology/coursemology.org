@@ -187,8 +187,8 @@ jQuery.fn.extend({
     }
 
     // Register the callback for when the form should be submitted.
-    $('form').submit(validateForm);
-    $('form input[type="submit"]').click(function() {
+    $(this).submit(validateForm);
+    $('input[type="submit"]', this).click(function() {
       handlevalidateForm.apply($(this).parents('form')[0], arguments);
     });
   }

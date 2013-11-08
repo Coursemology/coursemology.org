@@ -120,12 +120,12 @@ class Material < ActiveRecord::Base
 private
   def material_filename_unique
     if filename.length == 0 then
-      errors.add(:filename, "cannot have empty filenames")
+      errors.add(:filename, "Filenames cannot be empty.")
     end
 
     f = folder.find_material_by_filename(filename)
     if f && f.id != f then
-      errors.add(:filename, "cannot have non-unique filenames")
+      errors.add(:filename, "Another file with the same name already exists.")
     end
   end
 end

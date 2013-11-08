@@ -30,26 +30,25 @@
   
 <% if can? :manage, LessonPlanEntry %>
   <div id="lesson-plan-multi-milestone" class="modal hide fade" data-backdrop="static">
-    <div class="modal-header">
-      <h3>Milestone Generator</h3>
-    </div>
-    <div class="modal-body hidden">
-      <div id="modal-loading">
-        <h2>Loading...</h2>
-        <div class="progress progress-striped active">
-          <div class="bar" style="width: 100%;"></div>
+    <form class="lesson-plan-milestone-generator-form">
+      <div class="modal-header">
+        <h3>Milestone Generator</h3>
+      </div>
+      <div class="modal-body hidden">
+        <div id="modal-loading">
+          <h2>Loading...</h2>
+          <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="modal-body">
-      <form>
+      <div class="modal-body">
         <div class="control-group">
           <label class="control-label" for="input-number-milestones">
             How many milestones should we create?
           </label>
           <div class="controls">
             <input type="number" id="input-number-milestones" required="required">
-            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -59,7 +58,6 @@
           </label>
           <div class="controls">
             <input type="number" id="input-length-milestones" required="required">
-            <span class="help-inline"></span>
           </div>
         </div>
         
@@ -83,18 +81,16 @@
               <span class="add-on">
                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
               </span>
-              <span class="help-inline"></span>
             </div>
           </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <input id="lesson-plan-done-generating" class="btn btn-primary" type="submit" value="Done" />
+        <button data-dismiss="modal" class="btn">
+          Cancel
+        </button>
+      </div>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button id="lesson-plan-done-generating" class="btn btn-primary">
-        Done
-      </button>
-      <button data-dismiss="modal" class="btn">
-        Cancel
-      </button>
   </div>
 <% end %>

@@ -200,7 +200,7 @@ class MaterialsController < ApplicationController
                                   notice: "The file #{@material.filename} was successfully updated." }
       else
         gon.currentMaterial = {
-          filename: @material.filename
+          filename: Material.find_by_id(@material.id).filename
         }
         gon.currentFolder = @material.folder
         format.html { render action: "edit", params: {id: @material.id} }
