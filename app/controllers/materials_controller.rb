@@ -169,6 +169,9 @@ class MaterialsController < ApplicationController
   end
 
   def edit
+    gon.currentMaterial = {
+        filename: @material.filename
+    }
     gon.currentFolder = @material.folder
   end
 
@@ -196,6 +199,10 @@ class MaterialsController < ApplicationController
         format.html { redirect_to course_material_folder_path(@course, @material.folder),
                                   notice: "The file #{@material.filename} was successfully updated." }
       else
+        gon.currentMaterial = {
+          filename: @material.filename
+        }
+        gon.currentFolder = @material.folder
         format.html { render action: "edit", params: {id: @material.id} }
       end
     end
