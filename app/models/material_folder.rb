@@ -65,13 +65,19 @@ class MaterialFolder < ActiveRecord::Base
     end).new(id, parent_id)
   end
 
-  def find_material_by_name!(filename)
-    files = files.select {|f|
+  def find_material_by_name(filename)
+    f = files.select {|f|
       f.filename == filename
     }
 
-    raise ActiveRecord::RecordNotFound if files.length == 0
-    files[0]
+    f.length == 0 ? nil : f[0]
+  end
+
+  def find_material_by_name!(filename)
+    f = find_material_by_name(filename)
+
+    raise ActiveRecord::RecordNotFound if not(f)
+    f
   end
 
   def materials
