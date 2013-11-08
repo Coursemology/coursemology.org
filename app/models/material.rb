@@ -20,7 +20,7 @@ class Material < ActiveRecord::Base
       def initialize(parent, obj)
         @parent = parent
         @obj = obj
-        @name = @description = @updated_at = @url = nil
+        @name = @file = @description = @updated_at = @url = nil
       end
 
       def id
@@ -43,6 +43,12 @@ class Material < ActiveRecord::Base
       end
       def filesize=(size)
         @filesize = size
+      end
+      def file
+        @file
+      end
+      def file=(file)
+        @file = file
       end
       def description
         @description

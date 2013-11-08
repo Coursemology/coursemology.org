@@ -6,9 +6,6 @@
     <p><%= @folder.description.html_safe %></p>
   </div>
   <% end %>
-  <% if (can? :manage, Material) && not(@folder.is_virtual) %>
-    <%= render :partial => 'folder_controls' %>
-  <% end %>
 </div>
 
 <div class="container">
@@ -16,6 +13,7 @@
     <%= render :partial => 'folder_tree' %>
   </div>
   <div class="span7">
-  <%= render :partial => 'folder_listing' %>
+    <%= render :partial => 'folder_controls' %>
+    <%= render :partial => 'folder_listing' %>
   </div>
 </div>
