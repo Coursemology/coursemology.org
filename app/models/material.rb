@@ -7,6 +7,8 @@ class Material < ActiveRecord::Base
   attr_accessible :folder, :description, :filename
   after_save :save_file
 
+  validate :material_filename_unique
+
   def save_file
     if self.file then
       self.file.save
@@ -113,5 +115,17 @@ class Material < ActiveRecord::Base
 
   def is_virtual
     false
+  end
+
+private
+  def material_filename_unique
+    if filename.length == 0 then
+      errors.add(:filename, "cannot have empty filenames")
+    end
+
+    f = folder.find_material_by_filename(filename)
+    if f && f.id != f then
+      errors.add(:filename, "cannot have non-unique filenames")
+    end
   end
 end
