@@ -65,6 +65,15 @@ class MaterialFolder < ActiveRecord::Base
     end).new(id, parent_id)
   end
 
+  def find_material_by_name!(filename)
+    files = files.select {|f|
+      f.filename == filename
+    }
+
+    raise ActiveRecord::RecordNotFound if files.length == 0
+    files[0]
+  end
+
   def materials
     result = []
     self.subfolders.each { |f| result += f.materials }
