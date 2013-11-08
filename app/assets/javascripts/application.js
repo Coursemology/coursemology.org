@@ -96,6 +96,12 @@ $(document).ready(function() {
     });
     $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
 
+    // Make sure that any form elements with an error class are propagated
+    // upwards to the parent control group
+    $('.control-group label.error, .control-group div.error').each(function(n, element) {
+      $(element).parents('.control-group').addClass('error');
+    });
+
     // Make sure that all links with the disabled tag or disabled attribute
     // do not trigger a navigation
     $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
