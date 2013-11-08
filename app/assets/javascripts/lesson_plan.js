@@ -134,7 +134,7 @@ $(document).ready(function() {
     var $modal = $(this).parents('.modal');
     $('.modal-body', $modal).addClass('hidden');
     $('#modal-loading', $modal).parent().removeClass('hidden');
-    $('button.btn', $modal).addClass('disabled').prop('disabled', true);
+    $('button.btn, input.btn', $modal).addClass('disabled').prop('disabled', true);
 
     // Wait for all the requests to come back before closing the dialog.
     $.when.apply($, promises).then(function() {
