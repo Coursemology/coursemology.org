@@ -48,7 +48,7 @@
           <% else %>
             <%= button_tag "Unlike", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id} active", "data-toggle" => "button" %>
           <% end %>
-          <% if post.topic.can_be_replied_to? || curr_user_course.is_staff? %>
+          <% if post.topic.can_be_replied_to? %>
             <%= link_to t('reply', :scope => 'forem.topic'), main_app.new_course_forum_topic_post_path(@course, @forum, post.topic, :reply_to_id => post.id), :class => "btn" %>
           <% end %>
           <% if post.owner_or_admin?(forem_user) || curr_user_course.is_staff? %>
