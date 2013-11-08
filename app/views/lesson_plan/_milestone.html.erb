@@ -11,8 +11,8 @@
   <div class="lesson-plan-header">
       <h2>
         <% if entries.length > 0 %>
-        <a class="lesson-plan-hide-entries"><i class="icon-minus"></i></a>
-        <a class="lesson-plan-show-entries" style="display: none;"><i class="icon-plus"></i></a>
+        <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
+        <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
         <% end %>
         <%= milestone.title %>
         <% if milestone.end_at %>
@@ -42,7 +42,7 @@
   <% end %>
   
   <% if entries.length > 0 then %>
-  <div class="lesson-plan-body">
+  <div class="lesson-plan-body" style="display: none;" data-hidden="true">
   <table class="table">
     <tbody>
     <% entries.each {|entry| %>
