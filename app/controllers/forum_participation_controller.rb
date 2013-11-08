@@ -48,9 +48,18 @@ class ForumParticipationController < ApplicationController
 
     @post_count.sort! {|a, b| (b[:count] + b[:likes]) <=> (a[:count] + a[:likes])}
 
+    prev_score = -1
+    prev_exp = -1
     @post_count.each_with_index do |student, index|
-      # divides students up to 10 groups, top 10% gets full exp, top 20% gets 90% exp... last 10% gets 10% exp
-      student[:proposed_exp] = ((1.0 - index.to_f / @post_count.size).round(1) * @actual_cap).to_i
+      if student[:count] + student[:likes] == prev_score
+        # student with same score must have the same EXP to be fair
+        student[:proposed_exp] = prev_exp
+      else
+        # divides students up to 10 groups, top 10% gets full exp, top 20% gets 90% exp... last 10% gets 10% exp
+        student[:proposed_exp] = ((1.0 - index.to_f / @post_count.size).round(1) * @actual_cap).to_i
+        prev_score = student[:count] + student[:likes]
+        prev_exp = student[:proposed_exp]
+      end
     end
   end
 
