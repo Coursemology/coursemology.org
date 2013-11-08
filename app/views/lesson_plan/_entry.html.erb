@@ -14,13 +14,11 @@
   </td>
   <td>
     <% if entry.is_virtual %>
-      <%= link_to entry.url do %>
-        <h3 class="link">
-          <% if not entry.is_published %>
-             <span class="label label-important">Unpublished</span>
-          <% end %>
-          <%= entry.title %>
-        </h3>
+      <%= link_to entry.url, :class => "lesson-plan-virtual-entry-title" do %>
+        <% if not entry.is_published %>
+          <span class="label label-important">Unpublished</span>
+        <% end %>
+        <%= entry.title %>
       <% end %>
     <% else %>
     <a class="lesson-plan-anchor" name="entry-<%= entry.id %>"></a>
