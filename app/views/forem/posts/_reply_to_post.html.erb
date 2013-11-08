@@ -1,6 +1,6 @@
 <a class='post-anchor' name='post-<%= post.id %>'></a>
 <div id='post_<%= post.id %>' class='reply_to_post post <%= cycle('odd', 'even') -%> span10'>
-  <div class='user span2'>
+  <div class='user span2 user-box-reply-to'>
     <div class='username'>
       <a href="<%= main_app.course_user_course_path(@course, post.user.get_user_course(@course).id) %>"><%= post.user %></a>
     </div>
