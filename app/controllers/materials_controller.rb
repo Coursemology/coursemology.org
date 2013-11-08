@@ -5,7 +5,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :show_by_name, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
-  before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new, :edit_folder]
+  before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
   def index
     authorize! :index, Material
@@ -130,13 +130,9 @@ class MaterialsController < ApplicationController
   def show_by_name
     # Resolve the subfolder ID + file name to an ID
     folder = MaterialFolder.find_by_id(params[:id])
-    files = folder.files.select {|f|
-      f.filename == params[:filename]
-    }
-
-    raise ActiveRecord::RecordNotFound if files.length == 0
-    authorize! :index, files[0]
-    params[:id] = files[0].id
+    file = folder.find_material_by_filename!(params[:filename])
+    authorize! :index, file
+    params[:id] = file.id
 
     show
   end
@@ -173,6 +169,9 @@ class MaterialsController < ApplicationController
   end
 
   def edit
+    gon.currentMaterial = {
+        filename: @material.filename
+    }
     gon.currentFolder = @material.folder
   end
 
@@ -185,28 +184,26 @@ class MaterialsController < ApplicationController
   end
 
   def update
-    material = Material.find_by_id(params[:id])
-    if not material then
-      redirect_to :action => "index"
-      return
-    end
-
     # check if we have a new file version
     if params[:new_file_id] != '' then
-      material.attach(FileUpload.find_by_id(params[:new_file_id]))
+      @material.attach(FileUpload.find_by_id(params[:new_file_id]))
     end
 
-    material.update_attributes(params[:material])
+    @material.update_attributes(params[:material])
     
     respond_to do |format|
-      if material.save
+      if @material.save
         # mark all the seen entries as unseen.
-        SeenByUser.delete_all(obj_id: material, obj_type: material.class)
+        SeenByUser.delete_all(obj_id: @material, obj_type: @material.class)
 
-        format.html { redirect_to course_material_folder_path(@course, material.folder),
-                                  notice: "The file #{material.filename} was successfully updated." }
+        format.html { redirect_to course_material_folder_path(@course, @material.folder),
+                                  notice: "The file #{@material.filename} was successfully updated." }
       else
-        format.html { render action: "edit", params: {id: material.id} }
+        gon.currentMaterial = {
+          filename: Material.find_by_id(@material.id).filename
+        }
+        gon.currentFolder = @material.folder
+        format.html { render action: "edit", params: {id: @material.id} }
       end
     end
   end

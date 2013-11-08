@@ -96,11 +96,102 @@ $(document).ready(function() {
     });
     $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
 
+    // Make sure that any form elements with an error class are propagated
+    // upwards to the parent control group
+    $('.control-group label.error, .control-group div.error').each(function(n, element) {
+      $(element).parents('.control-group').addClass('error');
+    });
+
     // Make sure that all links with the disabled tag or disabled attribute
     // do not trigger a navigation
     $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
       e.preventDefault();
     });
+});
+
+// Define our framework for implementing client-side form validation.
+jQuery.fn.extend({
+  /// Validatr will find all forms in the queried set, and register
+  /// submission handlers. Validation will be triggered before submit
+  /// and blocked when errors occur.
+  ///
+  /// It also takes an array of tuples where the first element is a
+  /// string (selector from the set), or a jQuery object, and the
+  /// second element is the validation callback for the element.
+  /// The validation callback can return a promise to defer the operation,
+  /// a falsey value to validate; or a string or an array of error
+  /// messages to display.
+  validatr: function(elements) { //to not name conflict with the jQuery plugin
+    function show_error($this, error) {
+      var group = $this.parents('.control-group');
+      group.addClass('error');
+
+      // Create the help message span if none exists.
+      var $message = $('.help-inline', group);
+      if ($message.length === 0) {
+        $message = $('<span class="help-inline"></span>');
+        $message.appendTo($this.parent());
+      }
+
+      $message.text(error);
+    }
+
+    function remove_error($this) {
+      var group = $this.parents('.control-group');
+      group.removeClass('error');
+      $('.help-inline', group).remove();
+    }
+
+    // Generates a handler which will set the appropriate fields with
+    // the error message returned from the validator function.
+    function generateElementValidator(handler) {
+      return function() {
+        var result = handler.apply(this, arguments);
+        var $this = $(this);
+
+        function process_result(result) {
+          if (!result) {
+            remove_error($this);
+          } else if (typeof result === 'object' &&
+            typeof result['promise'] === 'function') {
+            result.done(function(value) {
+              process_result(value);
+            });
+          } else {
+            if (typeof result === 'string') {
+              result = [result];
+            }
+            show_error($this, result);
+          }
+        }
+
+        process_result(result);
+      };
+    }
+
+    function validateForm() {
+      if ($('.error', this).length > 0) {
+        e.preventDefault();
+      }
+    }
+
+    // Register all the callbacks for the form elements
+    for (var i = 0; i < elements.length; ++i) {
+      var pair = elements[i];
+      var set = pair[0];
+      if (typeof set === 'string') {
+        set = $(set, this);
+      }
+
+      set.change(generateElementValidator(pair[1]));
+    }
+
+    // Register the callback for when the form should be submitted.
+    $('form').submit(validateForm);
+    $('form input[type="submit"]').click(function() {
+      handlevalidateForm.apply($(this).parents('form')[0], arguments);
+    });
+  }
 });
 
 var _jfdiFormatFunc = function(i, d){
