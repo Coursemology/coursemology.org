@@ -1,5 +1,5 @@
 <%= simple_form_for [forem, :admin, @forum] do |f| %>
-  <%= f.hidden_field :category_id, :value => @category.id %>
+  <%= f.hidden_field :category_id, :value => @category.blank? ? @forum.category.id : @category.id %>
   <%= f.input :title %>
   <%= f.input :description, :as => :text %>
 
