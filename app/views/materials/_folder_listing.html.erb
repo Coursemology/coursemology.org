@@ -47,6 +47,8 @@
               class: 'btn btn-danger' do %>
                 <i class="icon-trash"></i>
             <% end %>
+          <% else %>
+          <%= render partial: "disabled_controls" %>
           <% end %>
         </td>
         <% end %>
@@ -80,7 +82,9 @@
 
         <% if (can? :manage, Material) %>
         <td>
-          <% if not material.is_virtual %>
+          <% if material.is_virtual %>
+            <%= render partial: "disabled_controls" %>
+          <% else %>
             <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>

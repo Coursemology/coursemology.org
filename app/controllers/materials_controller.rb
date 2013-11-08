@@ -3,7 +3,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
   load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :show_by_name, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
   
   before_filter :load_general_course_data, only: [:index, :index_virtual, :edit, :new, :edit_folder]
 
@@ -16,26 +16,6 @@ class MaterialsController < ApplicationController
                 MaterialFolder.find_by_course_id_and_parent_folder_id(@course.id, nil)
               end
 
-    # Compute the new files in this directory
-    @is_new = {}
-    @folder.files.each {|file|
-      unless @curr_user_course.seen_materials.exists?(file)
-        @is_new[file.id] = true
-      end
-    }
-
-    # Then any subfolders with new materials (so users can drill down to see what's new)
-    @is_subfolder_new = {}
-    @folder.subfolders.each { |subfolder|
-      subfolder.materials.each { |material|
-        if not @curr_user_course.seen_materials.exists?(material.id) then
-          @is_subfolder_new[subfolder.id] = true
-          break
-        end
-        material.id
-      }
-    }
-
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
@@ -47,11 +27,40 @@ class MaterialsController < ApplicationController
     # Get the directory structure to the front-end JS.
     respond_to do |format|
       format.html {
+        # Compute the new files in this directory
+        @is_new = {}
+        @folder.files.each {|file|
+          unless @curr_user_course.seen_materials.exists?(file)
+            @is_new[file.id] = true
+          end
+        }
+
+        # Then any subfolders with new materials (so users can drill down to see what's new)
+        @is_subfolder_new = {}
+        @folder.subfolders.each { |subfolder|
+          subfolder.materials.each { |material|
+            if not @curr_user_course.seen_materials.exists?(material.id) then
+              @is_subfolder_new[subfolder.id] = true
+              break
+            end
+            material.id
+          }
+        }
+
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
       }
       format.json {
         render :json => build_subtree(@folder, true)
+      }
+      format.zip {
+        filename = build_zip @folder
+        send_file(filename, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => @folder.name + ".zip"
+          }
+        )
       }
     end
   end
@@ -63,16 +72,27 @@ class MaterialsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
-    # Template variables defined by index.
-    @virtual_folders = []
-    @is_subfolder_new = []
-    @is_new = []
 
     respond_to do |format|
       format.html {
+        # Template variables defined by index.
+        @virtual_folders = []
+        @is_subfolder_new = []
+        @is_new = []
+
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
         render "materials/index"
+      }
+
+      format.zip {
+        filename = build_zip @folder
+        send_file(filename, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => @folder.name + ".zip"
+        }
+        )
       }
     end
   end
@@ -107,6 +127,20 @@ class MaterialsController < ApplicationController
     redirect_to material.file.file.url
   end
 
+  def show_by_name
+    # Resolve the subfolder ID + file name to an ID
+    folder = MaterialFolder.find_by_id(params[:id])
+    files = folder.files.select {|f|
+      f.filename == params[:filename]
+    }
+
+    raise ActiveRecord::RecordNotFound if files.length == 0
+    authorize! :index, files[0]
+    params[:id] = files[0].id
+
+    show
+  end
+
   def new
     @folder = MaterialFolder.find_by_id(params[:parent])
     if not @folder then
@@ -139,11 +173,7 @@ class MaterialsController < ApplicationController
   end
 
   def edit
-    @material = Material.find_by_id(params[:id])
-    if not @material then
-      redirect_to :action => "index"
-      return
-    end
+    gon.currentFolder = @material.folder
   end
 
   def edit_folder
@@ -290,5 +320,52 @@ private
         )
       }
     }
+  end
+
+  def build_zip folder
+    result = nil
+    Dir.mktmpdir("coursemology-mat-temp") { |dir|
+      # Extract all the files from AWS
+      # TODO: Preserve directory structure
+      folder.materials.each { |m|
+        temp_path = File.join(dir, m.filename.sub(":", "_"))
+        m.file.file.copy_to_local_file :original, temp_path
+
+        # Create the directory structure for this file.
+        parent_traversal = lambda {|d|
+          if d.parent_folder && d.id != folder.id then
+            prefix = parent_traversal.call(d.parent_folder)
+          else
+            # Root should not require a separate folder.
+            return ''
+          end
+
+          prefix = File.join(prefix, d.name)
+          dir_path = File.join(dir, prefix)
+          Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
+
+          prefix
+        }
+        prefix = m.folder ? parent_traversal.call(m.folder) : ''
+
+        if prefix.length > 0 then
+          File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
+        end
+      }
+
+      # Generate a file name to store the zip while we build it.
+      zip_name = File.join(File.dirname(dir),
+        Dir::Tmpname.make_tmpname(["coursemology-mat-temp-zip", ".zip"], nil))
+      Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
+        # Add every file in the directory to the zip file, preserving structure.
+        Dir[File.join(dir, '**', '**')].each {|file|
+          zipfile.add(file.sub(dir + '/', ''), file)
+        }
+      }
+
+      result = zip_name
+    }
+
+    result
   end
 end
