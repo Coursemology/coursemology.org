@@ -147,12 +147,4 @@ $(document).ready(function() {
     });
     return false;
   });
-  
-  $('.lesson-plan-entry-delete').click(function() {
-    var parent = $(this).parents('.lesson-plan-entry');
-    $(this).hide();
-    var that = this;
-    $('.lesson-plan-entry-delete-confirm', parent).fadeIn();
-    setTimeout(function() { $('.lesson-plan-entry-delete-confirm', parent).hide(); $(that).fadeIn(); }, 5000);
-  });
 });
