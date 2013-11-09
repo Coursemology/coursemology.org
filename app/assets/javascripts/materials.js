@@ -169,4 +169,18 @@ $(document).ready(function() {
     
     console.log(checkedFiles);
   });
+  
+  // Shade rows that are selected.
+  $('.workbin-select-file-checkbox').click(function() {
+    var parent = $(this).parents('.workbin-file-row');
+    parent.toggleClass('workbin-file-selected');
+  });
+  
+  // Shade them on load, too.
+  $('.workbin-select-file-checkbox').each(function(index) {
+    var parent = $(this).parents('.workbin-file-row');
+    if ($(this).prop('checked')) {
+      parent.addClass('workbin-file-selected');
+    }
+  });
 });
