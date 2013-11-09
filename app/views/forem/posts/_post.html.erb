@@ -18,8 +18,8 @@
 
     <div class='user span1' style="text-align:right;">
       <h5 class='username'>
-        <% if curr_user_course %>
-            <a href="<%= main_app.course_user_course_path(@course, curr_user_course) %>"><%= post.user %></a>
+        <% if user_course = post.user.get_user_course(@course)  %>
+            <a href="<%= main_app.course_user_course_path(@course, user_course) %>"><%= post.user %></a>
         <% else %>
             <%= post.user %>
         <% end %>
