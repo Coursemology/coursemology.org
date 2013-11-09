@@ -1,6 +1,11 @@
 <%- model_class = MaterialFolder -%>
 <div class="page-header">
-  <h1>Workbin: <%= @folder.name %><%= @folder.is_open? ? '' : '<span class="label">Closed</span>'.html_safe %></h1>
+  <h1>
+    Workbin: <%= @folder.name %>
+    <% if @folder.is_open? %>
+    <span class="label label-important">Closed</span>
+    <% end %>
+  </h1>
   <% if @folder.description %>
   <div>
     <p><%= @folder.description.html_safe %></p>
