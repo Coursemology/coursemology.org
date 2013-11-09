@@ -150,9 +150,21 @@ $(document).ready(function() {
     }]
   ]);
   
+  function shadeSelectedFiles() {
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var parent = $(this).parents('.workbin-file-row');
+      if ($(this).prop('checked')) {
+        parent.addClass('workbin-file-selected');
+      } else {
+        parent.removeClass('workbin-file-selected');
+      }
+    });
+  }
+  
   $('#workbin-select-all-files').click(function() {
     var isChecked = $(this).prop('checked');
     $('.workbin-select-file-checkbox').prop('checked', isChecked);
+    shadeSelectedFiles();
   });
   
   $('#workbin-download-zip-button').click(function() {
