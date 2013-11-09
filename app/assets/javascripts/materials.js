@@ -182,17 +182,25 @@ $(document).ready(function() {
     console.log(checkedFiles);
   });
   
-  // Shade rows that are selected.
-  $('.workbin-select-file-checkbox').click(function() {
-    var parent = $(this).parents('.workbin-file-row');
-    parent.toggleClass('workbin-file-selected');
+  // Shade selected rows on load.
+  shadeSelectedFiles();
+  
+  // Select a row by clicking on it.
+  $('.workbin-file-row').click(function(event) {
+    $(this).toggleClass('workbin-file-selected');
+    var checkbox = $(this).find('.workbin-select-file-checkbox');
+    var isChecked = checkbox.prop('checked');
+    checkbox.prop('checked', !isChecked);
   });
   
-  // Shade them on load, too.
-  $('.workbin-select-file-checkbox').each(function(index) {
+  $('.workbin-select-file-checkbox').click(function(event) {
+    // Don't bubble up to the div, or we'd never be able to check the box.
+    event.stopPropagation();
+    
     var parent = $(this).parents('.workbin-file-row');
-    if ($(this).prop('checked')) {
-      parent.addClass('workbin-file-selected');
+    parent.toggleClass('workbin-file-selected');
+    
     }
   });
+    
 });

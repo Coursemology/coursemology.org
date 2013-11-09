@@ -5,13 +5,13 @@
   <td>
     <% link = if material.is_virtual? then material.url else course_material_file_path(@course, material) end %>
     <%= link_to link do %>
-    <h4>
+    <span>
       <% if @is_new[material.id] %>
       <input type="hidden" class="new_<%= material.class.model_name.human.pluralize %>" />
       <span class="label label-warning">New</span>
       <% end %>
-      <i class="icon-file"></i> <%= material.filename %> <span class="muted"><%= get_pretty_file_size(material.filesize) %></span>
-    </h4>
+      <i class="icon-file"></i> <strong><%= material.filename %></strong> <span class="muted"><%= get_pretty_file_size(material.filesize) %></span>
+    </span>
     
     <% end %>
     
