@@ -21,7 +21,7 @@
   </span>
 
   <span class="pull-right btn-group">
-    <% if (can? :manage, Material) %>
+    <% if (can? :manage, @folder) %>
       <% if @folder.is_virtual %>
       <a class="btn disabled workbin-disabled-controls" title="This folder can't be edited.">Edit</a>
       <% else %>
@@ -37,7 +37,7 @@
   </span>
 </div>
 
-<% if (can? :manage, Material) && not(@folder.is_virtual) %>
+<% if (can? :manage, @folder) && not(@folder.is_virtual) %>
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     Create Subfolder

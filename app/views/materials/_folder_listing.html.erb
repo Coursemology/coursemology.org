@@ -4,14 +4,20 @@
       <th>Name</th>
       <th style="width: 12%">Size</th>
       <th style="width: 25%">Date Added</th>
-      <% if can? :manage, Material %>
       <th style="width: 13%">&nbsp;</th>
-      <% end %>
     </tr>
   </thead>
 
   <tbody class="table-hover">
-    <% (@virtual_folders.sort_by{|folder| folder.name} + @folder.subfolders.sort_by {|folder| folder.name}).each do |subfolder| %>
+    <% (@subfolders.sort {|left, right|
+          if (left.is_virtual != right.is_virtual)
+            if left.is_virtual then -1
+            else 1
+            end
+          else
+            left.name <=> right.name
+          end
+        }).each do |subfolder| %>
       <tr>
         <td>
           <% link = if subfolder.is_virtual then
@@ -30,13 +36,13 @@
         <td>
           <%= t('materials.subfolder_items', :count => subfolder.files.count + subfolder.subfolders.count) %>
         </td>
-        
+
         <td>
           <%= datetime_format(subfolder.updated_at) %>
         </td>
 
-        <% if (can? :manage, Material) %>
         <td>
+          <% if (can? :manage, subfolder) %>
           <% if not subfolder.is_virtual %>
             <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
@@ -50,8 +56,8 @@
           <% else %>
           <%= render partial: "disabled_controls" %>
           <% end %>
+          <% end %>
         </td>
-        <% end %>
 
       </tr>
     <% end %>
@@ -80,8 +86,8 @@
           <%= datetime_format(material.updated_at) %> by <%= material.file.creator.name %>
         </td>
 
-        <% if (can? :manage, Material) %>
         <td>
+          <% if (can? :manage, material) %>
           <% if material.is_virtual %>
             <%= render partial: "disabled_controls" %>
           <% else %>
@@ -95,8 +101,8 @@
                 <i class="icon-trash"></i>
             <% end %>
           <% end %>
+          <% end %>
         </td>
-        <% end %>
 
       </tr>
     <% end %>
