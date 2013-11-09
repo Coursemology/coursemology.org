@@ -30,9 +30,8 @@
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>
     <% end %>
-    <%= link_to "Download .zip", (@folder.is_virtual? ?
-        course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
-        course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
+    <a class="btn" id="workbin-download-zip-button">Download .zip</a>
+    
     <% if not(@folder.is_virtual?) %>
     <%= link_to "Mark as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
     <% end %>

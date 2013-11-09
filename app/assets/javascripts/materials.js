@@ -154,4 +154,19 @@ $(document).ready(function() {
     var isChecked = $(this).prop('checked');
     $('.workbin-select-file-checkbox').prop('checked', isChecked);
   });
+  
+  $('#workbin-download-zip-button').click(function() {
+    var checkedFiles = [];
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var checkbox = $(this);
+      var fileId = checkbox.data('fileid');
+      
+      var isChecked = checkbox.prop('checked');
+      if (isChecked) {
+        checkedFiles.push(fileId);
+      }
+    });
+    
+    console.log(checkedFiles);
+  });
 });
