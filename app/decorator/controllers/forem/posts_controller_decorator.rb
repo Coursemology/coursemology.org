@@ -30,6 +30,7 @@ Forem::PostsController.class_eval do
     @course = Course.find(@forum.category.id)
     @current_ability = CourseAbility.new(current_user, curr_user_course)
     load_general_course_data
+    ensure_logged_in
   end
 
   def create_successful

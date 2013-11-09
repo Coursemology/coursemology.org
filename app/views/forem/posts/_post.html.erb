@@ -18,7 +18,11 @@
 
     <div class='user span1' style="text-align:right;">
       <h5 class='username'>
-        <a href="<%= main_app.course_user_course_path(@course, post.user.get_user_course(@course).id) %>"><%= post.user %></a>
+        <% if @user_course = post.user.get_user_course(@course) %>
+            <a href="<%= main_app.course_user_course_path(@course, @user_course) %>"><%= post.user %></a>
+        <% else %>
+            <%= post.user %>
+        <% end %>
       </h5>
       <div class='icon' style="float:right;">
         <img class="user-profile-pic" src="<%= post.user.get_profile_photo_url %>"/>

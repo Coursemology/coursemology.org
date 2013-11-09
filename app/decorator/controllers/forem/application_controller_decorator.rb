@@ -16,4 +16,14 @@ Forem::ApplicationController.class_eval do
     can? :manage, Course
   end
   helper_method :forem_admin_or_moderator?
+
+  protected
+
+  def ensure_logged_in
+    if @course
+      unless curr_user_course.is_student? || (can? :manage, Course)
+        redirect_to main_app.course_url(@course)
+      end
+    end
+  end
 end
