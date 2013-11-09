@@ -2,9 +2,8 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th style="width: 12%">Size</th>
-      <th style="width: 25%">Date Added</th>
-      <th style="width: 13%">&nbsp;</th>
+      <th style="width: 25%">Modified</th>
+      <th style="width: 20%">&nbsp;</th>
     </tr>
   </thead>
 
@@ -20,21 +19,18 @@
         }).each do |subfolder| %>
       <tr>
         <td>
-          <% link = if subfolder.is_virtual? then
+          <% path = if subfolder.is_virtual? then
               course_material_virtual_folder_path(@course, subfolder.id)
             else
               course_material_folder_path(@course, subfolder)
             end %>
-          <%= link_to link do %>
-            <%= render partial: "layouts/material_subfolder_title", locals: {subfolder: subfolder} %>
+          <%= link_to path do %>
+          <%= render partial:"subfolder_title", :locals => { :subfolder => subfolder } %>
           <% end %>
+          
           <% if subfolder.description %>
           <p><%= truncate_html subfolder.description, :length => 100 %></p>
           <% end %>
-        </td>
-
-        <td>
-          <%= t('materials.subfolder_items', :count => subfolder.files.count + subfolder.subfolders.count) %>
         </td>
 
         <td>
