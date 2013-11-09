@@ -1,6 +1,6 @@
 <tr>
   <td>
-    <input type="checkbox">
+    <input type="checkbox" class="workbin-download-file-checkbox" id="workbin-file-<%= material.id %>">
   </td>
   <td>
     <% link = if material.is_virtual? then material.url else course_material_file_path(@course, material) end %>
