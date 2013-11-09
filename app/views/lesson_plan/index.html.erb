@@ -1,31 +1,35 @@
 <div>
-<a class="lesson-plan-anchor" name="top"></a>
-<h1>Lesson Plan</h1>
-<% if can? :manage, LessonPlanEntry %>
-<%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
-<%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
-<a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
-  Generate Milestones
-</a>
-<% end %>
-<span class="pull-right btn-group">
-<a id="lesson-plan-hide-all" class="btn">Collapse All</a>
-<a id="lesson-plan-show-all" class="btn">Expand All</a>
-</span>
+  <a class="lesson-plan-anchor" name="top"></a>
+  <div class="row">
+    <div class="span7">
+      <h1>Lesson Plan</h1>
+      <% if can? :manage, LessonPlanEntry %>
+      <%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
+      <%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
+      <a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
+        Generate Milestones
+      </a>
+      <% end %>
+    </div>
+    <div class="pull-right btn-group">
+    <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
+    <a id="lesson-plan-show-all" class="btn">Expand All</a>
+    </div>
+  </div>
 
-<hr>
+  <hr>
+  
+  <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
+  <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
+  <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
+  <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
+  <% sorted_milestones.each { |milestone| %>
+    <% if !milestone.is_virtual? || milestone.entries.length  > 0 %>
+      <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+    <% end %>
+  <% } %>
 
-<% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
-<% grouped_milestones[false] = [] unless grouped_milestones[false] %>
-<% grouped_milestones[true] = [] unless grouped_milestones[true] %>
-<% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
-<% sorted_milestones.each { |milestone| %>
-  <% if !milestone.is_virtual? || milestone.entries.length  > 0 %>
-    <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
-  <% end %>
-<% } %>
-
-<a href="#top">Back to Top</a>
+  <a href="#top">Back to Top</a>
 </div>
   
 <% if can? :manage, LessonPlanEntry %>
