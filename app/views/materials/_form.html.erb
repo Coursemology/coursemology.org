@@ -28,8 +28,8 @@
       <input type="hidden" name="files[{%=file.name%}]" class="uploaded-files" value="{%=file.id%}">
       <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{% if (file.original) { %}{%=file.original%}{% } else { %}{%=file.name%}{% } %}</a>
       <div class="span5" style="overflow: visible; padding-top: 1em">
-        <div class="span10">
-          <textarea class="text_area span10 html-editor uploaded-file-description" name="descriptions[{%=file.name%}]" rows="10"></textarea>
+        <div class="span9">
+          <textarea class="text_area span9 html-editor uploaded-file-description" name="descriptions[{%=file.name%}]" rows="10"></textarea>
         </div>
       </div>
     </td>
