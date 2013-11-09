@@ -13,6 +13,6 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
   padding: 4px 12px 4px;
 }
 
-.workbin-file-selected {
+.workbin-file-selected, tr.workbin-file-row:hover {
   background: #fef9dd;
 }
