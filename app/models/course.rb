@@ -41,6 +41,8 @@ class Course < ActiveRecord::Base
   has_many :tutor_monitorings,      dependent: :destroy
   has_many :surveys,                dependent: :destroy
 
+  after_create :populate_forum
+
   def asms
     missions + trainings
   end
@@ -247,6 +249,20 @@ class Course < ActiveRecord::Base
         pref.display = item.default_display
         pref.save
       end
+    end
+  end
+
+  def populate_forum
+    begin
+      cat = Forem::Category.find(self.id)
+    rescue ActiveRecord::RecordNotFound
+      cat = Forem::Category.create(:id => self.id, :name => self.title)
+      Forem::Forum.create(:category_id => cat.id,
+                          :name => 'General Discussion',
+                          :description => 'For general discussion')
+      Forem::Forum.create(:category_id => cat.id,
+                          :name => 'Help',
+                          :description => 'Ask your questions here')
     end
   end
 
