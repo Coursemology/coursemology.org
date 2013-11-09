@@ -10,13 +10,6 @@
       <% if @topic.user == forem_user || (can? :manage, Course) %>
         <%= link_to t(".delete"), main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
       <% end %>
-      <% if forem_user %>
-        <!--<% if !@topic.subscriber?(forem_user.id) %>
-          <%= link_to t(".subscribe"), main_app.course_forum_topic_subscribe_path(@course, @forum, @topic), :class => "btn btn-success" %>
-        <% else %>
-          <%= link_to t(".unsubscribe"), main_app.course_forum_topic_unsubscribe_path(@course, @forum, @topic), :class => "btn btn-danger" %>
-        <% end %>-->
-      <% end %>
       <% if can? :manage, Course %>
         <!--<%= link_to t('forem.topic.links.edit'), forem.edit_admin_topic_path(@topic), :class => "btn" %>-->
         <%= link_to t(".hide.#{@topic.hidden}"), main_app.course_forums_topics_admin_hide_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
@@ -40,6 +33,12 @@
     </div>
   <% end %>
 
+  <% if @topic.locked? %>
+    <div class="alert">
+      <strong>This topic is locked.</strong>
+    </div>
+  <% end %>
+
   <%= forem_pages_widget(@posts) %>
 
   <div id='posts'>
@@ -47,4 +46,19 @@
   </div>
 
   <%= forem_pages_widget(@posts) %>
+
+  <% if @topic.can_be_replied_to? %>
+    <hr>
+
+    <div class="simple_form">
+      <div class="post-content">
+        <h3>Post a Reply</h3>
+      </div>
+    </div>
+
+    <%= simple_form_for [main_app, @course, @forum, @topic, Forem::Post.new] do |f| %>
+      <%= render :partial => "forem/posts/form", :locals => { :f => f } %>
+      <%= f.submit t("forem.post.buttons.reply"), :class => "btn btn-primary" %>
+    <% end %>
+  <% end %>
 </div>
