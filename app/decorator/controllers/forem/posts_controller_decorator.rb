@@ -1,6 +1,6 @@
 Forem::PostsController.class_eval do
   load_and_authorize_resource :topic
-
+  skip_before_filter :block_spammers
   append_before_filter :shim
 
   def update
@@ -56,14 +56,6 @@ Forem::PostsController.class_eval do
     unless @post.owner_or_admin? forem_user or can? :manage, Course
       flash[:alert] = t("forem.post.cannot_delete")
       redirect_to main_app.course_forum_topic_url(@course, @forum, @topic) and return
-    end
-  end
-
-  def block_spammers
-    if forem_user.forem_spammer?
-      flash[:alert] = t('forem.general.flagged_for_spam') + ' ' +
-          t('forem.general.cannot_create_post')
-      redirect_to :back
     end
   end
 

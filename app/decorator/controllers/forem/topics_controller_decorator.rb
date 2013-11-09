@@ -1,6 +1,6 @@
 Forem::TopicsController.class_eval do
   load_and_authorize_resource :forum
-
+  skip_before_filter :block_spammers
   append_before_filter :shim
 
   def new

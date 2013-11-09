@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131106085007) do
+ActiveRecord::Schema.define(:version => 20131109085922) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -998,10 +998,10 @@ ActiveRecord::Schema.define(:version => 20131106085007) do
     t.string   "name"
     t.string   "profile_photo_url"
     t.string   "display_name"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
-    t.string   "email",                  :default => "",               :null => false
-    t.string   "encrypted_password",     :default => "",               :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -1018,9 +1018,6 @@ ActiveRecord::Schema.define(:version => 20131106085007) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "forem_admin",            :default => false
-    t.string   "forem_state",            :default => "pending_review"
-    t.boolean  "forem_auto_subscribe",   :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
