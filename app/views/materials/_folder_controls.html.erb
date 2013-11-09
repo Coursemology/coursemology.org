@@ -1,21 +1,27 @@
 <div class="materials-folder-controls">
   <span>
-    <% if @folder.is_virtual? %>
-    <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
-    <a class='btn btn-primary disabled'>
-      Upload Files
-    </a>
-    <a class='btn btn-success disabled'>
-      Create Folder
-    </a>
-    </span>
-    <% else %>
     <% if (can? :upload, @folder) %>
-      <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
+      <% if @folder.is_virtual? %>
+        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
+          <a class='btn btn-primary disabled'>
+            Upload Files
+          </a>
+        </span>
+      <% else %>
+        <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
+      <% end %>
     <% end %>
+    
     <% if (can? :manage, @folder) %>
-    <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
-    <% end %>
+      <% if @folder.is_virtual? %>
+        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
+          <a class='btn btn-success disabled'>
+            Create Folder
+          </a>
+        </span>
+      <% else %>
+        <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+      <% end %>
     <% end %>
     &nbsp;
   </span>
