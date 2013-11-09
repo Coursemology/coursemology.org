@@ -61,15 +61,17 @@
     {% if (file.error) { %}
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
     {% } else if (o.files.valid && !i) { %}
-    <td>
+    <td {% if (o.options.autoUpload) { %}colspan="2"{% } %}>
       <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
     </td>
-    <td class="start">{% if (!o.options.autoUpload) { %}
+    {% if (!o.options.autoUpload) { %}
+    <td class="start">
       <button class="btn btn-primary">
         <i class="icon-upload icon-white"></i>
         <span>{%=locale.fileupload.start%}</span>
       </button>
-      {% } %}</td>
+    </td>
+    {% } %}
     {% } else { %}
     <td colspan="2"></td>
     {% } %}
@@ -87,6 +89,7 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-download fade">
     {% if (file.error) { %}
+    <td class="preview"><span></span></td>
     <td class="name"><span>{%=file.name%}</span></td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
@@ -94,16 +97,12 @@
     <td class="preview">{% if (file.thumbnail_url) { %}
       <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
       {% } %}</td>
-    {% if (file.original) { %}
-    <td class="name"><span>{%=file.original%}</span></td>
-    {% } %}
     <td class="name">
       <input type="hidden" name="files[{%=file.name%}]" class="uploaded-files" value="{%=file.id%}">
-      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{% if (file.original) { %}{%=file.original%}{% } else { %}{%=file.name%}{% } %}</a>
     </td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-    <td class="timestamp"><span>{%= file.timestamp %}</span></td>
-    <td colspan="2"></td>
+    <td class="timestamp" colspan="2"><span>{%= file.timestamp %}</span></td>
     {% } %}
     <td class="delete">
       <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">

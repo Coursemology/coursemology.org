@@ -162,6 +162,7 @@ GEM
     multi_xml (0.5.2)
     multipart-post (1.2.0)
     mysql2 (0.3.13)
+    natcmp (1.4.1)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -318,6 +319,7 @@ DEPENDENCIES
   koala
   momentjs-rails
   mysql2
+  natcmp
   newrelic_rpm
   omniauth
   omniauth-facebook

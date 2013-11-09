@@ -2,34 +2,41 @@ class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
-  load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :show_by_name, :mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  check_authorization
+  load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :only => [:show, :edit, :update, :destroy]
   
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
   def index
-    authorize! :index, Material
-    @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
               else
-                MaterialFolder.find_by_course_id_and_parent_folder_id(@course.id, nil)
+                MaterialFolder.find_by_course_id_and_parent_folder_id(@course, nil)
               end
+    authorize! :show, @folder
 
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
-      @virtual_folders = virtual_folders
+      vfolders = virtual_folders
     else
-      @virtual_folders = []
+      vfolders = []
     end
     
     # Get the directory structure to the front-end JS.
     respond_to do |format|
       format.html {
+        # Compute the set of folders and files the user can see.
+        @subfolders =
+          MaterialFolder.accessible_by(current_ability).where(:parent_folder_id => @folder) +
+          vfolders
+        @files =
+          Material.accessible_by(current_ability).where(:folder_id => @folder)
+
         # Compute the new files in this directory
         @is_new = {}
-        @folder.files.each {|file|
+        @files.each {|file|
           unless @curr_user_course.seen_materials.exists?(file)
             @is_new[file.id] = true
           end
@@ -37,13 +44,16 @@ class MaterialsController < ApplicationController
 
         # Then any subfolders with new materials (so users can drill down to see what's new)
         @is_subfolder_new = {}
-        @folder.subfolders.each { |subfolder|
+        @subfolders.each { |subfolder|
+          if subfolder.is_virtual? then
+            next
+          end
+
           subfolder.materials.each { |material|
             if not @curr_user_course.seen_materials.exists?(material.id) then
               @is_subfolder_new[subfolder.id] = true
               break
             end
-            material.id
           }
         }
 
@@ -68,17 +78,18 @@ class MaterialsController < ApplicationController
   def index_virtual
     # Find the virtual folder matching the specified ID
     @folder = (virtual_folders.select {
-        |folder| folder.id == params[:virtual] })
+        |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
-
 
     respond_to do |format|
       format.html {
         # Template variables defined by index.
-        @virtual_folders = []
         @is_subfolder_new = []
         @is_new = []
+
+        @subfolders = @folder.subfolders
+        @files = @folder.files
 
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
@@ -98,10 +109,12 @@ class MaterialsController < ApplicationController
   end
 
   def mark_folder_read
+    @material_folder = MaterialFolder.where(:id => params[:material_folder_id]).first
     if not @material_folder then
-      redirect_to course_material_path(@course)
+      redirect_to course_materials_path(@course)
       return
     end
+    authorize! :read, @material_folder
 
     @material_folder.materials.each { |m|
       curr_user_course.mark_as_seen(m)
@@ -131,24 +144,21 @@ class MaterialsController < ApplicationController
     # Resolve the subfolder ID + file name to an ID
     folder = MaterialFolder.find_by_id(params[:id])
     file = folder.find_material_by_filename!(params[:filename])
-    authorize! :index, file
+    authorize! :show, file
     params[:id] = file.id
 
     show
   end
 
   def new
-    @folder = MaterialFolder.find_by_id(params[:parent])
-    if not @folder then
-      redirect_to :action => "index"
-      return
-    end
+    @folder = MaterialFolder.find_by_id!(params[:id])
+    authorize! :upload, @folder
   end
 
   def create
-    #TODO Make sure that we get a valid folder ID to upload to
-    @parent = MaterialFolder.find_by_id(params[:parent])
-    
+    @parent = MaterialFolder.find_by_id!(params[:id])
+    authorize! :upload, @parent
+
     notice = nil
     if params[:type] == "files" && params[:files] then
       @parent.attach_files(params[:files], params[:descriptions])
@@ -267,10 +277,12 @@ private
   # Builds a hash containing the given folder and all files in it, as a tree.
   def build_subtree(folder, include_files = true)
     folder_metadata = {}
-    folder_metadata['subfolders'] = folder.subfolders.map { |subfolder|
-      build_subtree(subfolder, include_files)
-    }
-    if (folder.parent_folder == nil) and not (folder.is_virtual) then
+    folder_metadata['subfolders'] = (folder.is_virtual? ?
+      folder.subfolders : MaterialFolder.accessible_by(current_ability).where(:parent_folder_id => folder))
+      .map { |subfolder|
+        build_subtree(subfolder, include_files)
+      }
+    if (folder.parent_folder == nil) and not (folder.is_virtual?) then
       folder_metadata['subfolders'] += virtual_folders.map { |subfolder|
         build_subtree(subfolder, include_files)
       }
@@ -278,27 +290,29 @@ private
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name
-    folder_metadata['url'] = folder.is_virtual ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
+    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
-    folder_metadata['count'] = folder.materials.length
-    folder_metadata['is_virtual'] = folder.is_virtual
+    folder_metadata['count'] = folder.files.length
+    folder_metadata['is_virtual?'] = folder.is_virtual?
     if include_files then
-      folder_metadata['files'] = folder.files.map { |file|
-        current_file = {}
+      folder_metadata['files'] = (folder.is_virtual? ?
+        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
+        .map { |file|
+          current_file = {}
 
-        current_file['id'] = file.id
-        current_file['name'] = file.filename
-        current_file['description'] = file.description
-        current_file['folder_id'] = file.folder_id
-        current_file['url'] = course_material_path(@course, file)
-        
-        if (not @curr_user_course.seen_materials.exists?(file.id)) then
-          current_file['is_new'] = true
-          folder_metadata['contains_new'] = true
-        end
-        
-        current_file
-      }
+          current_file['id'] = file.id
+          current_file['name'] = file.filename
+          current_file['description'] = file.description
+          current_file['folder_id'] = file.folder_id
+          current_file['url'] = course_material_file_path(@course, file)
+
+          if not(folder.is_virtual? || @curr_user_course.seen_materials.exists?(file.id)) then
+            current_file['is_new'] = true
+            folder_metadata['contains_new'] = true
+          end
+
+          current_file
+        }
     end
 
     folder_metadata
@@ -323,40 +337,45 @@ private
     result = nil
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      # TODO: Preserve directory structure
       folder.materials.each { |m|
+        if not (m.is_virtual?) and cannot? :read, m
+          next
+        end
+
         temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
+        curr_user_course.mark_as_seen(m)
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
-          if d.parent_folder && d.id != folder.id then
+          dname = d ? d.name : nil
+          if d && d.parent_folder && d.id != folder.id then
             prefix = parent_traversal.call(d.parent_folder)
           else
             # Root should not require a separate folder.
-            return ''
+            prefix = 'root'
+            dname = ''
           end
 
-          prefix = File.join(prefix, d.name)
+          prefix = File.join(prefix, dname)
           dir_path = File.join(dir, prefix)
           Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
 
           prefix
         }
-        prefix = m.folder ? parent_traversal.call(m.folder) : ''
+        prefix = parent_traversal.call(m.folder)
 
-        if prefix.length > 0 then
-          File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
-        end
+        File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
       }
 
       # Generate a file name to store the zip while we build it.
+      prefix = File.join(dir, 'root')
       zip_name = File.join(File.dirname(dir),
         Dir::Tmpname.make_tmpname(["coursemology-mat-temp-zip", ".zip"], nil))
       Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
         # Add every file in the directory to the zip file, preserving structure.
-        Dir[File.join(dir, '**', '**')].each {|file|
-          zipfile.add(file.sub(dir + '/', ''), file)
+        Dir[File.join(prefix, '**', '**')].each {|file|
+          zipfile.add(file.sub(File.join(prefix + '/'), ''), file)
         }
       }
 

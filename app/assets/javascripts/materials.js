@@ -122,9 +122,7 @@ $(document).ready(function() {
   
   // Set up the disabled controls tooltip.
   $('.workbin-disabled-controls').tooltip();
-});
 
-$(document).ready(function() {
   $('form.materials-edit-form').validatr([
     ['input#material_filename', function() {
       var $this = $(this);
@@ -151,4 +149,62 @@ $(document).ready(function() {
       }
     }]
   ]);
+  
+  function shadeSelectedFiles() {
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var parent = $(this).parents('.workbin-file-row');
+      if ($(this).prop('checked')) {
+        parent.addClass('workbin-file-selected');
+      } else {
+        parent.removeClass('workbin-file-selected');
+      }
+    });
+  }
+  
+  $('#workbin-select-all-files').click(function() {
+    var isChecked = $(this).prop('checked');
+    $('.workbin-select-file-checkbox').prop('checked', isChecked);
+    shadeSelectedFiles();
+  });
+  
+  $('#workbin-download-zip-button').click(function() {
+    var checkedFiles = [];
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var checkbox = $(this);
+      var fileId = checkbox.data('fileid');
+      
+      var isChecked = checkbox.prop('checked');
+      if (isChecked) {
+        checkedFiles.push(fileId);
+      }
+    });
+    
+    console.log(checkedFiles);
+  });
+  
+  // Shade selected rows on load.
+  shadeSelectedFiles();
+  
+  // Select a row by clicking on it.
+  $('.workbin-file-row').click(function(event) {
+    $(this).toggleClass('workbin-file-selected');
+    var checkbox = $(this).find('.workbin-select-file-checkbox');
+    var isChecked = checkbox.prop('checked');
+    checkbox.prop('checked', !isChecked);
+  });
+  
+  $('.workbin-select-file-checkbox').click(function(event) {
+    // Don't bubble up to the div, or we'd never be able to check the box.
+    event.stopPropagation();
+    
+    var parent = $(this).parents('.workbin-file-row');
+    parent.toggleClass('workbin-file-selected');
+    
+    // Uncheck the master checkbox if we need to.
+    var masterBox = $('#workbin-select-all-files');
+    if (masterBox.prop('checked')) {
+      masterBox.prop('checked', false);
+    }
+  });
+    
 });

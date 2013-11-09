@@ -77,13 +77,17 @@ class Material < ActiveRecord::Base
         -1
       end
 
-      def is_virtual
+      def is_virtual?
         true
       end
     end).new(parent, obj)
   end
 
   def filename
+    if self.file == nil then
+      return nil
+    end
+
     self.file.original_name || self.file.file_file_name
   end
   
@@ -113,13 +117,13 @@ class Material < ActiveRecord::Base
     end
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 
 private
   def material_filename_unique
-    if filename.length == 0 then
+    if filename && filename.length == 0 then
       errors.add(:filename, "Filenames cannot be empty.")
     end
 

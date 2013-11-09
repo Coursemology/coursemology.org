@@ -41,25 +41,25 @@ $(document).ready(function() {
 
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR',
+        language: 'en-US',
         startDate: new Date()
     });
     
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
-        language: 'pt-BR',
+        language: 'en-US',
         startDate: new Date(),
         pickTime: false
     });
     
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR'
+        language: 'en-US'
     });
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
-        language: 'pt-BR',
+        language: 'en-US',
         pickTime: false
     });
 
@@ -67,6 +67,13 @@ $(document).ready(function() {
 
     $('.colorpicker').colorpicker();
 
+    $('.delete-button').click(function() {
+      var parent = $(this).parents('.delete-confirm-control-group');
+      $(this).hide();
+      var that = this;
+      $('.delete-confirm-button', parent).fadeIn();
+      setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 2000);
+    });
 
     $(function(){
         $(".jfdiCode").each(_jfdiFormatFunc);

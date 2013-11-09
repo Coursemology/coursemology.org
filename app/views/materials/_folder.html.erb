@@ -1,0 +1,35 @@
+<tr>
+  <td>
+  </td>
+  <td>
+    <% path = if subfolder.is_virtual? then course_material_virtual_folder_path(@course, subfolder.id) 
+      else course_material_folder_path(@course, subfolder) end %>
+    <%= link_to path do %>
+    <%= render partial:"subfolder_title", :locals => { :subfolder => subfolder } %>
+    <% end %>
+    
+    <% if subfolder.description %>
+    <p><%= truncate_html subfolder.description, :length => 100 %></p>
+    <% end %>
+  </td>
+  
+  <td>
+    <%= datetime_format(subfolder.updated_at) %>
+  </td>
+  
+  <td>
+    <div class="pull-right">
+      <% if (can? :manage, subfolder) %>
+      <% if not subfolder.is_virtual? %>
+      <%= link_to edit_course_material_folder_path(@course, subfolder), class: 'btn' do %>
+      <i class="icon-edit"></i>
+      <% end %>
+      <%= render partial: "layouts/delete_confirm", :locals => { :path_to_item => course_material_folder_path(@course, subfolder) } %>
+      <% else %>
+      <%= render partial: "disabled_controls" %>
+      <% end %>
+      <% end %>
+    </div>
+  </td>
+  
+</tr>

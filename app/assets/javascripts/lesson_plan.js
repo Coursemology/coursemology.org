@@ -50,12 +50,12 @@ $(document).ready(function() {
   $('.lesson-plan-header').click(function() {
     var parent = $(this).parents('.lesson-plan-item');
     var isHidden = $('.lesson-plan-body', parent).data("hidden");
-    if (isHidden === "true") {
-      $('.lesson-plan-body', parent).slideDown().data("hidden", "false");
+    if (isHidden) {
+      $('.lesson-plan-body', parent).slideDown().data("hidden", false);
       $('.lesson-plan-hide-entries', this).show();
       $('.lesson-plan-show-entries', this).hide();
     } else {
-      $('.lesson-plan-body', parent).slideUp().data("hidden", "true");
+      $('.lesson-plan-body', parent).slideUp().data("hidden", true);
       $('.lesson-plan-hide-entries', this).hide();
       $('.lesson-plan-show-entries', this).show();
     }
