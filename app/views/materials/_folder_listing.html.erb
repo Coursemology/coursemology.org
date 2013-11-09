@@ -9,7 +9,15 @@
   </thead>
 
   <tbody class="table-hover">
-    <% (@virtual_folders.sort_by{|folder| folder.name} + @folder.subfolders.sort_by {|folder| folder.name}).each do |subfolder| %>
+    <% (@subfolders.sort {|left, right|
+          if (left.is_virtual != right.is_virtual)
+            if left.is_virtual then -1
+            else 1
+            end
+          else
+            left.name <=> right.name
+          end
+        }).each do |subfolder| %>
       <tr>
         <td>
           <% link = if subfolder.is_virtual then
