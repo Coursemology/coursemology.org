@@ -30,7 +30,7 @@
       </div>
     <% end %>
   </div>
-  <div class="float-right">
+  <div class="pull-right">
     <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual != true %>
       <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
         <i class="icon-edit"></i>
