@@ -3,7 +3,7 @@
   <h1>
     Workbin: <%= @folder.name %>
     <% if not @folder.is_open? %>
-    <span class="label label-important">Closed</span>
+    <span class="label label-important large-label">Closed</span>
     <% end %>
   </h1>
   <% if @folder.description %>
