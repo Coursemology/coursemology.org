@@ -9,28 +9,35 @@ class MaterialsController < ApplicationController
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
   def index
-    authorize! :index, MaterialFolder
     @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
               else
-                MaterialFolder.find_by_course_id_and_parent_folder_id(@course.id, nil)
+                MaterialFolder.find_by_course_id_and_parent_folder_id(@course, nil)
               end
+    authorize! :show, @folder
 
     # If we are the root directory, we need to include the virtual entries for
     # this course
     if @folder.parent_folder == nil then
-      @virtual_folders = virtual_folders
+      vfolders = virtual_folders
     else
-      @virtual_folders = []
+      vfolders = []
     end
     
     # Get the directory structure to the front-end JS.
     respond_to do |format|
       format.html {
+        # Compute the set of folders and files the user can see.
+        @subfolders =
+          MaterialFolder.accessible_by(current_ability).where(:parent_folder_id => @folder) +
+          vfolders
+        @files =
+          Material.accessible_by(current_ability).where(:folder_id => @folder)
+
         # Compute the new files in this directory
         @is_new = {}
-        @folder.files.each {|file|
+        @files.each {|file|
           unless @curr_user_course.seen_materials.exists?(file)
             @is_new[file.id] = true
           end
@@ -38,13 +45,16 @@ class MaterialsController < ApplicationController
 
         # Then any subfolders with new materials (so users can drill down to see what's new)
         @is_subfolder_new = {}
-        @folder.subfolders.each { |subfolder|
+        @subfolders.each { |subfolder|
+          if subfolder.is_virtual then
+            next
+          end
+          
           subfolder.materials.each { |material|
             if not @curr_user_course.seen_materials.exists?(material.id) then
               @is_subfolder_new[subfolder.id] = true
               break
             end
-            material.id
           }
         }
 
