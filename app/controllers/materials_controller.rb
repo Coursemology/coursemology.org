@@ -79,7 +79,7 @@ class MaterialsController < ApplicationController
   def index_virtual
     # Find the virtual folder matching the specified ID
     @folder = (virtual_folders.select {
-        |folder| folder.id == params[:virtual] })
+        |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
@@ -110,8 +110,9 @@ class MaterialsController < ApplicationController
   end
 
   def mark_folder_read
+    @material_folder = MaterialFolder.where(:id => params[:material_folder_id]).first
     if not @material_folder then
-      redirect_to course_material_path(@course)
+      redirect_to course_materials_path(@course)
       return
     end
 
