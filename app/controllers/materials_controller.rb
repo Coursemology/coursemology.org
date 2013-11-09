@@ -336,14 +336,18 @@ private
     result = nil
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      folder.materials.accessible_by(current_ability).each { |m|
+      folder.materials.each { |m|
+        if not (m.is_virtual?) and cannot? :read, m
+          next
+        end
+
         temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
-          dname = d.name
-          if d.parent_folder && d.id != folder.id then
+          dname = d ? d.name : nil
+          if d && d.parent_folder && d.id != folder.id then
             prefix = parent_traversal.call(d.parent_folder)
           else
             # Root should not require a separate folder.
@@ -357,7 +361,7 @@ private
 
           prefix
         }
-        prefix = m.folder ? parent_traversal.call(m.folder) : ''
+        prefix = parent_traversal.call(m.folder)
 
         File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
       }
