@@ -98,9 +98,7 @@ class CourseAbility
         'can_student_upload = ? AND \
          (open_at <= ? OR open_at IS NULL) AND \
          (close_at >= ? OR close_at IS NULL)', true, DateTime.new, DateTime.new] do |folder|
-        folder.can_student_upload? &&
-          (folder.open_at == nil || folder.open_at <= DateTime.new) &&
-          (folder.close_at == nil || folder.close_at >= DateTime.new)
+        folder.can_student_upload? && folder.is_open?
       end
       can :manage, Material, :file => { :creator_id => user.id }
       can :read, Material, :file => {
