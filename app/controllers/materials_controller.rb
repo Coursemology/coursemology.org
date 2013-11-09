@@ -9,7 +9,7 @@ class MaterialsController < ApplicationController
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
   def index
-    authorize! :index, Material
+    authorize! :index, MaterialFolder
     @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
@@ -146,7 +146,7 @@ class MaterialsController < ApplicationController
   def create
     @parent = MaterialFolder.find_by_id!(params[:parent])
     authorize! :upload, @folder
-    
+
     notice = nil
     if params[:type] == "files" && params[:files] then
       @parent.attach_files(params[:files], params[:descriptions])
