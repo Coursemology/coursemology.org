@@ -15,7 +15,7 @@
             else 1
             end
           else
-            left.name <=> right.name
+            left.name.downcase <=> right.name.downcase
           end
         }).each do |subfolder| %>
       <tr>
@@ -62,7 +62,7 @@
       </tr>
     <% end %>
 
-    <% @folder.files.sort_by{|file| file.filename.downcase}.each do |material| %>
+    <% @files.sort_by{|file| file.filename.downcase}.each do |material| %>
       <tr>
         <td>
           <% link = if material.is_virtual then
