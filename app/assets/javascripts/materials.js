@@ -122,9 +122,7 @@ $(document).ready(function() {
   
   // Set up the disabled controls tooltip.
   $('.workbin-disabled-controls').tooltip();
-});
 
-$(document).ready(function() {
   $('form.materials-edit-form').validatr([
     ['input#material_filename', function() {
       var $this = $(this);
