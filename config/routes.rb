@@ -182,9 +182,10 @@ JfdiAcademy::Application.routes.draw do
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
     match "/forums" => "forem/categories#show", as: :forums
-    match "/forums/admin" => "forem/admin/forums#show", as: :forums_admin
-    match "/forums/admin/new" => "forem/admin/forums#new", as: :forums_admin_new
-    match "/forums/:forum_id/topics/:id/admin" => "forem/admin/topics#index", as: :forums_topics_admin
+    match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
+    match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
+    match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
+    match "/forums/:forum_id/topics/:id/manage" => "forem/admin/topics#index", as: :forums_topics_admin
     put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
     put "/forums/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
     put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin
