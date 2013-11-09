@@ -200,6 +200,10 @@ $(document).ready(function() {
     var parent = $(this).parents('.workbin-file-row');
     parent.toggleClass('workbin-file-selected');
     
+    // Uncheck the master checkbox if we need to.
+    var masterBox = $('#workbin-select-all-files');
+    if (masterBox.prop('checked')) {
+      masterBox.prop('checked', false);
     }
   });
     
