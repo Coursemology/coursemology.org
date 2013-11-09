@@ -276,9 +276,11 @@ private
   # Builds a hash containing the given folder and all files in it, as a tree.
   def build_subtree(folder, include_files = true)
     folder_metadata = {}
-    folder_metadata['subfolders'] = folder.subfolders.map { |subfolder|
-      build_subtree(subfolder, include_files)
-    }
+    folder_metadata['subfolders'] = (folder.is_virtual ?
+      folder.subfolders : MaterialFolder.accessible_by(current_ability).where(:parent_folder_id => folder))
+      .map { |subfolder|
+        build_subtree(subfolder, include_files)
+      }
     if (folder.parent_folder == nil) and not (folder.is_virtual) then
       folder_metadata['subfolders'] += virtual_folders.map { |subfolder|
         build_subtree(subfolder, include_files)
@@ -292,22 +294,24 @@ private
     folder_metadata['count'] = folder.materials.length
     folder_metadata['is_virtual'] = folder.is_virtual
     if include_files then
-      folder_metadata['files'] = folder.files.map { |file|
-        current_file = {}
+      folder_metadata['files'] = (folder.is_virtual ?
+        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
+        .map { |file|
+          current_file = {}
 
-        current_file['id'] = file.id
-        current_file['name'] = file.filename
-        current_file['description'] = file.description
-        current_file['folder_id'] = file.folder_id
-        current_file['url'] = course_material_path(@course, file)
-        
-        if (not @curr_user_course.seen_materials.exists?(file.id)) then
-          current_file['is_new'] = true
-          folder_metadata['contains_new'] = true
-        end
-        
-        current_file
-      }
+          current_file['id'] = file.id
+          current_file['name'] = file.filename
+          current_file['description'] = file.description
+          current_file['folder_id'] = file.folder_id
+          current_file['url'] = course_material_path(@course, file)
+
+          if (not @curr_user_course.seen_materials.exists?(file.id)) then
+            current_file['is_new'] = true
+            folder_metadata['contains_new'] = true
+          end
+
+          current_file
+        }
     end
 
     folder_metadata
