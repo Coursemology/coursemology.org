@@ -65,7 +65,7 @@ class MaterialFolder < ActiveRecord::Base
         nil
       end
 
-      def is_virtual
+      def is_virtual?
         true
       end
     end).new(id, parent_id)
@@ -120,7 +120,7 @@ class MaterialFolder < ActiveRecord::Base
     subfolder.save
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 end

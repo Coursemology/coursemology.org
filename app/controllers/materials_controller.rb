@@ -46,7 +46,7 @@ class MaterialsController < ApplicationController
         # Then any subfolders with new materials (so users can drill down to see what's new)
         @is_subfolder_new = {}
         @subfolders.each { |subfolder|
-          if subfolder.is_virtual then
+          if subfolder.is_virtual? then
             next
           end
 
@@ -276,12 +276,12 @@ private
   # Builds a hash containing the given folder and all files in it, as a tree.
   def build_subtree(folder, include_files = true)
     folder_metadata = {}
-    folder_metadata['subfolders'] = (folder.is_virtual ?
+    folder_metadata['subfolders'] = (folder.is_virtual? ?
       folder.subfolders : MaterialFolder.accessible_by(current_ability).where(:parent_folder_id => folder))
       .map { |subfolder|
         build_subtree(subfolder, include_files)
       }
-    if (folder.parent_folder == nil) and not (folder.is_virtual) then
+    if (folder.parent_folder == nil) and not (folder.is_virtual?) then
       folder_metadata['subfolders'] += virtual_folders.map { |subfolder|
         build_subtree(subfolder, include_files)
       }
@@ -289,12 +289,12 @@ private
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name
-    folder_metadata['url'] = folder.is_virtual ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
+    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.materials.length
-    folder_metadata['is_virtual'] = folder.is_virtual
+    folder_metadata['is_virtual?'] = folder.is_virtual?
     if include_files then
-      folder_metadata['files'] = (folder.is_virtual ?
+      folder_metadata['files'] = (folder.is_virtual? ?
         folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
         .map { |file|
           current_file = {}

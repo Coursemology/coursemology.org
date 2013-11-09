@@ -1,4 +1,4 @@
-<% if milestone.is_virtual == false %>
+<% if milestone.is_virtual? == false %>
   <a class="lesson-plan-anchor" name="milestone-<%= milestone.id %>"></a>
 <% end %>
 
@@ -31,7 +31,7 @@
     <% end %>
   </div>
   <div class="pull-right">
-    <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual != true %>
+    <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
       <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
         <i class="icon-edit"></i>
       <% end %>

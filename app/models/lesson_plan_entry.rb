@@ -76,7 +76,7 @@ class LessonPlanEntry < ActiveRecord::Base
         @url = url
       end
       
-      def is_virtual
+      def is_virtual?
         true
       end
       
@@ -98,7 +98,7 @@ class LessonPlanEntry < ActiveRecord::Base
     ['Other', 3]
   ]
   
-  def is_virtual
+  def is_virtual?
     false
   end
   def is_published
