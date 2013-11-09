@@ -17,89 +17,11 @@
             left.name.downcase <=> right.name.downcase
           end
         }).each do |subfolder| %>
-      <tr>
-        <td>
-          <% path = if subfolder.is_virtual? then
-              course_material_virtual_folder_path(@course, subfolder.id)
-            else
-              course_material_folder_path(@course, subfolder)
-            end %>
-          <%= link_to path do %>
-          <%= render partial:"subfolder_title", :locals => { :subfolder => subfolder } %>
-          <% end %>
-          
-          <% if subfolder.description %>
-          <p><%= truncate_html subfolder.description, :length => 100 %></p>
-          <% end %>
-        </td>
-
-        <td>
-          <%= datetime_format(subfolder.updated_at) %>
-        </td>
-
-        <td>
-          <div class="pull-right">
-          <% if (can? :manage, subfolder) %>
-          <% if not subfolder.is_virtual? %>
-            <%= link_to edit_course_material_folder_path(@course, subfolder), class: 'btn' do %>
-              <i class="icon-edit"></i>
-            <% end %>
-          <%= render partial: "layouts/delete_confirm", :locals => { :path_to_item => course_material_folder_path(@course, subfolder) } %>
-          <% else %>
-          <%= render partial: "disabled_controls" %>
-          <% end %>
-          <% end %>
-          </div>
-        </td>
-
-      </tr>
+    <%= render partial: "folder", :locals => { :subfolder => subfolder } %>
     <% end %>
 
     <% @files.sort_by{|file| file.filename.downcase}.each do |material| %>
-      <tr>
-        <td>
-          <% link = if material.is_virtual? then
-              material.url
-            else
-              course_material_file_path(@course, material)
-            end %>
-          <%= link_to link do %>
-            <h4>
-              <% if @is_new[material.id] %>
-                <input type="hidden" class="new_<%= material.class.model_name.human.pluralize %>" />
-                <span class="label label-warning">New</span>
-              <% end %>
-              <i class="icon-file"></i> <%= material.filename %> <span class="muted"><%= get_pretty_file_size(material.filesize) %></span>
-            </h4>
-
-          <% end %>
-              
-          <% if material.description %>
-            <p><%= material.description.html_safe %></p>
-          <% end %>
-        </td>
-
-        <td>
-          <%= datetime_format(material.updated_at) %> 
-          <div class="muted"><%= material.file.creator.name %></div>
-        </td>
-
-        <td>
-          <div class="pull-right">
-          <% if (can? :manage, material) %>
-          <% if material.is_virtual? %>
-            <%= render partial: "disabled_controls" %>
-          <% else %>
-            <%= link_to edit_course_material_file_path(@course, material), class: 'btn' do %>
-              <i class="icon-edit"></i>
-            <% end %>
-          <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_material_file_path(@course, material) } %>
-          <% end %>
-          <% end %>
-          </div>
-        </td>
-
-      </tr>
+    <%= render partial: "file", :locals => { :material => material } %>
     <% end %>
   </tbody>
 </table>
