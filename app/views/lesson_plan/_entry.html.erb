@@ -62,14 +62,7 @@
     <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
       <i class="icon-edit"></i>
     <% end %>
-    <a class='btn btn-danger lesson-plan-entry-delete'>
-      <i class="icon-trash"></i>
-    </a>
-    <%= link_to course_lesson_plan_entry_path(@course, entry),
-        method: :delete,
-class: 'btn btn-danger lesson-plan-entry-delete-confirm', style: 'display: none;' do %>
-        Confirm
-    <% end %>
+    <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
   <% end %>
     </td>
 </tr>
