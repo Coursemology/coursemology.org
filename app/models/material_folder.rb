@@ -35,6 +35,9 @@ class MaterialFolder < ActiveRecord::Base
       def description=(description)
         @description = description
       end
+      def can_student_upload?
+        false
+      end
       def files
         @files
       end
