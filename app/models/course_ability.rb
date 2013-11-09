@@ -88,7 +88,14 @@ class CourseAbility
       can :read, Announcement, Announcement.published do |ann|
         ann.publish_at <= Time.now
       end
-      can :read, [Material, MaterialFolder]
+
+      # Workbin: The file is accessible to students if the student uploaded
+      # the file, or course staff uploaded the file.
+      can :read, MaterialFolder
+      can :read, Material, :file => { :creator_id => user.id }
+      can :read, Material, :file => {
+        :creator_id => UserCourse.staff.where(:course_id => user_course.course).pluck(:user_id) }
+
       can :read, [LessonPlanEntry, LessonPlanMilestone]
 
       can :read, [Mission, Training, Survey], publish: true

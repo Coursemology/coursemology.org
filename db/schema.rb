@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131102174954) do
+ActiveRecord::Schema.define(:version => 20131109112240) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -382,6 +382,9 @@ ActiveRecord::Schema.define(:version => 20131102174954) do
     t.integer  "course_id"
     t.string   "name"
     t.text     "description"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.boolean  "can_student_upload", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
