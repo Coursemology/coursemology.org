@@ -92,6 +92,7 @@ class CourseAbility
       # Workbin: The file is accessible to students if the student uploaded
       # the file, or course staff uploaded the file.
       can :read, MaterialFolder
+      can :upload, MaterialFolder, :can_student_upload => true
       can :manage, Material, :file => { :creator_id => user.id }
       can :read, Material, :file => {
         :creator_id => UserCourse.staff.where(:course_id => user_course.course).pluck(:user_id) }
