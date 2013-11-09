@@ -1,6 +1,6 @@
 <div class="materials-folder-controls">
   <span>
-    <% if @folder.is_virtual %>
+    <% if @folder.is_virtual? %>
     <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
     <a class='btn btn-primary disabled'>
       Upload Files
@@ -22,22 +22,22 @@
 
   <span class="pull-right btn-group">
     <% if (can? :manage, @folder) %>
-      <% if @folder.is_virtual %>
+      <% if @folder.is_virtual? %>
       <a class="btn disabled workbin-disabled-controls" title="This folder can't be edited.">Edit</a>
       <% else %>
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>
     <% end %>
-    <%= link_to "Download .zip", (@folder.is_virtual ?
+    <%= link_to "Download .zip", (@folder.is_virtual? ?
         course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
-    <% if not(@folder.is_virtual) %>
+    <% if not(@folder.is_virtual?) %>
     <%= link_to "Mark as Seen", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
   </span>
 </div>
 
-<% if (can? :manage, @folder) && not(@folder.is_virtual) %>
+<% if (can? :manage, @folder) && not(@folder.is_virtual?) %>
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     Create Subfolder

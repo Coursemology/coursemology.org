@@ -24,7 +24,7 @@ class LessonPlanMilestone < ActiveRecord::Base
           nil
         end
 
-        def is_virtual
+        def is_virtual?
           true
         end
     end).new(*args)
@@ -48,7 +48,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     real_entries + virtual_entries
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 end

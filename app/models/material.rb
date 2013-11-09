@@ -77,7 +77,7 @@ class Material < ActiveRecord::Base
         -1
       end
 
-      def is_virtual
+      def is_virtual?
         true
       end
     end).new(parent, obj)
@@ -117,7 +117,7 @@ class Material < ActiveRecord::Base
     end
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 

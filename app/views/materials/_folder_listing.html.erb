@@ -10,8 +10,8 @@
 
   <tbody class="table-hover">
     <% (@subfolders.sort {|left, right|
-          if (left.is_virtual != right.is_virtual)
-            if left.is_virtual then -1
+          if (left.is_virtual? != right.is_virtual?)
+            if left.is_virtual? then -1
             else 1
             end
           else
@@ -20,7 +20,7 @@
         }).each do |subfolder| %>
       <tr>
         <td>
-          <% link = if subfolder.is_virtual then
+          <% link = if subfolder.is_virtual? then
               course_material_virtual_folder_path(@course, subfolder.id)
             else
               course_material_folder_path(@course, subfolder)
@@ -43,7 +43,7 @@
 
         <td>
           <% if (can? :manage, subfolder) %>
-          <% if not subfolder.is_virtual %>
+          <% if not subfolder.is_virtual? %>
             <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
@@ -65,7 +65,7 @@
     <% @files.sort_by{|file| file.filename.downcase}.each do |material| %>
       <tr>
         <td>
-          <% link = if material.is_virtual then
+          <% link = if material.is_virtual? then
               material.url
             else
               course_material_path(@course, material)
@@ -88,7 +88,7 @@
 
         <td>
           <% if (can? :manage, material) %>
-          <% if material.is_virtual %>
+          <% if material.is_virtual? %>
             <%= render partial: "disabled_controls" %>
           <% else %>
             <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
