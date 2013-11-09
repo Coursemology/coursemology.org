@@ -149,4 +149,9 @@ $(document).ready(function() {
       }
     }]
   ]);
+  
+  $('#workbin-select-all-files').click(function() {
+    var isChecked = $(this).prop('checked');
+    $('.workbin-select-file-checkbox').prop('checked', isChecked);
+  });
 });
