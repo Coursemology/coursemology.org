@@ -1,0 +1,11 @@
+<h4>
+  <i class="<%= subfolder.can_student_upload? ? 'icon-upload' : 'icon-folder-open' %>"></i> <%= subfolder.name %>
+  <% if not subfolder.is_open? %>
+  <span class="label label-important">Closed</span>
+  <% end %>
+  
+  <% if @is_subfolder_new[subfolder.id] %>
+  <input type="hidden" class="new_<%= subfolder.class.model_name.human.pluralize %>" />
+  <span class="label label-warning">New</span>
+  <% end %>
+</h4>
