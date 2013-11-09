@@ -337,7 +337,7 @@ private
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
       # TODO: Preserve directory structure
-      folder.materials.each { |m|
+      folder.materials.accessible_by(current_ability).each { |m|
         temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
 
