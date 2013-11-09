@@ -1,5 +1,7 @@
 <tr>
   <td>
+  </td>
+  <td>
     <% path = if subfolder.is_virtual? then course_material_virtual_folder_path(@course, subfolder.id) 
       else course_material_folder_path(@course, subfolder) end %>
     <%= link_to path do %>
