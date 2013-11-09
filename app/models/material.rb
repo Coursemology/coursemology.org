@@ -84,6 +84,10 @@ class Material < ActiveRecord::Base
   end
 
   def filename
+    if self.file == nil then
+      return nil
+    end
+
     self.file.original_name || self.file.file_file_name
   end
   
@@ -119,7 +123,7 @@ class Material < ActiveRecord::Base
 
 private
   def material_filename_unique
-    if filename.length == 0 then
+    if filename && filename.length == 0 then
       errors.add(:filename, "Filenames cannot be empty.")
     end
 
