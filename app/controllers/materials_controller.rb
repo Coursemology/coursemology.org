@@ -49,7 +49,7 @@ class MaterialsController < ApplicationController
           if subfolder.is_virtual then
             next
           end
-          
+
           subfolder.materials.each { |material|
             if not @curr_user_course.seen_materials.exists?(material.id) then
               @is_subfolder_new[subfolder.id] = true
@@ -83,13 +83,14 @@ class MaterialsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
-
     respond_to do |format|
       format.html {
         # Template variables defined by index.
-        @virtual_folders = []
         @is_subfolder_new = []
         @is_new = []
+
+        @subfolders = @folder.subfolders
+        @files = @folder.files
 
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)
