@@ -12,8 +12,24 @@
   </div>
   <div class="page-header">
     <h1>Forums</h1>
-    <h3><%= link_to main_app.course_forums_path(@course) do %>
-          <%= content_tag :i, '', :class => 'icon-home' %>
-        <% end %> &raquo; <%= forum.title %></h3>
+    <ul class="breadcrumb">
+      <li>
+        <%= link_to main_app.course_forums_path(@course) do %>
+            <%= content_tag :i, '', :class => 'icon-home' %>
+        <% end %>
+        <span class="divider">/</span>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <%= forem_emojify(forum.title) %> <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <% category = Forem::Category.find(@course.id) %>
+          <% category.forums.each do |f|  %>
+              <li><%= link_to f.title, main_app.course_forum_path(@course, f) %></li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
