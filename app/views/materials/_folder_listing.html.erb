@@ -41,7 +41,7 @@
           <div class="pull-right">
           <% if (can? :manage, subfolder) %>
           <% if not subfolder.is_virtual? %>
-            <%= link_to course_edit_material_folder_path(@course, subfolder), class: 'btn' do %>
+            <%= link_to edit_course_material_folder_path(@course, subfolder), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
           <%= render partial: "layouts/delete_confirm", :locals => { :path_to_item => course_material_folder_path(@course, subfolder) } %>
@@ -61,7 +61,7 @@
           <% link = if material.is_virtual? then
               material.url
             else
-              course_material_path(@course, material)
+              course_material_file_path(@course, material)
             end %>
           <%= link_to link do %>
             <h4>
@@ -90,10 +90,10 @@
           <% if material.is_virtual? %>
             <%= render partial: "disabled_controls" %>
           <% else %>
-            <%= link_to edit_course_material_path(@course, material), class: 'btn' do %>
+            <%= link_to edit_course_material_file_path(@course, material), class: 'btn' do %>
               <i class="icon-edit"></i>
             <% end %>
-          <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_material_path(@course, material) } %>
+          <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_material_file_path(@course, material) } %>
           <% end %>
           <% end %>
           </div>

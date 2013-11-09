@@ -6,21 +6,17 @@
           <a class='btn btn-primary disabled'>
             Upload Files
           </a>
-        </span>
-      <% else %>
-        <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
-      <% end %>
-    <% end %>
-    
-    <% if (can? :manage, @folder) %>
-      <% if @folder.is_virtual? %>
-        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
           <a class='btn btn-success disabled'>
             Create Folder
           </a>
         </span>
       <% else %>
+      <% if (can? :upload, @folder) %>
+        <%= link_to t('.new', :default => t("Upload files")), upload_course_material_folder_path(@course, @folder), :class => 'btn btn-primary' %>
+      <% end %>
+      <% if (can? :manage, @folder) %>
         <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+      <% end %>
       <% end %>
     <% end %>
     &nbsp;
@@ -38,7 +34,7 @@
         course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
     <% if not(@folder.is_virtual?) %>
-    <%= link_to "Mark as Seen", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
+    <%= link_to "Mark as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
   </span>
 </div>

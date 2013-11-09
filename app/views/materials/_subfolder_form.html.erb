@@ -1,5 +1,5 @@
 <div id="create-subfolder-modal">
-  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
+  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :method => subfolder_method do |f| %>
   <div>
   <div class="control-group">
     <%= f.label :name, :class => 'control-label' %>
