@@ -2,8 +2,9 @@ class MaterialsController < ApplicationController
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
+  check_authorization
   load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
-  load_and_authorize_resource :material, :parent => false, :except => [:index, :index_virtual, :show_by_name, :mark_folder_read, :new, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material, :parent => false, :only => [:show, :edit, :update, :destroy]
   
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
@@ -138,18 +139,13 @@ class MaterialsController < ApplicationController
   end
 
   def new
-    @folder = MaterialFolder.find_by_id(params[:parent])
-    if not @folder then
-      redirect_to :action => "index"
-      return
-    end
-
+    @folder = MaterialFolder.find_by_id!(params[:parent])
     authorize! :upload, @folder
   end
 
   def create
-    #TODO Make sure that we get a valid folder ID to upload to
-    @parent = MaterialFolder.find_by_id(params[:parent])
+    @parent = MaterialFolder.find_by_id!(params[:parent])
+    authorize! :upload, @folder
     
     notice = nil
     if params[:type] == "files" && params[:files] then
