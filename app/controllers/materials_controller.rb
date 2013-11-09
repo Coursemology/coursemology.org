@@ -304,7 +304,7 @@ private
           current_file['name'] = file.filename
           current_file['description'] = file.description
           current_file['folder_id'] = file.folder_id
-          current_file['url'] = course_material_path(@course, file)
+          current_file['url'] = course_material_file_path(@course, file)
 
           if (not @curr_user_course.seen_materials.exists?(file.id)) then
             current_file['is_new'] = true

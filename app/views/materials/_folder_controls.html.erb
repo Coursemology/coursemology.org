@@ -44,13 +44,13 @@
   <div class="modal-header">
     Create Subfolder
   </div>
-  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @subfolder, :subfolder_method => :post } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: @folder, subfolder_method: :post } %>
 </div>
 
 <div id="edit-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     Edit Folder
   </div>
-  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @folder,  :subfolder_method => :put } %>
+  <%= render partial: "subfolder_form", locals: { modal: false, folder_to_change: @folder, subfolder_method: :put } %>
 </div>
 <% end %>

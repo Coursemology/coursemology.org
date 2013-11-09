@@ -5,5 +5,4 @@
 </div>
 <br/>
 
-<% @subfolder = @folder %>
-<%= render partial: "subfolder_form", locals: { :subfolder_method => :put, :modal => false } %>
+<%= render partial: "subfolder_form", locals: { :modal => false, :folder_to_change => @folder, :subfolder_method => :put } %>
