@@ -77,7 +77,7 @@
         </td>
 
         <td>
-          <%= datetime_format(material.updated_at) %>
+          <%= datetime_format(material.updated_at) %> by <%= material.file.creator.name %>
         </td>
 
         <% if (can? :manage, Material) %>
