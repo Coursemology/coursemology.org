@@ -99,8 +99,9 @@ JfdiAcademy::Application.routes.draw do
         get "show", to: "materials#index"
         get "edit", to: "materials#edit_folder"
         get "upload", to: "materials#new"
+        post "create", to: "materials#create"
         put "update", to: "materials#update_folder"
-        delete "delete", to: "materials#delete_folder"
+        delete "", to: "materials#destroy_folder"
       end
 
       get "mark_read", to: "materials#mark_folder_read"
