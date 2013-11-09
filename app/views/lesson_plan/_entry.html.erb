@@ -57,12 +57,14 @@
     </ul>
 <% end %>
   </td>
-  <td width="10%">
-  <% if can? :manage, LessonPlanEntry and not entry.is_virtual %>
-    <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
-      <i class="icon-edit"></i>
+  <td width="15%">
+    <% if can? :manage, LessonPlanEntry and not entry.is_virtual %>
+      <div class="pull-right">
+        <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
+      </div>
     <% end %>
-    <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
-  <% end %>
     </td>
 </tr>
