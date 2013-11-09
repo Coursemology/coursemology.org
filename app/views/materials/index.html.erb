@@ -8,12 +8,13 @@
   <% end %>
 </div>
 
+<%= render :partial => 'folder_controls' %>
+
 <div class="container">
   <div class="span2">
     <%= render :partial => 'folder_tree' %>
   </div>
   <div class="span7">
-    <%= render :partial => 'folder_controls' %>
     <%= render :partial => 'folder_listing' %>
   </div>
 </div>
