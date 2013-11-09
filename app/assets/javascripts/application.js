@@ -41,25 +41,25 @@ $(document).ready(function() {
 
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR',
+        language: 'en-US',
         startDate: new Date()
     });
     
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
-        language: 'pt-BR',
+        language: 'en-US',
         startDate: new Date(),
         pickTime: false
     });
     
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR'
+        language: 'en-US'
     });
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
-        language: 'pt-BR',
+        language: 'en-US',
         pickTime: false
     });
 
