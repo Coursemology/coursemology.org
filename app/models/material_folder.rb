@@ -7,7 +7,7 @@ class MaterialFolder < ActiveRecord::Base
   has_many :subfolders, dependent: :destroy, class_name: "MaterialFolder", foreign_key: "parent_folder_id"
   has_many :files, dependent: :destroy, class_name: "Material", foreign_key: "folder_id"
 
-  attr_accessible :parent_folder, :course, :course_id, :name, :description
+  attr_accessible :parent_folder, :course, :course_id, :name, :description, :can_student_upload, :open_at, :close_at
 
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(id, parent_id)
@@ -111,8 +111,8 @@ class MaterialFolder < ActiveRecord::Base
   end
 
   def is_open?
-    (open_at == nil || open_at <= DateTime.new) &&
-    (close_at == nil || close_at >= DateTime.new)
+    (open_at == nil || open_at <= DateTime.now) &&
+    (close_at == nil || close_at >= DateTime.now)
   end
 
   def new_subfolder(name, description = nil)
