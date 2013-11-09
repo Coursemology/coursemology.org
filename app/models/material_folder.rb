@@ -38,6 +38,9 @@ class MaterialFolder < ActiveRecord::Base
       def can_student_upload?
         false
       end
+      def is_open?
+        true
+      end
       def files
         @files
       end
@@ -105,6 +108,11 @@ class MaterialFolder < ActiveRecord::Base
       material.description = descriptions[key]
       material.save
     end
+  end
+
+  def is_open?
+    (open_at == nil || open_at <= DateTime.new) &&
+    (close_at == nil || close_at >= DateTime.new)
   end
 
   def new_subfolder(name, description = nil)
