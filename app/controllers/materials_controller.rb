@@ -343,14 +343,16 @@ private
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
+          dname = d.name
           if d.parent_folder && d.id != folder.id then
             prefix = parent_traversal.call(d.parent_folder)
           else
             # Root should not require a separate folder.
-            return ''
+            prefix = 'root'
+            dname = ''
           end
 
-          prefix = File.join(prefix, d.name)
+          prefix = File.join(prefix, dname)
           dir_path = File.join(dir, prefix)
           Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
 
@@ -358,18 +360,17 @@ private
         }
         prefix = m.folder ? parent_traversal.call(m.folder) : ''
 
-        if prefix.length > 0 then
-          File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
-        end
+        File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
       }
 
       # Generate a file name to store the zip while we build it.
+      prefix = File.join(dir, 'root')
       zip_name = File.join(File.dirname(dir),
         Dir::Tmpname.make_tmpname(["coursemology-mat-temp-zip", ".zip"], nil))
       Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
         # Add every file in the directory to the zip file, preserving structure.
-        Dir[File.join(dir, '**', '**')].each {|file|
-          zipfile.add(file.sub(dir + '/', ''), file)
+        Dir[File.join(prefix, '**', '**')].each {|file|
+          zipfile.add(file.sub(File.join(prefix + '/'), ''), file)
         }
       }
 
