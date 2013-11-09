@@ -65,6 +65,7 @@ gem 'aws-sdk'
 gem 'gon'
 gem 'momentjs-rails'
 gem 'truncate_html'
+gem 'natcmp'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
