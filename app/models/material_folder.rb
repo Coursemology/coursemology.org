@@ -111,8 +111,8 @@ class MaterialFolder < ActiveRecord::Base
   end
 
   def is_open?
-    (open_at == nil || open_at <= DateTime.new) &&
-    (close_at == nil || close_at >= DateTime.new)
+    (open_at == nil || open_at <= DateTime.now) &&
+    (close_at == nil || close_at >= DateTime.now)
   end
 
   def new_subfolder(name, description = nil)
