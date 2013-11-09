@@ -17,16 +17,6 @@ class CoursesController < ApplicationController
     user_course.user = current_user
     user_course.role = Role.find_by_name(:lecturer)
 
-    # builds some default forum sections
-    # TODO: refactor this to somewhere else
-    cat = Forem::Category.create(:id => @course.id, :name => @course.title)
-    Forem::Forum.create(:category_id => cat.id,
-                        :name => 'General Discussion',
-                        :description => 'For general discussion')
-    Forem::Forum.create(:category_id => cat.id,
-                        :name => 'Help',
-                        :description => 'Ask your questions here')
-
     respond_to do |format|
       if @course.save  && user_course.save
         format.html { redirect_to edit_course_path(@course),
