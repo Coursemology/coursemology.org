@@ -72,7 +72,7 @@ $(document).ready(function() {
       $(this).hide();
       var that = this;
       $('.delete-confirm-button', parent).fadeIn();
-      setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 5000);
+      setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 2000);
     });
 
     $(function(){
