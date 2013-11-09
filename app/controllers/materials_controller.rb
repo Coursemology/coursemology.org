@@ -3,7 +3,7 @@ class MaterialsController < ApplicationController
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
   check_authorization
-  load_and_authorize_resource :material_folder, :parent => false, :only => [:mark_folder_read, :edit_folder, :update_folder, :destroy_folder]
+  load_and_authorize_resource :material_folder, :parent => false, :only => [:edit_folder, :update_folder, :destroy_folder]
   load_and_authorize_resource :material, :parent => false, :only => [:show, :edit, :update, :destroy]
   
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
@@ -114,6 +114,7 @@ class MaterialsController < ApplicationController
       redirect_to course_materials_path(@course)
       return
     end
+    authorize! :read, @material_folder
 
     @material_folder.materials.each { |m|
       curr_user_course.mark_as_seen(m)
@@ -150,12 +151,12 @@ class MaterialsController < ApplicationController
   end
 
   def new
-    @folder = MaterialFolder.find_by_id!(params[:parent])
+    @folder = MaterialFolder.find_by_id!(params[:id])
     authorize! :upload, @folder
   end
 
   def create
-    @parent = MaterialFolder.find_by_id!(params[:parent])
+    @parent = MaterialFolder.find_by_id!(params[:id])
     authorize! :upload, @parent
 
     notice = nil
