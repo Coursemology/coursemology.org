@@ -89,18 +89,24 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
-    get "materials/new/:parent", to: "materials#new", as: :new_material
-    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
-    get "materials/subfolder/:id/mark_read", to: "materials#mark_folder_read", as: :material_mark_folder_read
-    get "materials/subfolder/:id/:filename", to: "materials#show_by_name", as: :material_show_by_name, constraints: {filename: /[^\/]+/}
-    get "materials/subfolder/:id", to: "materials#index", as: :material_folder
-    put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
-    post "materials/subfolder/:parent", to: "materials#create", as: :material_create
-    delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
-    get "materials/virtual/:virtual", to: "materials#index_virtual", as: :material_virtual_folder
-    resources :materials, except: [:new, :create] do
-      #resources :file_uploads
+    get "materials", to: "materials#index"
+    resources :material_virtual_folders, only: [], path: "materials/virtuals", controller: 'materials' do
+      get "index", :on => :member, :to => "materials#index_virtual"
     end
+    resources :material_folders, only: [], path: "materials/folders", controller: 'materials' do
+      member do
+        get "show", to: "materials#index"
+        get "edit", to: "materials#edit_folder"
+        get "upload", to: "materials#new"
+        put "update", to: "materials#update_folder"
+        post "create", to: "materials#create"
+        delete "delete", to: "materials#delete_folder"
+      end
+
+      get "mark_read", to: "materials#mark_folder_read"
+    end
+    resources :material_files, except: [:index, :create], path: "materials/files", controller: 'materials'
+    get "materials/*path", to: "materials#show_by_name", as: :material_path
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update

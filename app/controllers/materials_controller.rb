@@ -79,7 +79,7 @@ class MaterialsController < ApplicationController
   def index_virtual
     # Find the virtual folder matching the specified ID
     @folder = (virtual_folders.select {
-        |folder| folder.id == params[:virtual] })
+        |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
 
@@ -110,8 +110,9 @@ class MaterialsController < ApplicationController
   end
 
   def mark_folder_read
+    @material_folder = MaterialFolder.where(:id => params[:material_folder_id]).first
     if not @material_folder then
-      redirect_to course_material_path(@course)
+      redirect_to course_materials_path(@course)
       return
     end
 
@@ -336,21 +337,22 @@ private
     result = nil
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      # TODO: Preserve directory structure
       folder.materials.accessible_by(current_ability).each { |m|
         temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
+          dname = d.name
           if d.parent_folder && d.id != folder.id then
             prefix = parent_traversal.call(d.parent_folder)
           else
             # Root should not require a separate folder.
-            return ''
+            prefix = 'root'
+            dname = ''
           end
 
-          prefix = File.join(prefix, d.name)
+          prefix = File.join(prefix, dname)
           dir_path = File.join(dir, prefix)
           Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
 
@@ -358,18 +360,17 @@ private
         }
         prefix = m.folder ? parent_traversal.call(m.folder) : ''
 
-        if prefix.length > 0 then
-          File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
-        end
+        File.rename(temp_path, File.join(dir, prefix, File.basename(temp_path)))
       }
 
       # Generate a file name to store the zip while we build it.
+      prefix = File.join(dir, 'root')
       zip_name = File.join(File.dirname(dir),
         Dir::Tmpname.make_tmpname(["coursemology-mat-temp-zip", ".zip"], nil))
       Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
         # Add every file in the directory to the zip file, preserving structure.
-        Dir[File.join(dir, '**', '**')].each {|file|
-          zipfile.add(file.sub(dir + '/', ''), file)
+        Dir[File.join(prefix, '**', '**')].each {|file|
+          zipfile.add(file.sub(File.join(prefix + '/'), ''), file)
         }
       }
 
