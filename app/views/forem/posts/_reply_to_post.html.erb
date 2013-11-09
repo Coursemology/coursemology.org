@@ -2,7 +2,11 @@
 <div id='post_<%= post.id %>' class='reply_to_post post <%= cycle('odd', 'even') -%> span10'>
   <div class='user span2' style='width:70px;'>
     <div class='username'>
-      <a href="<%= main_app.course_user_course_path(@course, post.user.get_user_course(@course).id) %>"><%= post.user %></a>
+      <% if user_course = post.user.get_user_course(@course)  %>
+          <a href="<%= main_app.course_user_course_path(@course, user_course) %>"><%= post.user %></a>
+      <% else %>
+          <%= post.user %>
+      <% end %>
     </div>
     <div class='icon'>
       <img class="user-profile-pic" src="<%= post.user.get_profile_photo_url %>"/>
