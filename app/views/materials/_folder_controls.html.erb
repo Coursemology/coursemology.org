@@ -29,7 +29,7 @@
         course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
     <% if not(@folder.is_virtual) %>
-    <%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
+    <%= link_to "Mark as Seen", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
   </span>
 </div>
