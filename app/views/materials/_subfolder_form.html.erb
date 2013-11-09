@@ -1,5 +1,5 @@
 <%= folder_to_change.inspect %>
-<% form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :url => course_material_folder_path(@course, folder_to_change), :method => subfolder_method do |f| %>
+<%= form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :method => subfolder_method do |f| %>
   <div class="<%= modal ? 'modal-body' : '' %>">
     <div class="row-fluid control-group">
       <%= f.label :name, :class => 'control-label' %>
@@ -56,7 +56,9 @@
         <button type="button" class="btn" data-dismiss="modal">Cancel</button>
       <% else %>
         <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                    course_material_folder_path(@course, folder_to_change.parent_folder), :class => 'btn' %>
+                    folder_to_change.parent_folder ?
+                      course_material_folder_path(@course, folder_to_change.parent_folder) :
+                      course_materials_path(@course), :class => 'btn' %>
       <% end %>
     </div>
   </div>

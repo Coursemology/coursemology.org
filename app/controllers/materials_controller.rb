@@ -9,7 +9,6 @@ class MaterialsController < ApplicationController
   before_filter :load_general_course_data, except: [:destroy, :destroy_folder]
 
   def index
-    @subfolder = MaterialFolder.new()
     @folder = if params[:id] then
                 MaterialFolder.find_by_id(params[:id])
               else

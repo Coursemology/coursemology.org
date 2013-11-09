@@ -94,12 +94,12 @@ JfdiAcademy::Application.routes.draw do
       get "index", :on => :member, :to => "materials#index_virtual"
     end
     resources :material_folders, only: [], path: "materials/folders", controller: 'materials' do
+      post "create", :on => :collection, to: "materials#create"
       member do
         get "show", to: "materials#index"
         get "edit", to: "materials#edit_folder"
         get "upload", to: "materials#new"
         put "update", to: "materials#update_folder"
-        post "create", to: "materials#create"
         delete "delete", to: "materials#delete_folder"
       end
 
