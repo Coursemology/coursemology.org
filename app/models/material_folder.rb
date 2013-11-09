@@ -86,12 +86,17 @@ class MaterialFolder < ActiveRecord::Base
     f
   end
 
+  def subfolders_recursive
+    [self] + (subfolders.map{|subfolder|
+      subfolder.subfolders_recursive
+    }).reduce([]) {|e, accum|
+      e + accum
+    }
+  end
+
   def materials
-    result = []
-    self.subfolders.each { |f| result += f.materials }
-    self.files.each { |f| result += [f] }
-    
-    result
+    subfolder_recursive_ids = subfolders_recursive
+    Material.where(:folder_id => subfolder_recursive_ids)
   end
 
   def attach_files(files, descriptions)
