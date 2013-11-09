@@ -145,7 +145,7 @@ class MaterialsController < ApplicationController
 
   def create
     @parent = MaterialFolder.find_by_id!(params[:parent])
-    authorize! :upload, @folder
+    authorize! :upload, @parent
 
     notice = nil
     if params[:type] == "files" && params[:files] then
