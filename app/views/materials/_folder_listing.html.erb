@@ -17,13 +17,13 @@
             else 1
             end
           else
-            left.name.downcase <=> right.name.downcase
+            Natcmp.natcmp left.name, right.name
           end
         }).each do |subfolder| %>
     <%= render partial: "folder", :locals => { :subfolder => subfolder } %>
     <% end %>
 
-    <% @files.sort_by{|file| file.filename.downcase}.each do |material| %>
+    <% @files.sort {|left, right| Natcmp.natcmp left.filename, right.filename }.each do |material| %>
     <%= render partial: "file", :locals => { :material => material } %>
     <% end %>
   </tbody>
