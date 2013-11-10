@@ -54,6 +54,10 @@ Forem::PostsController.class_eval do
   end
 
   def ensure_post_ownership!
+    if @course.blank?
+      @course = Course.find(params[:course_id])
+    end
+    
     unless @post.owner_or_admin? forem_user or can? :manage, Course
       flash[:alert] = t("forem.post.cannot_delete")
       redirect_to main_app.course_forum_topic_url(@course, @forum, @topic) and return
