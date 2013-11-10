@@ -256,7 +256,10 @@ class Course < ActiveRecord::Base
     begin
       cat = Forem::Category.find(self.id)
     rescue ActiveRecord::RecordNotFound
-      cat = Forem::Category.create(:id => self.id, :name => self.title)
+      cat = Forem::Category.new(:name => self.title)
+      cat.id = self.id 
+      cat.save
+
       Forem::Forum.create(:category_id => cat.id,
                           :name => 'General Discussion',
                           :description => 'For general discussion')
