@@ -130,7 +130,7 @@
         });
 
         $('#fileupload').fileupload({
-            maxFileSize: 5000000,
+            maxFileSize: 50000000,
             autoUpload: true,
             uploadTemplateId: 'template-upload-complicated',
             downloadTemplateId: 'template-download-complicated',
@@ -140,7 +140,17 @@
                     value: 'MUL'
                 }]
         });
-        //
+
+        // Register our handler for deleting items so deleted IDs won't be sent
+        // to the server.
+        $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
+          var $row = $(this).parents('tr.template-download')
+          var input = $('input.uploaded-files', $row)[0];
+
+          // Match the input with the same name as the file we are deleting.
+          $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
+        });
+
         // Load existing files:
         $.getJSON($('#fileupload').prop('action'), function (files) {
             var fu = $('#fileupload').data('blueimpFileupload'),

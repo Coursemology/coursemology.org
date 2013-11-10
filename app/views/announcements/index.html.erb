@@ -14,7 +14,7 @@
       <h2>
         <% if @is_new.has_key?(announcement.id) %>
             <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
-            <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/256x256/promotion_new.png">
+            <img class="asm-new-icon" src="http://c.dryicons.com/images/icon_sets/colorful_stickers_part_3_icons_set/png/48x48/promotion_new.png">
         <% end %>
         <%= announcement.title %>
         <% if can? :manage, Announcement %>

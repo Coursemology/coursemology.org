@@ -27,3 +27,8 @@ en:
         pin:
           'true': Unpin
           'false': Pin
+  materials:
+    subfolder_items:
+      zero: "empty"
+      one: "1 item"
+      other: "%{count} items"

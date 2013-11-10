@@ -231,7 +231,7 @@ class MissionsController < ApplicationController
     end
 
     sbms = @mission.submissions.
-        where("std_course_id IN (?)", std_courses.select("user_courses.id")).includes(:std_coding_answers)
+        where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:std_coding_answers)
 
     temp_folder = "#{Rails.root}/paths/tmp/"
 
@@ -244,7 +244,9 @@ class MissionsController < ApplicationController
           next
         end
         #TODO: hardcoded
-        title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
+        #title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
+        #only student name
+        title = "#{ sbm.std_course.name.gsub(/\//,"_") }.py"
         file = File.open(temp_folder + title, 'w+')
         file.write(ans.code)
         file.close

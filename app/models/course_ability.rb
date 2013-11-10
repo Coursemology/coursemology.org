@@ -88,6 +88,8 @@ class CourseAbility
       can :read, Announcement, Announcement.published do |ann|
         ann.publish_at <= Time.now
       end
+      can :read, [Material, MaterialFolder]
+      can :read, [LessonPlanEntry, LessonPlanMilestone]
 
       can :read, [Mission, Training, Survey], publish: true
 

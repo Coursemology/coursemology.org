@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui.min
 //= require jquery-fileupload
+//= require tree.jquery.js
 //= require_tree .
 //
 //= require bootstrap-dropdown
@@ -34,6 +35,7 @@
 //= require codemirror/modes/python
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
+//= require moment
 
 $(document).ready(function() {
 
@@ -41,6 +43,24 @@ $(document).ready(function() {
         format: 'dd-MM-yyyy hh:mm:ss',
         language: 'pt-BR',
         startDate: new Date()
+    });
+    
+    $('.datepicker').datetimepicker({
+        format: 'dd-MM-yyyy',
+        language: 'pt-BR',
+        startDate: new Date(),
+        pickTime: false
+    });
+    
+    $('.datetimepicker-past').datetimepicker({
+        format: 'dd-MM-yyyy hh:mm:ss',
+        language: 'pt-BR'
+    });
+
+    $('.datepicker-past').datetimepicker({
+        format: 'dd-MM-yyyy',
+        language: 'pt-BR',
+        pickTime: false
     });
 
     $('.datepicker').datetimepicker({
@@ -110,6 +130,12 @@ $(document).ready(function() {
         }
     });
     $(':input[type=number]' ).live('mousewheel',function(e){ $(this).blur(); });
+
+    // Make sure that all links with the disabled tag or disabled attribute
+    // do not trigger a navigation
+    $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
+      e.preventDefault();
+    });
 });
 
 var _jfdiFormatFunc = function(i, d){

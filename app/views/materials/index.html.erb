@@ -1,0 +1,19 @@
+<%- model_class = MaterialFolder -%>
+<div class="page-header">
+  <h1>Workbin: <%= @folder.name %></h1>
+  <% if @folder.description %>
+  <div>
+    <p><%= @folder.description.html_safe %></p>
+  </div>
+  <% end %>
+</div>
+
+<div class="container">
+  <div class="span2">
+    <%= render :partial => 'folder_tree' %>
+  </div>
+  <div class="span7">
+    <%= render :partial => 'folder_controls' %>
+    <%= render :partial => 'folder_listing' %>
+  </div>
+</div>

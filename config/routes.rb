@@ -96,6 +96,19 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
+    get "materials/new/:parent", to: "materials#new", as: :new_material
+    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
+    get "materials/subfolder/:id/mark_read", to: "materials#mark_folder_read", as: :material_mark_folder_read
+    get "materials/subfolder/:id/:filename", to: "materials#show_by_name", as: :material_show_by_name, constraints: {filename: /[^\/]+/}
+    get "materials/subfolder/:id", to: "materials#index", as: :material_folder
+    put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
+    post "materials/subfolder/:parent", to: "materials#create", as: :material_create
+    delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
+    get "materials/virtual/:virtual", to: "materials#index_virtual", as: :material_virtual_folder
+    resources :materials, except: [:new, :create] do
+      #resources :file_uploads
+    end
+
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
     match "missions/:id/access_denied" => "missions#access_denied", as: :mission_access_denied
@@ -176,6 +189,10 @@ JfdiAcademy::Application.routes.draw do
 
     match "surveys/:id/stats" => "surveys#stats", as: :survey_stats
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
+
+    get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
+    resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
+    resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 

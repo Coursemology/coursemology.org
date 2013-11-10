@@ -48,5 +48,29 @@ class Training < ActiveRecord::Base
     coding_questions.where("pos < ?", pos)
   end
 
+  def can_start?(curr_user_course)
+    if self.open_at > Time.now then
+      return false, "Training hasn't opened yet :)"
+    end
+    return true, ""
+  end
+
+  # Converts this training into a format that can be used by the lesson plan component
+  def as_lesson_plan_entry
+    entry = LessonPlanEntry.create_virtual
+    entry.title = self.title
+    entry.description = self.description
+    entry.entry_real_type = "Training"
+    entry.start_at = self.open_at
+    entry.end_at = nil
+    entry.url = course_training_path(self.course, self)
+    entry.is_published = self.publish
+    entry
+  end
+
+  def published?
+    publish?
+  end
+
   alias_method :sbms, :training_submissions
 end

@@ -3,13 +3,17 @@ class Course < ActiveRecord::Base
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open
   before_create :populate_preference
+  after_create :create_materials_root
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions,       dependent: :destroy
-  has_many :announcements,  dependent: :destroy
-  has_many :user_courses,   dependent: :destroy
-  has_many :trainings,      dependent: :destroy
+  has_many :missions,          dependent: :destroy
+  has_many :announcements,     dependent: :destroy
+  has_many :user_courses ,     dependent: :destroy
+  has_many :trainings,         dependent: :destroy
+  has_many :lesson_plan_entries, dependent: :destroy
+  has_many :lesson_plan_milestones, dependent: :destroy
+  has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
@@ -266,6 +270,10 @@ class Course < ActiveRecord::Base
     end
   end
 
+  def create_materials_root
+    MaterialFolder.create(:course => self, :name => "Root")
+  end
+
   def enrol_user(user, role)
     if UserCourse.where(course_id: self, user_id: user).first
       return
@@ -283,5 +291,79 @@ class Course < ActiveRecord::Base
 
   def self.online_course
     Course.where(is_publish: true)
+  end
+
+  def lesson_plan_virtual_entries(from = nil, to = nil)
+    missions = self.missions.where("TRUE " +
+      (if from then "AND open_at >= :from " else "" end) +
+      (if to then "AND open_at <= :to" else "" end),
+      :from => from, :to => to
+    )
+
+    entries = missions.map { |m| m.as_lesson_plan_entry }
+
+    trainings = self.trainings.where("TRUE " +
+      (if from then "AND open_at >= :from " else "" end) +
+      (if to then "AND open_at <= :to" else "" end),
+      :from => from, :to => to
+    )
+
+    entries += trainings.map { |t| t.as_lesson_plan_entry }
+  end
+
+  def workbin_virtual_entries
+    mission_files =
+      # Get the missions' files, and map it to the virtual entries.
+      (self.missions.map { |m|
+        m.files.map { |f|
+          material = Material.create_virtual(m, f)
+          material.file = f
+          material.filename = m.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
+          material.url = f.file.url
+
+          material
+        }
+      })
+      .reduce { |mission, files| mission + files }
+
+    # Make sure we return at least an empty list, in case there are no missions.
+    if mission_files == nil
+      mission_files = []
+    end
+
+    missions = MaterialFolder.create_virtual("missions", material_folder.id)
+    missions.name = "Missions"
+    missions.description = "Mission descriptions and other files"
+    missions.files = mission_files
+
+    training_files =
+      # Get the trainings' files, and map it to the virtual entries.
+      (self.trainings.map { |t|
+        t.files.map { |f|
+          material = Material.create_virtual(t, f)
+          material.file = f
+          material.filename = t.title + ": " + f.original_name
+          material.filesize = f.file_file_size
+          material.updated_at = f.file_updated_at
+          material.url = f.file.url
+
+          material
+        }
+      })
+      .reduce { |training, files| training + files }
+
+    # Make sure we return at least an empty list, in case there are no trainings.
+    if training_files == nil
+      training_files = []
+    end
+
+    trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
+    trainings.name = "Trainings"
+    trainings.description = "Training descriptions and other files"
+    trainings.files = training_files
+
+    [missions, trainings]
   end
 end
