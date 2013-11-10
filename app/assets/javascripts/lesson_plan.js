@@ -35,14 +35,14 @@ $(document).ready(function() {
   
   $('#lesson-plan-hide-all').click(function() {
     $('.lesson-plan-body').slideUp();
-    $('.lesson-plan-body').data("hidden", "true");
+    $('.lesson-plan-body').data("hidden", true);
     $('.lesson-plan-show-entries').show();
     $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
     $('.lesson-plan-body').slideDown();
-    $('.lesson-plan-body').data("hidden", "false");
+    $('.lesson-plan-body').data("hidden", false);
     $('.lesson-plan-show-entries').hide();
     $('.lesson-plan-hide-entries').show();
   });
