@@ -8,12 +8,12 @@ Forem::ApplicationController.class_eval do
   end
 
   def forem_admin?
-    can? :manage, Course
+    can? :manage, Forem
   end
   helper_method :forem_admin?
 
   def forem_admin_or_moderator?(forum)
-    can? :manage, Course
+    can? :manage, Forem
   end
   helper_method :forem_admin_or_moderator?
 
@@ -21,7 +21,7 @@ Forem::ApplicationController.class_eval do
 
   def ensure_logged_in
     if @course
-      unless curr_user_course.is_student? || (can? :manage, Course)
+      unless curr_user_course.is_student? || (can? :manage, Forem)
         redirect_to main_app.course_url(@course)
       end
     end
