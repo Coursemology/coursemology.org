@@ -90,10 +90,10 @@ JfdiAcademy::Application.routes.draw do
     resources :announcements
 
     get "materials", to: "materials#index"
-    resources :material_virtual_folders, only: [], path: "materials/virtuals", controller: 'materials' do
+    resources :material_virtual_folders, only: [], path: "materials/virtuals", controller: "materials" do
       get "index", :on => :member, :to => "materials#index_virtual"
     end
-    resources :material_folders, only: [], path: "materials/folders", controller: 'materials' do
+    resources :material_folders, only: [], path: "materials/folders", controller: "materials" do
       post "create", :on => :collection, to: "materials#create"
       member do
         get "show", to: "materials#index"
@@ -106,8 +106,9 @@ JfdiAcademy::Application.routes.draw do
 
       get "mark_read", to: "materials#mark_folder_read"
     end
-    resources :material_files, except: [:index, :create], path: "materials/files", controller: 'materials'
-    get "materials/*path", to: "materials#show_by_name", as: :material_path
+    resources :material_files, except: [:index, :create], path: "materials/files", controller: "materials"
+    get "materials/files/:id", to: "materials#show", as: :material # Alias for url_for with Material objects
+    get "materials/*path", to: "materials#show_by_name", as: :material_by_path
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
