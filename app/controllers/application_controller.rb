@@ -142,12 +142,12 @@ class ApplicationController < ActionController::Base
                         #count:  counts[:submissions] || 0
                     }, {
                         text:   "Lesson Plan",
-                        url:    course_lesson_plan_url(@course),
+                        url:    main_app.course_lesson_plan_url(@course),
                         img:    @theme_settings["Lesson Plan Icon"],
                         icon:   "icon-time"
                     }, {
                         text:   "Workbin",
-                        url:    course_materials_url(@course),
+                        url:    main_app.course_materials_url(@course),
                         img:    @theme_settings["Materials Icon"],
                         icon:   "icon-download",
                         count:  counts[:materials] || 0
@@ -368,10 +368,10 @@ class ApplicationController < ActionController::Base
         url = main_app.course_forums_url(@course)
         icon = 'icon-th-list'
       when 'lesson_plan'
-        url = course_lesson_plan_path(@course)
+        url = main_app.course_lesson_plan_path(@course)
         icon = 'icon-time'
       when 'materials'
-        url = course_materials_path(@course)
+        url = main_app.course_materials_path(@course)
         icon = 'icon-download'
     end
     [url, icon]
