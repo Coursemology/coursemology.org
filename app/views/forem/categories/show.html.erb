@@ -1,0 +1,8 @@
+<div class='category'>
+  <div id='forum_topic_links' class='btn-group pull-right'>
+    <% if curr_user_course.is_staff? %>
+        <%= link_to "Manage Forum Sections", main_app.course_forums_admin_path(@course), :class => "btn btn-primary" %>
+    <% end %>
+  </div>
+  <%= render @category %>
+</div>

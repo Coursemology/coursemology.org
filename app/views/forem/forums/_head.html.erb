@@ -1,0 +1,35 @@
+<div id='forum'>
+  <div id='forum_topic_links' class='btn-group pull-right'>
+    <% unless @topic.try(:new_record?) %>
+      <%= link_to t('forem.topic.links.new'), main_app.new_course_forum_topic_path(@course, forum), :class => "btn btn-primary" %>
+    <% end %>
+    <% if @topic %>
+      <%= link_to t('forem.topic.links.back_to_topics'), main_app.course_forum_path(@course, forum), :class => "btn" %>
+    <% end %>
+    <% if curr_user_course.is_staff? %>
+      <!--<%= link_to t('forem.forum.moderator_tools'), forem.forum_moderator_tools_path(forum), :class => "btn btn-inverse" %>-->
+    <% end %>
+  </div>
+  <div class="page-header">
+    <h1>Forums</h1>
+    <ul class="breadcrumb">
+      <li>
+        <%= link_to main_app.course_forums_path(@course) do %>
+            <%= content_tag :i, '', :class => 'icon-home' %>
+        <% end %>
+        <span class="divider">/</span>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <%= forem_emojify(forum.title) %> <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <% category = Forem::Category.find(@course.id) %>
+          <% category.forums.each do |f|  %>
+              <li><%= link_to f.title, main_app.course_forum_path(@course, f) %></li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

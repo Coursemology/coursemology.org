@@ -1,14 +1,14 @@
-<a href="<%= course_path(@course) %>">
+<a href="<%= main_app.course_path(@course) %>">
   <img class="sidebar-course-logo"  src="<%= @course.logo_url %>" />
 </a>
 
 <% if curr_user_course.id %>
     <div class="user-sidebar-container">
       <div class="user-sidebar-profile">
-        <a class="user-thumb-profile" href="<%= course_user_course_path(@course, curr_user_course)%>">
+        <a class="user-thumb-profile" href="<%= main_app.course_user_course_path(@course, curr_user_course)%>">
           <img class="user-profile-pic" src="<%= current_user.get_profile_photo_url %>" />
         </a>
-        <div id="user-profile-name"> <a href="<%= course_user_course_path(@course, curr_user_course)%>">
+        <div id="user-profile-name"> <a href="<%= main_app.course_user_course_path(@course, curr_user_course)%>">
           <%= current_user.name %></a></div>
         <div class="clearfix"></div>
       </div>
@@ -18,8 +18,8 @@
             <thead>
             <tr>
               <% # <th>Ranking</th> %>
-              <th><%= link_to 'Achievement', course_achievements_path(@course) %></th>
-              <th><%= link_to 'Level', course_user_course_exp_transactions_path(@course, curr_user_course) %><th>
+              <th><%= link_to 'Achievement', main_app.course_achievements_path(@course) %></th>
+              <th><%= link_to 'Level', main_app.course_user_course_exp_transactions_path(@course, curr_user_course) %><th>
             </tr>
             </thead>
             <tbody>

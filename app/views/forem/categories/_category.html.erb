@@ -1,0 +1,7 @@
+<div class="page-header">
+  <h1><%=t '.title', :default => "Forums" %></h1>
+</div>
+<div id='category_<%= category.id %>' class='category'>
+  <!--<h2><%= link_to forem_emojify(category.name), [forem, category] %></h2>-->
+  <%= render "/forem/forums/listing", :category => category %>
+</div>

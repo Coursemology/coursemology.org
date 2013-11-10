@@ -1,0 +1,67 @@
+<a class='post-anchor' name='post-<%= post.id %>'></a>
+<div class="row" style="padding:5px;">
+  <div id='post_<%= post_counter + 1 %>' class='post <%= cycle('odd', 'even') -%> span12'>
+      <% if post.pending_review? %>
+      <div class='moderation alert'>
+        <%= t(".pending_review") %>
+        <% if forem_admin_or_moderator?(post.topic.forum) %>
+          <% if local_assigns[:mass_moderation] %>
+            <%= render "/forem/posts/moderation_tools", :post => post %>
+          <% else %>
+            <%= form_tag forem.forum_moderate_posts_path(post.topic.forum), :method => :put do %>
+              <%= render "/forem/posts/moderation_tools", :post => post %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class='user span1' style="text-align:right;">
+      <h5 class='username'>
+        <% if user_course = post.user.get_user_course(@course)  %>
+            <a href="<%= main_app.course_user_course_path(@course, user_course) %>"><%= post.user %></a>
+        <% else %>
+            <%= post.user %>
+        <% end %>
+      </h5>
+      <div class='icon' style="float:right;">
+        <img class="user-profile-pic" src="<%= post.user.get_profile_photo_url %>"/>
+      </div>
+    </div>
+
+    <div class='contents span7 thumbnail' style="padding:20px;">
+      <%=raw forem_format(post.text) %>
+
+      <% if post.reply_to %>
+        <div class='in-reply-to'>
+          <%= link_to "#{t("forem.post.in_reply_to")} #{post.reply_to.user}", "#post-#{post.reply_to.id}" %>
+        </div>
+      <% end %>
+
+      <div>
+      <a href='#post-<%= post.id %>'>
+        <time datetime="<%= post.created_at.to_s(:db) -%>"><%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %></time>
+      </a>
+      <% if forem_user %>
+        <div class="pull-right">
+          <span style="padding:5px; <%= (likes = post.likes.size) > 0 ? '' : 'display:none;' %>">
+            <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
+          </span>
+          <% if !forem_user.voted_for? post %>
+            <%= button_tag "Like", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id}", "data-toggle" => "button" %>
+          <% else %>
+            <%= button_tag "Unlike", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id} active", "data-toggle" => "button" %>
+          <% end %>
+          <% if post.topic.can_be_replied_to? %>
+            <%= link_to t('reply', :scope => 'forem.topic'), main_app.new_course_forum_topic_post_path(@course, @forum, post.topic, :reply_to_id => post.id), :class => "btn" %>
+          <% end %>
+          <% if post.owner_or_admin?(forem_user) || curr_user_course.is_staff? %>
+            <%= link_to t('edit', :scope => 'forem.post'), main_app.edit_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => "btn" %>
+            <%= link_to t('delete', :scope => 'forem.topic'), main_app.course_forum_topic_post_path(@course, @forum, post.topic, post), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn" %>
+          <% end %>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>

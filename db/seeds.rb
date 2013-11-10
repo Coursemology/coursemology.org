@@ -564,3 +564,12 @@ if PreferableItem.count == 59
                          description:   "Lesson Plan",
                          default_display: true
 end
+
+if PreferableItem.count == 60
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "forums",
+                         default_value: "Forums",
+                         description:   "Discussion Forums",
+                         default_display: true
+end

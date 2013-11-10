@@ -1,4 +1,10 @@
 class ApplicationController < ActionController::Base
+
+  def forem_user
+    current_user
+  end
+  helper_method :forem_user
+
   protect_from_forgery
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
@@ -112,72 +118,77 @@ class ApplicationController < ActionController::Base
     if can? :manage, Course
       @nav_items = [{
                         text:   "Announcements",
-                        url:    course_announcements_url(@course),
+                        url:    main_app.course_announcements_url(@course),
                         img:    @theme_settings["Announcements Icon"],
                         icon:   "icon-bullhorn",
                         count:  counts[:announcements] || 0
                     }, {
                         text:   "Missions",
-                        url:    course_missions_url(@course),
+                        url:    main_app.course_missions_url(@course),
                         img:    @theme_settings["Missions Icon"],
                         icon:   "icon-fighter-jet",
                         count:   counts[:missions] || 0
                     }, {
                         text:   "Trainings",
-                        url:    course_trainings_url(@course),
+                        url:    main_app.course_trainings_url(@course),
                         img:    @theme_settings["Trainings Icon"],
                         icon:   "icon-upload-alt",
                         count:  counts[:trainings] || 0
                     }, {
                         text:   "Submissions",
-                        url:    course_submissions_url(@course),
+                        url:    main_app.course_submissions_url(@course),
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
                     }, {
                         text:   "Lesson Plan",
-                        url:    course_lesson_plan_url(@course),
+                        url:    main_app.course_lesson_plan_url(@course),
                         img:    @theme_settings["Lesson Plan Icon"],
                         icon:   "icon-time"
                     }, {
                         text:   "Workbin",
-                        url:    course_materials_url(@course),
+                        url:    main_app.course_materials_url(@course),
                         img:    @theme_settings["Materials Icon"],
                         icon:   "icon-download",
                         count:  counts[:materials] || 0
                     }]
       @nav_items <<   {
           text:   "Comments",
-          url:    course_comments_url(@course),
+          url:    main_app.course_comments_url(@course),
           icon:   "icon-comments",
           count:  counts[:pending_comments] || 0
       }
       @nav_items <<    {
           text: "Pending Gradings",
-          url:  course_pending_gradings_url(@course),
+          url:  main_app.course_pending_gradings_url(@course),
           icon: "icon-question-sign",
           count: counts[:pending_grading] || 0
       }
       @nav_items << {
           text:   "Achievements",
-          url:    course_achievements_url(@course),
+          url:    main_app.course_achievements_url(@course),
           icon:   "icon-trophy"
       }
       @nav_items <<    {
           text:   "Leaderboard",
-          url:    course_leaderboards_url(@course),
+          url:    main_app.course_leaderboards_url(@course),
           img:    @theme_settings["Leaderboards Icon"],
           icon:   "icon-star-empty"
       }
       @nav_items <<    {
           text:   "Students",
-          url:    course_students_url(@course),
+          url:    main_app.course_students_url(@course),
           icon:   "icon-group",
       }
       @nav_items << {
           text: "Survey",
-          url: course_surveys_path(@course),
+          url: main_app.course_surveys_path(@course),
           icon: "icon-edit"
+      }
+      @nav_items << {
+          text:   "Forums",
+          url:    main_app.course_forums_url(@course),
+          icon:   "icon-th-list",
       }
     end
 
@@ -186,83 +197,88 @@ class ApplicationController < ActionController::Base
       if curr_user_course.is_staff?
         @admin_nav_items << {
             text: "My Students",
-            url: course_manage_group_url(@course),
+            url: main_app.course_manage_group_url(@course),
+            icon: "icon-group"
+        }
+        @admin_nav_items << {
+            text: "Forum Participation",
+            url:  main_app.course_forum_participation_url(@course),
             icon: "icon-group"
         }
       end
       @admin_nav_items << {
           text: "Manage Staff",
-          url:  course_staff_url(@course),
+          url:  main_app.course_staff_url(@course),
           icon: "icon-user"
       }
       @admin_nav_items << {
           text: "Manage Students",
-          url:  course_manage_students_url(@course),
+          url:  main_app.course_manage_students_url(@course),
           icon: "icon-user"
       }
 
       @admin_nav_items << {
           text: "Student Summary",
-          url:  course_student_summary_index_path(@course),
+          url:  main_app.course_student_summary_index_path(@course),
           icon: "icon-user"
       }
 
       @admin_nav_items << {
           text: "Tutor Summary",
-          url: course_staff_monitoring_path(@course),
+          url: main_app.course_staff_monitoring_path(@course),
           icon: "icon-trophy"
       }
       @admin_nav_items << {
           text:   "Levels",
-          url:    course_levels_url(@course),
+          url:    main_app.course_levels_url(@course),
           icon:   "icon-star-empty"
       }
 
       @admin_nav_items << {
           text: "Tags",
-          url: course_tags_url(@course),
+          url: main_app.course_tags_url(@course),
           icon: "icon-tags"
       }
       @admin_nav_items << {
           text: "Award Give-away",
-          url: course_manual_exp_url(@course),
+          url: main_app.course_manual_exp_url(@course),
           icon: "icon-star"
       }
       @admin_nav_items << {
           text: "Statistics",
-          url: course_stats_url(@course),
+          url: main_app.course_stats_url(@course),
           icon: "icon-bar-chart"
       }
 
       @admin_nav_items << {
           text: "Enrollment",
-          url: course_enroll_requests_url(@course),
+          url: main_app.course_enroll_requests_url(@course),
           icon: "icon-bolt",
           count: counts[:pending_enrol] || 0
       }
 
       @admin_nav_items << {
           text: "Mass Enrollment",
-          url: course_mass_enrollment_emails_path(@course),
+          url: main_app.course_mass_enrollment_emails_path(@course),
           icon: "icon-bolt"
       }
     end
     if can? :share, Course
       @admin_nav_items << {
           text: "Duplicate Data",
-          url: course_duplicate_url(@course),
+          url: main_app.course_duplicate_url(@course),
           icon: "icon-bolt"
       }
     end
     if can? :manage, Course
       @admin_nav_items << {
           text: "Course Settings",
-          url: edit_course_url(@course),
+          url: main_app.edit_course_url(@course),
           icon: "icon-cog"
       }
       @admin_nav_items << {
           text: "Preference Settings",
-          url: course_preferences_path(@course),
+          url: main_app.course_preferences_path(@course),
           icon: "icon-cog"
       }
     end
@@ -322,37 +338,40 @@ class ApplicationController < ActionController::Base
     icon = 'icon-star'
     case item
       when 'announcements'
-        url = course_announcements_path(@course)
+        url = main_app.course_announcements_path(@course)
         icon = 'icon-bullhorn'
       when 'missions'
-        url = course_missions_url(@course)
+        url = main_app.course_missions_url(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = course_trainings_path(@course)
+        url = main_app.course_trainings_path(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
-        url = course_submissions_path(@course)
+        url = main_app.course_submissions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
-        url = course_achievements_url(@course)
+        url = main_app.course_achievements_url(@course)
         icon = 'icon-trophy'
       when 'leaderboard'
-        url =  course_leaderboards_url(@course)
+        url =  main_app.course_leaderboards_url(@course)
         icon = 'icon-star-empty'
       when 'students'
-        url = course_students_url(@course)
+        url = main_app.course_students_url(@course)
         icon = 'icon-group'
       when 'comments'
-        url = course_comments_url(@course)
+        url = main_app.course_comments_url(@course)
         icon = 'icon-comments'
       when 'surveys'
-        url = course_surveys_path(@course)
+        url = main_app.course_surveys_path(@course)
         icon = 'icon-edit'
+      when 'forums'
+        url = main_app.course_forums_url(@course)
+        icon = 'icon-th-list'
       when 'lesson_plan'
-        url = course_lesson_plan_path(@course)
+        url = main_app.course_lesson_plan_path(@course)
         icon = 'icon-time'
       when 'materials'
-        url = course_materials_path(@course)
+        url = main_app.course_materials_path(@course)
         icon = 'icon-download'
     end
     [url, icon]

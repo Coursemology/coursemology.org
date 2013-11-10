@@ -1,0 +1,60 @@
+<% if (!@is_raw) %>
+  <div class="page-header">
+    <table>
+      <tr>
+        <td>
+          <img class="user-profile-pic"
+               src="<%= @user_course.user.get_profile_photo_url %>" />
+        </td>
+        <td style="padding-left: 10px">
+          <a id="student-large" href="<%= course_user_course_path(@course, @user_course)%>"><%= @user_course.name %></a>
+          <p><%= @user_course.user.email %></p>
+        </td>
+      </tr>
+    </table>
+    <h3>
+      <%= @from_date ? date_dmy_to_readable_format(@from_date) : '' %> to <%= @to_date ? date_dmy_to_readable_format(@to_date) : ''%>
+      </h3>
+      <h4>
+        Post count: <%= @result.length %>
+    </h4>
+  </div>
+<% end %>
+<table class="table" id="dg-std-table">
+  <thead>
+  <th>
+    Post Content
+  </th>
+  <th>
+    Likes
+  </th>
+  <th>
+    Date Posted
+  </th>
+  </thead>
+  <tbody>
+  <% if (@result.length == 0) %>
+    <tr>
+      <td colspan="3">
+        No posts found.
+      </td>
+    </tr>
+  <% end %>
+  <% @result.each do |post| %>
+      <tr>
+        <td>
+          <h5>Thread: <%= post[:subject] %></h5>
+
+          <%=raw forem_format post[:text] %>
+        </td>
+        <td>
+          <%= post[:likes] %>
+        </td>
+        <td style="white-space: nowrap">
+          <%= link_to datetime_no_seconds(post[:created]),
+                      main_app.course_forum_topic_path(@course, post[:forum], post[:topic_id], :anchor => 'post-' + post[:id].to_s) %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

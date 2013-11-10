@@ -9,6 +9,24 @@ en:
       new_mrq:  "New MRQ Question"
       new_qn:   "New Question"
 
+  # overriding Forem locales
+  forem:
+    post:
+      buttons:
+        edit: "Save"
+    topics:
+      show:
+        links:
+          edit: Edit
+        hide:
+          'true': Show
+          'false': Hide
+        lock:
+          'true': Unlock
+          'false': Lock
+        pin:
+          'true': Unpin
+          'false': Pin
   materials:
     subfolder_items:
       zero: "empty"

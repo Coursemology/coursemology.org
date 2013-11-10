@@ -1,0 +1,73 @@
+<div class="page-header">
+  <h1>Forum Participation </h1>
+</div>
+
+<%= render :partial => "prefs" %>
+
+<%= form_for(@course, url: course_manage_update_exp_path,
+             html: { method: :post, class: "form-horizontal" } ) do |f| %>
+  <table class="table" id="dg-std-table">
+    <thead>
+    <th>
+      Name
+    </th>
+    <th>
+      Level
+    </th>
+    <th>
+      Exp
+    </th>
+    <th>
+      Post Count
+    </th>
+    <th>
+      Likes Earned
+    </th>
+    <th>
+      View Top Posts
+    </th>
+    <th>
+      Add Exp
+    </th>
+    </thead>
+    <tbody>
+    <% @post_count.each do |entry| %>
+      <tr>
+        <td><%= link_to entry[:name], course_user_course_path(@course, entry[:std_course_id]), id: entry[:std_course_id] %></td>
+        <td><%= entry[:level] %></td>
+        <td><%= link_to entry[:exp], course_user_course_exp_transactions_path(@course, entry[:std_course_id]) %></td>
+        <td>
+          <%= link_to entry[:count] || 0,
+                      course_forum_participation_individual_path(@course, entry[:std_course_id],
+                                                                 from_date: @from_date,
+                                                                 to_date: @to_date),
+                      :class => 'post-count-link'
+          %>
+        </td>
+        <td>
+          <%= entry[:likes] %>
+        </td>
+        <td>
+          <button type="button" class="btn btn-info view-post-btn">View</button>
+        </td>
+        <td><input type="number" name="EXP[<%= entry[:std_course_id] %>]" title="EXP amount" class="input-mini" value="<%= entry[:proposed_exp] %>"> </td>
+      </tr>
+      <tr class="post-details-container">
+        <td colspan="7">
+          <div class="post-details">... Loading Posts Summary ... </div>
+        </td>
+      </tr>
+    <% end %>
+    <% if @post_count.size == 0 %>
+      <tr>
+        <td colspan="7">
+          <i>No posts found during the time range specified.</i>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= f.label :Reason, style:"display: inline-block;"%>
+  <input type="text" class="text_field" name="reason" value="Forum participation"/>
+  <%= f.submit "Update EXP", :class => 'btn btn-primary', "data-disable-with" => "Submitting..."%>
+<% end %>
