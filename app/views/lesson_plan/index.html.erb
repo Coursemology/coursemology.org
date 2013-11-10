@@ -1,19 +1,33 @@
 <div>
   <a class="lesson-plan-anchor" name="top"></a>
   <div class="row">
-    <div class="span7">
-      <h1>Lesson Plan</h1>
-      <% if can? :manage, LessonPlanEntry %>
-      <%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
-      <%= link_to "New Period", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
-      <a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
-        Generate Periods
-      </a>
-      <% end %>
+    <div class="span2">
+      <h1 class="heading-remove-margin">Lesson Plan</h1>
     </div>
-    <div class="pull-right btn-group">
-    <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
-    <a id="lesson-plan-show-all" class="btn">Expand All</a>
+    <div class="pull-right btn-toolbar">
+      <% if can? :manage, LessonPlanEntry %>
+        <div class="btn-group dropdown dropdown-trigger-on-hover">
+          <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            New <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <%= link_to "Entry", new_course_lesson_plan_entry_path() %>
+            </li>
+            <li>
+              <%= link_to "Period", new_course_lesson_plan_milestone_path() %>
+            </li>
+            <li class="divider"></li>
+            <li id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" >
+              <a href="#">Generate Periods</a>
+            </li>
+          </ul>
+        </div>
+      <% end %>
+      <div class="btn-group">
+        <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
+        <a id="lesson-plan-show-all" class="btn">Expand All</a>
+      </div>
     </div>
   </div>
 
