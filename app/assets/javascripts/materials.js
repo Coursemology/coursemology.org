@@ -120,8 +120,9 @@ $(document).ready(function() {
     }
   });
   
-  // Set up the disabled controls tooltip.
+  // Set up tooltips.
   $('.workbin-disabled-controls').tooltip();
+  $('.hover-tooltip').tooltip();
 
   $('form.materials-edit-form').validatr([
     ['input#material_filename', function() {

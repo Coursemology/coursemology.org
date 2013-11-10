@@ -3,25 +3,30 @@
     <% if (can? :upload, @folder) %>
       <% if @folder.is_virtual? %>
         <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
-          <a class='btn btn-primary disabled'>
-            Upload Files
+          <a class='btn disabled' title="Upload Files">
+            <h4 class="icon-upload"></h4>
           </a>
-          <a class='btn btn-success disabled'>
-            Create Folder
+          <a class="btn disabled" title="Create Folder">
+            <h4 class="icon-folder-close"></h4>
           </a>
         </span>
       <% else %>
       <% if (can? :upload, @folder) %>
-        <%= link_to t('.new', :default => t("Upload files")), upload_course_material_folder_path(@course, @folder), :class => 'btn btn-primary' %>
+        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn hover-tooltip' 
+           title="Upload Files">
+          <h4 class="icon-upload"></h4>
+        </a>
       <% end %>
       <% if (can? :manage, @folder) %>
-        <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+        <a href="#create-subfolder-modal" class="btn hover-tooltip" title="Create Folder">
+          <h4 class="icon-folder-close"></h4>
+        </a>
       <% end %>
       <% end %>
     <% end %>
     &nbsp;
   </span>
-
+  
   <span class="pull-right btn-group">
     <% if (can? :manage, @folder) %>
       <% if @folder.is_virtual? %>
