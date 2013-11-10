@@ -41,7 +41,7 @@ group :assets do
   gem 'coffee-rails'
 end
 
-gem 'pg'
+#gem 'pg'
 gem 'jquery-rails', '2.1.3'
 gem 'devise', '2.1.2'
 gem 'cancan'
@@ -49,7 +49,7 @@ gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
 gem 'yaml_db'
-gem 'rubyzip'
+gem 'rubyzip', '~> 0.9.9'
 gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'google_visualr', '>= 2.1'
@@ -62,6 +62,9 @@ gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
+gem 'forem', :github => "radar/forem"
+gem 'sanitize'
+gem 'acts_as_votable', '~> 0.7.1'
 gem 'gon'
 gem 'momentjs-rails'
 gem 'truncate_html'
