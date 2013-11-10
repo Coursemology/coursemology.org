@@ -290,7 +290,7 @@ private
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name
-    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
+    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.files.length
     folder_metadata['is_virtual?'] = folder.is_virtual?

@@ -65,6 +65,9 @@ class MaterialFolder < ActiveRecord::Base
         nil
       end
 
+      def to_param
+        id
+      end
       def is_virtual?
         true
       end
