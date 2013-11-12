@@ -5,6 +5,7 @@
 
   <div class="span10 span-content">
     <div class="course-title">
+      <%= render partial: "layouts/facebook_like", locals: {style:"button_count"} %>
       <a href="<%= main_app.course_path(@course) %>">
         <%= @course.title %>
       </a>
@@ -19,7 +20,7 @@
           <%= flash[:error].html_safe %>
         </div>
     <% end %>
-    <div style="clearfix" class="content"/>
+    <div class="content"/>
     <%= yield %>
   </div>
   <%= render "layouts/course_popup" %>

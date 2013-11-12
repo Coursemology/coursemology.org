@@ -1,3 +1,4 @@
+<%= render partial: "layouts/facebook_like" %>
 <div class="page-header">
   <h1>Hello, <%= current_user.display_name || current_user.name %>!</h1>
   <% if can? :manage, Course %>
