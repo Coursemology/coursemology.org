@@ -168,7 +168,7 @@ $(document).ready(function() {
     shadeSelectedFiles();
   });
   
-  $('#workbin-download-zip-button').click(function() {
+  $('#workbin-download-zip-button').click(function(e) {
     var checkedFiles = [];
     $('.workbin-select-file-checkbox').each(function(index) {
       var checkbox = $(this);
@@ -179,8 +179,11 @@ $(document).ready(function() {
         checkedFiles.push(fileId);
       }
     });
-    
-    console.log(checkedFiles);
+
+    e.preventDefault();
+    location.href = this.href + "?" + jQuery.param({
+      include: checkedFiles
+    });
   });
   
   // Shade selected rows on load.

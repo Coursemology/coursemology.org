@@ -66,7 +66,7 @@ class MaterialsController < ApplicationController
         render :json => build_subtree(@folder, true)
       }
       format.zip {
-        filename = build_zip @folder, false
+        filename = build_zip @folder, :recursive => false, :include => params['include']
         send_file(filename, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
@@ -335,11 +335,22 @@ private
     }
   end
 
-  def build_zip(folder, recursive=true)
+  def build_zip(folder, options = {})
     result = nil
+    recursive = not(not(options[:recursive]))
+    include = options[:include]
+
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      (recursive ? folder.materials : folder.files).each { |m|
+      files = if include then
+                Material.where(:id => include)
+              elsif recursive then
+                folder.materials
+              else
+                folder.files
+              end
+
+      files.each { |m|
         if not (m.is_virtual?) and cannot? :read, m
           next
         end
