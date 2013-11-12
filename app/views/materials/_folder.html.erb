@@ -2,7 +2,7 @@
   <td>
   </td>
   <td>
-    <% path = if subfolder.is_virtual? then course_material_virtual_folder_path(@course, subfolder.id) 
+    <% path = if subfolder.is_virtual? then course_material_virtual_folder_path(@course, subfolder)
       else course_material_folder_path(@course, subfolder) end %>
     <%= link_to path do %>
     <%= render partial:"subfolder_title", :locals => { :subfolder => subfolder } %>

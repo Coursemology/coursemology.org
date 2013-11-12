@@ -1,4 +1,6 @@
 class MaterialsController < ApplicationController
+  require 'zip/zipfilesystem'
+
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
@@ -64,7 +66,7 @@ class MaterialsController < ApplicationController
         render :json => build_subtree(@folder, true)
       }
       format.zip {
-        filename = build_zip @folder
+        filename = build_zip @folder, :recursive => false, :include => params['include']
         send_file(filename, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
@@ -290,7 +292,7 @@ private
 
     folder_metadata['id'] = folder.id
     folder_metadata['name'] = folder.name
-    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder.id) : course_material_folder_path(@course, folder)
+    folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.files.length
     folder_metadata['is_virtual?'] = folder.is_virtual?
@@ -333,11 +335,22 @@ private
     }
   end
 
-  def build_zip folder
+  def build_zip(folder, options = {})
     result = nil
+    recursive = not(not(options[:recursive]))
+    include = options[:include]
+
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      folder.materials.each { |m|
+      files = if include then
+                Material.where(:id => include)
+              elsif recursive then
+                folder.materials
+              else
+                folder.files
+              end
+
+      files.each { |m|
         if not (m.is_virtual?) and cannot? :read, m
           next
         end
