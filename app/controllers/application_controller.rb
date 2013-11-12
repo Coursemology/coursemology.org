@@ -314,7 +314,6 @@ class ApplicationController < ActionController::Base
     params[:direction]
   end
 
-
   def sort_column
     params[:sort]
   end
@@ -329,9 +328,18 @@ class ApplicationController < ActionController::Base
   end
 
   def masquerading?
-    puts session.to_json
+    #puts session.to_json
     session[:admin_id].present?
   end
+
+  #def fb_liked?
+  #  @oauth = Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s)
+  #  @oauth.get_app_access_token
+  #  likes = @oauth.get_connections("me", "likes")
+  #
+  #  puts likes
+  #end
+
 
   def get_url_and_icon(item)
     url = root_path
@@ -379,4 +387,5 @@ class ApplicationController < ActionController::Base
 
   helper_method :masquerading?
   helper_method :curr_user_course
+  #helper_method :fb_liked?
 end
