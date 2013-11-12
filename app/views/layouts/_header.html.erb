@@ -32,7 +32,11 @@
                 <%= link_to "(Stop Masquerading)", main_app.destroy_masquerades_path, method: :delete %>
               </li>
           <% end %>
-
+          <li>
+            <div style="margin-top: 10px">
+            <%= render partial: "layouts/facebook_like", locals: {style:"button_count"} %>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
