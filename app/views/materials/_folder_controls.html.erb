@@ -18,7 +18,7 @@
         </a>
       <% end %>
       <% if (can? :manage, @folder) %>
-        <a href="#create-subfolder-modal" class="btn hover-tooltip" title="Create Folder">
+        <a href="#create-subfolder-modal" data-toggle="modal" class="btn hover-tooltip" title="Create Folder">
           <h4 class="icon-folder-close"></h4>
         </a>
       <% end %>
@@ -49,15 +49,15 @@
 <% if (can? :manage, @folder) && not(@folder.is_virtual?) %>
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
-    Create Subfolder
+    <h3>Create Subfolder</h3>
   </div>
   <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: MaterialFolder.new, subfolder_method: :post } %>
 </div>
 
 <div id="edit-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
-    Edit Folder
+    <h3>Edit Folder</h3>
   </div>
-  <%= render partial: "subfolder_form", locals: { modal: false, folder_to_change: @folder, subfolder_method: :put } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: @folder, subfolder_method: :put } %>
 </div>
 <% end %>
