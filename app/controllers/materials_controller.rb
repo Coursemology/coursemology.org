@@ -357,7 +357,7 @@ private
 
         temp_path = File.join(dir, m.filename.sub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
-        curr_user_course.mark_as_seen(m)
+        curr_user_course.mark_as_seen(m) unless m.is_virtual?
 
         # Create the directory structure for this file.
         parent_traversal = lambda {|d|
