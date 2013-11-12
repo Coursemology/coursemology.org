@@ -1,4 +1,6 @@
 class MaterialsController < ApplicationController
+  require 'zip/zipfilesystem'
+
   include MaterialsHelper
   load_and_authorize_resource :course
   # These resources are not authorised through course because this controller is heterogenous, dealing with both folders and files
@@ -64,7 +66,7 @@ class MaterialsController < ApplicationController
         render :json => build_subtree(@folder, true)
       }
       format.zip {
-        filename = build_zip @folder
+        filename = build_zip @folder, false
         send_file(filename, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
@@ -333,11 +335,11 @@ private
     }
   end
 
-  def build_zip folder
+  def build_zip(folder, recursive=true)
     result = nil
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      folder.materials.each { |m|
+      (recursive ? folder.materials : folder.files).each { |m|
         if not (m.is_virtual?) and cannot? :read, m
           next
         end
