@@ -120,53 +120,95 @@ $(document).ready(function() {
     }
   });
   
-  // Set up the disabled controls tooltip.
+  // Set up tooltips.
   $('.workbin-disabled-controls').tooltip();
-});
+  $('.hover-tooltip').tooltip();
 
-$(document).ready(function() {
-  function show_error($this, error) {
-    var group = $this.parents('.control-group');
-    group.addClass('error');
-    $('.help-inline', group).text(error);
-    has_errors = true;
-  }
-  function remove_error($this) {
-    var group = $this.parents('.control-group');
-    group.removeClass('error');
-    $('.help-inline', group).text('');
-  }
-
-  var original_filename = $('input#material_filename').val();
-  $('input#material_filename').change(function() {
-    var $this = $(this);
-    if (this.value === original_filename) {
-      remove_error($this);
-    } else {
-      // Check against the server.
-      $.post('/courses/' + gon.course.id + '/materials/subfolder/' + gon.currentFolder.id + '/' + this.value,
+  $('form.materials-edit-form').validatr([
+    ['input#material_filename', function() {
+      var $this = $(this);
+      if (this.value === gon.currentMaterial.filename) {
+        return null;
+      } else {
+        // Check against the server.
+        var deferred = $.Deferred();
+        $.post('/courses/' + gon.course.id + '/materials/subfolder/' + gon.currentFolder.id + '/' + this.value,
           {_method: 'HEAD'})
           .done(function() {
             //This is supposed to fail! There's a file already.
-            show_error($this, 'Another file with the same name already exists.');
+            deferred.resolve('Another file with the same name already exists.');
           })
           .fail(function(e) {
             if (e.status === 404) {
-              remove_error($this);
+              deferred.resolve(null);
             } else if (!e.status) {
-              show_error($this, 'Another file with the same name already exists.');
+              deferred.resolve('Another file with the same name already exists.');
             }
           });
-    }
-  });
 
-  var handleValidation = function(e) {
-    if ($('.error', this).length > 0) {
-      e.preventDefault();
-    }
-  };
-  $('.materials-edit-form').submit(handleValidation);
-  $('.materials-edit-form input[type="submit"]').click(function() {
-    handleValidation.apply($('.materials-edit-form')[0], arguments);
+        return deferred.promise();
+      }
+    }]
+  ]);
+  
+  function shadeSelectedFiles() {
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var parent = $(this).parents('.workbin-file-row');
+      if ($(this).prop('checked')) {
+        parent.addClass('workbin-file-selected');
+      } else {
+        parent.removeClass('workbin-file-selected');
+      }
+    });
+  }
+  
+  $('#workbin-select-all-files').click(function() {
+    var isChecked = $(this).prop('checked');
+    $('.workbin-select-file-checkbox').prop('checked', isChecked);
+    shadeSelectedFiles();
   });
+  
+  $('#workbin-download-zip-button').click(function(e) {
+    var checkedFiles = [];
+    $('.workbin-select-file-checkbox').each(function(index) {
+      var checkbox = $(this);
+      var fileId = checkbox.data('fileid');
+      
+      var isChecked = checkbox.prop('checked');
+      if (isChecked) {
+        checkedFiles.push(fileId);
+      }
+    });
+
+    e.preventDefault();
+    location.href = this.href + "?" + jQuery.param({
+      include: checkedFiles
+    });
+  });
+  
+  // Shade selected rows on load.
+  shadeSelectedFiles();
+  
+  // Select a row by clicking on it.
+  $('.workbin-file-row').click(function(event) {
+    $(this).toggleClass('workbin-file-selected');
+    var checkbox = $(this).find('.workbin-select-file-checkbox');
+    var isChecked = checkbox.prop('checked');
+    checkbox.prop('checked', !isChecked);
+  });
+  
+  $('.workbin-select-file-checkbox').click(function(event) {
+    // Don't bubble up to the div, or we'd never be able to check the box.
+    event.stopPropagation();
+    
+    var parent = $(this).parents('.workbin-file-row');
+    parent.toggleClass('workbin-file-selected');
+    
+    // Uncheck the master checkbox if we need to.
+    var masterBox = $('#workbin-select-all-files');
+    if (masterBox.prop('checked')) {
+      masterBox.prop('checked', false);
+    }
+  });
+    
 });

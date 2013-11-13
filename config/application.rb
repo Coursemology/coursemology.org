@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'nokogiri'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -64,5 +65,28 @@ module JfdiAcademy
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Generate a Bootstrap-friendly field indicator. This is used to wrap the
+    # *label* of the field which has validation errors.
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance|
+      #"<span class=\"field_with_errors\">#{html_tag}</span>".html_safe
+      # Inspired by https://gist.github.com/t2/1464315
+      html = %(<div class="field_with_errors">#{html_tag}</div>).html_safe
+      # add nokogiri gem to Gemfile
+      elements = Nokogiri::HTML::DocumentFragment.parse(html_tag).css "label, input"
+      elements.each do |e|
+        if e.node_name.eql? 'label'
+          e['class'] += ' error'
+          html = e.to_s.html_safe
+        elsif e.node_name.eql? 'input'
+          if instance.error_message.kind_of?(Array)
+            html = %(<div class="error">#{html_tag}<span class="help-inline">#{instance.error_message.join(',')}</span></div>).html_safe
+          else
+            html = %(<div class="error">#{html_tag}<span class="help-inline">#{instance.error_message}</span></div>).html_safe
+          end
+        end
+      end
+      html
+    }
   end
 end
