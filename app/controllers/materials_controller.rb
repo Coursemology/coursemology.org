@@ -99,7 +99,7 @@ class MaterialsController < ApplicationController
       }
 
       format.zip {
-        filename = build_zip @folder
+        filename = build_zip @folder, :include => params[:include]
         send_file(filename, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
@@ -339,6 +339,7 @@ private
     result = nil
     recursive = not(not(options[:recursive]))
     include = options[:include]
+    include = include.map {|i| Integer(i)} if include
 
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
@@ -352,12 +353,7 @@ private
         if not (m.is_virtual?) and cannot? :read, m then
           next
         elsif include then
-          # If we specify only files to get, negative IDs correspond
-          # to virtual item FileUpload records; positive IDs refer to
-          # physical materials.
-          if m.is_virtual? and not include.has?(-m.id) then
-            next
-          elsif not include.has?(m.id) then
+          if not include.include?(m.id) then
             next
           end
         end
