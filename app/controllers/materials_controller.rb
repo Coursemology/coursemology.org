@@ -342,17 +342,24 @@ private
 
     Dir.mktmpdir("coursemology-mat-temp") { |dir|
       # Extract all the files from AWS
-      files = if include then
-                Material.where(:id => include)
-              elsif recursive then
+      files = if recursive then
                 folder.materials
               else
                 folder.files
               end
 
       files.each { |m|
-        if not (m.is_virtual?) and cannot? :read, m
+        if not (m.is_virtual?) and cannot? :read, m then
           next
+        elsif include then
+          # If we specify only files to get, negative IDs correspond
+          # to virtual item FileUpload records; positive IDs refer to
+          # physical materials.
+          if m.is_virtual? and not include.has?(-m.id) then
+            next
+          elsif not include.has?(m.id) then
+            next
+          end
         end
 
         temp_path = File.join(dir, m.filename.sub(":", "_"))

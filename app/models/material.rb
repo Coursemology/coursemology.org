@@ -26,7 +26,7 @@ class Material < ActiveRecord::Base
       end
 
       def id
-        -1
+        -@obj.id
       end
       def obj
         @obj
