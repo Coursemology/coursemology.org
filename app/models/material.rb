@@ -7,6 +7,8 @@ class Material < ActiveRecord::Base
   attr_accessible :folder, :description, :filename
   after_save :save_file
 
+  validate :material_filename_unique
+
   def save_file
     if self.file then
       self.file.save
@@ -24,7 +26,7 @@ class Material < ActiveRecord::Base
       end
 
       def id
-        -1
+        -@obj.id
       end
       def obj
         @obj
@@ -75,13 +77,17 @@ class Material < ActiveRecord::Base
         -1
       end
 
-      def is_virtual
+      def is_virtual?
         true
       end
     end).new(parent, obj)
   end
 
   def filename
+    if self.file == nil then
+      return nil
+    end
+
     self.file.original_name || self.file.file_file_name
   end
   
@@ -111,7 +117,19 @@ class Material < ActiveRecord::Base
     end
   end
 
-  def is_virtual
+  def is_virtual?
     false
+  end
+
+private
+  def material_filename_unique
+    if filename && filename.length == 0 then
+      errors.add(:filename, "Filenames cannot be empty.")
+    end
+
+    f = folder.find_material_by_filename(filename)
+    if f && f.id != f then
+      errors.add(:filename, "Another file with the same name already exists.")
+    end
   end
 end

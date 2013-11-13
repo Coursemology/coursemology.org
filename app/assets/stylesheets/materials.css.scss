@@ -6,3 +6,13 @@ ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
   background: #e2e2e2;
 }
+
+.large-label {
+  font-size: 24px;
+  border-radius: 6px;
+  padding: 4px 12px 4px;
+}
+
+.workbin-file-selected, tr.workbin-file-row:hover {
+  background: #fef9dd;
+}

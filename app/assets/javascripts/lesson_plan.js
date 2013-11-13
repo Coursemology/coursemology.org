@@ -35,14 +35,14 @@ $(document).ready(function() {
   
   $('#lesson-plan-hide-all').click(function() {
     $('.lesson-plan-body').slideUp();
-    $('.lesson-plan-body').data("hidden", "true");
+    $('.lesson-plan-body').data("hidden", true);
     $('.lesson-plan-show-entries').show();
     $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
     $('.lesson-plan-body').slideDown();
-    $('.lesson-plan-body').data("hidden", "false");
+    $('.lesson-plan-body').data("hidden", false);
     $('.lesson-plan-show-entries').hide();
     $('.lesson-plan-hide-entries').show();
   });
@@ -50,60 +50,58 @@ $(document).ready(function() {
   $('.lesson-plan-header').click(function() {
     var parent = $(this).parents('.lesson-plan-item');
     var isHidden = $('.lesson-plan-body', parent).data("hidden");
-    if (isHidden === "true") {
-      $('.lesson-plan-body', parent).slideDown().data("hidden", "false");
+    if (isHidden) {
+      $('.lesson-plan-body', parent).slideDown().data("hidden", false);
       $('.lesson-plan-hide-entries', this).show();
       $('.lesson-plan-show-entries', this).hide();
     } else {
-      $('.lesson-plan-body', parent).slideUp().data("hidden", "true");
+      $('.lesson-plan-body', parent).slideUp().data("hidden", true);
       $('.lesson-plan-hide-entries', this).hide();
       $('.lesson-plan-show-entries', this).show();
     }
   });
 
-  $('#lesson-plan-done-generating').click(function() {
-    /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
-    var has_errors = false;
-    function show_error(id, error) {
-      var group = $(id).parents('.control-group');
-      group.addClass('error');
-      $('.help-inline', group).text(error);
-      has_errors = true;
-    }
-    function remove_error(id) {
-      var group = $(id).parents('.control-group');
-      group.removeClass('error');
-      $('.help-inline', group).text('');
-    }
+  // Install the validator for the milestone generator.
+  $('.lesson-plan-milestone-generator-form').validatr([
+    ['input#input-number-milestones', function() {
+      // Get the values from the form; make sure all fields are filled up.
+      var milestone_count = $(this).val();
+      if (!milestone_count) {
+        return 'This field is required';
+      } else if (milestone_count <= 0) {
+        return 'The number of milestones to create should be a positive integer';
+      } else {
+        return null;
+      }
+    }],
+    ['input#input-length-milestones', function() {
+      var milestone_length_in_days = $(this).val();
+      if (!milestone_length_in_days) {
+        return 'This field is required';
+      } else if (milestone_length_in_days <= 0) {
+        return 'The length of a milestone should be a positive integer';
+      } else {
+        return null;
+      }
+    }],
+    ['input#input-prefix-milestones', function() {}],
+    ['input#input-start-milestones', function() {
+      var first_milestone = $(this).val();
+      if (!first_milestone) {
+        return 'This field is required';
+      } else {
+        return null;
+      }
+    }]
+  ]);
 
-    // Get the values from the form; make sure all fields are filled up.
+  $('form.lesson-plan-milestone-generator-form').submit(function() {
+    /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
+
     var milestone_count = $('input#input-number-milestones').val();
-    if (!milestone_count) {
-      show_error('input#input-number-milestones', 'This field is required');
-    } else if (milestone_count <= 0) {
-      show_error('input#input-number-milestones', 'The number of milestones to create should be a positive integer');
-    } else {
-      remove_error('input#input-number-milestones');
-    }
     var milestone_length_in_days = $('input#input-length-milestones').val();
-    if (!milestone_length_in_days) {
-      show_error('input#input-length-milestones', 'This field is required');
-    } else if (milestone_length_in_days <= 0) {
-      show_error('input#input-length-milestones', 'The length of a milestone should be a positive integer');
-    } else {
-      remove_error('input#input-length-milestones');
-    }
     var milestone_prefix = $('input#input-prefix-milestones').val();
     var first_milestone = $('input#input-start-milestones').val();
-    if (!first_milestone) {
-      show_error('input#input-start-milestones', 'This field is required');
-    } else {
-      remove_error('input#input-start-milestones');
-    }
-
-    if (has_errors) {
-      return false;
-    }
 
     var current_milestone = moment(first_milestone, DATE_FORMAT);
     var milestones = [];
@@ -136,7 +134,7 @@ $(document).ready(function() {
     var $modal = $(this).parents('.modal');
     $('.modal-body', $modal).addClass('hidden');
     $('#modal-loading', $modal).parent().removeClass('hidden');
-    $('button.btn', $modal).addClass('disabled').prop('disabled', true);
+    $('button.btn, input.btn', $modal).addClass('disabled').prop('disabled', true);
 
     // Wait for all the requests to come back before closing the dialog.
     $.when.apply($, promises).then(function() {
