@@ -24,7 +24,7 @@
           </ul>
         </div>
       <% end %>
-      <select class="selectpicker" id="lesson-plan-entry-filter" multiple="multiple" title="Filter">
+      <select class="selectpicker" id="lesson-plan-entry-filter" multiple="multiple" title="Filter" data-selected-text-format="count>1" data-width="auto">
         <% get_lesson_plan_entry_types.each {|type| %>
           <option checked="checked" data-entry-type="<%= get_lesson_plan_entry_css_class(type) %>"><%= type %></option>
         <% } %>
