@@ -43,6 +43,7 @@ end
 
 #gem 'pg'
 gem 'jquery-rails', '2.1.3'
+gem 'jqtree-rails'
 gem 'devise', '2.1.2'
 gem 'cancan'
 gem 'paperclip', '~>3.0'
