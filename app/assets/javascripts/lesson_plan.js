@@ -43,7 +43,7 @@ $(document).ready(function() {
         $(document.getElementsByClassName(data.entryType)).slideUp();
       }
     }
-  })
+  });
   
   $('#lesson-plan-hide-all').click(function() {
     $('.lesson-plan-body').slideUp();
