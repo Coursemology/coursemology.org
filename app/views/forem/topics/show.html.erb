@@ -4,10 +4,13 @@
 <div id='topic' class='<%= 'un' unless @topic.locked? %>locked'>
   <div id='menu' class="pull-right">
     <div class='btn-group'>
-      <% unread = Forem::Post.unread_by(current_user).select { |p| p.topic != @topic } %>
-      <% unread = unread.select { |p| p.topic.forum.category.id == @course.id } %>
+      <% unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id } %>
       <% if unread.count > 0 %>
-        <%= link_to "Next Unread Topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
+        <%= link_to "Mark all as read", main_app.course_forum_topic_mark_read_path(@course, @forum, @topic), :class => "btn" %>
+      <% end %>
+      <% unread = unread.select { |p| p.topic != @topic } %>
+      <% if unread.count > 0 %>
+        <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
       <% if @topic.can_be_replied_to? %>
         <%= link_to t(".reply"), main_app.new_course_forum_topic_post_path(@course, @forum, @topic), :class => "btn" %>

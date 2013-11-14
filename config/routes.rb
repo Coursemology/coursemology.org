@@ -184,6 +184,7 @@ JfdiAcademy::Application.routes.draw do
     match "/forums" => "forem/categories#show", as: :forums
     match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
+    match "/forums/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
     match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
     match "/forums/:forum_id/topics/:id/manage" => "forem/admin/topics#index", as: :forums_topics_admin
     put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
@@ -197,7 +198,7 @@ JfdiAcademy::Application.routes.draw do
         end
         get :subscribe
         get :unsubscribe
-        get :mark_unread
+        get :mark_read
         get :next_unread
       end
       get :mark_read
