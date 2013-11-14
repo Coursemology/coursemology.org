@@ -9,7 +9,6 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
  *= require bootstrap-datetimepicker
  *= require bootstrap-wysihtml5
  *= require bootstrap-colorpicker
@@ -18,8 +17,5 @@
  *= require jqtree
  //= require codemirror
  //= require codemirror/themes/night
+ *= require_tree .
  */
-
-div.bootstrap-select.btn-group, div.bootstrap-select.btn-group[class*="span"] {
-  margin-bottom: 0
-}

@@ -40,6 +40,10 @@ th {
   text-transform: uppercase;
 }
 
+.bootstrap-select.btn-group, .bootstrap-select.btn-group[class*="span"] {
+  margin-bottom: 0
+}
+
 #site-logo {
   float: left;
   margin-right: 10px;
