@@ -40,6 +40,10 @@ th {
   text-transform: uppercase;
 }
 
+.bootstrap-select.btn-group, .bootstrap-select.btn-group[class*="span"] {
+  margin-bottom: 0
+}
+
 #site-logo {
   float: left;
   margin-right: 10px;
@@ -1032,11 +1036,4 @@ a:hover, .leaderboard-achivement {
 .pagination-large ul > li > span {
   padding: 11px 19px;
   font-size: 17.5px;
-}
-
-.materials-description-title {
-  margin-bottom: 10px;
-}
-
-.materials-list-table {
 }
