@@ -1,6 +1,10 @@
 <div id='forum'>
   <div id='forum_topic_links' class='btn-group pull-right'>
-    <%= link_to 'Mark all as read', main_app.course_forum_mark_read_path(@course, forum), :class => "btn" %>
+    <% unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id } %>
+    <% if unread.count > 0 %>
+        <%= link_to 'Next Unread Topic', main_app.course_forum_next_unread_path(@course, forum), :class => "btn" %>
+        <%= link_to 'Mark all as read', main_app.course_forum_mark_read_path(@course, forum), :class => "btn" %>
+    <% end %>
     <% unless @topic.try(:new_record?) %>
       <%= link_to t('forem.topic.links.new'), main_app.new_course_forum_topic_path(@course, forum), :class => "btn btn-primary" %>
     <% end %>

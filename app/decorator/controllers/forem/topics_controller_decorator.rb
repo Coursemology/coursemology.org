@@ -5,7 +5,7 @@ Forem::TopicsController.class_eval do
 
   def next_unread
     unread = Forem::Post.unread_by(current_user).select { |p| p.topic != @topic }
-    unread = unread.select { |p| p.topic.forum.category.id == @course.id }
+    unread = unread.select { |p| p.topic.forum.id == @forum.id }
     if unread.count > 0
       redirect_to main_app.course_forum_topic_url(@course, @forum, unread.first.topic)
     else

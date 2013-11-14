@@ -201,6 +201,7 @@ JfdiAcademy::Application.routes.draw do
         get :next_unread
       end
       get :mark_read
+      get :next_unread
     end
   end
 
