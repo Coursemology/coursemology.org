@@ -40,7 +40,12 @@
 
       <div>
       <a href='#post-<%= post.id %>'>
-        <time datetime="<%= post.created_at.to_s(:db) -%>"><%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %></time>
+        <time datetime="<%= post.created_at.to_s(:db) -%>">
+          Posted <%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %>
+          <% if post.unread?(current_user)  %>
+            <span class="label">New!</span>
+          <% end %>
+        </time>
       </a>
       <% if forem_user %>
         <div class="pull-right">

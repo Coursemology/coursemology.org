@@ -3,8 +3,8 @@ Forem::ForumsController.class_eval do
   append_before_filter :shim
 
   def mark_read
-    #Forem::Topic.mark_as_read! :all, :for => current_user
-    Forem::Post.mark_as_read! :all, :for => current_user
+    unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id }
+    Forem::Post.mark_as_read! unread, :for => current_user
     redirect_to main_app.course_forum_path(@course, @forum)
   end
 
