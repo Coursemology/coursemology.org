@@ -1,38 +1,46 @@
 <div>
   <a class="lesson-plan-anchor" name="top"></a>
-  <div class="row">
-    <div class="span5">
-      <h1 class="heading-remove-margin">Lesson Plan</h1>
-    </div>
-    <div class="pull-right btn-toolbar">
-      <% if can? :manage, LessonPlanEntry %>
-        <div class="btn-group dropdown-trigger-on-hover">
-          <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            New <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <%= link_to "Entry", new_course_lesson_plan_entry_path() %>
-            </li>
-            <li>
-              <%= link_to "Period", new_course_lesson_plan_milestone_path() %>
-            </li>
-            <li class="divider"></li>
-            <li id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" >
-              <a href="#">Generate Periods</a>
-            </li>
-          </ul>
+  <div id="lesson-plan-toolbar">
+    <div class="row">
+      <div class="span5">
+        <h1 class="heading-remove-margin">Lesson Plan</h1>
+      </div>
+      <div class="pull-right btn-toolbar">
+        <% if can? :manage, LessonPlanEntry %>
+          <div class="btn-group dropdown-trigger-on-hover">
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              New <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <%= link_to "Entry", new_course_lesson_plan_entry_path() %>
+              </li>
+              <li>
+                <%= link_to "Period", new_course_lesson_plan_milestone_path() %>
+              </li>
+              <li class="divider"></li>
+              <li id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" >
+                <a href="#">Generate Periods</a>
+              </li>
+            </ul>
+          </div>
+        <% end %>
+        <select class="selectpicker dropdown-trigger-on-hover" id="lesson-plan-entry-filter" multiple="multiple" title="Filter" data-selected-text-format="count>1" data-width="auto">
+          <% get_lesson_plan_entry_types.each {|type| %>
+            <option checked="checked" data-entry-type="<%= get_lesson_plan_entry_css_class(type) %>"><%= type %></option>
+          <% } %>
+        </select>
+        <div class="btn-group">
+          <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
+          <a id="lesson-plan-show-all" class="btn">Expand All</a>
         </div>
-      <% end %>
-      <div class="btn-group">
-        <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
-        <a id="lesson-plan-show-all" class="btn">Expand All</a>
       </div>
     </div>
+    
+    <hr class="hr-shrink-margin">
   </div>
-
-  <hr>
   
+  <ul class="lesson-plan-remove-margin">
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
   <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
@@ -42,6 +50,7 @@
       <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
     <% end %>
   <% } %>
+  </ul>
 
   <a href="#top">Back to Top</a>
 </div>

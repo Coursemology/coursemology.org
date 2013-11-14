@@ -97,6 +97,10 @@ class LessonPlanEntry < ActiveRecord::Base
     ['Tutorial', 2],
     ['Other', 3]
   ]
+
+  def entry_real_type
+    LessonPlanEntry::ENTRY_TYPES[self.entry_type][0]
+  end
   
   def is_virtual?
     false

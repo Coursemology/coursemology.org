@@ -32,16 +32,60 @@ $(document).ready(function() {
   $(document).on('click', '.resource-delete', null, function() {
     $(this).parents('tr').remove();
   });
+
+  $('#lesson-plan-entry-filter').change(function(e) {
+    for (var i = 0; i < this.options.length; ++i) {
+      var option = this.options[i];
+      var data = $(option).data();
+      if (option.selected) {
+        $(document.getElementsByClassName(data.entryType)).slideDown({ complete: resizeStickyHeaders });
+      } else {
+        $(document.getElementsByClassName(data.entryType)).slideUp({ complete: resizeStickyHeaders });
+      }
+    }
+  });
+
+  var wrappers = $('.lesson-plan-header-row-wrapper');
+  var headers = $('.lesson-plan-header-row');
+  headers.each(function (i) {
+    var currentHeader = $(headers[i]);
+    var nextHeader = headers[i + 1];
+    
+    // This is necessary to prevent items from "jumping up", since
+    // the header is removed from the normal document flow.
+    var currentWrapper = $(wrappers[i]);
+    currentWrapper.height(currentHeader.outerHeight(true));
+    
+    currentHeader.scrollToFixed({
+      marginTop: $('.navbar-inner').outerHeight(true),
+      limit: function() {
+        if (nextHeader) {
+          return $(nextHeader).offset().top - currentHeader.outerHeight(true) - 20;
+        }
+        return $("footer").offset().top;
+      },
+      fixed: function() {
+        currentHeader.addClass("shadow-down");
+      },
+      unfixed: function() {
+        currentHeader.removeClass("shadow-down");
+      }
+    });
+  });
+  
+  function resizeStickyHeaders () {
+    $(window).resize();
+  }
   
   $('#lesson-plan-hide-all').click(function() {
-    $('.lesson-plan-body').slideUp();
+    $('.lesson-plan-body').slideUp({ complete: resizeStickyHeaders });
     $('.lesson-plan-body').data("hidden", true);
     $('.lesson-plan-show-entries').show();
     $('.lesson-plan-hide-entries').hide();
   });
   
   $('#lesson-plan-show-all').click(function() {
-    $('.lesson-plan-body').slideDown();
+    $('.lesson-plan-body').slideDown({ complete: resizeStickyHeaders });
     $('.lesson-plan-body').data("hidden", false);
     $('.lesson-plan-show-entries').hide();
     $('.lesson-plan-hide-entries').show();
@@ -51,11 +95,11 @@ $(document).ready(function() {
     var parent = $(this).parents('.lesson-plan-item');
     var isHidden = $('.lesson-plan-body', parent).data("hidden");
     if (isHidden) {
-      $('.lesson-plan-body', parent).slideDown().data("hidden", false);
+      $('.lesson-plan-body', parent).slideDown({ complete: resizeStickyHeaders }).data("hidden", false);
       $('.lesson-plan-hide-entries', this).show();
       $('.lesson-plan-show-entries', this).hide();
     } else {
-      $('.lesson-plan-body', parent).slideUp().data("hidden", true);
+      $('.lesson-plan-body', parent).slideUp({ complete: resizeStickyHeaders }).data("hidden", true);
       $('.lesson-plan-hide-entries', this).hide();
       $('.lesson-plan-show-entries', this).show();
     }
