@@ -1,3 +1,17 @@
+GIT
+  remote: git://github.com/radar/forem.git
+  revision: 40657b477f9228cd439f289041f6842ac36afadd
+  specs:
+    forem (1.0.0.beta1)
+      cancan (= 1.6.10)
+      decorators (~> 1.0.2)
+      friendly_id (~> 4.0, >= 4.0.9)
+      gemoji (= 1.1.2)
+      rails (>= 3.1.10, < 3.3, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0)
+      select2-rails (~> 3.4.3)
+      simple_form
+      workflow (= 0.8.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -30,6 +44,7 @@ GEM
       multi_json (~> 1.0)
     acts_as_paranoid (0.4.2)
       activerecord (~> 3.2)
+    acts_as_votable (0.7.1)
     addressable (2.3.5)
     arel (3.0.2)
     aws-sdk (1.6.9)
@@ -77,6 +92,8 @@ GEM
       execjs
     coffee-script-source (1.6.2)
     daemons (1.1.9)
+    decorators (1.0.3)
+      railties (>= 3.0.19, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0, != 3.1.9, != 3.1.8, != 3.1.7, != 3.1.6, != 3.1.5, != 3.1.4, != 3.1.3, != 3.1.2, != 3.1.1, != 3.1.0)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
     delayed_job_active_record (0.4.4)
@@ -106,6 +123,9 @@ GEM
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
     formatador (0.2.4)
+    friendly_id (4.0.10.1)
+      activerecord (>= 3.0, < 4.0)
+    gemoji (1.1.2)
     gon (4.1.1)
       actionpack (>= 2.3.0)
       json
@@ -194,8 +214,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.0)
       mime-types
-    pg (0.15.1)
-    pg (0.15.1-x86-mingw32)
     polyglot (0.3.3)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -254,11 +272,19 @@ GEM
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
     rubyzip (0.9.9)
+    sanitize (2.0.6)
+      nokogiri (>= 1.4.4)
     sass (3.2.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    select2-rails (3.4.9)
+      sass-rails
+      thor (~> 0.14)
+    simple_form (2.1.0)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
     slop (3.4.5)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -282,6 +308,7 @@ GEM
       rack (>= 1.0)
     win32console (1.3.2)
     win32console (1.3.2-x86-mingw32)
+    workflow (0.8.0)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yaml_db (0.2.3)
@@ -292,6 +319,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid (~> 0.4.0)
+  acts_as_votable (~> 0.7.1)
   aws-sdk
   best_in_place
   bootstrap-colorpicker-rails
@@ -309,6 +337,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   font-awesome-sass-rails
+  forem!
   gon
   google_visualr (>= 2.1)
   guard-rspec
@@ -324,12 +353,12 @@ DEPENDENCIES
   omniauth
   omniauth-facebook
   paperclip (~> 3.0)
-  pg
   pry
   puma
   rails (= 3.2.11)
   rspec-rails
-  rubyzip
+  rubyzip (~> 0.9.9)
+  sanitize
   sass-rails (~> 3.2.3)
   sqlite3
   truncate_html
