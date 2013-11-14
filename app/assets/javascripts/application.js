@@ -29,6 +29,7 @@
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
+//= require scrolltofixed
 
 //= require jquery.purr
 //= require best_in_place
