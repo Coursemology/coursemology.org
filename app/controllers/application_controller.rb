@@ -97,6 +97,9 @@ class ApplicationController < ActionController::Base
       end
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings
+
+      unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.category.id == @course.id }
+      counts[:forums] = unread.count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
@@ -189,6 +192,7 @@ class ApplicationController < ActionController::Base
           text:   "Forums",
           url:    main_app.course_forums_url(@course),
           icon:   "icon-th-list",
+          count: counts[:forums]
       }
     end
 

@@ -41,7 +41,7 @@ group :assets do
   gem 'coffee-rails'
 end
 
-#gem 'pg'
+gem 'pg'
 gem 'jquery-rails', '2.1.3'
 gem 'devise', '2.1.2'
 gem 'cancan'
@@ -65,10 +65,7 @@ gem 'aws-sdk'
 gem 'forem', :github => "radar/forem"
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
-gem 'gon'
-gem 'momentjs-rails'
-gem 'truncate_html'
-gem 'natcmp'
+gem 'unread'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -3,6 +3,22 @@ Forem::TopicsController.class_eval do
   skip_before_filter :block_spammers
   append_before_filter :shim
 
+  def mark_read
+    unread = Forem::Post.unread_by(current_user).select { |p| p.topic.id == @topic.id }
+    Forem::Post.mark_as_read! unread, :for => current_user
+    redirect_to main_app.course_forum_topic_url(@course, @forum, @topic)
+  end
+
+  def next_unread
+    unread = Forem::Post.unread_by(current_user).select { |p| p.topic.id != @topic.id }
+    unread = unread.select { |p| p.topic.forum.id == @forum.id }
+    if unread.count > 0
+      redirect_to main_app.course_forum_topic_url(@course, @forum, unread.first.topic)
+    else
+      redirect_to main_app.course_forum_topic_url(@course, @forum, @topic)
+    end
+  end
+
   def new
     @topic = @forum.topics.build
     @topic.posts.build
@@ -61,6 +77,10 @@ Forem::TopicsController.class_eval do
   def shim
     if !@topic and params[:id]
       @topic = Forem::Topic.find(params[:id])
+    end
+
+    if !@topic and params[:topic_id]
+      @topic = Forem::Topic.find(params[:topic_id])
     end
 
     @course = Course.find(@forum.category.id)
