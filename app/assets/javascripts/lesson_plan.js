@@ -38,9 +38,9 @@ $(document).ready(function() {
       var option = this.options[i];
       var data = $(option).data();
       if (option.selected) {
-        $(document.getElementsByClassName(data.entryType)).slideDown();
+        $(document.getElementsByClassName(data.entryType)).slideDown({ complete: resizeStickyHeaders });
       } else {
-        $(document.getElementsByClassName(data.entryType)).slideUp();
+        $(document.getElementsByClassName(data.entryType)).slideUp({ complete: resizeStickyHeaders });
       }
     }
   });
