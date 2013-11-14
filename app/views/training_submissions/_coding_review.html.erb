@@ -7,7 +7,7 @@
           <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
         </div>
         <div style="margin-left: 10px">
-          <%= style_format('[mc]' + ans.code + '[/mc]') %>
+          <%= style_format('[mc]' + ans.code.html_safe + '[/mc]') %>
         </div>
     <% end %>
     <% if qa[:g] %>
