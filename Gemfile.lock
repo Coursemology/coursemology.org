@@ -199,8 +199,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    pg (0.17.0)
-    pg (0.17.0-x86-mingw32)
     polyglot (0.3.3)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -343,7 +341,6 @@ DEPENDENCIES
   omniauth
   omniauth-facebook
   paperclip (~> 3.0)
-  pg
   pry
   puma
   rails (= 3.2.11)
