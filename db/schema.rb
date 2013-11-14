@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131114071622) do
+ActiveRecord::Schema.define(:version => 20131114230000) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -327,6 +327,11 @@ ActiveRecord::Schema.define(:version => 20131114071622) do
 
   add_index "forem_categories", ["slug"], :name => "index_forem_categories_on_slug", :unique => true
 
+  create_table "forem_category_subscriptions", :force => true do |t|
+    t.integer "subscriber_id"
+    t.integer "category_id"
+  end
+
   create_table "forem_forums", :force => true do |t|
     t.string  "name"
     t.text    "description"
@@ -421,6 +426,33 @@ ActiveRecord::Schema.define(:version => 20131114071622) do
   add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
   add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
 
+  create_table "lesson_plan_entries", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.integer  "entry_type"
+    t.text     "description"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.string   "location"
+  end
+
+  create_table "lesson_plan_milestones", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.string   "title"
+    t.text     "description"
+    t.datetime "end_at"
+  end
+
+  add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
+
+  create_table "lesson_plan_resources", :force => true do |t|
+    t.integer "lesson_plan_entry_id"
+    t.integer "obj_id"
+    t.string  "obj_type"
+  end
+
   create_table "levels", :force => true do |t|
     t.integer  "level"
     t.integer  "exp_threshold"
@@ -451,6 +483,22 @@ ActiveRecord::Schema.define(:version => 20131114071622) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.string   "confirm_token"
+  end
+
+  create_table "material_folders", :force => true do |t|
+    t.integer  "parent_folder_id"
+    t.integer  "course_id"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "materials", :force => true do |t|
+    t.integer  "folder_id"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "mcq_answers", :force => true do |t|
