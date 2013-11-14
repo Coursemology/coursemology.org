@@ -1,14 +1,8 @@
-<% if entry.is_virtual? %>
-  <% entry_type = entry.entry_real_type %>
-<% else %>
-  <% entry_type = LessonPlanEntry::ENTRY_TYPES[entry.entry_type][0] %>
-<% end %>
-
-<tr class="<% if entry.is_virtual? %>lesson-plan-virtual-entry<% else %>lesson-plan-entry<% end %>">
+<tr class="<%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
   <td>
     <h1>
       <small>
-        <%= entry_type %>
+        <%= entry.entry_real_type %>
       </small>
     </h1>
   </td>
