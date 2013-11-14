@@ -24,6 +24,11 @@
           </ul>
         </div>
       <% end %>
+      <select class="selectpicker" id="lesson-plan-entry-filter" multiple="multiple" title="Filter">
+        <% get_lesson_plan_entry_types.each {|type| %>
+          <option checked="checked" data-entry-type="<%= get_lesson_plan_entry_css_class(type) %>"><%= type %></option>
+        <% } %>
+      </select>
       <div class="btn-group">
         <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
         <a id="lesson-plan-show-all" class="btn">Expand All</a>

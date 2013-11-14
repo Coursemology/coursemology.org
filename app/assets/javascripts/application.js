@@ -25,6 +25,7 @@
 //
 //= require bootstrap-colorpicker
 //= require bootstrap-datetimepicker
+//= require bootstrap-select
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
@@ -87,6 +88,7 @@ $(document).ready(function() {
     $('a[rel=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
+    $('.selectpicker').selectpicker();
 
     $('.delete-button').click(function() {
       var parent = $(this).parents('.delete-confirm-control-group');

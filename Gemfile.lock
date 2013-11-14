@@ -61,6 +61,7 @@ GEM
       railties (>= 3.0)
     bootstrap-datetimepicker-rails (0.0.11)
     bootstrap-sass (2.0.0)
+    bootstrap-select-rails (1.3.0.1)
     bootstrap-wysihtml5-rails (0.3.1.20)
       railties (>= 3.0)
     builder (3.0.4)
@@ -327,6 +328,7 @@ DEPENDENCIES
   bootstrap-colorpicker-rails
   bootstrap-datetimepicker-rails
   bootstrap-sass (= 2.0.0)
+  bootstrap-select-rails
   bootstrap-wysihtml5-rails
   cancan
   capistrano

@@ -32,6 +32,18 @@ $(document).ready(function() {
   $(document).on('click', '.resource-delete', null, function() {
     $(this).parents('tr').remove();
   });
+
+  $('#lesson-plan-entry-filter').change(function(e) {
+    for (var i = 0; i < this.options.length; ++i) {
+      var option = this.options[i];
+      var data = $(option).data();
+      if (option.selected) {
+        $(document.getElementsByClassName(data.entryType)).slideDown();
+      } else {
+        $(document.getElementsByClassName(data.entryType)).slideUp();
+      }
+    }
+  })
   
   $('#lesson-plan-hide-all').click(function() {
     $('.lesson-plan-body').slideUp();
