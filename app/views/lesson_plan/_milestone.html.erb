@@ -8,36 +8,40 @@
 <% end %>
 
 <li class="lesson-plan-item">
-  <div class="row">
-  <div class="lesson-plan-header span8">
-    <div>
-      <h2>
-        <% if entries.length > 0 %>
-        <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
-        <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
-        <% end %>
-        <%= milestone.title %>
-        <% if milestone.end_at %>
-        <small>Ending on <%= milestone.end_at.strftime("%d %b %Y") %></small>
-        <% end %>
-      </h2>
-    </div>
-    <% if milestone.description %>
-      <div>
-        <p>
-          <%= milestone.description.html_safe %>
-        </p>
+  <div class="lesson-plan-header-row-wrapper">
+    <div class="lesson-plan-header-row">
+      <div class="row">
+        <div class="lesson-plan-header span8">
+          <div>
+            <h2>
+              <% if entries.length > 0 %>
+              <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
+              <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
+              <% end %>
+              <%= milestone.title %>
+              <% if milestone.end_at %>
+              <small>Ending on <%= milestone.end_at.strftime("%d %b %Y") %></small>
+              <% end %>
+            </h2>
+          </div>
+          <% if milestone.description %>
+          <div>
+            <p>
+              <%= milestone.description.html_safe %>
+            </p>
+          </div>
+          <% end %>
+        </div>
+        <div class="pull-right">
+          <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
+          <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
+          <i class="icon-edit"></i>
+          <% end %>
+          <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
+          <% end %>
+        </div>
       </div>
-    <% end %>
-  </div>
-  <div class="pull-right">
-    <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
-      <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), class: 'btn' do %>
-        <i class="icon-edit"></i>
-      <% end %>
-      <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
-    <% end %>
-  </div>
+    </div>
   </div>
   
   <% if entries.length > 0 then %>
