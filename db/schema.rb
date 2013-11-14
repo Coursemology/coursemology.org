@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131109155007) do
+ActiveRecord::Schema.define(:version => 20131114071622) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -564,6 +564,15 @@ ActiveRecord::Schema.define(:version => 20131109155007) do
   add_index "queued_jobs", ["delayed_job_id"], :name => "index_queued_jobs_on_delayed_job_id"
   add_index "queued_jobs", ["owner_id"], :name => "index_queued_jobs_on_owner_id"
   add_index "queued_jobs", ["owner_type"], :name => "index_queued_jobs_on_owner_type"
+
+  create_table "read_marks", :force => true do |t|
+    t.integer  "readable_id"
+    t.integer  "user_id",                     :null => false
+    t.string   "readable_type", :limit => 20, :null => false
+    t.datetime "timestamp"
+  end
+
+  add_index "read_marks", ["user_id", "readable_type", "readable_id"], :name => "index_read_marks_on_user_id_and_readable_type_and_readable_id"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"

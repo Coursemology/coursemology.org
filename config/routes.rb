@@ -197,7 +197,9 @@ JfdiAcademy::Application.routes.draw do
         end
         get :subscribe
         get :unsubscribe
+        get :mark_unread
       end
+      get :mark_read
     end
   end
 
