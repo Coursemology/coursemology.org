@@ -38,6 +38,7 @@
 
   <hr>
   
+  <ul class="lesson-plan-list">
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
   <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
@@ -47,6 +48,7 @@
       <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
     <% end %>
   <% } %>
+  </ul>
 
   <a href="#top">Back to Top</a>
 </div>
