@@ -45,7 +45,7 @@ th#linked_resource_type, th#linked_resource_actions {
 }
 
 .hr-shrink-margin {
-  margin-top: 0;
+  margin-top: 5px;
 }
 
 .dropdown-trigger-on-hover:hover ul.dropdown-menu {
@@ -56,6 +56,18 @@ th#linked_resource_type, th#linked_resource_actions {
   margin-bottom: 0;
 }
 
-ul.lesson-plan-list {
+.lesson-plan-remove-margin {
   margin: 0;
+}
+
+.lesson-plan-entry-body {
+  margin-left: 15px;
+}
+
+.lesson-plan-delete-controls {
+  float: right
+}
+
+.lesson-plan-entry-separator {
+  margin: 5px 0;
 }

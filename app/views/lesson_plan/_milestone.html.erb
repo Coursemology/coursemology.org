@@ -41,15 +41,11 @@
   </div>
   
   <% if entries.length > 0 then %>
-  <div class="lesson-plan-body" style="display: none;" data-hidden="true">
-  <table class="table">
-    <tbody>
+  <ul class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
     <% entries.each {|entry| %>
     <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
     <% } %>
-    </tbody>
-  </table>
-  </div>
+  </ul>
   <% end %>
   <hr class="hr-shrink-margin" />
 </li>

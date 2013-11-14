@@ -1,12 +1,13 @@
-<tr class="<%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
-  <td>
+<hr class="lesson-plan-entry-separator">
+<li class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
+  <div class="span1">
     <h1>
       <small>
         <%= entry.entry_real_type %>
       </small>
     </h1>
-  </td>
-  <td>
+  </div>
+  <div class="span7 lesson-plan-entry-body">
     <% if entry.is_virtual? %>
       <%= link_to entry.url, :class => "lesson-plan-virtual-entry-title" do %>
         <% if not entry.is_published %>
@@ -50,15 +51,13 @@
     <% } %>
     </ul>
 <% end %>
-  </td>
-  <td width="15%">
+  </div>
+  <div class="pull-right">
     <% if can? :manage, LessonPlanEntry and not entry.is_virtual? %>
-      <div class="pull-right">
-        <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
-      </div>
+      <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
     <% end %>
-    </td>
-</tr>
+  </div>
+</li>
