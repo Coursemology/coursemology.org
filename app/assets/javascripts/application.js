@@ -63,24 +63,6 @@ $(document).ready(function() {
         pickTime: false
     });
 
-    $('.datepicker').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        startDate: new Date(),
-        pickTime: false
-    });
-
-    $('.datetimepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR'
-    });
-
-    $('.datepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        pickTime: false
-    });
-
     var today = new Date();
     var yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
