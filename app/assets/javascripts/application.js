@@ -42,25 +42,29 @@ $(document).ready(function() {
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
         language: 'en-US',
-        startDate: new Date()
+        startDate: new Date(),
+        collapse: false
     });
     
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
         startDate: new Date(),
-        pickTime: false
+        pickTime: false,
+        collapse: false
     });
     
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'en-US'
+        language: 'en-US',
+        collapse: false
     });
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
-        pickTime: false
+        pickTime: false,
+        collapse: false
     });
 
     var today = new Date();
