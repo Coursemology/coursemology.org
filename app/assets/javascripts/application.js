@@ -82,6 +82,16 @@ $(document).ready(function() {
 
     $('.colorpicker').colorpicker();
 
+    $('.btn-hover-text').hover(
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.text($this.data('alt'));
+        },
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.text($this.data('original'));
+        }
+    );
 
     $(function(){
         $(".jfdiCode").each(_jfdiFormatFunc);

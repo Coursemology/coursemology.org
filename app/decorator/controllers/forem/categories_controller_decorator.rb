@@ -1,5 +1,6 @@
 Forem::CategoriesController.class_eval do
   append_before_filter :shim
+  skip_authorize_resource :only => [:subscribe, :unsubscribe]
 
   def mark_read
     unread = Forem::Post.joins(topic: {forum: :category}).unread_by(current_user).where('forem_categories.id' => @course.id)
@@ -13,9 +14,18 @@ Forem::CategoriesController.class_eval do
     redirect_to main_app.course_forums_url(@course)
   end
 
-  def subscribe_new_topic
-    flash[:notice] = "Subscribed"
-    redirect_to main_app.course_achievements_url(@course)
+  def subscribe
+    Forem::CategorySubscription.create(subscriber_id: current_user.id, category_id: @course.id)
+    flash[:notice] = "Subscribed, you will be notified of new topics via email."
+    redirect_to main_app.course_forums_url(@course)
+  end
+
+  def unsubscribe
+    Forem::CategorySubscription.where('subscriber_id = ? AND category_id = ?', current_user.id, @course.id).each do |s|
+      s.destroy
+    end
+    flash[:notice] = "Unsubscribed, you will no longer receive email notifications."
+    redirect_to main_app.course_forums_url(@course)
   end
 
   private
