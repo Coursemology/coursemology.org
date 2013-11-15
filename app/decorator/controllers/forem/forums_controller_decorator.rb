@@ -5,6 +5,8 @@ Forem::ForumsController.class_eval do
   def mark_read
     unread = Forem::Post.joins(topic: :forum).unread_by(current_user).where('forem_forums.id' => @forum.id)
     Forem::Post.mark_as_read! unread, :for => current_user
+    unread = Forem::Topic.joins(topic: :forum).unread_by(current_user).where('forem_forums.id' => @forum.id)
+    Forem::Topic.mark_as_read! unread, :for => current_user
     redirect_to main_app.course_forum_path(@course, @forum)
   end
 
