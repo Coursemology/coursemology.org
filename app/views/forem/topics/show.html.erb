@@ -15,11 +15,11 @@
       <% if @topic.can_be_replied_to? %>
         <%= link_to t(".reply"), main_app.new_course_forum_topic_post_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
-      <% if @topic.user == forem_user || (can? :manage, Course) %>
+      <% if @topic.user == forem_user || (can? :manage, Forem) %>
         <%= link_to t(".delete"), main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
       <% end %>
-      <% if can? :manage, Course %>
-        <!--<%= link_to t('forem.topic.links.edit'), forem.edit_admin_topic_path(@topic), :class => "btn" %>-->
+      <% if can? :manage, Forem %>
+        <%= link_to t('forem.topic.links.edit'), main_app.course_forums_topics_admin_edit_path(@course, @forum, @topic), :class => "btn" %>
         <%= link_to t(".hide.#{@topic.hidden}"), main_app.course_forums_topics_admin_hide_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
         <%= link_to t(".lock.#{@topic.locked}"), main_app.course_forums_topics_admin_lock_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
         <%= link_to t(".pin.#{@topic.pinned}"), main_app.course_forums_topics_admin_pin_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
