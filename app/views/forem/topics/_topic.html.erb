@@ -10,16 +10,22 @@
         <% if topic.hidden? %>
           <i class='iicon-eye-close' title='Hidden Post'></i>
       <% end %>
-      <% if forem_user && view = topic.view_for(forem_user) %>
-        <% if topic.posts.exists?(["created_at > ?", view.updated_at]) %>
-          <i class='icon-envelope' title='Update!'></i>
-        <% end %>
+      <% relevant = relevant_posts(topic)
+         unread = false
+         relevant.each do |p|
+           if p.unread?(current_user)
+             unread = true
+           end
+         end
+      %>
+      <% if unread %>
+        <i class='icon-envelope' title='Update!'></i>
       <% end %>
     </span>
   </td>
   <td class='byline'>
     <div class='subject'>
-      <%= new_since_last_view_text(topic) %>
+      <!--<%= new_since_last_view_text(topic) %>-->
       <%= link_to forem_emojify(topic.subject), main_app.course_forum_topic_path(@course, @forum, topic) %>
       <% relevant = relevant_posts(topic) %>
       <% if (likes = relevant.first.likes.size) > 0 %>

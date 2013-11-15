@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui.min
 //= require jquery-fileupload
-//= require tree.jquery.js
+//= require tree.jquery
 //= require_tree .
 //
 //= require bootstrap-dropdown
@@ -25,9 +25,11 @@
 //
 //= require bootstrap-colorpicker
 //= require bootstrap-datetimepicker
+//= require bootstrap-select
 //
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
+//= require scrolltofixed
 
 //= require jquery.purr
 //= require best_in_place
@@ -42,43 +44,29 @@ $(document).ready(function() {
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
         language: 'en-US',
-        startDate: new Date()
+        startDate: new Date(),
+        collapse: false
     });
     
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
         startDate: new Date(),
-        pickTime: false
+        pickTime: false,
+        collapse: false
     });
     
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'en-US'
+        language: 'en-US',
+        collapse: false
     });
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
-        pickTime: false
-    });
-
-    $('.datepicker').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        startDate: new Date(),
-        pickTime: false
-    });
-
-    $('.datetimepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR'
-    });
-
-    $('.datepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        pickTime: false
+        pickTime: false,
+        collapse: false
     });
 
     var today = new Date();
@@ -101,6 +89,7 @@ $(document).ready(function() {
     $('a[rel=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
+    $('.selectpicker').selectpicker();
 
     $('.delete-button').click(function() {
       var parent = $(this).parents('.delete-confirm-control-group');

@@ -33,6 +33,7 @@ group :assets do
   gem 'bootstrap-wysihtml5-rails'
   gem 'jquery-fileupload-rails'
   gem 'bootstrap-colorpicker-rails'
+  gem 'bootstrap-select-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
@@ -43,6 +44,7 @@ end
 
 #gem 'pg'
 gem 'jquery-rails', '2.1.3'
+gem 'jqtree-rails'
 gem 'devise', '2.1.2'
 gem 'cancan'
 gem 'paperclip', '~>3.0'
@@ -65,10 +67,12 @@ gem 'aws-sdk'
 gem 'forem', :github => "radar/forem"
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
+gem 'unread'
 gem 'gon'
 gem 'momentjs-rails'
 gem 'truncate_html'
 gem 'natcmp'
+gem 'scrollToFixed_rails', '~> 1.0.0'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

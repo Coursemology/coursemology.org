@@ -45,7 +45,7 @@ th#linked_resource_type, th#linked_resource_actions {
 }
 
 .hr-shrink-margin {
-  margin-top: 0;
+  margin: 5px 0;
 }
 
 .dropdown-trigger-on-hover:hover ul.dropdown-menu {
@@ -54,4 +54,28 @@ th#linked_resource_type, th#linked_resource_actions {
 
 .heading-remove-margin {
   margin-bottom: 0;
+}
+
+.lesson-plan-remove-margin {
+  margin: 0;
+}
+
+.lesson-plan-entry-body {
+  margin-left: 15px;
+}
+
+.lesson-plan-delete-controls {
+  float: right;
+}
+
+.lesson-plan-entry-separator {
+  margin: 5px 0;
+}
+
+.lesson-plan-header-row {
+  padding-top: 5px;
+}
+
+.transparent-background {
+  background-color:rgba(255, 255, 255, 0.8);
 }
