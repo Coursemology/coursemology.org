@@ -65,10 +65,10 @@ $(document).ready(function() {
         return $("footer").offset().top;
       },
       fixed: function() {
-        currentHeader.addClass("shadow-down");
+        currentHeader.addClass("transparent-background");
       },
       unfixed: function() {
-        currentHeader.removeClass("shadow-down");
+        currentHeader.removeClass("transparent-background");
       }
     });
   });
