@@ -40,7 +40,7 @@
     <hr class="hr-shrink-margin">
   </div>
   
-  <ul class="lesson-plan-remove-margin">
+  <div>
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
   <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
@@ -50,7 +50,7 @@
       <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
     <% end %>
   <% } %>
-  </ul>
+  </div>
 
   <a href="#top">Back to Top</a>
 </div>

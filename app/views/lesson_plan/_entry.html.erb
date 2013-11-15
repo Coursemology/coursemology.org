@@ -1,5 +1,5 @@
-<hr class="lesson-plan-entry-separator">
-<li class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
+<div class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
+  <hr class="lesson-plan-entry-separator">
   <div class="span1">
     <h1>
       <small>
@@ -60,4 +60,4 @@
       <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
     <% end %>
   </div>
-</li>
+</div>
