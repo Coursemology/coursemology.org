@@ -4,6 +4,9 @@ Forem::SubscriptionMailer.class_eval do
     @topic = Forem::Topic.find(topic_id)
     @user = Forem.user_class.find(subscriber_id)
 
-    mail(:to => @user.email, :subject => I18n.t('forem.topic.received_new_topic'))
+    @forum = @topic.forum
+    @course = Course.find(@forum.category.id)
+    @post = @topic.posts.first
+    mail(:to => @user.email, :subject => @course.title + ': ' + I18n.t('forem.topic.received_new_topic'), :content_type => "text/html")
   end
 end

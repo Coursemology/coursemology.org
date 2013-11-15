@@ -10,8 +10,9 @@ module Forem
     def send_notification(topic_id)
       # If a user cannot be found, then no-op
       # This will happen if the user record has been deleted.
+
       if subscriber.present?
-        SubscriptionMailer.new_topic(topic_id, subscriber.id).deliver
+        SubscriptionMailer.delay.new_topic(topic_id, subscriber.id)
       end
     end
   end
