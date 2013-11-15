@@ -17,6 +17,7 @@ en:
     topic:
       links:
         edit: "Edit/Move"
+      received_new_topic: New topic posted in forum
     topics:
       show:
         links:
