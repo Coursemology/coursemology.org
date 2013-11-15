@@ -4,7 +4,7 @@
       <% if @folder.is_virtual? %>
         <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
           <a class='btn disabled' title="Upload Files">
-            <h4 class="icon-upload"></h4>
+            Upload
           </a>
           <a class="btn disabled" title="Create Folder">
             <h4 class="icon-folder-close"></h4>
@@ -14,7 +14,7 @@
       <% if (can? :upload, @folder) %>
         <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn hover-tooltip' 
            title="Upload Files">
-          <h4 class="icon-upload"></h4>
+          Upload
         </a>
       <% end %>
       <% if (can? :manage, @folder) %>
