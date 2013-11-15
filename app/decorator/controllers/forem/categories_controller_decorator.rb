@@ -6,6 +6,10 @@ Forem::CategoriesController.class_eval do
     if unread.count > 0
       Forem::Post.mark_as_read! unread.all, :for => current_user
     end
+    unread = Forem::Topic.joins(forum: :category).unread_by(current_user).where('forem_categories.id' => @course.id)
+    if unread.count > 0
+        Forem::Topic.mark_as_read! unread.all, :for => current_user
+    end
     redirect_to main_app.course_forums_url(@course)
   end
 

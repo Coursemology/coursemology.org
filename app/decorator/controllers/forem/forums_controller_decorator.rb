@@ -7,6 +7,10 @@ Forem::ForumsController.class_eval do
     if unread.count > 0
       Forem::Post.mark_as_read! unread.all, :for => current_user
     end
+    unread = Forem::Topic.unread_by(current_user).where('forum_id' => @forum.id)
+    if unread.count > 0
+      Forem::Topic.mark_as_read! unread.all, :for => current_user
+    end
     redirect_to main_app.course_forum_path(@course, @forum)
   end
 
