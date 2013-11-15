@@ -85,7 +85,7 @@ class LessonPlanEntriesController < ApplicationController
 private
   def render(*args)
     options = args.extract_options!
-    options[:template] = "/lesson_plan/#{params[:action]}"
+    options[:template] = "/lesson_plan/#{options[:action] || params[:action]}"
     super(*(args << options))
   end
 

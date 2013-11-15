@@ -62,13 +62,13 @@ $(document).ready(function() {
         if (nextHeader) {
           return $(nextHeader).offset().top - currentHeader.outerHeight(true) - 20;
         }
-        return $("footer").offset().top;
+        return $(".end-of-page").offset().top;
       },
       fixed: function() {
-        currentHeader.addClass("shadow-down");
+        currentHeader.addClass("transparent-background");
       },
       unfixed: function() {
-        currentHeader.removeClass("shadow-down");
+        currentHeader.removeClass("transparent-background");
       }
     });
   });
