@@ -10,11 +10,13 @@
         <% if topic.hidden? %>
           <i class='icon-eye-close' title='Hidden Post'></i>
       <% end %>
-      <% relevant = relevant_posts(topic)
+      <!-- TODO: figure out why .includes doesn't work -->
+      <% relevant = relevant_posts(topic).reorder('forem_posts.created_at DESC')
          unread = false
          relevant.each do |p|
            if p.unread?(current_user)
              unread = true
+             break
            end
          end
       %>
