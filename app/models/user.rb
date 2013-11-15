@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_voter
+  acts_as_reader
 
   before_create :set_default_role
   before_create :set_default_profile_pic
@@ -138,6 +140,17 @@ class User < ActiveRecord::Base
       uc.name = self.name
       uc.save
     end
+  end
+
+  def to_s
+    self.name
+  end
+
+  def get_user_course(course)
+    UserCourse.find_by_user_id_and_course_id(
+      self.id,
+      course.id
+    )
   end
 
   private

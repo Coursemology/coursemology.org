@@ -1,0 +1,42 @@
+<tr class="topic <%= cycle('odd', 'even') %> <%= topic.locked? ? 'locked' : 'unlocked' %> <%= topic.pinned? ? 'pinned' : '' %>">
+  <td class='icon'>
+    <span class='post-status-icons'>
+      <% if topic.locked? %>
+        <i class='icon-lock' title='Locked Post'></i>
+      <% end %>
+        <% if topic.pinned? %>
+        <i class='icon-chevron-up' title='Pinned Post'></i>
+      <% end %>
+        <% if topic.hidden? %>
+          <i class='iicon-eye-close' title='Hidden Post'></i>
+      <% end %>
+      <% relevant = relevant_posts(topic)
+         unread = false
+         relevant.each do |p|
+           if p.unread?(current_user)
+             unread = true
+           end
+         end
+      %>
+      <% if unread %>
+        <i class='icon-envelope' title='Update!'></i>
+      <% end %>
+    </span>
+  </td>
+  <td class='byline'>
+    <div class='subject'>
+      <!--<%= new_since_last_view_text(topic) %>-->
+      <%= link_to forem_emojify(topic.subject), main_app.course_forum_topic_path(@course, @forum, topic) %>
+      <% relevant = relevant_posts(topic) %>
+      <% if (likes = relevant.first.likes.size) > 0 %>
+        &nbsp;&nbsp;<i class="icon-thumbs-up"></i>&nbsp;<%= likes %>
+      <% end %>
+    </div>
+    <div class='started-by'><%= t "started_by" %><%= relevant.first.user %></div>
+  </td>
+  <td class='latest-post text-center'>
+    <%= link_to_latest_post(topic) -%>
+  </td>
+  <td class='posts-count text-center'><%= relevant_posts(topic).count %></td>
+  <td class='views-count text-center'><%= topic.views_count %></td>
+</tr>

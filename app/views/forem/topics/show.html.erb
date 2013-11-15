@@ -1,0 +1,72 @@
+<script>
+  forum.topicPath = "<%= main_app.course_forum_topic_path(@course, @forum, @topic) %>";
+</script>
+<div id='topic' class='<%= 'un' unless @topic.locked? %>locked'>
+  <div id='menu' class="pull-right">
+    <div class='btn-group'>
+      <% unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id } %>
+      <% if unread.count > 0 %>
+        <%= link_to "Mark all as read", main_app.course_forum_topic_mark_read_path(@course, @forum, @topic), :class => "btn" %>
+      <% end %>
+      <% unread = unread.select { |p| p.topic != @topic } %>
+      <% if unread.count > 0 %>
+        <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
+      <% end %>
+      <% if @topic.can_be_replied_to? %>
+        <%= link_to t(".reply"), main_app.new_course_forum_topic_post_path(@course, @forum, @topic), :class => "btn" %>
+      <% end %>
+      <% if @topic.user == forem_user || (can? :manage, Course) %>
+        <%= link_to t(".delete"), main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
+      <% end %>
+      <% if can? :manage, Course %>
+        <!--<%= link_to t('forem.topic.links.edit'), forem.edit_admin_topic_path(@topic), :class => "btn" %>-->
+        <%= link_to t(".hide.#{@topic.hidden}"), main_app.course_forums_topics_admin_hide_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
+        <%= link_to t(".lock.#{@topic.locked}"), main_app.course_forums_topics_admin_lock_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
+        <%= link_to t(".pin.#{@topic.pinned}"), main_app.course_forums_topics_admin_pin_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
+      <% end %>
+    </div>
+
+  </div>
+
+  <%= render :partial => 'forem/topics/head', :locals => { :topic => @topic } %>
+
+  <% if @topic.pending_review? %>
+    <div class="moderation alert" id='topic_moderation'>
+      <%= t(".pending_review") %>
+      <% if forem_admin_or_moderator?(@topic.forum) %>
+        <%= form_for @topic, :url => forem.moderate_forum_topic_path(@topic.forum, @topic), :method => :put do |f| %>
+          <%= render "/forem/moderation/options", :f => f %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @topic.locked? %>
+    <div class="alert">
+      <strong>This topic is locked.</strong>
+    </div>
+  <% end %>
+
+  <%= forem_pages_widget(@posts) %>
+
+  <div id='posts'>
+    <%= render :partial => "forem/posts/post", :collection => @posts %>
+  </div>
+
+  <%= forem_pages_widget(@posts) %>
+
+  <% if @topic.can_be_replied_to? %>
+    <hr>
+
+    <div class="simple_form">
+      <div class="post-content">
+        <h3>Post a Reply</h3>
+      </div>
+    </div>
+
+    <%= simple_form_for [main_app, @course, @forum, @topic, Forem::Post.new] do |f| %>
+      <%= render :partial => "forem/posts/form", :locals => { :f => f } %>
+      <%= f.submit t("forem.post.buttons.reply"), :class => "btn btn-primary" %>
+    <% end %>
+  <% end %>
+</div>

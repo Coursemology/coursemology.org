@@ -550,17 +550,9 @@ end
 if PreferableItem.count == 58
   PreferableItem.create! item:          "Sidebar",
                          item_type:     "Student",
-                         name:          "materials",
-                         default_value: "Workbin",
-                         description:   "All course materials uploaded",
+                         name:          "forums",
+                         default_value: "Forums",
+                         description:   "Discussion Forums",
                          default_display: true
 end
 
-if PreferableItem.count == 59
-  PreferableItem.create! item:          "Sidebar",
-                         item_type:     "Student",
-                         name:          "lesson_plan",
-                         default_value: "Lesson Plan",
-                         description:   "Lesson Plan",
-                         default_display: true
-end
