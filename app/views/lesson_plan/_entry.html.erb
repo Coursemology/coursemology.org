@@ -1,6 +1,6 @@
-<div>
+<div class="<%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
   <hr class="lesson-plan-entry-separator">
-  <div class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
+  <div class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %>">
     <div class="span1">
       <h1>
         <small>
