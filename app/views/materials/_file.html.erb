@@ -1,0 +1,43 @@
+<tr class="workbin-file-row">
+  <td>
+    <input type="checkbox" class="workbin-select-file-checkbox" data-fileid="<%= material.id %>">
+  </td>
+  <td>
+    <% link = if material.is_virtual? then material.url else course_material_file_path(@course, material) end %>
+    <%= link_to link do %>
+    <span>
+      <% if @is_new[material.id] %>
+      <input type="hidden" class="new_<%= material.class.model_name.human.pluralize %>" />
+      <span class="label label-warning">New</span>
+      <% end %>
+      <i class="icon-file"></i> <strong><%= material.filename %></strong> <span class="muted"><%= get_pretty_file_size(material.filesize) %></span>
+    </span>
+    
+    <% end %>
+    
+    <% if material.description %>
+    <p><%= material.description.html_safe %></p>
+    <% end %>
+  </td>
+  
+  <td>
+    <%= datetime_format(material.updated_at) %> 
+    <div class="muted"><%= material.file.creator.name %></div>
+  </td>
+  
+  <td>
+    <div class="pull-right">
+      <% if (can? :manage, material) %>
+      <% if material.is_virtual? %>
+      <%= render partial: "disabled_controls" %>
+      <% else %>
+      <%= link_to edit_course_material_file_path(@course, material), class: 'btn' do %>
+      <i class="icon-edit"></i>
+      <% end %>
+      <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_material_file_path(@course, material) } %>
+      <% end %>
+      <% end %>
+    </div>
+  </td>
+  
+</tr>

@@ -7,7 +7,7 @@
     <%= f.submit "Done", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
     <%= hidden_field_tag :type, :files  %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_material_folder_url(@course, @folder), :class => 'btn' %>
+                course_material_folder_path(@course, @folder), :class => 'btn' %>
   </div>
 <% end %>
 
@@ -16,35 +16,31 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-download fade" id="template-upload-id-{%= file.id %}">
     {% if (file.error) { %}
+    <td></td>
     <td class="name"><span>{%=file.name%}</span></td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
     {% } else { %}
-    <td class="preview">{% if (file.thumbnail_url) { %}
-      <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
-      {% } %}</td>
-    {% if (file.original) { %}
-    <td class="name"><span>{%=file.original%}</span></td>
-    {% } %}
+    <td class="delete">
+      <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}" style="display: none;"></button>
+      <input type="checkbox" name="delete" value="1">
+    </td>
     <td class="name">
       <input type="hidden" name="files[{%=file.name%}]" class="uploaded-files" value="{%=file.id%}">
-      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{% if (file.original) { %}{%=file.original%}{% } else { %}{%=file.name%}{% } %}</a>
       <div class="span5" style="overflow: visible; padding-top: 1em">
-        <div class="span7">
-          <textarea class="text_area span7 html-editor uploaded-file-description" name="descriptions[{%=file.name%}]" rows="10"></textarea>
+        <div class="span9">
+          <textarea class="text_area span9 html-editor uploaded-file-description" name="descriptions[{%=file.name%}]" rows="10"></textarea>
         </div>
       </div>
     </td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-    <td class="timestamp"><span>{%= file.timestamp %}</span></td>
-    <td colspan="2"></td>
+    <td class="timestamp" colspan="2"><span>{%= file.timestamp %}</span></td>
     {% } %}
     <td class="delete">
       <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
         <i class="icon-trash icon-white"></i>
-        <span>{%=locale.fileupload.destroy%}</span>
       </button>
-      <input type="checkbox" name="delete" value="1">
     </td>
   </tr>
   {% } %}

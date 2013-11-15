@@ -96,18 +96,26 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
-    get "materials/new/:parent", to: "materials#new", as: :new_material
-    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
-    get "materials/subfolder/:id/mark_read", to: "materials#mark_folder_read", as: :material_mark_folder_read
-    get "materials/subfolder/:id/:filename", to: "materials#show_by_name", as: :material_show_by_name, constraints: {filename: /[^\/]+/}
-    get "materials/subfolder/:id", to: "materials#index", as: :material_folder
-    put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
-    post "materials/subfolder/:parent", to: "materials#create", as: :material_create
-    delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
-    get "materials/virtual/:virtual", to: "materials#index_virtual", as: :material_virtual_folder
-    resources :materials, except: [:new, :create] do
-      #resources :file_uploads
+    get "materials", to: "materials#index"
+    resources :material_virtual_folders, only: [], path: "materials/virtuals", controller: "materials" do
+      get "index", :on => :member, :to => "materials#index_virtual"
     end
+    resources :material_folders, only: [], path: "materials/folders", controller: "materials" do
+      post "create", :on => :collection, to: "materials#create"
+      member do
+        get "show", to: "materials#index"
+        get "edit", to: "materials#edit_folder"
+        get "upload", to: "materials#new"
+        post "create", to: "materials#create"
+        put "update", to: "materials#update_folder"
+        delete "", to: "materials#destroy_folder"
+      end
+
+      get "mark_read", to: "materials#mark_folder_read"
+    end
+    resources :material_files, except: [:index, :create], path: "materials/files", controller: "materials"
+    get "materials/files/:id", to: "materials#show", as: :material # Alias for url_for with Material objects
+    get "materials/*path", to: "materials#show_by_name", as: :material_by_path
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
@@ -201,6 +209,7 @@ JfdiAcademy::Application.routes.draw do
     match "/forums" => "forem/categories#show", as: :forums
     match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
+    match "/forums/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
     match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
     match "/forums/:forum_id/topics/:id/manage" => "forem/admin/topics#index", as: :forums_topics_admin
     put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
@@ -214,7 +223,11 @@ JfdiAcademy::Application.routes.draw do
         end
         get :subscribe
         get :unsubscribe
+        get :mark_read
+        get :next_unread
       end
+      get :mark_read
+      get :next_unread
     end
   end
 

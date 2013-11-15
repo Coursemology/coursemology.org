@@ -4,9 +4,13 @@
       <%= link_to "/", id: "site-logo" do %>
           <img src="/images/coursemology_white.png" />
       <% end %>
+      <div style="float: left; margin-top: 13px;margin-left:10px">
+        <%= render partial: "layouts/facebook_like", locals: {style:"button_count"} %>
+      </div>
       <a class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
         <span class="icon-chevron-down"></span>
       </a>
+
       <div class="nav-collapse" style="height: 0px;">
         <ul class="nav pull-right">
           <li><%= link_to "Courses", main_app.courses_path %></li>
@@ -32,6 +36,9 @@
                 <%= link_to "(Stop Masquerading)", main_app.destroy_masquerades_path, method: :delete %>
               </li>
           <% end %>
+          <li>
+
+          </li>
         </ul>
       </div>
     </div>

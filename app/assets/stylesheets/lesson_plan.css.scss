@@ -37,3 +37,45 @@ th#linked_resource_type, th#linked_resource_actions {
 .lesson-plan-virtual-entry:hover .lesson-plan-entry-description {
   color: #000000;
 }
+
+.lesson-plan-virtual-entry-title {
+  line-height: 27px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.hr-shrink-margin {
+  margin: 5px 0;
+}
+
+.dropdown-trigger-on-hover:hover ul.dropdown-menu {
+  display: block;
+}
+
+.heading-remove-margin {
+  margin-bottom: 0;
+}
+
+.lesson-plan-remove-margin {
+  margin: 0;
+}
+
+.lesson-plan-entry-body {
+  margin-left: 15px;
+}
+
+.lesson-plan-delete-controls {
+  float: right;
+}
+
+.lesson-plan-entry-separator {
+  margin: 5px 0;
+}
+
+.lesson-plan-header-row {
+  padding-top: 5px;
+}
+
+.transparent-background {
+  background-color:rgba(255, 255, 255, 0.8);
+}

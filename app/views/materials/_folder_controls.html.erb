@@ -1,51 +1,76 @@
 <div class="materials-folder-controls">
-  <% if (can? :manage, Material) %>
   <span>
-    <% if @folder.is_virtual %>
-    <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
-    <a class='btn btn-primary disabled'>
-      Upload Files
-    </a>
-    <a class='btn btn-success disabled'>
-      Create Folder
-    </a>
-    </span>
-    <% else %>
-    <%= link_to t('.new', :default => t("Upload files")), course_new_material_path(@course, @folder), :class => 'btn btn-primary' %>
-    <%= link_to "Create Folder", "#create-subfolder-modal", "data-toggle" => "modal", :class => 'btn btn-success' %>
+    <% if (can? :upload, @folder) %>
+      <% if @folder.is_virtual? %>
+        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
+          <a class='btn disabled' title="Upload Files">
+            Upload
+          </a>
+          <a class="btn disabled" title="Create Folder">
+            <h4 class="icon-folder-close"></h4>
+          </a>
+        </span>
+      <% else %>
+      <% if (can? :upload, @folder) %>
+        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn hover-tooltip' 
+           title="Upload Files">
+          Upload
+        </a>
+      <% end %>
+      <% if (can? :manage, @folder) %>
+        <a href="#create-subfolder-modal" data-toggle="modal" class="btn hover-tooltip" title="Create Folder">
+          <h4 class="icon-folder-close"></h4>
+        </a>
+      <% end %>
+      <% end %>
     <% end %>
+    &nbsp;
   </span>
-  <% end %>
-
+  
   <span class="pull-right btn-group">
-    <% if (can? :manage, Material) %>
-      <% if @folder.is_virtual %>
+    <% if (can? :manage, @folder) %>
+      <% if @folder.is_virtual? %>
       <a class="btn disabled workbin-disabled-controls" title="This folder can't be edited.">Edit</a>
       <% else %>
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>
     <% end %>
-    <%= link_to "Download .zip", (@folder.is_virtual ?
+    <%= link_to "Download .zip", (@folder.is_virtual? ?
         course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
-        course_material_folder_path(@course, @folder, :format => 'zip')), :class => 'btn' %>
-    <% if not(@folder.is_virtual) %>
-    <%= link_to "Mark as Read", course_material_mark_folder_read_path(@course, @folder), :class => 'btn' %>
+        course_material_folder_path(@course, @folder, :format => 'zip')),
+        :class => 'btn', :id => 'workbin-download-zip-button' %>
+    
+    <% if not(@folder.is_virtual?) %>
+    <%# For non-root folders, allow marking the entire workbin read. %>
+    <% if @folder.parent_folder %>
+    <%= link_to "Mark as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to "Mark entire workbin as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
+      </ul>
+    <% else %>
+    <%# Otherwise we are at root, then marking the root folder read is as
+        good as marking the entire workbin read. %>
+        <%= link_to "Mark Workbin as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
+    <% end %>
     <% end %>
   </span>
 </div>
 
-<% if (can? :manage, Material) && not(@folder.is_virtual) %>
+<% if (can? :manage, @folder) && not(@folder.is_virtual?) %>
 <div id="create-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
-    Create Subfolder
+    <h3>Create Subfolder</h3>
   </div>
-  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @subfolder, :subfolder_method => :post } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: MaterialFolder.new, subfolder_method: :post } %>
 </div>
 
 <div id="edit-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
-    Edit Folder
+    <h3>Edit Folder</h3>
   </div>
-  <%= render partial: "subfolder_modal_form", locals: { :folder_to_change => @folder,  :subfolder_method => :put } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: @folder, subfolder_method: :put } %>
 </div>
 <% end %>

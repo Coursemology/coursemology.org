@@ -88,7 +88,22 @@ class CourseAbility
       can :read, Announcement, Announcement.published do |ann|
         ann.publish_at <= Time.now
       end
-      can :read, [Material, MaterialFolder]
+
+      # Workbin: The file is accessible to students if the student uploaded
+      # the file, or course staff uploaded the file.
+      can :read, MaterialFolder, ['open_at <= ? OR open_at IS NULL', DateTime.now] do |folder|
+        folder.open_at == nil || folder.open_at <= DateTime.now
+      end
+      can :upload, MaterialFolder, [
+        'can_student_upload = ? AND \
+         (open_at <= ? OR open_at IS NULL) AND \
+         (close_at >= ? OR close_at IS NULL)', true, DateTime.now, DateTime.now] do |folder|
+        folder.can_student_upload? && folder.is_open?
+      end
+      can :manage, Material, :file => { :creator_id => user.id }
+      can :read, Material, :file => {
+        :creator_id => UserCourse.staff.where(:course_id => user_course.course).pluck(:user_id) }
+
       can :read, [LessonPlanEntry, LessonPlanMilestone]
 
       can :read, [Mission, Training, Survey], publish: true

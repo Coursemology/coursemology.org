@@ -485,6 +485,9 @@ ActiveRecord::Schema.define(:version => 20131109155007) do
     t.integer  "course_id"
     t.string   "name"
     t.text     "description"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.boolean  "can_student_upload", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -516,9 +519,9 @@ ActiveRecord::Schema.define(:version => 20131109155007) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
@@ -607,6 +610,15 @@ ActiveRecord::Schema.define(:version => 20131109155007) do
   add_index "queued_jobs", ["delayed_job_id"], :name => "index_queued_jobs_on_delayed_job_id"
   add_index "queued_jobs", ["owner_id"], :name => "index_queued_jobs_on_owner_id"
   add_index "queued_jobs", ["owner_type"], :name => "index_queued_jobs_on_owner_type"
+
+  create_table "read_marks", :force => true do |t|
+    t.integer  "readable_id"
+    t.integer  "user_id",                     :null => false
+    t.string   "readable_type", :limit => 20, :null => false
+    t.datetime "timestamp"
+  end
+
+  add_index "read_marks", ["user_id", "readable_type", "readable_id"], :name => "index_read_marks_on_user_id_and_readable_type_and_readable_id"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"

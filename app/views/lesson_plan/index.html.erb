@@ -1,71 +1,97 @@
 <div>
-<a class="lesson-plan-anchor" name="top"></a>
-<h1>Lesson Plan</h1>
-<% if can? :manage, LessonPlanEntry %>
-<%= link_to "New Entry", new_course_lesson_plan_entry_path(), :class => "btn btn-primary" %>
-<%= link_to "New Milestone", new_course_lesson_plan_milestone_path(), :class => "btn btn-success" %>
-<a id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" class="btn btn-warning">
-  Generate Milestones
-</a>
-<% end %>
-<span class="pull-right btn-group">
-<a id="lesson-plan-hide-all" class="btn">Collapse All</a>
-<a id="lesson-plan-show-all" class="btn">Expand All</a>
-</span>
+  <a class="lesson-plan-anchor" name="top"></a>
+  <div id="lesson-plan-toolbar">
+    <div class="row">
+      <div class="span5">
+        <h1 class="heading-remove-margin">Lesson Plan</h1>
+      </div>
+      <div class="pull-right btn-toolbar">
+        <% if can? :manage, LessonPlanEntry %>
+          <div class="btn-group dropdown-trigger-on-hover">
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+              New <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <%= link_to "Entry", new_course_lesson_plan_entry_path() %>
+              </li>
+              <li>
+                <%= link_to "Period", new_course_lesson_plan_milestone_path() %>
+              </li>
+              <li class="divider"></li>
+              <li id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" >
+                <a href="#">Generate Periods</a>
+              </li>
+            </ul>
+          </div>
+        <% end %>
+        <select class="selectpicker dropdown-trigger-on-hover" id="lesson-plan-entry-filter" multiple="multiple" title="Filter" data-selected-text-format="count>1" data-width="auto">
+          <% get_lesson_plan_entry_types.each {|type| %>
+            <option selected="selected" data-entry-type="<%= get_lesson_plan_entry_css_class(type) %>"><%= type %></option>
+          <% } %>
+        </select>
+        <div class="btn-group">
+          <a id="lesson-plan-hide-all" class="btn">Collapse All</a>
+          <a id="lesson-plan-show-all" class="btn">Expand All</a>
+        </div>
+      </div>
+    </div>
+    
+    <hr class="hr-shrink-margin">
+  </div>
+  
+  <div>
+  <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
+  <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
+  <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
+  <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
+  <% sorted_milestones.each { |milestone| %>
+    <% if !milestone.is_virtual? || milestone.entries.length  > 0 %>
+      <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
+    <% end %>
+  <% } %>
+  </div>
 
-<hr>
-
-<% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual } %>
-<% grouped_milestones[false] = [] unless grouped_milestones[false] %>
-<% grouped_milestones[true] = [] unless grouped_milestones[true] %>
-<% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
-<% sorted_milestones.each { |milestone| %>
-  <% if !milestone.is_virtual || milestone.entries.length  > 0 %>
-    <%= render :partial => 'lesson_plan/milestone', locals: { :milestone => milestone } %>
-  <% end %>
-<% } %>
-
-<a href="#top">Back to Top</a>
+  <a href="#top">Back to Top</a>
 </div>
   
 <% if can? :manage, LessonPlanEntry %>
   <div id="lesson-plan-multi-milestone" class="modal hide fade" data-backdrop="static">
-    <div class="modal-header">
-      <h3>Milestone Generator</h3>
-    </div>
-    <div class="modal-body hidden">
-      <div id="modal-loading">
-        <h2>Loading...</h2>
-        <div class="progress progress-striped active">
-          <div class="bar" style="width: 100%;"></div>
+    <form class="lesson-plan-milestone-generator-form">
+      <div class="modal-header">
+        <h3>Period Generator</h3>
+      </div>
+      <div class="modal-body hidden">
+        <div id="modal-loading">
+          <h2>Loading...</h2>
+          <div class="progress progress-striped active">
+            <div class="bar" style="width: 100%;"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="modal-body">
-      <form>
+    
+      <div class="modal-body">
         <div class="control-group">
-          <label class="control-label" for="input-number-milestones">
-            How many milestones should we create?
+          <label class="control-label" for="input-length-milestones">
+            How long is each period, in days?
           </label>
           <div class="controls">
-            <input type="number" id="input-number-milestones" required="required">
-            <span class="help-inline"></span>
+            <input type="number" id="input-length-milestones" required="required">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="control-label" for="input-length-milestones">
-            How long is each milestone, in days?
+          <label class="control-label" for="input-number-milestones">
+            How many periods should we create?
           </label>
           <div class="controls">
-            <input type="number" id="input-length-milestones" required="required">
-            <span class="help-inline"></span>
+            <input type="number" id="input-number-milestones" required="required">
           </div>
         </div>
         
         <div class="control-group">
           <label class="control-label" for="input-prefix-milestones">
-            What should each milestone be prefixed with?
+            What should each period be prefixed with?
             <br>(For example, "Week" will generate "Week 1", "Week 2", and so on.)
           </label>
           <div class="controls">
@@ -75,7 +101,7 @@
         
         <div class="control-group">
           <label class="control-label" for="input-start-milestones">
-            What day should the first milestone start on?
+            What day should the first period start on?
           </label>
           <div class="controls">
             <div class="datepicker-past input-append date">
@@ -83,18 +109,16 @@
               <span class="add-on">
                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
               </span>
-              <span class="help-inline"></span>
             </div>
           </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <input id="lesson-plan-done-generating" class="btn btn-primary" type="submit" value="Done" />
+        <button data-dismiss="modal" class="btn">
+          Cancel
+        </button>
+      </div>
       </form>
-    </div>
-    <div class="modal-footer">
-      <button id="lesson-plan-done-generating" class="btn btn-primary">
-        Done
-      </button>
-      <button data-dismiss="modal" class="btn">
-        Cancel
-      </button>
   </div>
 <% end %>
