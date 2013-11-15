@@ -7,7 +7,7 @@
 <% entries = entries.select { |entry| entry.is_published } %>
 <% end %>
 
-<li class="lesson-plan-item">
+<div class="lesson-plan-item">
   <div class="lesson-plan-header-row-wrapper">
     <div class="lesson-plan-header-row">
       <div class="row">
@@ -45,11 +45,11 @@
   </div>
   
   <% if entries.length > 0 then %>
-  <ul class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
+  <div class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
     <% entries.each {|entry| %>
     <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
     <% } %>
-  </ul>
+  </div>
   <% end %>
   <hr class="hr-shrink-margin" />
-</li>
+</div>

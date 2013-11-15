@@ -1,63 +1,65 @@
-<hr class="lesson-plan-entry-separator">
-<li class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %> <%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
-  <div class="span1">
-    <h1>
-      <small>
-        <%= entry.entry_real_type %>
-      </small>
-    </h1>
-  </div>
-  <div class="span7 lesson-plan-entry-body">
-    <% if entry.is_virtual? %>
-      <%= link_to entry.url, :class => "lesson-plan-virtual-entry-title" do %>
-        <% if not entry.is_published %>
-          <span class="label label-important">Unpublished</span>
+<div class="<%= get_lesson_plan_entry_css_class(entry.entry_real_type) %>">
+  <hr class="lesson-plan-entry-separator">
+  <div class="row <%= entry.is_virtual?  ? 'lesson-plan-virtual-entry' : 'lesson-plan-entry' %>">
+    <div class="span1">
+      <h1>
+        <small>
+          <%= entry.entry_real_type %>
+        </small>
+      </h1>
+    </div>
+    <div class="span7 lesson-plan-entry-body">
+      <% if entry.is_virtual? %>
+        <%= link_to entry.url, :class => "lesson-plan-virtual-entry-title" do %>
+          <% if not entry.is_published %>
+            <span class="label label-important">Unpublished</span>
+          <% end %>
+          <%= entry.title %>
         <% end %>
+      <% else %>
+      <a class="lesson-plan-anchor" name="entry-<%= entry.id %>"></a>
+      <h2>
         <%= entry.title %>
+      </h2>
       <% end %>
-    <% else %>
-    <a class="lesson-plan-anchor" name="entry-<%= entry.id %>"></a>
-    <h2>
-      <%= entry.title %>
-    </h2>
-    <% end %>
-    <h3><%= entry.location %></h3>
-    <h4>
-      <% if entry.start_at %>
-        <span class="icon-calendar"></span>
-        <%= entry.start_at.strftime("%A, %d %b %Y %I:%M %p") %>
-        <% if entry.end_at %> to 
-          <% if entry.start_at.yday == entry.end_at.yday and entry.start_at.year == entry.end_at.year %>
-            <%= entry.end_at.strftime("%I:%M %p") %>
-          <% else %>
-            <%= entry.end_at.strftime("%A, %d %b %Y %I:%M %p") %>
+      <h3><%= entry.location %></h3>
+      <h4>
+        <% if entry.start_at %>
+          <span class="icon-calendar"></span>
+          <%= entry.start_at.strftime("%A, %d %b %Y %I:%M %p") %>
+          <% if entry.end_at %> to 
+            <% if entry.start_at.yday == entry.end_at.yday and entry.start_at.year == entry.end_at.year %>
+              <%= entry.end_at.strftime("%I:%M %p") %>
+            <% else %>
+              <%= entry.end_at.strftime("%A, %d %b %Y %I:%M %p") %>
+            <% end %>
           <% end %>
         <% end %>
-      <% end %>
-    </h4>
-    <div class="show-bullet-points lesson-plan-entry-description">
-      <% if entry.is_virtual? %>
-        <%= truncate_html entry.description, :length => 140 %>
-      <% else %>
-        <%= entry.description.html_safe %>
+      </h4>
+      <div class="show-bullet-points lesson-plan-entry-description">
+        <% if entry.is_virtual? %>
+          <%= truncate_html entry.description, :length => 140 %>
+        <% else %>
+          <%= entry.description.html_safe %>
+        <% end %>
+      </div>
+      
+  <% if entry.resources.length > 0 %>
+      <h4>Instructional Resources</h4>
+      <ul>
+      <% entry.resources.each { |r| %>
+        <li><%= link_to r.obj.title, url_for([@course, r.obj]) %></li>
+      <% } %>
+      </ul>
+  <% end %>
+    </div>
+    <div class="pull-right">
+      <% if can? :manage, LessonPlanEntry and not entry.is_virtual? %>
+        <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
       <% end %>
     </div>
-    
-<% if entry.resources.length > 0 %>
-    <h4>Instructional Resources</h4>
-    <ul>
-    <% entry.resources.each { |r| %>
-      <li><%= link_to r.obj.title, url_for([@course, r.obj]) %></li>
-    <% } %>
-    </ul>
-<% end %>
   </div>
-  <div class="pull-right">
-    <% if can? :manage, LessonPlanEntry and not entry.is_virtual? %>
-      <%= link_to edit_course_lesson_plan_entry_path(@course, entry), class: 'btn' do %>
-        <i class="icon-edit"></i>
-      <% end %>
-      <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
-    <% end %>
-  </div>
-</li>
+</div>
