@@ -45,7 +45,7 @@
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Downloaded at</th>
+                <th>Downloaded/Seen at</th>
               </tr>
             </thead>
             <% role_counts = [] %>
@@ -60,10 +60,10 @@
             <tbody>
               <tr>
                 <th><%= view.user_course.user.name %></th>
-                <td><%= view.created_at %></td>
+                <td><%= datetime_format(view.created_at) %></td>
               </tr>
             </tbody>
-            <% } %>
+          <% } %>
           </table>
           <h3>Summary</h3>
           <ul>
