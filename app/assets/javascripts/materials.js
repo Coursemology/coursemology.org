@@ -191,6 +191,11 @@ $(document).ready(function() {
   
   // Select a row by clicking on it.
   $('.materials-file-row').click(function(event) {
+    if ($(event.target).parents('.btn').length > 0) {
+      // Do not highlight this row since it was a button which was clicked.
+      return;
+    }
+
     $(this).toggleClass('materials-file-selected');
     var checkbox = $(this).find('.materials-select-file-checkbox');
     var isChecked = checkbox.prop('checked');
@@ -210,5 +215,4 @@ $(document).ready(function() {
       masterBox.prop('checked', false);
     }
   });
-    
 });
