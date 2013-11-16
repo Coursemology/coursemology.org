@@ -89,7 +89,7 @@ class CourseAbility
         ann.publish_at <= Time.now
       end
 
-      # Workbin: The file is accessible to students if the student uploaded
+      # Materials: The file is accessible to students if the student uploaded
       # the file, or course staff uploaded the file.
       can :read, MaterialFolder, ['open_at <= ? OR open_at IS NULL', DateTime.now] do |folder|
         folder.open_at == nil || folder.open_at <= DateTime.now

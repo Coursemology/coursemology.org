@@ -322,7 +322,7 @@ private
 
   # Builds the list of virtual folders which are accessible
   def virtual_folders
-    entries = @course.workbin_virtual_entries
+    entries = @course.materials_virtual_entries
     entries.each { |entry|
       entry.files = entry.files.select { |file|
         can?(:manage, file.parent) ||
