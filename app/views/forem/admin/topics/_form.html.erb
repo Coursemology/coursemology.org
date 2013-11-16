@@ -1,13 +1,24 @@
 <%= simple_form_for [forem, :admin, @topic] do |f| %>
   <%= f.input :subject %>
-  <%= f.association :forum , :label => "Forum" %>
-  <%= f.label :locked %>
-  <%= f.check_box :locked %>
-  <%= f.label :pinned %>
-  <%= f.check_box :pinned %>
-  <%= f.label :hidden %>
-  <%= f.check_box :hidden %>
-
+  <%= f.association :forum, collection:Forem::Forum.where(category_id: @course), :required => true, :label => "Section" %>
+  <div class="control-group">
+    <%= f.label :locked %>
+    <div class="controls">
+      <%= f.check_box :locked %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :pinned %>
+    <div class="controls">
+      <%= f.check_box :pinned %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :hidden %>
+    <div class="controls">
+      <%= f.check_box :hidden %>
+    </div>
+  </div>
   <br />
   <%= f.submit :class => "btn btn-primary" %>
 <% end %>

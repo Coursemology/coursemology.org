@@ -4,6 +4,8 @@ class LessonPlanMilestone < ActiveRecord::Base
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
+  validates :end_at, presence: true, allow_blank: false
+
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(*args)
     (Class.new do

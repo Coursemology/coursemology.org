@@ -3,6 +3,8 @@ Forem::Admin::BaseController.class_eval do
     if @course.blank?
       if params[:course_id]
         @course = Course.find(params[:course_id])
+      elsif params[:topic][:forum_id]
+        @course = Course.find(Forem::Forum.find(params[:topic][:forum_id]).category.id)
       elsif params[:id]
         @course = Course.find(Forem::Forum.find(params[:id]).category.id)
       else

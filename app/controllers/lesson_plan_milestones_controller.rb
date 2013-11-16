@@ -2,7 +2,7 @@ class LessonPlanMilestonesController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :lesson_plan_milestone, through: :course
 
-  before_filter :load_general_course_data, :only => [:show, :edit]
+  before_filter :load_general_course_data, :except => [:destroy]
 
   def show
 
@@ -14,7 +14,7 @@ class LessonPlanMilestonesController < ApplicationController
 
   def create
     @lesson_plan_milestone.creator = current_user
-    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day if @lesson_plan_milestone.end_at
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
@@ -58,7 +58,7 @@ class LessonPlanMilestonesController < ApplicationController
 private
   def render(*args)
     options = args.extract_options!
-    options[:template] = "/lesson_plan/milestone_#{params[:action]}"
+    options[:template] = "/lesson_plan/milestone_#{options[:action] || params[:action]}"
     super(*(args << options))
   end
 end

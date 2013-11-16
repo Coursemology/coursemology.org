@@ -2,7 +2,7 @@
   <span>
     <% if (can? :upload, @folder) %>
       <% if @folder.is_virtual? %>
-        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
+        <span class="materials-disabled-controls" title="This folder is reserved for Mission/Training files.">
           <a class='btn disabled' title="Upload Files">
             Upload
           </a>
@@ -30,7 +30,7 @@
   <span class="pull-right btn-group">
     <% if (can? :manage, @folder) %>
       <% if @folder.is_virtual? %>
-      <a class="btn disabled workbin-disabled-controls" title="This folder can't be edited.">Edit</a>
+      <a class="btn disabled materials-disabled-controls" title="This folder can't be edited.">Edit</a>
       <% else %>
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>
@@ -38,7 +38,7 @@
     <%= link_to "Download .zip", (@folder.is_virtual? ?
         course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')),
-        :class => 'btn', :id => 'workbin-download-zip-button' %>
+        :class => 'btn', :id => 'materials-download-zip-button' %>
     
     <% if not(@folder.is_virtual?) %>
     <%# For non-root folders, allow marking the entire workbin read. %>

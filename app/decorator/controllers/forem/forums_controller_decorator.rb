@@ -3,13 +3,19 @@ Forem::ForumsController.class_eval do
   append_before_filter :shim
 
   def mark_read
-    unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id }
-    Forem::Post.mark_as_read! unread, :for => current_user
+    unread = Forem::Post.joins(topic: :forum).unread_by(current_user).where('forem_forums.id' => @forum.id)
+    if unread.count > 0
+      Forem::Post.mark_as_read! unread.all, :for => current_user
+    end
+    unread = Forem::Topic.unread_by(current_user).where('forum_id' => @forum.id)
+    if unread.count > 0
+      Forem::Topic.mark_as_read! unread.all, :for => current_user
+    end
     redirect_to main_app.course_forum_path(@course, @forum)
   end
 
   def next_unread
-    unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id }
+    unread = Forem::Post.joins(topic: :forum).unread_by(current_user).where('forem_forums.id' => @forum.id)
     if unread.count > 0
       redirect_to main_app.course_forum_topic_url(@course, @forum, unread.first.topic)
     else
