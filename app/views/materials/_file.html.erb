@@ -45,18 +45,38 @@
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Downloaded/Seen at</th>
+                <th>Downloaded at</th>
               </tr>
             </thead>
-          <% SeenByUser.course(@course).materials.where(:obj_id => material).each {|view| %>
+            <% role_counts = [] %>
+            <% SeenByUser.course(@course).materials.where(:obj_id => material).each {|view| %>
+            <%
+               role_id = view.user_course.role.id;
+               while (role_counts.length <= role_id) do
+                 role_counts[role_counts.length] = 0
+               end
+               role_counts[role_id] += 1
+            %>
             <tbody>
               <tr>
                 <th><%= view.user_course.user.name %></th>
-                <td><%= datetime_format(view.created_at) %></td>
+                <td><%= view.created_at %></td>
               </tr>
             </tbody>
-          <% } %>
+            <% } %>
           </table>
+          <h3>Summary</h3>
+          <ul>
+          <% role_counts.each_index {|i|
+            role = Role.find_by_id(i)
+            next unless role
+
+            role_users = @course.user_courses.where(:role_id => role.id).count
+            next unless role_users > 0
+          %>
+            <li><%= role.title %>: <%= role_counts[i] %> out of <%= role_users %> seen</li>
+          <% } %>
+          </ul>
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
