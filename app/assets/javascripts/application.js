@@ -46,7 +46,8 @@ $(document).ready(function() {
         language: 'en-US',
         startDate: new Date(),
         collapse: false,
-        pickSeconds: false
+        pickSeconds: false,
+        maskInput: true
     });
     
     $('.datepicker').datetimepicker({
@@ -54,21 +55,24 @@ $(document).ready(function() {
         language: 'en-US',
         startDate: new Date(),
         pickTime: false,
-        collapse: false
+        collapse: false,
+        maskInput: true
     });
     
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
         collapse: false,
-        pickSeconds: false
+        pickSeconds: false,
+        maskInput: true
     });
 
     $('.datepicker-past').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
         pickTime: false,
-        collapse: false
+        collapse: false,
+        maskInput: true
     });
 
     var today = new Date();
