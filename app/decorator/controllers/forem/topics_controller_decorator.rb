@@ -12,7 +12,7 @@ Forem::TopicsController.class_eval do
   end
 
   def next_unread
-    unread = Forem::Post.joins(:topic).unread_by(current_user).where('forem_topics.id <> ?', @topic.id)
+    unread = Forem::Post.joins(:topic).unread_by(current_user).where('forem_forums.id = ? AND forem_topics.id <> ? ', @forum.id, @topic.id)
     if unread.count > 0
       redirect_to main_app.course_forum_topic_url(@course, @forum, unread.first.topic)
     else
