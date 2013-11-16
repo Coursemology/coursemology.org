@@ -49,7 +49,7 @@ $(document).ready(function() {
         pickSeconds: false,
         maskInput: true
     });
-    
+
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
@@ -58,7 +58,7 @@ $(document).ready(function() {
         collapse: false,
         maskInput: true
     });
-    
+
     $('.datetimepicker-past').datetimepicker({
         format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
@@ -104,6 +104,17 @@ $(document).ready(function() {
       $('.delete-confirm-button', parent).fadeIn();
       setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 2000);
     });
+
+    $('.btn-hover-text').hover(
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.text($this.data('alt'));
+        },
+        function() {
+            var $this = $(this); // caching $(this)
+            $this.text($this.data('original'));
+        }
+    );
 
     $(function(){
         $(".jfdiCode").each(_jfdiFormatFunc);

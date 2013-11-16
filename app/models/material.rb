@@ -93,6 +93,7 @@ class Material < ActiveRecord::Base
   
   def filename=(filename)
     self.file.original_name = filename
+    self.file.download_filename = filename
   end
     
   def title

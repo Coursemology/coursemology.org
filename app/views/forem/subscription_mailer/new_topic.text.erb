@@ -1,0 +1,12 @@
+Hello, <%= @user %>!<br/>
+New topic posted in the forum for <%= @course.title %>:
+<br/>
+<%= @topic.subject %> by <%= @topic.user %>
+<br/>
+
+<%=raw Forem.formatter.format(@post.text) %>
+
+<%= link_to 'Click here', main_app.course_forum_topic_url(@course, @forum, @topic) %> to view.
+
+Best Regards, <br/>
+The Coursemology Team
