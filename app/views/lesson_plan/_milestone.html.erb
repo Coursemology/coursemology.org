@@ -19,14 +19,23 @@
               <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
               <% end %>
               <%= milestone.title %>
+              <% if milestone.previous_milestone or milestone.end_at %>
               <small>
                 <% if milestone.previous_milestone %>
-                <%= milestone.previous_milestone.end_at.advance(:days => 1).strftime("%d %b %Y") %> - 
+                  <%= milestone.previous_milestone.end_at.advance(:days => 1).strftime("%d %b %Y") %>
+                  <% if milestone.end_at %>
+                    - 
+                  <% else %>
+                    onwards
+                  <% end %>
                 <% else %>
                   Ending on
                 <% end %>
-                <%= milestone.end_at.strftime("%d %b %Y") %>
+                <% if milestone.end_at %>
+                  <%= milestone.end_at.strftime("%d %b %Y") %>
+                <% end %>
               </small>
+              <% end %>
             </h2>
           </div>
           <% if milestone.description %>

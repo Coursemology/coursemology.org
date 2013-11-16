@@ -10,6 +10,7 @@ class LessonPlanMilestone < ActiveRecord::Base
   def self.create_virtual(*args)
     (Class.new do
         def initialize(other_entries)
+          @previous_milestone = nil
           @other_entries = other_entries
         end
 
@@ -24,6 +25,12 @@ class LessonPlanMilestone < ActiveRecord::Base
         end
         def end_at
           nil
+        end
+        def previous_milestone
+          @previous_milestone
+        end
+        def previous_milestone=(milestone)
+          @previous_milestone = milestone
         end
 
         def is_virtual?
