@@ -11,7 +11,7 @@ class SurveysController < ApplicationController
       @stats = {}
       total = @course.user_courses.real_students.count
       @surveys.each do |survey|
-        sub = survey.survey_submissions.select {|s| s.user_course.is_student? and !s.user_course.is_phantom? }.count
+        sub = survey.survey_submissions.select {|s| s.user_course and s.user_course.is_student? and !s.user_course.is_phantom? }.count
         @stats[survey] = {started: sub, total: total}
       end
     end
