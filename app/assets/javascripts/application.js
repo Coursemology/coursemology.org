@@ -42,10 +42,11 @@
 $(document).ready(function() {
 
     $('.datetimepicker').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
+        format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
         startDate: new Date(),
-        collapse: false
+        collapse: false,
+        pickSeconds: false
     });
     
     $('.datepicker').datetimepicker({
@@ -57,9 +58,10 @@ $(document).ready(function() {
     });
     
     $('.datetimepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
+        format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
-        collapse: false
+        collapse: false,
+        pickSeconds: false
     });
 
     $('.datepicker-past').datetimepicker({
