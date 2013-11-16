@@ -1,6 +1,6 @@
-<tr class="materials-file-row">
+<tr class="workbin-file-row">
   <td>
-    <input type="checkbox" class="materials-select-file-checkbox" data-fileid="<%= material.id %>">
+    <input type="checkbox" class="workbin-select-file-checkbox" data-fileid="<%= material.id %>">
   </td>
   <td>
     <% link = if material.is_virtual? then material.url else course_material_file_path(@course, material) end %>
@@ -31,6 +31,38 @@
       <% if material.is_virtual? %>
       <%= render partial: "disabled_controls" %>
       <% else %>
+      <% if (can? :manage, Material) %>
+      <%= link_to '#materials-statistics-' + material.id.to_s, 'class' => 'btn materials-statistics-button', 'data-toggle' => 'modal', 'role' => 'button' do %>
+      <i class="icon-eye-open"></i>
+      <% end %>
+      <div class="materials-statistics modal hide fade" id="materials-statistics-<%= material.id %>" role="dialog" aria-labelledby="Download Statistics" aria-hidden="true">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3>File Statistics</h3>
+        </div>
+        <div class="modal-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Downloaded at</th>
+              </tr>
+            </thead>
+          <% SeenByUser.course(@course).materials.where(:obj_id => material).each {|view| %>
+            <tbody>
+              <tr>
+                <th><%= view.user_course.user.name %></th>
+                <td><%= view.created_at %></td>
+              </tr>
+            </tbody>
+          <% } %>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+      </div>
+      <% end %>
       <%= link_to edit_course_material_file_path(@course, material), class: 'btn' do %>
       <i class="icon-edit"></i>
       <% end %>
