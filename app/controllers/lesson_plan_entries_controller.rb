@@ -8,7 +8,11 @@ class LessonPlanEntriesController < ApplicationController
     @milestones = @course.lesson_plan_milestones.order("end_at")
     
     if @milestones.length > 0
-      from = @milestones[@milestones.length - 1].end_at
+      last_milestone = @milestones[@milestones.length - 1];
+      from = last_milestone.end_at
+    else
+      last_milestone = nil
+      from = nil
     end
     
     if can? :manage, Mission
@@ -18,7 +22,7 @@ class LessonPlanEntriesController < ApplicationController
     end
 
     # Add the entries which don't belong in any milestone
-    other_entries = if from then
+    other_entries = if last_milestone then
         @course.lesson_plan_entries.where("end_at > :end_at",
           :end_at => from) +
         virtual_entries
@@ -28,6 +32,7 @@ class LessonPlanEntriesController < ApplicationController
       end
 
     other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
+    other_entries_milestone.previous_milestone = last_milestone
     @milestones <<= other_entries_milestone
   end
 

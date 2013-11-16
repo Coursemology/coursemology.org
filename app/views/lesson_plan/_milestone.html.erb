@@ -21,11 +21,11 @@
               <%= milestone.title %>
               <small>
                 <% if milestone.previous_milestone %>
-                <%= milestone.previous_milestone.end_at.advance(:days => 1).strftime("%d %b %Y") %> - 
-                <% else %>
-                  Ending on
+                <%= milestone.previous_milestone.end_at.advance(:days => 1).strftime("%d %b %Y") %> -
                 <% end %>
-                <%= milestone.end_at.strftime("%d %b %Y") %>
+                <% if milestone.end_at %>
+                  Ending on <%= milestone.end_at.strftime("%d %b %Y") %>
+                <% end %>
               </small>
             </h2>
           </div>
