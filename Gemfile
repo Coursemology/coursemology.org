@@ -67,6 +67,7 @@ gem 'aws-sdk'
 gem 'forem', :github => "radar/forem"
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
+gem 'unread'
 gem 'gon'
 gem 'momentjs-rails'
 gem 'truncate_html'
