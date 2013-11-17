@@ -150,6 +150,23 @@
           $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
         });
 
+        // Prevent files with the same filename from being uploaded twice in the
+        // same session.
+        $('#fileupload').on('fileuploadadd', function(e,data) {
+          var currentfiles = [];
+          $(this).fileupload('option').filesContainer.children().each(function() {
+            currentfiles.push($(this).data('data').files[0].name);
+          });
+
+          data.files = $.map(data.files, function(file, i) {
+            if ($.inArray(file.name, currentfiles) >= 0) {
+              return null;
+            } else {
+              return file;
+            }
+          });
+        });
+
         // Load existing files:
         $.getJSON($('#fileupload').prop('action'), function (files) {
             var fu = $('#fileupload').data('blueimpFileupload'),
