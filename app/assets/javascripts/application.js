@@ -92,6 +92,8 @@ $(document).ready(function() {
         endDate: yesterday
     });
   
+    // This stuff is actually for the Lesson Plan, but won't work in the
+    // Lesson Plan JS file, as that's loaded before application.js.
     if ($('.datetimepicker-past').length) {
       var dateTimeFormatString = $('.datetimepicker-past').data('datetimepicker').format;
       var inputElement = $('.datetimepicker-past input');
@@ -100,6 +102,27 @@ $(document).ready(function() {
         inputElement.attr("placeholder", dateTimeFormatString);
       }
     }
+  
+    if (gon.startAt) {
+      var dateInSeconds = parseInt(gon.startAt, 10) * 1000;
+      var start = new Date(dateInSeconds);
+      $('.datetimepicker-past').each(function() {
+        $(this).data('datetimepicker').setStartDate(start);
+      });
+    }
+    
+    if (gon.endAt) {
+      var dateInSeconds = parseInt(gon.endAt, 10) * 1000;
+      var end = new Date(dateInSeconds);
+      
+      $('.datetimepicker-past').each(function() {
+        var picker = $(this).data('datetimepicker');
+        picker.setEndDate(end);
+        picker.setDate(end);
+        picker.setDate(null);
+      });
+    }
+    // End of Lesson Plan stuff.
 
     $('a[rel=tooltip]').tooltip();
 
