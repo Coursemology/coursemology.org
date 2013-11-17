@@ -37,6 +37,8 @@ class LessonPlanEntriesController < ApplicationController
   end
 
   def new
+    gon.startAt = params[:start_at]
+    gon.endAt = params[:end_at]
   end
 
   def create
