@@ -93,7 +93,7 @@ $(document).ready(function() {
     });
   
     if ($('.datetimepicker-past').length) {
-      var dateTimeFormatString = $('.datetimepicker-past').data().datetimepicker.format;
+      var dateTimeFormatString = $('.datetimepicker-past').data('datetimepicker').format;
       var inputElement = $('.datetimepicker-past input');
       if (!inputElement.attr("placeholder")) {
         // We only replace the placeholder if there isn't already one.
