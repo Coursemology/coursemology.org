@@ -41,19 +41,19 @@
         :class => 'btn', :id => 'materials-download-zip-button' %>
     
     <% if not(@folder.is_virtual?) %>
-    <%# For non-root folders, allow marking the entire workbin read. %>
+    <%# For non-root folders, allow marking all materials read recursively. %>
     <% if @folder.parent_folder %>
     <%= link_to "Mark as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
       <button class="btn dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><%= link_to "Mark entire workbin as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
+        <li><%= link_to "Mark entire #{get_materials_display_name} as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
       </ul>
     <% else %>
     <%# Otherwise we are at root, then marking the root folder read is as
-        good as marking the entire workbin read. %>
-        <%= link_to "Mark Workbin as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
+        good as marking all materials recursively read. %>
+        <%= link_to "Mark entire #{get_materials_display_name} as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
     <% end %>
   </span>
