@@ -6,7 +6,7 @@ Hello, <%= @user %>!<br/>
 <% else %>
   <%= link_to 'Re: ' + @topic.subject, main_app.course_forum_topic_url(@course, @forum, @topic, :anchor => "post-" + @post.id.to_s) %>
 <% end %>
-by <%= @topic.user %>
+by <%= @post.user %>
 <br/>
 <blockquote>
   <%=raw Forem.formatter.format(@post.text) %>

@@ -15,8 +15,21 @@ Forem::CategoriesController.class_eval do
   end
 
   def subscribe
-    Forem::CategorySubscription.create(subscriber_id: current_user.id, category_id: @course.id)
-    flash[:notice] = "Subscribed, you will be notified of new posts via email."
+    digest = params[:digest] ? true : false
+
+    subscription = Forem::CategorySubscription.where(subscriber_id: current_user.id, category_id: @course.id).first
+    if subscription
+      subscription.is_digest = digest
+      subscription.save
+    else
+      Forem::CategorySubscription.create(subscriber_id: current_user.id, category_id: @course.id, is_digest: digest)
+    end
+    if digest
+      flash[:notice] = "Subscribed, you will receive daily summary of new posts."
+    else
+      flash[:notice] = "Subscribed, you will be notified of new posts via email."
+    end
+
     redirect_to main_app.course_forums_url(@course)
   end
 
