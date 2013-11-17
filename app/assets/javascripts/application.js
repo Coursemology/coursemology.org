@@ -15,7 +15,6 @@
 //= require jquery-ui.min
 //= require jquery-fileupload
 //= require tree.jquery
-//= require_tree .
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -30,7 +29,7 @@
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
 //= require scrolltofixed
-
+//
 //= require jquery.purr
 //= require best_in_place
 //= require codemirror
@@ -38,6 +37,9 @@
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
 //= require moment
+//
+//= require_self
+//= require_tree .
 
 $(document).ready(function() {
 
