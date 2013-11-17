@@ -91,6 +91,15 @@ $(document).ready(function() {
         pickTime: false,
         endDate: yesterday
     });
+  
+    if ($('.datetimepicker-past').length) {
+      var dateTimeFormatString = $('.datetimepicker-past').data().datetimepicker.format;
+      var inputElement = $('.datetimepicker-past input');
+      if (!inputElement.attr("placeholder")) {
+        // We only replace the placeholder if there isn't already one.
+        inputElement.attr("placeholder", dateTimeFormatString);
+      }
+    }
 
     $('a[rel=tooltip]').tooltip();
 
