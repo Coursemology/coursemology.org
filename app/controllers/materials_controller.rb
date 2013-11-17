@@ -83,6 +83,7 @@ class MaterialsController < ApplicationController
         |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
+    authorize! :read, MaterialFolder
 
     respond_to do |format|
       format.html {
