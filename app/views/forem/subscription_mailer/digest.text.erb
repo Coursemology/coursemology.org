@@ -1,1 +1,21 @@
-Digest
+Hello, <%= @user %>!<br/>
+<p>Here are the new forum posts for <%= @day %> in <%= @course.title %>:</p>
+<br/>
+<% @posts.each_with_index do |post, index| %>
+  <%= index + 1 %>.&nbsp;
+  <%= link_to 'Re: ' + post.topic.subject, main_app.course_forum_topic_url(@course, post.topic.forum, post.topic, :anchor => "post-" + post.id.to_s) %>
+  <br/>
+  <blockquote>
+    <p>Posted by <%= post.user %> at <%= format_post_time(post.created_at) %></p>
+    <%=raw truncate_html Forem.formatter.format(post.text), length: @length, omission: '...(truncated)' %>
+  </blockquote>
+  <p> -------------------------------------------------- </p>
+  <br/>
+<% end %>
+
+
+<br/>
+Best Regards,
+<br/>
+
+The Coursemology Team
