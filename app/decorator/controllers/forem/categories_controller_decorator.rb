@@ -16,7 +16,7 @@ Forem::CategoriesController.class_eval do
 
   def subscribe
     Forem::CategorySubscription.create(subscriber_id: current_user.id, category_id: @course.id)
-    flash[:notice] = "Subscribed, you will be notified of new topics via email."
+    flash[:notice] = "Subscribed, you will be notified of new posts via email."
     redirect_to main_app.course_forums_url(@course)
   end
 
