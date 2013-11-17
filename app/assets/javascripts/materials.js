@@ -119,10 +119,6 @@ $(document).ready(function() {
       window.location.href = selectedFolderUrl;
     }
   });
-  
-  // Set up tooltips.
-  $('.materials-disabled-controls').tooltip();
-  $('.hover-tooltip').tooltip();
 
   $('form.materials-edit-form').validatr([
     ['input#material_filename', function() {

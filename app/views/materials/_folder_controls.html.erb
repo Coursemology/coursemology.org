@@ -12,13 +12,13 @@
         </span>
       <% else %>
       <% if (can? :upload, @folder) %>
-        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn hover-tooltip' 
-           title="Upload Files">
+        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn'
+           title="Upload Files" rel="tooltip">
           Upload
         </a>
       <% end %>
       <% if (can? :manage, @folder) %>
-        <a href="#create-subfolder-modal" data-toggle="modal" class="btn hover-tooltip" title="Create Folder">
+        <a href="#create-subfolder-modal" data-toggle="modal" class="btn" title="Create Folder" rel="tooltip">
           <h4 class="icon-folder-close"></h4>
         </a>
       <% end %>
@@ -30,7 +30,7 @@
   <span class="pull-right btn-group">
     <% if (can? :manage, @folder) %>
       <% if @folder.is_virtual? %>
-      <a class="btn disabled materials-disabled-controls" title="This folder can't be edited.">Edit</a>
+      <a class="btn disabled" title="This folder can't be edited." rel="tooltip">Edit</a>
       <% else %>
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>

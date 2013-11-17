@@ -92,7 +92,7 @@ $(document).ready(function() {
         endDate: yesterday
     });
 
-    $('a[rel=tooltip]').tooltip();
+    $('*[rel=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();
