@@ -116,70 +116,71 @@
 </script>
 
 <script type="text/javascript" charset="utf-8">
-    $(function () {
-        // Initialize the jQuery File Upload widget:
-
-
-        $('#fileupload').bind('fileuploaddone', function (e, data) {
-            // Log the current bitrate for this upload:
-            var that = $(this).data('blueimp-fileupload') ||
-                            $(this).data('fileupload'),
-                    file = that._getFilesFromResponse(data)[0];
-            $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
-        });
-
-        $('#fileupload').fileupload({
-            maxFileSize: 50000000,
-            autoUpload: true,
-            uploadTemplateId: 'template-upload-complicated',
-            downloadTemplateId: 'template-download-complicated',
-            formData: [
-                {
-                    name: '_mode',
-                    value: 'MUL'
-                }]
-        });
-
-        // Register our handler for deleting items so deleted IDs won't be sent
-        // to the server.
-        $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
-          var $row = $(this).parents('tr.template-download')
-          var input = $('input.uploaded-files', $row)[0];
-
-          // Match the input with the same name as the file we are deleting.
-          $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
-        });
-
-        // Prevent files with the same filename from being uploaded twice in the
-        // same session.
-        $('#fileupload').on('fileuploadadd', function(e,data) {
-          var currentfiles = [];
-          $(this).fileupload('option').filesContainer.children().each(function() {
-            currentfiles.push($(this).data('data').files[0].name);
-          });
-
-          data.files = $.map(data.files, function(file, i) {
-            if ($.inArray(file.name, currentfiles) >= 0) {
-              return null;
-            } else {
-              return file;
-            }
-          });
-        });
-
-        // Load existing files:
-        $.getJSON($('#fileupload').prop('action'), function (files) {
-            var fu = $('#fileupload').data('blueimpFileupload'),
-                    template;
-            fu._adjustMaxNumberOfFiles(-files.length);
-//            console.log(files);
-            template = fu._renderDownload(files)
-                    .appendTo($('#fileupload .files'));
-            // Force reflow:
-            fu._reflow = fu._transition && template.length &&
-                    template[0].offsetWidth;
-            template.addClass('in');
-            $('#loading').remove();
-        });
+$(function () {
+    // Initialize the jQuery File Upload widget:
+    $('#fileupload').fileupload({
+        maxFileSize: 50000000,
+        autoUpload: true,
+        uploadTemplateId: 'template-upload-complicated',
+        downloadTemplateId: 'template-download-complicated',
+        formData: [
+            {
+                name: '_mode',
+                value: 'MUL'
+            }]
     });
+
+    var uploaded_files = []
+    $('#fileupload').bind('fileuploaddone', function (e, data) {
+      // Log the current bitrate for this upload:
+      var that = $(this).data('blueimp-fileupload') ||
+              $(this).data('fileupload'),
+          file = that._getFilesFromResponse(data)[0];
+      $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
+      uploaded_files.push(file.original);
+    });
+
+    // Register our handler for deleting items so deleted IDs won't be sent
+    // to the server.
+    $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
+      var $row = $(this).parents('tr.template-download')
+      var input = $('input.uploaded-files', $row)[0];
+
+      // Match the input with the same name as the file we are deleting.
+      $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
+    });
+
+    // Prevent files with the same filename from being uploaded twice in the
+    // same session.
+    $('#fileupload').on('fileuploadadd', function(e,data) {
+      var current_files = [];
+      $(this).fileupload('option').filesContainer.children().each(function() {
+        var data = $(this).data('data');
+        if (data) {
+          current_files.push(data.files[0].name);
+        }
+      });
+
+      data.files = $.map(data.files, function(file, i) {
+        if ($.inArray(file.name, uploaded_files) >= 0 || $.inArray(file.name, current_files) >= 0) {
+          return null;
+        } else {
+          return file;
+        }
+      });
+    });
+
+    // Load existing files:
+    $.getJSON($('#fileupload').prop('action'), function (files) {
+        var fu = $('#fileupload').data('blueimpFileupload');
+        fu._adjustMaxNumberOfFiles(-files.length);
+        var template = fu._renderDownload(files)
+                .appendTo($('#fileupload .files'));
+        // Force reflow:
+        fu._reflow = fu._transition && template.length &&
+                template[0].offsetWidth;
+        template.addClass('in');
+        $('#loading').remove();
+    });
+});
 </script>
