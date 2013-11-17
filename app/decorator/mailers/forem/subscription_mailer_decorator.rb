@@ -22,4 +22,13 @@ Forem::SubscriptionMailer.class_eval do
 
     mail(:to => @user.email, :subject => @course.title + ': ' + I18n.t('forem.topic.received_new_post'), :content_type => "text/html")
   end
+
+  def digest(posts, user, course)
+    posts.each do |post|
+      puts post.text
+      puts post.topic.subject
+      puts post.created_at
+    end
+    mail(:to => user.email, :subject => course.title)
+  end
 end

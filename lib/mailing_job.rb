@@ -14,6 +14,9 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
         new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
+      when Forem::SubscriptionMailer.to_s
+        # daily forum new posts digest email
+        forum_digest(course)
     end
   end
 
@@ -65,4 +68,18 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
       end
     end
   end
+
+  def forum_digest(course)
+    subscriptions = Forem::CategorySubscription.where(category_id: course.id, is_digest: true)
+
+    yesterday = (Time.now.midnight - 1.day)..(Time.now.end_of_day - 1.day)
+
+    posts = Forem::Post.includes(topic: :forum).where(created_at: yesterday)
+            .where('forem_forums.category_id = ?', course.id)
+
+    subscriptions.each do |sub|
+      Forem::SubscriptionMailer.digest(posts, sub.subscriber, course)
+    end
+  end
+
 end
