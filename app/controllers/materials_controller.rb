@@ -322,7 +322,7 @@ private
 
   # Builds the list of virtual folders which are accessible
   def virtual_folders
-    entries = @course.workbin_virtual_entries
+    entries = @course.materials_virtual_entries
     entries.each { |entry|
       entry.files = entry.files.select { |file|
         can?(:manage, file.parent) ||
@@ -358,7 +358,7 @@ private
           end
         end
 
-        temp_path = File.join(dir, m.filename.sub(":", "_"))
+        temp_path = File.join(dir, m.filename.gsub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
         curr_user_course.mark_as_seen(m) unless m.is_virtual?
 

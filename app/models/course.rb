@@ -314,7 +314,7 @@ class Course < ActiveRecord::Base
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 
-  def workbin_virtual_entries
+  def materials_virtual_entries
     mission_files =
       # Get the missions' files, and map it to the virtual entries.
       (self.missions.map { |m|
