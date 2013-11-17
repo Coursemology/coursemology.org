@@ -37,8 +37,17 @@ private
     end
 
     obj = file.s3_object
+    if not obj then
+      return
+    end
+
+    # Preserve the ACL of the file we are replacing
     acl = obj.acl
+
+    # Copy the file in place -- this replaces the headers but retains content
     new_obj = obj.copy_to(obj.key, :content_disposition => 'attachment; filename=' + original_name)
+
+    # Restore ACL since copy_to does not preserve it
     new_obj.acl = acl
   end
 end
