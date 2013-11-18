@@ -7,7 +7,7 @@ class FileUpload < ActiveRecord::Base
   has_attached_file :file
 
   before_post_process :hash_filename
-  after_save :save_s3_filename
+  after_save :sync_filename
 
   include Rails.application.routes.url_helpers
   require 'digest/md5'
@@ -25,13 +25,51 @@ class FileUpload < ActiveRecord::Base
     }
   end
 
+  # Whether the current save operation will preserve the filename
+  def preserve_filename?
+    not(@hash_filenames)
+  end
+
+  # Sets whether the filename will be preserved when this record is saved
+  def preserve_filename=(preserve = true)
+    @hash_filenames = not(preserve)
+  end
+
+  # Sets that the filename will be preserved when this record is saved
+  def preserve_filename!
+    self.preserve_filename = (true)
+  end
+
+  # Gets the display filename for the upload: It will give the original name if present, otherwise
+  # it will be the (obfuscated) storage filename
+  def display_filename
+    original_name || file_file_name
+  end
+
+  # Sets the download filename for this upload. By default, this is obfuscated. This is the filename
+  # that the users will see when they try to download this particular file.
+  #
+  # nil can be specified as the filename to remove the download filename.
+  def download_filename=(filename)
+    save_s3_filename(filename)
+    nil
+  end
+
+private
+  # Stores on disk the hash of the file, for uniqueness as well as to obfuscate the file name, where necessary
+  # for example, in surveys.
   def hash_filename
     self.original_name = self.file_file_name.to_s
     self.file.instance_write(:file_name, "#{Digest::MD5.hexdigest(self.file_file_name)}#{File.extname(self.file_file_name)}")
   end
 
-private
-  def save_s3_filename
+  # Callback after saving the record to sync the filename with AWS
+  def sync_filename
+    save_s3_filename(preserve_filename? ? original_name : nil)
+  end
+
+  # Sets the download filename of S3 if specified; otherwise removes the filename.
+  def save_s3_filename(filename)
     if not self.file then
       return
     end
@@ -45,7 +83,10 @@ private
     acl = obj.acl
 
     # Copy the file in place -- this replaces the headers but retains content
-    new_obj = obj.copy_to(obj.key, :content_disposition => 'attachment; filename=' + original_name)
+    options = {
+      content_disposition: (filename ? 'attachment; filename=' + filename : '')
+    }
+    new_obj = obj.copy_to(obj.key, options)
 
     # Restore ACL since copy_to does not preserve it
     new_obj.acl = acl

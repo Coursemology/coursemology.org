@@ -321,7 +321,7 @@ class Course < ActiveRecord::Base
         m.files.map { |f|
           material = Material.create_virtual(m, f)
           material.file = f
-          material.filename = m.title + ": " + f.original_name
+          material.filename = m.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
           material.url = f.file.url
@@ -347,7 +347,7 @@ class Course < ActiveRecord::Base
         t.files.map { |f|
           material = Material.create_virtual(t, f)
           material.file = f
-          material.filename = t.title + ": " + f.original_name
+          material.filename = t.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
           material.url = f.file.url

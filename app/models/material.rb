@@ -88,11 +88,15 @@ class Material < ActiveRecord::Base
       return nil
     end
 
-    self.file.original_name || self.file.file_file_name
+    self.file.display_filename
   end
   
   def filename=(filename)
-    self.file.original_name = filename
+    if self.file == nil then
+      return
+    end
+
+    self.file.display_filename = filename
   end
     
   def title
@@ -109,7 +113,7 @@ class Material < ActiveRecord::Base
     existing_file = self.file
 
     file.owner = self
-    file.original_name = existing_file.original_name if existing_file
+    file.display_filename = existing_file.display_filename if existing_file
     if file.save and existing_file then
       existing_file.owner_type = nil
       existing_file.owner_id = nil
