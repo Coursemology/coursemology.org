@@ -1,19 +1,19 @@
 <h3>Milestone</h3>
 
 <div class="row">
-  <div class="span3">
+  <div class="span2">
     <h4>Title</h4>
     <% if !milestone.is_virtual? %>
-      <input name="milestones[<%= milestone.id %>][title]" type="text" required="true" value="<%= milestone.title %>">
+      <input name="milestones[<%= milestone.id %>][title]" type="text" class="span2" required="true" value="<%= milestone.title %>">
     <% else %>
       <h4><%= milestone.title %></h4>
     <% end %>
   </div>
-  <div class="span3 offset1">
+  <div class="span3">
     <% if !milestone.is_virtual? %>
     <h4>End Date</h4>
     <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" required="true">
+      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" class="span2" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
