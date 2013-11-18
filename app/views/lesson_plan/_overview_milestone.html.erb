@@ -1,14 +1,8 @@
 <h3>Milestone</h3>
+
 <div class="row">
   <div class="span3">
     <h4>Title</h4>
-  </div>
-  <div class="span3 offset1">
-    <h4>End Date</h4>
-  </div>
-</div>
-<div class="row">
-  <div class="span3">
     <% if !milestone.is_virtual? %>
       <input name="milestones[<%= milestone.id %>][title]" type="text" required="true" value="<%= milestone.title %>">
     <% else %>
@@ -17,8 +11,9 @@
   </div>
   <div class="span3 offset1">
     <% if !milestone.is_virtual? %>
+    <h4>End Date</h4>
     <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>">
+      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
@@ -26,18 +21,23 @@
     <% end %>
   </div>
 </div>
+
 <div>
   <h4>Description</h4>
-  <textarea class="text_field html-editor span7" rows="5">
+  <textarea class="text_field html-editor span7">
     <%= milestone.description %>
   </textarea>
 </div>
+
 <% if milestone.entries.length > 0 %>
-<div>
-  <h4>Entries</h4>
-  <% milestone.entries.each { |entry| %>
-  <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
-  <% } %>
-</div>
+  <div>
+    <h3 class="muted">Entries</h3>
+    <% milestone.entries.each { |entry| %>
+      <% if !entry.is_virtual? %>
+        <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
+      <% end %>
+    <% } %>
+  </div>
 <% end %>
-<hr class="hr-shrink-margin">
+
+<hr>
