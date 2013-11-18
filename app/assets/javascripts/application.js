@@ -42,6 +42,29 @@
 //= require_tree .
 
 $(document).ready(function() {
+  (function() {
+    /// Sets a date suggestion for the given datetimepicker (set as this) when it is blank.
+    function set_default_date_suggestion(date) {
+      var $this = $(this);
+      var registered = $this.data('datetimepickerDefault');
+      $this.data('datetimepickerDefault', date);
+
+      if (registered) {
+        return;
+      }
+
+      $this.on('show', function() {
+        // If we have no date set, we will jump the date picker to somewhere in the start/end range.
+        var picker = $this.data('datetimepicker');
+        var default_date = $this.data('datetimepickerDefault');
+        if (!$this.val()) {
+          if (default_date < now || now < default_date) {
+            picker.setDate(default_date);
+            picker.setDate(null);
+          }
+        }
+      });
+    }
 
     var datetimepickers = $('.datepicker, .datetimepicker');
     $('.datetimepicker').datetimepicker({
@@ -60,10 +83,17 @@ $(document).ready(function() {
         maskInput: true
     });
 
-    $('.datetimepicker.future-only:not(.past-only)').datetimepicker('setStartDate', new Date());
-    $('.datepicker.future-only:not(.past-only)').datetimepicker('setStartDate', moment().add('d', 1).startOf('day').toDate());
-    $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', new Date());
-    $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', moment().subtract('d', 1).endOf('day').toDate());
+    var now = new Date();
+    var tomorrow = moment().add('d', 1).startOf('day').toDate();
+    var yesterday = moment().subtract('d', 1).endOf('day').toDate();
+    $('.datetimepicker.future-only:not(.past-only)').datetimepicker('setStartDate', now).
+      each(function() { set_default_date_suggestion.call(this, now); });
+    $('.datepicker.future-only:not(.past-only)').datetimepicker('setStartDate', tomorrow).
+      each(function() { set_default_date_suggestion.call(this, tomorrow); });
+    $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', now).
+      each(function() { set_default_date_suggestion.call(this, now); });
+    $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', yesterday).
+      each(function() { set_default_date_suggestion.call(this, yesterday); });
 
     // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
     // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
@@ -72,38 +102,18 @@ $(document).ready(function() {
     // input.
     datetimepickers.each(function() {
       var $this = $(this);
-      var default_registered = false;
-      function set_default_date(date) {
-        if (default_registered) {
-          return;
-        }
-
-        default_registered = true;
-        $this.on('show', function() {
-          // If we have no date set, we will jump the date picker to somewhere in the start/end range.
-          var picker = $this.data('datetimepicker');
-          if (!$this.val()) {
-            var now = new Date();
-            if (date < now || now < date) {
-              picker.setDate(date);
-              picker.setDate(null);
-            }
-          }
-        });
-      }
-
       // TODO: The dates are passed through moment because of a bug in bootstrap-datetimepicker:
       // https://github.com/tarruda/bootstrap-datetimepicker/issues/210
       // Furthermore, it's not following HTML5 specification: names split by hyphens are not camelCased.
       if ($this.data('dateStartdate')) {
         var date = moment($this.data('dateStartdate')).toDate();
         $this.datetimepicker('setStartDate', date);
-        set_default_date(date);
+        set_default_date_suggestion(date);
       }
       if ($this.data('dateEnddate')) {
         var date = moment($this.data('dateEnddate')).toDate();
         $this.datetimepicker('setEndDate', date);
-        set_default_date(date);
+        set_default_date_suggestion(date);
       }
 
       var dateTimeFormatString = $this.data('datetimepicker').format;
@@ -113,6 +123,7 @@ $(document).ready(function() {
         inputElement.attr("placeholder", dateTimeFormatString);
       }
     });
+  })();
 
     $('*[rel=tooltip]').tooltip();
 
