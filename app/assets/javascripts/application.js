@@ -72,14 +72,38 @@ $(document).ready(function() {
     // input.
     datetimepickers.each(function() {
       var $this = $(this);
+      var default_registered = false;
+      function set_default_date(date) {
+        if (default_registered) {
+          return;
+        }
+
+        default_registered = true;
+        $this.on('show', function() {
+          // If we have no date set, we will jump the date picker to somewhere in the start/end range.
+          var picker = $this.data('datetimepicker');
+          if (!$this.val()) {
+            var now = new Date();
+            if (date < now || now < date) {
+              picker.setDate(date);
+              picker.setDate(null);
+            }
+          }
+        });
+      }
+
       // TODO: The dates are passed through moment because of a bug in bootstrap-datetimepicker:
       // https://github.com/tarruda/bootstrap-datetimepicker/issues/210
       // Furthermore, it's not following HTML5 specification: names split by hyphens are not camelCased.
       if ($this.data('dateStartdate')) {
-        $this.datetimepicker('setStartDate', moment($this.data('dateStartdate')).toDate());
+        var date = moment($this.data('dateStartdate')).toDate();
+        $this.datetimepicker('setStartDate', date);
+        set_default_date(date);
       }
       if ($this.data('dateEnddate')) {
-        $this.datetimepicker('setEndDate', moment($this.data('dateEnddate')).toDate());
+        var date = moment($this.data('dateEnddate')).toDate();
+        $this.datetimepicker('setEndDate', date);
+        set_default_date(date);
       }
 
       var dateTimeFormatString = $this.data('datetimepicker').format;
