@@ -25,6 +25,12 @@ class FileUpload < ActiveRecord::Base
     }
   end
 
+  # Gets the display filename for the upload: It will give the original name if present, otherwise
+  # it will be the (obfuscated) storage filename
+  def display_filename
+    original_name || file_file_name
+  end
+
   def hash_filename
     self.original_name = self.file_file_name.to_s
     self.file.instance_write(:file_name, "#{Digest::MD5.hexdigest(self.file_file_name)}#{File.extname(self.file_file_name)}")

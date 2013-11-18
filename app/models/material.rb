@@ -88,11 +88,15 @@ class Material < ActiveRecord::Base
       return nil
     end
 
-    self.file.original_name || self.file.file_file_name
+    self.file.display_filename
   end
   
   def filename=(filename)
-    self.file.original_name = filename
+    if self.file == nil then
+      return
+    end
+
+    self.file.display_filename = filename
   end
     
   def title
