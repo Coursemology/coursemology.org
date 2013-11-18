@@ -46,6 +46,11 @@ class FileUpload < ActiveRecord::Base
     original_name || file_file_name
   end
 
+  # Sets the display filename for the upload.
+  def display_filename=(filename)
+    self.original_name = filename
+  end
+
   # Sets the download filename for this upload. By default, this is obfuscated. This is the filename
   # that the users will see when they try to download this particular file.
   #
