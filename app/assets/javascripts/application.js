@@ -44,7 +44,7 @@
 $(document).ready(function() {
   (function() {
     /// Sets a date suggestion for the given datetimepicker (set as this) when it is blank.
-    function set_default_date_suggestion(date) {
+    function setDefaultDateSuggestion(date) {
       var $this = $(this);
       var registered = $this.data('datetimepickerDefault');
       $this.data('datetimepickerDefault', date);
@@ -56,10 +56,10 @@ $(document).ready(function() {
       $this.on('show', function() {
         // If we have no date set, we will jump the date picker to somewhere in the start/end range.
         var picker = $this.data('datetimepicker');
-        var default_date = $this.data('datetimepickerDefault');
+        var defaultDate = $this.data('datetimepickerDefault');
         if (!$this.val()) {
-          if (default_date < now || now < default_date) {
-            picker.setDate(default_date);
+          if (defaultDate < now || now < defaultDate) {
+            picker.setDate(defaultDate);
             picker.setDate(null);
           }
         }
@@ -87,13 +87,13 @@ $(document).ready(function() {
     var tomorrow = moment().add('d', 1).startOf('day').toDate();
     var yesterday = moment().subtract('d', 1).endOf('day').toDate();
     $('.datetimepicker.future-only:not(.past-only)').datetimepicker('setStartDate', now).
-      each(function() { set_default_date_suggestion.call(this, now); });
+      each(function() { setDefaultDateSuggestion.call(this, now); });
     $('.datepicker.future-only:not(.past-only)').datetimepicker('setStartDate', tomorrow).
-      each(function() { set_default_date_suggestion.call(this, tomorrow); });
+      each(function() { setDefaultDateSuggestion.call(this, tomorrow); });
     $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', now).
-      each(function() { set_default_date_suggestion.call(this, now); });
+      each(function() { setDefaultDateSuggestion.call(this, now); });
     $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', yesterday).
-      each(function() { set_default_date_suggestion.call(this, yesterday); });
+      each(function() { setDefaultDateSuggestion.call(this, yesterday); });
 
     // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
     // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
@@ -108,12 +108,12 @@ $(document).ready(function() {
       if ($this.data('dateEnddate')) {
         var date = moment($this.data('dateEnddate')).toDate();
         $this.datetimepicker('setEndDate', date);
-        set_default_date_suggestion.call(this, date);
+        setDefaultDateSuggestion.call(this, date);
       }
       if ($this.data('dateStartdate')) {
         var date = moment($this.data('dateStartdate')).toDate();
         $this.datetimepicker('setStartDate', date);
-        set_default_date_suggestion.call(this, date);
+        setDefaultDateSuggestion.call(this, date);
       }
 
       var dateTimeFormatString = $this.data('datetimepicker').format;
