@@ -13,7 +13,7 @@
     <% if !milestone.is_virtual? %>
     <h4>End Date</h4>
     <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" class="span2" required="true">
+      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" class="input-small" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>

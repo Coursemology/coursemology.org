@@ -1,39 +1,39 @@
 <hr class="hr-shrink-margin">
 
-<div class="row">
-  <div class="span2">
+<div class="row controls controls-row">
+  <div class="span1">
     <h4>Type</h4>
     
-    <select name="lesson_plan_entry[<%= entry.id %>][entry_type]" class="span2">
+    <select name="lesson_plan_entry[<%= entry.id %>][entry_type]" class="input-small">
       <% LessonPlanEntry::ENTRY_TYPES.each { |type| %>
-        <option value="<%= type[1] %>"><%= type[0] %></option>
+      <option value="<%= type[1] %>"><%= type[0] %></option>
       <% } %>
     </select>
   </div>
   
-  <div class="span7">
+  <div class="span3">
     <h4>Title</h4>
     
-    <input name="lesson_plan_entry[<%= entry.id %>][title]" type="text" value="<%= entry.title %>" class="span5" required="true">
-  </div>
-</div>
-
-<div class="row">
-  <div class="span3 datetimepicker input-append">
-    <h4>Start</h4>
-    
-    <input name="lesson_plan_entry[<%= entry.id %>[start_at]" type="datetime" value="<%= entry.start_at.strftime('%d-%m-%Y %H:%M') %>" class="span2" required="true">
-    <span class="add-on">
-      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-    </span>
+    <input name="lesson_plan_entry[<%= entry.id %>][title]" type="text" value="<%= entry.title %>" class="span3" required="true">
   </div>
   
-  <div class="span3 datetimepicker input-append">
-    <h4>End</h4>
+  <div class="span5">
+    <div class="pull-left datetimepicker input-append">
+      <h4>Start</h4>
+      
+      <input name="lesson_plan_entry[<%= entry.id %>[start_at]" type="datetime" value="<%= entry.start_at.strftime('%d-%m-%Y %H:%M') %>" class="input-medium" required="true">
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+      </span>
+    </div>
     
-    <input name="lesson_plan_entry[<%= entry.id %>[end_at]" type="datetime" value="<%= entry.end_at.strftime('%d-%m-%Y %H:%M') %>" class="span2" required="true">
-    <span class="add-on">
-      <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-    </span>
+    <div class="span-left-margin datetimepicker input-append">
+      <h4>End</h4>
+      
+      <input name="lesson_plan_entry[<%= entry.id %>[end_at]" type="datetime" value="<%= entry.end_at.strftime('%d-%m-%Y %H:%M') %>" class="input-medium" required="true">
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+      </span>
+    </div>
   </div>
 </div>
