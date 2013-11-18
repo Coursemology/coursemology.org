@@ -105,15 +105,15 @@ $(document).ready(function() {
       // TODO: The dates are passed through moment because of a bug in bootstrap-datetimepicker:
       // https://github.com/tarruda/bootstrap-datetimepicker/issues/210
       // Furthermore, it's not following HTML5 specification: names split by hyphens are not camelCased.
-      if ($this.data('dateStartdate')) {
-        var date = moment($this.data('dateStartdate')).toDate();
-        $this.datetimepicker('setStartDate', date);
-        set_default_date_suggestion(date);
-      }
       if ($this.data('dateEnddate')) {
         var date = moment($this.data('dateEnddate')).toDate();
         $this.datetimepicker('setEndDate', date);
-        set_default_date_suggestion(date);
+        set_default_date_suggestion.call(this, date);
+      }
+      if ($this.data('dateStartdate')) {
+        var date = moment($this.data('dateStartdate')).toDate();
+        $this.datetimepicker('setStartDate', date);
+        set_default_date_suggestion.call(this, date);
       }
 
       var dateTimeFormatString = $this.data('datetimepicker').format;
