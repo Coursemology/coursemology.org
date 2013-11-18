@@ -25,6 +25,26 @@
 <% if milestone.entries.length > 0 %>
   <div>
     <h3 class="muted">Entries</h3>
+    
+    <div class="row">
+      <div class="span1">
+        <h4>Type</h4>
+      </div>
+      
+      <div class="span3">
+        <h4>Title</h4>
+      </div>
+      
+      <div class="span2">
+        <h4>Start</h4>
+      </div>
+      
+      <div class="span3">
+        <h4>End</h4>
+      </div>
+    </div>
+    
+    <hr class="hr-shrink-margin">
     <% milestone.entries.each { |entry| %>
       <% if !entry.is_virtual? %>
         <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
