@@ -187,7 +187,7 @@ $(document).ready(function() {
   
   // Select a row by clicking on it.
   $('.materials-file-row').click(function(event) {
-    if ($(event.target).parents('.btn, a').length > 0) {
+    if (event.target.classList.contains('btn') || event.tagName === 'a' || $(event.target).parents('.btn, a').length > 0) {
       // Do not highlight this row since it was a button which was clicked.
       return;
     }
