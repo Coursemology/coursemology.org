@@ -43,6 +43,7 @@
 
 $(document).ready(function() {
 
+    var datetimepickers = $('.datepicker, .datetimepicker');
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
@@ -66,12 +67,23 @@ $(document).ready(function() {
 
     // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
     // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
-    $('.datepicker, .datetimepicker').each(function() {
-      if ($(this).data('date-startdate')) {
-        $(this).datetimepicker('setStartDate', $(this).data('date-startdate'));
+    //
+    // This also displays placeholder text so users know what format the date/time picker expects for keyboard
+    // input.
+    datetimepickers.each(function() {
+      var $this = $(this);
+      if ($this.data('date-startdate')) {
+        $this.datetimepicker('setStartDate', $(this).data('date-startdate'));
       }
-      if ($(this).data('date-enddate')) {
-        $(this).datetimepicker('setEndDate', $(this).data('date-enddate'));
+      if ($this.data('date-enddate')) {
+        $this.datetimepicker('setEndDate', $(this).data('date-enddate'));
+      }
+
+      var dateTimeFormatString = $this.data('datetimepicker').format;
+      var inputElement = $('input', this);
+      if (!inputElement.attr("placeholder")) {
+        // We only replace the placeholder if there isn't already one.
+        inputElement.attr("placeholder", dateTimeFormatString);
       }
     });
 
