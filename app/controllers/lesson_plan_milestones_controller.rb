@@ -54,6 +54,10 @@ class LessonPlanMilestonesController < ApplicationController
                     notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been removed." }
     end
   end
+    
+  def overview
+    render "/lesson_plan/overview"
+  end
 
 private
   def render(*args)
