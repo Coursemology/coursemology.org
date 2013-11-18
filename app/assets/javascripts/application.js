@@ -72,11 +72,14 @@ $(document).ready(function() {
     // input.
     datetimepickers.each(function() {
       var $this = $(this);
-      if ($this.data('date-startdate')) {
-        $this.datetimepicker('setStartDate', $(this).data('date-startdate'));
+      // TODO: The dates are passed through moment because of a bug in bootstrap-datetimepicker:
+      // https://github.com/tarruda/bootstrap-datetimepicker/issues/210
+      // Furthermore, it's not following HTML5 specification: names split by hyphens are not camelCased.
+      if ($this.data('dateStartdate')) {
+        $this.datetimepicker('setStartDate', moment($this.data('dateStartdate')).toDate());
       }
-      if ($this.data('date-enddate')) {
-        $this.datetimepicker('setEndDate', $(this).data('date-enddate'));
+      if ($this.data('dateEnddate')) {
+        $this.datetimepicker('setEndDate', moment($this.data('dateEnddate')).toDate());
       }
 
       var dateTimeFormatString = $this.data('datetimepicker').format;
