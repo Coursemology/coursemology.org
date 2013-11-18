@@ -56,6 +56,7 @@ class LessonPlanMilestonesController < ApplicationController
   end
     
   def overview
+    @milestones = @course.lesson_plan_milestones.order("end_at")
     render "/lesson_plan/overview"
   end
 
