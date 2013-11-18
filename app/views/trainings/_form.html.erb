@@ -20,7 +20,7 @@
     <div class="control-group">
       <%= f.label :open_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :open_at,
                            :value => datetime_format(@training.open_at),
                            :class => 'input-medium',
@@ -52,7 +52,7 @@
     <div class="control-group">
       <%= f.label :bonus_cutoff, class: 'control-label' %>
       <div class='controls'>
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :bonus_cutoff,
                            value: datetime_format(@training.bonus_cutoff),
                            class: 'input-medium',

@@ -46,7 +46,6 @@ $(document).ready(function() {
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
-        startDate: new Date(),
         collapse: false,
         pickSeconds: false,
         maskInput: true
@@ -55,43 +54,25 @@ $(document).ready(function() {
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
-        startDate: new Date(),
         pickTime: false,
         collapse: false,
         maskInput: true
     });
 
-    $('.datetimepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm',
-        language: 'en-US',
-        collapse: false,
-        pickSeconds: false,
-        maskInput: true
-    });
+    $('.datetimepicker.future-only:not(.past-only)').datetimepicker('setStartDate', new Date());
+    $('.datepicker.future-only:not(.past-only)').datetimepicker('setStartDate', moment().add('d', 1).startOf('day').toDate());
+    $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', new Date());
+    $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', moment().subtract('d', 1).endOf('day').toDate());
 
-    $('.datepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'en-US',
-        pickTime: false,
-        collapse: false,
-        maskInput: true
-    });
-
-    var today = new Date();
-    var yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    $('.datetimepicker-past-only').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR',
-        endDate: yesterday
-    });
-
-    $('.datepicker-past-only').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        pickTime: false,
-        endDate: yesterday
+    // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
+    // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
+    $('.datepicker, .datetimepicker').each(function() {
+      if ($(this).data('date-startdate')) {
+        $(this).datetimepicker('setStartDate', $(this).data('date-startdate'));
+      }
+      if ($(this).data('date-enddate')) {
+        $(this).datetimepicker('setEndDate', $(this).data('date-enddate'));
+      }
     });
 
     $('*[rel=tooltip]').tooltip();
