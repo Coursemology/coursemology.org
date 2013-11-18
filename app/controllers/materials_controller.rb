@@ -83,6 +83,7 @@ class MaterialsController < ApplicationController
         |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
+    authorize! :read, MaterialFolder
 
     respond_to do |format|
       format.html {
@@ -358,7 +359,7 @@ private
           end
         end
 
-        temp_path = File.join(dir, m.filename.sub(":", "_"))
+        temp_path = File.join(dir, m.filename.gsub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
         curr_user_course.mark_as_seen(m) unless m.is_virtual?
 

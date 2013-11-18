@@ -15,7 +15,6 @@
 //= require jquery-ui.min
 //= require jquery-fileupload
 //= require tree.jquery
-//= require_tree .
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -30,7 +29,7 @@
 //= require bootstrap-modal
 //= require bootstrap-wysihtml5
 //= require scrolltofixed
-
+//
 //= require jquery.purr
 //= require best_in_place
 //= require codemirror
@@ -38,13 +37,39 @@
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
 //= require moment
+//
+//= require_self
+//= require_tree .
 
 $(document).ready(function() {
+  (function() {
+    /// Sets a date suggestion for the given datetimepicker (set as this) when it is blank.
+    function set_default_date_suggestion(date) {
+      var $this = $(this);
+      var registered = $this.data('datetimepickerDefault');
+      $this.data('datetimepickerDefault', date);
 
+      if (registered) {
+        return;
+      }
+
+      $this.on('show', function() {
+        // If we have no date set, we will jump the date picker to somewhere in the start/end range.
+        var picker = $this.data('datetimepicker');
+        var default_date = $this.data('datetimepickerDefault');
+        if (!$this.val()) {
+          if (default_date < now || now < default_date) {
+            picker.setDate(default_date);
+            picker.setDate(null);
+          }
+        }
+      });
+    }
+
+    var datetimepickers = $('.datepicker, .datetimepicker');
     $('.datetimepicker').datetimepicker({
         format: 'dd-MM-yyyy hh:mm',
         language: 'en-US',
-        startDate: new Date(),
         collapse: false,
         pickSeconds: false,
         maskInput: true
@@ -53,46 +78,54 @@ $(document).ready(function() {
     $('.datepicker').datetimepicker({
         format: 'dd-MM-yyyy',
         language: 'en-US',
-        startDate: new Date(),
         pickTime: false,
         collapse: false,
         maskInput: true
     });
 
-    $('.datetimepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm',
-        language: 'en-US',
-        collapse: false,
-        pickSeconds: false,
-        maskInput: true
+    var now = new Date();
+    var tomorrow = moment().add('d', 1).startOf('day').toDate();
+    var yesterday = moment().subtract('d', 1).endOf('day').toDate();
+    $('.datetimepicker.future-only:not(.past-only)').datetimepicker('setStartDate', now).
+      each(function() { set_default_date_suggestion.call(this, now); });
+    $('.datepicker.future-only:not(.past-only)').datetimepicker('setStartDate', tomorrow).
+      each(function() { set_default_date_suggestion.call(this, tomorrow); });
+    $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', now).
+      each(function() { set_default_date_suggestion.call(this, now); });
+    $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', yesterday).
+      each(function() { set_default_date_suggestion.call(this, yesterday); });
+
+    // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
+    // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
+    //
+    // This also displays placeholder text so users know what format the date/time picker expects for keyboard
+    // input.
+    datetimepickers.each(function() {
+      var $this = $(this);
+      // TODO: The dates are passed through moment because of a bug in bootstrap-datetimepicker:
+      // https://github.com/tarruda/bootstrap-datetimepicker/issues/210
+      // Furthermore, it's not following HTML5 specification: names split by hyphens are not camelCased.
+      if ($this.data('dateEnddate')) {
+        var date = moment($this.data('dateEnddate')).toDate();
+        $this.datetimepicker('setEndDate', date);
+        set_default_date_suggestion.call(this, date);
+      }
+      if ($this.data('dateStartdate')) {
+        var date = moment($this.data('dateStartdate')).toDate();
+        $this.datetimepicker('setStartDate', date);
+        set_default_date_suggestion.call(this, date);
+      }
+
+      var dateTimeFormatString = $this.data('datetimepicker').format;
+      var inputElement = $('input', this);
+      if (!inputElement.attr("placeholder")) {
+        // We only replace the placeholder if there isn't already one.
+        inputElement.attr("placeholder", dateTimeFormatString);
+      }
     });
+  })();
 
-    $('.datepicker-past').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'en-US',
-        pickTime: false,
-        collapse: false,
-        maskInput: true
-    });
-
-    var today = new Date();
-    var yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    $('.datetimepicker-past-only').datetimepicker({
-        format: 'dd-MM-yyyy hh:mm:ss',
-        language: 'pt-BR',
-        endDate: yesterday
-    });
-
-    $('.datepicker-past-only').datetimepicker({
-        format: 'dd-MM-yyyy',
-        language: 'pt-BR',
-        pickTime: false,
-        endDate: yesterday
-    });
-
-    $('a[rel=tooltip]').tooltip();
+    $('*[rel=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();

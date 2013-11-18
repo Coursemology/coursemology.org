@@ -2,7 +2,7 @@
   <div class="control-group">
     <%= label_tag :from, 'From (inclusive)', class: 'control-label' %>
     <div class="controls">
-      <div class="datepicker-past-only input-append">
+      <div class="datepicker past-only input-append">
         <%= text_field_tag :from, '' ,
                            value: @from_date,
                            class: 'input-medium',
@@ -17,7 +17,7 @@
   <div class="control-group">
     <%= label_tag :to, 'To (inclusive)', class: 'control-label' %>
     <div class="controls">
-      <div class="datepicker-past-only input-append">
+      <div class="datepicker past-only input-append">
         <%= text_field_tag :to, '' ,
                            value: @to_date,
                            class: 'input-medium',

@@ -379,7 +379,7 @@ class ApplicationController < ActionController::Base
       when 'forums'
         url = main_app.course_forums_url(@course)
         icon = 'icon-th-list'
-      when 'lesson_plan'
+      when 'lessonplan'
         url = main_app.course_lesson_plan_path(@course)
         icon = 'icon-time'
       when 'materials'

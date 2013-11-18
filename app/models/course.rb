@@ -101,7 +101,7 @@ class Course < ActiveRecord::Base
   end
 
   def student_sidebar_display
-    student_sidebar_items.select {|pref| pref.display }
+    student_sidebar_items.where(display: true)
   end
 
   def mission_columns_display

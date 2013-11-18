@@ -32,7 +32,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $.ajax({
     url: '/courses/' + courseId + '/materials.json',
     success: function(rootNode) { 
-      that.onWorkbinStructureReceived(rootNode); 
+      that.onFolderStructureReceived(rootNode);
     },
     beforeSend: function() {
       $('#file-picker-loading', div).show();
@@ -57,7 +57,7 @@ MaterialsFilePicker.prototype.onDone = function() {
   this.onSelectionCompleted(selectedItems);
 };
 
-MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
+MaterialsFilePicker.prototype.onFolderStructureReceived = function(rootNode) {
   var shouldIncludeFiles = true;
   var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
   

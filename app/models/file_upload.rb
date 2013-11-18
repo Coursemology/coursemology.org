@@ -7,6 +7,7 @@ class FileUpload < ActiveRecord::Base
   has_attached_file :file
 
   before_post_process :hash_filename
+  after_save :save_s3_filename
 
   include Rails.application.routes.url_helpers
   require 'digest/md5'
@@ -27,5 +28,26 @@ class FileUpload < ActiveRecord::Base
   def hash_filename
     self.original_name = self.file_file_name.to_s
     self.file.instance_write(:file_name, "#{Digest::MD5.hexdigest(self.file_file_name)}#{File.extname(self.file_file_name)}")
+  end
+
+private
+  def save_s3_filename
+    if not self.file then
+      return
+    end
+
+    obj = file.s3_object
+    if not obj then
+      return
+    end
+
+    # Preserve the ACL of the file we are replacing
+    acl = obj.acl
+
+    # Copy the file in place -- this replaces the headers but retains content
+    new_obj = obj.copy_to(obj.key, :content_disposition => 'attachment; filename=' + original_name)
+
+    # Restore ACL since copy_to does not preserve it
+    new_obj.acl = acl
   end
 end

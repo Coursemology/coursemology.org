@@ -93,7 +93,6 @@ class Material < ActiveRecord::Base
   
   def filename=(filename)
     self.file.original_name = filename
-    self.file.download_filename = filename
   end
     
   def title
@@ -129,7 +128,7 @@ private
     end
 
     f = folder.find_material_by_filename(filename)
-    if f && f.id != f then
+    if f && f != self then
       errors.add(:filename, "Another file with the same name already exists.")
     end
   end
