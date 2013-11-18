@@ -25,6 +25,14 @@ module ApplicationHelper
     end
   end
 
+  def datetime_iso(datetime)
+    if datetime.nil?
+      ''
+    else
+      datetime.iso8601(2)
+    end
+  end
+
   def resource_name
     :user
   end

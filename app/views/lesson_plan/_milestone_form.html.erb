@@ -24,7 +24,7 @@
       <div class="controls">
         <div class="datepicker input-append date">
           <% if @lesson_plan_milestone.end_at %>
-          <%= f.text_field :end_at, :class => 'text_field', :value => @lesson_plan_milestone.end_at.strftime("%d-%m-%Y"), :required => 'required' %>
+          <%= f.text_field :end_at, :class => 'text_field', :value => date_mdY(@lesson_plan_milestone.end_at), :required => 'required' %>
           <% else %>
           <%= f.text_field :end_at, :class=> 'text_field', :required => 'required' %>
           <% end %>

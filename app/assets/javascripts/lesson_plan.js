@@ -191,24 +191,4 @@ $(document).ready(function() {
     });
     return false;
   });
-
-  if (gon.startAt) {
-    var dateInSeconds = parseInt(gon.startAt, 10) * 1000;
-    var start = new Date(dateInSeconds);
-    $('.datetimepicker-past').each(function() {
-      $(this).data('datetimepicker').setStartDate(start);
-    });
-  }
-
-  if (gon.endAt) {
-    var dateInSeconds = parseInt(gon.endAt, 10) * 1000;
-    var end = new Date(dateInSeconds);
-
-    $('.datetimepicker-past').each(function() {
-      var picker = $(this).data('datetimepicker');
-      picker.setEndDate(end);
-      picker.setDate(end);
-      picker.setDate(null);
-    });
-  }
 });

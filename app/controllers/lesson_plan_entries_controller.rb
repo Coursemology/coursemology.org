@@ -37,8 +37,11 @@ class LessonPlanEntriesController < ApplicationController
   end
 
   def new
-    gon.startAt = params[:start_at]
-    gon.endAt = params[:end_at]
+    @start_at = params[:start_at]
+    @end_at = params[:end_at]
+
+    @start_at = DateTime.strptime(@start_at, '%d-%m-%Y') if @start_at
+    @end_at = DateTime.strptime(@end_at, '%d-%m-%Y') if @end_at
   end
 
   def create

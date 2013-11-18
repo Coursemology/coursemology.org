@@ -48,7 +48,7 @@
         </div>
         <div class="pull-right lesson-plan-milestone-controls">
           <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
-            <% start_at = milestone.previous_milestone ? milestone.previous_milestone.end_at.advance(:days => 1) : 0 %>
+            <% start_at = milestone.previous_milestone ? milestone.previous_milestone.end_at.advance(:days => 1) : nil %>
             <div class="btn-group pull-left">
               <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), :class => 'btn' do %>
                 <i class="icon-edit"></i>
@@ -58,7 +58,7 @@
               </button>
               <ul class="dropdown-menu">
                 <li>
-                  <%= link_to "Add Entry", new_course_lesson_plan_entry_path(:start_at => start_at.to_i, :end_at => milestone.end_at.to_i) %>
+                  <%= link_to "Add Entry", new_course_lesson_plan_entry_path(:start_at => start_at ? date_mdY(start_at): nil, :end_at => date_mdY(milestone.end_at)) %>
                 </li>
               </ul>
             </div>
