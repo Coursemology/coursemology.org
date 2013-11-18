@@ -7,4 +7,18 @@
       <a class="btn btn-primary">Done</a>
     </div>
   </div>
+  
+  <hr>
+  
+  <div>
+  <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
+  <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
+  <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
+  <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.end_at } + grouped_milestones[true] %>
+  <% sorted_milestones.each { |milestone| %>
+    <% if !milestone.is_virtual? || milestone.entries.length  > 0 %>
+      <%= render :partial => 'lesson_plan/overview_milestone', locals: { :milestone => milestone } %>
+    <% end %>
+  <% } %>
+  </div>
 </div>
