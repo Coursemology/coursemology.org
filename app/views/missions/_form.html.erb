@@ -20,7 +20,7 @@
     <div class="control-group">
       <%= f.label :open_time, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :open_at,
                            :value => datetime_format(@mission.open_at),
                            :class => 'input-medium',
@@ -35,7 +35,7 @@
     <div class="control-group">
       <%= f.label :close_time, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :close_at,
                            :value => datetime_format(@mission.close_at),
                            :class => 'input-medium',

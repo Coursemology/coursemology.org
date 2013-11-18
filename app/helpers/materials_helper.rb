@@ -11,4 +11,10 @@ module MaterialsHelper
     size_rounded = sprintf "%.2f", size_current_units
     size_rounded + " " + suffixes[unit]
   end
+
+  def get_materials_display_name
+    preferable = @course.student_sidebar_display.joins(:preferable_item).
+      where(preferable_items: {name: 'materials'}).first
+    preferable.prefer_value
+  end
 end
