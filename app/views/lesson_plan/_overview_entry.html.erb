@@ -2,7 +2,7 @@
   <div class="span1">
     <select name="lesson_plan_entry[<%= entry.id %>][entry_type]" class="input-small">
       <% LessonPlanEntry::ENTRY_TYPES.each { |type| %>
-      <option value="<%= type[1] %>"><%= type[0] %></option>
+      <option value="<%= type[1] %>" <% if entry.entry_type == type[1] %> selected="selected" <% end %> ><%= type[0] %></option>
       <% } %>
     </select>
   </div>
