@@ -258,7 +258,7 @@ jQuery.fn.extend({
       };
     }
 
-    function validateForm() {
+    function validateForm(e) {
       if ($('.error', this).length > 0) {
         e.preventDefault();
       }
@@ -272,13 +272,15 @@ jQuery.fn.extend({
         set = $(set, this);
       }
 
-      set.change(generateElementValidator(pair[1]));
+      var validator = generateElementValidator(pair[1]);
+      set.change(validator);
+      set.on('changeDate', validator);
     }
 
     // Register the callback for when the form should be submitted.
     $(this).submit(validateForm);
     $('input[type="submit"]', this).click(function() {
-      handlevalidateForm.apply($(this).parents('form')[0], arguments);
+      validateForm.apply($(this).parents('form')[0], arguments);
     });
   }
 });
