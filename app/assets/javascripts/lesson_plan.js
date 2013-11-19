@@ -157,22 +157,22 @@ $(document).ready(function() {
       });
     }
 
-    var promises = [];
-    for (var i = 0; i < milestones.length; ++i) {
-      var milestone = milestones[i];
-      promises.push($.ajax({
-        type: 'POST',
-        url: 'lesson_plan/milestones.json',
-        data: {
-          lesson_plan_milestone: {
-            title: milestone.title,
-            description: '',
-            end_at: milestone.end_at.format(DATE_FORMAT)
-          }
-        },
-        dataType: 'json'
-      }));
-    }
+    var upload_milestones = milestones.map(function(milestone) {
+      return {
+        title: milestone.title,
+        description: '',
+        end_at: milestone.end_at.format(DATE_FORMAT)
+      };
+    });
+
+    var promise = $.ajax({
+      type: 'POST',
+      url: 'lesson_plan/milestones.json',
+      data: {
+        lesson_plan_milestone: upload_milestones
+      },
+      dataType: 'json'
+    });
 
     // Show the progress bar.
     var $modal = $(this).parents('.modal');
@@ -181,7 +181,7 @@ $(document).ready(function() {
     $('button.btn, input.btn', $modal).addClass('disabled').prop('disabled', true);
 
     // Wait for all the requests to come back before closing the dialog.
-    $.when.apply($, promises).then(function() {
+    promise.then(function() {
       $modal.modal('hide');
       location.href = location.href;
     }, function() {
