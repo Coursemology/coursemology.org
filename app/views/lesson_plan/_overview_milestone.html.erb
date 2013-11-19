@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<% if milestone.entries.length > 0 %>
+<% if (milestone.entries.select { |m| not(m.is_virtual) }).length > 0 %>
   <div>
     <h3 class="muted">Entries</h3>
     
