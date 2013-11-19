@@ -89,7 +89,7 @@ private
 
     # Copy the file in place -- this replaces the headers but retains content
     options = {
-      content_disposition: (filename ? 'attachment; filename=' + filename : '')
+      content_disposition: (filename ? 'attachment; filename="' + filename + '"' : '')
     }
     new_obj = obj.copy_to(obj.key, options)
 
