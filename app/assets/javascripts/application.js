@@ -183,6 +183,14 @@ $(document).ready(function() {
       $(element).parents('.control-group').addClass('error');
     });
 
+    // Make sure that form elements with add-on components have the error message
+    // displayed after the add-on, not before (Rails limitation)
+    $('div.error + span.add-on').each(function(n, elem) {
+      var $elem = $(elem);
+      var $input = $('input', $elem.parent());
+      $elem.detach().insertAfter($input);
+    });
+
     // Make sure that all links with the disabled tag or disabled attribute
     // do not trigger a navigation
     $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
