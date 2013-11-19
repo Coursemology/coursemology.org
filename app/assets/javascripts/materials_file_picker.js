@@ -59,7 +59,7 @@ MaterialsFilePicker.prototype.onDone = function() {
 
 MaterialsFilePicker.prototype.onFolderStructureReceived = function(rootNode) {
   var shouldIncludeFiles = true;
-  var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
+  var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles, false);
   
   this.treeElement.tree({
     data: treeData,
