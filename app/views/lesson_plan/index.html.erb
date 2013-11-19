@@ -38,7 +38,9 @@
     
     <hr class="hr-shrink-margin">
   </div>
-  
+
+  <%= render :partial => 'lesson_plan/navigation' %>
+
   <div>
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>

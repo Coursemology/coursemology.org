@@ -8,8 +8,9 @@
       <input type="submit" class="btn btn-primary" value="Done" />
     </div>
   </div>
-  
+
   <hr />
+  <%= render :partial => 'lesson_plan/navigation' %>
 
   <div>
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
