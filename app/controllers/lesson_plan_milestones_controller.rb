@@ -87,7 +87,7 @@ class LessonPlanMilestonesController < ApplicationController
     authorize! :manage, LessonPlanMilestone
     authorize! :manage, LessonPlanEntry
     milestones = params[:milestones]
-    entries = params[:lesson_plan_entry]
+    entries = params[:lesson_plan_entry] || []
 
     LessonPlanEntry.transaction do
       milestones.each do |key, val|
