@@ -296,7 +296,7 @@ private
     folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.files.length
-    folder_metadata['is_virtual?'] = folder.is_virtual?
+    folder_metadata['is_virtual'] = folder.is_virtual?
     if include_files then
       folder_metadata['files'] = (folder.is_virtual? ?
         folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
