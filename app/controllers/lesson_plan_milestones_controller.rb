@@ -62,6 +62,32 @@ class LessonPlanMilestonesController < ApplicationController
 
   def bulk_update
     authorize! :manage, :bulk_update
+    milestones = params[:milestones]
+    entries = params[:lesson_plan_entry]
+
+    LessonPlanEntry.transaction do
+      milestones.each do |key, val|
+        milestone = @course.lesson_plan_milestones.where(id: key).first
+        milestone.update_attributes!(val)
+        unless milestone.changed?
+          next
+        end
+
+        milestone.save!
+      end
+
+      entries.each do |key, val|
+        entry = @course.lesson_plan_entries.where(id: key).first
+        entry.update_attributes!(val)
+        unless entry.changed?
+          next
+        end
+
+        entry.save!
+      end
+    end
+
+    redirect_to course_lesson_plan_path(@course), notice: 'The Lesson Plan was updated successfully.'
   end
 
 private
