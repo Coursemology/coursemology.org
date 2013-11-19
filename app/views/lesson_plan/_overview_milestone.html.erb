@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="span1"><h3>Milestone</h3></div>
+  <div class="span2">
+    <h4>Title</h4>
+    <% if !milestone.is_virtual? %>
+      <input name="milestones[<%= milestone.id %>][title]" type="text" class="span2" required="true" value="<%= milestone.title %>">
+    <% else %>
+      <h4><%= milestone.title %></h4>
+    <% end %>
+  </div>
+  <div class="span3">
+    <% if !milestone.is_virtual? %>
+    <h4>End Date</h4>
+    <div class="datepicker input-append date">
+      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" class="input-small" required="true">
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+      </span>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<% if (milestone.entries.select { |m| not(m.is_virtual?) }).length > 0 %>
+  <div>
+    <h3 class="muted">Entries</h3>
+    
+    <div class="row">
+      <div class="span1">
+        <h4>Type</h4>
+      </div>
+      
+      <div class="span3">
+        <h4>Title</h4>
+      </div>
+      
+      <div class="span2">
+        <h4>Start</h4>
+      </div>
+      
+      <div class="span3">
+        <h4>End</h4>
+      </div>
+    </div>
+    
+    <hr class="hr-shrink-margin">
+    <% milestone.entries.each { |entry| %>
+      <% if !entry.is_virtual? %>
+        <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
+      <% end %>
+    <% } %>
+  </div>
+<% end %>
+
+<hr />

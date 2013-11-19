@@ -157,22 +157,22 @@ $(document).ready(function() {
       });
     }
 
-    var promises = [];
-    for (var i = 0; i < milestones.length; ++i) {
-      var milestone = milestones[i];
-      promises.push($.ajax({
-        type: 'POST',
-        url: 'lesson_plan/milestones.json',
-        data: {
-          lesson_plan_milestone: {
-            title: milestone.title,
-            description: '',
-            end_at: milestone.end_at.format(DATE_FORMAT)
-          }
-        },
-        dataType: 'json'
-      }));
-    }
+    var upload_milestones = milestones.map(function(milestone) {
+      return {
+        title: milestone.title,
+        description: '',
+        end_at: milestone.end_at.format(DATE_FORMAT)
+      };
+    });
+
+    var promise = $.ajax({
+      type: 'POST',
+      url: 'lesson_plan/milestones.json',
+      data: {
+        lesson_plan_milestone: upload_milestones
+      },
+      dataType: 'json'
+    });
 
     // Show the progress bar.
     var $modal = $(this).parents('.modal');
@@ -181,14 +181,29 @@ $(document).ready(function() {
     $('button.btn, input.btn', $modal).addClass('disabled').prop('disabled', true);
 
     // Wait for all the requests to come back before closing the dialog.
-    $.when.apply($, promises).then(function() {
+    promise.then(function() {
       $modal.modal('hide');
-      location.href = location.href;
+      location.reload();
     }, function() {
       alert('An error occurred while processing your request.');
       $modal.modal('hide');
-      location.href = location.href;
+      location.reload();
     });
     return false;
   });
+
+  // Install the validator for the event form
+  function validate_start_end_date() {
+    var start = $('#lesson_plan_entry_start_at_picker').data('datetimepicker').getDate();
+    var end = $('#lesson_plan_entry_end_at_picker').data('datetimepicker').getDate();
+    if (start > end) {
+      return 'The start date must be before the end date.';
+    } else {
+      return null;
+    }
+  }
+  $('.lesson-plan-entry-form').validatr([
+    ['#lesson_plan_entry_start_at_picker', validate_start_end_date],
+    ['#lesson_plan_entry_end_at_picker', validate_start_end_date]
+  ]);
 });
