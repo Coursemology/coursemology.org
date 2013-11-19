@@ -1,4 +1,7 @@
 <%= form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :method => subfolder_method do |f| %>
+  <% if parent %>
+  <input type="hidden" name="id" value="<%= parent.id %>" />
+  <% end %>
   <div class="<%= modal ? 'modal-body' : '' %>">
     <div class="row-fluid control-group">
       <%= f.label :name, :class => 'control-label' %>

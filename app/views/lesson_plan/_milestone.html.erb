@@ -58,7 +58,7 @@
               </button>
               <ul class="dropdown-menu">
                 <li>
-                  <%= link_to "Add Entry", new_course_lesson_plan_entry_path(:start_at => start_at ? date_mdY(start_at): nil, :end_at => date_mdY(milestone.end_at)) %>
+                  <%= link_to "Add Event", new_course_lesson_plan_entry_path(:start_at => start_at ? date_mdY(start_at): nil, :end_at => date_mdY(milestone.end_at)) %>
                 </li>
               </ul>
             </div>

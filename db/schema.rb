@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131115100001) do
+ActiveRecord::Schema.define(:version => 20131117034500) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -330,6 +330,7 @@ ActiveRecord::Schema.define(:version => 20131115100001) do
   create_table "forem_category_subscriptions", :force => true do |t|
     t.integer "subscriber_id"
     t.integer "category_id"
+    t.integer "is_digest",     :default => 0
   end
 
   create_table "forem_forums", :force => true do |t|

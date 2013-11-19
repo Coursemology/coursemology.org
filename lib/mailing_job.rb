@@ -80,7 +80,7 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
     # only deliver when there is at least 1 mail
     if posts.size > 0
       subscriptions.each do |sub|
-        Forem::SubscriptionMailer.delay.digest(posts, sub.subscriber, course, yesterday)
+        Forem::SubscriptionMailer.delay.digest(posts.all, sub.subscriber, course, yesterday)
       end
     end
 

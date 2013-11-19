@@ -1,8 +1,8 @@
 <div>
-  <div id="lesson-plan-toolbar">
+  <div id="lesson-plan-toolbar" class="page-header">
     <div class="row">
       <div class="span5">
-        <h1 class="heading-remove-margin">Lesson Plan</h1>
+        <h1>Lesson Plan</h1>
       </div>
       <div class="pull-right btn-toolbar">
         <% if can? :manage, LessonPlanEntry %>
@@ -12,14 +12,14 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <%= link_to "Entry", new_course_lesson_plan_entry_path() %>
+                <%= link_to "Event", new_course_lesson_plan_entry_path() %>
               </li>
               <li>
-                <%= link_to "Period", new_course_lesson_plan_milestone_path() %>
+                <%= link_to "Milestone", new_course_lesson_plan_milestone_path() %>
               </li>
               <li class="divider"></li>
               <li id="lesson-plan-open-milestone-generator" data-toggle="modal" data-target="#lesson-plan-multi-milestone" >
-                <a href="#">Generate Periods</a>
+                <a href="#">Generate Milestones</a>
               </li>
             </ul>
           </div>
@@ -35,10 +35,10 @@
         </div>
       </div>
     </div>
-    
-    <hr class="hr-shrink-margin">
   </div>
-  
+
+  <%= render :partial => 'lesson_plan/navigation' %>
+
   <div>
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
@@ -57,7 +57,7 @@
   <div id="lesson-plan-multi-milestone" class="modal hide fade" data-backdrop="static">
     <form class="lesson-plan-milestone-generator-form">
       <div class="modal-header">
-        <h3>Period Generator</h3>
+        <h3>Milestone Generator</h3>
       </div>
       <div class="modal-body hidden">
         <div id="modal-loading">
@@ -71,7 +71,7 @@
       <div class="modal-body">
         <div class="control-group">
           <label class="control-label" for="input-length-milestones">
-            How long is each period, in days?
+            How long is each milestone, in days?
           </label>
           <div class="controls">
             <input type="number" id="input-length-milestones" required="required">
@@ -80,7 +80,7 @@
         
         <div class="control-group">
           <label class="control-label" for="input-number-milestones">
-            How many periods should we create?
+            How many milestones should we create?
           </label>
           <div class="controls">
             <input type="number" id="input-number-milestones" required="required">
@@ -89,7 +89,7 @@
         
         <div class="control-group">
           <label class="control-label" for="input-prefix-milestones">
-            What should each period be prefixed with?
+            What should each milestone be prefixed with?
             <br>(For example, "Week" will generate "Week 1", "Week 2", and so on.)
           </label>
           <div class="controls">
@@ -99,7 +99,7 @@
         
         <div class="control-group">
           <label class="control-label" for="input-start-milestones">
-            What day should the first period start on?
+            What day should the first milestone start on?
           </label>
           <div class="controls">
             <div class="datepicker input-append date">
