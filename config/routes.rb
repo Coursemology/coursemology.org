@@ -200,6 +200,7 @@ JfdiAcademy::Application.routes.draw do
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
     get "lesson_plan/overview" => 'lesson_plan_milestones#overview', as: :lesson_plan_overview
+    post "lesson_plan/bulk_update" => 'lesson_plan_milestones#bulk_update', as: :lesson_plan_bulk_update
     resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
     resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
 

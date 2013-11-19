@@ -1,15 +1,16 @@
 <div>
   <div class="row">
     <div class="span5">
-      <h1 class="heading-remove-margin">Lesson Plan: Mass Edit</h1>
+      <h1 class="heading-remove-margin">Lesson Plan: Overview</h1>
     </div>
     <div class="pull-right">
       <a class="btn btn-primary">Done</a>
     </div>
   </div>
   
-  <hr>
-  
+  <hr />
+
+  <%= form_tag course_lesson_plan_bulk_update_path(@course), :method => 'POST' do %>
   <div>
   <% grouped_milestones = @milestones.group_by { |milestone| milestone.is_virtual? } %>
   <% grouped_milestones[false] = [] unless grouped_milestones[false] %>
@@ -21,4 +22,5 @@
     <% end %>
   <% } %>
   </div>
+  <% end %>
 </div>

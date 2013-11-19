@@ -1,6 +1,6 @@
 class LessonPlanMilestonesController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :lesson_plan_milestone, through: :course
+  load_and_authorize_resource :lesson_plan_milestone, through: :course, except: [:bulk_update]
 
   before_filter :load_general_course_data, :except => [:destroy]
 
@@ -58,6 +58,10 @@ class LessonPlanMilestonesController < ApplicationController
   def overview
     @milestones = @course.lesson_plan_milestones.order("end_at")
     render "/lesson_plan/overview"
+  end
+
+  def bulk_update
+    authorize! :manage, :bulk_update
   end
 
 private
