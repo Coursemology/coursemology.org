@@ -183,11 +183,11 @@ $(document).ready(function() {
     // Wait for all the requests to come back before closing the dialog.
     promise.then(function() {
       $modal.modal('hide');
-      location.href = location.href;
+      location.reload();
     }, function() {
       alert('An error occurred while processing your request.');
       $modal.modal('hide');
-      location.href = location.href;
+      location.reload();
     });
     return false;
   });
