@@ -29,10 +29,14 @@ class StudentSummaryController < ApplicationController
   def export
     @students = @course.user_courses.student.where(is_phantom: false).order('lower(name) asc')
     file = Tempfile.new('student_summary')
-    file.puts "Student, Level \n"
+    file.puts "Student, Tutor, Level, EXP, EXP Count \n"
 
     @students.each do |student|
-     file.puts student.name.gsub(",", " ") + "," + student.level.level.to_s + "\n"
+     file.puts student.name.gsub(",", " ") + "," +
+                   student.get_my_tutor_name.gsub(",", " ") + "," +
+                   student.level.level.to_s + "," +
+                   student.exp.to_s + "," +
+                   student.exp_transactions.length.to_s + "\n"
     end
 
     file.close
