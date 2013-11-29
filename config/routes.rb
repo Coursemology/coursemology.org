@@ -185,7 +185,10 @@ JfdiAcademy::Application.routes.draw do
     match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
     match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
 
-    resources :student_summary
+    #resources :student_summary
+
+    get "student_summary" => "student_summary#index"
+    get "/student_summary/export" => "student_summary#export", as: :student_summary_export
 
     resources :staff_leaderboard
 

@@ -223,7 +223,7 @@ class ApplicationController < ActionController::Base
 
       @admin_nav_items << {
           text: "Student Summary",
-          url:  main_app.course_student_summary_index_path(@course),
+          url:  main_app.course_student_summary_path(@course),
           icon: "icon-user"
       }
 

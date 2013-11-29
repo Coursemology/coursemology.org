@@ -1,17 +1,18 @@
 <div class="page-header">
   <h1>Student Summary</h1>
+  <a href="<%= course_student_summary_export_path %>" class="btn btn-success" style="float: right; margin-right: 20px;width: 100px;margin-top: -30px">Export .csv</a>
 </div>
 <% has_tutor = @course.tutorial_groups.count > 0 %>
 
 <table class="table table-center">
   <thead>
   <th>S/N</th>
-  <th style="text-align: left"><%= sortable 'Name', course_student_summary_index_path %></th>
+  <th style="text-align: left"><%= sortable 'Name', course_student_summary_path %></th>
   <% if has_tutor %>
       <th style="text-align: left">Tutor</th>
   <% end %>
-  <th><%= sortable 'Level', course_student_summary_index_path %></th>
-  <th><%= sortable 'Exp', course_student_summary_index_path %></th>
+  <th><%= sortable 'Level', course_student_summary_path %></th>
+  <th><%= sortable 'Exp', course_student_summary_path %></th>
   <th>Exp Count</th>
   </thead>
   <tbody>
