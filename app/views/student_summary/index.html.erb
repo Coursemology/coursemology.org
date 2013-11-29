@@ -1,6 +1,7 @@
 <div class="page-header">
   <h1>Student Summary</h1>
   <a href="<%= course_student_summary_export_path %>" class="btn btn-success" style="float: right; margin-right: 20px;width: 100px;margin-top: -30px">Export .csv</a>
+  <!--<a href="#optionModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>-->
 </div>
 <% has_tutor = @course.tutorial_groups.count > 0 %>
 
@@ -63,3 +64,17 @@
   <% end %>
   </tbody>
 </table>
+
+<!--<div id="optionModal" class="modal hide fade">-->
+  <!--<div class="modal-header">-->
+    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+    <!--<h3>Export Options</h3>-->
+  <!--</div>-->
+  <!--<div class="modal-body">-->
+    <!--<p>One fine body…</p>-->
+  <!--</div>-->
+  <!--<div class="modal-footer">-->
+    <!--<a href="#" class="btn">Close</a>-->
+    <!--<a href="#" class="btn btn-primary">Save changes</a>-->
+  <!--</div>-->
+<!--</div>-->
