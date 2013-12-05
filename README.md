@@ -49,14 +49,14 @@ In case you are trying to deploy the website yourself using Phusion Messenger, h
 
 You should skim through the README of these following gems to get a gist of how they works
 
-* Authentication: (Devise)[https://github.com/plataformatec/devise]
+* Authentication: Devise[https://github.com/plataformatec/devise]
 
-* Authorization: (CanCan)[https://github.com/ryanb/cancan]
+* Authorization: CanCan[https://github.com/ryanb/cancan]
 
-* Front-end Framework/ library: (Bootstrap)[http://twitter.github.com/bootstrap/] and Bootstrap-sass[https://github.com/thomas-mcdonald/bootstrap-sass]
+* Front-end Framework/ library: Bootstrap[http://twitter.github.com/bootstrap/] and Bootstrap-sass[https://github.com/thomas-mcdonald/bootstrap-sass]
 
-* File upload: (Paperclip)[https://github.com/thoughtbot/paperclip]. (Very easy to use).
+* File upload: Paperclip[https://github.com/thoughtbot/paperclip]. (Very easy to use).
 
-* Icon: (Font Awesome)[http://fortawesome.github.com/Font-Awesome/] and Font-awesome-sass-rails[https://github.com/littlebtc/font-awesome-sass-rails]
+* Icon: {Font Awesome}[http://fortawesome.github.com/Font-Awesome/] and Font-awesome-sass-rails[https://github.com/littlebtc/font-awesome-sass-rails]
 
-* Datepicker: (Bootstrap Datepicker for Rails)[https://github.com/Nerian/bootstrap-datepicker-rails]
+* Datepicker: {Bootstrap Datepicker for Rails}[https://github.com/Nerian/bootstrap-datepicker-rails]
