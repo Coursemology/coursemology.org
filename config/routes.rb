@@ -209,6 +209,28 @@ JfdiAcademy::Application.routes.draw do
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
+    resources :forums, module: :forum do
+      resources :topics, except: [:index, :edit] do
+        resources :posts, only: [:edit, :update, :destroy] do
+          put 'vote' => 'posts#set_post_vote'
+          get 'reply' => 'posts#reply_to'
+          post 'create' => 'posts#create', on: :collection
+        end
+
+        get 'subscribe' => 'topics#subscribe'
+        get 'unsubscribe' => 'topics#unsubscribe'
+        put 'hide' => 'topics#set_hide'
+        put 'lock' => 'topics#set_lock'
+        put 'type' => 'topics#set_type'
+      end
+
+      get 'subscribe' => 'forums#subscribe', on: :member
+      get 'unsubscribe' => 'forums#unsubscribe', on: :member
+      get 'mark_read' => 'forums#mark_read', on: :member
+      get 'mark_read' => 'forums#mark_all_read', on: :collection
+    end
+
+=begin
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
     match "/forums" => "forem/categories#show", as: :forums
@@ -236,6 +258,7 @@ JfdiAcademy::Application.routes.draw do
       get :mark_read
       get :next_unread
     end
+=end
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

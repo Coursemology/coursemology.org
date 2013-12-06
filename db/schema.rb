@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131117034500) do
+ActiveRecord::Schema.define(:version => 20131206182107) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -427,6 +427,61 @@ ActiveRecord::Schema.define(:version => 20131117034500) do
   add_index "forem_views", ["updated_at"], :name => "index_forem_views_on_updated_at"
   add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
   add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
+
+  create_table "forum_forum_subscriptions", :force => true do |t|
+    t.integer "forum_id"
+    t.integer "user_id"
+  end
+
+  create_table "forum_forums", :force => true do |t|
+    t.integer "course_id"
+    t.string  "name"
+    t.string  "slug"
+    t.text    "description"
+  end
+
+  add_index "forum_forums", ["slug"], :name => "index_forum_forums_on_slug", :unique => true
+
+  create_table "forum_post_votes", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "vote"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "forum_posts", :force => true do |t|
+    t.integer  "topic_id"
+    t.integer  "parent_id"
+    t.integer  "author_id"
+    t.boolean  "answer"
+    t.text     "text"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "forum_posts", ["author_id"], :name => "index_forum_posts_on_author_id"
+  add_index "forum_posts", ["parent_id"], :name => "index_forum_posts_on_parent_id"
+  add_index "forum_posts", ["topic_id"], :name => "index_forum_posts_on_topic_id"
+
+  create_table "forum_topic_subscriptions", :force => true do |t|
+    t.integer "topic_id"
+    t.integer "user_id"
+  end
+
+  create_table "forum_topics", :force => true do |t|
+    t.integer  "forum_id"
+    t.string   "slug"
+    t.integer  "author_id"
+    t.boolean  "locked",     :default => false
+    t.boolean  "hidden",     :default => false
+    t.integer  "type",       :default => 0
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "forum_topics", ["author_id"], :name => "index_forum_topics_on_author_id"
+  add_index "forum_topics", ["forum_id"], :name => "index_forum_topics_on_forum_id"
+  add_index "forum_topics", ["slug"], :name => "index_forum_topics_on_slug", :unique => true
 
   create_table "lesson_plan_entries", :force => true do |t|
     t.integer  "course_id"
