@@ -230,21 +230,20 @@ JfdiAcademy::Application.routes.draw do
       get 'mark_read' => 'forums#mark_all_read', on: :collection
     end
 
-=begin
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
-    match "/forums" => "forem/categories#show", as: :forums
-    match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
-    match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
-    match "/forums/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
-    match "/forums/subscribe" => "forem/categories#subscribe", as: :forums_subscribe
-    match "/forums/unsubscribe" => "forem/categories#unsubscribe", as: :forums_unsubscribe
-    match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
-    match "/forums/:forum_id/topics/:id/edit" => "forem/admin/topics#edit", as: :forums_topics_admin_edit
-    put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
-    put "/forums/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
-    put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin
-    resources :forums, :controller => "forem/forums" do
+    match "/forems" => "forem/categories#show", as: :forums
+    match "/forems/manage" => "forem/admin/forums#show", as: :forums_admin
+    match "/forems/new" => "forem/admin/forums#new", as: :forums_admin_new
+    match "/forems/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
+    match "/forems/subscribe" => "forem/categories#subscribe", as: :forums_subscribe
+    match "/forems/unsubscribe" => "forem/categories#unsubscribe", as: :forums_unsubscribe
+    match "/forems/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
+    match "/forems/:forum_id/topics/:id/edit" => "forem/admin/topics#edit", as: :forums_topics_admin_edit
+    put "/forems/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
+    put "/forems/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
+    put "/forems/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin
+    resources :forems, :controller => "forem/forums" do
       resources :topics, :controller => "forem/topics" do
         resources :posts, :controller => "forem/posts" do
           get :like
@@ -258,7 +257,6 @@ JfdiAcademy::Application.routes.draw do
       get :mark_read
       get :next_unread
     end
-=end
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students
