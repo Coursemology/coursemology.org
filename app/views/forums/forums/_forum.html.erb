@@ -1,0 +1,18 @@
+<tr class="forum">
+  <td>
+    <%= link_to forum.name, course_forum_path(@course, forum), :class => "title" %>
+    <div class='description'><%= forum.description.html_safe %></div>
+    Last post:
+    <span class='last_post'>
+    <% last_post = forum.last_post_for(forem_user) %>
+    <% if last_post %>
+      <%= link_to last_post.topic.subject.html_safe, course_forum_topic_path(@course, forum, last_post.topic) -%> by <%= last_post.user %>
+      <time datetime="<%= last_post.created_at.to_s(:db) -%>"><%= time_ago_in_words(last_post.created_at) %> ago</time>
+    <% else %>
+      none
+    <% end %>
+  </span>
+  </td>
+  <td class="topics-count"><%= forum.topics.count %></td>
+  <td class="posts-count"><%= forum.topics.posts.count %></td>
+</tr>

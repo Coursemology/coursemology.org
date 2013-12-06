@@ -66,8 +66,8 @@
     </thead>
     <tbody>
 
-    <% @forums.each do |f| %>
-      <%= render partial: 'forum', locals: {} %>
+    <% @forums.each do |forum| %>
+      <%= render partial: 'forum', locals: {forum: forum} %>
     <% end %>
 
     </tbody>
