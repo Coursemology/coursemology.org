@@ -44,6 +44,7 @@ class Course < ActiveRecord::Base
   has_many :enroll_requests,        dependent: :destroy
   has_many :tutor_monitorings,      dependent: :destroy
   has_many :surveys,                dependent: :destroy
+  has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
 
   after_create :populate_forum
 
