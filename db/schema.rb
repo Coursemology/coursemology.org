@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207103717) do
+ActiveRecord::Schema.define(:version => 20131207114621) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -452,6 +452,7 @@ ActiveRecord::Schema.define(:version => 20131207103717) do
   create_table "forum_posts", :force => true do |t|
     t.integer  "topic_id"
     t.integer  "parent_id"
+    t.string   "title"
     t.integer  "author_id"
     t.boolean  "answer"
     t.text     "text"

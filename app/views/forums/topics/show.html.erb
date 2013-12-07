@@ -1,0 +1,65 @@
+<div id="topic" class="<%= @topic.locked ? 'locked' : 'unlocked' %>">
+  <div id="menu" class="pull-right btn-toolbar">
+    <div class="btn-group">
+      <%# Implement go to next unread %>
+      <% unread = Forem::Post.joins(topic: :forum).unread_by(current_user)
+      .where('forem_forums.id = ? AND forem_topics.id <> ? ', @forum.id, @topic.id) %>
+      <% if unread.count > 0 %>
+        <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
+      <% end %>
+      <% if @topic.can_be_replied_to? %>
+        <%= link_to 'Reply', course_forum_topic_post_reply_path(@course, @forum, @topic, @topic.posts.last), :class => 'btn' %>
+      <% end %>
+      <% if @topic.author == curr_user_course || (can? :manage, @topic) %>
+        <%= link_to 'Delete', main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
+      <% end %>
+    </div>
+    <% if can? :manage, @topic %>
+      <div class="btn-group dropdown-trigger-on-hover">
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+          Manage topic
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><%= link_to 'Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
+          <li><%= link_to 'Edit', course_forum_topic_hide_path(@course, @forum, @topic), :method => :put %></li>
+          <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic), :method => :put%></li>
+
+          <li><%= link_to 'Normal', course_forum_topic_type_path(@course, @forum, @topic), :method => :put%></li>
+          <li><%= link_to 'Question', course_forum_topic_type_path(@course, @forum, @topic), :method => :put%></li>
+          <li><%= link_to 'Sticky', course_forum_topic_type_path(@course, @forum, @topic), :method => :put%></li>
+          <li><%= link_to 'Announcement', course_forum_topic_type_path(@course, @forum, @topic), :method => :put%></li>
+        </ul>
+      </div>
+    <% end %>
+
+  </div>
+
+  <%= render :partial => 'header', :locals => { :topic => @topic } %>
+
+  <% if @topic.locked? %>
+    <div class="alert">
+      <strong>This topic is locked.</strong>
+    </div>
+  <% end %>
+
+  <div id='posts'>
+    <%= render :partial => "forem/posts/post", :collection => @posts %>
+  </div>
+
+  <% if @topic.can_be_replied_to? %>
+    <hr />
+
+    <div class="simple_form">
+      <div class="post-content">
+        <h3>Post a Reply</h3>
+      </div>
+    </div>
+
+    <% new_post = ForumPost.new %>
+    <%= simple_form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
+      <%= render :partial => "forem/posts/form", :locals => { :f => f } %>
+      <%= f.submit 'Reply', :class => "btn btn-primary" %>
+    <% end %>
+  <% end %>
+</div>

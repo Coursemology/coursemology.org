@@ -210,7 +210,7 @@ JfdiAcademy::Application.routes.draw do
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
     resources :forums, module: :forums do
-      resources :topics, except: [:index, :edit] do
+      resources :topics, except: [:index] do
         resources :posts, only: [:edit, :update, :destroy] do
           put 'vote' => 'posts#set_post_vote'
           get 'reply' => 'posts#reply_to'

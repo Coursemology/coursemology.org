@@ -1,6 +1,7 @@
 class ForumTopic < ActiveRecord::Base
   has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id
   has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id
+  belongs_to :author, class_name: 'UserCourse', foreign_key: :author_id
   belongs_to :forum, class_name: 'ForumForum'
 
   is_sluggable :title, history: false
@@ -23,6 +24,14 @@ class ForumTopic < ActiveRecord::Base
 
   def unread?(user_course)
     SeenByUser.forum_threads.where(:user_course_id => user_course, :obj_id => self.id).empty?
+  end
+
+  def can_be_replied_to?
+    not(locked?)
+  end
+
+  def subject
+    posts.first.title
   end
 
   def view_count
