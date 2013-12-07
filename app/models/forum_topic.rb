@@ -1,6 +1,6 @@
 class ForumTopic < ActiveRecord::Base
-  has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id
-  has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id
+  has_many :posts, class_name: 'ForumPost', foreign_key: :topic_, dependent: destroy
+  has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id, dependent: destroy
   belongs_to :author, class_name: 'UserCourse', foreign_key: :author_id
   belongs_to :forum, class_name: 'ForumForum'
 
@@ -31,7 +31,8 @@ class ForumTopic < ActiveRecord::Base
   end
 
   def subject
-    posts.first.title
+    posts.first.title and return unless posts.empty?
+    nil
   end
 
   def view_count

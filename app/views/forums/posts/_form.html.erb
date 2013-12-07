@@ -1,5 +1,6 @@
 <div class="post-content">
-  <%= form.input :text , label: false, required: false, input_html: {:class => 'text_area span7 html-editor'} %>
+  <%= form.input :title, class: 'span12' %>
+  <%= form.text_area :text , label: false, required: false, class: 'text_area span7 html-editor' %>
 </div>
 <% if reply_to %>
 <%= form.hidden_field :parent_id, :value => reply_to.id %>

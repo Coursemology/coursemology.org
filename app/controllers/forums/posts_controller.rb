@@ -79,7 +79,7 @@ private
 
   def load_post
     @post = ForumPost.find_by_id(params[:id])
-    if params[:action] == 'create'
+    if %w(new create).include?(params[:action])
       @post = ForumPost.new
       @post.assign_attributes(params[:forum_post])
     end
