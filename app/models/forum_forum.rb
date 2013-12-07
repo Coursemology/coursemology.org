@@ -4,10 +4,6 @@ class ForumForum < ActiveRecord::Base
 
   is_sluggable :name, history: false
 
-  def to_param
-    slug
-  end
-
   def last_post
     posts.last
   end
