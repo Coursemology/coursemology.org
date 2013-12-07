@@ -26,7 +26,7 @@
         </ul>
       </div>
 
-      <span>
+      <span class="btn-group">
         <%= render :partial => "layouts/delete_confirm", :locals => { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
       </span>
     <% end %>

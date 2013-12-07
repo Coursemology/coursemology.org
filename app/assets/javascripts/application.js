@@ -130,12 +130,31 @@ $(document).ready(function() {
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();
 
+    // For our delete buttons, detach the companion button so it looks nicer in a .btn-group
+    $('.delete-button').each(function(n, elem) {
+      var $elem = $(elem);
+      var $confirm = $elem.siblings('.delete-confirm-button');
+
+      $confirm.data('sibling', $elem);
+      $elem.data('sibling', $confirm);
+      $confirm.hide();
+      $confirm.detach();
+    });
     $('.delete-button').click(function() {
-      var parent = $(this).parents('.delete-confirm-control-group');
-      $(this).hide();
-      var that = this;
-      $('.delete-confirm-button', parent).fadeIn();
-      setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 2000);
+      var $this = $(this);
+      var $parent = $this.parent();
+      var $sibling = $this.data('sibling');
+      $this.hide();
+      $this.detach();
+
+      $sibling.appendTo($parent);
+      $sibling.fadeIn();
+      setTimeout(function() {
+          $sibling.hide();
+          $sibling.detach();
+          $this.appendTo($parent);
+          $this.fadeIn();
+        }, 2000);
     });
 
     $('.btn-hover-text').hover(
