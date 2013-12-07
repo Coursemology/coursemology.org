@@ -10,8 +10,10 @@ class Forums::PostsController < ApplicationController
   load_and_authorize_resource :post
 
   def create
-    parent = ForumPost.find_by_id!(params[:parent_id])
+    parent = ForumPost.find_by_id!(params[:forum_post][:parent_id])
+    @post.topic = @topic
     @post.parent = parent
+    @post.author = curr_user_course
 
     respond_to do |format|
       if @post.save
@@ -50,6 +52,9 @@ private
 
   def load_post
     @post = ForumPost.find_by_id(params[:id])
-    @post = ForumPost.create unless @post
+    if params[:action] == 'create'
+      @post = ForumPost.new
+      @post.assign_attributes(params[:forum_post])
+    end
   end
 end

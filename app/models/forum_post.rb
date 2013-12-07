@@ -4,6 +4,8 @@ class ForumPost < ActiveRecord::Base
   belongs_to :parent, class_name: 'ForumPost', foreign_key: 'parent_id'
   has_many :children, class_name: 'ForumPost', foreign_key: 'parent_id'
 
+  attr_accessible :title, :text, :parent_id
+
   def unread?(user_course)
     SeenByUser.forum_posts.where(user_course_id: user_course, obj_id: self).empty?
   end
