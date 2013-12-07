@@ -6,6 +6,7 @@ class SeenByUser < ActiveRecord::Base
   scope :announcements, where(obj_type: "Announcement")
   scope :materials, where(obj_type: "Material")
   scope :forum_threads, where(obj_type: 'ForumThread')
+  scope :forum_posts, where(obj_type: 'ForumPost')
   scope :course, ->(course) { joins(:user_course).where(:user_courses => { :course_id => course }) }
 
   belongs_to :user_course

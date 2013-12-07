@@ -44,7 +44,9 @@
   <% end %>
 
   <div id='posts'>
-    <%= render :partial => "forem/posts/post", :collection => @posts %>
+    <%# TODO: for now, render linearly. We will have to write a display helper to display this
+        in threaded view at some point. %>
+    <%= render :partial => "forums/posts/post", :collection => @topic.posts %>
   </div>
 
   <% if @topic.can_be_replied_to? %>
@@ -58,7 +60,7 @@
 
     <% new_post = ForumPost.new %>
     <%= simple_form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
-      <%= render :partial => "forem/posts/form", :locals => { :f => f } %>
+      <%= render :partial => "forums/posts/form", :locals => { :f => f } %>
       <%= f.submit 'Reply', :class => "btn btn-primary" %>
     <% end %>
   <% end %>

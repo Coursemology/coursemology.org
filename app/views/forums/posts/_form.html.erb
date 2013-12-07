@@ -1,0 +1,13 @@
+<% if params[:reply_to_id] %>
+  <div class="post-content">
+    <%= f.input :text , label: false, required: false, input_html: {:class => 'text_area span7 html-editor', :value => quote_reply(reply)} %>
+    <p class="muted">Tip: You can use the indent/outdent buttons to adjust indentation in quoted text</p>
+  </div>
+
+  <%= f.hidden_field :reply_to_id, :value => params[:reply_to_id] %>
+<% else %>
+  <div class="post-content">
+    <%= f.input :text , label: false, required: false, input_html: {:class => 'text_area span7 html-editor'} %>
+  </div>
+<% end %>
+
