@@ -1,6 +1,6 @@
 <a class="post-anchor" name="post-<%= post.id %>"></a>
 <div class="row" style="padding:5px;">
-  <div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%> span12">
+  <div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%> span9">
     <div class="user span1" style="text-align:right;">
       <h5 class="username">
         <a href="<%= course_user_course_path(@course, post.author) %>"><%= post.author.user %></a>
@@ -11,7 +11,7 @@
     </div>
 
     <div class="contents span7 thumbnail" style="padding:20px;">
-      <%= Sanitize.clean(post.text, Sanitize::Config::BASIC) %>
+      <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
       <% if post.parent %>
         <div class="in-reply-to">
