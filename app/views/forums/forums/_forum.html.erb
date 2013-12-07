@@ -1,5 +1,12 @@
 <tr class="forum">
   <td>
+    <span class="post-status-icons">
+      <% if not forum.unread_topics(curr_user_course).empty? %>
+        <i class="icon-envelope" title="New posts"></i>
+      <% end %>
+    </span>
+  </td>
+  <td>
     <%= link_to forum.name, course_forum_path(@course, forum), :class => "title" %>
     <div class='description'><%= forum.description.html_safe %></div>
     Last post:
