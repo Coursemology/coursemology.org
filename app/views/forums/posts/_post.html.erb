@@ -1,8 +1,8 @@
-<a class='post-anchor' name='post-<%= post.id %>'></a>
+<a class="post-anchor" name="post-<%= post.id %>"></a>
 <div class="row" style="padding:5px;">
-  <div id='post_<%= post_counter + 1 %>' class='post <%= cycle('odd', 'even') -%> span12'>
-    <div class='user span1' style="text-align:right;">
-      <h5 class='username'>
+  <div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%> span12">
+    <div class="user span1" style="text-align:right;">
+      <h5 class="username">
         <a href="<%= course_user_course_path(@course, post.author) %>"><%= post.author.user %></a>
       </h5>
       <div class='icon' style="float:right;">
@@ -10,27 +10,27 @@
       </div>
     </div>
 
-    <div class='contents span7 thumbnail' style="padding:20px;">
+    <div class="contents span7 thumbnail" style="padding:20px;">
       <%=raw forem_format(post.text) %>
 
       <% if post.parent %>
-        <div class='in-reply-to'>
-          <%= link_to "#{t("forem.post.in_reply_to")} #{post.parent.author.user}", "#post-#{post.parent.id}" %>
+        <div class="in-reply-to">
+          <%= link_to "In reply to #{post.parent.author.user}", "#post-#{post.parent.id}" %>
         </div>
       <% end %>
 
       <div>
-      <a href='#post-<%= post.id %>'>
-        <time datetime="<%= post.created_at.to_s(:db) -%>">
-          Posted <%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %>
-          <% if post.unread?(curr_user_course)  %>
-            <span class="label">New!</span>
-          <% end %>
-        </time>
-      </a>
-      <% if forem_user %>
+        <a href="#post-<%= post.id %>">
+          <time datetime="<%= post.created_at.to_s(:db) -%>">
+            Posted <%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %>
+            <% if post.unread?(curr_user_course)  %>
+              <span class="label">New!</span>
+            <% end %>
+          </time>
+        </a>
+
         <div class="pull-right">
-          <%# Reimplement up/down votes. %>
+          <%# TODO: Reimplement up/down votes. %>
           <span style="padding:5px; <%= (likes = 0) > 0 ? '' : 'display:none;' %>">
             <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
           </span>
@@ -47,7 +47,6 @@
             <%= link_to 'Delete', course_forum_topic_post_path(@course, @forum, post.topic, post), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => 'btn' %>
           <% end %>
         </div>
-      <% end %>
       </div>
     </div>
   </div>

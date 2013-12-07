@@ -1,17 +1,15 @@
 <div id="topic" class="<%= @topic.locked ? 'locked' : 'unlocked' %>">
   <div id="menu" class="pull-right btn-toolbar">
     <div class="btn-group">
-      <%# TODO: Implement go to next unread %>
-      <% unread = @forum.unread_by(current_user)
-      .where('forem_forums.id = ? AND forem_topics.id <> ? ', @forum.id, @topic.id) %>
+      <% unread = @forum.unread_topics(curr_user_course) %>
       <% if unread.count > 0 %>
-        <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
+        <%= link_to 'Next unread topic', course_forum_next_unread_path(@course), :class => "btn" %>
       <% end %>
       <% if @topic.can_be_replied_to? %>
         <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), :class => 'btn reply', 'data-post-id' => @topic.posts.last.id %>
       <% end %>
-      <% if @topic.author == curr_user_course || (can? :manage, @topic) %>
-        <%= link_to 'Delete', main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
+      <% if can? :manage, @topic %>
+        <%= link_to 'Delete', course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => 'btn btn-danger' %>
       <% end %>
     </div>
     <% if can? :manage, @topic %>
@@ -42,10 +40,10 @@
     </div>
   <% end %>
 
-  <div id='posts'>
+  <div id="posts">
     <%# TODO: for now, render linearly. We will have to write a display helper to display this
         in threaded view at some point. %>
-    <%= render :partial => "forums/posts/post", :collection => @topic.posts %>
+    <%= render :partial => 'forums/posts/post', :collection => @topic.posts %>
   </div>
 
   <% if @topic.can_be_replied_to? %>

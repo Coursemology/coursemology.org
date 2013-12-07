@@ -220,6 +220,7 @@ JfdiAcademy::Application.routes.draw do
       get 'unsubscribe' => 'forums#unsubscribe', on: :member
       get 'mark_read' => 'forums#mark_read', on: :member
       get 'mark_read' => 'forums#mark_all_read', on: :collection
+      get 'next_unread' => 'forums#next_unread', on: :collection
     end
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
