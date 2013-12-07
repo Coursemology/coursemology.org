@@ -8,6 +8,10 @@ class Forums::TopicsController < ApplicationController
   load_and_authorize_resource :topic
 
   def show
+    respond_to do |format|
+      format.html { render action: 'show' }
+    end
+    
     curr_user_course.mark_as_seen(@topic)
     curr_user_course.mark_as_seen(@topic.posts)
   end
