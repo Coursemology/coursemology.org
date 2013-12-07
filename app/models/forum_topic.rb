@@ -4,7 +4,7 @@ class ForumTopic < ActiveRecord::Base
   belongs_to :author, class_name: 'UserCourse', foreign_key: :author_id
   belongs_to :forum, class_name: 'ForumForum'
 
-  scope :unseen, ->(user_course) {
+  scope :unread, ->(user_course) {
     joins('LEFT OUTER JOIN seen_by_users ON
       seen_by_users.user_course_id = ' + user_course.id.to_s + ' AND
       seen_by_users.obj_id=forum_topics.id AND
