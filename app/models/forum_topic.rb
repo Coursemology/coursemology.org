@@ -6,6 +6,8 @@ class ForumTopic < ActiveRecord::Base
 
   is_sluggable :title, history: false
 
+  attr_accessible :forum, :topic_type, :locked, :hidden
+
   # Defines all topic types
   TOPIC_TYPES = [
       ['Normal', 0],

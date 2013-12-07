@@ -43,6 +43,22 @@ class Forums::TopicsController < ApplicationController
     end
   end
 
+  def edit
+
+  end
+
+  def update
+    params[:forum_topic][:forum] = @course.forums.where(id: params[:forum_topic][:forum].to_i).first!
+    @topic.assign_attributes(params[:forum_topic])
+
+    respond_to do |format|
+      if @topic.save
+        format.html { redirect_to course_forum_topic_path(@course, @topic.forum, @topic),
+                                  notice: 'The topic was successfully updated.' }
+      end
+    end
+  end
+
   def set_type
     authorize! :edit, @topic
     @topic.topic_type = params[:type]
