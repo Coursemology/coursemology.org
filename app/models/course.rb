@@ -163,6 +163,10 @@ class Course < ActiveRecord::Base
     paging_pref('Students')
   end
 
+  def forum_paging_pref
+    paging_pref('Forums')
+  end
+
   def mgmt_std_paging_pref
     paging_pref('ManageStudents')
   end

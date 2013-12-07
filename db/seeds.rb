@@ -573,3 +573,12 @@ if PreferableItem.count == 60
                          description:   "Discussion Forums",
                          default_display: true
 end
+
+if PreferableItem.count == 61
+  PreferableItem.create! item:            "Paging",
+                         item_type:       "Forums",
+                         name:            "Forums",
+                         default_value:   "50",
+                         description:     "Number of topics to display per forum page",
+                         default_display: true
+end
