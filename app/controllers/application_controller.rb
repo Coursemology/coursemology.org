@@ -1,10 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
-
   protect_from_forgery
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
