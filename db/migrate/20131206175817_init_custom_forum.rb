@@ -1,4 +1,4 @@
-class CustomForumInit < ActiveRecord::Migration
+class InitCustomForum < ActiveRecord::Migration
   def change
     create_table :forum_forums do |t|
       t.integer :course_id
