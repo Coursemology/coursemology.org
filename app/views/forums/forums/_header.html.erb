@@ -6,7 +6,10 @@
         <%= link_to 'Mark all as read', main_app.course_forum_mark_read_path(@course, forum), :class => "btn" %>
     <% end %>
     <% if can?(:create, ForumTopic) %>
-      <%= link_to 'New Topic', new_course_forum_topic_path(@course, @forum), :class => "btn btn-primary" %>
+      <%= link_to 'New Topic', new_course_forum_topic_path(@course, @forum), :class => 'btn btn-primary' %>
+    <% end %>
+    <% if can?(:edit, @forum) %>
+      <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), :class => 'btn' %>
     <% end %>
     <% if @topic %>
       <%= link_to t('forem.topic.links.back_to_topics'), course_forum_path(@course, @forum), :class => "btn" %>
