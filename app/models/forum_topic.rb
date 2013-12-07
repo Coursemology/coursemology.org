@@ -6,7 +6,7 @@ class ForumTopic < ActiveRecord::Base
 
   scope :unread, ->(user_course) {
     joins('LEFT OUTER JOIN seen_by_users ON
-      seen_by_users.user_course_id = ' + user_course.id.to_s + ' AND
+      seen_by_users.user_course_id = ' + (user_course.id ? user_course.id.to_s : '0') + ' AND
       seen_by_users.obj_id=forum_topics.id AND
       obj_type=\'ForumTopic\'').where(seen_by_users: { obj_id: nil })
   }
