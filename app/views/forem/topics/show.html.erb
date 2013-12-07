@@ -2,29 +2,38 @@
   forum.topicPath = "<%= main_app.course_forum_topic_path(@course, @forum, @topic) %>";
 </script>
 <div id='topic' class='<%= 'un' unless @topic.locked? %>locked'>
-  <div id='menu' class="pull-right">
+  <div id='menu' class="pull-right btn-toolbar">
     <div class='btn-group'>
-      <% unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.id == @forum.id } %>
+      <% unread = @topic.posts.unread_by(current_user) %>
       <% if unread.count > 0 %>
-        <%= link_to "Mark all as read", main_app.course_forum_topic_mark_read_path(@course, @forum, @topic), :class => "btn" %>
+        <%= link_to "Mark topic as read", main_app.course_forum_topic_mark_read_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
-      <% unread = unread.select { |p| p.topic != @topic } %>
+      <% unread = Forem::Post.joins(topic: :forum).unread_by(current_user)
+                  .where('forem_forums.id = ? AND forem_topics.id <> ? ', @forum.id, @topic.id) %>
       <% if unread.count > 0 %>
         <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
       <% if @topic.can_be_replied_to? %>
         <%= link_to t(".reply"), main_app.new_course_forum_topic_post_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
-      <% if @topic.user == forem_user || (can? :manage, Course) %>
+      <% if @topic.user == forem_user || (can? :manage, Forem) %>
         <%= link_to t(".delete"), main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>
       <% end %>
-      <% if can? :manage, Course %>
-        <!--<%= link_to t('forem.topic.links.edit'), forem.edit_admin_topic_path(@topic), :class => "btn" %>-->
-        <%= link_to t(".hide.#{@topic.hidden}"), main_app.course_forums_topics_admin_hide_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
-        <%= link_to t(".lock.#{@topic.locked}"), main_app.course_forums_topics_admin_lock_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
-        <%= link_to t(".pin.#{@topic.pinned}"), main_app.course_forums_topics_admin_pin_path(@course, @forum, @topic), :method => :put, :class => "btn" %>
-      <% end %>
     </div>
+    <% if can? :manage, Forem %>
+      <div class='btn-group dropdown-trigger-on-hover'>
+        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+          Manage topic
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><%= link_to t('forem.topic.links.edit'), main_app.course_forums_topics_admin_edit_path(@course, @forum, @topic) %></li>
+          <li><%= link_to t(".hide.#{@topic.hidden}"), main_app.course_forums_topics_admin_hide_path(@course, @forum, @topic), :method => :put %></li>
+          <li><%= link_to t(".lock.#{@topic.locked}"), main_app.course_forums_topics_admin_lock_path(@course, @forum, @topic), :method => :put%></li>
+          <li><%= link_to t(".pin.#{@topic.pinned}"), main_app.course_forums_topics_admin_pin_path(@course, @forum, @topic), :method => :put%></li>
+        </ul>
+      </div>
+    <% end %>
 
   </div>
 
@@ -70,3 +79,4 @@
     <% end %>
   <% end %>
 </div>
+<% @topic.mark_as_read! :for => current_user %>

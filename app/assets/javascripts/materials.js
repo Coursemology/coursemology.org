@@ -119,4 +119,96 @@ $(document).ready(function() {
       window.location.href = selectedFolderUrl;
     }
   });
+
+  $('form.materials-edit-form').validatr([
+    ['input#material_filename', function() {
+      var $this = $(this);
+      if (this.value === gon.currentMaterial.filename) {
+        return null;
+      } else {
+        // Check against the server.
+        var deferred = $.Deferred();
+        $.post('/courses/' + gon.course.id + '/materials/subfolder/' + gon.currentFolder.id + '/' + this.value,
+          {_method: 'HEAD'})
+          .done(function() {
+            //This is supposed to fail! There's a file already.
+            deferred.resolve('Another file with the same name already exists.');
+          })
+          .fail(function(e) {
+            if (e.status === 404) {
+              deferred.resolve(null);
+            } else if (!e.status) {
+              deferred.resolve('Another file with the same name already exists.');
+            }
+          });
+
+        return deferred.promise();
+      }
+    }]
+  ]);
+  
+  function shadeSelectedFiles() {
+    $('.materials-select-file-checkbox').each(function(index) {
+      var parent = $(this).parents('.materials-file-row');
+      if ($(this).prop('checked')) {
+        parent.addClass('materials-file-selected');
+      } else {
+        parent.removeClass('materials-file-selected');
+      }
+    });
+  }
+  
+  $('#materials-select-all-files').click(function() {
+    var isChecked = $(this).prop('checked');
+    $('.materials-select-file-checkbox').prop('checked', isChecked);
+    shadeSelectedFiles();
+  });
+  
+  $('#materials-download-zip-button').click(function(e) {
+    var checkedFiles = [];
+    $('.materials-select-file-checkbox').each(function(index) {
+      var checkbox = $(this);
+      var fileId = checkbox.data('fileid');
+      
+      var isChecked = checkbox.prop('checked');
+      if (isChecked) {
+        checkedFiles.push(fileId);
+      }
+    });
+
+    e.preventDefault();
+    location.href = this.href + "?" + jQuery.param({
+      include: checkedFiles
+    });
+  });
+  
+  // Shade selected rows on load.
+  shadeSelectedFiles();
+  
+  // Select a row by clicking on it.
+  $('.materials-file-row').click(function(event) {
+    if (event.target.classList.contains('btn') || event.tagName === 'a' || $(event.target).parents('.btn, a').length > 0) {
+      // Do not highlight this row since it was a button which was clicked.
+      return;
+    }
+
+    $(this).toggleClass('materials-file-selected');
+    var checkbox = $(this).find('.materials-select-file-checkbox');
+    var isChecked = checkbox.prop('checked');
+    checkbox.prop('checked', !isChecked);
+  });
+  
+  $('.materials-select-file-checkbox').click(function(event) {
+    // Don't bubble up to the div, or we'd never be able to check the box.
+    event.stopPropagation();
+    
+    var parent = $(this).parents('.materials-file-row');
+    parent.toggleClass('materials-file-selected');
+    
+    // Uncheck the master checkbox if we need to.
+    var masterBox = $('#materials-select-all-files');
+    if (masterBox.prop('checked')) {
+      masterBox.prop('checked', false);
+    }
+  });
 });

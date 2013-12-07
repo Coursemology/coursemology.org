@@ -1,0 +1,10 @@
+<% if can? :manage, LessonPlanEntry %>
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if current_page?(:course_lesson_plan) %>">
+    <%= link_to '<h4>Main</h4>'.html_safe, course_lesson_plan_path(@course), data_toggle: 'tab' %>
+  </li>
+  <li class="<%= "active" if current_page?(:course_lesson_plan_overview) %>">
+    <%= link_to '<h4>Overview</h4>'.html_safe, course_lesson_plan_overview_path(@course), data_toggle: 'tab' %>
+  </li>
+</ul>
+<% end %>

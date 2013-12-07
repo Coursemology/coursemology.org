@@ -96,16 +96,26 @@ JfdiAcademy::Application.routes.draw do
 
     resources :announcements
 
-    get "materials/new/:parent", to: "materials#new", as: :new_material
-    get "materials/subfolder/:id/edit", to: "materials#edit_folder", as: :edit_material_folder
-    get "materials/subfolder/:id", to: "materials#index", as: :material_folder
-    put "materials/subfolder/:id", to: "materials#update_folder", as: :material_update_folder
-    post "materials/subfolder/:parent", to: "materials#create", as: :material_create
-    delete "materials/subfolder/:id", to: "materials#destroy_folder", as: :material_destroy_folder
-    get "materials/virtual/:virtual", to: "materials#index_virtual", as: :material_virtual_folder
-    resources :materials, except: [:new, :create] do
-      #resources :file_uploads
+    get "materials", to: "materials#index"
+    resources :material_virtual_folders, only: [], path: "materials/virtuals", controller: "materials" do
+      get "index", :on => :member, :to => "materials#index_virtual"
     end
+    resources :material_folders, only: [], path: "materials/folders", controller: "materials" do
+      post "create", :on => :collection, to: "materials#create"
+      member do
+        get "show", to: "materials#index"
+        get "edit", to: "materials#edit_folder"
+        get "upload", to: "materials#new"
+        post "create", to: "materials#create"
+        put "update", to: "materials#update_folder"
+        delete "", to: "materials#destroy_folder"
+      end
+
+      get "mark_read", to: "materials#mark_folder_read"
+    end
+    resources :material_files, except: [:index, :create], path: "materials/files", controller: "materials"
+    get "materials/files/:id", to: "materials#show", as: :material # Alias for url_for with Material objects
+    get "materials/*path", to: "materials#show_by_name", as: :material_by_path
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
@@ -175,7 +185,10 @@ JfdiAcademy::Application.routes.draw do
     match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
     match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
 
-    resources :student_summary
+    #resources :student_summary
+
+    get "student_summary" => "student_summary#index"
+    get "/student_summary/export" => "student_summary#export", as: :student_summary_export
 
     resources :staff_leaderboard
 
@@ -189,6 +202,8 @@ JfdiAcademy::Application.routes.draw do
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
+    get "lesson_plan/overview" => 'lesson_plan_milestones#overview', as: :lesson_plan_overview
+    post "lesson_plan/bulk_update" => 'lesson_plan_milestones#bulk_update', as: :lesson_plan_bulk_update
     resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
     resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
 
@@ -200,8 +215,10 @@ JfdiAcademy::Application.routes.draw do
     match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
     match "/forums/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
+    match "/forums/subscribe" => "forem/categories#subscribe", as: :forums_subscribe
+    match "/forums/unsubscribe" => "forem/categories#unsubscribe", as: :forums_unsubscribe
     match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
-    match "/forums/:forum_id/topics/:id/manage" => "forem/admin/topics#index", as: :forums_topics_admin
+    match "/forums/:forum_id/topics/:id/edit" => "forem/admin/topics#edit", as: :forums_topics_admin_edit
     put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
     put "/forums/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
     put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin

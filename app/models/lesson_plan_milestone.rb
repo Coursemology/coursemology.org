@@ -4,10 +4,13 @@ class LessonPlanMilestone < ActiveRecord::Base
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
+  validates :end_at, presence: true, allow_blank: false
+
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(*args)
     (Class.new do
         def initialize(other_entries)
+          @previous_milestone = nil
           @other_entries = other_entries
         end
 
@@ -23,8 +26,14 @@ class LessonPlanMilestone < ActiveRecord::Base
         def end_at
           nil
         end
+        def previous_milestone
+          @previous_milestone
+        end
+        def previous_milestone=(milestone)
+          @previous_milestone = milestone
+        end
 
-        def is_virtual
+        def is_virtual?
           true
         end
     end).new(*args)
@@ -48,7 +57,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     real_entries + virtual_entries
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 end

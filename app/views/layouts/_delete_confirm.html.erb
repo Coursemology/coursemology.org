@@ -1,0 +1,10 @@
+<span class="delete-confirm-control-group">    
+<a class='btn btn-danger delete-button'>
+      <i class="icon-trash"></i>
+    </a>
+  <%= link_to path_to_item,
+:method => :delete,
+class: 'btn btn-danger delete-confirm-button', style: 'display: none;' do %>
+        Confirm
+    <% end %>
+</span>

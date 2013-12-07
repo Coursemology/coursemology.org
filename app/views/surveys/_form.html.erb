@@ -14,7 +14,7 @@
     <div class="control-group">
       <%= f.label :open_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :open_at,
                            :value => datetime_format(@survey.open_at),
                            :class => 'input-medium',
@@ -28,7 +28,7 @@
     <div class="control-group">
       <%= f.label :expire_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :expire_at,
                            :value => datetime_format(@survey.expire_at),
                            :class => 'input-medium',
@@ -43,7 +43,7 @@
     <div class="control-group">
       <%= f.label "Publish?", class: 'control-label' %>
       <div class="controls checkbox-text">
-        <%= f.check_box :publish %> Check to publish training
+        <%= f.check_box :publish %> Check to publish survey
       </div>
     </div>
 

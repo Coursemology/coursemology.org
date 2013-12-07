@@ -7,7 +7,7 @@ class MaterialFolder < ActiveRecord::Base
   has_many :subfolders, dependent: :destroy, class_name: "MaterialFolder", foreign_key: "parent_folder_id"
   has_many :files, dependent: :destroy, class_name: "Material", foreign_key: "folder_id"
 
-  attr_accessible :parent_folder, :course, :course_id, :name, :description
+  attr_accessible :parent_folder, :course, :course_id, :name, :description, :can_student_upload, :open_at, :close_at
 
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(id, parent_id)
@@ -35,6 +35,12 @@ class MaterialFolder < ActiveRecord::Base
       def description=(description)
         @description = description
       end
+      def can_student_upload?
+        false
+      end
+      def is_open?
+        true
+      end
       def files
         @files
       end
@@ -59,18 +65,41 @@ class MaterialFolder < ActiveRecord::Base
         nil
       end
 
-      def is_virtual
+      def to_param
+        id
+      end
+      def is_virtual?
         true
       end
     end).new(id, parent_id)
   end
 
+  def find_material_by_filename(filename)
+    f = files.select {|f|
+      f.filename == filename
+    }
+
+    f.length == 0 ? nil : f[0]
+  end
+
+  def find_material_by_filename!(filename)
+    f = find_material_by_filename(filename)
+
+    raise ActiveRecord::RecordNotFound if not(f)
+    f
+  end
+
+  def subfolders_recursive
+    [self] + (subfolders.map{|subfolder|
+      subfolder.subfolders_recursive
+    }).reduce([]) {|e, accum|
+      e + accum
+    }
+  end
+
   def materials
-    result = []
-    self.subfolders.each { |f| result += f.materials }
-    self.files.each { |f| result += [f] }
-    
-    result
+    subfolder_recursive_ids = subfolders_recursive
+    Material.where(:folder_id => subfolder_recursive_ids)
   end
 
   def attach_files(files, descriptions)
@@ -80,12 +109,18 @@ class MaterialFolder < ActiveRecord::Base
 
       # Associate the file upload with the record
       file = FileUpload.find_by_id(id)
-      if file
-        material.attach(file)
+      if not(file)
+        next
       end
+      material.attach(file)
       material.description = descriptions[key]
       material.save
     end
+  end
+
+  def is_open?
+    (open_at == nil || open_at <= DateTime.now) &&
+    (close_at == nil || close_at >= DateTime.now)
   end
 
   def new_subfolder(name, description = nil)
@@ -93,7 +128,7 @@ class MaterialFolder < ActiveRecord::Base
     subfolder.save
   end
 
-  def is_virtual
+  def is_virtual?
     false
   end
 end

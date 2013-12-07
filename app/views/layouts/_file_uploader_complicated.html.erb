@@ -12,19 +12,10 @@
           <span>Add files...</span>
           <input id="file_upload_upload" type="file" name="files" multiple>
         </span>
-        <!--<button type="submit" class="btn btn-primary start">-->
-          <!--<i class="icon-upload icon-white"></i>-->
-          <!--<span>Start upload</span>-->
-        <!--</button>-->
-        <button type="reset" class="btn btn-warning cancel">
-          <i class="icon-ban-circle icon-white"></i>
-          <span>Cancel upload</span>
-        </button>
         <button type="button" class="btn btn-danger delete">
           <i class="icon-trash icon-white"></i>
-          <span>Delete</span>
+          <span>Delete Selected</span>
         </button>
-        <input type="checkbox" class="toggle">
       </div>
       <div class="span5">
         <!-- The global progress bar -->
@@ -36,7 +27,17 @@
     <!-- The loading indicator is shown during image processing -->
     <div class="fileupload-loading"></div>
     <!-- The table listing the files available for upload/download -->
-    <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="fileupload-buttonbar"><input type="checkbox" class="toggle"></th>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Uploaded At</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
     </table>
 <% end %>
 
@@ -55,21 +56,23 @@
 <script id="template-upload-complicated" type="text/x-tmpl">
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-upload fade">
-    <td class="preview"><span class="fade"></span></td>
+    <td></td>
     <td class="name"><span>{%=file.name%}</span></td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     {% if (file.error) { %}
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
     {% } else if (o.files.valid && !i) { %}
-    <td>
+    <td {% if (o.options.autoUpload) { %}colspan="2"{% } %}>
       <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
     </td>
-    <td class="start">{% if (!o.options.autoUpload) { %}
+    {% if (!o.options.autoUpload) { %}
+    <td class="start">
       <button class="btn btn-primary">
         <i class="icon-upload icon-white"></i>
         <span>{%=locale.fileupload.start%}</span>
       </button>
-      {% } %}</td>
+    </td>
+    {% } %}
     {% } else { %}
     <td colspan="2"></td>
     {% } %}
@@ -87,73 +90,97 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-download fade">
     {% if (file.error) { %}
+    <td></td>
     <td class="name"><span>{%=file.name%}</span></td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
     {% } else { %}
-    <td class="preview">{% if (file.thumbnail_url) { %}
-      <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
-      {% } %}</td>
-    {% if (file.original) { %}
-    <td class="name"><span>{%=file.original%}</span></td>
-    {% } %}
+    <td class="delete">
+      <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}" style="display: none;"></button>
+      <input type="checkbox" name="delete" value="1">
+    </td>
     <td class="name">
       <input type="hidden" name="files[{%=file.name%}]" class="uploaded-files" value="{%=file.id%}">
-      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+      <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{% if (file.original) { %}{%=file.original%}{% } else { %}{%=file.name%}{% } %}</a>
     </td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-    <td class="timestamp"><span>{%= file.timestamp %}</span></td>
-    <td colspan="2"></td>
+    <td class="timestamp" colspan="2"><span>{%= file.timestamp %}</span></td>
     {% } %}
     <td class="delete">
       <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
         <i class="icon-trash icon-white"></i>
-        <span>{%=locale.fileupload.destroy%}</span>
       </button>
-      <input type="checkbox" name="delete" value="1">
     </td>
   </tr>
   {% } %}
 </script>
 
 <script type="text/javascript" charset="utf-8">
-    $(function () {
-        // Initialize the jQuery File Upload widget:
-
-
-        $('#fileupload').bind('fileuploaddone', function (e, data) {
-            // Log the current bitrate for this upload:
-            var that = $(this).data('blueimp-fileupload') ||
-                            $(this).data('fileupload'),
-                    file = that._getFilesFromResponse(data)[0];
-            $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
-        });
-
-        $('#fileupload').fileupload({
-            maxFileSize: 5000000,
-            autoUpload: true,
-            uploadTemplateId: 'template-upload-complicated',
-            downloadTemplateId: 'template-download-complicated',
-            formData: [
-                {
-                    name: '_mode',
-                    value: 'MUL'
-                }]
-        });
-        //
-        // Load existing files:
-        $.getJSON($('#fileupload').prop('action'), function (files) {
-            var fu = $('#fileupload').data('blueimpFileupload'),
-                    template;
-            fu._adjustMaxNumberOfFiles(-files.length);
-//            console.log(files);
-            template = fu._renderDownload(files)
-                    .appendTo($('#fileupload .files'));
-            // Force reflow:
-            fu._reflow = fu._transition && template.length &&
-                    template[0].offsetWidth;
-            template.addClass('in');
-            $('#loading').remove();
-        });
+$(function () {
+    // Initialize the jQuery File Upload widget:
+    $('#fileupload').fileupload({
+        maxFileSize: 50000000,
+        autoUpload: true,
+        uploadTemplateId: 'template-upload-complicated',
+        downloadTemplateId: 'template-download-complicated',
+        formData: [
+            {
+                name: '_mode',
+                value: 'MUL'
+            }]
     });
+
+    var uploaded_files = []
+    $('#fileupload').bind('fileuploaddone', function (e, data) {
+      // Log the current bitrate for this upload:
+      var that = $(this).data('blueimp-fileupload') ||
+              $(this).data('fileupload'),
+          file = that._getFilesFromResponse(data)[0];
+      $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
+      uploaded_files.push(file.original);
+    });
+
+    // Register our handler for deleting items so deleted IDs won't be sent
+    // to the server.
+    $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
+      var $row = $(this).parents('tr.template-download')
+      var input = $('input.uploaded-files', $row)[0];
+
+      // Match the input with the same name as the file we are deleting.
+      $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
+    });
+
+    // Prevent files with the same filename from being uploaded twice in the
+    // same session.
+    $('#fileupload').on('fileuploadadd', function(e,data) {
+      var current_files = [];
+      $(this).fileupload('option').filesContainer.children().each(function() {
+        var data = $(this).data('data');
+        if (data) {
+          current_files.push(data.files[0].name);
+        }
+      });
+
+      data.files = $.map(data.files, function(file, i) {
+        if ($.inArray(file.name, uploaded_files) >= 0 || $.inArray(file.name, current_files) >= 0) {
+          return null;
+        } else {
+          return file;
+        }
+      });
+    });
+
+    // Load existing files:
+    $.getJSON($('#fileupload').prop('action'), function (files) {
+        var fu = $('#fileupload').data('blueimpFileupload');
+        fu._adjustMaxNumberOfFiles(-files.length);
+        var template = fu._renderDownload(files)
+                .appendTo($('#fileupload .files'));
+        // Force reflow:
+        fu._reflow = fu._transition && template.length &&
+                template[0].offsetWidth;
+        template.addClass('in');
+        $('#loading').remove();
+    });
+});
 </script>

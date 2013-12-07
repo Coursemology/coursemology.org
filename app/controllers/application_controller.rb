@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
   helper_method :sort_direction, :sort_column
+  before_filter :init_gon
 
   rescue_from CanCan::AccessDenied do |exception|
 
@@ -26,6 +27,10 @@ class ApplicationController < ActionController::Base
       )
     end
     @curr_user_course ||= UserCourse.new
+  end
+
+  def init_gon
+    gon.push :gon => true
   end
 
   def load_theme_setting
@@ -72,6 +77,11 @@ class ApplicationController < ActionController::Base
       unseen_missions = all_missions - curr_user_course.seen_missions
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
+
+      all_materials = @course.material_folder.materials.accessible_by(current_ability)
+      unseen_materials = all_materials - curr_user_course.seen_materials
+      counts[:materials] = unseen_materials.count
+
       #if can? :see_all, Submission
       #  # lecturers see number of new submissions of all students in the course
       #  all_sbms = @course.submissions.accessible_by(current_ability) +
@@ -88,7 +98,7 @@ class ApplicationController < ActionController::Base
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings
 
-      unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.category.id == @course.id }
+      unread = Forem::Post.joins(topic: {forum: :category}).unread_by(current_user).where('forem_categories.id' => @course.id)
       counts[:forums] = unread.count
     end
     # in the future, nav items can be loaded from the database
@@ -133,6 +143,17 @@ class ApplicationController < ActionController::Base
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
+                    }, {
+                        text:   "Lesson Plan",
+                        url:    main_app.course_lesson_plan_url(@course),
+                        img:    @theme_settings["Lesson Plan Icon"],
+                        icon:   "icon-time"
+                    }, {
+                        text:   "Workbin",
+                        url:    main_app.course_materials_url(@course),
+                        img:    @theme_settings["Materials Icon"],
+                        icon:   "icon-download",
+                        count:  counts[:materials] || 0
                     }]
       @nav_items <<   {
           text:   "Comments",
@@ -202,7 +223,7 @@ class ApplicationController < ActionController::Base
 
       @admin_nav_items << {
           text: "Student Summary",
-          url:  main_app.course_student_summary_index_path(@course),
+          url:  main_app.course_student_summary_path(@course),
           icon: "icon-user"
       }
 
@@ -280,6 +301,7 @@ class ApplicationController < ActionController::Base
 
   def load_general_course_data
     if @course
+      gon.course = { id: @course.id }
       load_theme_setting
       load_sidebar_data
       load_popup_notifications
@@ -296,7 +318,6 @@ class ApplicationController < ActionController::Base
     params[:direction]
   end
 
-
   def sort_column
     params[:sort]
   end
@@ -311,9 +332,18 @@ class ApplicationController < ActionController::Base
   end
 
   def masquerading?
-    puts session.to_json
+    #puts session.to_json
     session[:admin_id].present?
   end
+
+  #def fb_liked?
+  #  @oauth = Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s)
+  #  @oauth.get_app_access_token
+  #  likes = @oauth.get_connections("me", "likes")
+  #
+  #  puts likes
+  #end
+
 
   def get_url_and_icon(item)
     url = root_path
@@ -349,10 +379,17 @@ class ApplicationController < ActionController::Base
       when 'forums'
         url = main_app.course_forums_url(@course)
         icon = 'icon-th-list'
+      when 'lessonplan'
+        url = main_app.course_lesson_plan_path(@course)
+        icon = 'icon-time'
+      when 'materials'
+        url = main_app.course_materials_path(@course)
+        icon = 'icon-download'
     end
     [url, icon]
   end
 
   helper_method :masquerading?
   helper_method :curr_user_course
+  #helper_method :fb_liked?
 end

@@ -8,17 +8,9 @@
         <i class='icon-chevron-up' title='Pinned Post'></i>
       <% end %>
         <% if topic.hidden? %>
-          <i class='iicon-eye-close' title='Hidden Post'></i>
+          <i class='icon-eye-close' title='Hidden Post'></i>
       <% end %>
-      <% relevant = relevant_posts(topic)
-         unread = false
-         relevant.each do |p|
-           if p.unread?(current_user)
-             unread = true
-           end
-         end
-      %>
-      <% if unread %>
+      <% if topic.unread?(current_user) %>
         <i class='icon-envelope' title='Update!'></i>
       <% end %>
     </span>

@@ -15,7 +15,7 @@ th#linked_resource_type, th#linked_resource_actions {
   width: 20%;
 }
 
-.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover {
+.lesson-plan-hide-entries:hover, .lesson-plan-show-entries:hover, .lesson-plan-header:hover {
   cursor: pointer;
 }
 
@@ -23,4 +23,63 @@ th#linked_resource_type, th#linked_resource_actions {
 .lesson-plan-anchor {
   padding-top: 40px;
   margin-top: -40px;
+}
+  
+/* Use this class whenever bullet points need to be displayed. */
+.show-bullet-points ul {
+  list-style: disc;
+}
+
+.lesson-plan-virtual-entry .lesson-plan-entry-description {
+  color: #888;
+}
+
+.lesson-plan-virtual-entry:hover .lesson-plan-entry-description {
+  color: #000000;
+}
+
+.lesson-plan-virtual-entry-title {
+  line-height: 27px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.hr-shrink-margin {
+  margin: 5px 0;
+}
+
+.dropdown-trigger-on-hover:hover ul.dropdown-menu {
+  display: block;
+}
+
+.heading-remove-margin {
+  margin-bottom: 0;
+}
+
+.lesson-plan-remove-margin {
+  margin: 0;
+}
+
+.lesson-plan-entry-body {
+  margin-left: 15px;
+}
+
+.span-left-margin {
+  margin-left: 20px;
+}
+
+.lesson-plan-delete-controls {
+  margin-left: 2px;
+}
+
+.lesson-plan-entry-separator {
+  margin: 5px 0;
+}
+
+.lesson-plan-header-row {
+  padding-top: 5px;
+}
+
+.transparent-background {
+  background-color:rgba(255, 255, 255, 0.9);
 }

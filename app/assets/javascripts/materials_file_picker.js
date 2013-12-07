@@ -3,7 +3,7 @@ function MaterialsFilePicker() {
 }
 
 MaterialsFilePicker.prototype.pick = function(div) {
-  var courseId = gon.course;
+  var courseId = gon.course.id;
   var that = this;
   
   var htmlContent = '<div class="modal-header">\
@@ -32,7 +32,7 @@ MaterialsFilePicker.prototype.pick = function(div) {
   $.ajax({
     url: '/courses/' + courseId + '/materials.json',
     success: function(rootNode) { 
-      that.onWorkbinStructureReceived(rootNode); 
+      that.onFolderStructureReceived(rootNode);
     },
     beforeSend: function() {
       $('#file-picker-loading', div).show();
@@ -57,9 +57,9 @@ MaterialsFilePicker.prototype.onDone = function() {
   this.onSelectionCompleted(selectedItems);
 };
 
-MaterialsFilePicker.prototype.onWorkbinStructureReceived = function(rootNode) {
+MaterialsFilePicker.prototype.onFolderStructureReceived = function(rootNode) {
   var shouldIncludeFiles = true;
-  var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles);
+  var treeData = parseFileJsonForJqTree(rootNode, shouldIncludeFiles, false);
   
   this.treeElement.tree({
     data: treeData,

@@ -14,6 +14,11 @@ en:
     post:
       buttons:
         edit: "Save"
+    topic:
+      links:
+        edit: "Edit/Move"
+      received_new_topic: New topic posted in forum
+      received_new_post: New post in forum
     topics:
       show:
         links:
@@ -27,3 +32,8 @@ en:
         pin:
           'true': Unpin
           'false': Pin
+  materials:
+    subfolder_items:
+      zero: "empty"
+      one: "1 item"
+      other: "%{count} items"

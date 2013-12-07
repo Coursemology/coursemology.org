@@ -71,7 +71,12 @@ class Mission < ActiveRecord::Base
     entry.start_at = self.open_at
     entry.end_at = self.close_at
     entry.url = course_mission_path(self.course, self)
+    entry.is_published = self.publish
     entry
+  end
+
+  def published?
+    publish?
   end
 
   alias_method :sbms, :submissions

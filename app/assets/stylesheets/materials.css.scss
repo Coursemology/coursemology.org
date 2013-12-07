@@ -1,4 +1,25 @@
-ul.jqtree-tree li.jqtree-selected > .jqtree-element,
+.materials-description-title {
+  margin-bottom: 10px;
+}
+
+.materials-list-table {
+}
+
+div.materials-folder-controls {
+  padding-bottom: 1em;
+}
+
+#file-tree ul.jqtree-tree li.jqtree-selected > .jqtree-element,
 ul.jqtree-tree li.jqtree-selected > .jqtree-element:hover {
   background: #e2e2e2;
+}
+
+.large-label {
+  font-size: 24px;
+  border-radius: 6px;
+  padding: 4px 12px 4px;
+}
+
+.materials-file-selected, tr.materials-file-row:hover {
+  background: #fef9dd;
 }

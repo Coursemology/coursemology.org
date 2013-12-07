@@ -1,24 +1,67 @@
-<div id="create-subfolder-modal">
-  <%= form_for [@course, @subfolder], :html => { :class => 'form-horizontal' }, :url => course_material_create_path(@course, @folder), :method => subfolder_method do |f| %>
-  <div>
-  <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'text_field span7', :required => 'required' %>
+<%= form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :method => subfolder_method do |f| %>
+  <% if parent %>
+  <input type="hidden" name="id" value="<%= parent.id %>" />
+  <% end %>
+  <div class="<%= modal ? 'modal-body' : '' %>">
+    <div class="row-fluid control-group">
+      <%= f.label :name, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :name, :class => 'text_field span7', :required => 'required' %>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, :class => 'text_field html-editor span7', :rows => 10 %>
+    <div class="row-fluid control-group">
+      <%= f.label :can_student_upload, 'Students can Upload', :class => 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :can_student_upload, :class => 'checkbox' %>
+      </div>
     </div>
-  </div>
-  </div>
-  <div class="form-actions">
-    <%= hidden_field_tag :type, :subfolder %>
-    <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_material_folder_path(@course, @folder.parent_folder), :class => 'btn' %>
+    <div class="row-fluid control-group">
+      <%= f.label :open_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <% if folder_to_change.close_at %>
+            <%= f.text_field :open_at, :class => 'text_field', :value => datetime_format(folder_to_change.open_at) %>
+          <% else %>
+            <%= f.text_field :open_at, :class=> 'text_field' %>
+          <% end %>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid control-group">
+      <%= f.label :close_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <% if folder_to_change.close_at %>
+            <%= f.text_field :close_at, :class => 'text_field', :value => datetime_format(folder_to_change.close_at) %>
+          <% else %>
+            <%= f.text_field :close_at, :class=> 'text_field' %>
+          <% end %>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+      <div class="row-fluid control-group">
+        <%= f.label :description, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_area :description, :class => 'text_field html-editor span7', :rows => 10 %>
+        </div>
+      </div>
+    </div>
+    <div class="<%= modal ? 'modal-footer' : 'form-actions' %>">
+      <%= hidden_field_tag :type, :subfolder %>
+      <%= f.submit "Submit", :class => 'btn btn-primary', data: {disable_with: "Submitting..."} %>
+      <% if modal then %>
+        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+      <% else %>
+        <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                    folder_to_change.parent_folder ?
+                      course_material_folder_path(@course, folder_to_change.parent_folder) :
+                      course_materials_path(@course), :class => 'btn' %>
+      <% end %>
+    </div>
   </div>
 <% end %>
-</div>
