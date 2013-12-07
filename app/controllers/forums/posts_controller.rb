@@ -18,7 +18,7 @@ class Forums::PostsController < ApplicationController
     respond_to do |format|
       if @post.save
         format.html { redirect_to course_forum_topic_path(@course, @forum, @topic, anchor: "post-#{@post.id}"),
-                                  notice: 'The post was successfully created' }
+                                  notice: 'The post was successfully created.' }
       else
         redirect_to course_forum_topic_path(@course, @forum, @topic)
       end
@@ -30,11 +30,25 @@ class Forums::PostsController < ApplicationController
   end
 
   def update
+    @post.assign_attributes(params[:forum_post])
 
+    respond_to do |format|
+      if @post.save
+        format.html { redirect_to course_forum_topic_path(@course, @forum, @topic, anchor: "post-#{@post.id}"),
+                                  notice: 'The post was successfully saved.' }
+      else
+        redirect_to course_forum_topic_path(@course, @forum, @topic)
+      end
+    end
   end
 
   def destroy
+    @post.destroy
 
+    respond_to do |format|
+      format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
+                                notice: "The post was successfully deleted." }
+    end
   end
 
   def reply

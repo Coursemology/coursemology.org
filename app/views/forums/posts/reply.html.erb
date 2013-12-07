@@ -29,7 +29,7 @@
 
   <% new_post = ForumPost.new %>
   <%= simple_form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
-    <%= render :partial => "forums/posts/form", :locals => { reply_to: @topic.posts.last, form: f } %>
+    <%= render :partial => 'form', :locals => { reply_to: @topic.posts.last, form: f } %>
     <%= f.submit 'Reply', :class => "btn btn-primary" %>
   <% end %>
 </div>
