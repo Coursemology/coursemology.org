@@ -40,7 +40,7 @@
             <%= button_tag "Unlike", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id} active", "data-toggle" => "button" %>
           <% end %>
           <% if post.topic.can_be_replied_to? %>
-            <%= link_to 'Reply', course_forum_topic_post_reply_path(@course, @forum, post.topic, post), :class => 'btn reply', 'data-post-id' => post.id %>
+            <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn reply', 'data-post-id' => post.id %>
           <% end %>
           <% if can? :edit, post %>
             <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn' %>
