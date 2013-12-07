@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207114621) do
+ActiveRecord::Schema.define(:version => 20131206175817) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -440,7 +440,7 @@ ActiveRecord::Schema.define(:version => 20131207114621) do
     t.text    "description"
   end
 
-  add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_slug", :unique => true
+  add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true
 
   create_table "forum_post_votes", :force => true do |t|
     t.integer  "post_id"
@@ -491,7 +491,7 @@ ActiveRecord::Schema.define(:version => 20131207114621) do
   end
 
   add_index "forum_topics", ["author_id"], :name => "index_forum_topics_on_author_id"
-  add_index "forum_topics", ["cached_slug"], :name => "index_forum_topics_on_slug", :unique => true
+  add_index "forum_topics", ["cached_slug"], :name => "index_forum_topics_on_cached_slug", :unique => true
   add_index "forum_topics", ["forum_id"], :name => "index_forum_topics_on_forum_id"
 
   create_table "lesson_plan_entries", :force => true do |t|
