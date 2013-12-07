@@ -18,7 +18,7 @@ class CustomForumInit < ActiveRecord::Migration
       t.integer :author_id
       t.boolean :locked, :default => false
       t.boolean :hidden, :default => false
-      t.integer :type, :default => 0
+      t.integer :topic_type, :default => 0
 
       t.timestamps
     end

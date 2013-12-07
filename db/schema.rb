@@ -475,7 +475,7 @@ ActiveRecord::Schema.define(:version => 20131207090634) do
     t.integer  "author_id"
     t.boolean  "locked",      :default => false
     t.boolean  "hidden",      :default => false
-    t.integer  "type",        :default => 0
+    t.integer  "topic_type",  :default => 0
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
