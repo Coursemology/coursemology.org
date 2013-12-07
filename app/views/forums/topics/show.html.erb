@@ -3,13 +3,10 @@
     <div class="btn-group">
       <% unread = @forum.unread_topics(curr_user_course) %>
       <% if unread.count > 0 %>
-        <%= link_to 'Next unread topic', course_forum_next_unread_path(@course), :class => "btn" %>
+        <%= link_to 'Next unread topic', next_unread_course_forums_path(@course), :class => "btn" %>
       <% end %>
       <% if @topic.can_be_replied_to? %>
         <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), :class => 'btn reply', 'data-post-id' => @topic.posts.last.id %>
-      <% end %>
-      <% if can? :manage, @topic %>
-        <%= link_to 'Delete', course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => 'btn btn-danger' %>
       <% end %>
     </div>
     <% if can? :manage, @topic %>
@@ -28,6 +25,10 @@
           <% end %>
         </ul>
       </div>
+
+      <span>
+        <%= render :partial => "layouts/delete_confirm", :locals => { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
+      </span>
     <% end %>
 
   </div>
@@ -49,14 +50,10 @@
   <% if @topic.can_be_replied_to? %>
     <hr />
 
-    <div class="simple_form">
-      <div class="post-content">
-        <h3>Post a Reply</h3>
-      </div>
-    </div>
+    <h3>Post a Reply</h3>
 
     <% new_post = ForumPost.new %>
-    <%= simple_form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
+    <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
       <%= render :partial => "forums/posts/form", :locals => { reply_to: @topic.posts.last, form: f } %>
       <%= f.submit 'Reply', :class => "btn btn-primary" %>
     <% end %>

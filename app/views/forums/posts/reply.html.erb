@@ -11,7 +11,7 @@
     </div>
 
     <div class='contents span7 thumbnail' style="padding:20px;">
-      <%=raw forem_format(@post.text) %>
+      <%=raw Sanitize.clean(post.text, Sanitize::Config::BASIC) %>
 
       <% if @post.parent %>
         <div class='in-reply-to'>
@@ -28,7 +28,7 @@
   </div>
 
   <% new_post = ForumPost.new %>
-  <%= simple_form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
+  <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
     <%= render :partial => 'form', :locals => { reply_to: @topic.posts.last, form: f } %>
     <%= f.submit 'Reply', :class => "btn btn-primary" %>
   <% end %>

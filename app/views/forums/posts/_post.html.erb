@@ -11,7 +11,7 @@
     </div>
 
     <div class="contents span7 thumbnail" style="padding:20px;">
-      <%=raw forem_format(post.text) %>
+      <%= Sanitize.clean(post.text, Sanitize::Config::BASIC) %>
 
       <% if post.parent %>
         <div class="in-reply-to">
@@ -30,21 +30,21 @@
         </a>
 
         <div class="pull-right">
-          <%# TODO: Reimplement up/down votes. %>
           <span style="padding:5px; <%= (likes = 0) > 0 ? '' : 'display:none;' %>">
             <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
           </span>
-          <% if !forem_user.voted_for? post %>
-            <%= button_tag "Like", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id}", "data-toggle" => "button" %>
+          <% if not current_user.voted_for? post %>
+            <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), :class => 'btn btn-primary' %>
+            <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), :class => 'btn btn-primary' %>
           <% else %>
-            <%= button_tag "Unlike", :onClick => "forumToggleLike(#{post.id})", :class => "btn btn-primary like-#{post.id} active", "data-toggle" => "button" %>
+            <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), :class => 'btn btn-primary' %>
           <% end %>
           <% if post.topic.can_be_replied_to? %>
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn reply', 'data-post-id' => post.id %>
           <% end %>
           <% if can? :edit, post %>
             <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn' %>
-            <%= link_to 'Delete', course_forum_topic_post_path(@course, @forum, post.topic, post), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => 'btn' %>
+            <%= render partial: "layouts/delete_confirm", locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
           <% end %>
         </div>
       </div>
