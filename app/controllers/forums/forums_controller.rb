@@ -64,5 +64,7 @@ private
       @forum = ForumForum.new
       @forum.assign_attributes(params[:forum])
     end
+
+    raise ActiveRecord::RecordNotFound unless @forum
   end
 end

@@ -71,10 +71,12 @@ class Forums::PostsController < ApplicationController
 private
   def load_forum
     @forum = ForumForum.find_using_slug(params[:forum_id])
+    raise ActiveRecord::RecordNotFound unless @forum
   end
 
   def load_topic
     @topic = ForumTopic.find_using_slug(params[:topic_id])
+    raise ActiveRecord::RecordNotFound unless @topic
   end
 
   def load_post
@@ -83,5 +85,7 @@ private
       @post = ForumPost.new
       @post.assign_attributes(params[:forum_post])
     end
+
+    raise ActiveRecord::RecordNotFound unless @post
   end
 end
