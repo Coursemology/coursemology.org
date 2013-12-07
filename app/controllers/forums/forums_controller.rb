@@ -29,6 +29,25 @@ class Forums::ForumsController < ApplicationController
     end
   end
 
+  def edit
+
+  end
+
+  def update
+    @forum.assign_attributes(params[:forum_forum])
+
+    respond_to do |format|
+      format.html do
+        if @forum.save
+          redirect_to course_forum_path(@course, @forum),
+                      notice: 'The forum was successfully updated.'
+        else
+          render action: 'edit'
+        end
+      end
+    end
+  end
+
 private
   def load_forum
     @forum = ForumForum.find_using_slug(params[:id])
