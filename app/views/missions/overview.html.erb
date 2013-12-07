@@ -34,7 +34,7 @@
           <input name="missions[<%= mission.id %>][exp]" type="number" value="<%= mission.exp %>" min="0" class="input-mini" required>
         </td>
         <td>
-          <div class="datetimepicker input-append date">
+          <div class="datetimepicker future-only input-append date">
             <input name="missions[<%= mission.id %>][open_at]" type="text" value="<%= datetime_format(mission.open_at) %>" class="input-medium" required="true">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
@@ -42,7 +42,7 @@
           </div>
         </td>
         <td>
-          <div class="datetimepicker input-append date">
+          <div class="datetimepicker future-only input-append date">
             <input name="missions[<%= mission.id %>][close_at]" type="text" value="<%= datetime_format(mission.close_at) %>" class="input-medium" required="true">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>

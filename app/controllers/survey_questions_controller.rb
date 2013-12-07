@@ -67,6 +67,8 @@ class SurveyQuestionsController < ApplicationController
       file = FileUpload.where(id:id).first
       if file
         if file.file_content_type.start_with?('image')
+          file.preserve_filename = false
+          file.save
           create_option(file, question)
         elsif file.file_content_type == 'application/zip'
           #extract_options(file, question)

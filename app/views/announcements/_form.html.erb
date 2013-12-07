@@ -14,7 +14,7 @@
     <div class="control-group">
       <%= f.label :publish_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :publish_at,
                            value: datetime_format(@announcement.publish_at),
                            class: 'input-medium',
@@ -28,7 +28,7 @@
     <div class="control-group">
       <%= f.label :expiry_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker input-append date">
+        <div class="datetimepicker future-only input-append date">
           <%= f.text_field :expiry_at,
                            value: datetime_format(@announcement.expiry_at),
                            class: 'input-medium',

@@ -101,7 +101,7 @@ class Course < ActiveRecord::Base
   end
 
   def student_sidebar_display
-    student_sidebar_items.select {|pref| pref.display }
+    student_sidebar_items.where(display: true)
   end
 
   def mission_columns_display
@@ -314,14 +314,14 @@ class Course < ActiveRecord::Base
     entries += trainings.map { |t| t.as_lesson_plan_entry }
   end
 
-  def workbin_virtual_entries
+  def materials_virtual_entries
     mission_files =
       # Get the missions' files, and map it to the virtual entries.
       (self.missions.map { |m|
         m.files.map { |f|
           material = Material.create_virtual(m, f)
           material.file = f
-          material.filename = m.title + ": " + f.original_name
+          material.filename = m.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
           material.url = f.file.url
@@ -347,7 +347,7 @@ class Course < ActiveRecord::Base
         t.files.map { |f|
           material = Material.create_virtual(t, f)
           material.file = f
-          material.filename = t.title + ": " + f.original_name
+          material.filename = t.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
           material.url = f.file.url

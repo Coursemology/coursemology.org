@@ -1,4 +1,4 @@
-<%= form_for [@course, @lesson_plan_entry], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @lesson_plan_entry], :html => { :class => 'form-horizontal lesson-plan-entry-form' } do |f| %>
     <div class="control-group">
       <%= f.label "Type", :class => 'control-label' %>
       <div class="controls">
@@ -32,7 +32,9 @@
     <div class="control-group">
       <%= f.label :start_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker-past input-append">
+        <div class="datetimepicker input-append" id="lesson_plan_entry_start_at_picker"
+          <%= @start_at ? " data-date-startdate=\"#{datetime_iso(@start_at)}\"".html_safe : '' %>
+          <%= @end_at ? " data-date-enddate=\"#{datetime_iso(@end_at)}\"".html_safe : '' %>>
           <%= f.text_field :start_at, :value => datetime_format(@lesson_plan_entry.start_at), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
@@ -44,7 +46,9 @@
     <div class="control-group">
       <%= f.label :end_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker-past input-append">
+        <div class="datetimepicker input-append" id="lesson_plan_entry_end_at_picker"
+          <%= @start_at ? " data-date-startdate=\"#{datetime_iso(@start_at)}\"".html_safe : '' %>
+          <%= @end_at ? " data-date-enddate=\"#{datetime_iso(@end_at)}\"".html_safe : '' %>>
           <%= f.text_field :end_at, :value => datetime_format(@lesson_plan_entry.end_at), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>

@@ -2,7 +2,7 @@
   <span>
     <% if (can? :upload, @folder) %>
       <% if @folder.is_virtual? %>
-        <span class="workbin-disabled-controls" title="This folder is reserved for Mission/Training files.">
+        <span class="materials-disabled-controls" title="This folder is reserved for Mission/Training files.">
           <a class='btn disabled' title="Upload Files">
             Upload
           </a>
@@ -12,13 +12,13 @@
         </span>
       <% else %>
       <% if (can? :upload, @folder) %>
-        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn hover-tooltip' 
-           title="Upload Files">
+        <a href="<%= upload_course_material_folder_path(@course, @folder) %>" class='btn'
+           title="Upload Files" rel="tooltip">
           Upload
         </a>
       <% end %>
       <% if (can? :manage, @folder) %>
-        <a href="#create-subfolder-modal" data-toggle="modal" class="btn hover-tooltip" title="Create Folder">
+        <a href="#create-subfolder-modal" data-toggle="modal" class="btn" title="Create Folder" rel="tooltip">
           <h4 class="icon-folder-close"></h4>
         </a>
       <% end %>
@@ -30,30 +30,30 @@
   <span class="pull-right btn-group">
     <% if (can? :manage, @folder) %>
       <% if @folder.is_virtual? %>
-      <a class="btn disabled workbin-disabled-controls" title="This folder can't be edited.">Edit</a>
+      <a class="btn disabled" title="This folder can't be edited." rel="tooltip">Edit</a>
       <% else %>
       <%= link_to "Edit", "#edit-subfolder-modal", "data-toggle" => "modal", :class => 'btn' %>
       <% end %>
     <% end %>
     <%= link_to "Download .zip", (@folder.is_virtual? ?
-        course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
+        course_material_virtual_folder_path(@course, @folder, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')),
-        :class => 'btn', :id => 'workbin-download-zip-button' %>
+        :class => 'btn', :id => 'materials-download-zip-button' %>
     
     <% if not(@folder.is_virtual?) %>
-    <%# For non-root folders, allow marking the entire workbin read. %>
+    <%# For non-root folders, allow marking all materials read recursively. %>
     <% if @folder.parent_folder %>
     <%= link_to "Mark as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
       <button class="btn dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><%= link_to "Mark entire workbin as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
+        <li><%= link_to "Mark entire #{get_materials_display_name} as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
       </ul>
     <% else %>
     <%# Otherwise we are at root, then marking the root folder read is as
-        good as marking the entire workbin read. %>
-        <%= link_to "Mark Workbin as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
+        good as marking all materials recursively read. %>
+        <%= link_to "Mark entire #{get_materials_display_name} as Seen", course_material_folder_mark_read_path(@course, @folder), :class => 'btn' %>
     <% end %>
     <% end %>
   </span>
@@ -64,13 +64,13 @@
   <div class="modal-header">
     <h3>Create Subfolder</h3>
   </div>
-  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: MaterialFolder.new, subfolder_method: :post } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: MaterialFolder.new, subfolder_method: :post, parent: @folder } %>
 </div>
 
 <div id="edit-subfolder-modal" class="modal hide fade">
   <div class="modal-header">
     <h3>Edit Folder</h3>
   </div>
-  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: @folder, subfolder_method: :put } %>
+  <%= render partial: "subfolder_form", locals: { modal: true, folder_to_change: @folder, subfolder_method: :put, parent: nil } %>
 </div>
 <% end %>

@@ -83,6 +83,7 @@ class MaterialsController < ApplicationController
         |folder| folder.id == params[:id] })
     raise ActiveRecord::RecordNotFound if @folder.length == 0
     @folder = @folder[0]
+    authorize! :read, MaterialFolder
 
     respond_to do |format|
       format.html {
@@ -295,7 +296,7 @@ private
     folder_metadata['url'] = folder.is_virtual? ? course_material_virtual_folder_path(@course, folder) : course_material_folder_path(@course, folder)
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.files.length
-    folder_metadata['is_virtual?'] = folder.is_virtual?
+    folder_metadata['is_virtual'] = folder.is_virtual?
     if include_files then
       folder_metadata['files'] = (folder.is_virtual? ?
         folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
@@ -322,7 +323,7 @@ private
 
   # Builds the list of virtual folders which are accessible
   def virtual_folders
-    entries = @course.workbin_virtual_entries
+    entries = @course.materials_virtual_entries
     entries.each { |entry|
       entry.files = entry.files.select { |file|
         can?(:manage, file.parent) ||
@@ -358,7 +359,7 @@ private
           end
         end
 
-        temp_path = File.join(dir, m.filename.sub(":", "_"))
+        temp_path = File.join(dir, m.filename.gsub(":", "_"))
         m.file.file.copy_to_local_file :original, temp_path
         curr_user_course.mark_as_seen(m) unless m.is_virtual?
 

@@ -185,7 +185,10 @@ JfdiAcademy::Application.routes.draw do
     match "resend_enrollment_emails" => "mass_enrollment_emails#resend_emails"
     match "delete_enrollment_invitations" => "mass_enrollment_emails#delete_mass"
 
-    resources :student_summary
+    #resources :student_summary
+
+    get "student_summary" => "student_summary#index"
+    get "/student_summary/export" => "student_summary#export", as: :student_summary_export
 
     resources :staff_leaderboard
 
@@ -199,6 +202,8 @@ JfdiAcademy::Application.routes.draw do
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
+    get "lesson_plan/overview" => 'lesson_plan_milestones#overview', as: :lesson_plan_overview
+    post "lesson_plan/bulk_update" => 'lesson_plan_milestones#bulk_update', as: :lesson_plan_bulk_update
     resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
     resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
 
@@ -210,8 +215,10 @@ JfdiAcademy::Application.routes.draw do
     match "/forums/manage" => "forem/admin/forums#show", as: :forums_admin
     match "/forums/new" => "forem/admin/forums#new", as: :forums_admin_new
     match "/forums/mark_read" => "forem/categories#mark_read", as: :forums_mark_read
+    match "/forums/subscribe" => "forem/categories#subscribe", as: :forums_subscribe
+    match "/forums/unsubscribe" => "forem/categories#unsubscribe", as: :forums_unsubscribe
     match "/forums/:id/edit" => "forem/admin/forums#edit", as: :forums_admin_edit
-    match "/forums/:forum_id/topics/:id/manage" => "forem/admin/topics#index", as: :forums_topics_admin
+    match "/forums/:forum_id/topics/:id/edit" => "forem/admin/topics#edit", as: :forums_topics_admin_edit
     put "/forums/:forum_id/topics/:id/toggle_hide" => "forem/admin/topics#toggle_hide", as: :forums_topics_admin_hide
     put "/forums/:forum_id/topics/:id/toggle_lock" => "forem/admin/topics#toggle_lock", as: :forums_topics_admin_lock
     put "/forums/:forum_id/topics/:id/toggle_pin" => "forem/admin/topics#toggle_pin", as: :forums_topics_admin_pin

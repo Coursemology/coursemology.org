@@ -64,8 +64,12 @@ th#linked_resource_type, th#linked_resource_actions {
   margin-left: 15px;
 }
 
+.span-left-margin {
+  margin-left: 20px;
+}
+
 .lesson-plan-delete-controls {
-  float: right;
+  margin-left: 2px;
 }
 
 .lesson-plan-entry-separator {
@@ -77,5 +81,5 @@ th#linked_resource_type, th#linked_resource_actions {
 }
 
 .transparent-background {
-  background-color:rgba(255, 255, 255, 0.8);
+  background-color:rgba(255, 255, 255, 0.9);
 }

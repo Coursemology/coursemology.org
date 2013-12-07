@@ -25,4 +25,26 @@ class StudentSummaryController < ApplicationController
 
     @phantom_students = @course.user_courses.student.where(is_phantom: true).order("exp desc")
   end
+
+  def export
+    @students = @course.user_courses.student.where(is_phantom: false).order('lower(name) asc')
+    file = Tempfile.new('student_summary')
+    file.puts "Student, Tutor, Level, EXP, EXP Count \n"
+
+    @students.each do |student|
+     file.puts student.name.gsub(",", " ") + "," +
+                   student.get_my_tutor_name.gsub(",", " ") + "," +
+                   student.level.level.to_s + "," +
+                   student.exp.to_s + "," +
+                   student.exp_transactions.length.to_s + "\n"
+    end
+
+    file.close
+    send_file(file.path, {
+        :type => "application/zip, application/octet-stream",
+        :disposition => "attachment",
+        :filename =>   @course.title + " - Student Summary.csv"
+    }
+              )
+  end
 end

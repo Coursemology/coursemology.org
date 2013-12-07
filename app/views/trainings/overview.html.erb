@@ -39,7 +39,7 @@
               <input name="trainings[<%= training.id %>][exp]" type="number" value="<%= training.exp %>" min="0" class="input-mini" required>
             </td>
             <td>
-              <div class="datetimepicker input-append date">
+              <div class="datetimepicker future-only input-append date">
                 <input name="trainings[<%= training.id %>][open_at]" type="text" value="<%= datetime_format(training.open_at) %>" class="input-medium" required="true">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
@@ -51,7 +51,7 @@
               <input name="trainings[<%= training.id %>][bonus_exp]" type="number" value="<%= training.bonus_exp %>" min="0" class="input-mini" required>
             </td>
             <td>
-              <div class="datetimepicker input-append date">
+              <div class="datetimepicker future-only input-append date">
                 <input name="trainings[<%= training.id %>][bonus_cutoff]" type="text" value="<%= datetime_format(training.bonus_cutoff) %>" class="input-medium" required="true">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>

@@ -13,6 +13,6 @@
 <% end %>
 
 <%= simple_form_for [main_app, @course, @forum, @topic, @post] do |f| %>
-  <%= render :partial => "form", :locals => { :f => f } %>
+  <%= render :partial => "form", :locals => { :f => f, :reply => @reply_to_post } %>
   <%= f.submit t("forem.post.buttons.reply"), :class => "btn btn-primary" %>
 <% end %>

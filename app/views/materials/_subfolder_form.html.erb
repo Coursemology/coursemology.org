@@ -1,4 +1,7 @@
 <%= form_for [@course, folder_to_change], :html => { :class => 'form-horizontal' }, :method => subfolder_method do |f| %>
+  <% if parent %>
+  <input type="hidden" name="id" value="<%= parent.id %>" />
+  <% end %>
   <div class="<%= modal ? 'modal-body' : '' %>">
     <div class="row-fluid control-group">
       <%= f.label :name, :class => 'control-label' %>
@@ -15,7 +18,7 @@
     <div class="row-fluid control-group">
       <%= f.label :open_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker-past input-append date">
+        <div class="datetimepicker input-append date">
           <% if folder_to_change.close_at %>
             <%= f.text_field :open_at, :class => 'text_field', :value => datetime_format(folder_to_change.open_at) %>
           <% else %>
@@ -30,7 +33,7 @@
     <div class="row-fluid control-group">
       <%= f.label :close_at, :class => 'control-label' %>
       <div class="controls">
-        <div class="datetimepicker-past input-append date">
+        <div class="datetimepicker input-append date">
           <% if folder_to_change.close_at %>
             <%= f.text_field :close_at, :class => 'text_field', :value => datetime_format(folder_to_change.close_at) %>
           <% else %>

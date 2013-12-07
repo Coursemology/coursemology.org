@@ -1,6 +1,6 @@
-<tr class="workbin-file-row">
+<tr class="materials-file-row">
   <td>
-    <input type="checkbox" class="workbin-select-file-checkbox" data-fileid="<%= material.id %>">
+    <input type="checkbox" class="materials-select-file-checkbox" data-fileid="<%= material.id %>">
   </td>
   <td>
     <% link = if material.is_virtual? then material.url else course_material_file_path(@course, material) end %>
@@ -31,6 +31,55 @@
       <% if material.is_virtual? %>
       <%= render partial: "disabled_controls" %>
       <% else %>
+      <% if (can? :manage, Material) %>
+      <%= link_to '#materials-statistics-' + material.id.to_s, 'class' => 'btn materials-statistics-button', 'data-toggle' => 'modal', 'role' => 'button' do %>
+      <i class="icon-eye-open"></i>
+      <% end %>
+      <div class="materials-statistics modal hide fade" id="materials-statistics-<%= material.id %>" role="dialog" aria-labelledby="Download Statistics" aria-hidden="true">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3>File Statistics</h3>
+        </div>
+        <div class="modal-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Downloaded/Seen at</th>
+              </tr>
+            </thead>
+            <% role_counts = [] %>
+            <% SeenByUser.course(@course).materials.where(:obj_id => material).each {|view| %>
+            <%
+               role_id = view.user_course.role.id;
+               while (role_counts.length <= role_id) do
+                 role_counts[role_counts.length] = 0
+               end
+               role_counts[role_id] += 1
+            %>
+            <tbody>
+              <tr>
+                <th><%= view.user_course.user.name %></th>
+                <td><%= datetime_format(view.created_at) %></td>
+              </tr>
+            </tbody>
+            <% } %>
+          </table>
+          <h3>Summary</h3>
+          <ul>
+          <% Role.all.each {|role|
+            role_users = @course.user_courses.where(:role_id => role.id).count
+            next unless role_users > 0
+          %>
+            <li><%= role.title %>: <%= role_counts[role.id] ? role_counts[role.id] : 0 %> out of <%= role_users %> seen</li>
+          <% } %>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+      </div>
+      <% end %>
       <%= link_to edit_course_material_file_path(@course, material), class: 'btn' do %>
       <i class="icon-edit"></i>
       <% end %>

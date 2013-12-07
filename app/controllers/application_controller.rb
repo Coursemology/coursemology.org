@@ -98,8 +98,8 @@ class ApplicationController < ActionController::Base
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings
 
-      #unread = Forem::Post.unread_by(current_user).select { |p| p.topic.forum.category.id == @course.id }
-      #counts[:forums] = unread.count
+      unread = Forem::Post.joins(topic: {forum: :category}).unread_by(current_user).where('forem_categories.id' => @course.id)
+      counts[:forums] = unread.count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
@@ -223,7 +223,7 @@ class ApplicationController < ActionController::Base
 
       @admin_nav_items << {
           text: "Student Summary",
-          url:  main_app.course_student_summary_index_path(@course),
+          url:  main_app.course_student_summary_path(@course),
           icon: "icon-user"
       }
 
@@ -379,7 +379,7 @@ class ApplicationController < ActionController::Base
       when 'forums'
         url = main_app.course_forums_url(@course)
         icon = 'icon-th-list'
-      when 'lesson_plan'
+      when 'lessonplan'
         url = main_app.course_lesson_plan_path(@course)
         icon = 'icon-time'
       when 'materials'
