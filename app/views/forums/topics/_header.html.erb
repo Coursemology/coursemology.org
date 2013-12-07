@@ -2,8 +2,8 @@
   <h1>Forums</h1>
   <ul class="breadcrumb">
     <li>
-      <%= link_to main_app.course_forums_path(@course) do %>
-          <%= content_tag :i, '', :class => 'icon-home' %>
+      <%= link_to course_forums_path(@course) do %>
+        <%= content_tag :i, '', :class => 'icon-home' %>
       <% end %>
       <span class="divider">/</span>
     </li>
@@ -12,20 +12,19 @@
         <%= topic.forum.name %> <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% category = Forem::Category.find(@course.id) %>
-        <% category.forums.each do |f|  %>
-            <li><%= link_to f.title, main_app.course_forum_path(@course, f) %></li>
+        <% @course.forums.each do |f|  %>
+          <li><%= link_to f.name, course_forum_path(@course, f) %></li>
         <% end %>
       </ul>
       <span class="divider">/</span>
     </li>
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown">
-        <%= forem_emojify(topic.title) %> <span class="caret"></span>
+        <%= topic.title %> <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% @forum.topics.each do |t|  %>
-            <li><%= link_to t.subject, main_app.course_forum_topic_path(@course, @forum, t) %></li>
+        <% topic.forum.topics.each do |t|  %>
+          <li><%= link_to t.title, course_forum_topic_path(@course, @forum, t) %></li>
         <% end %>
       </ul>
     </li>

@@ -1,7 +1,7 @@
 <div id="topic" class="<%= @topic.locked ? 'locked' : 'unlocked' %>">
   <div id="menu" class="pull-right btn-toolbar">
     <div class="btn-group">
-      <%# Implement go to next unread %>
+      <%# TODO: Implement go to next unread %>
       <% unread = Forem::Post.joins(topic: :forum).unread_by(current_user)
       .where('forem_forums.id = ? AND forem_topics.id <> ? ', @forum.id, @topic.id) %>
       <% if unread.count > 0 %>
@@ -21,7 +21,7 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><%= link_to 'Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
+          <li><%= link_to 'Edit/Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
           <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, :hide => @topic.hidden? ? 0 : 1), :method => :put %></li>
           <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic, :lock => @topic.locked? ? 0 : 1), :method => :put %></li>
           <li class="divider"></li>
