@@ -1,6 +1,6 @@
 class ForumTopic < ActiveRecord::Base
-  has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id, dependent: :destroy
-  has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id, dependent: :destroy
+  has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id, dependent: :delete_all
+  has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id, dependent: :delete_all
   belongs_to :author, class_name: 'UserCourse', foreign_key: :author_id
   belongs_to :forum, class_name: 'ForumForum'
 

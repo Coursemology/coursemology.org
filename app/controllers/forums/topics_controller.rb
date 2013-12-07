@@ -39,7 +39,16 @@ class Forums::TopicsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
-                                notice: 'The topic was successfully created' }
+                                notice: 'The topic was successfully created.' }
+    end
+  end
+
+  def destroy
+    @topic.destroy
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_path(@course, @forum),
+                                notice: 'The topic was successfully deleted.'}
     end
   end
 
