@@ -43,7 +43,16 @@ class Forums::PostsController < ApplicationController
   end
 
   def destroy
-    @post.destroy
+    ForumPost.transaction do
+      # Set all child references to the parent of the item we are deleting.
+      @post.children.each do |post|
+        post.parent = @post.parent
+        post.save
+      end
+
+      @post.reload
+      @post.destroy
+    end
 
     respond_to do |format|
       format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
