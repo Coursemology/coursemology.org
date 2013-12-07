@@ -8,7 +8,7 @@
         <%= link_to "Next unread topic", main_app.course_forum_topic_next_unread_path(@course, @forum, @topic), :class => "btn" %>
       <% end %>
       <% if @topic.can_be_replied_to? %>
-        <%= link_to 'Reply', course_forum_topic_post_reply_path(@course, @forum, @topic, @topic.posts.last), :class => 'btn' %>
+        <%= link_to 'Reply', course_forum_topic_post_reply_path(@course, @forum, @topic, @topic.posts.last), :class => 'btn reply', 'data-post-id' => @topic.posts.last.id %>
       <% end %>
       <% if @topic.author == curr_user_course || (can? :manage, @topic) %>
         <%= link_to 'Delete', main_app.course_forum_topic_path(@course, @forum, @topic), :method => :delete, data: { :confirm => t("are_you_sure") }, :class => "btn btn-danger" %>

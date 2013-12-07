@@ -1,6 +1,6 @@
 class Forums::PostsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, only: [:edit]
+  before_filter :load_general_course_data, only: [:reply, :edit]
 
   before_filter :load_forum
   load_and_authorize_resource :forum
@@ -34,6 +34,10 @@ class Forums::PostsController < ApplicationController
   end
 
   def destroy
+
+  end
+
+  def reply
 
   end
 
