@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207090634) do
+ActiveRecord::Schema.define(:version => 20131207103717) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -467,6 +467,15 @@ ActiveRecord::Schema.define(:version => 20131207090634) do
     t.integer "topic_id"
     t.integer "user_id"
   end
+
+  create_table "forum_topic_views", :force => true do |t|
+    t.integer  "topic_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "forum_topic_views", ["topic_id"], :name => "index_forum_topic_views_on_topic_id"
 
   create_table "forum_topics", :force => true do |t|
     t.integer  "forum_id"

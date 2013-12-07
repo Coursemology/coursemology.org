@@ -1,0 +1,31 @@
+<tr class="topic <%= topic.locked? ? 'locked' : 'unlocked' %>">
+  <td class='icon'>
+    <span class='post-status-icons'>
+      <% if topic.locked? %>
+        <i class='icon-lock' title='Locked Post'></i>
+      <% end %>
+      <% if topic.sticky? || topic.announcement? %>
+        <i class='icon-chevron-up' title='Sticky'></i>
+      <% end %>
+      <% if topic.hidden? %>
+          <i class='icon-eye-close' title='Hidden Post'></i>
+      <% end %>
+      <% if topic.unread?(current_user) %>
+        <i class='icon-envelope' title='Update!'></i>
+      <% end %>
+    </span>
+  </td>
+  <td class='byline'>
+    <div class='subject'>
+      <%= link_to topic.title, course_forum_topic_path(@course, @forum, topic) %>
+    </div>
+    <div class='started-by'><%= t "started_by" %><%= topic.posts.first.author.user %></div>
+  </td>
+  <td class='posts-count text-center'><%= topic.posts.count %></td>
+  <td class='views-count text-center'><%= topic.views.count %></td>
+  <td class='latest-post text-center'>
+    <%  last_post = topic.posts.last %>
+    <%  text = "#{time_ago_in_words(last_post.created_at)} #{t("ago_by")} #{last_post.author.user}" %>
+    <%= link_to text, topic_latest_post_path(@course, topic.forum, topic) -%>
+  </td>
+</tr>

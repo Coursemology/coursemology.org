@@ -6,17 +6,20 @@
     <thead>
     <tr>
       <th class="icon"></th>
-      <th class="byline"><%= t('forem.topic.headings.topic') -%></th>
-      <th class="latest-post"><%= t('forem.topic.headings.latest') -%></th>
-      <th class="posts-count"><%= t('forem.topic.headings.posts') -%></th>
-      <th class="views-count"><%= t('forem.topic.headings.views') -%></th>
+      <th class="byline">&nbsp;</th>
+      <th class="latest-post">Latest</th>
+      <th class="posts-count">Posts</th>
+      <th class="views-count">Views</th>
     </tr>
     </thead>
     <tbody>
     <% if @topics.empty? %>
-      <tr><td colspan='5' align='center'><%= t('forem.topic.none') %></td></tr>
+      <tr><td colspan='5' align='center'>There are currently no topics in this forum</td></tr>
+    <% else %>
+      <% @topics.each do |t| %>
+        <%= render partial: 'forums/topics/topic', locals: { topic: t } %>
+      <% end %>
     <% end %>
-    <%= render @topics %>
     </tbody>
   </table>
   <%= forem_pages_widget(@topics) %>
