@@ -11,6 +11,9 @@
     <% if can?(:edit, @forum) %>
       <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), :class => 'btn' %>
     <% end %>
+    <% if can?(:destroy, @forum) %>
+      <%= link_to 'Delete Forum', course_forum_path(@course, @forum), :method => :delete, data: { :confirm => 'Are you sure you want to delete this forum? This action is irreversible!' }, :class => 'btn btn-danger' %>
+    <% end %>
     <% if @topic %>
       <%= link_to t('forem.topic.links.back_to_topics'), course_forum_path(@course, @forum), :class => "btn" %>
     <% end %>

@@ -48,6 +48,15 @@ class Forums::ForumsController < ApplicationController
     end
   end
 
+  def destroy
+    @forum.destroy
+
+    respond_to do |format|
+      format.html { redirect_to course_forums_path(@course),
+                                notice: 'The forum was successfully deleted.' }
+    end
+  end
+
 private
   def load_forum
     @forum = ForumForum.find_using_slug(params[:id])
