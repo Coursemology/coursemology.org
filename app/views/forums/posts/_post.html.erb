@@ -23,7 +23,7 @@
       <a href='#post-<%= post.id %>'>
         <time datetime="<%= post.created_at.to_s(:db) -%>">
           Posted <%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %>
-          <% if post.unread?(current_user_course)  %>
+          <% if post.unread?(curr_user_course)  %>
             <span class="label">New!</span>
           <% end %>
         </time>
