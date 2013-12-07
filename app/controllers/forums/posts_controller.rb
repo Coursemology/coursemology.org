@@ -46,7 +46,8 @@ class Forums::PostsController < ApplicationController
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
+      path = @topic.posts.empty? ? course_forum_path(@course, @forum) : course_forum_topic_path(@course, @forum, @topic)
+      format.html { redirect_to path,
                                 notice: "The post was successfully deleted." }
     end
   end

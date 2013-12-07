@@ -15,12 +15,18 @@ class ForumPost < ActiveRecord::Base
     ForumPost.transaction do
       # Set all child references to the parent of the item we are deleting.
       children.each do |post|
-        post.parent = @post.parent
+        post.parent = parent
         post.save
       end
 
+      # If the topic this belongs to is now an empty shell, delete it.
+      old_topic = topic
       reload
       super
+
+      if old_topic.posts.empty?
+        old_topic.destroy
+      end
     end
   end
 end
