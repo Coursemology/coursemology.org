@@ -42,9 +42,36 @@
   <% end %>
 
   <div id="posts">
-    <%# TODO: for now, render linearly. We will have to write a display helper to display this
-        in threaded view at some point. %>
-    <%= render :partial => 'forums/posts/post', :collection => @topic.posts %>
+    <%
+    posts = @topic.posts.all.sort do |a, b|
+      if not a.parent then
+        -1
+      elsif not b.parent then
+        1
+      else
+        a.parent.id <=> b.parent.id
+      end
+    end
+
+    # This is basically a DFS: we have to emit the conversation style layout without the
+    # tree information from the database.
+    post_counter = 0
+    level_iter = lambda do |common_parent|
+      this_level = posts.select {|p| p.parent == common_parent}
+      this_level.each do |p|
+        %><%= render partial: 'forums/posts/post', locals: { post: p, post_counter: post_counter } %><%
+        post_counter += 1
+
+        # We start a new thread only if the current level has more than one post so that we do not
+        # indent at every reply, only those with forks.
+        if this_level.length > 1 %><div class="thread"><% end
+        level_iter.call(p)
+        if this_level.length > 1 %></div><% end
+      end
+    end
+
+    level_iter.call(nil)
+    %>
   </div>
 
   <% if @topic.can_be_replied_to? %>
