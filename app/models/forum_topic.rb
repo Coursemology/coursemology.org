@@ -32,7 +32,7 @@ class ForumTopic < ActiveRecord::Base
   end
 
   def unread?(user_course)
-    SeenByUser.forum_threads.where(:user_course_id => user_course, :obj_id => self.id).empty?
+    SeenByUser.forum_topics.where(:user_course_id => user_course, :obj_id => self.id).empty?
   end
 
   def can_be_replied_to?
