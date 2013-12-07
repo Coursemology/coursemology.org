@@ -11,7 +11,7 @@ class Forums::TopicsController < ApplicationController
     respond_to do |format|
       format.html { render action: 'show' }
     end
-    
+
     curr_user_course.mark_as_seen(@topic)
     curr_user_course.mark_as_seen(@topic.posts)
   end

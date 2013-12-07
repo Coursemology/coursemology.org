@@ -211,10 +211,9 @@ JfdiAcademy::Application.routes.draw do
 
     resources :forums, module: :forums do
       resources :topics, except: [:index] do
-        resources :posts, only: [:edit, :update, :destroy] do
-          put 'vote' => 'posts#set_post_vote'
+        resources :posts, only: [:create, :edit, :update, :destroy] do
+          put 'vote' => 'posts#set_vote'
           get 'reply' => 'posts#reply_to'
-          post 'create' => 'posts#create', on: :collection
         end
 
         get 'subscribe' => 'topics#subscribe'
