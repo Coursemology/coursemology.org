@@ -10,4 +10,8 @@ class ForumForum < ActiveRecord::Base
   def last_post
     posts.last
   end
+
+  def unread_topics(user_course)
+    topics.merge(ForumTopic.unseen(user_course))
+  end
 end
