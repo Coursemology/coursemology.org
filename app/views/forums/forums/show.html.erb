@@ -16,14 +16,14 @@
         <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), :class => 'btn' %>
       <% end %>
       <% if can?(:destroy, @forum) %>
-        <%= link_to 'Delete Forum', course_forum_path(@course, @forum), :method => :delete, data: { :confirm => 'Are you sure you want to delete this forum? This action is irreversible!' }, :class => 'btn btn-danger' %>
+        <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete Forum', path_to_item: course_forum_path(@course, @forum) } %>
       <% end %>
     </div>
   </div>
 
   <%= render :partial => 'header', :locals => { } %>
 
-  <table class='topics table-striped table' cellspacing='0'>
+  <table class="topics table-striped table">
     <thead>
     <tr>
       <th class="icon span1"></th>
@@ -35,7 +35,7 @@
     </thead>
     <tbody>
     <% if @topics.empty? %>
-      <tr><td colspan='5' align='center'>There are currently no topics in this forum</td></tr>
+      <tr><td colspan="5" align="center">There are currently no topics in this forum</td></tr>
     <% else %>
       <% @topics.each do |t| %>
         <%= render partial: 'forums/topics/topic', locals: { topic: t } %>
