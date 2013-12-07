@@ -1,15 +1,14 @@
 <div class='forum'>
   <%= render :partial => 'header', :locals => { :forum => @forum } %>
 
-  <%= forem_pages_widget(@topics) %>
   <table class='topics table-striped table' cellspacing='0'>
     <thead>
     <tr>
       <th class="icon"></th>
       <th class="byline">&nbsp;</th>
-      <th class="latest-post">Latest</th>
-      <th class="posts-count">Posts</th>
-      <th class="views-count">Views</th>
+      <th class="posts-count span1">Posts</th>
+      <th class="views-count span1">Views</th>
+      <th class="latest-post span3">Latest</th>
     </tr>
     </thead>
     <tbody>
@@ -22,5 +21,4 @@
     <% end %>
     </tbody>
   </table>
-  <%= forem_pages_widget(@topics) %>
 </div>

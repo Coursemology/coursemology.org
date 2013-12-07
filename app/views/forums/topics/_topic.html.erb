@@ -25,7 +25,7 @@
   <td class='views-count text-center'><%= topic.views.count %></td>
   <td class='latest-post text-center'>
     <%  last_post = topic.posts.last %>
-    <%  text = "#{time_ago_in_words(last_post.created_at)} #{t("ago_by")} #{last_post.author.user}" %>
-    <%= link_to text, topic_latest_post_path(@course, topic.forum, topic) -%>
+    <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
+    <%= link_to "#{time_ago_in_words(last_post.created_at)} ago", topic_latest_post_path(@course, topic.forum, topic) -%>
   </td>
 </tr>
