@@ -231,7 +231,7 @@ JfdiAcademy::Application.routes.draw do
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
-    match "/forems" => "forem/categories#show", as: :forums
+    match "/forems" => "forem/categories#show", as: :forems
     match "/forems/manage" => "forem/admin/forums#show", as: :forums_admin
     match "/forems/new" => "forem/admin/forums#new", as: :forums_admin_new
     match "/forems/mark_read" => "forem/categories#mark_read", as: :forums_mark_read

@@ -1,0 +1,6 @@
+<%= form_for @forum, url: @forum.new_record? ? course_forums_path(@course) : course_forum_path(@course, @forum) do |f| %>
+  <%= f.text_field :name %>
+  <%= f.text_area :description, :class => 'span7 html-editor' %>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>
