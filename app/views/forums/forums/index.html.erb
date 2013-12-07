@@ -46,7 +46,7 @@
         <!--<%= link_to "Mark all as read", main_app.course_forums_mark_read_path(@course), :class => "btn" %>-->
       <% end %>
       <% if curr_user_course.is_staff? %>
-        <%= link_to "Manage Forum Sections", main_app.course_forums_admin_path(@course), :class => "btn btn-primary" %>
+        <%= link_to 'New Forum', new_course_forum_path(@course), :class => 'btn btn-primary' %>
       <% end %>
     </div>
   </div>
