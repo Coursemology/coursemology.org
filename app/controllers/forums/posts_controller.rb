@@ -10,6 +10,11 @@ class Forums::PostsController < ApplicationController
   load_and_authorize_resource :post, class: 'ForumPost'
 
   def create
+    if @topic.locked? then
+      flash[:error] = 'Cannot reply to the given post because it is locked.'
+      redirect_to course_forum_topic_path(@course, @forum, @topic) and return
+    end
+
     parent = ForumPost.find_by_id!(params[:forum_post][:parent_id])
     @post.topic = @topic
     @post.parent = parent
