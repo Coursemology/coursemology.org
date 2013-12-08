@@ -16,6 +16,11 @@
       margin-right: 1em;
       text-align: right;
       float: left;
+
+      .voting {
+        clear: both;
+        text-align: center;
+      }
     }
 
     .contents {

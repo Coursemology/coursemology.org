@@ -7,6 +7,26 @@
     <div class="icon pull-right">
       <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
     </div>
+    <div class="voting">
+      <% votes = post.upvotes.size - post.downvotes.size %>
+      <% if not current_user.voted_for? post %>
+        <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put do %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+        <span class="muted"><%= votes %></span>
+        <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put do %>
+          <i class="icon-thumbs-up"></i>
+        <% end %>
+      <% else %>
+        <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put do %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+        <strong><%= votes %></strong>
+        <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put do %>
+          <i class="icon-thumbs-up"></i>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 
   <div class="contents">
@@ -29,15 +49,6 @@
       </a>
 
       <div class="pull-right">
-        <span style="padding:5px; <%= (likes = 0) > 0 ? '' : 'display:none;' %>">
-          <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
-        </span>
-        <% if not current_user.voted_for? post %>
-          <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, class: 'btn btn-primary' %>
-          <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, class: 'btn btn-primary' %>
-        <% else %>
-          <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, class: 'btn btn-primary' %>
-        <% end %>
         <% if post.topic.can_be_replied_to? %>
           <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id %>
         <% end %>
