@@ -65,6 +65,10 @@ class Forums::PostsController < ApplicationController
       when 1
         @post.upvote_from curr_user_course.user
     end
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_topic_path(@course, @forum, @topic, anchor: ('post-' + @post.id.to_s)) }
+    end
   end
 
 private
