@@ -1,26 +1,26 @@
-<a class='post-anchor' name='post-<%= @post.id %>'></a>
+<a class="post-anchor" name="post-<%= @post.id %>"></a>
 <div class="row" style="padding:5px;">
-  <div id='post_<%= @post.id %>' class='reply_to_post post span12'>
-    <div class='user span1' style="text-align:right;">
-      <h5 class='username'>
+  <div id="post_<%= @post.id %>" class="reply_to_post post span12">
+    <div class="user span1" style="text-align:right;">
+      <h5 class="username">
         <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
       </h5>
-      <div class='icon' style="float:right;">
+      <div class="icon" style="float:right;">
         <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
       </div>
     </div>
 
-    <div class='contents span7 thumbnail' style="padding:20px;">
+    <div class="contents span7 thumbnail" style="padding:20px;">
       <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
       <% if @post.parent %>
-        <div class='in-reply-to'>
+        <div class="in-reply-to">
           <%= link_to "In reply to #{@post.parent.author.user}", "#post-#{@post.parent.id}" %>
         </div>
       <% end %>
 
       <div>
-        <a href='#post-<%= @post.id %>'>
+        <a href="#post-<%= @post.id %>">
           <time datetime="<%= @post.created_at.to_s(:db) -%>"><%= time_ago_in_words(@post.created_at) %> ago</time>
         </a>
       </div>
