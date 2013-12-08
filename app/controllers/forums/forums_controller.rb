@@ -1,12 +1,12 @@
 class Forums::ForumsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, except: [:destroy]
+  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read]
 
-  before_filter :load_forum, except: [:index]
-  load_and_authorize_resource :forum, except: [:index]
+  before_filter :load_forum, except: [:index, :mark_all_read]
+  load_and_authorize_resource :forum, except: [:index, :mark_all_read]
 
   def index
-    @forums = @course.forums
+    @forums = @course.forums.accessible_by(current_ability)
   end
 
   def show
@@ -54,6 +54,24 @@ class Forums::ForumsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_forums_path(@course),
                                 notice: 'The forum was successfully deleted.' }
+    end
+  end
+
+  def mark_read
+    curr_user_course.mark_as_seen(@forum.unread_topics(curr_user_course).all)
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_path(@course, @forum) }
+    end
+  end
+
+  def mark_all_read
+    @course.forums.accessible_by(current_ability).each do |f|
+      curr_user_course.mark_as_seen(f.unread_topics(curr_user_course).all)
+    end
+
+    respond_to do |format|
+      format.html { redirect_to course_forums_path(@course) }
     end
   end
 
