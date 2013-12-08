@@ -43,7 +43,7 @@
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id %>
           <% end %>
           <% if can? :edit, post %>
-            <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn' %>
+            <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn' %>
             <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
           <% end %>
         </div>

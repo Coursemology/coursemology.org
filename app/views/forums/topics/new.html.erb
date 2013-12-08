@@ -1,11 +1,11 @@
-<%= render :partial => 'forums/forums/header', :locals => { } %>
+<%= render partial: 'forums/forums/header', locals: { } %>
 
 <h2>New Topic</h2>
 
 <%= form_for @topic, url: course_forum_topics_path(@course, @forum) do |f| %>
   <%= f.fields_for :posts do |post| %>
-    <%= render :partial => "forums/posts/form", :locals => { reply_to: nil, form: post }%>
+    <%= render partial: 'forums/posts/form', locals: { reply_to: nil, form: post }%>
   <% end %>
 
-  <%= f.submit :class => "btn btn-primary" %>
+  <%= f.submit class: 'btn btn-primary' %>
 <% end %>

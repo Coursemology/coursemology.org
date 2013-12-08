@@ -1,21 +1,21 @@
-<div class='forum'>
-  <div id='forum_topic_links' class='pull-right btn-toolbar'>
-    <div class='btn-group'>
+<div class="forum">
+  <div id="forum_topic_links" class="pull-right btn-toolbar">
+    <div class="btn-group">
       <% unread = ForumTopic.unread(curr_user_course).where(forum_id: @course.forums) %>
       <% if unread.count > 0 %>
-        <%= link_to 'Mark all as read', mark_read_course_forums_path(@course), :class => "btn" %>
+        <%= link_to 'Mark all as read', mark_read_course_forums_path(@course), class: 'btn' %>
       <% end %>
       <% if curr_user_course.is_staff? %>
-        <%= link_to 'New Forum', new_course_forum_path(@course), :class => 'btn btn-primary' %>
+        <%= link_to 'New Forum', new_course_forum_path(@course), class: 'btn btn-primary' %>
       <% end %>
     </div>
   </div>
 
   <div class="page-header">
-    <h1><%=t '.title', :default => "Forums" %></h1>
+    <h1>Forums</h1>
   </div>
 
-  <table id='forums' class='forums table table-striped' cellspacing='0'>
+  <table id="forums" class="forums table table-striped">
     <thead>
     <tr>
       <th class="icon span1">&nbsp;</th>

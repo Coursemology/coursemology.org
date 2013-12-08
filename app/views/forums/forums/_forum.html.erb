@@ -7,10 +7,10 @@
     </span>
   </td>
   <td>
-    <%= link_to forum.name, course_forum_path(@course, forum), :class => "title" %>
-    <div class='description'><%= forum.description.html_safe %></div>
+    <%= link_to forum.name, course_forum_path(@course, forum), class: 'title' %>
+    <div class="description"><%= forum.description.html_safe %></div>
     Last post:
-    <span class='last_post'>
+    <span class="last_post">
     <% last_post = forum.last_post %>
     <% if last_post %>
       <%= link_to last_post.topic.title.html_safe, course_forum_topic_path(@course, forum, last_post.topic) -%> by <%= last_post.author.user %>
