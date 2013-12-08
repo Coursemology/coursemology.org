@@ -1,52 +1,50 @@
 <a class="post-anchor" name="post-<%= post.id %>"></a>
-<div class="row" style="padding:5px;">
-  <div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%> span9">
-    <div class="user span1" style="text-align:right;">
-      <h5 class="username">
-        <a href="<%= course_user_course_path(@course, post.author) %>"><%= post.author.user %></a>
-      </h5>
-      <div class="icon" style="float:right;">
-        <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
-      </div>
+<div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%>">
+  <div class="user span1" style="text-align:right;">
+    <h5 class="username">
+      <a href="<%= course_user_course_path(@course, post.author) %>"><%= post.author.user %></a>
+    </h5>
+    <div class="icon" style="float:right;">
+      <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
     </div>
+  </div>
 
-    <div class="contents span7 thumbnail" style="padding:20px;">
-      <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
+  <div class="contents span7 thumbnail" style="padding:20px;">
+    <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
-      <% if post.parent %>
-        <div class="in-reply-to">
-          <%= link_to "In reply to #{post.parent.author.user}", "#post-#{post.parent.id}" %>
-        </div>
-      <% end %>
+    <% if post.parent %>
+      <div class="in-reply-to">
+        <%= link_to "In reply to #{post.parent.author.user}", "#post-#{post.parent.id}" %>
+      </div>
+    <% end %>
 
-      <div>
-        <a href="#post-<%= post.id %>">
-          <time datetime="<%= post.created_at.to_s(:db) -%>">
-            Posted <%= time_ago_in_words(post.created_at) %> ago
-            <% if post.unread?(curr_user_course)  %>
-              <span class="label">New!</span>
-            <% end %>
-          </time>
-        </a>
-
-        <div class="pull-right">
-          <span style="padding:5px; <%= (likes = 0) > 0 ? '' : 'display:none;' %>">
-            <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
-          </span>
-          <% if not current_user.voted_for? post %>
-            <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, class: 'btn btn-primary' %>
-            <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, class: 'btn btn-primary' %>
-          <% else %>
-            <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, class: 'btn btn-primary' %>
+    <div>
+      <a href="#post-<%= post.id %>">
+        <time datetime="<%= post.created_at.to_s(:db) -%>">
+          Posted <%= time_ago_in_words(post.created_at) %> ago
+          <% if post.unread?(curr_user_course)  %>
+            <span class="label">New!</span>
           <% end %>
-          <% if post.topic.can_be_replied_to? %>
-            <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id %>
-          <% end %>
-          <% if can? :edit, post %>
-            <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn' %>
-            <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
-          <% end %>
-        </div>
+        </time>
+      </a>
+
+      <div class="pull-right">
+        <span style="padding:5px; <%= (likes = 0) > 0 ? '' : 'display:none;' %>">
+          <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
+        </span>
+        <% if not current_user.voted_for? post %>
+          <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, class: 'btn btn-primary' %>
+          <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, class: 'btn btn-primary' %>
+        <% else %>
+          <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, class: 'btn btn-primary' %>
+        <% end %>
+        <% if post.topic.can_be_replied_to? %>
+          <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id %>
+        <% end %>
+        <% if can? :edit, post %>
+          <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn' %>
+          <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
+        <% end %>
       </div>
     </div>
   </div>

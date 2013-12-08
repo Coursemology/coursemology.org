@@ -1,4 +1,5 @@
-<div id="topic" class="<%= @topic.locked ? 'locked' : 'unlocked' %>">
+<div class="forum">
+<div class="topic <%= @topic.locked ? 'locked' : 'unlocked' %>">
   <div id="menu" class="pull-right btn-toolbar">
     <div class="btn-group">
       <% unread = @forum.unread_topics(curr_user_course) %>
@@ -41,7 +42,7 @@
     </div>
   <% end %>
 
-  <div id="posts">
+  <div class="posts">
     <%
     posts = @topic.posts.all.sort do |a, b|
       if not a.parent then
@@ -85,4 +86,5 @@
       <%= f.submit 'Reply', class: 'btn btn-primary' %>
     <% end %>
   <% end %>
+</div>
 </div>
