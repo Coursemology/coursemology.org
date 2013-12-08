@@ -34,17 +34,17 @@
             <i class="icon-thumbs-up"></i>&nbsp;<span class="like-count-<%= post.id %>"><%= likes %></span>
           </span>
           <% if not current_user.voted_for? post %>
-            <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), :class => 'btn btn-primary' %>
-            <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), :class => 'btn btn-primary' %>
+            <%= link_to 'Upvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, class: 'btn btn-primary' %>
+            <%= link_to 'Downvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, class: 'btn btn-primary' %>
           <% else %>
-            <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), :class => 'btn btn-primary' %>
+            <%= link_to 'Unvote', course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, class: 'btn btn-primary' %>
           <% end %>
           <% if post.topic.can_be_replied_to? %>
-            <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn reply', 'data-post-id' => post.id %>
+            <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id %>
           <% end %>
           <% if can? :edit, post %>
             <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), :class => 'btn' %>
-            <%= render partial: "layouts/delete_confirm", locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
+            <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
           <% end %>
         </div>
       </div>
