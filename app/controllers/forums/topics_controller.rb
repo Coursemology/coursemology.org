@@ -12,6 +12,11 @@ class Forums::TopicsController < ApplicationController
       format.html { render action: 'show' }
     end
 
+    topic_view = ForumTopicView.create
+    topic_view.topic = @topic
+    topic_view.user = curr_user_course
+    topic_view.save
+    
     curr_user_course.mark_as_seen(@topic)
     curr_user_course.mark_as_seen(@topic.posts)
   end
