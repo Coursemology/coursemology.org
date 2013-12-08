@@ -9,7 +9,11 @@
     // In case the previous post was too short.
     clear: both;
 
+    // Spacing between posts.
+    margin-bottom: 1em;
+
     .user {
+      margin-right: 1em;
       text-align: right;
       float: left;
     }
