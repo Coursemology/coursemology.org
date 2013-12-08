@@ -7,7 +7,7 @@ class Forums::PostsController < ApplicationController
   before_filter :load_topic
   load_and_authorize_resource :topic
   before_filter :load_post
-  load_and_authorize_resource :post
+  load_and_authorize_resource :post, class: 'ForumPost'
 
   def create
     parent = ForumPost.find_by_id!(params[:forum_post][:parent_id])
@@ -57,7 +57,14 @@ class Forums::PostsController < ApplicationController
   end
 
   def set_vote
-
+    case params[:vote].to_i <=> 0
+      when -1
+        @post.downvote_from curr_user_course.user
+      when 0
+        @post.unvote_for curr_user_course.user
+      when 1
+        @post.upvote_from curr_user_course.user
+    end
   end
 
 private
@@ -72,7 +79,7 @@ private
   end
 
   def load_post
-    @post = ForumPost.find_by_id(params[:id])
+    @post = ForumPost.find_by_id(params[:id] || params[:post_id])
     if %w(new create).include?(params[:action])
       @post = ForumPost.new
       @post.assign_attributes(params[:forum_post])

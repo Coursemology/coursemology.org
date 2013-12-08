@@ -59,7 +59,7 @@ class Forums::ForumsController < ApplicationController
 
 private
   def load_forum
-    @forum = ForumForum.find_using_slug(params[:id])
+    @forum = ForumForum.find_using_slug(params[:id] || params[:forum_id])
     if %w(new create).include?(params[:action])
       @forum = ForumForum.new
       @forum.assign_attributes(params[:forum])
