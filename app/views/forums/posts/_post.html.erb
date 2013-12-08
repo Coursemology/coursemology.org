@@ -1,15 +1,15 @@
 <a class="post-anchor" name="post-<%= post.id %>"></a>
 <div id="post_<%= post_counter + 1 %>" class="post <%= cycle('odd', 'even') -%>">
-  <div class="user span1" style="text-align:right;">
+  <div class="user">
     <h5 class="username">
       <a href="<%= course_user_course_path(@course, post.author) %>"><%= post.author.user %></a>
     </h5>
-    <div class="icon" style="float:right;">
+    <div class="icon pull-right">
       <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
     </div>
   </div>
 
-  <div class="contents span7 thumbnail" style="padding:20px;">
+  <div class="contents">
     <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
     <% if post.parent %>
