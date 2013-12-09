@@ -695,7 +695,7 @@ small {
 }
 
 /** used in jfdiFormat multi-line code blocks **/
-span.jfdiCode{
+span.jfdiCode, code.jfdiCode {
   padding: 2px 4px;
   border-radius: 3px;
 }
@@ -706,6 +706,10 @@ div.jfdiCode{
 
 pre.jfdiCode{
   padding: 0px;
+}
+
+code.jfdiCode.multiline {
+  display: block;
 }
 /* debug style */
 

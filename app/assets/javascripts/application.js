@@ -314,13 +314,41 @@ jQuery.fn.extend({
   }
 });
 
-var _jfdiFormatFunc = function(i, d){
+function _jfdiFormatFunc(i, elem) {
+  var $elem = $(elem);
 
-    if ($(d).data('jfdiFormatted')) return;
-    $(d).data('jfdiFormatted', true);
-    if($(d).hasClass("pythonCode")){
-        CodeMirror.runMode($(d).text(), "python", d);
-    }
+  // Make sure we process every code block exactly once.
+  if ($elem.data('jfdiFormatted')) {
+    return;
+  }
+  $elem.data('jfdiFormatted', true);
+
+  // Replace all <br /> with \n for CodeMirror.
+  var $br = $('br', $elem);
+  $br.each(function(n, elem) {
+    var $elem = $(elem);
+    var $prev = $elem.prev();
+    var $next = $elem.next();
+
+    $(document.createTextNode('\n')).insertBefore($elem);
+    $elem.remove();
+  });
+  $elem.css('white-space', 'pre');
+  var code = $elem.text();
+
+  // Apply the multiline CSS style if we have a multiline code segment.
+  if ($br.length > 0) {
+    $elem.addClass('multiline');
+  }
+
+  // Wrap the elements with an appropriate CodeMirror block to trigger syntax highlighting
+  if ($elem.parents('.cos_code').length == 0) {
+    $elem.wrap('<div class="cos_code"></div>');
+    $elem.addClass('cm-s-molokai');
+  }
+  /*if($(d).hasClass("pythonCode"))*/{
+    CodeMirror.runMode(code, 'python', elem);
+  }
 }
 function jfdiFormat(element){
     $(element).find(".jfdiCode").each(_jfdiFormatFunc);
