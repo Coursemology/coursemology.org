@@ -1,16 +1,16 @@
-<a class="post-anchor" name="post-<%= @post.id %>"></a>
-<div class="row" style="padding:5px;">
-  <div id="post_<%= @post.id %>" class="reply_to_post post span12">
-    <div class="user span1" style="text-align:right;">
+<div class="forum">
+  <a class="post-anchor" name="post-<%= @post.id %>"></a>
+  <div id="post-<%= @post.id %>" class="reply_to_post post">
+    <div class="user">
       <h5 class="username">
         <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
       </h5>
-      <div class="icon" style="float:right;">
+      <div class="icon pull-right">
         <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
       </div>
     </div>
 
-    <div class="contents span7 thumbnail" style="padding:20px;">
+    <div class="contents">
       <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
 
       <% if @post.parent %>
@@ -27,6 +27,7 @@
     </div>
   </div>
 
+  <h3>Post a Reply</h3>
   <% new_post = ForumPost.new %>
   <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
     <%= render partial: 'form', locals: { reply_to: @topic.posts.last, form: f } %>
