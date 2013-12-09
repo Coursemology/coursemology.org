@@ -45,7 +45,7 @@ class Forums::TopicsController < ApplicationController
 
     # send out notifications for subscribers
     @forum.subscriptions.each do |sub|
-      UserMailer.forum_new_topic(sub.user, @topic, post, @course)
+      UserMailer.delay.forum_new_topic(sub.user, @topic, post, @course)
     end
 
     respond_to do |format|

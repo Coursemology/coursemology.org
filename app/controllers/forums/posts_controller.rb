@@ -31,10 +31,10 @@ class Forums::PostsController < ApplicationController
 
     # send out notifications for subscribers
     @forum.subscriptions.each do |sub|
-      UserMailer.forum_new_post(sub.user, @post, @course)
+      UserMailer.delay.forum_new_post(sub.user, @post, @course)
     end
     @topic.subscriptions.each do |sub|
-      UserMailer.forum_new_post(sub.user, @post, @course)
+      UserMailer.delay.forum_new_post(sub.user, @post, @course)
     end
   end
 
