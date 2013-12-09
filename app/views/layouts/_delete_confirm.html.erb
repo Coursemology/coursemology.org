@@ -1,5 +1,5 @@
 <span class="delete-confirm-control-group">
-  <%= link_to '#', class: 'btn btn-danger delete-button' do %>
+  <%= link_to path_to_item, method: :delete, class: 'btn btn-danger delete-button' do %>
     <% if defined?(display_label) %>
       <%= display_label %>
     <% else %>
@@ -7,7 +7,7 @@
     <% end %>
   <% end %>
 
-  <%= link_to path_to_item, method: :delete, class: 'btn btn-danger delete-confirm-button', style: 'position: relative; display: none;' do %>
+  <%= link_to path_to_item, method: :delete, class: 'btn btn-danger delete-confirm-button', style: 'display: none' do %>
     Confirm
   <% end %>
 </span>

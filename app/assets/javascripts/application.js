@@ -146,7 +146,7 @@ $(document).ready(function() {
       $elem.insertBefore($parent);
       $parent.remove();
     });
-    $('.delete-button').click(function() {
+    $('.delete-button').click(function(e) {
       var $this = $(this);
       var $parent = $this.parent();
       var $sibling = $this.data('sibling');
@@ -162,6 +162,9 @@ $(document).ready(function() {
           $sibling.detach();
           $this.fadeIn();
         }, 2000);
+
+      e.preventDefault();
+      e.stopPropagation();
     });
 
     $('.btn-hover-text').hover(
