@@ -1,6 +1,9 @@
-<h2>Edit</h2>
+<div class="forum">
+  <%= render partial: 'forums/topics/header', locals: { topic: @topic } %>
 
-<%= form_for @post, url: course_forum_topic_post_path(@course, @forum, @topic, @post, method: 'PUT') do |f| %>
-  <%= render partial: 'form', locals: { reply_to: nil, form: f } %>
-  <%= f.submit 'Save', class: 'btn btn-primary' %>
-<% end %>
+  <h3>Edit Post</h3>
+  <%= form_for @post, url: course_forum_topic_post_path(@course, @forum, @topic, @post, method: 'PUT') do |f| %>
+    <%= render partial: 'form', locals: { reply_to: nil, form: f } %>
+    <%= f.submit 'Save', class: 'btn btn-primary' %>
+  <% end %>
+</div>
