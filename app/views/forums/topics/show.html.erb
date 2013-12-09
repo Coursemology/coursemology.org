@@ -2,10 +2,6 @@
 <div class="topic <%= @topic.locked ? 'locked' : 'unlocked' %>">
   <div id="menu" class="pull-right btn-toolbar">
     <div class="btn-group">
-      <% unread = @forum.unread_topics(curr_user_course) %>
-      <% if unread.count > 0 %>
-        <%= link_to 'Next unread topic', next_unread_course_forums_path(@course), class: 'btn' %>
-      <% end %>
       <% if @topic.can_be_replied_to? %>
         <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id %>
       <% end %>
