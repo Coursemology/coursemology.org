@@ -56,9 +56,11 @@
 
         # We start a new thread only if the current level has more than one post so that we do not
         # indent at every reply, only those with forks.
-        if this_level.length > 1 %><div class="thread"><% end
+        child_level = posts.select {|c| c.parent == p}
+        fork = this_level.length > 1 || child_level.length > 1
+        if fork %><div class="thread"><% end
         level_iter.call(p)
-        if this_level.length > 1 %></div><% end
+        if fork %></div><% end
       end
     end
 
