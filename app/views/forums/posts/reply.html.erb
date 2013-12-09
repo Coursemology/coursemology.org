@@ -1,4 +1,6 @@
 <div class="forum">
+  <%= render partial: 'forums/topics/header', locals: { topic: @topic } %>
+
   <a class="post-anchor" name="post-<%= @post.id %>"></a>
   <div id="post-<%= @post.id %>" class="reply_to_post post">
     <div class="user">
