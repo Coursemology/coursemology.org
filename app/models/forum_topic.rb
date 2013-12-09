@@ -22,13 +22,25 @@ class ForumTopic < ActiveRecord::Base
       ['Sticky', 2],
       ['Announcement', 3]
   ]
+  TOPIC_TYPE_NORMAL = 0
+  TOPIC_TYPE_QUESTION = 1
+  TOPIC_TYPE_STICKY = 2
+  TOPIC_TYPE_ANNOUNCEMENT = 3
 
   def announcement?
-    topic_type == 3
+    topic_type == TOPIC_TYPE_ANNOUNCEMENT
   end
 
   def sticky?
-    topic_type == 2
+    topic_type == TOPIC_TYPE_STICKY
+  end
+
+  def question?
+    topic_type == TOPIC_TYPE_QUESTION
+  end
+
+  def answered?
+    question? && (not posts.where('answer <> 0').empty?)
   end
 
   def unread?(user_course)

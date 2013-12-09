@@ -7,6 +7,9 @@
       <% if topic.sticky? || topic.announcement? %>
         <i class="icon-chevron-up" title="Sticky"></i>
       <% end %>
+      <% if not topic.answered? %>
+        <i class="icon-question-sign" title="Unanswered question"></i>
+      <% end %>
       <% if topic.hidden? %>
         <i class="icon-eye-close" title="Hidden"></i>
       <% end %>
