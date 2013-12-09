@@ -1,9 +1,9 @@
 class Forums::ForumsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read]
+  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read, :next_unread, :next_unanswered]
 
-  before_filter :load_forum, except: [:index, :mark_all_read]
-  load_and_authorize_resource :forum, except: [:index, :mark_all_read]
+  before_filter :load_forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
+  load_and_authorize_resource :forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
 
   def index
     @forums = @course.forums.accessible_by(current_ability)
@@ -73,6 +73,24 @@ class Forums::ForumsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_forums_path(@course) }
     end
+  end
+
+  def next_unread
+    @course.forums.accessible_by(current_ability).each do |f|
+      topics = f.unread_topics(curr_user_course)
+      if not topics.empty?
+        respond_to do |format|
+          redirect_to course_forum_topic_path(@course, f, topics.first) and return
+        end
+      end
+    end
+
+    # All read already
+    redirect_to course_forums_path(@course)
+  end
+
+  def next_unanswered
+
   end
 
 private
