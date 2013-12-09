@@ -1,16 +1,16 @@
-Hello, <%= @user %>!<br/>
-New topic posted in the forum for <%= @course.title %>:
-<br/>
-<%= @topic.subject %> by <%= @topic.user %>
-<br/>
+<p>Hello, <%= @user.user %>!</p>
 
-<%=raw Forem.formatter.format(@post.text) %>
+<p>A new topic has been created in the forum <%= @topic.forum.name %> in <%= @course.title %>.</p>
 
-<br/>
-<%= link_to 'Click here', main_app.course_forum_topic_url(@course, @forum, @topic) %> to view.
-<br/>
+<h1><%= @topic.title %> by <%= @topic.author ? @topic.author.user : '(unknown)' %></h1>
 
-Best Regards,
-<br/>
+<blockquote>
+  <%= CoursemologyFormatter.sanitize(@post.text) %>
+</blockquote>
 
-The Coursemology Team
+<p><%= link_to 'Click here', course_forum_topic_url(@course, @topic.forum, @topic) %> to view.</p>
+
+<p>
+  Best Regards,
+  The Coursemology Team
+</p>

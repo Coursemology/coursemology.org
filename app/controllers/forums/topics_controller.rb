@@ -26,6 +26,7 @@ class Forums::TopicsController < ApplicationController
   end
 
   def create
+    post = nil
     ForumTopic.transaction do
       post = ForumPost.new
       post.assign_attributes(params[:forum_topic][:posts])
@@ -44,7 +45,7 @@ class Forums::TopicsController < ApplicationController
 
     # send out notifications for subscribers
     @forum.subscriptions.each do |sub|
-      UserMailer.forum_new_topic(sub.user, @topic, @course)
+      UserMailer.forum_new_topic(sub.user, @topic, post, @course)
     end
 
     respond_to do |format|
