@@ -120,13 +120,34 @@ class Forums::TopicsController < ApplicationController
     end
   end
 
-
   def destroy
     @topic.destroy
 
     respond_to do |format|
       format.html { redirect_to course_forum_path(@course, @forum),
                                 notice: 'The topic was successfully deleted.'}
+    end
+  end
+
+  def subscribe
+    subscription = ForumTopicSubscription.create
+    subscription.topic = @topic
+    subscription.user = curr_user_course
+
+    respond_to do |format|
+      if subscription.save
+        format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
+                                  notice: 'You have subscribed to the topic.' }
+      end
+    end
+  end
+
+  def unsubscribe
+    ForumTopicSubscription.delete_all(topic_id: @topic, user_id: curr_user_course)
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
+                                notice: 'You have been unsubscribed from the topic.' }
     end
   end
 

@@ -210,8 +210,8 @@ JfdiAcademy::Application.routes.draw do
           get 'reply' => 'posts#reply', on: :member
         end
 
-        get 'subscribe' => 'topics#subscribe'
-        get 'unsubscribe' => 'topics#unsubscribe'
+        get 'subscribe' => 'topics#subscribe', on: :member
+        get 'unsubscribe' => 'topics#unsubscribe', on: :member
         put 'hide' => 'topics#set_hide'
         put 'lock' => 'topics#set_lock'
         put 'type' => 'topics#set_type'
