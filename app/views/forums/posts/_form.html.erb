@@ -1,6 +1,18 @@
 <div class="post-content">
-  <%= form.text_field :title, class: 'span7' %>
-  <%= form.text_area :text , label: false, required: false, class: 'text_area span7 html-editor' %>
+  <div class="control-group">
+    <%= form.label :title %>
+    <div class="controls">
+      <%= form.text_field :title, required: true, class: 'span7' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= form.label :text %>
+    <div class="controls">
+      <%= form.text_area :text , label: false, required: false, class: 'text_area span7 html-editor' %>
+    </div>
+  </div>
+
 </div>
 <% if reply_to %>
 <%= form.hidden_field :parent_id, value: reply_to.id %>
