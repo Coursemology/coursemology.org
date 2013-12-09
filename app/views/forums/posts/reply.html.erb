@@ -35,8 +35,12 @@
 
   <h2>Post a Reply</h2>
   <% new_post = ForumPost.new %>
-  <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
+  <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
+               html: { class: 'form-horizontal' } do |f| %>
     <%= render partial: 'form', locals: { reply_to: @topic.posts.last, form: f } %>
-    <%= f.submit 'Reply', class: 'btn btn-primary' %>
+    
+    <div class="form-actions">
+      <%= f.submit 'Reply', class: 'btn btn-primary' %>
+    </div>
   <% end %>
 </div>
