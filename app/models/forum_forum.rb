@@ -2,7 +2,7 @@ class ForumForum < ActiveRecord::Base
   belongs_to :course
   has_many :topics, class_name: 'ForumTopic', foreign_key: :forum_id
   has_many :posts, through: :topics
-  has_many :subscriptions, class_name: 'ForumForumSubscriptions', foreign_key: :forum_id
+  has_many :subscriptions, class_name: 'ForumForumSubscription', foreign_key: :forum_id
 
   is_sluggable :name, history: false
 

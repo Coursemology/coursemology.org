@@ -87,6 +87,13 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
   end
 
+  def forum_digest(user, posts, course)
+    @user = user
+    @day
+    @posts = posts
+    @length = 1000
+  end
+
   def email_changed(user_name, new_email, email_was)
     @user_name = user_name
     @new_email = new_email
