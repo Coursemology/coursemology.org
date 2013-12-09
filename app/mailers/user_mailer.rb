@@ -97,7 +97,7 @@ class UserMailer < ActionMailer::Base
     @course = course
     @length = 1000
 
-    mail(to: user.email, subject: "#{course.title}: Forum digest")
+    mail(to: user.user.email, subject: "#{course.title}: Forum digest")
   end
 
   def forum_new_topic(user, topic, post, course)
