@@ -1,21 +1,30 @@
-  <div class="page-header">
-    <h1>Forums</h1>
-    <ul class="breadcrumb">
-      <li>
-        <%= link_to course_forums_path(@course) do %>
-          <%= content_tag :i, '', class: 'icon-home' %>
+<div class="page-header">
+  <h1>Forums</h1>
+  <ul class="breadcrumb">
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown">
+        Jump to
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><%= link_to 'Next unread topic', next_unread_course_forums_path(@course) %></li>
+        <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
+      </ul>
+      <span class="divider">/</span>
+    </li>
+    <li>
+      <%= link_to course_forums_path(@course), data: { toggle: 'dropdown' } do %><i class="icon-home"></i><% end %>
+      <span class="divider">/</span>
+    </li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown">
+        <%= @forum.name %> <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% @course.forums.each do |f|  %>
+          <li><%= link_to f.name, course_forum_path(@course, f) %></li>
         <% end %>
-        <span class="divider">/</span>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown">
-          <%= @forum.name %> <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <% @course.forums.each do |f|  %>
-            <li><%= link_to f.name, course_forum_path(@course, f) %></li>
-          <% end %>
-        </ul>
-      </li>
-    </ul>
-  </div>
+      </ul>
+    </li>
+  </ul>
+</div>

@@ -222,6 +222,7 @@ JfdiAcademy::Application.routes.draw do
       get 'mark_read' => 'forums#mark_read', on: :member
       get 'mark_read' => 'forums#mark_all_read', on: :collection
       get 'next_unread' => 'forums#next_unread', on: :collection
+      get 'next_unanswered' => 'forums#next_unanswered', on: :collection
     end
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
