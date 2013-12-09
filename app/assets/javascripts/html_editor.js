@@ -21,11 +21,7 @@ $(document).ready(function() {
       // see https://github.com/xing/wysihtml5/issues/148
       $this.css('display', 'block');
       var input = $this.val();
-      var $parent = $this.parent();
-
       $this.siblings('.wysihtml5-sandbox, .wysihtml5-toolbar, input[name="_wysihtml5_mode"]').remove();
-      $('', $parent).remove();
-      $this.val(input);
     }
 
     $(this).wysihtml5(options);
