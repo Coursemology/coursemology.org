@@ -56,12 +56,10 @@
 
     # This is basically a DFS: we have to emit the conversation style layout without the
     # tree information from the database.
-    post_counter = 0
     level_iter = lambda do |common_parent|
       this_level = posts.select {|p| p.parent == common_parent}
       this_level.each do |p|
-        %><%= render partial: 'forums/posts/post', locals: { post: p, post_counter: post_counter } %><%
-        post_counter += 1
+        %><%= render partial: 'forums/posts/post', locals: { post: p } %><%
 
         # We start a new thread only if the current level has more than one post so that we do not
         # indent at every reply, only those with forks.
