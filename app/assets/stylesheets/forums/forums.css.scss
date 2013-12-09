@@ -15,6 +15,7 @@
     .user {
       margin-right: 1em;
       text-align: right;
+      width: 7em;
       float: left;
 
       .voting {
@@ -37,6 +38,10 @@
 
       // Block formatting context
       overflow: hidden;
+    }
+
+    .quick-reply {
+      clear: both;
     }
   }
 
