@@ -7,7 +7,7 @@
     <div class="icon pull-right">
       <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
     </div>
-    <div class="voting">
+    <div class="voting pull-right">
       <% votes = post.upvotes.size - post.downvotes.size %>
       <% if not current_user.voted_for? post %>
         <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put do %>
@@ -31,12 +31,6 @@
 
   <div class="contents">
     <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
-
-    <% if post.parent %>
-      <div class="in-reply-to">
-        <%= link_to "In reply to #{post.parent.author.user}", "#post-#{post.parent.id}" %>
-      </div>
-    <% end %>
 
     <div>
       <a href="#post-<%= post.id %>">
