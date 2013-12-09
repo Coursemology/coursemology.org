@@ -86,7 +86,8 @@ class Forums::ForumsController < ApplicationController
     end
 
     # All read already
-    redirect_to course_forums_path(@course)
+    redirect_to course_forums_path(@course),
+                notice: 'Hooray! All topics have been read'
   end
 
   def next_unanswered
@@ -100,7 +101,8 @@ class Forums::ForumsController < ApplicationController
     end
 
     # All answered already
-    redirect_to course_forums_path(@course)
+    redirect_to course_forums_path(@course),
+                notice: 'Hooray! All topics have been answered'
   end
 
 private
