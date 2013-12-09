@@ -14,7 +14,7 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
         new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
-      when Forem::SubscriptionMailer.to_s
+      when 'ForumDigests'
         # daily forum new posts digest email
         forum_digest(course)
     end

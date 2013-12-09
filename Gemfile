@@ -72,6 +72,7 @@ gem 'truncate_html'
 gem 'natcmp'
 gem 'scrollToFixed_rails', '~> 1.0.0'
 gem 'slugged', '~> 2.0'
+gem 'clockwork'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
