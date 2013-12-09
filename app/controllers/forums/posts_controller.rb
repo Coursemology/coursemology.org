@@ -76,6 +76,16 @@ class Forums::PostsController < ApplicationController
     end
   end
 
+  def set_answer
+    @post.answer = params[:answer].to_i != 0
+
+    respond_to do |format|
+      if @post.save then
+        format.html { redirect_to course_forum_topic_path(@course, @forum, @topic, anchor: ('post-' + @post.id.to_s)) }
+      end
+    end
+  end
+
 private
   def load_forum
     @forum = ForumForum.find_using_slug(params[:forum_id])

@@ -206,6 +206,7 @@ JfdiAcademy::Application.routes.draw do
       resources :topics, except: [:index] do
         resources :posts, only: [:create, :edit, :update, :destroy] do
           put 'vote' => 'posts#set_vote'
+          put 'answer' => 'posts#set_answer'
           get 'reply' => 'posts#reply', on: :member
         end
 
