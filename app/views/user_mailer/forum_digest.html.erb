@@ -2,9 +2,9 @@ Hello, <%= @user %>!<br />
 <p>Here are the new forum posts for <%= @day %> in <%= @course.title %>:</p>
 
 <% @posts.each_with_index do |post, index| %>
-  <h2><%= index + 1 %>.&nbsp; <%= link_to 'Re: ' + post.topic.subject, main_app.course_forum_topic_url(@course, post.topic.forum, post.topic, :anchor => 'post-' + post.id.to_s) %></h2>
+  <h2><%= index + 1 %>.&nbsp; <%= link_to 'Re: ' + post.title, main_app.course_forum_topic_url(@course, post.topic.forum, post.topic, :anchor => 'post-' + post.id.to_s) %></h2>
 
-  <p>Posted by <%= post.user %> at <%= format_post_time(post.created_at) %></p>
+  <p>Posted by <%= post.author ? post.author.user : '(unknown)' %> at <%= post.created_at %></p>
   <blockquote>
     <%= (truncate_html CoursemologyFormatter.sanitize(post.text), length: @length, omission: '... (truncated)').html_safe %>
   </blockquote>

@@ -82,7 +82,7 @@ private
     course.forums.each do |forum|
       forums[forum.id.to_s] = [forum,
                                forum.posts.where(created_at: yesterday). # all posts created yesterday, by topic and time.
-                                   order(topic_id: :asc, created_at: :asc)]
+                                   order('topic_id ASC', 'created_at ASC')]
     end
 
     # Iterate over every subscription, sending out only the forums where the user specified he wanted

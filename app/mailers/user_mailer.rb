@@ -1,4 +1,7 @@
 class UserMailer < ActionMailer::Base
+  include TruncateHtmlHelper
+  helper_method :truncate_html
+
   default from: "noreply@coursemology.com",
           'Content-Transfer-Encoding' => '7bit'
 
@@ -91,7 +94,10 @@ class UserMailer < ActionMailer::Base
     @user = user
     @day
     @posts = posts
+    @course = course
     @length = 1000
+
+    mail(to: user.email, subject: "#{course.title}: Forum digest")
   end
 
   def email_changed(user_name, new_email, email_was)
