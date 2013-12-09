@@ -1,6 +1,12 @@
 <div class="forum">
   <div id="forum_topic_links" class="btn-toolbar pull-right">
     <div class="btn-group">
+      <% if @forum.subscribed?(curr_user_course) %>
+        <%= link_to 'Unsubscribe', unsubscribe_course_forum_path(@course, @forum), class: 'btn' %>
+      <% else %>
+        <%= link_to 'Subscribe', subscribe_course_forum_path(@course, @forum), class: 'btn' %>
+      <% end %>
+
       <% unread = @forum.unread_topics(curr_user_course) %>
       <% if unread.count > 0 %>
         <%= link_to 'Mark forum read', mark_read_course_forum_path(@course, @forum), class: 'btn' %>

@@ -69,4 +69,8 @@ class ForumTopic < ActiveRecord::Base
   def view_count
     views.count
   end
+
+  def subscribed?(user_course)
+    not subscriptions.where(user_id: user_course).empty?
+  end
 end

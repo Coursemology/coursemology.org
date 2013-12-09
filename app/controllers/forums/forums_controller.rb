@@ -57,6 +57,28 @@ class Forums::ForumsController < ApplicationController
     end
   end
 
+  def subscribe
+    subscription = ForumForumSubscription.create
+    subscription.forum = @forum
+    subscription.user = curr_user_course
+
+    respond_to do |format|
+      if subscription.save
+        format.html { redirect_to course_forum_path(@course, @forum),
+                                  notice: 'You have subscribed to the forum.' }
+      end
+    end
+  end
+
+  def unsubscribe
+    ForumForumSubscription.delete_all(forum_id: @forum, user_id: curr_user_course)
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_path(@course, @forum),
+                                notice: 'You have been unsubscribed from the forum.' }
+    end
+  end
+
   def mark_read
     curr_user_course.mark_as_seen(@forum.unread_topics(curr_user_course).all)
 

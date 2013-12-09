@@ -23,4 +23,8 @@ class ForumForum < ActiveRecord::Base
   def subscriptions_for_user(user_course)
     subscriptions.where(:user_id => user_course)
   end
+
+  def subscribed?(user_course)
+    not subscriptions.where(user_id: user_course).empty?
+  end
 end
