@@ -4,11 +4,20 @@ class ForumTopic < ActiveRecord::Base
   belongs_to :author, class_name: 'UserCourse', foreign_key: :author_id
   belongs_to :forum, class_name: 'ForumForum'
 
+  scope :questions, -> {
+    where(topic_type: TOPIC_TYPE_QUESTION)
+  }
   scope :unread, ->(user_course) {
     joins('LEFT OUTER JOIN seen_by_users ON
       seen_by_users.user_course_id = ' + (user_course.id ? user_course.id.to_s : '0') + ' AND
       seen_by_users.obj_id=forum_topics.id AND
       obj_type=\'ForumTopic\'').where(seen_by_users: { obj_id: nil })
+  }
+  scope :unanswered, -> {
+    questions.joins('LEFT OUTER JOIN forum_posts ON
+      forum_posts.topic_id = forum_topics.id AND
+      forum_posts.answer <> 0').
+    where(forum_posts: { id: nil })
   }
 
   is_sluggable :title, history: false

@@ -90,7 +90,17 @@ class Forums::ForumsController < ApplicationController
   end
 
   def next_unanswered
+    @course.forums.accessible_by(current_ability).each do |f|
+      topics = f.unanswered_questions
+      if not topics.empty?
+        respond_to do |format|
+          redirect_to course_forum_topic_path(@course, f, topics.first) and return
+        end
+      end
+    end
 
+    # All answered already
+    redirect_to course_forums_path(@course)
   end
 
 private

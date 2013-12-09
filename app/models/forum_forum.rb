@@ -16,6 +16,10 @@ class ForumForum < ActiveRecord::Base
     topics.merge(ForumTopic.unread(user_course))
   end
 
+  def unanswered_questions
+    topics.merge(ForumTopic.unanswered)
+  end
+
   def subscriptions_for_user(user_course)
     subscriptions.where(:user_id => user_course)
   end
