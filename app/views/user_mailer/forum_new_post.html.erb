@@ -1,19 +1,16 @@
-Hello, <%= @user %>!<br/>
-<p>New post in the forum for <%= @course.title %>:</p>
-<br/>
-<% if @post.id == @first_post.id %>
-  <%= link_to @topic.subject, main_app.course_forum_topic_url(@course, @forum, @topic) %>
-<% else %>
-  <%= link_to 'Re: ' + @topic.subject, main_app.course_forum_topic_url(@course, @forum, @topic, :anchor => "post-" + @post.id.to_s) %>
-<% end %>
-by <%= @post.user %>
-<br/>
+<p>Hello, <%= @user.user %>!</p>
+<p>There is a new post in the topic <%= @post.topic.title %> in <%= @course.title %>.</p>
+
+<h1>
+  <%= link_to @post.topic.title, course_forum_topic_url(@course, @post.topic.forum, @post.topic, anchor: 'post-' + @post.id.to_s) %>
+  by <%= @post.author ? @post.author.user : '(unknown)' %>
+</h1>
+
 <blockquote>
-  <%=raw Forem.formatter.format(@post.text) %>
+  <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
 </blockquote>
 
-<br/>
-Best Regards,
-<br/>
-
-The Coursemology Team
+<p>
+  Best Regards,<br />
+  The Coursemology Team
+</p>

@@ -28,6 +28,14 @@ class Forums::PostsController < ApplicationController
         redirect_to course_forum_topic_path(@course, @forum, @topic)
       end
     end
+
+    # send out notifications for subscribers
+    @forum.subscriptions.each do |sub|
+      UserMailer.forum_new_post(sub.user, @post, @course)
+    end
+    @topic.subscriptions.each do |sub|
+      UserMailer.forum_new_post(sub.user, @post, @course)
+    end
   end
 
   def edit
