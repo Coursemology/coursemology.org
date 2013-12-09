@@ -7,7 +7,7 @@
       <% if topic.sticky? || topic.announcement? %>
         <i class="icon-chevron-up" title="Sticky"></i>
       <% end %>
-      <% if not topic.answered? %>
+      <% if topic.question? and (not topic.answered?) %>
         <i class="icon-question-sign" title="Unanswered question"></i>
       <% end %>
       <% if topic.hidden? %>
@@ -28,7 +28,11 @@
   <td class="views-count text-center"><%= topic.views.count %></td>
   <td class="latest-post text-center">
     <%  last_post = topic.posts.last %>
-    <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
+    <%  if last_post.author %>
+      <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
+    <% else %>
+      (unknown)
+    <% end %>
     <%= link_to "#{time_ago_in_words(last_post.created_at)} ago", topic_latest_post_path(@course, topic.forum, topic) -%>
   </td>
 </tr>

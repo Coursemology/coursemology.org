@@ -4,12 +4,16 @@
   <a class="post-anchor" name="post-<%= @post.id %>"></a>
   <div id="post-<%= @post.id %>" class="reply_to_post post">
     <div class="user">
-      <h5 class="username">
-        <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
-      </h5>
-      <div class="icon pull-right">
-        <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
-      </div>
+      <% if @post.author %>
+        <h5 class="username">
+          <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
+        </h5>
+        <div class="icon pull-right">
+          <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
+        </div>
+      <% else %>
+        <h5 class="username">(unknown)</h5>
+      <% end %>
     </div>
 
     <div class="contents">
@@ -17,7 +21,7 @@
 
       <% if @post.parent %>
         <div class="in-reply-to">
-          <%= link_to "In reply to #{@post.parent.author.user}", "#post-#{@post.parent.id}" %>
+          <%= link_to "In reply to #{@post.parent.author ? @post.parent.author.user : '(unknown)'}", "#post-#{@post.parent.id}" %>
         </div>
       <% end %>
 
