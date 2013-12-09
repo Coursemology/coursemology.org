@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <h3>Post a Reply</h3>
+  <h2>Post a Reply</h2>
   <% new_post = ForumPost.new %>
   <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post) do |f| %>
     <%= render partial: 'form', locals: { reply_to: @topic.posts.last, form: f } %>
