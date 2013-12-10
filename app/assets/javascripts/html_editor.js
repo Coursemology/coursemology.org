@@ -1,38 +1,51 @@
-// wysihtml5 <code> tag component for code.
-// https://github.com/xing/wysihtml5/issues/43
-(function(wysihtml5) {
+// Inspired by the implementation upstream in https://github.com/evereq/bootstrap-wysihtml5
+// that has not made it to the Rails version.
+(function(wysi) {
   "use strict";
-  var NODE_NAME = 'CODE';
 
-  wysihtml5.commands.createCode = {
-    exec: function(composer, command) {
-      var selection = composer.selection.getSelectedNode();
-      var result = wysihtml5.commands.formatInline.exec(composer, command, 'code');
+  function exec(composer) {
 
-      // Make sure we do not have new <code> blocks split by <br />'s
-      $('br', selection).each(function(n, elem) {
-        var $elem = $(elem);
-        var $prev = $elem.prev();
-        var $next = $elem.next();
+    var pre = this.state(composer);
 
-        var $next_children = $next.contents();
-        $next_children.detach();
-        $prev.append(elem);
-        $next_children.appendTo($prev);
-        $next.remove();
+    if (pre) {
+      // caret is already within a <pre><code>...</code></pre>
+      composer.selection.executeAndRestore(function () {
+        var codeSelector = pre.querySelector("code");
+        wysi.dom.replaceWithChildNodes(pre);
+        if (codeSelector) {
+          wysi.dom.replaceWithChildNodes(pre);
+          hljs.highlightBlock(pre);
+        }
       });
-      $('code', selection).addClass('jfdiCode');
-      return result;
-    },
+    } else {
+      // Wrap in <pre><code class="jfdiCode">...</code></pre>
+      var range = composer.selection.getRange();
+      if (!range) {
+        return false;
+      }
 
-    state: function(composer, command) {
-      // element.ownerDocument.queryCommandState("bold") results:
-      // firefox: only <b>
-      // chrome: <b>, <strong>, <h1>, <h2>, ...
-      // ie: <b>, <strong>
-      // opera: <b>, <strong>
-      return wysihtml5.commands.formatInline.state(composer, command, 'code');
+      var selectedNodes = range.extractContents(),
+          preElem = composer.doc.createElement("pre"),
+          code = composer.doc.createElement("code");
+
+      preElem.appendChild(code);
+      code.appendChild(selectedNodes);
+      code.className = 'jfdiCode';
+      range.insertNode(preElem);
+      hljs.highlightBlock(preElem);
+      composer.selection.selectNode(preElem);
     }
+  }
+
+  function state(composer) {
+    var selectedNode = composer.selection.getSelectedNode();
+    return wysi.dom.getParentElement(selectedNode, { nodeName: "CODE" }) &&
+      wysi.dom.getParentElement(selectedNode, { nodeName: "PRE" });
+  }
+
+  wysi.commands.createCode = {
+    exec: exec,
+    state: state
   };
 })(wysihtml5);
 
