@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131117034500) do
+ActiveRecord::Schema.define(:version => 20131210162710) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -428,6 +428,72 @@ ActiveRecord::Schema.define(:version => 20131117034500) do
   add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
   add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
 
+  create_table "forum_forum_subscriptions", :force => true do |t|
+    t.integer "forum_id"
+    t.integer "user_id"
+  end
+
+  create_table "forum_forums", :force => true do |t|
+    t.integer "course_id"
+    t.string  "name"
+    t.string  "cached_slug"
+    t.text    "description"
+  end
+
+  add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true
+
+  create_table "forum_post_votes", :force => true do |t|
+    t.integer  "post_id"
+    t.integer  "vote"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "forum_posts", :force => true do |t|
+    t.integer  "topic_id"
+    t.integer  "parent_id"
+    t.string   "title"
+    t.integer  "author_id"
+    t.boolean  "answer"
+    t.text     "text"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "forum_posts", ["author_id"], :name => "index_forum_posts_on_author_id"
+  add_index "forum_posts", ["parent_id"], :name => "index_forum_posts_on_parent_id"
+  add_index "forum_posts", ["topic_id"], :name => "index_forum_posts_on_topic_id"
+
+  create_table "forum_topic_subscriptions", :force => true do |t|
+    t.integer "topic_id"
+    t.integer "user_id"
+  end
+
+  create_table "forum_topic_views", :force => true do |t|
+    t.integer  "topic_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "forum_topic_views", ["topic_id"], :name => "index_forum_topic_views_on_topic_id"
+
+  create_table "forum_topics", :force => true do |t|
+    t.integer  "forum_id"
+    t.string   "title"
+    t.string   "cached_slug"
+    t.integer  "author_id"
+    t.boolean  "locked",      :default => false
+    t.boolean  "hidden",      :default => false
+    t.integer  "topic_type",  :default => 0
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "forum_topics", ["author_id"], :name => "index_forum_topics_on_author_id"
+  add_index "forum_topics", ["cached_slug"], :name => "index_forum_topics_on_cached_slug", :unique => true
+  add_index "forum_topics", ["forum_id"], :name => "index_forum_topics_on_forum_id"
+
   create_table "lesson_plan_entries", :force => true do |t|
     t.integer  "course_id"
     t.integer  "creator_id"
@@ -526,9 +592,9 @@ ActiveRecord::Schema.define(:version => 20131117034500) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
-    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
+    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
@@ -1060,10 +1126,10 @@ ActiveRecord::Schema.define(:version => 20131117034500) do
     t.string   "name"
     t.string   "profile_photo_url"
     t.string   "display_name"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "email",                  :default => "", :null => false
-    t.string   "encrypted_password",     :default => "", :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.string   "email",                  :default => "",   :null => false
+    t.string   "encrypted_password",     :default => "",   :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -1080,6 +1146,7 @@ ActiveRecord::Schema.define(:version => 20131117034500) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.boolean  "is_logged_in",           :default => true
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
