@@ -107,4 +107,10 @@ module ApplicationHelper
 
     "#{dd} d #{"%02d" % hh}:#{"%02d" % mm}:#{"%02d" % ss}"
   end
+
+  def logged_out
+    @facebook_uid ||= Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s).get_user_from_cookies(cookies)
+    @user = User.where(:provider => "facebook", :uid => @facebook_uid).first
+    !@user.is_logged_in?
+  end
 end
