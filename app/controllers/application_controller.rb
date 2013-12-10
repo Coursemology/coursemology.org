@@ -322,6 +322,10 @@ class ApplicationController < ActionController::Base
     params[:sort]
   end
 
+  def before_logout
+    puts "before logout"
+  end
+
   private
   def current_ability
     if @course
