@@ -38,6 +38,11 @@
 
       // Block formatting context
       overflow: hidden;
+
+      // The post info, like post time etc
+      .info {
+        margin-top: 1em;
+      }
     }
 
     .contents.answer {
