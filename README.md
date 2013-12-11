@@ -27,10 +27,23 @@ To get started, you will need to do the following:
     $ rake db:seed
     $ rake db:populate_course_pref
     $ rake db:gen_fake_data # Creates sample courses & users for you, takes a few minutes
-    $ script/delayed_job start   #start the delayed job queue
 
     # The app performance can be monitored by adding newrelic config file:
     # config/newrelic.yml
+
+# `clockwork` and `delayed_job`
+
+Coursemology has got various tasks that need to be run at various intervals; the `clockwork` and `delayed_job` gems are used for this purpose. These need setting up to run alongside your application instance.
+
+Run these tasks from your source checkout directory when your application is launched
+
+    $ script/delayed_job start
+    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids start
+
+To terminate them (for upgrading or reloading)
+
+    $ script/delayed_job stop
+    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids stop
 
 # Testing on your local machine
 
@@ -47,20 +60,6 @@ One Superuser is added during `rake db:seed`.
 In case you are trying to deploy the website yourself using Passenger (aka mod_rails), here is a good guide to get started:
 
     http://www.web-l.nl/posts/5
-
-# Clockwork and delayed_job
-
-Coursemology has got various tasks that need to be run at various intervals; the `clockwork` and `delayed_job` gems are used for this purpose. These need setting up to run alongside your application instance.
-
-Run these tasks from your source checkout directory when your application is launched
-
-    $ script/delayed_job start
-    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids start
-
-To terminate them (for upgrading or reloading)
-
-    $ script/delayed_job stop
-    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids stop
 
 # Production builds
 
