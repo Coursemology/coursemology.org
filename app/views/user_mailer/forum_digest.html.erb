@@ -1,4 +1,4 @@
-Hello, <%= @user %>!<br />
+<p>Hello, <%= @user.user %>!</p>
 <p>Here are the new forum posts for <%= @day %> in <%= @course.title %>:</p>
 
 <% @posts.each_with_index do |post, index| %>
@@ -12,6 +12,6 @@ Hello, <%= @user %>!<br />
 <% end %>
 
 <p>
-Best Regards,<br />
-The Coursemology Team
+  Best Regards,<br />
+  The Coursemology Team
 </p>
