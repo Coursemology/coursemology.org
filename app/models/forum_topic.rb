@@ -27,8 +27,8 @@ class ForumTopic < ActiveRecord::Base
 
   # Defines all topic types. Last element is the permission required.
   TOPIC_TYPES = [
-      ['Normal', 0, :edit],
-      ['Question', 1, :edit],
+      ['Normal', 0, :show],
+      ['Question', 1, :show],
       ['Sticky', 2, :set_sticky],
       ['Announcement', 3, :set_announcement]
   ]

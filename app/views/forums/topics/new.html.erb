@@ -11,7 +11,7 @@
   <div class="control-group">
     <%= f.label :topic_type %>
     <div class="controls">
-      <%= f.select :topic_type, ForumTopic::TOPIC_TYPES, required: true, class: 'span7' %>
+      <%= f.select :topic_type, ForumTopic::TOPIC_TYPES.select {|t| can? t[2], @topic}, required: true, class: 'span7' %>
     </div>
   </div>
 
