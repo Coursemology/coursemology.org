@@ -153,6 +153,11 @@ class User < ActiveRecord::Base
     )
   end
 
+  def after_database_authentication
+    #self.update_attribute(:invite_code, nil)
+    self.is_logged_in = true
+  end
+
   private
   def set_default_role
     if !self.system_role
