@@ -13,7 +13,6 @@
         wysi.dom.replaceWithChildNodes(pre);
         if (codeSelector) {
           wysi.dom.replaceWithChildNodes(pre);
-          hljs.highlightBlock(pre);
         }
       });
     } else {
@@ -29,15 +28,13 @@
       code.appendChild(selectedNodes);
       code.className = 'jfdiCode';
       range.insertNode(code);
-      hljs.highlightBlock(code);
       composer.selection.selectNode(code);
     }
   }
 
   function state(composer) {
     var selectedNode = composer.selection.getSelectedNode();
-    return wysi.dom.getParentElement(selectedNode, { nodeName: "CODE" }) &&
-      wysi.dom.getParentElement(selectedNode, { nodeName: "PRE" });
+    return wysi.dom.getParentElement(selectedNode, { nodeName: "CODE" });
   }
 
   wysi.commands.createCode = {
