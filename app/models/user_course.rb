@@ -102,12 +102,9 @@ class UserCourse < ActiveRecord::Base
   end
 
   def mark_as_seen(obj)
-    seen = self.seen_stuff.where(obj_id:obj, obj_type:obj.class.to_s).first
-    unless seen
-      s = self.seen_stuff.build()
-      s.obj = obj
-      s.save
-    end
+    obj = obj.to_a if (obj.is_a?(Enumerable) && not(obj.is_a?(Array)))
+    obj = [obj] unless obj.is_a?(Enumerable)
+    mark_as_seen_array(obj)
   end
 
   def update_exp_and_level
@@ -271,5 +268,29 @@ class UserCourse < ActiveRecord::Base
 
   def leaderboard_achievements
     self.user_achievements.order('created_at desc').first(6)
+  end
+
+private
+  # @param [Array] An array of objects which will be marked as seen
+  def mark_as_seen_array(objs)
+    return if objs.empty?
+
+    # Find the asymmetric difference between the input array and the stuff we already have marked seen.
+    seen = (self.seen_stuff.where(obj_id: objs, obj_type: objs[0].class.to_s).map {|obj|
+      obj.obj_id
+    }).to_set
+    new = (objs.map {|obj|
+      obj.id
+    }).to_set - seen
+
+    # Then store all the new IDs as
+    SeenByUser.transaction do
+      new.each do |obj|
+        s = self.seen_stuff.build()
+        s.obj_type = objs[0].class.to_s
+        s.obj_id = obj
+        s.save
+      end
+    end
   end
 end

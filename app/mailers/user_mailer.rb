@@ -1,4 +1,7 @@
 class UserMailer < ActionMailer::Base
+  include TruncateHtmlHelper
+  helper_method :truncate_html
+
   default from: "noreply@coursemology.com",
           'Content-Transfer-Encoding' => '7bit'
 
@@ -85,6 +88,33 @@ class UserMailer < ActionMailer::Base
     @due_time = mission.close_at
     @redirect_url = redirect_to
     mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
+  end
+
+  def forum_digest(user, posts, course)
+    @user = user
+    @day
+    @posts = posts
+    @course = course
+    @length = 1000
+
+    mail(to: user.user.email, subject: "#{course.title}: Forum digest")
+  end
+
+  def forum_new_topic(user, topic, post, course)
+    @user = user
+    @topic = topic
+    @post = post
+    @course = course
+
+    mail(to: user.user.email, subject: "#{course.title}: New topic notification")
+  end
+
+  def forum_new_post(user, post, course)
+    @user = user
+    @post = post
+    @course = course
+
+    mail(to: user.user.email, subject: "#{course.title}: New post notification")
   end
 
   def email_changed(user_name, new_email, email_was)

@@ -46,6 +46,7 @@ module ApplicationHelper
   end
 
   def self.style_format(str, html_safe = true, lang='python')
+    # TODO: Find a more consistent way for both back- and front-end to access styling without needing this.
     if str.to_s.length > 0
       unless html_safe
         str = HTMLEntities.new.encode(str)

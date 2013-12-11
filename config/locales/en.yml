@@ -9,8 +9,7 @@ en:
       new_mrq:  "New MRQ Question"
       new_qn:   "New Question"
 
-  # overriding Forem locales
-  forem:
+  forum:
     post:
       buttons:
         edit: "Save"

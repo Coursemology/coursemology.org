@@ -16,6 +16,7 @@ class CoursemologyFormatter
           :all         => ['dir', 'lang', 'title'],
           'a'          => ['href', 'target'],
           'blockquote' => ['cite'],
+          'code'       => ['class'],
           'col'        => ['span', 'width'],
           'colgroup'   => ['span', 'width'],
           'del'        => ['cite', 'datetime'],

@@ -1,0 +1,19 @@
+<div class="post-content">
+  <div class="row-fluid control-group">
+    <%= form.label :title %>
+    <div class="controls">
+      <%= form.text_field :title, required: true, class: 'span10' %>
+    </div>
+  </div>
+
+  <div class="row-fluid control-group">
+    <%= form.label :text %>
+    <div class="controls">
+      <%= form.text_area :text , label: false, required: false, class: 'text_area span10 html-editor' %>
+    </div>
+  </div>
+
+</div>
+<% if reply_to %>
+<%= form.hidden_field :parent_id, value: reply_to.id %>
+<% end %>

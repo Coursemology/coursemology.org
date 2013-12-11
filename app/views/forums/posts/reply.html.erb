@@ -1,0 +1,47 @@
+<div class="forum">
+  <%= render partial: 'forums/topics/header', locals: { topic: @topic } %>
+
+  <a class="post-anchor" name="post-<%= @post.id %>"></a>
+  <div id="post-<%= @post.id %>" class="reply_to_post post">
+    <div class="user">
+      <% if @post.author %>
+        <h5 class="username">
+          <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
+        </h5>
+        <div class="icon pull-right">
+          <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
+        </div>
+      <% else %>
+        <h5 class="username">(unknown)</h5>
+      <% end %>
+    </div>
+
+    <div class="contents">
+      <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
+
+      <% if @post.parent %>
+        <div class="in-reply-to">
+          <%= link_to "In reply to #{@post.parent.author ? @post.parent.author.user : '(unknown)'}", "#post-#{@post.parent.id}" %>
+        </div>
+      <% end %>
+
+      <div>
+        <a href="#post-<%= @post.id %>">
+          <time datetime="<%= @post.created_at.to_s(:db) -%>"><%= time_ago_in_words(@post.created_at) %> ago</time>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <h2>Post a Reply</h2>
+  <% new_post = ForumPost.new %>
+  <% new_post.title = replize_title(@topic.title) %>
+  <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
+               html: { class: 'form-horizontal' } do |f| %>
+    <%= render partial: 'form', locals: { reply_to: @topic.posts.last, form: f } %>
+    
+    <div class="form-actions">
+      <%= f.submit 'Reply', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

@@ -64,15 +64,15 @@ gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
 gem 'aws-sdk'
-gem 'forem', :github => "radar/forem"
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
-gem 'unread'
 gem 'gon'
 gem 'momentjs-rails'
 gem 'truncate_html'
 gem 'natcmp'
 gem 'scrollToFixed_rails', '~> 1.0.0'
+gem 'slugged', '~> 2.0'
+gem 'clockwork'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -1,0 +1,33 @@
+<h1>Edit Topic</h1>
+
+<%= form_for @topic, url: course_forum_topic_path(@course, @forum, @topic),
+             html: { class: 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :forum %>
+    <div class="controls">
+      <%= f.select :forum, @course.forums.map { |f| [f.name, f.id] }, required: true, class: 'span7' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :locked %>
+    <div class="controls">
+      <%= f.check_box :locked %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :hidden %>
+    <div class="controls">
+      <%= f.check_box :hidden %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :topic_type %>
+    <div class="controls">
+      <%= f.select :topic_type, ForumTopic::TOPIC_TYPES.select {|t| can? t[2], @topic}, required: true, class: 'span7' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Save Changes', class: 'btn btn-primary', data: { disable_with: 'Submitting...' } %>
+  </div>
+<% end %>
