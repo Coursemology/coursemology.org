@@ -35,6 +35,7 @@
 
   <h2>Post a Reply</h2>
   <% new_post = ForumPost.new %>
+  <% new_post.title = replize_title(@topic.title) %>
   <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
                html: { class: 'form-horizontal' } do |f| %>
     <%= render partial: 'form', locals: { reply_to: @topic.posts.last, form: f } %>
