@@ -23,9 +23,10 @@ Setting up
 
     $ bundle install
     $ rake db:create # Do it for the first time
-    $ rake db:migrate
+    $ rake db:schema:load
     $ rake db:seed
     $ rake db:gen_fake_data # Creates sample courses & users for you, takes a few minutes
+    $ script/delayed_job start   #start the delayed job queue
 
     # The app performance can be monitored by adding newrelic config file:
     # config/newrelic.yml
