@@ -105,12 +105,17 @@ class CourseAbility
         :creator_id => UserCourse.staff.where(:course_id => user_course.course).pluck(:user_id) }
 
       # Forums: The posts are accessible if they are not marked hidden, regardless of whether they
-      # made the thread or not. Hiding is an admin function
+      # made the thread or not. Hiding is an admin function.
+      #
+      # Students can delete their own posts and threads.
       can :read, ForumForum
+      can :create, ForumTopic
       can :read, ForumTopic, hidden: false
       can :reply, ForumTopic, locked: false
+      can :delete, ForumTopic, locked: false, author: user_course
       can :read, ForumPost
       can :create, ForumPost
+      #can :delete, ForumPost, author: user_course
 
       # Students can edit their own posts
       can :edit, ForumPost, author: user_course

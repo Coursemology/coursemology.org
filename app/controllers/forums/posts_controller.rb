@@ -15,6 +15,8 @@ class Forums::PostsController < ApplicationController
       redirect_to course_forum_topic_path(@course, @forum, @topic) and return
     end
 
+    authorize! :reply, @topic
+
     parent = ForumPost.find_by_id!(params[:forum_post][:parent_id])
     @post.topic = @topic
     @post.parent = parent

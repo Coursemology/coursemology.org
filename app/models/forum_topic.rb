@@ -25,12 +25,12 @@ class ForumTopic < ActiveRecord::Base
 
   attr_accessible :forum, :topic_type, :locked, :hidden
 
-  # Defines all topic types
+  # Defines all topic types. Last element is the permission required.
   TOPIC_TYPES = [
-      ['Normal', 0],
-      ['Question', 1],
-      ['Sticky', 2],
-      ['Announcement', 3]
+      ['Normal', 0, :edit],
+      ['Question', 1, :edit],
+      ['Sticky', 2, :set_sticky],
+      ['Announcement', 3, :set_announcement]
   ]
   TOPIC_TYPE_NORMAL = 0
   TOPIC_TYPE_QUESTION = 1

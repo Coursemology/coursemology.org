@@ -11,24 +11,32 @@
         <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id, 'data-post-title' => @topic.title %>
       <% end %>
     </div>
-    <% if can? :manage, @topic %>
-      <div class="btn-group dropdown-trigger-on-hover">
+    <div class="btn-group dropdown-trigger-on-hover">
+      <% if can? :edit, @topic %>
         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
           Manage topic
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><%= link_to 'Edit/Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
-          <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, hide: @topic.hidden? ? 0 : 1), method: :put %></li>
-          <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic, lock: @topic.locked? ? 0 : 1), method: :put %></li>
+          <% if can? :set_hidden, @topic %>
+            <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, hide: @topic.hidden? ? 0 : 1), method: :put %></li>
+          <% end %>
+          <% if can? :set_locked, @topic %>
+            <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic, lock: @topic.locked? ? 0 : 1), method: :put %></li>
+          <% end %>
           <li class="divider"></li>
           <% ForumTopic::TOPIC_TYPES.each do |t| %>
-            <li><%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %></li>
+            <% if can? t[2], @topic %>
+              <li><%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %></li>
+            <% end %>
           <% end %>
         </ul>
+      <% end %>
+      <% if can? :delete, @topic %>
         <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
-       </div>
-    <% end %>
+      <% end %>
+     </div>
 
   </div>
 

@@ -26,6 +26,8 @@ class Forums::TopicsController < ApplicationController
   end
 
   def create
+    authorize_topic_type!(params[:forum_topic][:topic_type].to_i)
+
     post = nil
     ForumTopic.transaction do
       post = ForumPost.new
@@ -60,7 +62,9 @@ class Forums::TopicsController < ApplicationController
 
   def update
     params[:forum_topic][:forum] = @course.forums.where(id: params[:forum_topic][:forum].to_i).first!
+    authorize_topic_type!(params[:forum_topic][:topic_type].to_i)
     @topic.assign_attributes(params[:forum_topic])
+
 
     respond_to do |format|
       if @topic.save
@@ -72,6 +76,8 @@ class Forums::TopicsController < ApplicationController
 
   def set_type
     authorize! :edit, @topic
+    authorize_topic_type!(params[:type].to_i)
+
     @topic.topic_type = params[:type]
     respond_to do |format|
       if @topic.save then
@@ -166,5 +172,14 @@ private
     end
 
     raise ActiveRecord::RecordNotFound unless @topic
+  end
+
+  def authorize_topic_type!(type)
+    case type
+      when ForumTopic::TOPIC_TYPE_STICKY
+        authorize!(:set_sticky, @topic)
+      when ForumTopic::TOPIC_TYPE_ANNOUNCEMENT
+        authorize!(:set_announcement, @topic)
+    end
   end
 end
