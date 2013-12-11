@@ -4,7 +4,6 @@
   "use strict";
 
   function exec(composer) {
-
     var pre = this.state(composer);
 
     if (pre) {
@@ -18,22 +17,20 @@
         }
       });
     } else {
-      // Wrap in <pre><code class="jfdiCode">...</code></pre>
+      // Wrap in <code class="jfdiCode">...</code>
       var range = composer.selection.getRange();
       if (!range) {
         return false;
       }
 
       var selectedNodes = range.extractContents(),
-          preElem = composer.doc.createElement("pre"),
           code = composer.doc.createElement("code");
 
-      preElem.appendChild(code);
       code.appendChild(selectedNodes);
       code.className = 'jfdiCode';
-      range.insertNode(preElem);
-      hljs.highlightBlock(preElem);
-      composer.selection.selectNode(preElem);
+      range.insertNode(code);
+      hljs.highlightBlock(code);
+      composer.selection.selectNode(code);
     }
   }
 
