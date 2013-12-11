@@ -13,7 +13,7 @@
     <% end %>
 
     <div class="voting pull-right">
-      <% if post.topic.question? and can? :manage, post %>
+      <% if post.topic.question? and can? :set_answer, @topic %>
         <% if post.answer? %>
           <%= link_to course_forum_topic_post_answer_path(@course, @forum, @topic, post, answer: 0), method: :put, title: 'Unmark as Answer' do %>
             <i class="icon-ok"></i>
