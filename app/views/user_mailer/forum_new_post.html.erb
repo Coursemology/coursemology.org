@@ -10,6 +10,8 @@
   <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
 </blockquote>
 
+<p><%= link_to 'Click here', course_forum_topic_url(@course, @topic.forum, @topic, anchor: 'post-' + @post.id.to_s) %> to view.</p>
+
 <p>
   Best Regards,<br />
   The Coursemology Team
