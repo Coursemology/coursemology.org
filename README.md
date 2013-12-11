@@ -26,7 +26,6 @@ To get started, you will need to do the following:
     $ rake db:schema:load
     $ rake db:seed
     $ rake db:gen_fake_data # Creates sample courses & users for you, takes a few minutes
-                            # after more changes in future, run rake db:migrate
 
     # The app performance can be monitored by adding newrelic config file:
     # config/newrelic.yml
@@ -46,6 +45,27 @@ One Superuser is added during `rake db:seed`.
 In case you are trying to deploy the website yourself using Passenger (aka mod_rails), here is a good guide to get started:
 
     http://www.web-l.nl/posts/5
+
+# Clockwork and delayed_job
+
+Coursemology has got various tasks that need to be run at various intervals; the `clockwork` and `delayed_job` gems are used for this purpose. These need setting up to run alongside your application instance.
+
+Run these tasks from your source checkout directory when your application is launched
+
+    $ script/delayed_job start
+    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids start
+
+To terminate them (for upgrading or reloading)
+
+    $ script/delayed_job stop
+    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids stop
+
+# Production builds
+
+Coursemology utilises the Rails assets pipeline. Also, changes might require schema migrations. Run them all on your deployment servers using the following comments
+
+    $ rake db:migrate db:seed db:populate_course_pref
+    $ rake tmp:cache:clear assets:clean:all assets:precompile:all
 
 # Third party libraries
 
