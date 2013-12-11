@@ -78,6 +78,7 @@ private
   def course_forum_digests(course)
     # Build a post list for every forum
     yesterday = (Time.now.midnight - 1.day)..(Time.now.end_of_day - 1.day)
+    digest_date = Time.now.midnight - 1.day
     forums = {}
     course.forums.each do |forum|
       forums[forum.id.to_s] = [forum,
@@ -91,7 +92,7 @@ private
       reduce({ posts: [], user: nil }) do |posts, subscription|
         if (posts[:user] != subscription.user)
           # Send out the posts for the previous user
-          UserMailer.delay.forum_digest(posts[:user], posts.posts, course) if posts[:user] && (not posts[:posts].empty?)
+          UserMailer.delay.forum_digest(posts[:user], posts.posts, course, digest_date) if posts[:user] && (not posts[:posts].empty?)
 
           # Reset the accumulator
           posts[:posts] = []
@@ -104,7 +105,7 @@ private
 
     # Handle the last user accumulated.
     if last_subscription[:user] && (not last_subscription[:posts].empty?)
-      UserMailer.delay.forum_digest(last_subscription[:user], last_subscription[:posts], course)
+      UserMailer.delay.forum_digest(last_subscription[:user], last_subscription[:posts], course, digest_date)
     end
   end
 

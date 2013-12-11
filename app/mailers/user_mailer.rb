@@ -90,9 +90,9 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
   end
 
-  def forum_digest(user, posts, course)
+  def forum_digest(user, posts, course, date)
     @user = user
-    @day
+    @day = date
     @posts = posts
     @course = course
     @length = 1000
