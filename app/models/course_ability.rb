@@ -104,6 +104,23 @@ class CourseAbility
       can :read, Material, :file => {
         :creator_id => UserCourse.staff.where(:course_id => user_course.course).pluck(:user_id) }
 
+      # Forums: The posts are accessible if they are not marked hidden, regardless of whether they
+      # made the thread or not. Hiding is an admin function
+      can :read, ForumForum
+      can :read, ForumTopic, hidden: false
+      can :reply, ForumTopic, locked: false
+      can :read, ForumPost
+      can :create, ForumPost
+
+      # Students can edit their own posts
+      can :edit, ForumPost, author: user_course
+
+      # Students cannot make topics sticky nor announcements, they also cannot lock and make posts hidden
+      cannot :set_sticky, ForumTopic
+      cannot :set_announcement, ForumTopic
+      cannot :set_lock, ForumTopic
+      cannot :set_hidden, ForumTopic
+
       can :read, [LessonPlanEntry, LessonPlanMilestone]
 
       can :read, [Mission, Training, Survey], publish: true

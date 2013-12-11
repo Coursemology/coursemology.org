@@ -66,7 +66,7 @@ class Forums::PostsController < ApplicationController
   end
 
   def reply
-
+    authorize! :reply, @topic
   end
 
   def set_vote
