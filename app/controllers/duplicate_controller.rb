@@ -3,6 +3,7 @@ class DuplicateController < ApplicationController
   before_filter :load_general_course_data, only: [:manage]
 
   def manage
+    authorize! :can, :duplicate, @course
     @missions = @course.missions
     @trainings = @course.trainings
     lecturer_courses = current_user.user_courses.lecturer
@@ -10,6 +11,7 @@ class DuplicateController < ApplicationController
   end
 
   def duplicate_assignments
+    authorize! :can, :duplicate, @course
     require 'duplication'
     dest_course = Course.find(params[:dest_course])
     puts dest_course.to_json
