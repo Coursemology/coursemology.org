@@ -1,10 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
-
   protect_from_forgery
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
@@ -98,8 +93,8 @@ class ApplicationController < ActionController::Base
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings
 
-      unread = Forem::Post.joins(topic: {forum: :category}).unread_by(current_user).where('forem_categories.id' => @course.id)
-      counts[:forums] = unread.count
+      counts[:forums] = ForumTopic.unread(curr_user_course).
+        where(forum_id: @course.forums.accessible_by(current_ability)).count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []

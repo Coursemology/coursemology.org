@@ -1,0 +1,10 @@
+<div class="forum">
+  <%= render partial: 'forums/topics/header', locals: { topic: @topic } %>
+
+  <h2>Edit Post</h2>
+  <%= form_for @post, url: course_forum_topic_post_path(@course, @forum, @topic, @post, method: 'PUT'),
+               html: { class: 'form-horizontal' } do |f| %>
+    <%= render partial: 'form', locals: { reply_to: nil, form: f } %>
+    <%= f.submit 'Save', class: 'btn btn-primary' %>
+  <% end %>
+</div>

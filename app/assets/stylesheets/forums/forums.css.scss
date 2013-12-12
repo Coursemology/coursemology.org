@@ -1,0 +1,61 @@
+.forum {
+  ul.breadcrumb {
+    .dropdown-menu {
+      max-width: inherit;
+    }
+  }
+
+  .post {
+    // In case the previous post was too short.
+    clear: both;
+
+    // Spacing between posts.
+    margin-bottom: 1em;
+
+    .user {
+      margin-right: 1em;
+      text-align: right;
+      width: 7em;
+      float: left;
+
+      .voting {
+        clear: both;
+        text-align: center;
+      }
+    }
+
+    .contents {
+      // Same as .thumbnail from Bootstrap 2.2.
+      padding: 20px;
+      line-height: 1;
+      border: 1px solid #ddd;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+      -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+
+      // Block formatting context
+      overflow: hidden;
+
+      // The post info, like post time etc
+      .info {
+        margin-top: 1em;
+      }
+    }
+
+    .contents.answer {
+      // background-color: $state-success-bg;
+      background-color: #dff0d8;
+    }
+
+    .quick-reply {
+      clear: both;
+    }
+  }
+
+  .thread {
+    padding-left: 75px;
+  }
+}

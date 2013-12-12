@@ -1,0 +1,48 @@
+<div class="forum">
+  <div id="forum_topic_links" class="pull-right btn-toolbar">
+    <div class="btn-group">
+      <% unread = ForumTopic.unread(curr_user_course).where(forum_id: @course.forums) %>
+      <% if unread.count > 0 %>
+        <%= link_to 'Mark all as read', mark_read_course_forums_path(@course), class: 'btn' %>
+      <% end %>
+      <% if curr_user_course.is_staff? %>
+        <%= link_to 'New Forum', new_course_forum_path(@course), class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <h1>Forums</h1>
+
+    <ul class="breadcrumb">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          Jump to
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><%= link_to 'Next unread topic', next_unread_course_forums_path(@course) %></li>
+          <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <table id="forums" class="forums table table-striped">
+    <thead>
+    <tr>
+      <th class="icon span1">&nbsp;</th>
+      <th class="desc-and-last-post span9">Forum</th>
+      <th class="topics-count span1">Topics</th>
+      <th class="posts-count span1">Posts</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <% @forums.each do |forum| %>
+      <%= render partial: 'forum', locals: {forum: forum} %>
+    <% end %>
+
+    </tbody>
+  </table>
+</div>

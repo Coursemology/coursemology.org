@@ -46,6 +46,7 @@ module ApplicationHelper
   end
 
   def self.style_format(str, html_safe = true, lang='python')
+    # TODO: Find a more consistent way for both back- and front-end to access styling without needing this.
     if str.to_s.length > 0
       unless html_safe
         str = HTMLEntities.new.encode(str)
@@ -106,5 +107,16 @@ module ApplicationHelper
     dd, hh = hh.divmod(24)
 
     "#{dd} d #{"%02d" % hh}:#{"%02d" % mm}:#{"%02d" % ss}"
+  end
+
+  def logged_out
+    @facebook_uid ||= Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s).get_user_from_cookies(cookies)
+    @user = User.where(:provider => "facebook", :uid => @facebook_uid).first
+    #if @user
+    # !@user.is_logged_in?
+    #else
+    #  true
+    #end
+    @user and !@user.is_logged_in?
   end
 end

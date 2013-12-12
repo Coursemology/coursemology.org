@@ -1,0 +1,18 @@
+<p>Hello, <%= @user.user %>!</p>
+<p>There is a new post in the topic <%= @post.topic.title %> in <%= @course.title %>.</p>
+
+<h1>
+  <%= link_to @post.topic.title, course_forum_topic_url(@course, @post.topic.forum, @post.topic, anchor: 'post-' + @post.id.to_s) %>
+  by <%= @post.author ? @post.author.user : '(unknown)' %>
+</h1>
+
+<blockquote>
+  <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
+</blockquote>
+
+<p><%= link_to 'Click here', course_forum_topic_url(@course, @post.topic.forum, @post.topic, anchor: 'post-' + @post.id.to_s) %> to view.</p>
+
+<p>
+  Best Regards,<br />
+  The Coursemology Team
+</p>

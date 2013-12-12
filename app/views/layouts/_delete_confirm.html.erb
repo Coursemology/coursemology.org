@@ -1,10 +1,13 @@
-<span class="delete-confirm-control-group">    
-<a class='btn btn-danger delete-button'>
+<span class="delete-confirm-control-group">
+  <%= link_to path_to_item, method: :delete, class: 'btn btn-danger delete-button' do %>
+    <% if defined?(display_label) %>
+      <%= display_label %>
+    <% else %>
       <i class="icon-trash"></i>
-    </a>
-  <%= link_to path_to_item,
-:method => :delete,
-class: 'btn btn-danger delete-confirm-button', style: 'display: none;' do %>
-        Confirm
     <% end %>
+  <% end %>
+
+  <%= link_to path_to_item, method: :delete, class: 'btn btn-danger delete-confirm-button', style: 'display: none' do %>
+    Confirm
+  <% end %>
 </span>

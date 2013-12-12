@@ -1,0 +1,21 @@
+<%= render partial: 'forums/forums/header', locals: { } %>
+
+<h2>New Topic</h2>
+
+<%= form_for @topic, url: course_forum_topics_path(@course, @forum),
+             html: { class: 'form-horizontal' } do |f| %>
+  <%= f.fields_for :posts do |post| %>
+    <%= render partial: 'forums/posts/form', locals: { reply_to: nil, form: post }%>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :topic_type %>
+    <div class="controls">
+      <%= f.select :topic_type, ForumTopic::TOPIC_TYPES.select {|t| can? t[2], @topic}, required: true, class: 'span7' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Create Topic', class: 'btn btn-primary' %>
+  </div>
+<% end %>

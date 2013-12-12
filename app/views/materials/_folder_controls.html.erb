@@ -36,7 +36,7 @@
       <% end %>
     <% end %>
     <%= link_to "Download .zip", (@folder.is_virtual? ?
-        course_material_virtual_folder_path(@course, @folder.id, :format => 'zip') :
+        course_material_virtual_folder_path(@course, @folder, :format => 'zip') :
         course_material_folder_path(@course, @folder, :format => 'zip')),
         :class => 'btn', :id => 'materials-download-zip-button' %>
     

@@ -130,12 +130,41 @@ $(document).ready(function() {
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();
 
-    $('.delete-button').click(function() {
-      var parent = $(this).parents('.delete-confirm-control-group');
-      $(this).hide();
-      var that = this;
-      $('.delete-confirm-button', parent).fadeIn();
-      setTimeout(function() { $('.delete-confirm-button', parent).hide(); $(that).fadeIn(); }, 2000);
+    // For our delete buttons, detach the companion button so it looks nicer in a .btn-group.
+    // Then move it one level up so it acts like a first class citizen.
+    $('.delete-button').each(function(n, elem) {
+      var $elem = $(elem);
+      var $parent = $elem.parent();
+      var $confirm = $elem.siblings('.delete-confirm-button');
+
+      $confirm.data('sibling', $elem);
+      $elem.data('sibling', $confirm);
+      $confirm.hide();
+      $confirm.detach();
+
+      $elem.detach();
+      $elem.insertBefore($parent);
+      $parent.remove();
+    });
+    $('.delete-button').click(function(e) {
+      var $this = $(this);
+      var $parent = $this.parent();
+      var $sibling = $this.data('sibling');
+
+      $this.hide();
+      $sibling.insertBefore($this);
+      $this.detach();
+      $sibling.fadeIn();
+
+      setTimeout(function() {
+          $sibling.hide();
+          $this.insertBefore($sibling);
+          $sibling.detach();
+          $this.fadeIn();
+        }, 2000);
+
+      e.preventDefault();
+      e.stopPropagation();
     });
 
     $('.btn-hover-text').hover(
@@ -285,13 +314,41 @@ jQuery.fn.extend({
   }
 });
 
-var _jfdiFormatFunc = function(i, d){
+function _jfdiFormatFunc(i, elem) {
+  var $elem = $(elem);
 
-    if ($(d).data('jfdiFormatted')) return;
-    $(d).data('jfdiFormatted', true);
-    if($(d).hasClass("pythonCode")){
-        CodeMirror.runMode($(d).text(), "python", d);
-    }
+  // Make sure we process every code block exactly once.
+  if ($elem.data('jfdiFormatted')) {
+    return;
+  }
+  $elem.data('jfdiFormatted', true);
+
+  // Replace all <br /> with \n for CodeMirror.
+  var $br = $('br', $elem);
+  $br.each(function(n, elem) {
+    var $elem = $(elem);
+    var $prev = $elem.prev();
+    var $next = $elem.next();
+
+    $(document.createTextNode('\n')).insertBefore($elem);
+    $elem.remove();
+  });
+  $elem.css('white-space', 'pre');
+  var code = $elem.text();
+
+  // Apply the multiline CSS style if we have a multiline code segment.
+  if ($br.length > 0) {
+    $elem.addClass('multiline');
+  }
+
+  // Wrap the elements with an appropriate CodeMirror block to trigger syntax highlighting
+  if ($elem.parents('.cos_code').length == 0) {
+    $elem.wrap('<div class="cos_code"></div>');
+    $elem.addClass('cm-s-molokai');
+  }
+  /*if($(d).hasClass("pythonCode"))*/{
+    CodeMirror.runMode(code, 'python', elem);
+  }
 }
 function jfdiFormat(element){
     $(element).find(".jfdiCode").each(_jfdiFormatFunc);
