@@ -149,6 +149,12 @@ class ApplicationController < ActionController::Base
                         img:    @theme_settings["Materials Icon"],
                         icon:   "icon-download",
                         count:  counts[:materials] || 0
+                    }, {
+                        text:   "Comics",
+                        url:    main_app.course_comics_url(@course),
+                        img:    @theme_settings["Comics Icon"],
+                        icon:   "icon-download",
+                        count:  0 || 0
                     }]
       @nav_items <<   {
           text:   "Comments",

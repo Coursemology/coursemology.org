@@ -15,6 +15,8 @@ class Course < ActiveRecord::Base
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
+  has_many :comics,            dependent: :destroy
+
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
 

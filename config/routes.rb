@@ -203,6 +203,8 @@ JfdiAcademy::Application.routes.draw do
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
+    resources :comics
+
     resources :forums, module: :forums do
       resources :topics, except: [:index] do
         resources :posts, only: [:create, :edit, :update, :destroy] do

@@ -1,0 +1,6 @@
+<%- model_class = Comic -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human.pluralize,
+                                   :default => "Edit #{model_class.model_name.human.pluralize}") %></h1>
+</div>
+<%= render :partial => 'form' %>

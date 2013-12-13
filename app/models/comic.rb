@@ -1,6 +1,6 @@
 class Comic < ActiveRecord::Base
 
-  attr_accessible :visible, :chapter, :name, :episode
+  attr_accessible :visible, :chapter, :name, :episode, :dependent_mission_id, :next_mission_id
 
   scope :published, where(:visible => true)
 
