@@ -153,7 +153,7 @@ class ApplicationController < ActionController::Base
                         text:   "Comics",
                         url:    main_app.course_comics_url(@course),
                         img:    @theme_settings["Comics Icon"],
-                        icon:   "icon-download",
+                        icon:   "icon-picture",
                         count:  0 || 0
                     }]
       @nav_items <<   {
@@ -390,6 +390,9 @@ class ApplicationController < ActionController::Base
       when 'materials'
         url = main_app.course_materials_path(@course)
         icon = 'icon-download'
+      when 'comics'
+        url = main_app.course_comics_path(@course)
+        icon = 'icon-picture'
     end
     [url, icon]
   end

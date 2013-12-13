@@ -582,3 +582,13 @@ if PreferableItem.count == 61
                          description:     "Number of topics to display per forum page",
                          default_display: true
 end
+
+
+if PreferableItem.count == 62
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "comics",
+                         default_value: "Comics",
+                         description:   "Comics",
+                         default_display: true
+end
