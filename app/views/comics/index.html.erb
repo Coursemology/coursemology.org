@@ -21,20 +21,22 @@
       <h4>Chapter <%= chapter = comic.chapter %></h4>
     <% end %>
     <div>
-      <%= link_to comic_link_text(comic),
-                  course_comic_path(@course, comic),
-                  class: 'comic-link' %>
+
       <% if can? :manage, Comic %>
-        <%= link_to edit_course_comic_path(@course, comic), class: "btn" do %>
-          <i class="icon-edit"></i>
-        <% end %>
         <%= link_to course_comic_path(@course, comic),
                     class: "btn btn-danger",
                     method: "DELETE",
                     data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} do %>
           <i class="icon-trash"></i>
+          <%= link_to edit_course_comic_path(@course, comic), class: "btn" do %>
+            <i class="icon-edit"></i>
+          <% end %>
         <% end %>
+
       <% end %>
+      <%= link_to comic_link_text(comic),
+                  course_comic_path(@course, comic),
+                  class: 'comic-link' %>
     </div>
 
   <% end %>
