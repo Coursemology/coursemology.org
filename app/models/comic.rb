@@ -36,7 +36,42 @@ class Comic < ActiveRecord::Base
     else
       dependency = true
     end
-    visible && dependency
+    curr_user_course.is_staff? || visible && dependency
   end
 
+  def tbc?(curr_user_course)
+    ! next_episode(curr_user_course) || !next_episode.can_view?(curr_user_course)
+  end
+
+  def next_episode(curr_user_course)
+    next_episode_helper(self, curr_user_course)
+  end
+
+  def prev_episode(curr_user_course)
+    prev_episode_helper(self, curr_user_course)
+  end
+
+  private
+
+  def next_episode_helper(comic, curr_user_course)
+    candidate = Comic.where(course_id: comic.course.id).where('episode > ?', self.episode).order('episode').first
+    if candidate.nil?
+      nil
+    elsif candidate.can_view?(curr_user_course)
+      candidate
+    else
+      next_episode_helper(candidate, curr_user_course)
+    end
+  end
+
+  def prev_episode_helper(comic, curr_user_course)
+    candidate = Comic.where(course_id: comic.course.id).where('episode < ?', self.episode).order('episode desc').first
+    if candidate.nil?
+      nil
+    elsif candidate.can_view?(curr_user_course)
+      candidate
+    else
+      prev_episode_helper(candidate, curr_user_course)
+    end
+  end
 end
