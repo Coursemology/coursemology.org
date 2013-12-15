@@ -54,6 +54,7 @@ class UserCourse < ActiveRecord::Base
   has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
+  has_many :seen_comics, through: :seen_stuff, source: :obj, source_type: "Comic"
 
   has_many :notifications, foreign_key: "target_course_id"
 

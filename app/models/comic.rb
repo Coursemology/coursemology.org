@@ -30,4 +30,13 @@ class Comic < ActiveRecord::Base
     end
   end
 
+  def can_view?(curr_user_course)
+    if dependent_mission
+      dependency = dependent_mission.can_start?(curr_user_course).first
+    else
+      dependency = true
+    end
+    visible && dependency
+  end
+
 end
