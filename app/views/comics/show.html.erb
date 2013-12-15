@@ -1,8 +1,9 @@
 <%- model_class = Comic -%>
 <div class="page-header">
-  <h1 id='current-episode-title'><%=t '.title', :default => comic_link_text(@comic) %></h1>
+  <h1><%= link_to 'Comics', course_comics_path(@course) %></h1>
 </div>
 
+<h2 id='current-episode-title'>comic_link_text(@comic) %></h2>
 <div id='loading-indicator'>
   <p>
     <i class="icon-spinner icon-spin"></i>
