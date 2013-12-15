@@ -1,9 +1,8 @@
 class ComicsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :comic, through: :course, except: [:index]
+  load_and_authorize_resource :comic, through: :course
 
   before_filter :load_general_course_data, only: [:index, :new, :edit, :show]
-
 
   def index
     @comics = @course.comics
@@ -21,7 +20,11 @@ class ComicsController < ApplicationController
   end
 
   def show
-    @comic_pages = ComicPage.where(comic_id: @comic.id).includes(:file).order('page')
+    if @comic.can_view?(curr_user_course)
+      @comic_pages = ComicPage.where(comic_id: @comic.id).includes(:file).order('page')
+    else
+      redirect_to course_comics_url
+    end
   end
 
   def info
