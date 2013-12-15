@@ -55,7 +55,7 @@ class Comic < ActiveRecord::Base
   private
 
   def next_episode_helper(comic, curr_user_course)
-    candidate = Comic.where(course_id: comic.course.id).where('episode > ?', self.episode).order('episode').first
+    candidate = Comic.where(course_id: comic.course.id).where('episode > ?', comic.episode).order('episode').first
     if candidate.nil?
       nil
     elsif candidate.can_view?(curr_user_course)
@@ -66,7 +66,7 @@ class Comic < ActiveRecord::Base
   end
 
   def prev_episode_helper(comic, curr_user_course)
-    candidate = Comic.where(course_id: comic.course.id).where('episode < ?', self.episode).order('episode desc').first
+    candidate = Comic.where(course_id: comic.course.id).where('episode < ?', comic.episode).order('episode desc').first
     if candidate.nil?
       nil
     elsif candidate.can_view?(curr_user_course)
