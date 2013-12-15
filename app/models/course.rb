@@ -357,4 +357,8 @@ class Course < ActiveRecord::Base
 
     [missions, trainings]
   end
+
+  def accessible_comics(user_course)
+     comics.select {|comic| comic.can_view?(user_course)}
+  end
 end

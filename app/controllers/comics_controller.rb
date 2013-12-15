@@ -6,6 +6,12 @@ class ComicsController < ApplicationController
 
   def index
     @comics = @course.comics
+    unseen = @comics - curr_user_course.seen_comics
+
+    @is_new = {}
+    unseen.each do |comic|
+      @is_new[comic.id] = true
+    end
   end
 
   def edit
@@ -22,6 +28,7 @@ class ComicsController < ApplicationController
   def show
     if @comic.can_view?(curr_user_course)
       @comic_pages = ComicPage.where(comic_id: @comic.id).includes(:file).order('page')
+      curr_user_course.mark_as_seen(@comic)
     else
       redirect_to course_comics_url
     end
@@ -39,6 +46,7 @@ class ComicsController < ApplicationController
       end
       result[:next] = @comic.next_episode(curr_user_course)
       result[:prev] = @comic.prev_episode(curr_user_course)
+      curr_user_course.mark_as_seen(@comic)
       render json: result
     else
       redirect_to course_comics_url

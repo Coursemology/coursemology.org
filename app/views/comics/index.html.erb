@@ -21,7 +21,6 @@
       <h4>Chapter <%= chapter = comic.chapter %></h4>
     <% end %>
     <div>
-
       <% if can? :manage, Comic %>
         <%= link_to course_comic_path(@course, comic),
                     class: "btn btn-danger",
@@ -37,6 +36,9 @@
       <%= link_to comic_link_text(comic),
                   course_comic_path(@course, comic),
                   class: 'comic-link' %>
+      <% if @is_new.has_key?(comic.id) %>
+        <span class="label">New!</span>
+      <% end %>
     </div>
 
   <% end %>

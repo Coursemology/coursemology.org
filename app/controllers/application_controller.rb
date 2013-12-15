@@ -77,6 +77,10 @@ class ApplicationController < ActionController::Base
       unseen_materials = all_materials - curr_user_course.seen_materials
       counts[:materials] = unseen_materials.count
 
+      all_comics = @course.accessible_comics(curr_user_course)
+      unseen_comics = all_comics - curr_user_course.seen_comics
+      counts[:comics] = unseen_comics.count
+
       #if can? :see_all, Submission
       #  # lecturers see number of new submissions of all students in the course
       #  all_sbms = @course.submissions.accessible_by(current_ability) +
@@ -154,7 +158,7 @@ class ApplicationController < ActionController::Base
                         url:    main_app.course_comics_url(@course),
                         img:    @theme_settings["Comics Icon"],
                         icon:   "icon-picture",
-                        count:  0 || 0
+                        count:  counts[:comics] || 0
                     }]
       @nav_items <<   {
           text:   "Comments",
