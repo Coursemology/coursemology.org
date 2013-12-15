@@ -2,7 +2,7 @@ class ComicsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :comic, through: :course, except: [:index]
 
-  before_filter :load_general_course_data, only: [:index, :new, :edit]
+  before_filter :load_general_course_data, only: [:index, :new, :edit, :show]
 
 
   def index
@@ -18,6 +18,10 @@ class ComicsController < ApplicationController
     last_episode = Comic.where(course_id: @course).order('chapter DESC, episode DESC').first.episode
     @comic.chapter = last_chapter || 1
     @comic.episode = (last_episode || 0) + 1
+  end
+
+  def show
+    @comic_pages = ComicPage.where(comic_id: @comic.id).includes(:file).order('page')
   end
 
   def create_page

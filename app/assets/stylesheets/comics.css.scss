@@ -14,3 +14,25 @@ img.comic-preview {
 input.comic-page-number {
   width: 2em;
 }
+
+.comic-image-container {
+  display: table;
+  width: 100%;
+}
+
+.comic-image-container .image-cell {
+  display:table-cell;
+  vertical-align: middle;
+}
+
+i.comic-nav {
+  font-size: 30px;
+  margin: 0 auto;
+
+}
+
+img.current-image {
+  height: 600px;
+  width: auto;
+  margin: 0 auto;
+}

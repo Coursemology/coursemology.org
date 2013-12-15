@@ -1,0 +1,10 @@
+<%- model_class = Comic -%>
+<div class="page-header current-episode-title">
+  <h1><%=t '.title', :default => comic_link_text(@comic) %></h1>
+</div>
+
+<div class="comic-image-container">
+  <i class="icon-chevron-left comic-nav image-cell" id="prev_btn"></i>
+  <img src="<%= @comic_pages.first.file.file.url%>" class="current-image image-cell" />
+  <i class="icon-chevron-right comic-nav image-cell" id="next_btn"></i>
+</div>
