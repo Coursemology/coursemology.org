@@ -24,6 +24,25 @@ class ComicsController < ApplicationController
     @comic_pages = ComicPage.where(comic_id: @comic.id).includes(:file).order('page')
   end
 
+  def info
+    if @comic.can_view?(curr_user_course)
+      result = {}
+      result[:current] = @comic
+      result[:pages] = []
+      @comic.comic_pages.includes(:file).order('page').each do |page|
+        result[:pages] << {url: page.file.file.url,
+                           page: page.page,
+                           tbc: page.is_tbc}
+      end
+      result[:next] = @comic.next_episode(curr_user_course)
+      result[:prev] = @comic.prev_episode(curr_user_course)
+      render json: result
+    else
+      redirect_to course_comics_url
+    end
+
+  end
+
   def create_page
     notice = nil
     if params[:type] == "files" && params[:files] then

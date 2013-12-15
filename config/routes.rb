@@ -206,8 +206,8 @@ JfdiAcademy::Application.routes.draw do
     resources :comics do
       member do
         post "create", to: "comics#create_page"
+        get "info" => 'comics#info', as: :info
       end
-
       resources :comic_pages
     end
 

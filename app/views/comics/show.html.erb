@@ -1,10 +1,47 @@
 <%- model_class = Comic -%>
-<div class="page-header current-episode-title">
-  <h1><%=t '.title', :default => comic_link_text(@comic) %></h1>
+<div class="page-header">
+  <h1 id='current-episode-title'><%=t '.title', :default => comic_link_text(@comic) %></h1>
 </div>
 
-<div class="comic-image-container">
-  <i class="icon-chevron-left comic-nav image-cell" id="prev_btn"></i>
-  <img src="<%= @comic_pages.first.file.file.url%>" class="current-image image-cell" />
-  <i class="icon-chevron-right comic-nav image-cell" id="next_btn"></i>
+<div id='loading-indicator'>
+  <p>
+    <i class="icon-spinner icon-spin"></i>
+    Loading...
+  </p>
 </div>
+<div class="comic-image-container">
+  <a id="prev_btn" class="comic-nav image-cell" href='#'><i class="icon-chevron-left"></i></a>
+  <img src="<%= @comic_pages.first.file.file.url%>" class="current-image image-cell" id="current-image" />
+  <a id="next_btn" class="comic-nav image-cell" href='#'><i class="icon-chevron-right"></i></a>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  load_episode_info(<%= @comic.id %>, true);
+
+  $('#next_btn').click(function(e) {
+    next_page();
+    e.preventDefault();
+  });
+
+  $('#prev_btn').click(function(e) {
+    prev_page();
+    e.preventDefault();
+  });
+
+  $(document).keydown(function(e) {
+    switch (e.which) {
+      case 39:
+        next_page();
+        e.preventDefault();
+        break;
+      case 37:
+        prev_page();
+        e.preventDefault();
+        break;
+    };
+   }
+  );
+});
+
+</script>

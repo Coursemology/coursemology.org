@@ -25,14 +25,22 @@ input.comic-page-number {
   vertical-align: middle;
 }
 
-i.comic-nav {
+.comic-image-container .comic-nav {
   font-size: 30px;
   margin: 0 auto;
 
 }
 
-img.current-image {
-  height: 600px;
+img#current-image {
+  max-height: 600px;
   width: auto;
   margin: 0 auto;
+}
+
+#loading-indicator {
+  text-align: center;
+}
+
+.disabled-navigator {
+  opacity: 0;
 }
