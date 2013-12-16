@@ -44,6 +44,10 @@ class ComicsController < ApplicationController
                            page: page.page,
                            tbc: page.is_tbc}
       end
+      if @comic.next_mission && @comic.next_mission.can_start?(curr_user_course)
+        result[:next_mission] = {title: @comic.next_mission.title,
+                                 url: course_mission_url(@course, @comic.next_mission)}
+      end
       result[:next] = @comic.next_episode(curr_user_course)
       result[:prev] = @comic.prev_episode(curr_user_course)
       curr_user_course.mark_as_seen(@comic)

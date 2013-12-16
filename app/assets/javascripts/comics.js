@@ -9,6 +9,7 @@ var is_prev_navigatable = false;
 var is_next_navigatable = true;
 var first_non_tbc;
 var last_non_tbc;
+var next_mission;
 
 // load a specific episode,
 function load_episode_info(id, load_first_page) {
@@ -34,6 +35,7 @@ function load_episode_info(id, load_first_page) {
             }
             next_episode = data.next;
             prev_episode = data.prev;
+            next_mission = data.next_mission;
             load_pages(pages);
             update_view(load_first_page);
         }
@@ -149,6 +151,12 @@ function update_navigation_buttons() {
     if (!next_episode && curr_page >= last_non_tbc) {
         is_next_navigatable = false;
         $('#next_btn').addClass('disabled-navigator');
+        if (next_mission) {
+            var redirect = confirm('Do you want to start ' + next_mission.title + ' now?');
+            if (redirect) {
+                window.location.href = next_mission.url;
+            }
+        }
     } else {
         is_next_navigatable = true;
         $('#next_btn').removeClass('disabled-navigator');
