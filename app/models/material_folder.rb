@@ -131,4 +131,22 @@ class MaterialFolder < ActiveRecord::Base
   def is_virtual?
     false
   end
+
+  def dup_course(to_course, dic)
+    clone = dup
+    clone.course = to_course
+    subfolders.each do |folder|
+      clone_folder = folder.dup_course(to_course, dic)
+      clone_folder.parent_folder = clone
+      clone_folder.save
+    end
+
+    files.each do |material|
+      clone_material = material.dup
+      clone_material.folder = clone
+      clone_material.save
+      dic[material] = clone_material
+    end
+    clone
+  end
 end
