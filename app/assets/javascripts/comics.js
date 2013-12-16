@@ -99,9 +99,9 @@ function load_pages(pages) {
 function update_view(load_first_page) {
     $('#current-episode-title').text(curr_episode.episode + '. ' + curr_episode.name);
     if (load_first_page) {
-        curr_page = 0;
+        curr_page = first_non_tbc;
     } else {
-        curr_page = pages.length - 1;
+        curr_page = last_non_tbc;
     }
     $('#current-image').attr('src', pages[curr_page].url);
     update_navigation_buttons();
