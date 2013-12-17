@@ -53,7 +53,7 @@
                 <td>
                   <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
                   <% if option.file %>
-                      <img src="<%= option.file.file.url %>" style="width: 300px">
+                      <img src="<%= option.file.file_url %>" style="width: 300px">
                   <% end %>
                   <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/><%= option.description %></textarea>
                 </td>

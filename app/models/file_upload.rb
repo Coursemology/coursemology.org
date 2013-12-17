@@ -1,5 +1,5 @@
 class FileUpload < ActiveRecord::Base
-  attr_accessible :owner_id, :owner_type, :creator_id, :owner, :file, :creator, :original_name
+  attr_accessible :owner_id, :owner_type, :creator_id, :owner, :file, :creator, :original_name, :copy_url
 
   belongs_to :owner, :polymorphic => true
   belongs_to :creator, class_name: "User"
@@ -17,7 +17,7 @@ class FileUpload < ActiveRecord::Base
         "id"    =>  read_attribute(:id),
         "name"  => read_attribute(:file_file_name),
         "size"  => read_attribute(:file_file_size),
-        "url"   => file.url(:original),
+        "url"   => file_url,
         "original" => read_attribute(:original_name),
         "timestamp" => created_at.strftime("%d-%m-%Y %H:%M:%S"),
         "delete_url"  => file_upload_path(self),
@@ -61,13 +61,25 @@ class FileUpload < ActiveRecord::Base
   end
 
   def dup_owner(new_owner)
-    #FileUpload.skip_callback(:save, :after, :sync_filename)
-    clone_file = dup
-    clone_file.file = file
+    FileUpload.skip_callback(:save, :after, :sync_filename)
+    clone_file = FileUpload.new
+    clone_file.copy_url = file.url
     clone_file.original_name = original_name
     clone_file.owner = new_owner
+    clone_file.file_file_name = file_file_name
+    clone_file.file_file_size = file_file_size
+    clone_file.file_content_type = file_content_type
+    clone_file.creator = creator
     clone_file.save
-    #FileUpload.set_callback(:save, :after, :sync_filename)
+    FileUpload.set_callback(:save, :after, :sync_filename)
+  end
+
+  def file_url
+    if copy_url
+      copy_url
+    else
+      file.url
+    end
   end
 
 private
@@ -76,6 +88,7 @@ private
   def hash_filename
     self.original_name = self.file_file_name.to_s
     self.file.instance_write(:file_name, "#{Digest::MD5.hexdigest(self.file_file_name)}#{File.extname(self.file_file_name)}")
+    false
   end
 
   # Callback after saving the record to sync the filename with AWS

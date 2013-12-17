@@ -50,6 +50,7 @@ JfdiAcademy::Application.configure do
   }
 
   config.paperclip_defaults = {
+      preserve_files: true,
       :storage => :s3,
       :s3_credentials => {
           :bucket => ENV['AWS_BUCKET'],

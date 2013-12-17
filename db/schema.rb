@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131210162710) do
+ActiveRecord::Schema.define(:version => 20131217160844) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -316,6 +316,7 @@ ActiveRecord::Schema.define(:version => 20131210162710) do
     t.datetime "file_updated_at"
     t.string   "owner_type"
     t.string   "original_name"
+    t.string   "copy_url"
   end
 
   create_table "forem_categories", :force => true do |t|
