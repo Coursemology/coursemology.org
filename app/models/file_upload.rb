@@ -61,11 +61,11 @@ class FileUpload < ActiveRecord::Base
   end
 
   def dup_owner(new_owner)
-    FileUpload.skip_callback(:save, :after, :sync_filename)
+    #FileUpload.skip_callback(:save, :after, :sync_filename)
     clone_file = dup
     clone_file.owner = new_owner
     clone_file.save
-    FileUpload.set_callback(:save, :after, :sync_filename)
+    #FileUpload.set_callback(:save, :after, :sync_filename)
   end
 
 private
