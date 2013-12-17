@@ -3,7 +3,7 @@
   <h1><%= link_to 'Comics', course_comics_path(@course) %></h1>
 </div>
 
-<div class='comic'>
+<div class='comic comic-view-container'>
   <h2 id='current-episode-title'><%= comic_link_text(@comic) %></h2>
   <div id='loading-indicator'>
     <p>
@@ -16,36 +16,5 @@
     <img src="<%= @comic_pages.first.file.file.url if @comic_pages.first %>" class="current-image image-cell" id="current-image" />
     <a id="next_btn" class="comic-nav image-cell" href='#'><i class="icon-chevron-right"></i></a>
   </div>
+  <input type="hidden" id="episode_id" value="<%= @comic.id %>" />
 </div>
-
-
-<script type="text/javascript">
-$(function() {
-  load_episode_info(<%= @comic.id %>, true);
-
-  $('#next_btn').click(function(e) {
-    next_page();
-    e.preventDefault();
-  });
-
-  $('#prev_btn').click(function(e) {
-    prev_page();
-    e.preventDefault();
-  });
-
-  $(document).keydown(function(e) {
-    switch (e.which) {
-      case 39:
-        next_page();
-        e.preventDefault();
-        break;
-      case 37:
-        prev_page();
-        e.preventDefault();
-        break;
-    };
-   }
-  );
-});
-
-</script>
