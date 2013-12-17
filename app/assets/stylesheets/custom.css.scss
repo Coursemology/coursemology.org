@@ -14,7 +14,7 @@ label {
   margin-left: 5px;
 }
 
-@import "bootstrap-responsive";
+//@import "bootstrap-responsive";
 
 /* universal */
 html {
@@ -1040,4 +1040,8 @@ a:hover, .leaderboard-achivement {
 .pagination-large ul > li > span {
   padding: 11px 19px;
   font-size: 17.5px;
+}
+
+.affix {
+  position: fixed;
 }

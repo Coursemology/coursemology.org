@@ -16,17 +16,12 @@
 //= require jquery-fileupload
 //= require tree.jquery
 //
-//= require bootstrap-dropdown
-//= require bootstrap-transition
-//= require bootstrap-collapse
-//= require bootstrap-button
-//= require bootstrap-tooltip
+//= require bootstrap
 //
 //= require bootstrap-colorpicker
 //= require bootstrap-datetimepicker
 //= require bootstrap-select
 //
-//= require bootstrap-modal
 //= require bootstrap-wysihtml5
 //= require scrolltofixed
 //

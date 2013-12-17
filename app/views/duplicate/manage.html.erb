@@ -31,25 +31,51 @@ Assignments will not be tagged, etc.</p>
 
   <h3>Duplicate following data:</h3>
   <br/>
-  <h3>Mission:</h3>
-  <ul>
-    <% @missions.each_with_index do |asm, i| %>
+  <div class="duplicate">
+    <div class="span2">
+      <ul class="nav nav-list duplicate_sidenav" data-spy="affix">
+      <% @duplicable_items.each_pair do |model, v| %>
       <li>
-        <input type="checkbox" name="missions[]" value="<%= asm.id %>" />
-        <span><%= asm.title %></span>
+        <a href="#<%= model.model_name %>">
+          <i class="icon-chevron-right"></i>
+        <%= model.model_name.human.pluralize %>
+        </a>
       </li>
-    <% end %>
-  </ul>
+      <% end %>
+      </ul>
+    </div>
+    <div class="span7">
+      <% @duplicable_items.each_pair do |model, v| %>
+      <section id="<%= model.model_name %>">
+        <div class="page-header">
+          <h2><%= model.model_name.human.pluralize %></h2>
+        </div>
 
-  <h3>Training:</h3>
-  <ul>
-    <% @trainings.each_with_index do |asm, i| %>
-      <li>
-        <input type="checkbox" name="trainings[]" value="<%= asm.id %>" />
-        <span><%= asm.title %></span>
-      </li>
-    <% end %>
-  </ul>
+      </section>
+
+      <% end %>
+
+    </div>
+  </div>
+  <!--<h3>Missions:</h3>-->
+  <!--<ul>-->
+    <!--<% @missions.each_with_index do |asm, i| %>-->
+      <!--<li>-->
+        <!--<input type="checkbox" name="missions[]" value="<%= asm.id %>" />-->
+        <!--<span><%= asm.title %></span>-->
+      <!--</li>-->
+    <!--<% end %>-->
+  <!--</ul>-->
+
+  <!--<h3>Trainings:</h3>-->
+  <!--<ul>-->
+    <!--<% @trainings.each_with_index do |asm, i| %>-->
+      <!--<li>-->
+        <!--<input type="checkbox" name="trainings[]" value="<%= asm.id %>" />-->
+        <!--<span><%= asm.title %></span>-->
+      <!--</li>-->
+    <!--<% end %>-->
+  <!--</ul>-->
   <div class="center">
     <button class="btn btn-large btn-primary">Duplicate selected</button>
   </div>

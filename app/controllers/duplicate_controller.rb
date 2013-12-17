@@ -8,6 +8,17 @@ class DuplicateController < ApplicationController
     @trainings = @course.trainings
     lecturer_courses = current_user.user_courses.lecturer
     @my_courses = lecturer_courses.map { |uc| uc.course }
+    @duplicable_items = {
+        Mission     => @course.missions,
+        Training    => @course.trainings,
+        Achievement => @course.achievements,
+        Level       => @course.levels,
+        TagGroup    => @course.tag_groups,
+        MaterialFolder  => @course.material_folder,
+        LessonPlanMilestone => @course.lesson_plan_milestones,
+        ForumForum          => @course.forums,
+        Survey              => @course.surveys
+    }
   end
 
   def duplicate_assignments
