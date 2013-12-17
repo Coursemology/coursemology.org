@@ -31,9 +31,9 @@ Assignments will not be tagged, etc.</p>
 
   <h3>Duplicate following data:</h3>
   <br/>
-  <div class="duplicate">
-    <div class="span2">
-      <ul class="nav nav-list duplicate_sidenav" data-spy="affix">
+  <div class="duplicate row">
+    <div class="span2" id="duplicate_nav">
+      <ul class="nav nav-list duplicate_sidenav" data-spy="affix" data-offset-top="200">
       <% @duplicable_items.each_pair do |model, v| %>
       <li>
         <a href="#<%= model.model_name %>">
@@ -50,6 +50,24 @@ Assignments will not be tagged, etc.</p>
         <div class="page-header">
           <h2><%= model.model_name.human.pluralize %></h2>
         </div>
+        <% if model == Level %>
+            <% next %>
+        <% end %>
+        <% if model == MaterialFolder %>
+            <% next %>
+        <% end %>
+        <ul>
+          <li class="checkbox-text">
+            <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+            <span style="font-weight: bold; font-size: 15px">Select All</span>
+          </li>
+          <% v.each_with_index do |item, i| %>
+              <li class="checkbox-text">
+                <input type="checkbox" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                <span><%= item.title %></span>
+              </li>
+          <% end %>
+        </ul>
 
       </section>
 
@@ -80,3 +98,30 @@ Assignments will not be tagged, etc.</p>
     <button class="btn btn-large btn-primary">Duplicate selected</button>
   </div>
 </form>
+
+
+<script>
+    var offset = 40;
+
+    $(document).ready(function(){
+        $("body").scrollspy({target: "#duplicate_nav", offset:offset});
+    });
+
+
+    $('.duplicate_sidenav li a').click(function(event) {
+        event.preventDefault();
+        $($(this).attr('href'))[0].scrollIntoView();
+        scrollBy(0, -offset);
+    });
+
+    $("input[name*='select-all']").change(function(e){
+        var model = $(this).attr("class");
+        var checkboxes = $("input[name='"+model+"[]']");
+        if($(this).is(':checked')) {
+            checkboxes.attr('checked', 'checked');
+        } else {
+            checkboxes.removeAttr('checked');
+        }
+    });
+
+</script>
