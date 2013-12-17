@@ -160,6 +160,13 @@ module Duplication
         clone_survey.save
       end
 
+      #clone forum
+      course.forums.each do |forum|
+        clone_forum = forum.dup
+        clone_forum.course = clone
+        clone_forum.save
+      end
+
       clone
     end
   end

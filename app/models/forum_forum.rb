@@ -27,4 +27,5 @@ class ForumForum < ActiveRecord::Base
   def subscribed?(user_course)
     not subscriptions.where(user_id: user_course).empty?
   end
+
 end
