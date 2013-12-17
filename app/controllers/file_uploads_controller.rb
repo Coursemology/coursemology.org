@@ -54,7 +54,7 @@ class FileUploadsController < ApplicationController
         }
       else
         resp = {
-            url: file_upload.file.url,
+            url: file_upload.file_url,
             id: file_upload.id
         }
       end

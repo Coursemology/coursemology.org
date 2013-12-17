@@ -140,7 +140,7 @@ class MaterialsController < ApplicationController
       curr_user_course.mark_as_seen(material)
     end
 
-    redirect_to material.file.file.url
+    redirect_to material.file.file_url
   end
 
   def show_by_name

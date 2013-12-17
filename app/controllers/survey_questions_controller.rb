@@ -87,7 +87,7 @@ class SurveyQuestionsController < ApplicationController
   end
 
   def extract_options(archive, question)
-    Zip::ZipFile.open(archive.file.url(:original)) do |zip_file|
+    Zip::ZipFile.open(archive.file_url) do |zip_file|
       zip_file.each do |f|
         if f.name.start_with?('images')
              create_option(f, question)

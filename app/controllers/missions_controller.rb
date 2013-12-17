@@ -265,7 +265,7 @@ class MissionsController < ApplicationController
     t.close
     if file_upload.save
       respond_to do |format|
-        format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file.url} }
+        format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file_url} }
       end
     end
   end

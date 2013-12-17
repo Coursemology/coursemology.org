@@ -34,7 +34,7 @@
       <ul>
         <% question.options.each do |option| %>
             <li class="<%= 'rune-voted' if  answers.include? option.id %>">
-              <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
+              <a href="<%= option.file.file_url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file_url %>" /></a>
             </li>
         <% end %>
       </ul>

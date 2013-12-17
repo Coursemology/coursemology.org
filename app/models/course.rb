@@ -310,7 +310,7 @@ class Course < ActiveRecord::Base
           material.filename = m.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
-          material.url = f.file.url
+          material.url = f.file_url
 
           material
         }
@@ -336,7 +336,7 @@ class Course < ActiveRecord::Base
           material.filename = t.title + ": " + f.display_filename
           material.filesize = f.file_file_size
           material.updated_at = f.file_updated_at
-          material.url = f.file.url
+          material.url = f.file_url
 
           material
         }

@@ -48,7 +48,7 @@
                     <% if option.file %>
                         <li class="<%= 'rune-voted' if  answers.include? option.id %>">
 
-                          <a href="<%= option.file.file.url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file.url %>" /></a>
+                          <a href="<%= option.file.file_url %>" data-lightbox="roadtrip"><img class="rune-entry" src="<%= option.file.file_url %>" /></a>
                           <div class="checkbox-container">
                             <input type="checkbox" name="option[<%= option.id %>]" class="checked" <%= 'checked' if  answers.include? option.id %>/>
                           </div>
