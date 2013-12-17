@@ -15,6 +15,8 @@ class Course < ActiveRecord::Base
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
+  has_many :comics,            dependent: :destroy
+
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
 
@@ -354,5 +356,9 @@ class Course < ActiveRecord::Base
     trainings.files = training_files
 
     [missions, trainings]
+  end
+
+  def accessible_comics(user_course)
+     comics.select {|comic| comic.can_view?(user_course)}
   end
 end

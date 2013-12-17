@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131210162710) do
+ActiveRecord::Schema.define(:version => 20131214231300) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -155,6 +155,26 @@ ActiveRecord::Schema.define(:version => 20131210162710) do
     t.string   "staff_comments"
     t.datetime "last_commented_at"
     t.integer  "include_sol_qn_id"
+  end
+
+  create_table "comic_pages", :force => true do |t|
+    t.integer  "comic_id"
+    t.integer  "page"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "is_tbc",     :default => false
+  end
+
+  create_table "comics", :force => true do |t|
+    t.string   "name"
+    t.integer  "chapter"
+    t.integer  "episode"
+    t.boolean  "visible"
+    t.integer  "course_id"
+    t.integer  "dependent_mission_id"
+    t.integer  "next_mission_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "comment_subscriptions", :force => true do |t|

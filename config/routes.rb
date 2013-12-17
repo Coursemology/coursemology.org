@@ -203,6 +203,15 @@ JfdiAcademy::Application.routes.draw do
 
     get "staff_monitoring" => "staff_leaderboard#monitoring", as: :staff_monitoring
 
+    resources :comics do
+      member do
+        post "create", to: "comics#create_page"
+        get "info" => 'comics#info', as: :info
+      end
+      resources :comic_pages
+    end
+
+
     resources :forums, module: :forums do
       resources :topics, except: [:index] do
         resources :posts, only: [:create, :edit, :update, :destroy] do
