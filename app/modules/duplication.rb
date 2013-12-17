@@ -10,7 +10,7 @@ module Duplication
           clone_qn.mcq_answers << clone_ma
         end
       end
-      return clone_qn
+      clone_qn
     end
 
     def duplicate_asm_no_log(asm)
@@ -22,7 +22,7 @@ module Duplication
         new_link.qn = clone_qn
         clone.asm_qns << new_link
       end
-      return clone
+      clone
     end
 
     # duplicate an assignment and its question
@@ -40,11 +40,13 @@ module Duplication
       dl.dest_obj = clone
       dl.save
 
-      return clone
+      clone
     end
 
     # deep duplicate a course, return the cloned course
     def duplicate_course(user, course)
+      Course.skip_callback(:create, :before, :populate_preference)
+      Course.skip_callback(:create, :after, :create_materials_root)
       clone = course.dup
       clone.title += ' (clone)'
       clone.creator = user
@@ -52,6 +54,8 @@ module Duplication
       user_course.user = user
       user_course.role = Role.find_by_name(:lecturer)
       clone.save
+      Course.set_callback(:create, :before, :populate_preference)
+      Course.set_callback(:create, :after, :create_materials_root)
 
       clone_map = {}
 
@@ -78,6 +82,12 @@ module Duplication
           clone_obj.save
           clone_map[tag] = clone_obj
         end
+      end
+
+      course.course_preferences.each do |pref|
+        clone_pref = pref.dup
+        clone_pref.course = clone
+        clone_pref.save
       end
 
       # log the duplication
@@ -117,7 +127,40 @@ module Duplication
         end
       end
 
-      return clone
+      #clone materials
+      course.material_folder.dup_course(clone, clone_map)
+
+      #clone lesson plan milestone
+      course.lesson_plan_milestones.each do |milestone|
+        clone_milestone = milestone.dup
+        clone_milestone.course = clone
+        clone_milestone.save
+      end
+
+      #clone lesson plan entries
+      course.lesson_plan_entries.each do |entry|
+        clone_entry = entry.dup
+        clone_entry.course = clone
+        clone_entry.save
+
+        entry.resources.each do |entry_resource|
+          clone_er = entry_resource.dup
+          clone_er.lesson_plan_entry = clone_entry
+          if clone_map.has_key? entry_resource.obj
+            clone_er.obj = clone_map[entry_resource.obj]
+          end
+          clone_er.save
+        end
+      end
+
+      #clone survey
+      course.surveys.each do |survey|
+        clone_survey = survey.dup
+        clone_survey.course = clone
+        clone_survey.save
+      end
+
+      clone
     end
   end
 

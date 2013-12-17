@@ -72,5 +72,13 @@ class Training < ActiveRecord::Base
     publish?
   end
 
+  def dup
+    clone = super
+    files.each do |file|
+      file.dup_owner(clone)
+    end
+    clone
+  end
+
   alias_method :sbms, :training_submissions
 end

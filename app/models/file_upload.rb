@@ -60,6 +60,14 @@ class FileUpload < ActiveRecord::Base
     nil
   end
 
+  def dup_owner(new_owner)
+    FileUpload.skip_callback(:save, :after, :sync_filename)
+    clone_file = dup
+    clone_file.owner = new_owner
+    clone_file.save
+    FileUpload.set_callback(:save, :after, :sync_filename)
+  end
+
 private
   # Stores on disk the hash of the file, for uniqueness as well as to obfuscate the file name, where necessary
   # for example, in surveys.
@@ -96,4 +104,5 @@ private
     # Restore ACL since copy_to does not preserve it
     new_obj.acl = acl
   end
+
 end

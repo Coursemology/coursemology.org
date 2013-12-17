@@ -125,6 +125,12 @@ class Material < ActiveRecord::Base
     false
   end
 
+  def dup
+    clone = super
+    file.dup_owner(clone)
+    clone
+  end
+
 private
   def material_filename_unique
     if filename && filename.length == 0 then
