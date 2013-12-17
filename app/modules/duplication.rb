@@ -10,7 +10,7 @@ module Duplication
           clone_qn.mcq_answers << clone_ma
         end
       end
-      return clone_qn
+      clone_qn
     end
 
     def duplicate_asm_no_log(asm)
@@ -22,7 +22,7 @@ module Duplication
         new_link.qn = clone_qn
         clone.asm_qns << new_link
       end
-      return clone
+      clone
     end
 
     # duplicate an assignment and its question
@@ -40,7 +40,7 @@ module Duplication
       dl.dest_obj = clone
       dl.save
 
-      return clone
+      clone
     end
 
     # deep duplicate a course, return the cloned course
@@ -151,7 +151,14 @@ module Duplication
           end
           clone_er.save
         end
-        end
+      end
+
+      #clone survey
+      course.surveys.each do |survey|
+        clone_survey = survey.dup
+        clone_survey.course = clone
+        clone_survey.save
+      end
 
       clone
     end
