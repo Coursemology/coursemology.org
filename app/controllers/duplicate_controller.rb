@@ -83,7 +83,7 @@ class DuplicateController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to course_path(dest_course),
-                    notice: "The specified assignments have been duplicated." }
+                    notice: "The specified items have been duplicated." }
     end
   end
 
