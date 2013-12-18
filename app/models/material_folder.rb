@@ -149,6 +149,7 @@ class MaterialFolder < ActiveRecord::Base
         dic[material] = clone_material
       end
     end
+    clone.save
     clone
   end
 
