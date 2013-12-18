@@ -94,8 +94,10 @@ class DuplicateController < ApplicationController
     require 'duplication'
     clone = Duplication.duplicate_course(current_user, @course)
     respond_to do |format|
-      format.html { redirect_to edit_course_path(clone),
-                    notice: "The course '#{@course.title}' has been duplicated." }
+      flash[:notice] = "The course '#{@course.title}' has been duplicated."
+      format.html { redirect_to edit_course_path(clone) }
+
+      format.json {render json: {url: edit_course_path(clone)} }
     end
   end
 end

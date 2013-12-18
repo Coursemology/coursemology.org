@@ -9,8 +9,8 @@ achievements, and tags. The requirement of achievements, or the tags of the assi
 </p>
 
 <div class="center">
-  <%= link_to "Duplicate Course", course_duplicate_course_path(@course),
-    class: "btn btn-large btn-primary center", "data-disable-with"=>"Processing...", "id"=>"dup_link" %>
+  <input type="submit" class="btn btn-large btn-primary center" value="Duplicate Course" id="dup_course_btn">
+  <input type="hidden" id="dup_link" value="<%= course_duplicate_course_path(@course) %>">
 </div>
 
 <hr/>
@@ -195,10 +195,15 @@ Assignments will not be tagged, etc.</p>
             }
         });
 
-        $("#dup_link").click(function(e){
-           $("body").addClass("loading");
-        });
+        $("#dup_course_btn").click(function(e){
+            $("body").addClass("loading");
+            var url = $("#dup_link").val();
 
+            $.getJSON( url, function( data ) {
+                console.log(data);
+                window.location.href = data.url;
+            })
+        });
     });
 
 </script>
