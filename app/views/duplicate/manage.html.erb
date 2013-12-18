@@ -20,7 +20,7 @@ achievements, and tags. The requirement of achievements, or the tags of the assi
 <p class="well">Duplicating the data, the links are not preserved. For example: achievements will not have requirement.
 Assignments will not be tagged, etc.</p>
 
-<form action="<%= course_duplicate_assignments_path(@course) %>" action="POST">
+<form action="<%= course_duplicate_assignments_path(@course) %>" method="POST">
   <h3>Select target course:</h3><span>Data will be copied to the course: </span>
   <select name="dest_course">
     <% @my_courses.each do |c| %>
@@ -31,26 +31,170 @@ Assignments will not be tagged, etc.</p>
 
   <h3>Duplicate following data:</h3>
   <br/>
-  <h3>Mission:</h3>
-  <ul>
-    <% @missions.each_with_index do |asm, i| %>
+  <div class="duplicate row">
+    <div class="span2" id="duplicate_nav">
+      <ul class="nav nav-list duplicate_sidenav" data-spy="affix" data-offset-top="200">
+      <% @duplicable_items.each_pair do |model, v| %>
       <li>
-        <input type="checkbox" name="missions[]" value="<%= asm.id %>" />
-        <span><%= asm.title %></span>
+        <a href="#<%= model.model_name %>">
+          <i class="icon-chevron-right"></i>
+        <%= model.model_name.human.pluralize %>
+        </a>
       </li>
-    <% end %>
-  </ul>
+      <% end %>
+      </ul>
+    </div>
+    <div class="span7">
+      <% @duplicable_items.each_pair do |model, v| %>
+      <section id="<%= model.model_name %>">
+        <div class="page-header">
+          <h2><%= model.model_name.human.pluralize %></h2>
+        </div>
 
-  <h3>Training:</h3>
-  <ul>
-    <% @trainings.each_with_index do |asm, i| %>
-      <li>
-        <input type="checkbox" name="trainings[]" value="<%= asm.id %>" />
-        <span><%= asm.title %></span>
-      </li>
-    <% end %>
-  </ul>
-  <div class="center">
-    <button class="btn btn-large btn-primary">Duplicate selected</button>
+        <% if model == Level %>
+            <p class="well">Note: if target course already configued levels, levels won't be copied over.</p>
+            <% v = v[1..-1] %>
+        <% end %>
+        <% if model == TagGroup or model == LessonPlanMilestone %>
+            <div class="checkbox-text" style="margin-bottom: 10px">
+              <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+              <span style="font-weight: bold; font-size: 15px">Select All</span>
+            </div>
+            <ul>
+              <% v.each_with_index do |item, i| %>
+                  <li>
+                    <div  class="checkbox-text">
+                      <input type="checkbox" class="<%= model.model_name %> with-sub-items" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                      <span><%= item.title %></span>
+                    </div>
+                  </li>
+                  <!--<div class="duplicate_mul_entry">-->
+                  <% if model == TagGroup  %>
+                    <% sub_items = item.tags  %>
+                  <% else %>
+                    <% sub_items = item.entries(false) %>
+                  <% end %>
+
+                    <ul>
+                      <% sub_items.each_with_index do |tag, i| %>
+                          <li class="checkbox-text">
+                            <input type="checkbox" class="<%= model.model_name %><%= item.id %>" name="<%= tag.class.model_name %>[]" value="<%= tag.id %>" />
+                            <span><%= tag.title %></span>
+                          </li>
+                      <% end %>
+                    </ul>
+                  <!--</div>-->
+              <% end %>
+            </ul>
+            </section>
+            <% next %>
+        <% end %>
+        <% if model == MaterialFolder %>
+            <% v = v.subfolders %>
+
+        <% end %>
+        <div class="duplicate_mul_entry">
+          <div class="checkbox-text" style="margin-bottom: 10px">
+            <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+            <span style="font-weight: bold; font-size: 15px">Select All</span>
+          </div>
+        <ul>
+          <% v.each_with_index do |item, i| %>
+              <li class="checkbox-text">
+                <input type="checkbox" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                <span><%= item.title %></span>
+              </li>
+          <% end %>
+        </ul>
+        </div>
+
+      </section>
+
+      <% end %>
+      <div data-spy="affix" class="float-submit">
+        <button class="btn btn-large btn-circle" data-disable-with="Processing...">Duplicate selected</button>
+      </div>
+    </div>
+
   </div>
+  <div class="center">
+    <button class="btn btn-large btn-primary" data-disable-with="Processing...">Duplicate selected</button>
+  </div>
+
 </form>
+
+
+<script>
+    var offset = 40;
+
+    $(document).ready(function(){
+        var $window = $(window)
+
+        $("body").scrollspy({target: "#duplicate_nav", offset:offset});
+
+        setTimeout(function () {
+            $('.duplicate_sidenav').affix({
+                offset: {
+                    top: function () { return $window.width() <= 980 ? 700 : 700 }
+                    , bottom: 270
+                }
+            })
+        }, 100)
+
+        setTimeout(function () {
+            $('.float-submit').affix({
+                offset: {
+                    top: function () { return $window.width() <= 980 ? 700 : 700 }
+                    , bottom: 270
+                }
+            })
+        }, 100);
+
+        $('.duplicate_sidenav li a').click(function(event) {
+            event.preventDefault();
+            $($(this).attr('href'))[0].scrollIntoView();
+            scrollBy(0, -offset + 20);
+        });
+
+        $("input[name*='select-all']").change(function(e){
+            var model = $(this).attr("class");
+            var checkboxes = $("input[name='"+model+"[]']");
+            checkboxes.trigger('click');
+            if($(this).is(':checked')) {
+                checkboxes.attr('checked', 'checked');
+            } else {
+                checkboxes.removeAttr('checked');
+            }
+        });
+
+        $("input[name*='Level[]']").change(function(e){
+            var value = $(this).val() - 0;
+            var checked = $(this).is(':checked');
+            $("input[name*='Level[]']").each(function(i){
+               var lv = $(this).val() - 0;
+                if(checked) {
+                    if(lv < value) {
+                        $(this).attr('checked', 'checked');
+                    }
+                }
+                if (lv > value) {
+                    $(this).removeAttr('checked');
+                }
+            });
+        });
+
+        $(".with-sub-items").change(function(e){
+            var model = $(this).attr("class").split(" ")[0];
+            console.log(model);
+            var id = $(this).val();
+            var tags = $("."+model+id);
+            if($(this).is(':checked')) {
+                tags.attr('checked', 'checked');
+            } else {
+                tags.removeAttr('checked');
+            }
+        });
+
+    });
+
+</script>

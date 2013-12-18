@@ -1,3 +1,6 @@
+$baseFontSize:          13px !default;
+$baseLineHeight:        18px !default;
+
 @import "bootstrap";
 @import "font-awesome";
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
@@ -102,6 +105,7 @@ p {
     border: 1px solid #ccc;
   }
 }
+
 
 .nav-list > li > a, .nav-list .nav-header {
   padding: 2px 0px;
@@ -875,12 +879,18 @@ $grayMediumLight: #eaeaea;
   padding-left: 15px;
   text-indent: -15px;
 }
+
+.checkbox-text span {
+  padding-left: 7px;
+  text-indent: -15px;
+}
+
 .checkbox-text input {
   width: 13px;
   height: 13px;
   padding: 0;
   margin:0;
-  vertical-align: bottom;
+  //vertical-align: bottom;
   position: relative;
   top: -1px;
   *overflow: hidden;
@@ -1040,4 +1050,47 @@ a:hover, .leaderboard-achivement {
 .pagination-large ul > li > span {
   padding: 11px 19px;
   font-size: 17.5px;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: $baseLineHeight * 2;
+  small {
+    font-size: 18px;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: $baseLineHeight * 2;
+  small {
+    font-size: 18px;
+  }
+}
+h3 {
+  line-height: $baseLineHeight * 1.5;
+  font-size: 18px;
+  small {
+    font-size: 14px;
+  }
+}
+h4, h5, h6 {
+  line-height: $baseLineHeight;
+}
+h4 {
+  font-size: 14px;
+  small {
+    font-size: 12px;
+  }
+}
+h5 {
+  font-size: 12px;
+}
+h6 {
+  font-size: 11px;
+  color: $grayLight;
+  text-transform: uppercase;
+}
+
+.btn {
+  padding: 4px 10px;
 }

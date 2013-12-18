@@ -6,4 +6,9 @@ class TagGroup < ActiveRecord::Base
   belongs_to :course
 
   has_many :tags, dependent: :destroy
+
+
+  def title
+    name
+  end
 end

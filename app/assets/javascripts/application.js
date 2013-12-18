@@ -21,6 +21,8 @@
 //= require bootstrap-collapse
 //= require bootstrap-button
 //= require bootstrap-tooltip
+//= require bootstrap-affix
+//= require bootstrap-scrollspy
 //
 //= require bootstrap-colorpicker
 //= require bootstrap-datetimepicker

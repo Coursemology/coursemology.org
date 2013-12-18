@@ -43,6 +43,58 @@ module Duplication
       clone
     end
 
+
+    def duplicate_record(user, record, origin_course, dest_course)
+      clone = record.dup
+      if clone.respond_to?(:course)
+        clone.course = dest_course
+      end
+      clone.save
+
+      duplicate_log(user, record, clone, origin_course, dest_course)
+
+      clone
+    end
+
+    def duplicate_tag_group(user, group, tags, origin_course, dest_course)
+      clone = group.dup
+      clone.course = dest_course
+      clone.save
+
+      tags.each do |tag|
+        if tag.tag_group == group
+          tag_clone = duplicate_record(user, tag, origin_course, dest_course)
+          tag_clone.tag_group= clone
+          tag_clone.save
+        end
+      end
+
+      duplicate_log(user, group, clone, origin_course, dest_course)
+
+      clone
+    end
+
+    def duplicate_folder(user, folder, origin_course, dest_course)
+      clone = folder.dup_course(dest_course)
+      clone.parent_folder = dest_course.material_folder
+      clone.save
+
+      duplicate_log(user, folder, clone, origin_course, dest_course)
+
+      clone
+    end
+
+    def duplicate_log(user, obj, clone, origin_course, dest_course)
+      # log the duplication
+      dl = DuplicateLog.new
+      dl.user = user
+      dl.origin_course = origin_course
+      dl.origin_obj = obj
+      dl.dest_course = dest_course
+      dl.dest_obj = clone
+      dl.save
+    end
+
     # deep duplicate a course, return the cloned course
     def duplicate_course(user, course)
       Course.skip_callback(:create, :before, :populate_preference)
@@ -180,4 +232,20 @@ module Duplication
     d = Duplicator.new
     return d.duplicate_course(user, course)
   end
+
+  def Duplication.duplicate_record(user, record, origin_course, dest_course)
+    d = Duplicator.new
+    return d.duplicate_record(user, record, origin_course, dest_course)
+  end
+
+  def Duplication.duplicate_tag_group(user, group, tags, origin_course, dest_course)
+    d = Duplicator.new
+    return d.duplicate_tag_group(user, group, tags, origin_course, dest_course)
+  end
+
+  def Duplication.duplicate_folder(user, folder, origin_course, dest_course)
+    d = Duplicator.new
+    return d.duplicate_folder(user, folder, origin_course, dest_course)
+  end
+
 end

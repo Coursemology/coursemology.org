@@ -36,3 +36,7 @@ en:
       zero: "empty"
       one: "1 item"
       other: "%{count} items"
+  activerecord:
+    models:
+      forum_forum: Forum
+

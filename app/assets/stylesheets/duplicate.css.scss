@@ -1,3 +1,104 @@
 // Place all the styles related to the duplicate controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.duplicate .span2 {
+  min-height: 1px;
+}
+
+.duplicate_sidenav  .icon-chevron-right  {
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
+  opacity: .25;
+}
+
+.duplicate_sidenav {
+  font-size: 14px;
+  width: 190px;
+  margin: 30px 0 0;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+  -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+  box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.duplicate_sidenav > li > a {
+  display: block;
+  width: 190px \9;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+}
+.duplicate_sidenav > li:first-child > a {
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
+}
+.duplicate_sidenav > li:last-child > a {
+  -webkit-border-radius: 0 0 6px 6px;
+  -moz-border-radius: 0 0 6px 6px;
+  border-radius: 0 0 6px 6px;
+}
+.duplicate_sidenav > .active > a {
+  position: relative;
+  z-index: 2;
+  padding: 9px 15px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+  -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+  box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+
+.duplicate_sidenav a:hover .icon-chevron-right {
+  opacity: .5;
+}
+
+.duplicate_sidenav.affix {
+  top: 40px;
+}
+.duplicate_sidenav.affix-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 270px;
+}
+
+ .duplicate_mul_entry {
+   ul{
+     width:100%;
+   }
+   li{
+     float:left;
+     margin:0 10px 10px 0;
+     width:45%;
+   }
+   li:nth-child(even){
+     margin-right:0;
+   }
+ }
+
+ .float-submit.affix {
+   top: 50%;
+   right: 40px;
+ }
+
+//.float-submit.affix-bottom {
+//  display: none;
+//}
+
+
+.btn-circle {
+  width: 100px;
+  height: 100px;
+  //opacity: 0.5;
+  //text-align: center;
+  //padding: 6px 0;
+  //font-size: 12px;
+  //line-height: 1.42;
+  border-radius: 50px;
+}

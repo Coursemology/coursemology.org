@@ -28,4 +28,8 @@ class ForumForum < ActiveRecord::Base
     not subscriptions.where(user_id: user_course).empty?
   end
 
+  def title
+    name
+  end
+
 end

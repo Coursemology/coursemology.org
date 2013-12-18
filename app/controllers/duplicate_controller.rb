@@ -2,12 +2,24 @@ class DuplicateController < ApplicationController
   load_and_authorize_resource :course
   before_filter :load_general_course_data, only: [:manage]
 
+
   def manage
     authorize! :can, :duplicate, @course
     @missions = @course.missions
     @trainings = @course.trainings
     lecturer_courses = current_user.user_courses.lecturer
     @my_courses = lecturer_courses.map { |uc| uc.course }
+    @duplicable_items = {
+        Mission     => @course.missions,
+        Training    => @course.trainings,
+        Achievement => @course.achievements,
+        Level       => @course.levels,
+        TagGroup    => @course.tag_groups,
+        MaterialFolder  => @course.material_folder,
+        LessonPlanMilestone => @course.lesson_plan_milestones,
+        ForumForum          => @course.forums,
+        Survey              => @course.surveys
+    }
   end
 
   def duplicate_assignments
@@ -16,15 +28,15 @@ class DuplicateController < ApplicationController
     authorize! :manage, dest_course
     authorize! :duplicate, @course
 
-    training_ids = params[:trainings] || []
+    training_ids = params[Training.model_name] || []
     training_ids.each do |id|
       training = @course.trainings.find(id)
       if training
         Duplication.duplicate_asm(current_user, training, @course, dest_course)
       end
     end
-
-    mission_ids = params[:missions] || []
+    #
+    mission_ids = params[Mission.model_name] || []
     mission_ids.each do |id|
       mission = @course.missions.find(id)
       if mission
@@ -32,9 +44,46 @@ class DuplicateController < ApplicationController
       end
     end
 
+    achievement_ids   = params[Achievement.model_name] || []
+    achievements = @course.achievements.where(id:achievement_ids)
+
+    levels = []
+    if dest_course.levels.length == 1
+      level_ids         = params[Level.model_name] || []
+      levels = @course.levels.where(id: level_ids)
+    end
+
+    lesson_plan_milestone_ids = params[LessonPlanMilestone.model_name] || []
+    milestones = @course.lesson_plan_milestones.where(id: lesson_plan_milestone_ids)
+
+    lesson_plan_entry_ids     = params[LessonPlanEntry.model_name] || []
+    entries = @course.lesson_plan_entries.where(id: lesson_plan_entry_ids)
+
+    forum_ids                 = params[ForumForum.model_name] || []
+    forums = @course.forums.where(id: forum_ids)
+
+    survey_ids                = params[Survey.model_name] || []
+    surveys = @course.surveys.where(id: survey_ids)
+
+    (achievements + levels + milestones + entries +
+        forums + surveys).map {|record| Duplication.duplicate_record(current_user, record, @course, dest_course)}
+
+    tag_group_ids = params[TagGroup.model_name] || []
+    groups = @course.tag_groups.where(id: tag_group_ids)
+
+    tag_ids = params[Tag.model_name] || []
+    tags = @course.tags.where(id: tag_ids)
+
+    groups.map {|grp| Duplication.duplicate_tag_group(current_user, grp, tags, @course, dest_course)}
+
+    material_folder_ids = params[MaterialFolder.model_name] || []
+    folders = @course.material_folder.subfolders.where(id: material_folder_ids)
+    folders.map {|folder| Duplication.duplicate_folder(current_user, folder, @course, dest_course) }
+
+
     respond_to do |format|
       format.html { redirect_to course_path(dest_course),
-                    notice: "The specified assignments have been duplicated." }
+                    notice: "The specified items have been duplicated." }
     end
   end
 
