@@ -10,7 +10,7 @@ achievements, and tags. The requirement of achievements, or the tags of the assi
 
 <div class="center">
   <%= link_to "Duplicate Course", course_duplicate_course_path(@course),
-    class: "btn btn-large btn-primary center", "data-disable-with"=>"Processing..." %>
+    class: "btn btn-large btn-primary center", "data-disable-with"=>"Processing...", "id"=>"dup_link" %>
 </div>
 
 <hr/>
@@ -193,6 +193,10 @@ Assignments will not be tagged, etc.</p>
             } else {
                 tags.removeAttr('checked');
             }
+        });
+
+        $("#dup_link").click(function(e){
+           $("body").addClass("loading");
         });
 
     });
