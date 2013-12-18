@@ -67,3 +67,38 @@
   top: auto;
   bottom: 270px;
 }
+
+ .duplicate_mul_entry {
+   ul{
+     width:100%;
+   }
+   li{
+     float:left;
+     margin:0 10px 10px 0;
+     width:45%;
+   }
+   li:nth-child(even){
+     margin-right:0;
+   }
+ }
+
+ .float-submit.affix {
+   top: 50%;
+   right: 40px;
+ }
+
+//.float-submit.affix-bottom {
+//  display: none;
+//}
+
+
+.btn-circle {
+  width: 100px;
+  height: 100px;
+  //opacity: 0.5;
+  //text-align: center;
+  //padding: 6px 0;
+  //font-size: 12px;
+  //line-height: 1.42;
+  border-radius: 50px;
+}

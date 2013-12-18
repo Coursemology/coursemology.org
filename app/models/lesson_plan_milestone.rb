@@ -43,7 +43,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     self.course.lesson_plan_milestones.where("end_at < :end_at", :end_at => self.end_at).order("end_at DESC").first
   end
 
-  def entries
+  def entries(include_virtual = true)
     # Find the entries where the end time is after the last milestone, if any
     # and less than or equal to this milestone's end time.
     previous_milestone = self.previous_milestone
@@ -53,8 +53,12 @@ class LessonPlanMilestone < ActiveRecord::Base
       " AND course_id = :course_id",
       :end_at => self.end_at, :start_at => start_at, :course_id => self.course_id)
 
-    virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
-    real_entries + virtual_entries
+    if include_virtual
+      virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
+      real_entries + virtual_entries
+    else
+      real_entries
+    end
   end
 
   def is_virtual?

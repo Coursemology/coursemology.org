@@ -26,4 +26,8 @@ class Level < ActiveRecord::Base
     #user_course.level only get the Level object, same type as self object
     return user_course.level && user_course.level.level >= self.level
   end
+
+  def title
+    get_title
+  end
 end

@@ -40,6 +40,10 @@ class Tag < ActiveRecord::Base
     std_tag.save
   end
 
+  def title
+    name
+  end
+
   private
   def init
     self.max_exp ||= 0
