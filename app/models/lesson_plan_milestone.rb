@@ -1,5 +1,5 @@
 class LessonPlanMilestone < ActiveRecord::Base
-  attr_accessible :title, :description, :end_at
+  attr_accessible :title, :description, :end_at, :start_at
 
   belongs_to :course
   belongs_to :creator, class_name: "User"

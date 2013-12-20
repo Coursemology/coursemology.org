@@ -13,8 +13,8 @@ module Duplication
       clone_qn
     end
 
-    def duplicate_asm_no_log(asm)
-      clone = asm.dup
+    def duplicate_asm_no_log(asm, files=true)
+      clone = asm.dup_options(files)
       # duplicate question and create new asm_qn links
       asm.asm_qns.each do |asm_qn|
         clone_qn = duplicate_qn_no_log(asm_qn.qn)
@@ -96,7 +96,7 @@ module Duplication
     end
 
     # deep duplicate a course, return the cloned course
-    def duplicate_course(user, course)
+    def duplicate_course(user, course, options)
       Course.skip_callback(:create, :before, :populate_preference)
       Course.skip_callback(:create, :after, :create_materials_root)
       clone = course.dup
@@ -105,18 +105,40 @@ module Duplication
       user_course = clone.user_courses.build
       user_course.user = user
       user_course.role = Role.find_by_name(:lecturer)
+      clone.is_publish = false
+      clone.start_at = (clone.start_at || 0) + options[:course_diff]
+      clone.end_at = if clone.end_at then clone.end_at + options[:course_diff] else clone.end_at end
+
       clone.save
       Course.set_callback(:create, :before, :populate_preference)
       Course.set_callback(:create, :after, :create_materials_root)
 
       clone_map = {}
 
+
       # clone the entity
       (course.missions + course.trainings).each do |asm|
-        clone_asm = duplicate_asm_no_log(asm)
+        clone_asm = duplicate_asm_no_log(asm, asm.class == Mission ? options[:mission_files] : options[:training_files])
         clone_asm.course = clone
+        if asm.class == Mission
+          diff = options[:mission_diff]
+          clone_asm.close_at = clone_asm.close_at + diff
+        else
+          diff = options[:training_diff]
+          clone_asm.bonus_cutoff = if clone_asm.bonus_cutoff then clone_asm.bonus_cutoff + diff else clone_asm.bonus_cutoff end
+        end
+        clone_asm.open_at = clone_asm.open_at + diff
+
+        clone_asm.publish = false
         clone_asm.save
         clone_map[asm] = clone_asm
+      end
+
+      clone.missions.each do |asm|
+        if asm.dependent_mission
+          asm.dependent_mission = clone_map[asm.dependent_mission]
+          asm.save
+        end
       end
 
       (course.levels + course.achievements + course.tag_groups).each do |obj|
@@ -180,11 +202,12 @@ module Duplication
       end
 
       #clone materials
-      course.material_folder.dup_course(clone, clone_map)
+      course.material_folder.dup_course(clone, clone_map, options[:workbin_files])
 
       #clone lesson plan milestone
       course.lesson_plan_milestones.each do |milestone|
         clone_milestone = milestone.dup
+        clone_milestone.end_at += options[:course_diff]
         clone_milestone.course = clone
         clone_milestone.save
       end
@@ -193,6 +216,8 @@ module Duplication
       course.lesson_plan_entries.each do |entry|
         clone_entry = entry.dup
         clone_entry.course = clone
+        clone_entry.start_at += options[:course_diff]
+        clone_entry.end_at += options[:course_diff]
         clone_entry.save
 
         entry.resources.each do |entry_resource|
@@ -228,9 +253,9 @@ module Duplication
     return d.duplicate_asm(user, asm, origin_course, dest_course)
   end
 
-  def Duplication.duplicate_course(user, course)
+  def Duplication.duplicate_course(user, course, options)
     d = Duplicator.new
-    return d.duplicate_course(user, course)
+    return d.duplicate_course(user, course, options)
   end
 
   def Duplication.duplicate_record(user, record, origin_course, dest_course)

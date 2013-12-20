@@ -33,7 +33,7 @@
     </div>
 
     <div class="control-group">
-      <label>Type</label>
+      <%= f.label "Type", :class => 'control-label' %>
       <div class="controls">
         <select name="training[t_type]" class="input-medium" >
           <% AssignmentType.all.each do  |assign_type| %>
@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="control-group">
-      <label>Topic</label>
+      <%= f.label "Topic", class: 'control-label' %>
       <div class="controls">
         <%= render partial: "tags/form_checkboxes",
                    locals: { tag_groups: @course.tag_groups,

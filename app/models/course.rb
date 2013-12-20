@@ -1,7 +1,7 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
 
-  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open
+  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open, :start_at, :end_at
   before_create :populate_preference
   after_create :create_materials_root
 
