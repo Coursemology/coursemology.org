@@ -132,21 +132,23 @@ class MaterialFolder < ActiveRecord::Base
     false
   end
 
-  def dup_course(to_course, dic = nil)
+  def dup_course(to_course, dic = nil, dup_files = true)
     clone = dup
     clone.course = to_course
     subfolders.each do |folder|
-      clone_folder = folder.dup_course(to_course, dic)
+      clone_folder = folder.dup_course(to_course, dic, dup_files)
       clone_folder.parent_folder = clone
       clone_folder.save
     end
 
-    files.each do |material|
-      clone_material = material.dup
-      clone_material.folder = clone
-      clone_material.save
-      if dic
-        dic[material] = clone_material
+    if dup_files
+      files.each do |material|
+        clone_material = material.dup
+        clone_material.folder = clone
+        clone_material.save
+        if dic
+          dic[material] = clone_material
+        end
       end
     end
     clone.save

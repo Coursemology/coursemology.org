@@ -20,6 +20,14 @@ class DuplicateController < ApplicationController
         ForumForum          => @course.forums,
         Survey              => @course.surveys
     }
+    first_mission = @course.missions.first
+    first_training = @course.trainings.first
+    @dates = {
+        course: @course.start_at,
+        mission: unless first_mission then nil else first_mission.open_at end,
+        training: unless first_training then nil else first_training.open_at end
+    }
+    puts @dates
   end
 
   def duplicate_assignments
@@ -92,7 +100,34 @@ class DuplicateController < ApplicationController
     authorize! :create, Course
 
     require 'duplication'
-    clone = Duplication.duplicate_course(current_user, @course)
+    begin
+      course_diff = Time.parse(params[:course_start]) - @course.start_at
+    rescue
+      course_diff =  0
+    end
+
+    begin
+      mission_diff = Time.parse(params[:mission_start]) - @course.missions.first.open_at
+    rescue
+      mission_diff = 0
+    end
+
+    begin
+      training_diff = Time.parse(params[:training_start]) - @course.trainings.first.open_at
+    rescue
+      training_diff =  0
+    end
+
+    options = {
+        course_diff: course_diff,
+        mission_diff: mission_diff,
+        training_diff: training_diff,
+        mission_files: params[:mission_files] == "true",
+        training_files: params[:training_files] == "true",
+        workbin_files: params[:workbin_files] == "true"
+    }
+
+    clone = Duplication.duplicate_course(current_user, @course, options)
     respond_to do |format|
       flash[:notice] = "The course '#{@course.title}' has been duplicated."
       format.html { redirect_to edit_course_path(clone) }

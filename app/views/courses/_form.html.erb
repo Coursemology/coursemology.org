@@ -16,6 +16,38 @@
       </div>
     </div>
 
+    <div class="control-group">
+      <%= f.label :start_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :start_at,
+                           :value => datetime_format(@course.start_at),
+                           :class => 'input-medium',
+                           id: "start_at",
+                           required: true%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :end_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :end_at,
+                           :value => datetime_format(@course.end_at),
+                           :class => 'input-medium',
+                           id: "end_at",
+                           required: true%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+
     <% if can? :manage, :course_admin %>
         <div class="control-group">
           <%= f.label "Publish Course", :class => 'control-label' %>

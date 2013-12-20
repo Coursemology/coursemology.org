@@ -54,13 +54,13 @@
       </div>
     </div>
     <div class="control-group">
-      <label>Submission Type</label>
+      <%= f.label "Submission Type", class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :is_file_submission %> Allow File Submission
       </div>
     </div>
     <div class="control-group">
-      <label>Format</label>
+      <%= f.label "Format", class: 'control-label' %>
       <div class="controls" >
 
         <div class="checkbox-text">
@@ -77,7 +77,7 @@
         <br>
         <div id="question-types" class="collapse <%= @mission.single_question? ? 'in' : 'out'  %>">
           <div class="control-group">
-            <label>Answer Type:</label>
+            <%= f.label "Answer Type", class: 'control-label' %>
             <div class="controls">
               <% qn = @mission.get_all_questions.first  %>
               <select name="answer_type" class="input-medium" >
@@ -87,7 +87,7 @@
             </div>
           </div>
           <div class="control-group">
-            <label>Max Grade:</label>
+            <%= f.label "Max Grade", class: 'control-label' %>
             <div class="controls">
               <input type="text" class="input-medium" name="max_grade" id="mission-max-grade" value="<%= @mission.max_grade %>">
             </div>
@@ -97,7 +97,7 @@
     </div>
 
     <div class="control-group">
-      <label>Dependency</label>
+      <%= f.label "Dependency", class: 'control-label' %>
       <div class="controls">
         <select id="select-mission" name="mission[dependent_id]">
           <option >No Dependency</option>
@@ -109,7 +109,7 @@
     </div>
 
     <div class="control-group">
-      <label>Topic</label>
+      <%= f.label "Topic", class: 'control-label' %>
       <div class="controls">
         <%= render partial: "tags/form_checkboxes",
                    locals: { tag_groups: @course.tag_groups,

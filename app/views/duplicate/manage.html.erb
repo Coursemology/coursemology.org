@@ -5,26 +5,88 @@
 <h2>Duplicate this course to a new course</h2>
 <br/>
 <p class="well">This action will clone the whole course, including: missions, training, levels,
-achievements, and tags. The requirement of achievements, or the tags of the assignments are preserved as well.
+  achievements, and tags. The requirement of achievements, or the tags of the assignments are preserved as well.
 </p>
 
-<div class="center">
-  <input type="submit" class="btn btn-large btn-primary center" value="Duplicate Course" id="dup_course_btn">
-  <input type="hidden" id="dup_link" value="<%= course_duplicate_course_path(@course) %>">
-</div>
+<h3>Duplicate Options:</h3>
+<div class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label">Course Start Date</label>
+    <div class="controls">
+      <div class="datetimepicker future-only input-append date">
+        <input type="text" required="true" class="input-medium" id="course_start_date" value="<%= datetime_format(@dates[:course]) %>">
+      <span class="add-on">
+              <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+      </div>
+    </div>
+  </div>
 
+  <div class="control-group">
+    <label class="control-label">Mission Start Date</label>
+    <div class="controls">
+      <div class="datetimepicker future-only input-append date">
+
+        <input type="text" required="true" class="input-medium" id="mission_start_date" value = <%= datetime_format(@dates[:mission]) %>>
+      <span class="add-on">
+              <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Training Start Date</label>
+    <div class="controls">
+      <div class="datetimepicker future-only input-append date">
+        <input type="text" required="true" class="input-medium" id="training_start_date" value = <%= datetime_format(@dates[:training]) %>>
+      <span class="add-on">
+              <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls checkbox-text ">
+      <input checked="true" type="checkbox" id="dup_mission_file">
+      Duplicate Mission Files?
+    </div>
+  </div>
+
+  <div class="control-group">
+
+    <div class="controls checkbox-text ">
+      <input checked="true" type="checkbox" id="dup_training_file">
+      Duplicate Training Files?
+    </div>
+  </div>
+
+  <div class="control-group">
+
+    <div class="controls checkbox-text ">
+      <input checked="true" type="checkbox" id="dup_workbin_file">
+      Duplicate Workbin Files?
+    </div>
+  </div>
+
+  <div class="center">
+    <input type="submit" class="btn btn-large btn-primary center" value="Duplicate Course" id="dup_course_btn">
+    <input type="hidden" id="dup_link" value="<%= course_duplicate_course_path(@course) %>">
+  </div>
+</div>
 <hr/>
 
 <h2>Duplicate individual data</h2>
 <br/>
 <p class="well">Duplicating the data, the links are not preserved. For example: achievements will not have requirement.
-Assignments will not be tagged, etc.</p>
+  Assignments will not be tagged, etc.</p>
 
 <form action="<%= course_duplicate_assignments_path(@course) %>" method="POST">
   <h3>Select target course:</h3><span>Data will be copied to the course: </span>
   <select name="dest_course">
     <% @my_courses.each do |c| %>
-      <option value="<%= c.id %>"><%= c.title %></option>
+        <option value="<%= c.id %>"><%= c.title %></option>
     <% end %>
   </select>
   <br/>
@@ -34,81 +96,81 @@ Assignments will not be tagged, etc.</p>
   <div class="duplicate row">
     <div class="span2" id="duplicate_nav">
       <ul class="nav nav-list duplicate_sidenav" data-spy="affix" data-offset-top="200">
-      <% @duplicable_items.each_pair do |model, v| %>
-      <li>
-        <a href="#<%= model.model_name %>">
-          <i class="icon-chevron-right"></i>
-        <%= model.model_name.human.pluralize %>
-        </a>
-      </li>
-      <% end %>
+        <% @duplicable_items.each_pair do |model, v| %>
+            <li>
+              <a href="#<%= model.model_name %>">
+                <i class="icon-chevron-right"></i>
+                <%= model.model_name.human.pluralize %>
+              </a>
+            </li>
+        <% end %>
       </ul>
     </div>
     <div class="span7">
       <% @duplicable_items.each_pair do |model, v| %>
-      <section id="<%= model.model_name %>">
-        <div class="page-header">
-          <h2><%= model.model_name.human.pluralize %></h2>
-        </div>
-
-        <% if model == Level %>
-            <p class="well">Note: if target course already configued levels, levels won't be copied over.</p>
-            <% v = v[1..-1] %>
-        <% end %>
-        <% if model == TagGroup or model == LessonPlanMilestone %>
-            <div class="checkbox-text" style="margin-bottom: 10px">
-              <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
-              <span style="font-weight: bold; font-size: 15px">Select All</span>
+          <section id="<%= model.model_name %>">
+            <div class="page-header">
+              <h2><%= model.model_name.human.pluralize %></h2>
             </div>
-            <ul>
-              <% v.each_with_index do |item, i| %>
-                  <li>
-                    <div  class="checkbox-text">
-                      <input type="checkbox" class="<%= model.model_name %> with-sub-items" name="<%= model.model_name %>[]" value="<%= item.id %>" />
-                      <span><%= item.title %></span>
-                    </div>
-                  </li>
-                  <!--<div class="duplicate_mul_entry">-->
-                  <% if model == TagGroup  %>
-                    <% sub_items = item.tags  %>
-                  <% else %>
-                    <% sub_items = item.entries(false) %>
-                  <% end %>
 
-                    <ul>
-                      <% sub_items.each_with_index do |tag, i| %>
-                          <li class="checkbox-text">
-                            <input type="checkbox" class="<%= model.model_name %><%= item.id %>" name="<%= tag.class.model_name %>[]" value="<%= tag.id %>" />
-                            <span><%= tag.title %></span>
-                          </li>
+            <% if model == Level %>
+                <p class="well">Note: if target course already configued levels, levels won't be copied over.</p>
+                <% v = v[1..-1] %>
+            <% end %>
+            <% if model == TagGroup or model == LessonPlanMilestone %>
+                <div class="checkbox-text" style="margin-bottom: 10px">
+                  <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+                  <span style="font-weight: bold; font-size: 15px">Select All</span>
+                </div>
+                <ul>
+                  <% v.each_with_index do |item, i| %>
+                      <li>
+                        <div  class="checkbox-text">
+                          <input type="checkbox" class="<%= model.model_name %> with-sub-items" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                          <span><%= item.title %></span>
+                        </div>
+                      </li>
+                      <!--<div class="duplicate_mul_entry">-->
+                      <% if model == TagGroup  %>
+                          <% sub_items = item.tags  %>
+                      <% else %>
+                          <% sub_items = item.entries(false) %>
                       <% end %>
-                    </ul>
-                  <!--</div>-->
-              <% end %>
-            </ul>
+
+                      <ul>
+                        <% sub_items.each_with_index do |tag, i| %>
+                            <li class="checkbox-text">
+                              <input type="checkbox" class="<%= model.model_name %><%= item.id %>" name="<%= tag.class.model_name %>[]" value="<%= tag.id %>" />
+                              <span><%= tag.title %></span>
+                            </li>
+                        <% end %>
+                      </ul>
+                      <!--</div>-->
+                  <% end %>
+                </ul>
+                </section>
+                <% next %>
+            <% end %>
+            <% if model == MaterialFolder %>
+                <% v = v.subfolders %>
+
+            <% end %>
+            <div class="duplicate_mul_entry">
+              <div class="checkbox-text" style="margin-bottom: 10px">
+                <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+                <span style="font-weight: bold; font-size: 15px">Select All</span>
+              </div>
+              <ul>
+                <% v.each_with_index do |item, i| %>
+                    <li class="checkbox-text">
+                      <input type="checkbox" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                      <span><%= item.title %></span>
+                    </li>
+                <% end %>
+              </ul>
+            </div>
+
             </section>
-            <% next %>
-        <% end %>
-        <% if model == MaterialFolder %>
-            <% v = v.subfolders %>
-
-        <% end %>
-        <div class="duplicate_mul_entry">
-          <div class="checkbox-text" style="margin-bottom: 10px">
-            <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
-            <span style="font-weight: bold; font-size: 15px">Select All</span>
-          </div>
-        <ul>
-          <% v.each_with_index do |item, i| %>
-              <li class="checkbox-text">
-                <input type="checkbox" name="<%= model.model_name %>[]" value="<%= item.id %>" />
-                <span><%= item.title %></span>
-              </li>
-          <% end %>
-        </ul>
-        </div>
-
-      </section>
 
       <% end %>
       <div data-spy="affix" class="float-submit">
@@ -171,7 +233,7 @@ Assignments will not be tagged, etc.</p>
             var value = $(this).val() - 0;
             var checked = $(this).is(':checked');
             $("input[name*='Level[]']").each(function(i){
-               var lv = $(this).val() - 0;
+                var lv = $(this).val() - 0;
                 if(checked) {
                     if(lv < value) {
                         $(this).attr('checked', 'checked');
@@ -199,7 +261,16 @@ Assignments will not be tagged, etc.</p>
             $("body").addClass("loading");
             var url = $("#dup_link").val();
 
-            $.getJSON( url, function( data ) {
+            $.getJSON( url,
+                    {
+                        course_start: $("#course_start_date").val(),
+                        mission_start: $("#mission_start_date").val(),
+                        training_start: $("#training_start_date").val(),
+                        mission_files: $("#dup_mission_file").is(':checked'),
+                        training_files: $("#dup_training_file").is(':checked'),
+                        workbin_files: $("#dup_workbin_file").is(':checked')
+                    },
+                    function( data ) {
                 console.log(data);
                 window.location.href = data.url;
             })
