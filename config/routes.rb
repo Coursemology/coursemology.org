@@ -10,6 +10,7 @@ JfdiAcademy::Application.routes.draw do
   get "privacy_policy" => "static_pages#privacy_policy"
   get "access_denied" => "static_pages#access_denied"
   get "contact_us" => "static_pages#contact_us"
+  get "help" => "static_pages#help"
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",
                                        :registrations => "registrations",
