@@ -9,10 +9,10 @@
 </p>
 
 <h3>Duplicate Options:</h3>
-<p>Time Shift: specify the from and to date, lesson plan, mission and training's dates will be shifted according to the time difference. No shift will happen if one of the date is not entered.</p>
+<p>Time Shift: specify current course start date and new course start date; lesson plan, missions and trainings' dates will be shifted according to the time difference. No shift will happen if one of the date is not entered.</p>
 <div class="form-horizontal">
   <div class="control-group">
-    <label class="control-label">From Date</label>
+    <label class="control-label">Course Start Date</label>
     <div class="controls">
       <div class="datepicker input-append date">
         <input type="text" required="true" class="input-medium" id="from_date" value="<%= date_mdY(@dates[:course]) %>">
@@ -24,7 +24,7 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">To Date</label>
+    <label class="control-label">New Course Start Date</label>
     <div class="controls">
       <div class="datepicker input-append date">
 
