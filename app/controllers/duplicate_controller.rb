@@ -20,14 +20,10 @@ class DuplicateController < ApplicationController
         ForumForum          => @course.forums,
         Survey              => @course.surveys
     }
-    first_mission = @course.missions.first
-    first_training = @course.trainings.first
+
     @dates = {
-        course: @course.start_at,
-        mission: unless first_mission then nil else first_mission.open_at end,
-        training: unless first_training then nil else first_training.open_at end
+        course: @course.start_at ? @course.start_at.to_date : nil,
     }
-    puts @dates
   end
 
   def duplicate_assignments
@@ -101,22 +97,13 @@ class DuplicateController < ApplicationController
 
     require 'duplication'
     begin
-      course_diff = Time.parse(params[:course_start]) - @course.start_at
+      course_diff = Time.parse(params[:to_date]) -  Time.parse(params[:from_date])
     rescue
       course_diff =  0
     end
 
-    begin
-      mission_diff = Time.parse(params[:mission_start]) - @course.missions.first.open_at
-    rescue
-      mission_diff = 0
-    end
-
-    begin
-      training_diff = Time.parse(params[:training_start]) - @course.trainings.first.open_at
-    rescue
-      training_diff =  0
-    end
+    mission_diff =  course_diff
+    training_diff = course_diff
 
     options = {
         course_diff: course_diff,
