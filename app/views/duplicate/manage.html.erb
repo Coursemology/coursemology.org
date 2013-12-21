@@ -9,12 +9,13 @@
 </p>
 
 <h3>Duplicate Options:</h3>
+<p>Time Shift: specify the from and to date, lesson plan, mission and training's dates will be shifted according to the time difference. No shift will happen if one of the date is not entered.</p>
 <div class="form-horizontal">
   <div class="control-group">
-    <label class="control-label">Course Start Date</label>
+    <label class="control-label">From Date</label>
     <div class="controls">
-      <div class="datetimepicker future-only input-append date">
-        <input type="text" required="true" class="input-medium" id="course_start_date" value="<%= datetime_format(@dates[:course]) %>">
+      <div class="datepicker input-append date">
+        <input type="text" required="true" class="input-medium" id="from_date" value="<%= date_mdY(@dates[:course]) %>">
       <span class="add-on">
               <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
             </span>
@@ -23,11 +24,11 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">Mission Start Date</label>
+    <label class="control-label">To Date</label>
     <div class="controls">
-      <div class="datetimepicker future-only input-append date">
+      <div class="datepicker input-append date">
 
-        <input type="text" required="true" class="input-medium" id="mission_start_date" value = <%= datetime_format(@dates[:mission]) %>>
+        <input type="text" required="true" class="input-medium" id="to_date" value = <%= date_mdY(@dates[:mission]) %>>
       <span class="add-on">
               <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
             </span>
@@ -35,17 +36,6 @@
     </div>
   </div>
 
-  <div class="control-group">
-    <label class="control-label">Training Start Date</label>
-    <div class="controls">
-      <div class="datetimepicker future-only input-append date">
-        <input type="text" required="true" class="input-medium" id="training_start_date" value = <%= datetime_format(@dates[:training]) %>>
-      <span class="add-on">
-              <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-            </span>
-      </div>
-    </div>
-  </div>
 
   <div class="control-group">
     <div class="controls checkbox-text ">
@@ -197,7 +187,7 @@
         setTimeout(function () {
             $('.duplicate_sidenav').affix({
                 offset: {
-                    top: function () { return $window.width() <= 980 ? 700 : 700 }
+                    top: function () { return $window.width() <= 980 ? 0 : 900 }
                     , bottom: 270
                 }
             })
@@ -206,7 +196,7 @@
         setTimeout(function () {
             $('.float-submit').affix({
                 offset: {
-                    top: function () { return $window.width() <= 980 ? 700 : 700 }
+                    top: function () { return $window.width() <= 980 ? 0 : 900 }
                     , bottom: 0
                 }
             })
@@ -261,11 +251,14 @@
             $("body").addClass("loading");
             var url = $("#dup_link").val();
 
+            var from_date = $("#from_date").val();
+            var to_date = $("#to_date").val();
+
+
             $.getJSON( url,
                     {
-                        course_start: $("#course_start_date").val(),
-                        mission_start: $("#mission_start_date").val(),
-                        training_start: $("#training_start_date").val(),
+                        from_date: from_date,
+                        to_date: to_date,
                         mission_files: $("#dup_mission_file").is(':checked'),
                         training_files: $("#dup_training_file").is(':checked'),
                         workbin_files: $("#dup_workbin_file").is(':checked')
