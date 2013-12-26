@@ -230,6 +230,8 @@ JfdiAcademy::Application.routes.draw do
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
+
+    resources :tabs, module: :tabs
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

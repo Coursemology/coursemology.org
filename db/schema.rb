@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131220033623) do
+ActiveRecord::Schema.define(:version => 20131226163603) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -623,6 +623,7 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.boolean  "is_file_submission", :default => false
     t.integer  "dependent_id"
     t.boolean  "publish",            :default => true
+    t.integer  "tab_id"
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
@@ -969,6 +970,15 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
 
   add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"
 
+  create_table "tabs", :force => true do |t|
+    t.integer  "course_id",   :null => false
+    t.string   "title",       :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "owner_type",  :null => false
+  end
+
   create_table "tag_groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -1046,6 +1056,7 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.datetime "bonus_cutoff"
     t.boolean  "publish",      :default => true
     t.integer  "t_type",       :default => 1
+    t.integer  "tab_id"
   end
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"
