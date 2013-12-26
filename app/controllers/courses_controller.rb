@@ -26,6 +26,7 @@ class CoursesController < ApplicationController
     end
   end
 
+  respond_to :html, :json
   def update
     if params[:user_course_id]
       uc = @course.user_courses.where(id:params[:user_course_id]).first
@@ -48,10 +49,18 @@ class CoursesController < ApplicationController
         end
       end
     end
+
+    if params[:course_owner]
+      user = User.where(id: params[:course_owner]).first
+      @course.creator = user
+      @course.save
+    end
     respond_to do |format|
       if params[:user_course_id]
         format.html { redirect_to course_staff_url(@course),
                                   notice: 'New staff added.'}
+      elsif params[:course_owner]
+        format.json {render json:  {course:@course, owner: @course.creator.name } }
       elsif @course.update_attributes(params[:course])
         format.html { redirect_to edit_course_path(@course),
                                   notice: 'Course setting has been updated.' }

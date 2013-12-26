@@ -25,6 +25,7 @@ JfdiAcademy::Application.routes.draw do
   match "admins" => "admins#access_control"
   match "admins/search" => "admins#search"
   match "admins/masquerades" => 'admins#masquerades', as: :admin_masquerades
+  match "admins/courses" => "admins#courses", as: :admin_courses
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades

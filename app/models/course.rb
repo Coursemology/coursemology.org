@@ -355,4 +355,10 @@ class Course < ActiveRecord::Base
 
     [missions, trainings]
   end
+
+  def self.search(search)
+    search_condition = "%" + search.downcase + "%"
+    Course.where(['lower(title) LIKE ?', search_condition])
+    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+  end
 end

@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h3>Courses</h3>
+</div>
+
+<div class="alert alert-success hidden"></div>
+
+<%= form_tag admin_courses_path, :method => 'get', class: "form-search" do %>
+    <input type="text" class="input-medium search-query" id="search_field" name="search" placeholder="Search title">
+    <button type="submit" class="btn">Search</button>
+<% end %>
+
+<% if @courses %>
+    <table class="table assignments">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Created At</th>
+        <th>No. of Students</th>
+        <th width="10%">Owner</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+
+      <tbody class="table-hover">
+      <% @courses.each do |course| %>
+          <tr>
+            <td>
+              <input type="hidden" class="course-id" value="<%= course.id %>">
+              <input type="hidden" class="course-owner-update-path" value="<%= course_path(course)  %>">
+              <%= course.title %>
+            </td>
+            <td>
+              <%= course.is_publish? ? "Published" : "Unpublished" %>
+            </td>
+            <td>
+              <%= date_mdY(course.created_at) %>
+            </td>
+            <td style="text-align: center">
+              <%= course.student_courses.count %>
+            </td>
+            <td>
+              <%= select "select-owner","", course.user_courses.staff.map {|uc| [uc.user.name, uc.user.id] }, {:selected => "#{course.creator.id}" }%>
+            </td>
+            <td>
+              <%= link_to '#', class: 'btn update-course-owner' do %>
+                  <i class="icon-ok"></i>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= paginate @courses %>
+<% end %>
