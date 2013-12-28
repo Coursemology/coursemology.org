@@ -7,31 +7,34 @@
  */
 
 //code from JFDI acedamy
-CodeViewer = {};
 
-CodeViewer.init = function($wrapper, source, theme, code_id, edit){
-
+function CodeViewer($wrapper, source, theme, code_id, _vt, language){
+    var self = this;
+    var edit = _vt =='edit';
+    this.wrapper = $wrapper;
+    this.code_id = code_id;
+    this.cb_class = "comment-box-"+code_id;
 
     function setUpLines(){
-        var $lines = $output.find("div.lines");
+        var $lines = self.output.find("div.lines");
         var i = 1;
 
         function box_mdown(e){
             e.stopPropagation();
             if ($(this).hasClass('annotate')){
                 $(this).data('lh').eq(0).click();
-            }else if (end_line == $(this).data('l')){
-                start = this;
-                start_line = $(this).data('l');
+            }else if (self.end_line == $(this).data('l')){
+                self.start = this;
+                self.start_line = $(this).data('l');
             }
             return false;
         }
         function box_over(){
-            end = this;
+            self.end = this;
             el = $(this).data('l');
-            if (!start) start_line = el;
-            var s = (start_line < el) ? start_line : el;
-            var e = (start_line > el) ? start_line : el;
+            if (!self.start) self.start_line = el;
+            var s = (self.start_line < el) ? self.start_line : el;
+            var e = (self.start_line > el) ? self.start_line : el;
 
             for (var i=0;i<_comments.length;++i){
                 if (_comments[i].s >= s && _comments[i].s <= e) return false;
@@ -41,46 +44,47 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                 if (_comments[i].s <= s && _comments[i].e >= e) return false;
             }
 
-            end_line = $(this).data('l');
-            s = (start_line < end_line) ? start_line : end_line;
-            e = (start_line > end_line) ? start_line : end_line;
-            if (start){ // dragging in action
-                $_line_numbers.removeClass('hover').slice(s,e+1).addClass('hover');
+            self.end_line = $(this).data('l');
+            s = (self.start_line < self.end_line) ? self.start_line : self.end_line;
+            e = (self.start_line > self.end_line) ? self.start_line : self.end_line;
+            if (self.start){ // dragging in action
+                self.line_numbers.removeClass('hover').slice(s,e+1).addClass('hover');
                 $_lines.removeClass('highlight').slice(s,e+1).addClass('highlight');
             }
             $(this).addClass('hover');
         }
         function box_out(){
-            if (!start){
+            if (!self.start){
                 $(this).removeClass('hover');
                 $_lines.removeClass('highlight');
             }
         }
         function box_up(){
-            if (start){
-                var s = (start_line < end_line) ? start_line : end_line;
-                var e = (start_line > end_line) ? start_line : end_line;
-                $_line_numbers.removeClass('hover');
+            console.log(self.code_id);
+            if (self.start){
+                var s = (self.start_line < self.end_line) ? self.start_line : self.end_line;
+                var e = (self.start_line > self.end_line) ? self.start_line : self.end_line;
+                self.line_numbers.removeClass('hover');
                 createComment(s+1, e+1,false, true);
-                if (hideAnnotate) showAnnotation();
-                start = false;
+                if (self.hideAnnotate) self.showAnnotation();
+                self.start = false;
             }
         }
 
 
-        $_lines = $output.find('pre.line');
+        $_lines = self.output.find('pre.line');
         $_lines.each( function() {
             line_obj.push( this );
-            var $l = $('<div class="line-number">'+i+'</div>');
+            var $l = $('<div class="line-number line-number-'+ self.code_id +'">'+i+'</div>');
             $l.css('height', $(this).height() + 'px')
                 .css('line-height',($(this).height() +3)+ 'px')
-                .css('top', ($(this).offset().top -topOffset)+ 'px')
+                .css('top', ($(this).offset().top -self.topOffset)+ 'px')
                 .data('l',i-1)
                 .appendTo($lines);
             ++i;
         });
 //		if (_ca){
-        $_line_numbers = $('.line-number')
+        self.line_numbers = $('.line-number-' + self.code_id)
             .bind('mousedown', box_mdown)
             .hover(box_over, box_out)
         $(document).bind('mouseup',box_up);
@@ -93,7 +97,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         $ab = $('<div id="annotate-area"></div>')
         $ab.append('<p class="annotate-message">Leave an annotation:</p>');
         $ta = $('<textarea class="annotate-box" id="annotate-box"></textarea>')
-            .data('s', start_line+1).data('e', end_line+1)
+            .data('s', self.start_line+1).data('e', self.end_line+1)
             .appendTo($ab);
         $ab.append('<button class="btn" id="annotateButton">Annotate</button>');
         this.append($ab);
@@ -108,10 +112,10 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                 $ab.focus();
             }else{
                 $ab.attr('disabled','disabled');
-                $.post($('#annotation_path').val(), {
+                $.post(self.annotation_url, {
                     origin: document.URL,
                     annotation:{
-                        annotable_id: _cid,
+                        annotable_id: self.code_id,
                         annotable_type: "StdCodingAnswer",
                         text: t,
                         line_start: s,
@@ -124,6 +128,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         });
     }
     function createComment(start, end, callback, temporary) {
+        console.log("create comment");
         if (_vt!='view')return;
         if ( ($tcb = $("#temporary-comment-box")) && $tcb.size()){
             if (start != $tcb.data('s') || end != $tcb.data('e')){
@@ -138,14 +143,14 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }else{
 
             var $lh = addLineHighlighter(start, end);
-            var $cb = $('<div class="comment-box" '+(temporary ? 'id="temporary-comment-box"':'')+'/>');
+            var $cb = $('<div class="comment-box ' + self.cb_class +'" '+(temporary ? 'id="temporary-comment-box"':'')+'/>');
 
             if (!line_obj[start-1])return false;
             $cb.appendTo(document.body);
             $cb
                 .css('width', _cb_mw+'px')
                 .css('top', ($(line_obj[start-1]).offset().top)+'px')
-                .data('top', ($(line_obj[start-1]).offset().top) + $wrapper.scrollTop())
+                .data('top', ($(line_obj[start-1]).offset().top) + self.wrapper.scrollTop())
                 .css('minHeight', (end-start+1)*$lh.height() + 'px')
                 .data('s', start)
                 .data('e', end);
@@ -173,11 +178,11 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
     }
     function removeLineHighlighter(start, end){
         $_lines.slice(start-1, end).removeClass('annotate').unbind('mouseenter').unbind('mouesleave').unbind('click');
-        $_line_numbers.slice(start-1, end).removeClass('annotate').data('lh', false);
+        self.line_numbers.slice(start-1, end).removeClass('annotate').data('lh', false);
     }
     function addLineHighlighter(start, end) {
         $lh = $_lines.slice(start-1, end).addClass('annotate');
-        $_line_numbers.slice(start-1, end).addClass('annotate').data('lh', $lh);
+        self.line_numbers.slice(start-1, end).addClass('annotate').data('lh', $lh);
         return $lh;
     }
     function setLinesHover(start, end, $lh, $cb) {
@@ -237,26 +242,26 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
 
         if ($active == $com){
-            start_line = $com.data('s')-1;
-            end_line = $com.data('e')-1;
+            self.start_line = $com.data('s')-1;
+            self.end_line = $com.data('e')-1;
             addAnnotateBox.call($com);
         }
-        checkScroll();
+        self.checkScroll();
     }
 
-    function checkScroll(evt) {
-        if (hideAnnotate) return true;
+    this.checkScroll = function(evt) {
+        if (self.hideAnnotate) return true;
 
-        var st = $wrapper.scrollTop();
-        $('.comment-box').each( function() {
+        var st = self.wrapper.scrollTop();
+        $('.' + self.cb_class).each( function() {
             var $this = $(this);
             var ct = $this.data('top');
             ct -= st;
-            if (fullScreenOffset) ct -= fullScreenOffset
-            if (false && fullScreenOffset){
+            if (self.fullScreenOffset) ct -= self.fullScreenOffset
+            if (false && self.fullScreenOffset){
 //				$this.css('top', ct+'px').show();
             }else{
-                if (ct < topOffset || ct + 20 >= bottomOffset) {
+                if (ct < self.topOffset || ct + 20 >= self.bottomOffset) {
                     if ($this.is('#temporary-comment-box')){
                         removeComment.call($this);
                     }else{
@@ -266,7 +271,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                     if (!$this.is(':visible')) {
                         $this.fadeIn('fast');
                     }
-                    if (fullScreenOffset && ct + $this.height() > bottomOffset){
+                    if (self.fullScreenOffset && ct + $this.height() > self.bottomOffset){
                         $this.css('top','auto').css('bottom',  '0px');
                     }else{
                         $this.css('bottom','auto').css('top', ct+'px');
@@ -275,21 +280,22 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             }
         });
         return true;
-    }
+    };
+
     function setUp() {
-        $wrapper.bind("scroll", checkScroll);
+        self.wrapper.bind("scroll", self.checkScroll);
 
         // check height
-        if ($output.height() < $wrapper.height()){
-            $wrapper.height($output.height()+'px');
+        if (self.output.height() < self.wrapper.height()){
+            self.wrapper.height(self.output.height()+'px');
         }
         // check width
 
-        $output.width($wrapper.get(0).scrollWidth);
+        self.output.width(self.wrapper.get(0).scrollWidth);
 
         // check annotation width
         var x = function(){
-            var len = $(document).scroll().width() - $wrapper.offset().left - $wrapper.width();
+            var len = $(document).scroll().width() - self.wrapper.offset().left - self.wrapper.width();
             _cb_mw = len;
         }
         x();
@@ -297,8 +303,11 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
 
     function parseComments(annotations){
         if (typeof Comment != 'undefined'){
-            Comment.parseComment(annotations, _cid);
+            Comment.parseComment(annotations, self.code_id);
         }
+        console.log(self.code_id);
+        console.log(annotations.length);
+        console.log("parse comments");
         for (var i=0;i<annotations.length;++i){
             if (typeof _annotate_ids[annotations[i].id] != 'undefined') continue;
             _annotate_ids[annotations[i].id] = true;
@@ -313,7 +322,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
                 });
             }
         }
-        checkScroll.call($wrapper);
+        self.checkScroll.call(this.wrapper);
     }
 
     function del_annotation($li) {
@@ -323,7 +332,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
 
         $.ajax({
-                url:$("#annotation_path").val()+"/"+$obj.attr('cid'),
+                url: self.annotation_url +"/"+$obj.attr('cid'),
                 type: "DELETE",
                 dataType:"json",
                 success: function(e) {
@@ -359,7 +368,7 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         } else {
             //save comment
             $.ajax({
-                url:$("#annotation_path").val()+"/"+$obj.attr('cid'),
+                url:self.annotation_url +"/"+$obj.attr('cid'),
                 type: "PUT",
                 dataType:"json",
                 data: {
@@ -376,25 +385,25 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
 
     }
 
-     function quit_edit_annotation($li) {
-         $edit = $li.find('.comment-edit-link');
-         $del = $li.find('.comment-del-link');
-         var textarea = $li.find('.annotate-box');
-         comment = $li.find('.comment');
-         if(textarea.size() > 0) {
-             //show save
-             textarea.hide('slow', function(){ comment.empty(); comment.html($li.find('.comment-obj').attr('c').nl2br()) });
-             $edit.attr("title", "Edit Comment");
-             $edit.empty().append('<i class="icon-pencil"></i>');
-             $del.empty().append('<i class="icon-trash"></i>');
-             $del.attr("title", "Delete Comment");
-             $del.unbind('click');
-             $del.bind('click', (function(e) {
-                 e.preventDefault();
-                 del_annotation($li);
-             }));
-         }
-     }
+    function quit_edit_annotation($li) {
+        $edit = $li.find('.comment-edit-link');
+        $del = $li.find('.comment-del-link');
+        var textarea = $li.find('.annotate-box');
+        comment = $li.find('.comment');
+        if(textarea.size() > 0) {
+            //show save
+            textarea.hide('slow', function(){ comment.empty(); comment.html($li.find('.comment-obj').attr('c').nl2br()) });
+            $edit.attr("title", "Edit Comment");
+            $edit.empty().append('<i class="icon-pencil"></i>');
+            $del.empty().append('<i class="icon-trash"></i>');
+            $del.attr("title", "Delete Comment");
+            $del.unbind('click');
+            $del.bind('click', (function(e) {
+                e.preventDefault();
+                del_annotation($li);
+            }));
+        }
+    }
 
 
 
@@ -438,33 +447,38 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
     }
 
     function refreshComments(){
-        $.get($('#annotation_path').val(), {
+        $.get(self.annotation_url, {
             annotation:{
-            annotable_id: _cid,
-            annotable_type: "StdCodingAnswer"
-        }}, function(s){
+                annotable_id: self.code_id,
+                annotable_type: "StdCodingAnswer"
+            }}, function(s){
             parseComments(s);
             setTimeout(refreshComments, 4000);
         });
     }
     var line_obj = [];
     var $_lines;
-    var $_line_numbers = false;
+    this.line_numbers = false;
     var $_comment_boxes = {};
     var _comments = [];
 
     var _annotate_ids = {};
 
-    var start = false, end = false;
-    var start_line = false, end_line = false;
-    var fullScreenOffset = false;
-    var hideAnnotate = false;
+    this.start = false;
+    this.end = false;
+    this.start_line = false;
+    this.end_line = false;
+    this.fullScreenOffset = false;
+    this.hideAnnotate = false;
     var _cb_mw=0;
+    this.annotation_url = $("#annotation-path-" + self.code_id).val();
 
     if (typeof edit == 'undefined' || !edit){
-        $output = $('<div class="static-code cm-s-'+theme+'"/>').appendTo($wrapper);
+        console.log(code_id);
+        this.output = $('<div class="static-code cm-s-'+theme+'"'+ 'id="' + code_id +'"/>').appendTo(this.wrapper);
+//        console.log(this.output);
         var accum = [], zam = [];
-        CodeMirror.runMode(_source_code, _language, function(string, style){
+        CodeMirror.runMode(source, language, function(string, style){
             if (string == "\n"){
                 str = accum.join("");
                 if (str == '') str = '\x20';
@@ -483,19 +497,19 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
         }
 
         var code = zam.join("");
-        $output.html('<div class="lines"></div><div class="source">'+code+'</div>');
+        this.output.html('<div class="lines"></div><div class="source">'+code+'</div>');
 
-        var topOffset = $output.find('div.source').offset().top;
-        var bottomOffset = topOffset + $wrapper.height();
+        this.topOffset = this.output.find('div.source').offset().top;
+        this.bottomOffset = this.topOffset + this.wrapper.height();
         setUpLines($("#output"));
         setUp();
     }else{
         console.log(code_id);
-        var $code = $('<textarea class="code" name="code" id="code"></textarea>').val(source).appendTo($wrapper);
-//        var $save = $('<input type="button" class="btn" value="Save Code" />').appendTo($wrapper);
-        var editor = CodeMirror.fromTextArea($("#code").get(0), {
+        var $code = $('<textarea class="code" name="code" id="code' + this.wrapper.attr("id") + '"></textarea>').val(source).appendTo(this.wrapper);
+//        var $save = $('<input type="button" class="btn" value="Save Code" />').appendTo(this.wrapper);
+        this.editor = CodeMirror.fromTextArea($("#code" +  this.wrapper.attr("id") ).get(0), {
             //TODO:hard code language here
-            mode: {name: "python",
+            mode: {name: language,
                 version: 3,
                 singleLineStringErrors: false},
             lineNumbers: true,
@@ -504,13 +518,11 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             matchBrackets: true
         });
 
-        editor.on('change',function(){
-           $("#code_"+code_id).val(editor.getValue());
-        });
+
 //        $save.click(function(){
 //            var $this = $(this);
 //            $.post(makelink('code/_save_code'), {cid: code_id, c: editor.getValue()}, function(s){
-//                $wrapper.find('.CodeMirror-scroll').effect('highlight');
+//                this.wrapper.find('.CodeMirror-scroll').effect('highlight');
 //            });
 //            window.onbeforeunload = null;
 //        });
@@ -526,79 +538,75 @@ CodeViewer.init = function($wrapper, source, theme, code_id, edit){
             $("#comment-ta").focus();
         }else{
             $("#comment-ta").attr('disabled','disabled');
-            $.post(makelink('code/_comment'), {cid: _cid, comment: t }, function(s){
+            $.post(makelink('code/_comment'), {cid: self.code_id, comment: t }, function(s){
                 s = JSON.parse(s);
                 $("#comment-ta").attr('disabled',false).val('').focus();
                 parseComments(s);
             });
         }
     });
+}
 
-
-    function fullScreen(){ // currently not working
-        $wrapper.wrap('<div id="wrapper-container" />');
-        $newWrapper = $wrapper.addClass('fullscreen').appendTo(document.body);
-//		$(document).bind('scroll',checkScroll);
-        $output.data('oheight', $output.height());
-        if ($output.height() < $wrapper.height()){
-            $output.height($wrapper.height()+'px');
+CodeViewer.prototype = {
+    fullScreen: function() { // currently not working
+        this.wrapper.wrap('<div id="wrapper-container' + this.code_id +'" />');
+        $newWrapper = this.wrapper.addClass('fullscreen').appendTo(document.body);
+    //		$(document).bind('scroll',checkScroll);
+        this.output.data('oheight', this.output.height());
+        if (this.output.height() < this.wrapper.height()){
+            this.output.height(this.wrapper.height()+'px');
         }
 
         var _kd;
+        var self = this;
         $(document.body).addClass('fullscreen').keydown(_kd = function(evt){
             var kc = (evt.which) || evt.keyCode;
             if (kc == 27){
-                unfullScreen();
+                self.unfullScreen();
                 $(this).unbind('keydown', _kd);
             }
-        })
-        ntopOffset = $newWrapper.find('.static-code').find('div.source').offset().top;
-        fullScreenOffset = topOffset - ntopOffset; topOffset = ntopOffset;
-        bottomOffset = topOffset + $newWrapper.height();
-        checkScroll();
-    }
-    function unfullScreen(){
-        $wrapper.appendTo($("#wrapper-container")).removeClass('fullscreen');
-        $output.height($output.data('oheight'));
-        topOffset = $output.find('div.source').offset().top;
-        bottomOffset = topOffset + $wrapper.height();
-        fullScreenOffset = false;
+        });
+        var ntopOffset = $newWrapper.find('.static-code').find('div.source').offset().top;
+        this.fullScreenOffset = this.topOffset - ntopOffset; this.topOffset = ntopOffset;
+        this.bottomOffset = this.topOffset + $newWrapper.height();
+        this.checkScroll();
+    },
+    unfullScreen: function() {
+        if(!this.wrapper.hasClass('fullscreen')) {
+            return;
+        }
+        this.wrapper.appendTo($("#wrapper-container" + this.code_id)).removeClass('fullscreen');
+        this.output.height(this.output.data('oheight'));
+        this.topOffset = this.output.find('div.source').offset().top;
+        this.bottomOffset = this.topOffset + this.wrapper.height();
+        this.fullScreenOffset = false;
 
-//		$(document).unbind('scroll',checkScroll);
+    //		$(document).unbind('scroll',checkScroll);
         $(document.body).removeClass('fullscreen');
-        $(document).scrollTop( topOffset - 40);
-        checkScroll();
-    }
+        $(document).scrollTop( this.topOffset - 40);
+        this.checkScroll();
+    },
 
-    function hideAnnotation(){
-        hideAnnotate = true;
-        $('.comment-box').hide();
-    }
-    function showAnnotation(){
-        hideAnnotate = false;
-        checkScroll();
-        $("#toggle-comment").removeClass('hide');
-    }
+    hideAnnotation: function() {
+        this.hideAnnotate = true;
+        $('.' + this.cb_class).hide();
+    },
 
-    function selectAll() {
+    showAnnotation: function() {
+        this.hideAnnotate = false;
+        this.checkScroll();
+        $("#toggle-comment-" + this.code_id ).removeClass('hide');
+    },
+
+    selectAll: function() {
         if (document.selection) {
             var range = document.body.createTextRange();
-            range.moveToElementText($output.find('.source').get(0));
+            range.moveToElementText(this.output.find('.source').get(0));
             range.select();
         }else if (window.getSelection) {
             var range = document.createRange();
-            range.selectNode($output.find('.source').get(0));
+            range.selectNode(this.output.find('.source').get(0));
             window.getSelection().addRange(range);
         }
     }
-
-    return {
-        parseComments: parseComments,
-        checkScroll: checkScroll,
-        fullScreen: fullScreen,
-        unfullScreen: unfullScreen,
-        showAnnotation: showAnnotation,
-        hideAnnotation: hideAnnotation,
-        selectAll: selectAll
-    };
-}
+};

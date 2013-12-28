@@ -2,17 +2,20 @@
   <div class="code-submission span10">
     <% if mode == "view" %>
         <div class="btn-group" style="float: right" >
-          <a class="btn" href="#" id="select-all-code" title="Select entire code"><i class="icon-file"></i></a>
-          <a class="btn" href="#" id="toggle-comment" title="Toggle Annotations"><i class="icon-comment"></i></a>
-          <a class="btn" href="#" id="fullscreen-link" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
+          <a class="btn" href="#" id="select-all-code-<%= qn.id %>" title="Select entire code"><i class="icon-file"></i></a>
+          <a class="btn" href="#" id="toggle-comment-<%= qn.id %>" title="Toggle Annotations"><i class="icon-comment"></i></a>
+          <a class="btn" href="#" id="fullscreen-link-<%= qn.id %>" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
         </div>
     <% end %>
-    <div id="source-code" class="code-wrapper cos_code"></div>
+    <div id="source-code-<%= qn.id %>" class="code-wrapper cos_code"></div>
   </div>
   <div class="span2"></div>
 </div>
-<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= answer.id  %>">
-<input type="hidden" id="annotation_path" value="/courses/<%=@course.id%>/annotations">
+<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= qn.id %>" >
+<input type="hidden" id="annotation-path-<%= qn.id %>" value="/courses/<%=@course.id%>/annotations">
+<input type="hidden" class="code-qn" value="<%= qn.id %>" >
+<input type="hidden" id="mode_<%= qn.id %>" value="<%= mode %>">
+<input type="hidden" id="code-language-<%= qn.id %>" value="python">
 <style>
     .CodeMirror-scroll {
         height: 495px !important;
@@ -37,54 +40,11 @@
 </style>
 <script>
     var _source_code = <%= answer ? raw(answer.code.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
-    $('#code_<%= answer.id %>').val(_source_code);
+    $('#code_<%= qn.id %>').val(_source_code);
 
-    var _cid = <%= answer.id %>;
+
     var _c = [];
     var _ca = true;
     var _cc = true;
-    var _vt = '<%= mode %>';
-    //        var _vt = 'view'
-    var _language = "python";
-    $(function(){
-        var cv = CodeViewer.init($("#source-code"), _source_code, 'molokai', _cid, _vt=='edit');
-//        cv.parseComments(_c);
 
-//        $("#permissions li").hover(function(){
-//            $(this).addClass('hover');
-//        }, function(){
-//            $(this).removeClass('hover');
-//        }).bind('click', function(){
-//                    if ($(this).hasClass('sel')) return;
-//                    $("#permissions li").removeClass('sel');
-//                    p = $(this).hasClass('public') ? 'public' : 'private';
-//                    $(this).addClass('sel');
-//
-//                    $.post(makelink('code/_set_permission'), {cid: _cid, p: p}, function(s){
-//                    });
-//                });
-
-        $("#delete-code").click(function(){
-            return (confirm('Are you sure you want to delete this awesome source code?'));
-        });
-        $("#fullscreen-link").click(function(){
-            cv.fullScreen();
-            return false;
-        });
-        $("#toggle-comment").click(function(){
-            var $this = $(this);
-            if ($this.hasClass('disabled')){
-                $this.removeClass("disabled");
-                cv.showAnnotation();
-            }else{
-                cv.hideAnnotation();
-                $this.addClass('disabled');
-            }
-            return false;
-        });
-        $("#select-all-code").click(function(){
-            cv.selectAll();
-            return false;
-        });
-    });
 </script>
