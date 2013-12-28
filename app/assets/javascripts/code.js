@@ -145,7 +145,8 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
             var $lh = addLineHighlighter(start, end);
             var $cb = $('<div class="comment-box ' + self.cb_class +'" '+(temporary ? 'id="temporary-comment-box"':'')+'/>');
             $cb.click(function(){
-                activateComment($cb);
+                if ($active != $cb)
+                    activateComment($cb);
             });
 
             if (!line_obj[start-1])return false;

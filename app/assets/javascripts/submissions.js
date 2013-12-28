@@ -8,7 +8,9 @@
 
 
 $(document).ready(function() {
+
     $('#mission_submit').click(function(e){
+        saveCode();
         if(!confirm("THIS ACTION IS IRREVERSIBLE\n\nAre you sure you want to submit? You will no longer be able to amend your submission!")){
             e.preventDefault();
         }
@@ -19,10 +21,14 @@ $(document).ready(function() {
     var cvs = [];
 
     $('#mission-save').click(function(e){
+        saveCode();
+    });
+
+    function saveCode(){
         cvs.map(function(c, id){
             $("#code_" + qn_ids[id]).val(c.editor.getValue());
         });
-    });
+    }
 
     if(qns.size() > 0) {
 

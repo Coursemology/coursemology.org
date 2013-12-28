@@ -2,20 +2,20 @@
   <div class="code-submission span10">
     <% if mode == "view" %>
         <div class="btn-group" style="float: right" >
-          <a class="btn" href="#" id="select-all-code-<%= qn.id %>" title="Select entire code"><i class="icon-file"></i></a>
-          <a class="btn" href="#" id="toggle-comment-<%= qn.id %>" title="Toggle Annotations"><i class="icon-comment"></i></a>
-          <a class="btn" href="#" id="fullscreen-link-<%= qn.id %>" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
+          <a class="btn" href="#" id="select-all-code-<%= answer.id  %>" title="Select entire code"><i class="icon-file"></i></a>
+          <a class="btn" href="#" id="toggle-comment-<%= answer.id  %>" title="Toggle Annotations"><i class="icon-comment"></i></a>
+          <a class="btn" href="#" id="fullscreen-link-<%= answer.id  %>" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
         </div>
     <% end %>
-    <div id="source-code-<%= qn.id %>" class="code-wrapper cos_code"></div>
+    <div id="source-code-<%= answer.id  %>" class="code-wrapper cos_code"></div>
   </div>
   <div class="span2"></div>
 </div>
-<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= qn.id %>" >
-<input type="hidden" id="annotation-path-<%= qn.id %>" value="/courses/<%=@course.id%>/annotations">
-<input type="hidden" class="code-qn" value="<%= qn.id %>" >
-<input type="hidden" id="mode_<%= qn.id %>" value="<%= mode %>">
-<input type="hidden" id="code-language-<%= qn.id %>" value="python">
+<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= answer.id  %>" >
+<input type="hidden" id="annotation-path-<%= answer.id  %>" value="/courses/<%=@course.id%>/annotations">
+<input type="hidden" class="code-qn" value="<%= answer.id  %>" >
+<input type="hidden" id="mode_<%= answer.id  %>" value="<%= mode %>">
+<input type="hidden" id="code-language-<%= answer.id  %>" value="python">
 <style>
     .CodeMirror-scroll {
         height: 495px !important;
@@ -39,8 +39,8 @@
     }
 </style>
 <script>
-    var _source_code = <%= answer ? raw(answer.code.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
-    $('#code_<%= qn.id %>').val(_source_code);
+    var source_code = <%= answer ? raw(answer.code.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
+    $('#code_<%= answer.id  %>').val(source_code);
 
 
     var _c = [];
