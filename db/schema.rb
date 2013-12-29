@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131226163603) do
+ActiveRecord::Schema.define(:version => 20131229130926) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -150,11 +150,12 @@ ActiveRecord::Schema.define(:version => 20131226163603) do
     t.text     "description"
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
     t.integer  "include_sol_qn_id"
+    t.boolean  "is_auto_grading",   :default => false
   end
 
   create_table "comment_subscriptions", :force => true do |t|

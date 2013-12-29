@@ -8,6 +8,13 @@
         </div>
     <% end %>
     <div id="source-code-<%= answer.id  %>" class="code-wrapper cos_code"></div>
+    <% if qn.is_auto_grading? %>
+        <h3>Testing</h3>
+        <div id="eval_result" style="font-size: 14px;padding-left: 10px">
+          Click Run to test your answer. You can maximally run 3 times.
+        </div>
+        <button class="btn btn-large btn-block btn-danger" type="button">RUN ( 3 times left )</button>
+  <% end %>
   </div>
   <div class="span2"></div>
 </div>

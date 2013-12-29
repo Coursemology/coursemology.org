@@ -48,7 +48,7 @@ class Submission < ActiveRecord::Base
         sa = self.std_answers.build({text: ''})
         sa.question = qn
       elsif qn.class == CodingQuestion && !self.std_coding_answers.where(qn_id:qn.id).first
-        sa = self.std_coding_answers.build({code: "#Prefilled code \n#Auto generated for #{self.mission.title}"})
+        sa = self.std_coding_answers.build({code: qn.prefilled_code })
         sa.qn = qn
       end
       if sa
