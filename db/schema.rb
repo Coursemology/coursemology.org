@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131229130926) do
+ActiveRecord::Schema.define(:version => 20131229225554) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -793,6 +793,8 @@ ActiveRecord::Schema.define(:version => 20131229130926) do
     t.boolean  "is_correct"
     t.integer  "std_course_id"
     t.datetime "last_commented_at"
+    t.integer  "test_left"
+    t.text     "result"
   end
 
   add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"

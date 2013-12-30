@@ -24,4 +24,16 @@ class CodingQuestion < ActiveRecord::Base
   def prefilled_code
     data_hash["prefill"] || "#Prefilled code \n#Auto generated"
   end
+
+  def included_code
+    data_hash["included"] || ""
+  end
+
+  def test_code
+    data_hash["included"] || ""
+  end
+
+  def test_limit
+    data_hash["testLimit"] || 0
+  end
 end

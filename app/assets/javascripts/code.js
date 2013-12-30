@@ -507,6 +507,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
         this.bottomOffset = this.topOffset + this.wrapper.height();
         setUpLines($("#output"));
         setUp();
+        refreshComments();
     }else{
         console.log(code_id);
         var $code = $('<textarea class="code" name="code" id="code' + this.wrapper.attr("id") + '"></textarea>').val(source).appendTo(this.wrapper);
@@ -517,8 +518,9 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
                 version: 3,
                 singleLineStringErrors: false},
             lineNumbers: true,
-            tabMode: "indent",
+            tabMode: "shift",
             theme: 'molokai',
+            indentUnit: 4,
             matchBrackets: true
         });
 
@@ -533,7 +535,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
 
         //$(window).unload( function () {  } );
     }
-    refreshComments();
+
 
     $("#commentButton").click(function(){
         if ($("#comment-ta").attr('disabled') == 'disabled') return false;

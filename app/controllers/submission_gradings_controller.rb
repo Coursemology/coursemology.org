@@ -18,6 +18,15 @@ class SubmissionGradingsController < ApplicationController
     @submission.get_all_answers.each do |sa|
       qn = sa.qn
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
+      #suggest grading for auto grading question
+      if sa.class == StdCodingAnswer and qn.is_auto_grading?
+        evals = sa.result_hash["evalTests"].select {|r| r}.length
+        tests = qn.data_hash["evalTests"].length
+        grade = (qn.max_grade * evals / tests).to_i
+        ag = AnswerGrading.new
+        ag.grade = grade
+        @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
+      end
     end
 
     @do_grading = true

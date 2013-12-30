@@ -323,9 +323,8 @@ class TrainingSubmissionsController < ApplicationController
     sma.code = code
 
     #evaluate
-    tmp_file = get_tmp_file_name
     code_to_write = get_code_to_write(@current_question.data_hash["included"],code)
-    eval_summary = eval_python(tmp_file,code_to_write,@current_question.data_hash)
+    eval_summary = PythonEvaluator.eval_python(get_tmp_path, code_to_write, @current_question.data_hash)
     public_tests = if eval_summary[:publicTests].length == 0 then true else eval_summary[:publicTests].inject{|sum,a| sum and a} end
     private_tests = if eval_summary[:privateTests].length == 0 then true else eval_summary[:privateTests].inject{|sum,a| sum and a} end
 

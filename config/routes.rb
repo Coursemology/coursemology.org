@@ -64,6 +64,7 @@ JfdiAcademy::Application.routes.draw do
         resources :submission_gradings
       end
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
+      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
       resources :asm_qns do
         collection do
