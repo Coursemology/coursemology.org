@@ -1,12 +1,12 @@
 class PythonEvaluator
   require 'fileutils'
 
-  def self.get_mission_file_path(mission)
-    "#{Rails.root}/missions/#{mission.id}/files/"
+  def self.get_asm_file_path(assign)
+    "#{Rails.root}/#{assign.class.to_s}/#{assign.id}/files/"
   end
 
-  def self.create_local_file_for_mission(mission, file)
-    dir = get_mission_file_path(mission)
+  def self.create_local_file_for_asm(asm, file)
+    dir = get_asm_file_path(asm)
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
 
@@ -28,10 +28,16 @@ class PythonEvaluator
 ' << c2
   end
 
+  def self.add_importing_code(code)
+    #change the default directory to current file's directory
+'import os
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+' << code
+  end
+
   def self.eval_python(dir, code, data, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
-
-    puts data
+    code = add_importing_code(code)
 
     tests = {publicTests: data["publicTests"],
              privateTests:data["privateTests"],

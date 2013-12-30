@@ -177,7 +177,7 @@ class SubmissionsController < ApplicationController
       std_answer.save
       qn = std_answer.qn
       combined_code = PythonEvaluator.combine_code(code, qn.test_code)
-      result = PythonEvaluator.eval_python(PythonEvaluator.get_mission_file_path(@mission), combined_code, qn.data_hash, true)
+      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
     end
 
     respond_to do |format|
@@ -193,7 +193,7 @@ class SubmissionsController < ApplicationController
           next
         end
         combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
-        result = PythonEvaluator.eval_python(PythonEvaluator.get_mission_file_path(@mission), combined_code, qn.data_hash, true)
+        result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
         answer.result = result.to_json
         answer.save
       end
