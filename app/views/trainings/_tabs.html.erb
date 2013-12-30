@@ -1,0 +1,56 @@
+<% if can? :manage, Tab %>
+    <span class="btn" style="float: right" data-toggle="modal" data-target="#add_tab">
+      <i class="icon-plus icon-white"></i>
+      <span>Add Tab</span>
+    </span>
+
+    <div class="modal hide fade" id="add_tab">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Add New Tab</h3>
+      </div>
+      <div class="modal-body form-horizontal">
+        <% if @course.training_tabs.count == 0 %>
+            <p style="margin-left: 20px">*Note: This is your first tab, all your current trainings will be grouped into this tab.</p>
+
+        <% end %>
+        <input type="hidden" id="new-tag-url" value="<%= course_tabs_path %>">
+        <div class="control-group">
+          <label class="control-label">Title</label>
+          <div class="controls">
+            <input type="text" class="text_field span3" id="tab-title">
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label"> Description </label>
+
+          <div class="controls">
+            <textarea class="text_area span3" rows="5" id="tab-description"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary save-tab" id="save-tab">Save</button>
+      </div>
+    </div>
+<% end %>
+<ul class="nav nav-tabs">
+  <% if @tabs.length == 0 %>
+      <li class="<%= "active" if @tab == 'Trainings' %>">
+        <a href="<%=  course_trainings_path(@course) %>?_tab=Trainings" data-toggle="tab"><h4>Trainings</h4></a>
+      </li>
+  <% else %>
+      <% @tabs.each do |tab| %>
+          <li class="<%= "active" if @tab == tab.id.to_s %>">
+            <a href="<%=  course_trainings_path(@course) %>?_tab=<%= tab.id %>" data-toggle="tab"><h4><%= tab.title %></h4></a>
+          </li>
+      <% end %>
+  <% end %>
+  <% if can? :manage, :bulk_update %>
+      <li class="<%= "active" if @tab == 'overview' %>">
+        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
+      </li>
+  <% end %>
+</ul>

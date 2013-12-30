@@ -26,13 +26,19 @@ class TrainingsController < ApplicationController
       tags.each { |tag| @tags_map[tag.id] = true }
     end
 
-    if params['_tab'] == 'extra'
-      @tab='extra'
-      @trainings = @trainings.where(t_type: AssignmentType.extra)
+    @tabs = @course.training_tabs
+    if params['_tab']
+      @tab = params['_tab']
+      @trainings = @course.tabs.find(@tab).trainings
+      #@trainings = @trainings.where(t_type: AssignmentType.extra)
+    elsif @tabs.length > 0
+      @tab = @tabs.first.id.to_s
+      @trainings = @tabs.first.trainings
     else
-      @tab='main'
-      @trainings = @trainings.where(t_type: AssignmentType.main)
+      @tab='Trainings'
     end
+
+    puts "abcde", @tab
 
     if @paging.display?
       @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
@@ -137,6 +143,7 @@ class TrainingsController < ApplicationController
 
   def overview
     authorize! :manage, :bulk_update
+    @tabs = @course.training_tabs
     @tab = 'overview'
     @trainings = @course.trainings.order(:t_type, :open_at)
     @display_columns = {}

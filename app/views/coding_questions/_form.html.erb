@@ -3,7 +3,9 @@
       <div class="control-group">
         <%= f.label :Language, :class => 'control-label' %>
         <div class="controls">
-          <select class="lang" onchange="path.changeLang(this.value)"><option selected="selected" value="Python">Python</option></select></label><br />
+          <select class="lang" onchange="path.changeLang(this.value)">
+            <option selected="selected" value="Python">Python</option>
+          </select>
         </div>
       </div>
 
@@ -45,7 +47,7 @@
         </div>
       </div>
 
-      <div class="cos_code" id="path_dooptions">
+      <div class="cos_code path-code" id="path_dooptions">
         <h3>Options</h3>
         <div class="control-group">
           <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>

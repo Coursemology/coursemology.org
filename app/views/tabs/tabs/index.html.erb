@@ -1,0 +1,21 @@
+<h1>Listing tab_tabs</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @tab_tabs.each do |tab_tab| %>
+  <tr>
+    <td><%= link_to 'Show', tab_tab %></td>
+    <td><%= link_to 'Edit', edit_tab_tab_path(tab_tab) %></td>
+    <td><%= link_to 'Destroy', tab_tab, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Tab', new_course_tab_path %>

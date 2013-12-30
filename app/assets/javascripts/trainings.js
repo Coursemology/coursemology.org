@@ -122,4 +122,28 @@ $(document).ready(function(){
             });
         }
     });
+
+    $("#save-tab").click(function(e){
+        var title = $("#tab-title").val();
+        var description = $("#tab-description").val();
+        var url = $("#new-tag-url").val();
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            dataType: 'json',
+            data: {
+                title: title,
+                description: description,
+                type: "Training"
+            },
+            success: function(result){
+                location.reload();
+            }
+        });
+
+        console.log(title);
+        console.log(description);
+        console.log(url);
+    });
 });

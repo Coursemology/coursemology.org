@@ -1,5 +1,5 @@
 class StdCodingAnswer < ActiveRecord::Base
-  attr_accessible :code, :std_course_id, :student_id, :qn_id
+  attr_accessible :code, :std_course_id, :student_id, :qn_id, :test_left, :result
 
   belongs_to :student, class_name: "User"
   belongs_to :std_course, class_name: "UserCourse"
@@ -13,6 +13,10 @@ class StdCodingAnswer < ActiveRecord::Base
 
   def question
     qn
+  end
+
+  def result_hash
+    JSON.parse(self.result)
   end
 
 end

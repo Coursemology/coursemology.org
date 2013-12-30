@@ -25,6 +25,7 @@ JfdiAcademy::Application.routes.draw do
   match "admins" => "admins#access_control"
   match "admins/search" => "admins#search"
   match "admins/masquerades" => 'admins#masquerades', as: :admin_masquerades
+  match "admins/courses" => "admins#courses", as: :admin_courses
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
@@ -63,6 +64,7 @@ JfdiAcademy::Application.routes.draw do
         resources :submission_gradings
       end
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
+      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
       resources :asm_qns do
         collection do
@@ -229,6 +231,8 @@ JfdiAcademy::Application.routes.draw do
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
+
+    resources :tabs, module: :tabs
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

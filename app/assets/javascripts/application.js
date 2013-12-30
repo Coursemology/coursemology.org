@@ -367,3 +367,14 @@ function IsNumeric(input) {
 function IsPositive(input) {
     return IsNumeric(input) && (input - 0) >= 0
 }
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/\n/g, "<br/>")
+        .replace(/\s/g,"&nbsp;");
+}

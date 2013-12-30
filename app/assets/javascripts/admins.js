@@ -33,4 +33,30 @@ $(document).ready(function(){
         });
     });
 
+    $(".update-course-owner").on('click', function(e) {
+        e.preventDefault();
+        var course_row = $(this).parents('tr');
+        var owner_id = course_row.find("#select-owner_").val();
+        var course_id = course_row.find(".course-id").val();
+        var url = course_row.find(".course-owner-update-path").val();
+        var notice = $('.alert');
+
+        $.ajax({
+            url:url,
+            type: 'PUT',
+            data: {
+                course_owner: owner_id
+            },
+            dataType:'json',
+            success: function(data) {
+                notice.html("Update successful, " + data.owner + " is now owner of " +data.course.title);
+                notice.slideDown();
+                notice._removeClass('hidden');
+                setTimeout(function(){
+                    notice.slideUp()
+                }, 8000);
+            }
+        });
+    });
+
 });

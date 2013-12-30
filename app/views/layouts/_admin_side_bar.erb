@@ -1,12 +1,17 @@
-<a class="btn btn-navbar collapsed" data-toggle="collapse"
-   data-target=".sidenav-collapse">
-  <span class="icon-chevron-down"></span>
-</a>
+<div class="navbar">
+  <a class="btn btn-navbar collapsed" data-toggle="collapse"
+     data-target=".sidenav-collapse">
+    <span class="icon-chevron-down"></span>
+  </a>
+</div>
 <div class="clearfix"></div>
 <div class="sidenav-collapse collapse" style="height: 0px;">
   <ul class="nav nav-list sidenav">
     <li><%= link_to "Access control", admins_path %></li>
     <li><%= link_to "Masquerade", admin_masquerades_path %></li>
     <li><%= link_to "Role Request", role_requests_path %></li>
+    <li><%= link_to "Courses", admin_courses_path %></li>
   </ul>
 </div>
+
+
