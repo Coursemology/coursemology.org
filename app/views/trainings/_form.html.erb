@@ -38,7 +38,7 @@
           <div class="controls">
             <select name="training[tab_id]" class="input-medium" >
               <% @course.training_tabs.each do  |tab| %>
-                  <option value="<%= tab.id %>" <%= 'selected="selected"' if @training.tab.id == tab.id  %>> <%= tab.title  %></option>
+                  <option value="<%= tab.id %>" <%= 'selected="selected"' if (@training.tab and @training.tab.id == tab.id)  %>> <%= tab.title  %></option>
               <% end %>
             </select>
           </div>
