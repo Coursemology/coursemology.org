@@ -119,7 +119,7 @@ var path = function(){
                 _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected);
             }
 
-            for(var i = 0 ; i < cStep.evalTests.length; i++){
+            for(var i = 0 ; i < cStep.evalTests ? cStep.evalTests.length : 0; i++){
                 _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.publicTests[i].expected);
             }
             cmPrefill.setValue(cStep.prefill);

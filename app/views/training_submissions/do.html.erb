@@ -11,14 +11,18 @@
 <hr/>
 <div class="step-list">
   <% (1..@max_step).each do |i| %>
-      <% if i <= @current_step %>
-          <% if i == @step %>
-              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
-          <% else %>
-              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
-          <% end %>
+      <% if i == @step %>
+          <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
       <% else %>
-          <%= link_to i, '#training-stop-pos', class: "step" %>
+          <% if curr_user_course.is_staff?  %>
+              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
+          <% else %>
+            <% if i < @current_step %>
+                  <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
+            <% else %>
+                  <%= link_to i, '#training-stop-pos', class: "step" %>
+            <% end %>
+          <% end %>
       <% end %>
   <% end %>
 </div>
