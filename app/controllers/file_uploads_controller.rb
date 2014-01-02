@@ -82,7 +82,6 @@ class FileUploadsController < ApplicationController
   end
 
   def index
-    puts "file upload index",params
     owner = nil
     if params[:training_id]
       owner = Training.find(params[:training_id])
