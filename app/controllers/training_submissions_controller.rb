@@ -177,7 +177,8 @@ class TrainingSubmissionsController < ApplicationController
       @prefilled_code = @current_question.data_hash["prefill"]
       if @current_question.include_sol_qn
         std_answer = @current_question.include_sol_qn.std_coding_answers.where("is_correct is TRUE AND std_course_id = ?", curr_user_course.id).last
-        @prefilled_code = "#Answer from your previous question \n" + std_answer.code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
+        code = std_answer ? std_answer.code : ""
+        @prefilled_code = "#Answer from your previous question \n" + code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
 
       end
     end
