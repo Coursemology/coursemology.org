@@ -191,7 +191,6 @@ class TrainingSubmissionsController < ApplicationController
     # what's the current question?
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
-    puts 'Update', params, current_user.to_json
     @current_question = @training.questions[params[:current_step].to_i - 1]
 
     if @current_question.class == Mcq
