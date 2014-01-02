@@ -164,8 +164,9 @@ class TrainingSubmissionsController < ApplicationController
     @step = @current_step
     @max_step = @training.questions.count
 
+    #staff can skip steps
     if params[:step] && params[:step].to_i >= 1
-      @step = [@step, params[:step].to_i].min
+      @step = curr_user_course.is_staff? ? params[:step].to_i : [@step, params[:step].to_i].min
     end
 
     if @step <= @max_step
