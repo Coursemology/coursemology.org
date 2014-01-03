@@ -13,7 +13,7 @@ module ApplicationHelper
     if datetime.nil?
       ""
     else
-      datetime.strftime("%d-%m-%Y %H:%M:%S")
+      datetime.strftime("%d-%m-%Y %H:%M")
     end
   end
 
