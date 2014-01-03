@@ -38,7 +38,6 @@ class TrainingsController < ApplicationController
       @tab='Trainings'
     end
 
-    puts "abcde", @tab
 
     if @paging.display?
       @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
