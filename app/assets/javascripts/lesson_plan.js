@@ -143,24 +143,28 @@ $(document).ready(function() {
     /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
 
     var milestone_count = $('input#input-number-milestones').val();
-    var milestone_length_in_days = $('input#input-length-milestones').val();
+    var milestone_length_in_days = parseInt($('input#input-length-milestones').val());
     var milestone_prefix = $('input#input-prefix-milestones').val();
     var first_milestone = $('input#input-start-milestones').val();
 
-    var current_milestone = moment(first_milestone, DATE_FORMAT);
+    var current_milestone_start = moment(first_milestone, DATE_FORMAT);
+    var current_milestone_end = current_milestone_start.clone().add('days', milestone_length_in_days - 1);
     var milestones = [];
     for (var i = 0; i < milestone_count; ++i) {
-      current_milestone.add('days', parseInt(milestone_length_in_days));
       milestones.push({
         title: milestone_prefix + ' ' + (i + 1),
-        end_at: current_milestone.clone()
+        start_at: current_milestone_start.clone(),
+        end_at: current_milestone_end.clone()
       });
+      current_milestone_start.add('days', milestone_length_in_days);
+      current_milestone_end.add('days', milestone_length_in_days);
     }
 
     var upload_milestones = milestones.map(function(milestone) {
       return {
         title: milestone.title,
         description: '',
+        start_at: milestone.start_at.format(DATE_FORMAT),
         end_at: milestone.end_at.format(DATE_FORMAT)
       };
     });
