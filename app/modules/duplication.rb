@@ -232,7 +232,10 @@ module Duplication
       #clone lesson plan milestone
       course.lesson_plan_milestones.each do |milestone|
         clone_milestone = milestone.dup
-        clone_milestone.end_at += options[:course_diff]
+        clone_milestone.start_at += options[:course_diff]
+        if clone_milestone.end_at
+          clone_milestone.end_at += options[:course_diff]
+        end
         clone_milestone.course = clone
         clone_milestone.save
       end

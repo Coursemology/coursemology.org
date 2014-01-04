@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140103084403) do
+ActiveRecord::Schema.define(:version => 20140104052733) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -515,6 +515,7 @@ ActiveRecord::Schema.define(:version => 20140103084403) do
     t.string   "title"
     t.text     "description"
     t.datetime "end_at"
+    t.datetime "start_at"
   end
 
   add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
