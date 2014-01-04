@@ -115,4 +115,21 @@ module Assignment
       self.queued_jobs.create(delayed_job_id: delayed_job.id)
     end
   end
+
+  def dup_options(dup_files = true)
+    clone = dup
+    clone.save
+    if dup_files
+      files.each do |file|
+        file.dup_owner(clone)
+      end
+      folder_path = PythonEvaluator.get_asm_file_path(self)
+      if File.exist? folder_path
+        copy_path = PythonEvaluator.get_asm_file_path(clone)
+        FileUtils.mkdir_p(copy_path) unless File.exist?(copy_path)
+        FileUtils.cp_r(folder_path + "." , copy_path)
+      end
+    end
+    clone
+  end
 end

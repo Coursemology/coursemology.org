@@ -73,15 +73,7 @@ class Training < ActiveRecord::Base
     publish?
   end
 
-  def dup_options(dup_files = true)
-    clone = dup
-    if dup_files
-      files.each do |file|
-        file.dup_owner(clone)
-      end
-    end
-    clone
-  end
+
 
   alias_method :sbms, :training_submissions
 end

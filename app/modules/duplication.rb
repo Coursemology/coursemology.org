@@ -5,9 +5,24 @@ module Duplication
     def duplicate_qn_no_log(qn)
       clone_qn = qn.dup
       if qn.is_a?(Mcq)
+        answer_map = {}
         qn.mcq_answers.each do |ma|
           clone_ma = ma.dup
+          clone_ma.save
           clone_qn.mcq_answers << clone_ma
+          answer_map[ma.id] = clone_ma.id
+        end
+
+        if qn.select_all?
+          begin
+            ca = []
+            eval(qn.correct_answers).each do |answer|
+              ca << answer_map[answer]
+            end
+            clone_qn.correct_answers = ca.to_json
+          rescue SyntaxError => se
+            puts 'RESCUED!'
+          end
         end
       end
       clone_qn
@@ -106,7 +121,7 @@ module Duplication
       user_course.user = user
       user_course.role = Role.find_by_name(:lecturer)
       clone.is_publish = false
-      clone.start_at = (clone.start_at || 0) + options[:course_diff]
+      clone.start_at = clone.start_at ? clone.start_at + options[:course_diff] : clone.start_at
       clone.end_at = if clone.end_at then clone.end_at + options[:course_diff] else clone.end_at end
 
       clone.save
@@ -115,6 +130,13 @@ module Duplication
 
       clone_map = {}
 
+
+      course.tabs.each do |tab|
+        clone_tab = tab.dup
+        clone_tab.course = clone
+        clone_tab.save
+        clone_map[tab] = clone_tab
+      end
 
       # clone the entity
       (course.missions + course.trainings).each do |asm|
@@ -126,6 +148,9 @@ module Duplication
         else
           diff = options[:training_diff]
           clone_asm.bonus_cutoff = if clone_asm.bonus_cutoff then clone_asm.bonus_cutoff + diff else clone_asm.bonus_cutoff end
+          if asm.tab
+            clone_asm.tab = clone_map[asm.tab]
+          end
         end
         clone_asm.open_at = clone_asm.open_at + diff
 
