@@ -23,6 +23,7 @@ class LessonPlanMilestonesController < ApplicationController
       milestone.course = @course
       milestone.attributes = value
       milestone.creator = current_user
+      milestone.start_at = milestone.start_at.beginning_of_day if milestone.start_at
       milestone.end_at = milestone.end_at.end_of_day if milestone.end_at
       milestones.push(milestone)
     end
