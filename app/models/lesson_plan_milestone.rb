@@ -58,7 +58,13 @@ class LessonPlanMilestone < ActiveRecord::Base
 
   def entries(include_virtual = true)
     next_milestone = self.next_milestone
-    cutoff_time = if next_milestone and !next_milestone.is_virtual? then next_milestone.start_at else self.end_at end
+    cutoff_time = self.end_at
+
+    if next_milestone and !next_milestone.is_virtual?
+      if next_milestone.start_at - self.end_at > 86400
+        cutoff_time = next_milestone.start_at
+      end
+    end  
 
     start_after_us = "start_at >= :start_at"
     before_cutoff = " AND start_at < :cutoff"
