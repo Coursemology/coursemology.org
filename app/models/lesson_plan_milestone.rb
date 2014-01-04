@@ -49,11 +49,11 @@ class LessonPlanMilestone < ActiveRecord::Base
   end
   
   def previous_milestone
-    self.course.lesson_plan_milestones.where("start_at < :start_at", :start_at => self.start_at).order("start_at ASC").first
+    self.course.lesson_plan_milestones.where("start_at < :start_at", :start_at => self.start_at).order("start_at DESC").first
   end
 
   def next_milestone
-    self.course.lesson_plan_milestones.where("start_at > :start_at", :start_at => self.start_at).order("start_at DESC").first
+    self.course.lesson_plan_milestones.where("start_at > :start_at", :start_at => self.start_at).order("start_at ASC").first
   end
 
   def entries(include_virtual = true)
