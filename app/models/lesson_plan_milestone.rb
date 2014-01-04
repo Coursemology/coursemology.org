@@ -57,20 +57,23 @@ class LessonPlanMilestone < ActiveRecord::Base
   end
 
   def entries(include_virtual = true)
-    # Find the entries where the end time is after the last milestone, if any
-    # and less than or equal to this milestone's end time.
-    previous_milestone = self.previous_milestone
-    start_at = if previous_milestone then previous_milestone.end_at else nil end
-    real_entries = LessonPlanEntry.where("end_at <= :end_at " +
-      (if previous_milestone then "AND end_at > :start_at" else "" end) +
-      " AND course_id = :course_id",
-      :end_at => self.end_at, :start_at => start_at, :course_id => self.course_id)
+    # Get entries whose start time is after this milestone's start, but <= the next
+    # milestone's start.
+    next_milestone = self.next_milestone
+    cutoff_time = if next_milestone then next_milestone.start_at else nil end
+
+    start_after_us = "start_at >= :start_at "
+    before_next_milestone_starts = if next_milestone then "AND start_at < :next_end_at" else "" end
+    in_current_course = " AND course_id = :course_id"
+
+    actual_entries = LessonPlanEntry.where(start_after_us + before_next_milestone_starts + in_current_course,
+      :start_at => self.start_at, :next_end_at => cutoff_time, :course_id => self.course_id)
 
     if include_virtual
-      virtual_entries = course.lesson_plan_virtual_entries(start_at, self.end_at)
-      real_entries + virtual_entries
+      virtual_entries = course.lesson_plan_virtual_entries(self.start_at, cutoff_time)
+      actual_entries + virtual_entries
     else
-      real_entries
+      actual_entries
     end
   end
 
