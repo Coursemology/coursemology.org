@@ -9,16 +9,16 @@ class LessonPlanEntriesController < ApplicationController
     
     if @milestones.length > 0
       last_milestone = @milestones[@milestones.length - 1]
+      first_milestone = @milestones[0]
     else
+      first_milestone = nil
       last_milestone = nil
     end
     
-    if last_milestone then
-      if last_milestone.end_at then
-        other_entries = entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
-      else
-        other_entries = []
-      end
+    if last_milestone and last_milestone.end_at
+      other_entries = entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
+    elsif last_milestone
+      other_entries = []
     else
       other_entries = entries_between_date_range(nil, nil)
     end
@@ -26,6 +26,15 @@ class LessonPlanEntriesController < ApplicationController
     other_entries_milestone = LessonPlanMilestone.create_virtual("Other Items", other_entries)
     other_entries_milestone.previous_milestone = last_milestone
     @milestones <<= other_entries_milestone
+
+
+    if first_milestone
+      entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
+      if entries_before_first.length > 0
+        previous_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
+        @milestones.insert(0, previous_entries_milestone)
+      end
+    end
   end
 
   def new
