@@ -6,35 +6,13 @@ class LessonPlanEntriesController < ApplicationController
 
   def index
     @milestones = @course.lesson_plan_milestones.order("start_at")
-    
-    if @milestones.length > 0
-      last_milestone = @milestones[@milestones.length - 1]
-      first_milestone = @milestones[0]
-    else
-      first_milestone = nil
-      last_milestone = nil
-    end
-    
-    if last_milestone and last_milestone.end_at
-      other_entries = entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
-    elsif last_milestone
-      other_entries = []
-    else
-      other_entries = entries_between_date_range(nil, nil)
-    end
 
-    other_entries_milestone = LessonPlanMilestone.create_virtual("Other Items", other_entries)
-    other_entries_milestone.previous_milestone = last_milestone
+    other_entries_milestone = create_other_items_milestone(@milestones)
+    prior_entries_milestone = create_prior_items_milestone(@milestones)
+
     @milestones <<= other_entries_milestone
-
-
-    if first_milestone
-      entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
-      if entries_before_first.length > 0
-        previous_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
-        previous_entries_milestone.next_milestone = first_milestone
-        @milestones.insert(0, previous_entries_milestone)
-      end
+    if prior_entries_milestone
+      @milestones.insert(0, prior_entries_milestone)
     end
   end
 
@@ -130,5 +108,42 @@ private
 
     entries_in_range = virtual_entries + actual_entries
     entries_in_range.sort_by { |e| e.start_at }
+  end
+
+  def create_other_items_milestone(all_milestones)
+    last_milestone = if all_milestones.length > 0 then
+      all_milestones[all_milestones.length - 1]
+    else 
+      nil
+    end
+
+    other_entries = if last_milestone and last_milestone.end_at then
+      entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
+    elsif last_milestone
+      []
+    else
+      entries_between_date_range(nil, nil)
+    end
+
+    other_entries_milestone = LessonPlanMilestone.create_virtual("Other Items", other_entries)
+    other_entries_milestone.previous_milestone = last_milestone
+    other_entries_milestone
+  end
+
+  def create_prior_items_milestone(all_milestones)
+    first_milestone = if all_milestones.length > 0 then
+      all_milestones[0]
+    else
+      nil
+    end
+
+    if first_milestone
+      entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
+      if entries_before_first.length > 0
+        prior_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
+        prior_entries_milestone.next_milestone = first_milestone
+      end
+      prior_entries_milestone
+    end
   end
 end
