@@ -8,7 +8,7 @@ class LessonPlanEntriesController < ApplicationController
     @milestones = @course.lesson_plan_milestones.order("start_at")
     
     if @milestones.length > 0
-      last_milestone = @milestones[@milestones.length - 1];
+      last_milestone = @milestones[@milestones.length - 1]
       last_end_date = last_milestone.end_at.advance(:days => 1)
     else
       last_milestone = nil
