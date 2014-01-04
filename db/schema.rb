@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131229225554) do
+ActiveRecord::Schema.define(:version => 20140103084403) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -980,6 +980,7 @@ ActiveRecord::Schema.define(:version => 20131229225554) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "owner_type",  :null => false
+    t.integer  "pos"
   end
 
   create_table "tag_groups", :force => true do |t|

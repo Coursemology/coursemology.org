@@ -86,7 +86,7 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
         #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
         #}
         #@stderr, @stderw = IO.pipe
-        @stdout,@stderr, status = Open3.capture3("python3 #{file_path}")
+        @stdout,@stderr, status = Open3.capture3("python3.3 #{file_path}")
         errors = @stderr
         stdout = @stdout
         puts "stdout",stdout

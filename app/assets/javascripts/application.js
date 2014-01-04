@@ -15,6 +15,9 @@
 //= require jquery-ui.min
 //= require jquery-fileupload
 //= require tree.jquery
+//= require angular
+//= require angular-resource
+//= require angular-route
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -227,6 +230,17 @@ $(document).ready(function() {
     $('body').on('click', 'a.btn.disabled, a.btn[disabled]', function(e) {
       e.preventDefault();
     });
+
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $(".sort tbody").sortable({
+        helper: fixHelper
+    }).disableSelection();
 });
 
 // Define our framework for implementing client-side form validation.
@@ -314,6 +328,7 @@ jQuery.fn.extend({
       validateForm.apply($(this).parents('form')[0], arguments);
     });
   }
+
 });
 
 function _jfdiFormatFunc(i, elem) {

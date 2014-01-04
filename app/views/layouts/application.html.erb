@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="coursemologyApp">
 <head>
   <title>Coursemology</title>
   <!--[if lt IE 9]>
@@ -9,6 +9,7 @@
   <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/images/favicon.png">
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <script src="https://rawgithub.com/angular-ui/ui-sortable/master/src/sortable.js"></script>
   <%= include_gon %>
   <%= csrf_meta_tags %>
   <% if @course && @course.id && (can? :participate, Course) %>

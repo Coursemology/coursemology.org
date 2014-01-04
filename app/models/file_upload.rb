@@ -61,7 +61,7 @@ class FileUpload < ActiveRecord::Base
   end
 
   def dup_owner(new_owner)
-    FileUpload.skip_callback(:save, :after, :sync_filename)
+    #FileUpload.skip_callback(:save, :after, :sync_filename)
     clone_file = FileUpload.new
     clone_file.copy_url = file_url
     clone_file.original_name = original_name
@@ -71,7 +71,7 @@ class FileUpload < ActiveRecord::Base
     clone_file.file_content_type = file_content_type
     clone_file.creator = creator
     clone_file.save
-    FileUpload.set_callback(:save, :after, :sync_filename)
+    #FileUpload.set_callback(:save, :after, :sync_filename)
   end
 
   def file_url
@@ -98,12 +98,16 @@ private
 
   # Sets the download filename of S3 if specified; otherwise removes the filename.
   def save_s3_filename(filename)
-    if not self.file then
+    unless self.file then
+      return
+    end
+
+    if self.copy_url
       return
     end
 
     obj = file.s3_object
-    if not obj then
+    unless obj then
       return
     end
 
