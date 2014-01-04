@@ -58,7 +58,10 @@ class LessonPlanMilestonesController < ApplicationController
 
   def update
     @lesson_plan_milestone.update_attributes(params[:lesson_plan_milestone])
-    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+    @lesson_plan_milestone.start_at = @lesson_plan_milestone.start_at.beginning_of_day
+    if @lesson_plan_milestone.end_at then
+      @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+    end
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
@@ -80,7 +83,7 @@ class LessonPlanMilestonesController < ApplicationController
   end
     
   def overview
-    @milestones = @course.lesson_plan_milestones.order("end_at")
+    @milestones = @course.lesson_plan_milestones.order("start_at")
     render "/lesson_plan/overview"
   end
 
