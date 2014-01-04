@@ -44,7 +44,7 @@ class Tabs::TabsController < ApplicationController
     @tab = @course.tabs.build(JSON.parse(params[:tab]))
 
     if @course.tabs.count == 0
-      if params[:type] == Training.to_s
+      if @tab.owner_type == Training.to_s
         @course.trainings.each do |training|
           training.tab = @tab
           training.save
@@ -82,8 +82,16 @@ class Tabs::TabsController < ApplicationController
   # DELETE /tab/tabs/1
   # DELETE /tab/tabs/1.json
   def destroy
-    @tab_tab = Tab.find(params[:id])
-    @tab_tab.destroy
+    @tab = Tab.find(params[:id])
+    #put all trainings into first tab
+    first_tab = @course.tabs.first
+    first_tab = first_tab == @tab ? nil : first_tab
+    @tab.trainings.each do |training|
+      training.tab = first_tab
+      training.save
+    end
+    @tab.destroy
+
 
     respond_to do |format|
       format.html { redirect_to tab_tabs_url }

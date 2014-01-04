@@ -6,43 +6,38 @@
 
     <div class="modal hide fade" id="add_tab">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="location.reload();">&times;</button>
         <h3>Manage Tabs</h3>
       </div>
       <div class="modal-body form-horizontal">
-        <% if @course.training_tabs.count == 0 %>
-            <p style="margin-left: 20px">*Note: This is your first tab, all your current trainings will be grouped into this tab.</p>
-
-        <% end %>
         <div ng-view></div>
       </div>
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true" onclick="location.reload();">Close</button>
       </div>
     </div>
 <% end %>
 <ul class="nav nav-tabs">
   <% if @tabs.length == 0 %>
-      <li class="<%= "active" if @tab == 'Trainings' %>">
+      <li class="<%= "active" if @tab_id == 'Trainings' %>">
         <a href="<%=  course_trainings_path(@course) %>?_tab=Trainings" data-toggle="tab"><h4>Trainings</h4></a>
       </li>
   <% else %>
       <% @tabs.each do |tab| %>
-          <li class="<%= "active" if @tab == tab.id.to_s %>">
+          <li class="<%= "active" if @tab_id == tab.id.to_s %>">
             <a href="<%=  course_trainings_path(@course) %>?_tab=<%= tab.id %>" data-toggle="tab"><h4><%= tab.title %></h4></a>
           </li>
       <% end %>
   <% end %>
   <% if can? :manage, :bulk_update %>
-      <li class="<%= "active" if @tab == 'overview' %>">
+      <li class="<%= "active" if @tab_id == 'overview' %>">
         <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
       </li>
   <% end %>
 </ul>
 
 <script>
-    var url = document.URL;
-    console.log(url);
+    var tab_count = 0;
 
     function get_course_id(url) {
         var parts = url.split('/');
@@ -109,7 +104,12 @@
             })
             .controller('ListCtrl', function($scope, $routeParams, $location, Tabs) {
                 var tabs = new Tabs(get_course_id($location.absUrl()));
-                $scope.tabs = tabs.index();
+                var holder = tabs.index();
+                $scope.tabs = holder;
+                var tab_count = holder.length;
+                console.log(tab_count);
+                console.log($scope.tabs);
+
 
                 $scope.sortableOptions = {
                     update: function(e, ui) {
@@ -133,6 +133,8 @@
             .controller('CreateCtrl', function($scope, $location, $routeParams, $timeout, Tabs) {
                 var tabs = new Tabs(get_course_id($location.absUrl()));
 
+                $scope.message = "*Note: All your current trainings will be grouped into your first tab";
+
                 $scope.save = function() {
                     var attrs = $scope.tab;
                     console.log(attrs);
@@ -146,16 +148,18 @@
 
             .controller('EditCtrl',
             function($scope, $location, $routeParams, Tabs) {
-                console.log($routeParams);
                 var tabs = new Tabs(get_course_id($location.absUrl()));
 
                 $scope.tab = tabs.find($routeParams.tab_id);
+                $scope.message = "*Note: trainings under deleted tab will be moved to the first tab.";
 
 
-                console.log($scope.tab);
                 $scope.destroy = function() {
-                    $scope.tab.$remove();
-                    $location.path('/');
+                    var deleteTab = confirm('Are you absolutely sure you want to delete tab \'' + $scope.tab.title + "\' ?" );
+                    if (deleteTab) {
+                        $scope.tab.$remove();
+                        $location.path('/');
+                    }
                 };
 
                 $scope.save = function() {
@@ -199,6 +203,8 @@
 
 <script type="text/ng-template" id="detail.html">
   <form name="myForm" class="form-horizontal">
+    <p style="margin-left: 20px">{{message}}</p>
+
     <div class="control-group" ng-class="{error: myForm.name.$invalid}">
       <label class="control-label">Title</label>
       <div class="controls">

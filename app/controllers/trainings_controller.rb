@@ -27,15 +27,16 @@ class TrainingsController < ApplicationController
     end
 
     @tabs = @course.training_tabs
-    if params['_tab']
-      @tab = params['_tab']
-      @trainings = @course.tabs.find(@tab).trainings
+    if params['_tab'] and @tab = @course.tabs.where(id:@tab_id).first
+      @tab_id = params['_tab']
+      @trainings = @tab.trainings
+
       #@trainings = @trainings.where(t_type: AssignmentType.extra)
     elsif @tabs.length > 0
-      @tab = @tabs.first.id.to_s
+      @tab_id = @tabs.first.id.to_s
       @trainings = @tabs.first.trainings
     else
-      @tab='Trainings'
+      @tab_id='Trainings'
     end
 
 
@@ -143,7 +144,7 @@ class TrainingsController < ApplicationController
   def overview
     authorize! :manage, :bulk_update
     @tabs = @course.training_tabs
-    @tab = 'overview'
+    @tab_id = 'overview'
     @trainings = @course.trainings.order(:t_type, :open_at)
     @display_columns = {}
     @course.training_columns_display.each do |cp|
