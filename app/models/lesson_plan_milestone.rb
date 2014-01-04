@@ -60,24 +60,14 @@ class LessonPlanMilestone < ActiveRecord::Base
     # Get entries whose start time is after this milestone's start, but <= the next
     # milestone's start.
     next_milestone = self.next_milestone
-    cutoff_time = if next_milestone then next_milestone.start_at else nil end
+    cutoff_time = if next_milestone and !next_milestone.is_virtual? then next_milestone.start_at else self.end_at end
 
-    start_after_us = "start_at >= :start_at "
-
-    before_next_milestone_starts = ""
-    before_our_end = ""
-    if next_milestone then
-      before_next_milestone_starts = "AND start_at < :next_start_at"
-      if self.end_at and next_milestone.start_at - self.end_at <= 86400 then
-        before_our_end = " AND start_at < :our_end_at"
-      end
-    end
-
+    start_after_us = "start_at >= :start_at"
+    before_cutoff = " AND start_at < :cutoff"
     in_current_course = " AND course_id = :course_id"
 
-    actual_entries = LessonPlanEntry.where(start_after_us + before_next_milestone_starts +
-     before_our_end + in_current_course,
-      :start_at => self.start_at, :next_start_at => cutoff_time, :our_end_at => self.end_at, :course_id => self.course_id)
+    actual_entries = LessonPlanEntry.where(start_after_us + before_cutoff + in_current_course,
+      :start_at => self.start_at, :cutoff => cutoff_time, :course_id => self.course_id)
 
     if include_virtual
       virtual_entries = course.lesson_plan_virtual_entries(self.start_at, cutoff_time)
