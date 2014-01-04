@@ -8,7 +8,7 @@
     </div>
 
     <div class="control-group">
-      <label>Question Type</label>
+      <label class="control-label">Question Type</label>
       <div class="controls">
         <select name="survey_question[type_id]" id="type-select" disabled>
           <% SurveyQuestionType.all.each do |type| %>
@@ -24,7 +24,7 @@
     </div>
 
     <div class="control-group">
-      <label>Maximum Response</label>
+      <label class="control-label">Maximum Response</label>
       <div class="controls">
         <input type="number" name="survey_question[max_response]" value="<%= @survey_question.max_response %>" class="input-small" min="1" required>
       </div>
