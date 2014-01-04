@@ -9,14 +9,15 @@ class LessonPlanMilestone < ActiveRecord::Base
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(*args)
     (Class.new do
-        def initialize(other_entries)
+        def initialize(title, other_entries)
+          @title = title
           @previous_milestone = nil
           @next_milestone = nil
           @other_entries = other_entries
         end
 
         def title
-          "Other Items"
+          @title
         end
         def description
           nil
