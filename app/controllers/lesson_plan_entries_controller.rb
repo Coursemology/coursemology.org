@@ -9,32 +9,21 @@ class LessonPlanEntriesController < ApplicationController
     
     if @milestones.length > 0
       last_milestone = @milestones[@milestones.length - 1]
-      last_end_date = last_milestone.end_at.advance(:days => 1)
     else
       last_milestone = nil
-      last_end_date = nil
     end
     
-    if can? :manage, Mission
-      virtual_entries = @course.lesson_plan_virtual_entries(last_end_date)
+    if last_milestone then
+      if last_milestone.end_at then
+        other_entries = entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
+      else
+        other_entries = []
+      end
     else
-      virtual_entries = @course.lesson_plan_virtual_entries(last_end_date).select { |entry| entry.is_published }
+      other_entries = entries_between_date_range(nil, nil)
     end
 
-    other_entries = if last_milestone then
-        if last_end_date then
-          @course.lesson_plan_entries.where("end_at > :end_at",
-            :end_at => last_end_date) +
-          virtual_entries
-        else
-          []
-        end
-      else
-        @course.lesson_plan_entries.all +
-        virtual_entries
-      end
-
-    other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
+    other_entries_milestone = LessonPlanMilestone.create_virtual("Other Items", other_entries)
     other_entries_milestone.previous_milestone = last_milestone
     @milestones <<= other_entries_milestone
   end
