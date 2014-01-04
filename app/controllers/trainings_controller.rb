@@ -27,10 +27,10 @@ class TrainingsController < ApplicationController
     end
 
     @tabs = @course.training_tabs
-    if params['_tab'] and @tab = @course.tabs.where(id:@tab_id).first
-      @tab_id = params['_tab']
-      @trainings = @tab.trainings
+    @tab_id = params['_tab']
 
+    if params['_tab'] and @tab = @course.tabs.where(id:@tab_id).first
+      @trainings = @tab.trainings
       #@trainings = @trainings.where(t_type: AssignmentType.extra)
     elsif @tabs.length > 0
       @tab_id = @tabs.first.id.to_s
