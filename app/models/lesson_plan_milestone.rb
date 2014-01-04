@@ -67,7 +67,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     end  
 
     start_after_us = "start_at >= :start_at"
-    before_cutoff = " AND start_at < :cutoff"
+    before_cutoff = if cutoff_time then " AND start_at < :cutoff" else "" end
     in_current_course = " AND course_id = :course_id"
 
     actual_entries = LessonPlanEntry.where(start_after_us + before_cutoff + in_current_course,
