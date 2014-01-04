@@ -5,27 +5,30 @@ class LessonPlanEntriesController < ApplicationController
   before_filter :load_general_course_data, :only => [:index, :new, :edit]
 
   def index
-    @milestones = @course.lesson_plan_milestones.order("end_at")
+    @milestones = @course.lesson_plan_milestones.order("start_at")
     
     if @milestones.length > 0
       last_milestone = @milestones[@milestones.length - 1];
-      from = last_milestone.end_at
+      last_end_date = last_milestone.end_at
     else
       last_milestone = nil
-      from = nil
+      last_end_date = nil
     end
     
     if can? :manage, Mission
-      virtual_entries = @course.lesson_plan_virtual_entries(from)
+      virtual_entries = @course.lesson_plan_virtual_entries(last_end_date)
     else
-      virtual_entries = @course.lesson_plan_virtual_entries(from).select { |entry| entry.is_published }
+      virtual_entries = @course.lesson_plan_virtual_entries(last_end_date).select { |entry| entry.is_published }
     end
 
-    # Add the entries which don't belong in any milestone
     other_entries = if last_milestone then
-        @course.lesson_plan_entries.where("end_at > :end_at",
-          :end_at => from) +
-        virtual_entries
+        if last_end_date then
+          @course.lesson_plan_entries.where("end_at > :end_at",
+            :end_at => last_end_date) +
+          virtual_entries
+        else
+          []
+        end
       else
         @course.lesson_plan_entries.all +
         virtual_entries
