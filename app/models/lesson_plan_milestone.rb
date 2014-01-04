@@ -11,6 +11,7 @@ class LessonPlanMilestone < ActiveRecord::Base
     (Class.new do
         def initialize(other_entries)
           @previous_milestone = nil
+          @next_milestone = nil
           @other_entries = other_entries
         end
 
@@ -23,6 +24,9 @@ class LessonPlanMilestone < ActiveRecord::Base
         def entries
           @other_entries
         end
+        def start_at
+          nil
+        end
         def end_at
           nil
         end
@@ -32,7 +36,12 @@ class LessonPlanMilestone < ActiveRecord::Base
         def previous_milestone=(milestone)
           @previous_milestone = milestone
         end
-
+        def next_milestone
+          @next_milestone
+        end
+        def next_milestone=(milestone)
+          @next_milestone = milestone
+        end
         def is_virtual?
           true
         end
@@ -41,6 +50,10 @@ class LessonPlanMilestone < ActiveRecord::Base
   
   def previous_milestone
     self.course.lesson_plan_milestones.where("end_at < :end_at", :end_at => self.end_at).order("end_at DESC").first
+  end
+
+  def next_milestone
+    self.course.lesson_plan_milestones.where("start_at > :start_at", :start_at => self.start_at).order("start_at DESC").first
   end
 
   def entries(include_virtual = true)
