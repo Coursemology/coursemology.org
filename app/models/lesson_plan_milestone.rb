@@ -57,8 +57,6 @@ class LessonPlanMilestone < ActiveRecord::Base
   end
 
   def entries(include_virtual = true)
-    # Get entries whose start time is after this milestone's start, but <= the next
-    # milestone's start.
     next_milestone = self.next_milestone
     cutoff_time = if next_milestone and !next_milestone.is_virtual? then next_milestone.start_at else self.end_at end
 
