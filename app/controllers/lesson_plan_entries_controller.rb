@@ -139,10 +139,8 @@ private
 
     if first_milestone
       entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
-      if entries_before_first.length > 0
-        prior_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
-        prior_entries_milestone.next_milestone = first_milestone
-      end
+      prior_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
+      prior_entries_milestone.next_milestone = first_milestone
       prior_entries_milestone
     end
   end
