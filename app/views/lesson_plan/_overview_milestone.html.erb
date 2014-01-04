@@ -8,11 +8,26 @@
       <h4><%= milestone.title %></h4>
     <% end %>
   </div>
-  <div class="span3">
+  <div class="span2">
+    <% if !milestone.is_virtual? %>
+    <h4>Start Date</h4>
+    <div class="datepicker input-append date">
+      <input name="milestones[<%= milestone.id %>][start_at]" type="datetime"
+       value="<%= milestone.start_at.strftime('%d-%m-%Y') %>" 
+       class="input-medium" required="true">
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+      </span>
+    </div>
+    <% end %>
+  </div>
+  <div class="span2">
     <% if !milestone.is_virtual? %>
     <h4>End Date</h4>
     <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" required="true" value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" class="input-small" required="true">
+      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" 
+      <% if milestone.end_at %> value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" <% end %> 
+      class="input-medium">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
