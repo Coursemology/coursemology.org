@@ -205,13 +205,13 @@ $(document).ready(function() {
     }
   }
   $('.lesson-plan-entry-form').validatr([
-    ['#lesson_plan_entry_start_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', 'lesson_plan_entry_end_at_picker')],
-    ['#lesson_plan_entry_end_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', 'lesson_plan_entry_end_at_picker')]
+    ['#lesson_plan_entry_start_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', '#lesson_plan_entry_end_at_picker')],
+    ['#lesson_plan_entry_end_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', '#lesson_plan_entry_end_at_picker')]
   ]);
 
   // Validator for milestone form.
   $('.lesson-plan-milestone-form').validatr([
-    ['#lesson_plan_milestone_start_at_picker', validate_start_end_date('lesson_plan_milestone_start_at_picker', 'lesson_plan_milestone_end_at_picker')],
-    ['#lesson_plan_milestone_end_at_picker', validate_start_end_date('lesson_plan_milestone_start_at_picker', 'lesson_plan_milestone_end_at_picker')]
+    ['#lesson_plan_milestone_start_at_picker', validate_start_end_date('#lesson_plan_milestone_start_at_picker', '#lesson_plan_milestone_end_at_picker')],
+    ['#lesson_plan_milestone_end_at_picker', validate_start_end_date('#lesson_plan_milestone_start_at_picker', '#lesson_plan_milestone_end_at_picker')]
   ]);
 });
