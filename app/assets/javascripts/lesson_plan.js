@@ -193,17 +193,19 @@ $(document).ready(function() {
   });
 
   // Install the validator for the event form
-  function validate_start_end_date() {
-    var start = $('#lesson_plan_entry_start_at_picker').data('datetimepicker').getDate();
-    var end = $('#lesson_plan_entry_end_at_picker').data('datetimepicker').getDate();
-    if (start > end) {
-      return 'The start date must be before the end date.';
-    } else {
-      return null;
+  function validate_start_end_date(startPickerId, endPickerId) {
+    return function() {
+      var start = $(startPickerId).data('datetimepicker').getDate();
+      var end = $(endPickerId).data('datetimepicker').getDate();
+      if (start > end) {
+        return 'The start date must be before the end date.';
+      } else {
+        return null;
+      }
     }
   }
   $('.lesson-plan-entry-form').validatr([
-    ['#lesson_plan_entry_start_at_picker', validate_start_end_date],
-    ['#lesson_plan_entry_end_at_picker', validate_start_end_date]
+    ['#lesson_plan_entry_start_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', 'lesson_plan_entry_end_at_picker')],
+    ['#lesson_plan_entry_end_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', 'lesson_plan_entry_end_at_picker')]
   ]);
 });
