@@ -32,6 +32,7 @@ class LessonPlanEntriesController < ApplicationController
       entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
       if entries_before_first.length > 0
         previous_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
+        previous_entries_milestone.next_milestone = first_milestone
         @milestones.insert(0, previous_entries_milestone)
       end
     end
