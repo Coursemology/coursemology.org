@@ -63,14 +63,14 @@ class LessonPlanMilestone < ActiveRecord::Base
     cutoff_time = if next_milestone then next_milestone.start_at else nil end
 
     start_after_us = "start_at >= :start_at "
-    before_next_milestone_starts = if next_milestone then "AND start_at < :next_end_at" else "" end
+    before_next_milestone_starts = if next_milestone then "AND start_at < :next_start_at" else "" end
     before_our_end = if self.end_at and next_milestone and next_milestone.start_at - self.end_at <= 86400 then
       " AND start_at < :our_end_at" else "" end
     in_current_course = " AND course_id = :course_id"
 
     actual_entries = LessonPlanEntry.where(start_after_us + before_next_milestone_starts +
      before_our_end + in_current_course,
-      :start_at => self.start_at, :next_end_at => cutoff_time, :our_end_at => self.end_at, :course_id => self.course_id)
+      :start_at => self.start_at, :next_start_at => cutoff_time, :our_end_at => self.end_at, :course_id => self.course_id)
 
     if include_virtual
       virtual_entries = course.lesson_plan_virtual_entries(self.start_at, cutoff_time)
