@@ -115,4 +115,21 @@ private
 
     resources
   end
+
+  def entries_between_date_range(start_date, end_date)
+    if can? :manage, Mission
+      virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date)
+    else
+      virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date).select { |entry| entry.is_published }
+    end
+
+    after_start = if start_date then "AND start_at > :start_date " else "" end
+    before_end = if end_date then "AND end_at < :end_date" else "" end
+
+    actual_entries = @course.lesson_plan_entries.where("TRUE " + after_start + before_end,
+      :start_date => start_date, :end_date => end_date)
+
+    entries_in_range = virtual_entries + actual_entries
+    entries_in_range.sort_by { |e| e.start_at }
+  end
 end
