@@ -1,6 +1,6 @@
 var coursemologyApp = angular.module('coursemologyApp', ['ngResource', 'ngRoute', 'ui.sortable']);
 
-coursemologyApp.config(function($httpProvider ){
+coursemologyApp.config(function($httpProvider){
     var authToken;
     authToken = $("meta[name=\"csrf-token\"]").attr("content");
     return $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = authToken;
