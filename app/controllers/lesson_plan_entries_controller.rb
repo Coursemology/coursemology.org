@@ -67,7 +67,7 @@ class LessonPlanEntriesController < ApplicationController
   def destroy
     @lesson_plan_entry.destroy
     respond_to do |format|
-      format.html { redirect_to course_lesson_plan_path(@course),
+      format.html { redirect_to :back,
                     notice: "The lesson plan entry #{@lesson_plan_entry.title} has been removed." }
     end
   end
