@@ -59,7 +59,8 @@
     </div>
     
     <hr class="hr-shrink-margin">
-    <% milestone.entries.each { |entry| %>
+    <% sorted_entries = milestone.entries.sort_by { |e| e.start_at  } %>
+    <% sorted_entries.each { |entry| %>
       <% if !entry.is_virtual? %>
         <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
       <% end %>
