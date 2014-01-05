@@ -2,15 +2,26 @@
   <div class="span1"><h3>Milestone</h3></div>
   <div class="span3">
     <h4>Title</h4>
+  </div>
+  <% if !milestone.is_virtual? %>
+  <div class="span2">
+    <h4>Start Date</h4>
+  </div>
+  <div class="span2">
+    <h4>End Date (Optional)</h4>
+  </div>
+  <% end %>
+</div>
+<div class="row">
+  <div class="span3 offset1">
     <% if !milestone.is_virtual? %>
       <input name="milestones[<%= milestone.id %>][title]" type="text" class="span3" required="true" value="<%= milestone.title %>">
     <% else %>
       <h4><%= milestone.title %></h4>
     <% end %>
   </div>
+  <% if !milestone.is_virtual? %>
   <div class="span2">
-    <% if !milestone.is_virtual? %>
-    <h4>Start Date</h4>
     <div class="datepicker input-append date">
       <input name="milestones[<%= milestone.id %>][start_at]" type="datetime"
        value="<%= milestone.start_at.strftime('%d-%m-%Y') %>" 
@@ -19,11 +30,8 @@
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
     </div>
-    <% end %>
   </div>
   <div class="span2">
-    <% if !milestone.is_virtual? %>
-    <h4>End Date (Optional)</h4>
     <div class="datepicker input-append date">
       <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" 
       <% if milestone.end_at %> value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" <% end %> 
@@ -32,16 +40,14 @@
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
     </div>
-    <% end %>
   </div>
 
   <div class="span1">
-  <% if !milestone.is_virtual? %>
     <div class="pull-right">
     <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
     </div>
-  <% end %>
   </div>
+  <% end %>
 </div>
 
 <% if (milestone.entries.select { |m| not(m.is_virtual?) }).length > 0 %>
