@@ -81,11 +81,6 @@ class LessonPlanMilestonesController < ApplicationController
                     notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been removed." }
     end
   end
-    
-  def overview
-    @milestones = @course.lesson_plan_milestones.order("start_at")
-    render "/lesson_plan/overview"
-  end
 
   def bulk_update
     authorize! :manage, LessonPlanMilestone

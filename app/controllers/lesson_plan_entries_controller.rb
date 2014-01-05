@@ -64,6 +64,11 @@ class LessonPlanEntriesController < ApplicationController
     end
   end
 
+  def overview
+    @milestones = get_milestones_for_course(@course)
+    render "/lesson_plan/overview"
+  end
+
 private
   def render(*args)
     options = args.extract_options!
