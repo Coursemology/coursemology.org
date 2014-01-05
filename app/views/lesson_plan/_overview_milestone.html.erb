@@ -34,6 +34,14 @@
     </div>
     <% end %>
   </div>
+
+  <div class="span1">
+  <% if !milestone.is_virtual? %>
+    <div class="pull-right">
+    <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
+    </div>
+  <% end %>
+  </div>
 </div>
 
 <% if (milestone.entries.select { |m| not(m.is_virtual?) }).length > 0 %>
@@ -53,7 +61,7 @@
         <h4>Start</h4>
       </div>
       
-      <div class="span3">
+      <div class="span2">
         <h4>End</h4>
       </div>
     </div>

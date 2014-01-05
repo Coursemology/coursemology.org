@@ -11,21 +11,25 @@
     <input name="lesson_plan_entry[<%= entry.id %>][title]" type="text" value="<%= entry.title %>" class="span3" required="true">
   </div>
   
-  <div class="span5">
-    <div class="pull-left datetimepicker input-append">
+  <div class="span2">
+    <div class="datetimepicker input-append">
       <input name="lesson_plan_entry[<%= entry.id %>[start_at]" type="datetime" value="<%= entry.start_at.strftime('%d-%m-%Y %H:%M') %>" class="input-medium" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
     </div>
-    
-    <div class="span-left-margin datetimepicker input-append">
+  </div>
+  
+  <div class="span2">  
+    <div class="datetimepicker input-append">
       <input name="lesson_plan_entry[<%= entry.id %>[end_at]" type="datetime" value="<%= entry.end_at.strftime('%d-%m-%Y %H:%M') %>" class="input-medium" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
     </div>
-
+  </div>
+  
+  <div class="span1">
     <div class="pull-right">
     <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
     </div>
