@@ -19,7 +19,8 @@
   <% grouped_milestones[true] = [] unless grouped_milestones[true] %>
   <% sorted_milestones = grouped_milestones[false].sort_by { |milestone| milestone.start_at } + grouped_milestones[true] %>
   <% sorted_milestones.each { |milestone| %>
-    <% if !milestone.is_virtual? || milestone.entries.length  > 0 %>
+    <% actual_entries = milestone.entries.select { |e| !e.is_virtual?  } %>
+    <% if !milestone.is_virtual? || actual_entries.length  > 0 %>
       <%= render :partial => 'lesson_plan/overview_milestone', locals: { :milestone => milestone } %>
     <% end %>
   <% } %>
