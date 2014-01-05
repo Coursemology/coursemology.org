@@ -25,5 +25,9 @@
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
     </div>
+
+    <div class="pull-right">
+    <%= render :partial => "layouts/delete_confirm", :locals => { :path_to_item => course_lesson_plan_entry_path(@course, entry) } %>
+    </div>
   </div>
 </div>
