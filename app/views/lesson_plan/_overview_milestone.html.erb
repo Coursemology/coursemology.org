@@ -17,7 +17,7 @@
     <% if !milestone.is_virtual? %>
       <input name="milestones[<%= milestone.id %>][title]" type="text" class="span3" required="true" value="<%= milestone.title %>">
     <% else %>
-      <h4><%= milestone.title %></h4>
+      <h3 class="no-margin"><%= milestone.title %></h3>
     <% end %>
   </div>
   <% if !milestone.is_virtual? %>
