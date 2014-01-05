@@ -77,7 +77,7 @@ class LessonPlanMilestonesController < ApplicationController
   def destroy
     @lesson_plan_milestone.destroy
     respond_to do |format|
-      format.html { redirect_to course_lesson_plan_path(@course),
+      format.html { redirect_to :back,
                     notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been removed." }
     end
   end
