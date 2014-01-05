@@ -1,9 +1,9 @@
 <div class="row">
   <div class="span1"><h3>Milestone</h3></div>
-  <div class="span2">
+  <div class="span3">
     <h4>Title</h4>
     <% if !milestone.is_virtual? %>
-      <input name="milestones[<%= milestone.id %>][title]" type="text" class="span2" required="true" value="<%= milestone.title %>">
+      <input name="milestones[<%= milestone.id %>][title]" type="text" class="span3" required="true" value="<%= milestone.title %>">
     <% else %>
       <h4><%= milestone.title %></h4>
     <% end %>
