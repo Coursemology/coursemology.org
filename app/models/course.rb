@@ -283,6 +283,9 @@ class Course < ActiveRecord::Base
     Course.where(is_publish: true)
   end
 
+  # Note: this method returns entries in the closed interval
+  # of from and to: i.e. entries starting at both from and to
+  # are included. [from, to]
   def lesson_plan_virtual_entries(from = nil, to = nil)
     missions = self.missions.where("TRUE " +
       (if from then "AND open_at >= :from " else "" end) +
