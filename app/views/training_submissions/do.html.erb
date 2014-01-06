@@ -6,7 +6,7 @@
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @training}%>
 
-<p id="training-stop-pos"></p>
+<div id="training-stop-pos"><br></div>
 
 <hr/>
 <div class="step-list">
@@ -20,7 +20,7 @@
             <% if i < @current_step %>
                   <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
             <% else %>
-                  <%= link_to i, '#training-stop-pos', class: "step" %>
+                  <%= link_to i, "?step=#{i}#training-stop-pos", class: "step #{}" %>
             <% end %>
           <% end %>
       <% end %>
