@@ -1,7 +1,19 @@
 class AssessmentsRedesign < ActiveRecord::Migration
   def change
     create_table :assessment_assessments do |t|
+      t.integer :course_id
+      t.integer :creator_id
+      t.string :title
+      t.text :description
+
+      t.boolean :publish
+      t.integer :exp
+      t.integer :max_grade
+
       t.string :type
+      t.datetime :open_at
+      t.timestamps
+      t.datetime :deleted_at
     end
 
     create_table :assessment_tags do |t|
@@ -110,6 +122,23 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :grader_course_id # curr_user_course for the grader
 
       t.timestamps
+    end
+
+    create_table :assessment_trainings do |t|
+      t.integer :assessment_id
+      t.integer :pos
+      t.integer :bonus_exp
+      t.datetime :bonus_cutoff
+    end
+
+    create_table :assessment_missions do |t|
+      t.integer :assessment_id
+      t.integer :pos
+
+      t.datetime :close_at
+      t.integer :single_question
+      t.integer :is_file_submission
+      t.integer :dependent_id
     end
   end
 end
