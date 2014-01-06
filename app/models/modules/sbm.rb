@@ -14,11 +14,11 @@ module Sbm
   end
 
   def get_path
-    throw NotImplementedError
+    raise NotImplementedError
   end
 
   def get_new_grading_path
-    throw NotImplementedError
+    raise NotImplementedError
   end
 
   def get_final_grading
