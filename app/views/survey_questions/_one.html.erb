@@ -1,0 +1,11 @@
+<span><%= style_format(q.description) %></span>
+<br/>
+<ul>
+  <% q.options.each do |opt| %>
+      <li class="checkbox-text">
+        <input type="checkbox" disabled />
+        <span><%= opt.description %></span>
+      </li>
+  <% end %>
+</ul>
+

@@ -7,12 +7,27 @@
       </div>
     </div>
 
+    <% if @survey.has_section? %>
+        <div class="control-group">
+          <%= f.label "Survey Section", :class => 'control-label' %>
+          <div class="controls">
+            <select name="survey_question[survey_section_id]">
+              <% @survey.survey_sections.each do |s| %>
+                  <option value="<%= s.id %>" <%= 'selected' if s.id == @survey_question.survey_section_id %>><%= s.title %></option>
+              <% end %>
+
+
+            </select>
+          </div>
+        </div>
+    <% end %>
+
     <div class="control-group">
       <label class="control-label">Question Type</label>
       <div class="controls">
-        <select name="survey_question[type_id]" id="type-select" disabled>
+        <select name="survey_question[type_id]" id="type-select">
           <% SurveyQuestionType.all.each do |type| %>
-              <option value="<%= type.id %>" <%= 'selected' if type.id == @survey_question.type_id %>> <%= type.title %></option>
+              <option value="<%= type.id %>" <%= 'selected' if type.id == @survey_question.type_id %>><%= type.title %></option>
           <% end %>
         </select>
         <ul style="margin-left: 5px">
@@ -23,57 +38,49 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">Maximum Response</label>
-      <div class="controls">
-        <input type="number" name="survey_question[max_response]" value="<%= @survey_question.max_response %>" class="input-small" min="1" required>
+    <div id="mcq-section" class="collapse in">
+      <div class="control-group">
+        <label class="control-label">Maximum Response</label>
+        <div class="controls">
+          <input type="number" id="max-response" name="survey_question[max_response]" value="<%= @survey_question.max_response %>" class="input-small" min="1" required>
+        </div>
       </div>
-    </div>
-    <div class="control-group" id="sq-options">
-      <%= f.label "Options", :class => 'control-label' %>
-      <div class="controls" >
-        <table class="table table-no-border" style="margin-left: 0">
-          <thead>
-          <tr>
-            <th style="width: 10px">
-
-            </th>
-            <th>
-
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <% i = 0 %>
-          <% @survey_question.options.each do |option| %>
-              <% i += 1 %>
-              <tr>
-                <input type="hidden" name="options[<%= i %>][id]" value="<%= option.id %>" />
-                <td><strong style="font-size: 14px"><%= i %></strong></td>
-                <td>
-                  <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
-                  <% if option.file %>
-                      <img src="<%= option.file.file_url %>" style="width: 300px">
-                  <% end %>
-                  <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/><%= option.description %></textarea>
-                </td>
-              </tr>
-          <% end %>
-          <% if @survey_question.options.size < 4 %>
-              <% (4 - @survey_question.options.size).times.each do %>
-                  <% i += 1 %>
-                  <tr>
-                    <td><strong style="font-size: 14px"><%= i %></strong></td>
-                    <td>
-                      <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
-                      <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/></textarea>
-                    </td>
-                  </tr>
-              <% end %>
-          <% end %>
-          <tr><td></td><td><a href='#' id="add-survey-option">Add more options</a></td></tr>
-          </tbody>
-        </table>
+      <div class="control-group" id="sq-options">
+        <%= f.label "Options", :class => 'control-label' %>
+        <div class="controls" >
+          <table class="table table-no-border" style="margin-left: 0">
+            <tbody>
+            <% i = 0 %>
+            <% @survey_question.options.each do |option| %>
+                <% i += 1 %>
+                <tr>
+                  <input type="hidden" name="options[<%= i %>][id]" value="<%= option.id %>" />
+                  <td><strong style="font-size: 14px"><%= i %></strong></td>
+                  <td>
+                    <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
+                    <% if option.file %>
+                        <img src="<%= option.file.file_url %>" style="width: 300px">
+                    <% end %>
+                    <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/><%= option.description %></textarea>
+                  </td>
+                </tr>
+            <% end %>
+            <% if @survey_question.options.size < 4 %>
+                <% (4 - @survey_question.options.size).times.each do %>
+                    <% i += 1 %>
+                    <tr>
+                      <td><strong style="font-size: 14px"><%= i %></strong></td>
+                      <td>
+                        <input type="hidden" name="options[<%= i %>][pos]" value="<%= i %>">
+                        <textarea id="<%= i %>" name="options[<%= i %>][description]" placeholder="Option..." class=" span6" rows="3"/></textarea>
+                      </td>
+                    </tr>
+                <% end %>
+            <% end %>
+            <tr><td></td><td><a href='#' id="add-survey-option">Add more options</a></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -96,11 +103,26 @@
 <%= render :partial => "layouts/html_editor" %>
 <script>
     $(document).ready(function() {
-        $("#type-select").change(function(evt){
-            console.log($(this).children(":selected").text());
-            if($(this).children(":selected").text() == "Essay") {
-
+        function type_changed() {
+            var selected = $("#type-select").children(":selected").text();
+            var max_response = $("#max-response");
+            var mcq_section = $("#mcq-section");
+            if( selected == "Essay") {
+                if(mcq_section.height() != 0) mcq_section.collapse('hide');
+            } else if (selected == "MCQ") {
+                max_response.val(1);
+                max_response.prop('disabled', true);
+                if(mcq_section.height() == 0) mcq_section.collapse('show');
+            } else if (selected == "MRQ") {
+                max_response.prop('disabled', false);
+                if(mcq_section.height() == 0) mcq_section.collapse('show');
             }
-        })
+        }
+
+        $("#type-select").change(function(evt){
+            type_changed();
+        });
+
+        type_changed();
     })
 </script>

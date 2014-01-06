@@ -190,7 +190,16 @@ JfdiAcademy::Application.routes.draw do
     resources :staff_leaderboard
 
     resources :surveys do
-      resources :survey_questions
+      resources :survey_sections do
+        collection do
+          post 'reorder'
+        end
+      end
+      resources :survey_questions do
+        collection do
+          post 'reorder'
+        end
+      end
       resources :survey_submissions
       post "survey_submissions/:id/submit" => "survey_submissions#submit", as: :survey_submission_submit
     end

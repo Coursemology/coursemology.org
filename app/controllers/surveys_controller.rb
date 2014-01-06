@@ -34,7 +34,7 @@ class SurveysController < ApplicationController
   end
 
   def show
-
+    @survey_section = SurveySection.new
   end
 
   def edit
@@ -107,4 +107,5 @@ class SurveysController < ApplicationController
       format.html {redirect_to course_surveys_path}
     end
   end
+
 end

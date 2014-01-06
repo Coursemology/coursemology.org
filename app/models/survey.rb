@@ -25,6 +25,10 @@ class Survey < ActiveRecord::Base
     self.survey_submissions.where(user_course_id: user_course).first
   end
 
+  def sections
+    survey_sections
+  end
+
   def dup
     clone = super
     map = {}
@@ -55,4 +59,5 @@ class Survey < ActiveRecord::Base
     end
     clone
   end
+
 end

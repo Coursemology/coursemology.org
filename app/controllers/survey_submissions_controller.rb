@@ -30,7 +30,6 @@ class SurveySubmissionsController < ApplicationController
   end
 
   def update
-
   end
 
   def show

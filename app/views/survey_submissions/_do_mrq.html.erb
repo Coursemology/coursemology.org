@@ -1,0 +1,16 @@
+<% if q.type == SurveyQuestionType.MRQ.first %>
+    <p style="font-size: 15px;">Choose up to <span style="color: #ff0000;font-weight: bold"><%= q.max_response %></span> options.</p>
+<% end %>
+
+<ul>
+  <% q.options.each do |opt| %>
+      <li class="checkbox-text">
+        <% if q.type == SurveyQuestionType.MRQ.first %>
+            <input class="choices" max="<%= q.max_response %>" type="checkbox" name="response_<%=q.id %>[]" value="<%= opt.id %>"  <%= 'checked' if  answers.include? opt.id %>/>
+        <% else %>
+            <input class="choices" type="radio" name="response_<%=q.id %>" value="<%= opt.id %>" <%= 'checked' if  answers.include? opt.id %>/>
+        <% end %>
+        <label for="value=<%= opt.id %>"> <%= opt.description %></label>
+      </li>
+  <% end %>
+</ul>
