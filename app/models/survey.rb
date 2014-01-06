@@ -3,7 +3,7 @@ class Survey < ActiveRecord::Base
   default_scope { order("open_at") }
   attr_accessible :course_id, :title, :creator_id, :description,
                   :open_at, :expire_at, :anonymous, :publish,
-                  :allow_modify, :has_section
+                  :allow_modify, :has_section, :exp
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
@@ -23,6 +23,10 @@ class Survey < ActiveRecord::Base
 
   def submission_by(user_course)
     self.survey_submissions.where(user_course_id: user_course).first
+  end
+
+  def sections
+    survey_sections
   end
 
   def dup
@@ -55,4 +59,5 @@ class Survey < ActiveRecord::Base
     end
     clone
   end
+
 end

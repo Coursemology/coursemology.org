@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140104052733) do
+ActiveRecord::Schema.define(:version => 20140106060421) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -518,8 +518,6 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
     t.datetime "start_at"
   end
 
-  add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
-
   create_table "lesson_plan_resources", :force => true do |t|
     t.integer "lesson_plan_entry_id"
     t.integer "obj_id"
@@ -873,6 +871,15 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
   add_index "submissions", ["mission_id"], :name => "index_submissions_on_mission_id"
   add_index "submissions", ["std_course_id"], :name => "index_submissions_on_std_course_id"
 
+  create_table "survey_essay_answers", :force => true do |t|
+    t.integer  "user_course_id"
+    t.integer  "question_id"
+    t.text     "text"
+    t.time     "deleted_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "survey_mrq_answers", :force => true do |t|
     t.text     "selected_options"
     t.integer  "user_course_id"
@@ -916,6 +923,7 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
     t.time     "deleted_at"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
+    t.boolean  "is_required",       :default => true
   end
 
   add_index "survey_questions", ["survey_id"], :name => "index_survey_questions_on_survey_id"
@@ -970,6 +978,7 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
     t.time     "deleted_at"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.integer  "exp"
   end
 
   add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"

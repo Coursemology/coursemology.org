@@ -18,6 +18,7 @@
 //= require angular
 //= require angular-resource
 //= require angular-route
+//= require angular-ui-sortable-rails
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition

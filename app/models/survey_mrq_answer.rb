@@ -7,6 +7,7 @@ class SurveyMrqAnswer < ActiveRecord::Base
   belongs_to :question, class_name: "SurveyQuestion"
   belongs_to :option, class_name: "SurveyQuestionOption"
 
+  #TODO: not in use, can be remvoed
   def options
     SurveyQuestionOption.where(id: eval(selected_options))
   end

@@ -92,7 +92,11 @@ class MaterialsController < ApplicationController
         @is_new = []
 
         @subfolders = @folder.subfolders
-        @files = @folder.files
+
+        # Select only the files which the student can see.
+        @files = @folder.files.select { |file|
+          can? :read, file.parent
+        }
 
         gon.currentFolder = @folder
         gon.folders = build_subtree(@course.material_folder)

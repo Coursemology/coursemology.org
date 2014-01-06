@@ -1,4 +1,4 @@
-var coursemologyApp = angular.module('coursemologyApp', ['ngResource', 'ngRoute', 'ui.sortable']);
+var coursemologyApp = angular.module('coursemologyApp', ['ngResource', 'ngRoute', 'ui.sortable.rails']);
 
 coursemologyApp.config(function($httpProvider){
     var authToken;

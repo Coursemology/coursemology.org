@@ -18,6 +18,11 @@
             <td><%= datetime_format(@survey.expire_at) %></td>
           </tr>
           <tr>
+            <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+            <td><%= @survey.exp %></td>
+          </tr>
+
+          <tr>
             <td><strong><%= model_class.human_attribute_name(:publish)%>:</strong></td>
             <td><%= @survey.publish? ? 'Yes' : 'No' %></td>
           </tr>
@@ -49,41 +54,135 @@
           <% end %>
         </td>
     <% end %>
-</table>
+    </table>
 
 
 <% if can? :view_detail, @survey %>
     <hr/>
     <% if can? :manage, @survey %>
-        <%= link_to t('.new', :default => t("helpers.links.new_qn")),
-                    new_course_survey_survey_question_path(@course, @survey),
-                    :class => 'btn btn-primary' %>
+
+        <% if @survey.has_section? %>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_section_form">
+              New Section
+            </button>
+            <br><br>
+            <div id="new_section_form" class="collapse out">
+              <div class="well">
+                <%= render "survey_sections/form" %>
+              </div>
+            </div>
+        <% else %>
+            <%= link_to t('.new', :default => t("helpers.links.new_qn")),
+                        new_course_survey_survey_question_path(@course, @survey),
+                        :class => 'btn btn-primary' %>
+        <% end %>
     <% end %>
-    <br><br>
-    <h2 class="asm-qns-title">Survey Questions</h2>
-    <table class="table asm-qns-table">
 
-      <tbody class="asm-qns">
-      <% @survey.questions.each_with_index do |question, index| %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= question.description.html_safe %></td>
-            <td>
-              <%= link_to edit_course_survey_survey_question_path(@course, @survey, question), class: 'btn' do %>
-                  <i class="icon-edit"></i>
-              <% end %>
-              <%= link_to course_survey_survey_question_path(@course, @survey, question),
-                          method: :delete,
-                          data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          class: 'btn btn-danger' do %>
-                  <i class="icon-trash"></i>
-              <% end %>
+    <% if @survey.has_section? %>
+        <h2 class="asm-qns-title">Survey Sections</h2>
+        <table class="table asm-qns-table sort no-boarder">
+          <tbody class="asm-qns" url="<%= reorder_course_survey_survey_sections_path(@course, @survey) %>">
+          <% @survey.survey_sections.each_with_index do |s, index| %>
+              <tr class="asm-qn" id="asm-qn_<%= s.id %>" >
+                <td>
+                  <div class="asm-qn-handler">
+                    <i class="icon-move handler-icon"></i>
+                    <h3 class="handler-text">Section <%= index + 1 %>
+                      : <%= s.title %>
+                    </h3>
+                  </div>
+                  <table class="table" style="margin-left:  20px;margin-right: 10px">
+                    <tbody class="asm-qns" url="<%= reorder_course_survey_survey_questions_path(@course, @survey) %>">
+                    <% s.survey_questions.each_with_index do |q, i| %>
+                        <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
+                          <td>
+                            <div class="asm-qn-handler" style="background-color: #d9edf7">
+                              <i class="icon-move handler-icon"></i>
+                              <h3 class="handler-text">Question <%= i + 1 %> :  <%= q.type.title %></h3>
+                            </div>
+                            <%= render partial: "survey_questions/one", :locals => {q: q} %>
+                          </td>
+                          <% if can? :manage, Survey %>
+                              <td style="width: 70px">
+                                <%= link_to edit_course_survey_survey_question_path(@course, @survey, q),
+                                            class: 'btn',
+                                            rel: 'tooltip',
+                                            "data-original-title"=>"Edit Question" do %>
+                                    <i class="icon-edit"></i>
+                                <% end %>
 
-            </td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
+                                <%= link_to course_survey_survey_question_path(@course, @survey, q),
+                                            class: 'btn',
+                                            method: :delete,
+                                            data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete this question?")) },
+                                            class: 'btn btn-danger' do %>
+                                    <i class="icon-trash"></i>
+                                <% end %>
+                              </td>
+                          <% end %>
+                        </tr>
+                    <% end %>
+                    <tr>
 
+                    </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <% if can? :manage, Survey %>
+                    <td style="width: 110px">
+                      <%= link_to "#{new_course_survey_survey_question_path(@course, @survey)}?section_id=#{s.id}",
+                                  class: 'btn',
+                                  rel: 'tooltip',
+                                  "data-original-title"=>"Add new question" do %>
+                          <i class="icon-plus"></i>
+                      <% end %>
+                      <%= link_to edit_course_survey_survey_section_path(@course, @survey, s),
+                                  class: 'btn',
+                                  rel: 'tooltip',
+                                  "data-original-title"=>"Edit Section" do %>
+                          <i class="icon-edit"></i>
+                      <% end %>
+
+                      <%= link_to course_survey_survey_section_path(@course, @survey, s),
+                                  class: 'btn',
+                                  method: :delete,
+                                  data: { :confirm => t('.confirm', :default => t("helpers.links.confirm",
+                                                                                  :default => "Are you sure to delete section #{s.title}? All questions under this section will be deleted too.")) },
+                                  class: 'btn btn-danger' do %>
+                          <i class="icon-trash"></i>
+                      <% end %>
+                    </td>
+                <% end %>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+
+    <% else %>
+
+        <table class="table asm-qns-table">
+
+          <tbody class="asm-qns">
+          <% @survey.questions.each_with_index do |question, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= question.description.html_safe %></td>
+                <td>
+                  <%= link_to edit_course_survey_survey_question_path(@course, @survey, question), class: 'btn' do %>
+                      <i class="icon-edit"></i>
+                  <% end %>
+                  <%= link_to course_survey_survey_question_path(@course, @survey, question),
+                              method: :delete,
+                              data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+    <% end %>
 <% end %>
 

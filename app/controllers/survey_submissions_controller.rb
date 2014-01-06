@@ -30,7 +30,6 @@ class SurveySubmissionsController < ApplicationController
   end
 
   def update
-
   end
 
   def show
@@ -38,6 +37,64 @@ class SurveySubmissionsController < ApplicationController
   end
 
   def submit
+    if @survey.has_section?
+      params[:answers].each do |vals|
+        qn = @survey.questions.where(id: vals.first).first
+        if qn.type == SurveyQuestionType.Essay.first
+          essay =  qn.survey_essay_answers.first || qn.survey_essay_answers.build({user_course_id: curr_user_course})
+          essay.text = vals.last
+          essay.save
+        else
+          options = SurveyQuestionType.MCQ.first == qn.type ? [vals.last] : vals.last
+          answers = qn.survey_mrq_answers.where(user_course_id:curr_user_course)
+          was_selected = answers.map{|ans| ans.option_id }
+          (was_selected - options).each_with_index do |id, index|
+            answers[index].option.decrease_count
+            answers[index].destroy
+          end
+
+          (options - was_selected).each do |option|
+            answer = qn.survey_mrq_answers.build({option_id: option, user_course_id: curr_user_course.id})
+            answer.save
+            answer.option.increase_count
+          end
+        end
+      end
+
+      respond_to do |format|
+        if params[:commit] == 'Save'
+          format.html {redirect_to edit_course_survey_survey_submission_path(@course, @survey, @survey_submission),
+                                   notice: "Survey status has been saved."}
+        else
+          @survey_submission.set_submitted
+          format.html {redirect_to course_surveys_path,
+                                   notice: "You have submitted survey: #{@survey.title}"}
+        end
+      end
+    else
+      submit_single_question
+    end
+  end
+
+
+
+  private
+  def allow_only_one_submission
+    sub = @survey.submission_by(curr_user_course.id)
+    if sub
+      @survey_submission = sub
+    else
+      @survey_submission.user_course = curr_user_course
+    end
+    @survey_submission.set_started
+  end
+
+  #TODO: potentially, user can choose to render survey in three ways
+  def submit_single_page
+
+  end
+
+  def submit_single_question
     step =  params[:step].to_i
     redirect_url = edit_course_survey_survey_submission_path(@course, @survey, @survey_submission)
     unless params[:option]
@@ -85,14 +142,7 @@ class SurveySubmissionsController < ApplicationController
     end
   end
 
-  private
-  def allow_only_one_submission
-    sub = @survey.submission_by(curr_user_course.id)
-    if sub
-      @survey_submission = sub
-    else
-      @survey_submission.user_course = curr_user_course
-    end
-    @survey_submission.set_started
+  def submit_single_section
+
   end
 end
