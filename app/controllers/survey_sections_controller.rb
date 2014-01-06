@@ -8,6 +8,9 @@ class SurveySectionsController < ApplicationController
 
   def show
 
+    respond_to do |format|
+      format.json {render json: @survey_section}
+    end
   end
 
   def edit
@@ -28,6 +31,17 @@ class SurveySectionsController < ApplicationController
   end
 
   def update
+    @survey_section.title = params[:title]
+    @survey_section.description = params[:description]
+
+    respond_to do |format|
+      if @survey_section.save
+        flash[:notice] = "Section successfully updated."
+        format.json {render json: {status: "success"}}
+      else
+        format.json {render json: {status: "fail", message: "Fail to update section."}}
+      end
+    end
   end
 
   def destroy

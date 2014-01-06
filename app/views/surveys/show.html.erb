@@ -122,9 +122,6 @@
                           <% end %>
                         </tr>
                     <% end %>
-                    <tr>
-
-                    </tr>
                     </tbody>
                   </table>
                 </td>
@@ -136,12 +133,9 @@
                                   "data-original-title"=>"Add new question" do %>
                           <i class="icon-plus"></i>
                       <% end %>
-                      <%= link_to edit_course_survey_survey_section_path(@course, @survey, s),
-                                  class: 'btn',
-                                  rel: 'tooltip',
-                                  "data-original-title"=>"Edit Section" do %>
-                          <i class="icon-edit"></i>
-                      <% end %>
+                      <button class="btn edit-section" id="<%= s.id %>"  url="<%= course_survey_survey_section_path(@course, @survey, s) %>">
+                        <i class="icon-edit"></i>
+                      </button>
 
                       <%= link_to course_survey_survey_section_path(@course, @survey, s),
                                   class: 'btn',
@@ -161,7 +155,6 @@
     <% else %>
 
         <table class="table asm-qns-table">
-
           <tbody class="asm-qns">
           <% @survey.questions.each_with_index do |question, index| %>
               <tr>
@@ -185,4 +178,73 @@
         </table>
     <% end %>
 <% end %>
+
+<div class="modal hide fade" id="manage-section">
+  <form name="myForm" class="form-horizontal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="location.reload();">&times;</button>
+      <h3>Edit Section</h3>
+    </div>
+    <div class="modal-body form-horizontal">
+      <div class="control-group">
+        <label class="control-label">Title</label>
+        <div class="controls">
+          <input type="text" class="text_field" id="section-title" required="true"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Description</label>
+        <div class="controls">
+          <textarea class="text_area span3 html-editor" rows="4" id="section-dep"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" id="section-submit">Update</button>
+      <button class="btn" data-dismiss="modal">Close</button>
+    </div>
+  </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $(".edit-section").click(function(e){
+            $("#manage-section").modal('show');
+            var url = $(this).attr('url');
+            $.ajax(url, {
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $("#section-title").val(data.title);
+                    $("#section-dep").text(data.description);
+                    $("#section-submit").attr('url', url);
+                }
+            })
+
+        });
+
+        $('#section-submit').click(function(e){
+            var url = $(this).attr('url');
+            $.ajax(url, {
+                type: "PUT",
+                dataType: "json",
+                data: {
+                    title: $("#section-title").val(),
+                    description: $("#section-dep").text()
+                },
+                success: function(resp) {
+                    location.reload();
+                }
+            })
+        });
+
+        $('#section-title').keyup(function(e){
+            if($(this).val() == "") {
+                $('#section-submit').attr('disabled', true);
+            } else {
+                $('#section-submit').removeAttr('disabled');
+            }
+        });
+    });
+</script>
 
