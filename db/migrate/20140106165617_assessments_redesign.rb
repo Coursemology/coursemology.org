@@ -1,6 +1,6 @@
 class AssessmentsRedesign < ActiveRecord::Migration
   def change
-    create_table :assessment_assessments do |t|
+    create_table :assessment_assessments, :as_relation_superclass => true do |t|
       t.references :course
       t.references :creator
       t.string :title
@@ -11,7 +11,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :exp
       t.integer :max_grade
 
-      t.string :type
       t.datetime :open_at
       t.timestamps
       t.datetime :deleted_at
@@ -25,10 +24,9 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
     end
 
-    create_table :assessment_questions do |t|
+    create_table :assessment_questions, :as_relation_superclass => true do |t|
       t.references :assessment, index: true
       t.integer :max_grade
-      t.string :type
     end
 
     create_table :assessment_coding_questions do |t|
