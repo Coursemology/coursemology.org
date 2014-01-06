@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140104052733) do
+ActiveRecord::Schema.define(:version => 20140106165617) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -137,11 +137,126 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
 
-  create_table "assignment_types", :force => true do |t|
+  create_table "assessment_assessment_requirements", :force => true do |t|
+  end
+
+  create_table "assessment_assessments", :force => true do |t|
+    t.integer  "as_assessment_assessment_id"
+    t.string   "as_assessment_assessment_type"
+    t.integer  "course_id"
+    t.integer  "creator_id"
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
+    t.boolean  "file_submission"
+    t.boolean  "publish"
+    t.integer  "exp"
+    t.integer  "max_grade"
+    t.datetime "open_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.datetime "deleted_at"
+  end
+
+  create_table "assessment_coding_questions", :force => true do |t|
+    t.string   "title"
+    t.text     "staff_comment"
+    t.integer  "depends_on"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "assessment_coding_submissions", :force => true do |t|
+    t.text     "code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_gradings", :force => true do |t|
+    t.integer  "question_submission_id"
+    t.integer  "grader_id"
+    t.integer  "grader_course_id"
+    t.integer  "grade"
+    t.text     "comment"
+    t.integer  "exp_transaction_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  create_table "assessment_mcq_options", :force => true do |t|
+    t.integer  "creator_id"
+    t.integer  "question_id"
+    t.text     "text"
+    t.text     "explanation"
+    t.boolean  "correct"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "assessment_mcq_questions", :force => true do |t|
+    t.boolean  "must_select_all", :default => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+  end
+
+  create_table "assessment_mcq_submissions", :force => true do |t|
+    t.integer  "option_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_missions", :force => true do |t|
+    t.integer  "assessment_id"
+    t.integer  "pos"
+    t.integer  "dependent_id"
+    t.datetime "close_at"
+  end
+
+  create_table "assessment_question_submissions", :force => true do |t|
+    t.integer  "submission_id"
+    t.integer  "question_id"
+    t.boolean  "finalised"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "assessment_questions", :force => true do |t|
+    t.integer "as_assessment_question_id"
+    t.string  "as_assessment_question_type"
+    t.integer "assessment_id"
+    t.integer "creator_id"
+    t.text    "description"
+    t.integer "max_grade"
+  end
+
+  create_table "assessment_submissions", :force => true do |t|
+    t.integer  "assessment_id"
+    t.integer  "std_course_id"
+    t.string   "status"
+    t.float    "multiplier"
+    t.datetime "opened_at"
+    t.datetime "submitted_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.datetime "deleted_at"
+  end
+
+  add_index "assessment_submissions", ["status"], :name => "index_assessment_submissions_on_status"
+
+  create_table "assessment_tags", :force => true do |t|
+    t.integer "assessment_id"
+  end
+
+  create_table "assessment_text_submissions", :force => true do |t|
+    t.text     "text"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_trainings", :force => true do |t|
+    t.integer  "assessment_id"
+    t.integer  "pos"
+    t.integer  "bonus_exp"
+    t.datetime "bonus_cutoff"
   end
 
   create_table "coding_questions", :force => true do |t|
@@ -518,8 +633,6 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
     t.datetime "start_at"
   end
 
-  add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
-
   create_table "lesson_plan_resources", :force => true do |t|
     t.integer "lesson_plan_entry_id"
     t.integer "obj_id"
@@ -597,9 +710,9 @@ ActiveRecord::Schema.define(:version => 20140104052733) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
+    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
-    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"

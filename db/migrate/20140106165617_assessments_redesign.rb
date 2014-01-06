@@ -61,7 +61,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       # This allows trainings to be finalised step-by-step.
       # To finalise the entire mission submission, for example, set all questions as finalised.
       t.references :assessment, index: true # was mission_id/training_id
-      t.referneces :std_course, index: true
+      t.references :std_course, index: true
       t.string :status
       t.float :multiplier
       t.datetime :opened_at # was open_at
@@ -71,7 +71,9 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.datetime :deleted_at
 
       # Number of attempts is computed by the number of gradings.
+    end
 
+    change_table :assessment_submissions do |t|
       t.index [:status]
     end
 
@@ -124,7 +126,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.references :assessment, index: true
       t.integer :pos
 
-      t.integer :dependent_id
+      t.references :dependent, index: true
       t.datetime :close_at
     end
   end
