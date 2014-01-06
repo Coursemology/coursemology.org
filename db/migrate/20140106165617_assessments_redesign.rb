@@ -26,13 +26,14 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
     create_table :assessment_questions, :as_relation_superclass => true do |t|
       t.references :assessment, index: true
+      t.references :creator
+      t.text :description
       t.integer :max_grade
     end
 
     create_table :assessment_coding_questions do |t|
-      t.references :creator
       t.string :title # was step_name
-      t.text :description
+
       t.text :staff_comment
       t.integer :depends_on # was include_sol_qn_id
 
@@ -40,10 +41,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_mcq_questions do |t|
-      t.references :creator
-      t.text :description
       t.boolean :must_select_all, :default => false # was select_all
-      t.integer :max_grade
 
       t.timestamps
     end
@@ -54,14 +52,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.text :text
       t.text :explanation
       t.boolean :correct # was is_correct
-
-      t.timestamps
-    end
-
-    create_table :assessment_text_questions do |t|
-      t.references :creator
-      t.text :description
-      t.integer :max_grade
 
       t.timestamps
     end
@@ -94,21 +84,18 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_coding_submissions do |t|
-      t.references :question_submission, index: true
       t.text :code
 
       t.timestamps
     end
 
     create_table :assessment_mcq_submissions do |t|
-      t.references :question_submission, index: true
       t.references :option
 
       t.timestamps
     end
 
     create_table :assessment_text_submissions do |t|
-      t.references :question_submission, index: true
       t.text :text
 
       t.timestamps
