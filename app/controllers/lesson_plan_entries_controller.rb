@@ -5,15 +5,7 @@ class LessonPlanEntriesController < ApplicationController
   before_filter :load_general_course_data, :only => [:index, :new, :edit]
 
   def index
-    @milestones = @course.lesson_plan_milestones.order("start_at")
-
-    other_entries_milestone = create_other_items_milestone(@milestones)
-    prior_entries_milestone = create_prior_items_milestone(@milestones)
-
-    @milestones <<= other_entries_milestone
-    if prior_entries_milestone
-      @milestones.insert(0, prior_entries_milestone)
-    end
+    @milestones = get_milestones_for_course(@course)
   end
 
   def new
@@ -67,9 +59,14 @@ class LessonPlanEntriesController < ApplicationController
   def destroy
     @lesson_plan_entry.destroy
     respond_to do |format|
-      format.html { redirect_to course_lesson_plan_path(@course),
+      format.html { redirect_to :back,
                     notice: "The lesson plan entry #{@lesson_plan_entry.title} has been removed." }
     end
+  end
+
+  def overview
+    @milestones = get_milestones_for_course(@course)
+    render "/lesson_plan/overview"
   end
 
 private
@@ -91,6 +88,20 @@ private
     }
 
     resources
+  end
+
+  def get_milestones_for_course(course)
+    milestones = course.lesson_plan_milestones.order("start_at")
+
+    other_entries_milestone = create_other_items_milestone(milestones)
+    prior_entries_milestone = create_prior_items_milestone(milestones)
+
+    milestones <<= other_entries_milestone
+    if prior_entries_milestone
+      milestones.insert(0, prior_entries_milestone)
+    end
+
+    milestones
   end
 
   def entries_between_date_range(start_date, end_date)
