@@ -94,13 +94,21 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_text_submissions do |t|
+      t.integer :question_submission_id
       t.text :text
 
       t.timestamps
     end
 
     create_table :assessment_gradings do |t|
+      t.integer :question_submission_id
+      t.integer :grader
+      t.integer :grade
+      t.text :comment
+      t.integer :exp_transaction_id
+      t.integer :grader_course_id # curr_user_course for the grader
 
+      t.timestamps
     end
 
     create_table :assessment_missions do |t|
