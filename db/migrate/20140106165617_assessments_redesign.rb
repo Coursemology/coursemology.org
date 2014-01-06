@@ -63,7 +63,8 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :std_course_id
       t.string :status
       t.float :multiplier
-      t.datetime :submitted_at
+      t.datetime :opened_at # was open_at
+      t.datetime :submitted_at # was submit_at
 
       t.timestamps
       t.datetime :deleted_at
@@ -109,14 +110,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :grader_course_id # curr_user_course for the grader
 
       t.timestamps
-    end
-
-    create_table :assessment_missions do |t|
-
-    end
-
-    create_table :assessment_trainings do |t|
-
     end
   end
 end
