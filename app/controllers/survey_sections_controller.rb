@@ -45,6 +45,15 @@ class SurveySectionsController < ApplicationController
   end
 
   def destroy
+    @survey_section.questions.each do |qn|
+      qn.destroy
+    end
+
+    @survey_section.destroy
+
+    respond_to do |format|
+      format.html {redirect_to course_survey_url(@course, @survey) }
+    end
   end
 
   def reorder
