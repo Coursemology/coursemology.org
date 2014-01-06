@@ -2,7 +2,7 @@ class LessonPlanEntriesController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :lesson_plan_entry, through: :course
 
-  before_filter :load_general_course_data, :only => [:index, :new, :edit]
+  before_filter :load_general_course_data, :only => [:index, :new, :edit, :overview]
 
   def index
     @milestones = get_milestones_for_course(@course)
