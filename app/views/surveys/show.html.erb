@@ -216,7 +216,8 @@
                 dataType: "json",
                 success: function(data) {
                     $("#section-title").val(data.title);
-                    $("#section-dep").text(data.description);
+                    editor.setValue(data.description);
+//                    $("#section-dep").val(data.description);
                     $("#section-submit").attr('url', url);
                 }
             })
@@ -230,7 +231,7 @@
                 dataType: "json",
                 data: {
                     title: $("#section-title").val(),
-                    description: $("#section-dep").text()
+                    description: $("#section-dep").val()
                 },
                 success: function(resp) {
                     location.reload();
