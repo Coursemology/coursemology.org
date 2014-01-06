@@ -166,11 +166,18 @@ class TrainingSubmissionsController < ApplicationController
 
     #staff can skip steps
     if params[:step] && params[:step].to_i >= 1
-      @step = curr_user_course.is_staff? ? params[:step].to_i : [@step, params[:step].to_i].min
+      @step = curr_user_course.is_staff? || @training.can_skip? ? params[:step].to_i : [@step, params[:step].to_i].min
     end
 
+    left = @training_submission.questions_left
+    puts left, "left"
     if @step <= @max_step
+      puts @step
       @current_question = @training.questions[@step - 1]
+    elsif (left = @training_submission.questions_left).length > 0
+      puts left
+      @step = @training.questions.index(left.first) + 1
+      @current_question = left.first
     end
 
     if @current_question.class == CodingQuestion
@@ -182,6 +189,7 @@ class TrainingSubmissionsController < ApplicationController
 
       end
     end
+
     respond_to do |format|
       format.html { render template: "training_submissions/do.html.erb" }
     end

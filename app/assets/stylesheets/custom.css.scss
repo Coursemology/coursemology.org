@@ -467,6 +467,11 @@ f
   background-color: green;
 }
 
+.step-available {
+  background-color: #2ba6cb;
+}
+
+
 .step-list {
   text-align: center;
   display: block;
@@ -477,6 +482,14 @@ f
 
   a:hover {
     color: black;
+  }
+
+  .step-disabled {
+    cursor: default;
+  }
+
+  a.step-disabled:hover, a.step-disabled:active {
+    color: #ffffff;
   }
 }
 
@@ -1124,4 +1137,8 @@ body.loading {
    modal element will be visible */
 body.loading .modal_loading {
   display: block;
+}
+
+.no-margin {
+  margin: 0;
 }

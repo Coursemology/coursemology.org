@@ -21,7 +21,7 @@ class TrainingsController < ApplicationController
     if @selected_tags
       tags = Tag.find(@selected_tags)
       training_ids = tags.map{ |tag| tag.trainings.map { |t| t.id } }.reduce(:&)
-      @trainings = @trainings.where(id: training_ids).accessible_by(current_ability)
+      @trainings = @trainings.where(id: training_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     end
@@ -39,6 +39,7 @@ class TrainingsController < ApplicationController
       @tab_id='Trainings'
     end
 
+    @trainings = @trainings.accessible_by(current_ability)
 
     if @paging.display?
       @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
