@@ -6,6 +6,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.string :title
       t.text :description
 
+      t.boolean :file_submission # was mission.is_file_submission
       t.boolean :publish
       t.integer :exp
       t.integer :max_grade
@@ -127,6 +128,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
     create_table :assessment_trainings do |t|
       t.integer :assessment_id
       t.integer :pos
+
       t.integer :bonus_exp
       t.datetime :bonus_cutoff
     end
@@ -135,10 +137,8 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :assessment_id
       t.integer :pos
 
-      t.datetime :close_at
-      t.integer :single_question
-      t.integer :is_file_submission
       t.integer :dependent_id
+      t.datetime :close_at
     end
   end
 end
