@@ -40,7 +40,7 @@ class SurveySubmissionsController < ApplicationController
     if @survey.has_section?
       params[:answers].each do |vals|
         qn = @survey.questions.where(id: vals.first).first
-        if qn.type == SurveyQuestionType.Essay.first
+        if qn.is_essay?
           essay =  qn.survey_essay_answers.first || qn.survey_essay_answers.build({user_course_id: curr_user_course})
           essay.text = vals.last
           essay.save

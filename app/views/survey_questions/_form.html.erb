@@ -108,6 +108,7 @@
             var max_response = $("#max-response");
             var mcq_section = $("#mcq-section");
             if( selected == "Essay") {
+                max_response.val(1);
                 if(mcq_section.height() != 0) mcq_section.collapse('hide');
             } else if (selected == "MCQ") {
                 max_response.val(1);

@@ -14,12 +14,16 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :files, through: :options
 
   def answer_for_user(user_course)
-    type == SurveyQuestionType.Essay.first ?
+    is_essay? ?
         self.survey_essay_answers.where(user_course_id: user_course).first :
         self.survey_mrq_answers.where(user_course_id: user_course)
   end
 
   def no_unique_voters
     self.survey_mrq_answers.count(:user_course_id, distinct:true)
+  end
+
+  def is_essay?
+    type == SurveyQuestionType.Essay.first
   end
 end

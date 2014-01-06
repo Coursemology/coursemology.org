@@ -62,17 +62,36 @@ class SurveysController < ApplicationController
 
   def summary
     @summaries = []
-    @survey.questions.each do |question|
-      rows = {}
-      summary = {}
-      summary[:question] = question
+    if @survey.has_section?
+      @survey.sections.each do |section|
+        summary = {}
+        summary[:section] = section
+        summary_qns = []
+        section.questions.each do |question|
+          summary_qns << question_summary(question)
+        end
+        summary[:questions] = summary_qns
+        @summaries << summary
+      end
+    else
+      @survey.questions.each do |question|
+        @summaries << question_summary(question)
+      end
+    end
+  end
+
+  def question_summary(question)
+    summary = {}
+    summary[:question] = question
+
+    if question.type == SurveyQuestionType.Essay.first
+      summary[:responds] = question.survey_essay_answers
+    else
       summary[:total] = question.no_unique_voters
-
-
       #TODO: hardcoded 10
       summary[:options] = question.options.order("count desc").first(10)
-      @summaries << summary
     end
+    summary
   end
 
   #def summary
