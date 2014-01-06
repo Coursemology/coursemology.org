@@ -77,7 +77,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.index [:status]
     end
 
-    create_table :assessment_question_submissions do |t|
+    create_table :assessment_question_submissions, :as_relation_superclass => true do |t|
       t.references :submission, index: true
       t.references :question, index: true
       t.boolean :finalised

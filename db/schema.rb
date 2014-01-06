@@ -212,11 +212,13 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_question_submissions", :force => true do |t|
+    t.integer  "as_assessment_question_submission_id"
+    t.string   "as_assessment_question_submission_type"
     t.integer  "submission_id"
     t.integer  "question_id"
     t.boolean  "finalised"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
   create_table "assessment_questions", :force => true do |t|
