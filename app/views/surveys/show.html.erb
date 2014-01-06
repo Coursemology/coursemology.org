@@ -18,6 +18,11 @@
             <td><%= datetime_format(@survey.expire_at) %></td>
           </tr>
           <tr>
+            <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+            <td><%= @survey.exp %></td>
+          </tr>
+
+          <tr>
             <td><strong><%= model_class.human_attribute_name(:publish)%>:</strong></td>
             <td><%= @survey.publish? ? 'Yes' : 'No' %></td>
           </tr>
