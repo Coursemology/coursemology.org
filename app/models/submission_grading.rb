@@ -37,6 +37,7 @@ class SubmissionGrading < ActiveRecord::Base
     self.exp_transaction.save
     asm.tags.each { |tag| tag.update_exp_for_std(sbm.std_course_id) }
     self.exp_transaction.update_user_data
+    self.exp_transaction.exp
   end
 
   def get_name

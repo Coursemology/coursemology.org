@@ -10,19 +10,16 @@
 
 <hr/>
 <div class="step-list">
+  <% questions = @training.questions %>
+  <% questions_done = @training_submission.answered_questions %>
   <% (1..@max_step).each do |i| %>
       <% if i == @step %>
           <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
+      <% elsif questions_done.include? questions[i - 1] %>
+          <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
       <% else %>
-          <% if curr_user_course.is_staff?  %>
-              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
-          <% else %>
-            <% if i < @current_step %>
-                  <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
-            <% else %>
-                  <%= link_to i, "?step=#{i}#training-stop-pos", class: "step #{}" %>
-            <% end %>
-          <% end %>
+          <% can_access = (@training.can_skip? or i == @current_step) %>
+          <%= link_to i, "#{('?step=' + i.to_s) if can_access }#training-stop-pos", class: "step  #{can_access ? 'step-available' : 'step-disabled'}" %>
       <% end %>
   <% end %>
 </div>

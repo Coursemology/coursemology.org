@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140106060421) do
+ActiveRecord::Schema.define(:version => 20140106165916) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1062,8 +1062,8 @@ ActiveRecord::Schema.define(:version => 20140106060421) do
     t.integer  "exp"
     t.datetime "open_at"
     t.integer  "pos"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "max_grade"
     t.time     "deleted_at"
     t.integer  "bonus_exp"
@@ -1071,6 +1071,7 @@ ActiveRecord::Schema.define(:version => 20140106060421) do
     t.boolean  "publish",      :default => true
     t.integer  "t_type",       :default => 1
     t.integer  "tab_id"
+    t.boolean  "can_skip",     :default => false
   end
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"
