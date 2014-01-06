@@ -5,8 +5,8 @@ Coursemology, an open source online education platform for school :-)
 # Quick Start
 To get started, you will need to do the following:
 
-    1. Clone the repository
-    2. Created a Facebook app and retrive it `App ID` and `App secret`
+ 1. Clone the repository
+ 2. Created a Facebook app and retrive it `App ID` and `App secret`
 
 ## Setting up
 
@@ -74,6 +74,7 @@ In case you are trying to deploy the website yourself using Passenger (aka mod_r
 
 If you are deploying/developing on Windows, you will need to compile some gems from source using the Ruby DevKit. The following gems require special attention:
 
+ - mysql2 requires the MySQL C Connector to be present. Specify the path when installing the gem using `gem install mysql2 --version 0.3.13 -- --with-mysql-dir=.\mysql-connector-c-6.1.3-win32`
  - [Puma](https://github.com/puma/puma/issues/341) requires additional build resources not found within the DevKit. Notably, OpenSSL is missing. Obtain OpenSSL from the URL within the ticket and recompile.
 
 Furthermore, it is good to have [Node.js](http://nodejs.org) installed for the assets pipeline to work. In theory, the asset pipeline can work with `cscript`, but it is known to not produce any output at least on Windows 8.1.
