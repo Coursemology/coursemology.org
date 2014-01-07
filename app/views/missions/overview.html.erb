@@ -1,3 +1,4 @@
+<div class="missions missions-overview">
 <div class="page-header">
   <h1>Update Missions</h1>
 </div>
@@ -58,7 +59,7 @@
             <% end %>
           </select>
         </td>
-        <td style="text-align: center">
+        <td class="publish">
           <input type="hidden" name="missions[<%= mission.id %>][publish]" value="0">
           <input name="missions[<%= mission.id %>][publish]" type="checkbox" <%= 'checked' if mission.publish? %>>
         </td>
@@ -67,6 +68,7 @@
   </tbody>
 </table>
 <div class="center">
-  <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
+  <button class="btn btn-large" id="submit-button">Update</button>
 </div>
 <% end %>
+</div>
