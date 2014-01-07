@@ -274,6 +274,7 @@ namespace :db do
       end
     end
 
+    connection.execute('TRUNCATE TABLE assessment_assessments_tags')
     connection.select_all('SELECT * FROM asm_tags').each do |tag|
       case tag['asm_type'].to_sym
         when :Training
@@ -286,6 +287,7 @@ namespace :db do
       end
     end
 
+    connection.execute('TRUNCATE TABLE assessment_assessments_requirements')
     connection.select_all('SELECT * FROM asm_reqs').each do |req|
       case req['asm_type'].to_sym
         when :Training
@@ -296,7 +298,7 @@ namespace :db do
           raise StandardError
       end
 
-      Assessment::Requirement.create({
+      Assessment::AssessmentRequirement.create({
                                        id: req['id'],
                                        assessment_id: assessment_id,
                                        min_grade: req['min_grade'],
