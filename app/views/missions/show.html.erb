@@ -1,4 +1,5 @@
-<%- model_class = Mission -%>
+<div class="missions">
+<%- model_class = Assessment::Mission -%>
 <div class="page-header">
   <h1><%= @mission.title %></h1>
 </div>
@@ -24,18 +25,6 @@
           <td><%= model_class.human_attribute_name(:close_at) %>:</td>
           <td><%= datetime_format(@mission.close_at) %></td>
         </tr>
-        <!--<tr>-->
-        <!--<td><strong><%= model_class.human_attribute_name(:deadline) %>:</strong></td>-->
-        <!--<td><%= @mission.deadline %></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td><strong><%= model_class.human_attribute_name(:timelimit) %>:</strong></td>-->
-        <!--<td><%= @mission.timelimit %></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td><strong><%= model_class.human_attribute_name(:attempt_limit) %>:</strong></td>-->
-        <!--<td><%= @mission.attempt_limit %></td>-->
-        <!--</tr>-->
       </table>
     </td>
 
@@ -69,10 +58,10 @@
   </tr>
 </table>
 
-<% if @mission.missions_dependent_on.count > 0 %>
+<% if @mission.dependent.count > 0 %>
     <h3>Finish to unlock:</h3>
     <ul>
-      <% @mission.missions_dependent_on.each do |mission| %>
+      <% @mission.dependent.each do |mission| %>
           <h4><li><%= mission.title %></li></h4>
       <% end %>
     </ul>
@@ -148,3 +137,4 @@
       </tbody>
     </table>
 <% end %>
+</div>
