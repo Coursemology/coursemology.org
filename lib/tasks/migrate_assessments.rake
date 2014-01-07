@@ -298,7 +298,7 @@ namespace :db do
           raise StandardError
       end
 
-      Assessment::AssessmentRequirement.create({
+      Assessment::AssessmentsRequirement.create({
                                        id: req['id'],
                                        assessment_id: assessment_id,
                                        min_grade: req['min_grade'],
