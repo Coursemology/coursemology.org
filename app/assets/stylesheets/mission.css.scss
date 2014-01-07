@@ -1,4 +1,10 @@
 // Refer to asm_qn.scss for details of question table's style
+.missions {
+  td.actions-col {
+    white-space: nowrap;
+  }
+}
+
 .missions-overview {
   #submit-button {
     width: 50%;

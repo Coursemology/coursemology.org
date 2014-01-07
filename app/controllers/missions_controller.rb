@@ -49,7 +49,7 @@ class MissionsController < ApplicationController
     end
 
     @mission = @mission.specific
-    @questions = @mission.questions
+    @questions = @mission.questions.map { |q| q.specific }
     @question = Assessment::TextQuestion.new
     @question.max_grade = 10
     @coding_question = Assessment::CodingQuestion.new
