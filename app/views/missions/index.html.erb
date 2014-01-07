@@ -1,3 +1,4 @@
+<div class="missions">
 <%- model_class = Assessment::Mission -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
@@ -157,3 +158,4 @@
 <% if @paging.display? %>
     <%= paginate @missions %>
 <% end %>
+</div>
