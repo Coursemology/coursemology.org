@@ -137,9 +137,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
 
-  create_table "assessment_assessment_requirements", :force => true do |t|
-  end
-
   create_table "assessment_assessments", :force => true do |t|
     t.integer  "as_assessment_assessment_id"
     t.string   "as_assessment_assessment_type"
@@ -155,6 +152,13 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
     t.datetime "deleted_at"
+  end
+
+  create_table "assessment_assessments_requirements", :force => true do |t|
+    t.integer  "assessment_id"
+    t.integer  "min_grade"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "assessment_assessments_tags", :force => true do |t|

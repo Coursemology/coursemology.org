@@ -17,12 +17,15 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_assessments_tags do |t|
-      t.belongs_to :assessment
-      t.belongs_to :tag
+      t.belongs_to :assessment, index: true
+      t.belongs_to :tag, index: true
     end
 
-    create_table :assessment_assessment_requirements do |t|
+    create_table :assessment_assessments_requirements do |t|
+      t.belongs_to :assessment, index: true
+      t.integer :min_grade
 
+      t.timestamps
     end
 
     create_table :assessment_questions, :as_relation_superclass => true do |t|

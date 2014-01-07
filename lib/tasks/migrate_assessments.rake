@@ -285,6 +285,25 @@ namespace :db do
           mission.tags << Tag.find_by_id(tag['tag_id'])
       end
     end
+
+    connection.select_all('SELECT * FROM asm_reqs').each do |req|
+      case req['asm_type'].to_sym
+        when :Training
+          assessment_id = @trainings_map[req['asm_id']]
+        when :Mission
+          assessment_id = @missions_map[req['asm_id']]
+        else
+          raise StandardError
+      end
+
+      Assessment::Requirement.create({
+                                       id: req['id'],
+                                       assessment_id: assessment_id,
+                                       min_grade: req['min_grade'],
+                                       created_at: req['created_at'],
+                                       updated_at: req['updated_at']
+                                     }, :without_protection => true);
+    end
 =begin
 
     @coding_questions_map.each_pair do |key, value|
