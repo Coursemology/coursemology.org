@@ -3,7 +3,7 @@ namespace :db do
 
   task migrate_assessments: :environment do
     connection = Assessment::Assessment.connection
-    coding_questions_map = {}
+    @coding_questions_map = {}
 
     def migrate_assessment(assessment, type, connection)
       def sanitize(statement, args)
@@ -12,7 +12,7 @@ namespace :db do
         r
       end
 
-      connection.select_all('SELECT * FROM ' + type.to_s + 's').each do |item|
+      connection.select_all(sanitize('SELECT * FROM ' + type.to_s + 's WHERE id = ?', [assessment['id']])).each do |item|
         if type == :mission then
           parent = Assessment::Mission.create({
             course_id: item['course_id'],
@@ -55,9 +55,9 @@ namespace :db do
 
         # Migrate the questions
         connection.select_all(sanitize('SELECT * from asm_qns WHERE asm_id= ? AND asm_type = ?', [assessment['id'], type])).each do |q|
-          case q['qn_type']
+          case q['qn_type'].to_sym
             when :Mcq
-              mcq = connection.select_all(sanitize('SELECT * from mcqs WHERE id = ?', [q['id']])).first
+              mcq = connection.select_all(sanitize('SELECT * from mcqs WHERE id = ?', [q['qn_id']])).first
               parent_q = Assessment::McqQuestion.create({
                                                           assessment_id: parent['id'],
                                                           creator_id: mcq['creator_id'],
@@ -68,19 +68,19 @@ namespace :db do
                                                           updated_at: mcq['updated_at']
                                                        }, :without_protection => true)
             when :Question
-              text = connection.select_all(sanitize('SELECT * FROM questions WHERE id = ?', [q['id']])).first
+              text = connection.select_all(sanitize('SELECT * FROM questions WHERE id = ?', [q['qn_id']])).first
               parent_q = Assessment::TextQuestion.create({
                                                           assessment_id: parent['id'],
-                                                          creator_id: text['id'],
+                                                          creator_id: text['creator_id'],
                                                           description: text['description'],
                                                           max_grade: text['max_grade'],
                                                           created_at: text['created_at'],
                                                           updated_at: text['updated_at']
                                                          }, :without_protection => true)
             when :CodingQuestion
-              code = connection.select_all(sanitize('SELECT * FROM coding_questions WHERE id = ?', [q['id']])).first
-              if code['include_sol_qn_id'] != null && code['include_sol_qn_id'] != 0 then
-                if coding_questions_map[code['include_sol_qn_id']] == nil then
+              code = connection.select_all(sanitize('SELECT * FROM coding_questions WHERE id = ?', [q['qn_id']])).first
+              if code['include_sol_qn_id'] != nil && code['include_sol_qn_id'] != 0 then
+                if @coding_questions_map[code['include_sol_qn_id']] == nil then
                   raise StandardError
                 end
               end
@@ -90,11 +90,11 @@ namespace :db do
                                                           title: code['step_name'],
                                                           description: code['description'],
                                                           max_grade: code['max_grade'],
-                                                          depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? coding_questions_map[code['include_sol_qn_id']] : null,
+                                                          depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? coding_questions_map[code['include_sol_qn_id']] : nil,
                                                           created_at: code['created_at'],
                                                           updated_at: code['updated_at']
                                                          }, :without_protection => true)
-              coding_questions_map[q.id] = parent_q.id
+              @coding_questions_map[q['qn_id']] = parent_q.id
             else
               raise StandardError
           end
