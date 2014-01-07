@@ -6,9 +6,12 @@ namespace :db do
     @missions_map = {}
     @trainings_map = {}
     @coding_questions_map = {}
+    @coding_answers_map = {}
     @mcq_questions_map = {}
     @mcq_options_map = {}
+    @mcq_answers_map = {}
     @text_questions_map = {}
+    @text_answers_map = {}
     @mission_submissions_map = {}
     @training_submissions_map = {}
 
@@ -159,7 +162,7 @@ namespace :db do
         case sbm_answer['answer_type'].to_sym
           when :StdAnswer
             connection.select_all(sanitize('SELECT * FROM std_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              Assessment::TextSubmission.create({
+              ans = Assessment::TextSubmission.create({
                                                     submission_id: sbm.id,
                                                     question_id: @text_questions_map.fetch(answer['question_id']),
                                                     finalised: sbm_answer['is_final'],
@@ -168,10 +171,11 @@ namespace :db do
                                                     created_at: answer['created_at'],
                                                     updated_at: answer['updated_at']
                                                 }, :without_protection => true)
+              @text_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
             end
           when :StdMcqAnswer
             connection.select_all(sanitize('SELECT * FROM std_mcq_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              Assessment::McqSubmission.create({
+              ans = Assessment::McqSubmission.create({
                                                    submission_id: sbm.id,
                                                    question_id: @mcq_questions_map.fetch(answer['mcq_id']),
                                                    finalised: sbm_answer['is_final'],
@@ -180,10 +184,11 @@ namespace :db do
                                                    created_at: answer['created_at'],
                                                    updated_at: answer['updated_at']
                                                }, :without_protection => true)
+              @mcq_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
             end
           when :StdCodingAnswer
             connection.select_all(sanitize('SELECT * FROM std_coding_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              Assessment::CodingSubmission.create({
+              ans = Assessment::CodingSubmission.create({
                                                       submission_id: sbm.id,
                                                       question_id: @coding_questions_map.fetch(answer['qn_id']),
                                                       finalised: sbm_answer['is_final'],
@@ -192,6 +197,7 @@ namespace :db do
                                                       created_at: answer['created_at'],
                                                       updated_at: answer['updated_at']
                                                   }, :without_protection => true)
+              @coding_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
             end
         end
       end
@@ -235,17 +241,37 @@ namespace :db do
     end
 
     connection.execute('TRUNCATE TABLE assessment_gradings')
-    connection.select_all('SELECT * FROM answer_gradings').each do |g|
-      Assessment::Grading.create({
-                                     id: g.id,
-                                     question_submission_id: g.student_answer_id,
-                                     grader_id: g.grader_id,
-                                     grader_course_id: g.grader_course_id,
-                                     grade: g.grade,
-                                     comment: g.comment,
-                                     created_at: g.created_at,
-                                     updated_at: g.updated_at
-                                 }).save
+    connection.select_all('SELECT * FROM submission_gradings').each do |sbm_g|
+      case sbm_g['sbm_type'].to_sym
+        when :TrainingSubmission
+          submission = @training_submissions_map[sbm_g['sbm_id']]
+          exp_transaction_id = sbm_g['exp_transaction_id']
+        when :Submission
+        else
+          raise StandardError
+      end
+
+      connection.select_all(sanitize('SELECT * FROM answer_gradings WHERE submission_grading_id = ?', [sbm_g['id']])).each do |answer_g|
+        case answer_g['student_answer_type'].to_sym
+          when :StdMcqAnswer
+            answer_map = @mcq_answers_map
+          when :StdAnswer
+            answer_map = @text_answers_map
+          when :StdCodingAnswer
+            answer_map = @coding_answers_map
+          else
+            raise StandardError
+        end
+        Assessment::Grading.create({
+                                       question_submission_id: answer_map.fetch(answer_g['student_answer_id']),
+                                       grader_id: answer_g['grader_id'] || sbm_g['grader_id'],
+                                       grader_course_id: sbm_g['grader_course_id'],
+                                       grade: answer_g['grade'],
+                                       comment: answer_g['comment'],
+                                       created_at: answer_g['created_at'],
+                                       updated_at: answer_g['updated_at']
+                                   })
+      end
     end
   end
 end
