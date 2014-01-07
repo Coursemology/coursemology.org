@@ -2,16 +2,7 @@
 <div class="page-header">
   <h1>Update Missions</h1>
 </div>
-<% if can? :manage, :bulk_update %>
-    <ul class="nav nav-tabs">
-      <li class="<%= 'active' if @tab == 'missions' %>">
-        <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4>Missions</h4></a>
-      </li>
-      <li class="<%= 'active' if @tab == 'overview' %>">
-        <a href="<%= course_missions_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
-      </li>
-    </ul>
-<% end %>
+<%= render partial: 'navigation' %>
 
 <%= form_tag course_missions_bulk_update_path(@course), :method => 'POST' do %>
 <table class="table">
