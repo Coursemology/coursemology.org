@@ -56,8 +56,8 @@ JfdiAcademy::Application.routes.draw do
     end
 
     resources :assessment_missions, path: 'missions', controller: :missions do
-      resources :mission_coding_questions, as: :coding_questions
-      resources :assessment_text_questions, path: :text_questions
+      resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
+      resources :assessment_text_questions, path: :text_questions, controller: :text_questions
 
       resources :submissions do
         resources :submission_gradings
