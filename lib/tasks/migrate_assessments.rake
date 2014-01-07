@@ -245,8 +245,8 @@ namespace :db do
       case sbm_g['sbm_type'].to_sym
         when :TrainingSubmission
           submission = @training_submissions_map[sbm_g['sbm_id']]
-          exp_transaction_id = sbm_g['exp_transaction_id']
         when :Submission
+          submission = @mission_submissions_map[sbm_g['sbm_id']]
         else
           raise StandardError
       end
@@ -267,10 +267,10 @@ namespace :db do
                                        grader_id: answer_g['grader_id'] || sbm_g['grader_id'],
                                        grader_course_id: sbm_g['grader_course_id'],
                                        grade: answer_g['grade'],
-                                       comment: answer_g['comment'],
+                                       exp_transaction_id: sbm_g['exp_transaction_id'],
                                        created_at: answer_g['created_at'],
                                        updated_at: answer_g['updated_at']
-                                   })
+                                   }, :without_protection => true)
       end
     end
   end
