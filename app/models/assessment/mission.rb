@@ -1,7 +1,10 @@
 class Assessment::Mission < ActiveRecord::Base
   is_a :assessment, as: 'as_assessment_assessment', class_name: Assessment::Assessment
 
-  has_one :dependent, class_name: Assessment::Mission, foreign_key: :id
+  has_many :dependent, class_name: Assessment::Mission, foreign_key: :id
+  has_many :files, as: :owner, class_name: 'FileUpload', dependent: :destroy
+
+  alias :get_all_questions :questions
 
   # @deprecated
   def get_final_sbm_by_std(std_course_id)
@@ -21,5 +24,10 @@ class Assessment::Mission < ActiveRecord::Base
     end
 
     return true
+  end
+
+  # @deprecated
+  def single_question?
+    questions.count <= 1
   end
 end
