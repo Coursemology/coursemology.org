@@ -7,7 +7,7 @@ class Assessment::Assessment < ActiveRecord::Base
   belongs_to :course, class_name: 'Course'
   belongs_to :creator, class_name: 'User'
 
-  has_many :questions, class_name: Assessment::Question
+  has_many :questions, class_name: Assessment::Question, order: 'pos ASC'
   has_many :submissions, class_name: Assessment::Submission do
     def final(student_course)
       last = where(std_course_id: student_course).last

@@ -42,6 +42,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.references :creator
       t.text :description
       t.integer :max_grade
+      t.integer :pos
 
       t.timestamps
     end
