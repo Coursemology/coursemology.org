@@ -47,8 +47,6 @@ JfdiAcademy::Application.routes.draw do
     match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
-    match "missions/overview" => "missions#overview", as: :missions_overview
-    post  "missions/bulk_update" => "missions#bulk_update", as: :missions_bulk_update
     match "trainings/overview" => "trainings#overview", as: :trainings_overview
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
@@ -57,12 +55,16 @@ JfdiAcademy::Application.routes.draw do
       resources :user_achievements
     end
 
-    resources :missions do
+    resources :assessment_missions, path: 'missions', controller: :missions do
       resources :mission_coding_questions, as: :coding_questions
-      resources :questions
+      resources :assessment_text_questions, path: :text_questions
+
       resources :submissions do
         resources :submission_gradings
       end
+
+      get 'overview' => 'missions#overview', on: :collection
+      post  'bulk_update' => 'missions#bulk_update', as: :bulk_update
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
       post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 

@@ -40,17 +40,17 @@
           <% end %>
       <% else %>
           <%= link_to 'Attempt',
-                      new_course_mission_submission_path(@course, @mission),
+                      new_course_assessment_mission_submission_path(@course, @mission),
                       class: 'btn btn-success' %>
       <% end %>
     </td>
 
     <% if can? :manage, @mission %>
         <td width="10%">
-          <%= link_to edit_course_mission_path(@course, @mission), class: "btn" do %>
+          <%= link_to edit_course_assessment_mission_path(@course, @mission), class: "btn" do %>
               <i class="icon-edit"></i>
           <% end %>
-          <%= link_to course_mission_path(@course, @mission), class: "btn btn-danger", method: "DELETE" do %>
+          <%= link_to course_assessment_mission_path(@course, @mission), class: "btn btn-danger", method: "DELETE" do %>
               <i class="icon-trash"></i>
           <% end %>
         </td>
@@ -78,7 +78,7 @@
         <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
           Add Question
         </button>
-        <a href="<%= new_course_mission_coding_question_path(@course, @mission) %>" class="btn btn-primary">  Add Coding Question</a>
+        <a href="<%= new_course_assessment_mission_coding_question_path(@course, @mission) %>" class="btn btn-primary">  Add Coding Question</a>
 
     <% end %>
     <div id="new_wquestion_form" class="collapse out">
@@ -94,9 +94,9 @@
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
       </thead> -->
-      <tbody class="asm-qns" url="<%= reorder_course_mission_asm_qns_path(@course, @mission) %>">
+      <tbody class="asm-qns" url="<%= reorder_course_assessment_mission_asm_qns_path(@course, @mission) %>">
       <% @questions.each_with_index do |q, i| %>
-          <tr class="asm-qn" id="asm-qn_<%= q.asm_qns.first.id %>">
+          <tr class="asm-qn" id="asm-qn_<%= q.id %>">
             <td>
               <div class="asm-qn-handler">
                 <i class="icon-move handler-icon"></i>
@@ -106,8 +106,9 @@
             </td>
             <% if can? :manage, @mission %>
                 <td>
-                  <% if q.class == Question %>
-                      <%= link_to edit_course_mission_question_path(@course, @mission, q), class: 'btn' do %>
+                  <% case q.class %>
+                  <% when Assessment::TextQuestion %>
+                      <%= link_to edit_course_assessment_mission_question_path(@course, @mission, q), class: 'btn' do %>
 
 
                           <i class="icon-edit"></i>
@@ -118,7 +119,7 @@
                                   class: 'btn btn-danger' do %>
                           <i class="icon-trash"></i>
                       <% end %>
-                  <% else %>
+                  <% when Assessment::CodingQuestion %>
                       <%= link_to edit_course_mission_coding_question_path(@course, @mission, q), class: 'btn' do %>
                           <i class="icon-edit"></i>
                       <% end %>
@@ -128,6 +129,8 @@
                                   class: 'btn btn-danger' do %>
                           <i class="icon-trash"></i>
                       <% end %>
+                  <% else %>
+                    Unsupported question type: <%= q.class %>
                   <% end %>
 
                 </td>

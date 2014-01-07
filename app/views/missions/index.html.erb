@@ -8,7 +8,7 @@
 
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
-  <%= form_tag(course_missions_path(@course), method: :get) do %>
+  <%= form_tag(course_assessment_missions_path(@course), method: :get) do %>
       <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
         <div class="well">
           <%= render partial: "tags/form_checkboxes",
@@ -24,7 +24,7 @@
 <% if can? :manage, Assessment::Mission %>
     <p>
       <%= link_to "New Mission",
-                  new_course_mission_path(@course),
+                  new_course_assessment_mission_path(@course),
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>
@@ -56,7 +56,6 @@
 
   <tbody class="table-hover">
   <% @missions.each do |mission| %>
-  <% mission = mission.specific %>
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <% if to_display.include? 'title' %>
             <td>

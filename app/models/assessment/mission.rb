@@ -1,5 +1,5 @@
 class Assessment::Mission < ActiveRecord::Base
-  is_a :assessment, as: 'as_assessment_assessment', class_name: Assessment::Assessment
+  is_a :assessment, as: 'as_assessment_assessment', class_name: 'Assessment::Assessment'
 
   has_many :dependent, class_name: Assessment::Mission, foreign_key: :id
   has_many :files, as: :owner, class_name: 'FileUpload', dependent: :destroy
@@ -19,8 +19,8 @@ class Assessment::Mission < ActiveRecord::Base
     return false if not open?
 
     if dependent
-      submission = Assessment::Submission.where(id: dependent.assessment, std_course_id: curr_user_course).first
-      return false if !submission || submission.attempting?
+      submission = Assessment::Submission.where(id: dependent.map { |d| d.assessment }, std_course_id: curr_user_course).first
+      return false if !submission || (not submission.submitted?)
     end
 
     return true

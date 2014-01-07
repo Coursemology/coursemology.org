@@ -1,6 +1,6 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :mission, through: :course, class: 'Assessment::Mission'
+  load_and_authorize_resource :mission, class: 'Assessment::Mission'
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
@@ -39,13 +39,15 @@ class MissionsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html # index.html.erb
+      format.html do
+        @missions = @missions.map { |m| m.specific }
+      end
     end
   end
 
   def show
     if curr_user_course.is_student? and !@mission.can_start?(curr_user_course).first
-      redirect_to course_missions_path and return
+      redirect_to course_assessment_missions_path and return
     end
 
     @mission = @mission.specific
@@ -131,7 +133,7 @@ class MissionsController < ApplicationController
   def destroy
     @mission.destroy
     respond_to do |format|
-      format.html { redirect_to course_missions_url,
+      format.html { redirect_to course_assessment_missions_url,
                                 notice: "The mission #{@mission.title} has been removed." }
     end
   end
@@ -184,6 +186,7 @@ class MissionsController < ApplicationController
     end
 
     @missions = @course.missions.accessible_by(current_ability).order(:open_at)
+    @missions = @missions.map { |m| m.specific }
   end
 
   def bulk_update
@@ -208,7 +211,7 @@ class MissionsController < ApplicationController
     if fail > 0
       flash[:error] = "#{fail} mission(s) failed to update. You may have put an open time that is after end time."
     end
-    redirect_to course_missions_overview_path
+    redirect_to course_assessment_missions_overview_path
   end
 
   def access_denied

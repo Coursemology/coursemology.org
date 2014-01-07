@@ -4,7 +4,7 @@
 </div>
 <%= render partial: 'navigation' %>
 
-<%= form_tag course_missions_bulk_update_path(@course), :method => 'POST' do %>
+<%= form_tag course_assessment_missions_bulk_update_path(@course), :method => 'POST' do %>
 <table class="table">
   <thead>
   <tr>
@@ -18,7 +18,6 @@
   </thead>
   <tbody>
     <% @missions.each do |mission| %>
-    <% mission = mission.specific %>
       <tr>
         <td>
           <input name="missions[<%= mission.id %>][title]" class="input-medium" type="text"  value="<%= mission.title %>" required>
