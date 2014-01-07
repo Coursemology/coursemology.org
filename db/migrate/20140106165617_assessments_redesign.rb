@@ -54,6 +54,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
+    create_table :assessment_text_questions do |t|
+      # For future expansion
+    end
+
     create_table :assessment_submissions do |t|
       # Instead of finalising a submission, we finalise question by question.
       # This allows trainings to be finalised step-by-step.

@@ -158,11 +158,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_coding_questions", :force => true do |t|
-    t.string   "title"
-    t.text     "staff_comment"
-    t.integer  "depends_on"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.string  "title"
+    t.text    "staff_comment"
+    t.integer "depends_on"
   end
 
   create_table "assessment_coding_submissions", :force => true do |t|
@@ -193,9 +191,7 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_mcq_questions", :force => true do |t|
-    t.boolean  "must_select_all", :default => false
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.boolean "must_select_all", :default => false
   end
 
   create_table "assessment_mcq_submissions", :force => true do |t|
@@ -205,7 +201,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_missions", :force => true do |t|
-    t.integer  "assessment_id"
     t.integer  "pos"
     t.integer  "dependent_id"
     t.datetime "close_at"
@@ -222,12 +217,14 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_questions", :force => true do |t|
-    t.integer "as_assessment_question_id"
-    t.string  "as_assessment_question_type"
-    t.integer "assessment_id"
-    t.integer "creator_id"
-    t.text    "description"
-    t.integer "max_grade"
+    t.integer  "as_assessment_question_id"
+    t.string   "as_assessment_question_type"
+    t.integer  "assessment_id"
+    t.integer  "creator_id"
+    t.text     "description"
+    t.integer  "max_grade"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   create_table "assessment_submissions", :force => true do |t|
@@ -248,6 +245,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.integer "assessment_id"
   end
 
+  create_table "assessment_text_questions", :force => true do |t|
+  end
+
   create_table "assessment_text_submissions", :force => true do |t|
     t.text     "text"
     t.datetime "created_at", :null => false
@@ -255,7 +255,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_trainings", :force => true do |t|
-    t.integer  "assessment_id"
     t.integer  "pos"
     t.integer  "bonus_exp"
     t.datetime "bonus_cutoff"
