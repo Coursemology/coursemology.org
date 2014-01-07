@@ -7,7 +7,6 @@ class MissionsController < ApplicationController
   require 'zip/zipfilesystem'
 
   def index
-    @tab = 'missions'
     @is_new = {}
     @tags_map = {}
     @selected_tags = params[:tags]
@@ -46,14 +45,14 @@ class MissionsController < ApplicationController
 
   def show
     if curr_user_course.is_student? and !@mission.can_start?(curr_user_course).first
-      redirect_to course_missions_path
-      return
+      redirect_to course_missions_path and return
     end
 
-    @questions = @mission.get_all_questions
-    @question = Question.new
+    @mission = @mission.specific
+    @questions = @mission.questions
+    @question = Assessment::TextQuestion.new
     @question.max_grade = 10
-    @coding_question = CodingQuestion.new
+    @coding_question = Assessment::CodingQuestion.new
     @coding_question.max_grade = 10
     respond_to   do |format|
       format.html # show.html.erb
@@ -179,7 +178,6 @@ class MissionsController < ApplicationController
 
   def overview
     authorize! :manage, :bulk_update
-    @tab = 'overview'
     @display_columns = {}
     @course.mission_columns_display.each do |cp|
       @display_columns[cp.preferable_item.name] = cp.prefer_value
