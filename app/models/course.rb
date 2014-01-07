@@ -13,15 +13,16 @@ class Course < ActiveRecord::Base
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
-  has_many :missions,             dependent: :destroy,    class_name: Assessment::Assessment,
-                                  conditions: { as_assessment_assessment_type: Assessment::Mission }
-  has_many :trainings,            dependent: :destroy,    class_name: Assessment::Assessment,
-                                  conditions: { as_assessment_assessment_type: Assessment::Training }
-  has_many :mcqs,                 through: :trainings,    class_name: Assessment::Training
-  has_many :coding_questions,     through: :trainings,    class_name: Assessment::CodingQuestion
-  has_many :std_answers,          through: :user_courses, class_name: Assessment::TextSubmission
-  has_many :std_coding_answers,   through: :user_courses, class_name: Assessment::CodingSubmission
-  has_many :submissions,          through: :user_courses, class_name: Assessment::Submission do
+  has_many :assessments,        dependent: :destroy,    class_name: Assessment::Assessment
+  has_many :missions,           through: :assessments,  class_name: Assessment::Mission,
+                                source: :as_assessment_assessment, source_type: Assessment::Mission
+  has_many :trainings,          through: :assessments,  class_name: Assessment::Training,
+                                source: :as_assessment_assessment, source_type: Assessment::Training
+  has_many :mcqs,               through: :trainings,    class_name: Assessment::Training
+  has_many :coding_questions,   through: :trainings,    class_name: Assessment::CodingQuestion
+  has_many :std_answers,        through: :user_courses, class_name: Assessment::TextSubmission
+  has_many :std_coding_answers, through: :user_courses, class_name: Assessment::CodingSubmission
+  has_many :submissions,        through: :user_courses, class_name: Assessment::Submission do
     def missions
       joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').
         where('aa.as_assessment_assessment_type = \'Assessment::Mission\'')

@@ -1,6 +1,6 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :mission, class: 'Assessment::Mission'
+  load_and_authorize_resource :mission, class: 'Assessment::Mission', through: :course
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
@@ -28,7 +28,7 @@ class MissionsController < ApplicationController
     end
 
     if @paging.display?
-      @missions = @missions.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
+      @missions = @missions.order('assessment_assessments.open_at').page(params[:page]).per(@paging.prefer_value.to_i)
     end
 
     if curr_user_course.id
@@ -39,9 +39,7 @@ class MissionsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html do
-        @missions = @missions.map { |m| m.specific }
-      end
+      format.html
     end
   end
 
