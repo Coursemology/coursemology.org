@@ -21,11 +21,20 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.belongs_to :tag, index: true
     end
 
+    change_table :assessment_assessments_tags do |t|
+      t.index [:tag_id]
+      t.index [:assessment_id]
+    end
+
     create_table :assessment_assessments_requirements do |t|
       t.belongs_to :assessment, index: true
       t.integer :min_grade
 
       t.timestamps
+    end
+
+    change_table :assessment_assessments_requirements do |t|
+      t.index [:assessment_id]
     end
 
     create_table :assessment_questions, :as_relation_superclass => true do |t|
@@ -35,6 +44,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.integer :max_grade
 
       t.timestamps
+    end
+
+    change_table :assessment_questions do |t|
+      t.index [:assessment_id]
     end
 
     create_table :assessment_coding_questions do |t|
@@ -56,6 +69,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.boolean :correct # was is_correct
 
       t.timestamps
+    end
+
+    change_table :assessment_mcq_options do |t|
+      t.index [:question_id]
     end
 
     create_table :assessment_text_questions do |t|
@@ -80,6 +97,8 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     change_table :assessment_submissions do |t|
+      t.index [:assessment_id]
+      t.index [:std_course_id]
       t.index [:status]
     end
 
@@ -89,6 +108,11 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.boolean :finalised
 
       t.timestamps
+    end
+
+    change_table :assessment_question_submissions do |t|
+      t.index [:submission_id]
+      t.index [:question_id]
     end
 
     create_table :assessment_coding_submissions do |t|
@@ -113,6 +137,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
+    change_table :assessment_gradings do |t|
+      t.index [:question_submission_id]
+    end
+
     create_table :assessment_trainings do |t|
       t.integer :pos
 
@@ -125,6 +153,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
       t.references :dependent, index: true
       t.datetime :close_at
+    end
+
+    change_table :assessment_missions do |t|
+      t.index [:dependent_id]
     end
   end
 end

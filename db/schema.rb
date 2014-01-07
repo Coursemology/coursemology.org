@@ -161,10 +161,15 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "updated_at",    :null => false
   end
 
+  add_index "assessment_assessments_requirements", ["assessment_id"], :name => "index_assessment_assessments_requirements_on_assessment_id"
+
   create_table "assessment_assessments_tags", :force => true do |t|
     t.integer "assessment_id"
     t.integer "tag_id"
   end
+
+  add_index "assessment_assessments_tags", ["assessment_id"], :name => "index_assessment_assessments_tags_on_assessment_id"
+  add_index "assessment_assessments_tags", ["tag_id"], :name => "index_assessment_assessments_tags_on_tag_id"
 
   create_table "assessment_coding_questions", :force => true do |t|
     t.string  "title"
@@ -186,6 +191,8 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "updated_at",             :null => false
   end
 
+  add_index "assessment_gradings", ["question_submission_id"], :name => "index_assessment_gradings_on_question_submission_id"
+
   create_table "assessment_mcq_options", :force => true do |t|
     t.integer  "creator_id"
     t.integer  "question_id"
@@ -195,6 +202,8 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "assessment_mcq_options", ["question_id"], :name => "index_assessment_mcq_options_on_question_id"
 
   create_table "assessment_mcq_questions", :force => true do |t|
     t.boolean "must_select_all", :default => false
@@ -210,6 +219,8 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "close_at"
   end
 
+  add_index "assessment_missions", ["dependent_id"], :name => "index_assessment_missions_on_dependent_id"
+
   create_table "assessment_question_submissions", :force => true do |t|
     t.integer  "as_assessment_question_submission_id"
     t.string   "as_assessment_question_submission_type"
@@ -219,6 +230,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
   end
+
+  add_index "assessment_question_submissions", ["question_id"], :name => "index_assessment_question_submissions_on_question_id"
+  add_index "assessment_question_submissions", ["submission_id"], :name => "index_assessment_question_submissions_on_submission_id"
 
   create_table "assessment_questions", :force => true do |t|
     t.integer  "as_assessment_question_id"
@@ -230,6 +244,8 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
   end
+
+  add_index "assessment_questions", ["assessment_id"], :name => "index_assessment_questions_on_assessment_id"
 
   create_table "assessment_submissions", :force => true do |t|
     t.integer  "assessment_id"
@@ -243,7 +259,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "deleted_at"
   end
 
+  add_index "assessment_submissions", ["assessment_id"], :name => "index_assessment_submissions_on_assessment_id"
   add_index "assessment_submissions", ["status"], :name => "index_assessment_submissions_on_status"
+  add_index "assessment_submissions", ["std_course_id"], :name => "index_assessment_submissions_on_std_course_id"
 
   create_table "assessment_text_questions", :force => true do |t|
   end
