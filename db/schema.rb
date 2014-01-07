@@ -157,6 +157,11 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "deleted_at"
   end
 
+  create_table "assessment_assessments_tags", :force => true do |t|
+    t.integer "assessment_id"
+    t.integer "tag_id"
+  end
+
   create_table "assessment_coding_questions", :force => true do |t|
     t.string  "title"
     t.text    "staff_comment"
@@ -235,10 +240,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   add_index "assessment_submissions", ["status"], :name => "index_assessment_submissions_on_status"
-
-  create_table "assessment_tags", :force => true do |t|
-    t.integer "assessment_id"
-  end
 
   create_table "assessment_text_questions", :force => true do |t|
   end

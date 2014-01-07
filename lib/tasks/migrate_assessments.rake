@@ -274,6 +274,19 @@ namespace :db do
       end
     end
 
+    connection.select_all('SELECT * FROM asm_tags').each do |tag|
+      case tag['asm_type'].to_sym
+        when :Training
+          training = Assessment::Training.find_by_id(@trainings_map[tag['asm_id']])
+          training.tags << Tag.find_by_id(tag['tag_id'])
+
+        when :Mission
+          mission = Assessment::Mission.find_by_id(@missions_map[tag['asm_id']])
+          mission.tags << Tag.find_by_id(tag['tag_id'])
+      end
+    end
+=begin
+
     @coding_questions_map.each_pair do |key, value|
       connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
                                ['Assessment::CodingQuestion', value, 'CodingQuestion', key]))
@@ -349,5 +362,6 @@ namespace :db do
                                  ['Assessment::Training', value, 'Training', key]))
       end
     end
+=end
   end
 end

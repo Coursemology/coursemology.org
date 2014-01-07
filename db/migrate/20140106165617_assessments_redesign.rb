@@ -16,8 +16,9 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.datetime :deleted_at
     end
 
-    create_table :assessment_tags do |t|
-      t.references :assessment
+    create_table :assessment_assessments_tags do |t|
+      t.belongs_to :assessment
+      t.belongs_to :tag
     end
 
     create_table :assessment_assessment_requirements do |t|
