@@ -1,3 +1,3 @@
 class Assessment::Training < ActiveRecord::Base
-  belongs_to :assessment
+  is_a :assessment, as: 'as_assessment_assessment', class_name: 'Assessment::Assessment'
 end
