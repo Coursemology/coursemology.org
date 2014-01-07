@@ -67,6 +67,18 @@ namespace :db do
                                                           created_at: mcq['created_at'],
                                                           updated_at: mcq['updated_at']
                                                        }, :without_protection => true)
+
+              connection.select_all(sanitize('SELECT * from mcq_answers WHERE mcq_id = ?', [mcq['id']])).each do |opt|
+                Assessment::McqOption.create({
+                                               creator_id: opt['creator_id'],
+                                               question_id: parent_q.id,
+                                               text: opt['text'],
+                                               explanation: opt['explanation'],
+                                               correct: opt['is_correct'],
+                                               created_at: opt['created_at'],
+                                               updated_at: opt['updated_at']
+                                             }, :without_protection => true)
+              end
             when :Question
               text = connection.select_all(sanitize('SELECT * FROM questions WHERE id = ?', [q['qn_id']])).first
               parent_q = Assessment::TextQuestion.create({
