@@ -273,5 +273,81 @@ namespace :db do
                                    }, :without_protection => true)
       end
     end
+
+    @coding_questions_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
+                               ['Assessment::CodingQuestion', value, 'CodingQuestion', key]))
+
+      connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::CodingQuestion', value, 'CodingQuestion', key]))
+
+      connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::CodingQuestion', value, 'CodingQuestion', key]))
+
+      connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
+                               ['Assessment::CodingQuestion', value, 'CodingQuestion', key]))
+    end
+
+    @text_answers_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
+                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+
+      connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+
+      connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+
+      connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
+                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+    end
+
+    @mcq_questions_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
+                               ['Assessment::McqQuestion', value, 'Mcq', key]))
+
+      connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::McqQuestion', value, 'Mcq', key]))
+
+      connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::McqQuestion', value, 'Mcq', key]))
+
+      connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
+                               ['Assessment::McqQuestion', value, 'Mcq', key]))
+    end
+
+    @coding_answers_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE annotations SET annotable_type = ?, annotable_id = ? WHERE annotable_type = ? AND annotable_id = ?',
+                      ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+
+      connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
+                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+
+      connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+
+      connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
+                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+
+      connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
+                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+    end
+
+    @missions_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE file_uploads SET owner_type = ?, owner_id = ? WHERE owner_type = ? AND owner_id = ?',
+                               ['Assessment::Mission', value, 'Mission', key]))
+    end
+
+    @mission_submissions_map.each_pair do |key, value|
+      connection.exec(sanitize('UPDATE file_uploads SET owner_type = ?, owner_id = ? WHERE owner_type = ? AND owner_id = ?',
+                               ['Assessment::Submission', value, 'Submission', key]))
+    end
+
+    @trainings_map.each_pair do |key, value|
+      @missions_map.each do |key, value|
+        connection.exec(sanitize('UPDATE file_uploads SET owner_type = ?, owner_id = ? WHERE owner_type = ? AND owner_id = ?',
+                                 ['Assessment::Training', value, 'Training', key]))
+      end
+    end
   end
 end
