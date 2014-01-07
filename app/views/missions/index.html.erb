@@ -1,4 +1,4 @@
-<%- model_class = Mission -%>
+<%- model_class = Assessment::Mission -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
@@ -30,7 +30,7 @@
   <% end %>
 </div>
 
-<% if can? :manage, Mission %>
+<% if can? :manage, Assessment::Mission %>
     <p>
       <%= link_to "New Mission",
                   new_course_mission_path(@course),
@@ -54,10 +54,10 @@
           "><%= val %></th>
     <% end %>
 
-    <% if curr_user_course.id && can?(:manage, Submission) %>
+    <% if curr_user_course.id && can?(:manage, Assessment::Submission) %>
         <th width="10%"></th>
     <% end %>
-    <% if can?(:view_detail, Mission) %>
+    <% if can?(:view_detail, Assessment::Mission) %>
         <th width="10%"></th>
     <% end %>
   </tr>
@@ -68,7 +68,7 @@
       <tr class="<%= "future" if mission.open_at > Time.now %>">
         <% if to_display.include? 'title' %>
             <td>
-              <% if can? :manage, Mission %>
+              <% if can? :manage, Assessment::Mission %>
                   <%= link_to course_mission_stats_path(@course, mission) do %>
                       <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
                   <% end %>

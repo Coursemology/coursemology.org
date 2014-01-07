@@ -36,8 +36,8 @@ class CourseAbility
       can :share, Course
       can :participate, Course
       can :duplicate, Course
-      can :read, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :read, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
       can :read, [Level, Achievement, Title, Reward]
       can :students, Course
@@ -47,18 +47,16 @@ class CourseAbility
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all
-      can :see_all, [Submission, TrainingSubmission, Level]
-      can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :see_all, [Assessment::Submission, Level]
+      can :view_stat, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
       can :see, :pending_grading
       can :see, :pending_comments
-      can :unsubmit, Submission
+      can :unsubmit, Assessment::Submission
       can :view, :staff_leaderboard
-
-      cannot :modify, TrainingSubmission
     end
 
     if user.is_admin? || user_course.is_creator?

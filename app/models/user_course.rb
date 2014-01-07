@@ -47,8 +47,8 @@ class UserCourse < ActiveRecord::Base
   has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
 
-  has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
-  has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
+  has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: Assessment::Mission
+  has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: Assessment::Training
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
   has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
   has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"

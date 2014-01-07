@@ -7,24 +7,35 @@ class Course < ActiveRecord::Base
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions,          dependent: :destroy
   has_many :announcements,     dependent: :destroy
   has_many :user_courses ,     dependent: :destroy
-  has_many :trainings,         dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
 
-  has_many :mcqs,             through: :trainings
-  has_many :coding_questions, through: :trainings
+  has_many :missions,             dependent: :destroy,    class_name: Assessment::Assessment
+  has_many :trainings,            dependent: :destroy,    class_name: Assessment::Assessment,
+                                  conditions: { as_assessment_assessment_type: Assessment::Mission }
+  has_many :mcqs,                 through: :trainings,    class_name: Assessment::Training
+  has_many :coding_questions,     through: :trainings,    class_name: Assessment::CodingQuestion
+  has_many :std_answers,          through: :user_courses, class_name: Assessment::TextSubmission
+  has_many :std_coding_answers,   through: :user_courses, class_name: Assessment::CodingSubmission
+  has_many :submissions,          through: :user_courses, class_name: Assessment::Submission do
+    def missions
+      proxy_owner.joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').
+        where('aa.as_assessment_assessment_type = \'Assessment::Mission\'')
+    end
+
+    def trainings
+      proxy_owner.joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').
+          where('aa.as_assessment_assessment_type = \'Assessment::Training\'')
+    end
+  end
+
+  has_many :training_submissions, through: :user_courses, class_name: Assessment::Submission,
+                                  conditions: { assessment_assessments: { as_assessment_assessment_type: Assessment::Training } }
 
   has_many :users, through: :user_courses
-
-  has_many :std_answers,        through: :user_courses
-  has_many :std_coding_answers, through: :user_courses
-
-  has_many :submissions,          through: :user_courses
-  has_many :training_submissions, through: :user_courses
 
   has_many :activities, dependent: :destroy
 
@@ -47,9 +58,10 @@ class Course < ActiveRecord::Base
   has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
   has_many :tabs,                   dependent: :destroy
 
-  def asms
-    missions + trainings
-  end
+  # @deprecated
+  #def asms
+  #  missions + trainings
+  #end
 
   # def commented_topics
   #  # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq
