@@ -89,20 +89,14 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
     create_table :assessment_coding_submissions do |t|
       t.text :code
-
-      t.timestamps
     end
 
     create_table :assessment_mcq_submissions do |t|
       t.references :option
-
-      t.timestamps
     end
 
     create_table :assessment_text_submissions do |t|
       t.text :text
-
-      t.timestamps
     end
 
     create_table :assessment_gradings do |t|

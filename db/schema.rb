@@ -164,9 +164,7 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_coding_submissions", :force => true do |t|
-    t.text     "code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.text "code"
   end
 
   create_table "assessment_gradings", :force => true do |t|
@@ -195,9 +193,7 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_mcq_submissions", :force => true do |t|
-    t.integer  "option_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer "option_id"
   end
 
   create_table "assessment_missions", :force => true do |t|
@@ -249,9 +245,7 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   create_table "assessment_text_submissions", :force => true do |t|
-    t.text     "text"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.text "text"
   end
 
   create_table "assessment_trainings", :force => true do |t|
