@@ -3,10 +3,10 @@
 </div>
 <% if can? :manage, :bulk_update %>
     <ul class="nav nav-tabs">
-      <li class="<%= "active" if @tab == 'missions' %>">
+      <li class="<%= 'active' if @tab == 'missions' %>">
         <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4>Missions</h4></a>
       </li>
-      <li class="<%= "active" if @tab == 'overview' %>">
+      <li class="<%= 'active' if @tab == 'overview' %>">
         <a href="<%= course_missions_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
       </li>
     </ul>
@@ -25,7 +25,8 @@
   </tr>
   </thead>
   <tbody>
-  <% @missions.each do |mission| %>
+    <% @missions.each do |mission| %>
+    <% mission = mission.specific %>
       <tr>
         <td>
           <input name="missions[<%= mission.id %>][title]" class="input-medium" type="text"  value="<%= mission.title %>" required>
@@ -53,7 +54,7 @@
           <select id="select-mission" name="missions[<%= mission.id %>][dependent_id]" class="input-medium">
             <option value="0" >No Dependency</option>
             <%= (@missions - [mission]).each do |asm| %>
-                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent_mission %>><%= asm.title %></option>
+                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent %>><%= asm.title %></option>
             <% end %>
           </select>
         </td>
@@ -65,7 +66,7 @@
   <% end%>
   </tbody>
 </table>
-    <div class="center">
-      <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
-    </div>
+<div class="center">
+  <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
+</div>
 <% end %>
