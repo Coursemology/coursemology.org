@@ -16,17 +16,16 @@ class TextQuestionsController < ApplicationController
 
   def create
     @question.creator = current_user
-    @asm_qn = AsmQn.new
-    @asm_qn.asm = @mission
-    @asm_qn.qn = @question
+    @question.assessment = @mission.assessment
+    @question.pos = @mission.questions.last.pos + 1
 
     respond_to do |format|
-      if @question.save && @asm_qn.save
-        format.html { redirect_to course_mission_url(@course, @mission),
+      if @question.save
+        format.html { redirect_to course_assessment_mission_url(@course, @mission),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
         format.json { render json: @question.errors, status: :unprocessable_entity }
       end
     end
@@ -59,6 +58,15 @@ class TextQuestionsController < ApplicationController
 private
   def load_resources
     @mission = Assessment::Mission.find(params[:assessment_mission_id])
-    @question = Assessment::TextQuestion.find(params[:id])
+    @question = case params[:action]
+                  when 'new'
+                    Assessment::TextQuestion.new
+                  when 'create'
+                    q = Assessment::TextQuestion.new
+                    q.attributes = params[:assessment_text_question]
+                    q
+                  else
+                    Assessment::TextQuestion.find(params[:id])
+                end
   end
 end
