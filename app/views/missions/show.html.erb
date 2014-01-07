@@ -50,9 +50,7 @@
           <%= link_to edit_course_assessment_mission_path(@course, @mission), class: "btn" do %>
               <i class="icon-edit"></i>
           <% end %>
-          <%= link_to course_assessment_mission_path(@course, @mission), class: "btn btn-danger", method: "DELETE" do %>
-              <i class="icon-trash"></i>
-          <% end %>
+          <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_path(@course, @mission) } %>
         </td>
     <% end %>
   </tr>
