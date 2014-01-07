@@ -172,7 +172,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.integer  "grader_id"
     t.integer  "grader_course_id"
     t.integer  "grade"
-    t.text     "comment"
     t.integer  "exp_transaction_id"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false

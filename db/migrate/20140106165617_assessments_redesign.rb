@@ -104,7 +104,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.references :grader
       t.references :grader_course # curr_user_course for the grader
       t.integer :grade
-      t.text :comment
       t.references :exp_transaction
 
       t.timestamps
