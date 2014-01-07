@@ -29,6 +29,8 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.references :creator
       t.text :description
       t.integer :max_grade
+
+      t.timestamps
     end
 
     create_table :assessment_coding_questions do |t|
@@ -36,14 +38,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
       t.text :staff_comment
       t.integer :depends_on # was include_sol_qn_id
-
-      t.timestamps
     end
 
     create_table :assessment_mcq_questions do |t|
       t.boolean :must_select_all, :default => false # was select_all
-
-      t.timestamps
     end
 
     create_table :assessment_mcq_options do |t| # was mcq_answers
@@ -115,7 +113,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_trainings do |t|
-      t.references :assessment, index: true
       t.integer :pos
 
       t.integer :bonus_exp
@@ -123,7 +120,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_missions do |t|
-      t.references :assessment, index: true
       t.integer :pos
 
       t.references :dependent, index: true
