@@ -49,7 +49,7 @@ class Assessment::Submission < ActiveRecord::Base
       question = qn.specific
       answer = question.build_answer
 
-      answer.save
+      answer.save if answer
     end
   end
 end

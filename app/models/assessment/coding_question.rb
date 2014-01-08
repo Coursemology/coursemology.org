@@ -10,7 +10,7 @@ class Assessment::CodingQuestion < ActiveRecord::Base
     Assessment::CodingSubmission.new({
                                         question: self,
                                         code: prefill
-                                     })
+                                     }, without_protection: true)
   end
 
 private
