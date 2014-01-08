@@ -13,9 +13,9 @@
 
     <%- a = @submission.answers.where(question_id: q.id).first %>
     <%- answer = a.specific %>
-    <% q = q.specific %>
-    <% if q.class == Assessment::TextQuestion %>
-      <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span8 html-editor" rows="8"/>
+    <%- question = q.specific %>
+    <% if question.class == Assessment::TextQuestion %>
+      <textarea name="answers[<%= q.id %>][text]" class="span8 html-editor" rows="8"/>
       <% if answer %>
         <%= answer.text %>
       <% end %>
@@ -23,7 +23,7 @@
     <% else %>
         <%=render partial: 'do_coding',
                   locals: { answer: answer,
-                            question: q,
+                            question: question,
                             mode: "edit"
                   } %>
     <% end %>
@@ -59,7 +59,7 @@
   </span>
   <br/><br/>
   <div id="submission-files" class="collapse out">
-    <%= render partial: "layouts/file_uploader_complicated",
+    <%= render partial: 'layouts/file_uploader_complicated',
                locals: { owner: @submission } %>
   </div>
 <% end %>

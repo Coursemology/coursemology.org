@@ -72,13 +72,13 @@ class MissionSubmissionsController < ApplicationController
     @qadata = {}
     # if student is still attempting a mission, redirect to edit page
     if @submission.attempting? and @submission.std_course == curr_user_course
-      redirect_to edit_course_mission_submission_path
+      redirect_to edit_course_assessment_mission_assessment_submission_path
       return
     end
 
     #if staff is accessing the submitted mission, redirect to grading page
     if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
-      redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)
+      redirect_to new_course_assessment_mission_assessment_submission_assessment_grading_path(@course, @mission, @submission)
       return
     end
 
@@ -135,7 +135,15 @@ class MissionSubmissionsController < ApplicationController
   end
 
   def update
-    @submission.fetch_params_answers(params,current_user)
+    (params[:answers] || []).each do |question_id, value|
+      q = Assessment::Question.where(id: question_id).first
+      question = q.specific
+      a = @submission.answers.where(question_id: question_id).first
+      answer = a ? a.specific : question.build_answer
+      answer.update_attributes(value)
+      answer.save
+    end
+
     if params[:files]
       @submission.attach_files(params[:files].values)
     end
@@ -144,16 +152,18 @@ class MissionSubmissionsController < ApplicationController
       if @submission.save
         if params[:commit] == 'Save'
           @submission.set_attempting
-          format.html { redirect_to edit_course_mission_submission_path(@course, @mission, @submission),
-                                    notice: "Your submission has been saved." }
+          format.html { redirect_to edit_course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
+                                    notice: 'Your submission has been saved.' }
         else
-          @submission.set_submitted(course_mission_submission_url(@course,@mission,@submission))
+          @submission.set_submitted(course_assessment_mission_assessment_submission_url(@course, @mission, @submission))
+          @submission.save
+
           eval_answer
-          format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
-                                    notice: "Your submission has been updated." }
+          format.html { redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
+                                    notice: 'Your submission has been updated.' }
         end
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
       end
     end
   end

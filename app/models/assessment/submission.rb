@@ -53,4 +53,21 @@ class Assessment::Submission < ActiveRecord::Base
       answer.save if answer
     end
   end
+
+private
+  def notify_submission(redirect_url)
+    unless std_course.course.email_notify_enabled?(PreferableItem.new_submission)
+      return
+    end
+
+    std_course.get_staff_incharge.each do |uc|
+      #TODO: logging
+      UserMailer.delay.new_submission(
+        uc.user,
+        std_course.user,
+        assessment.specific,
+        redirect_url
+      )
+    end
+  end
 end

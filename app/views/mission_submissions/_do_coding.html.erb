@@ -69,7 +69,7 @@
   </div>
   <div class="span2"></div>
 </div>
-<input type="hidden" name="answers[<%=question.class.to_s%>][<%= question.id %>]" id="code_<%= answer.id  %>" >
+<input type="hidden" name="answers[<%= question.question.id %>][code]" id="code_<%= answer.id  %>" >
 <input type="hidden" id="annotation-path-<%= answer.id  %>" value="/courses/<%=@course.id%>/annotations">
 <input type="hidden" class="code-ans" value="<%= answer.id  %>" >
 <input type="hidden" id="mode_<%= answer.id  %>" value="<%= mode %>">

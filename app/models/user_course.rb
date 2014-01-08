@@ -1,3 +1,5 @@
+require 'tutorial_group'
+
 class UserCourse < ActiveRecord::Base
   acts_as_paranoid
 
