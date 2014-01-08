@@ -25,9 +25,4 @@ class Assessment::Mission < ActiveRecord::Base
 
     return true
   end
-
-  # @deprecated
-  def single_question?
-    questions.count <= 1
-  end
 end

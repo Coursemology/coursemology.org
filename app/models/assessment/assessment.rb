@@ -25,4 +25,15 @@ class Assessment::Assessment < ActiveRecord::Base
   end
 
   alias :as_requirements :requirements
+
+  # @deprecated
+  def is_file_submission
+    file_submission?
+  end
+
+  # @deprecated
+  def single_question
+    questions.count <= 1
+  end
+  alias_method :single_question?, :single_question
 end
