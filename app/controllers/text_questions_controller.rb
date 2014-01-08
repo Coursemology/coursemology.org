@@ -58,7 +58,14 @@ class TextQuestionsController < ApplicationController
 
 private
   def load_resources
-    @mission = Assessment::Mission.find(params[:assessment_mission_id])
+    if params[:assessment_mission_id] then
+      @mission = Assessment::Mission.find(params[:assessment_mission_id])
+    elsif params[:assessment_training_id]
+      @training = Assessment::Training.find(params[:assessment_training_id])
+    end
+    @assessment = @mission || @training
+    authorize! params[:action].to_sym, @assessment
+
     @question = case params[:action]
                   when 'new'
                     Assessment::TextQuestion.new
@@ -67,7 +74,7 @@ private
                     q.attributes = params[:assessment_text_question]
                     q
                   else
-                    Assessment::TextQuestion.find!(params[:id])
+                    Assessment::TextQuestion.find_by_id!!(params[:id])
                 end
   end
 end

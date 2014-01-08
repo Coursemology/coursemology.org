@@ -87,7 +87,7 @@ private
                     q.attributes = params[:assessment_coding_question]
                     q
                   else
-                    Assessment::CodingQuestion.find!(params[:id])
+                    Assessment::CodingQuestion.find_by_id!(params[:id])
                 end
   end
 end
