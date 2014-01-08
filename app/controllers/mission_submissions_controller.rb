@@ -110,8 +110,12 @@ class MissionSubmissionsController < ApplicationController
   end
 
   def new
-    # Update the activity feed. We cannot arrive here if the student already has a submission.
+    @submission.std_course = curr_user_course
+    @submission.assessment = @mission.assessment
+    @submission.set_attempting
     @submission.save!
+
+    # Update the activity feed. We cannot arrive here if the student already has a submission.
     if curr_user_course.is_student?
       Activity.attempted_asm(curr_user_course, @mission)
     end
@@ -123,11 +127,8 @@ class MissionSubmissionsController < ApplicationController
 
   def edit
     @questions = @mission.get_all_questions
-    @submission.build_initial_answers(current_user)
-    @std_answers = {}
-    @std_coding_answers = {}
-    @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
-    @submission.std_coding_answers.each { |answer| @std_coding_answers[answer.qn_id] = answer}
+    @submission.build_initial_answers
+
     respond_to do |format|
       format.html
     end
@@ -215,16 +216,12 @@ private
   def allow_only_one_submission
     sub = @mission.submissions.where(std_course_id:curr_user_course.id).first
     redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, sub) and return if sub
-
-    @submission.std_course = curr_user_course
-    @submission.assessment = @mission
-    @submission.attempt
   end
 
   def no_update_after_submission
     unless @submission.attempting?
       respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+        format.html { redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
                                   notice: "Your have already submitted this mission." }
       end
     end
