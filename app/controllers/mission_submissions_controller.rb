@@ -222,7 +222,7 @@ private
     unless @submission.attempting?
       respond_to do |format|
         format.html { redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
-                                  notice: "Your have already submitted this mission." }
+                                  notice: 'You have already submitted this mission.' }
       end
     end
   end
