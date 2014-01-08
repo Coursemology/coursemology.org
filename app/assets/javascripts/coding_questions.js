@@ -10,16 +10,17 @@
       return (str + '').replace(/[\"]/g, '&quot;');
     }
     function _appendTest(testType, test_count, expression, expected){
-      $("#"+testType+"_test_tbody").append('<tr testNo="'+test_count+'">' +
-        '<td><input type="text" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
-        '<td><input type="text" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
-        '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>');
+      $("#"+testType+"_test_tbody").append(tmpl('coding-question-form-test-case', {
+        testType: testType,
+        test_count: test_count,
+        expression: expression,
+        expected: expected
+      }));
     }
 
     function changeLang(lang) {
-      "use strict";
-      cmPrefill.setOption("mode", val);
-      cmIncluded.setOption("mode", val);
+      cmPrefill.setOption("mode", lang);
+      cmIncluded.setOption("mode", lang);
     }
 
     /** data types **/
@@ -116,7 +117,6 @@
     };
   }();
 
-
   $(document).ready(function() {
     $('form.coding-question-form select.lang').change(function() {
       path.changeLang(this.value);
@@ -128,6 +128,23 @@
 
     $('form.coding-question-form input#add-private-test').click(function() {
       path.addTest('private');
+    });
+
+    $(document).on('change', 'form.coding-question-form #path_testcases table.test_table input.code_to_run', function() {
+      var testType = $(this).data('testType');
+      var testNo = parseInt($(this).parents('tr.test_case').data('testNo'));
+      path.updateTest(testType, testNo, 'expression', this.value);
+    });
+
+    $(document).on('change', 'form.coding-question-form #path_testcases table.test_table input.expected_output', function() {
+      var testType = $(this).data('testType');
+      var testNo = parseInt($(this).parents('tr.test_case').data('testNo'));
+      path.updateTest(testType, testNo, 'expected', this.value);
+    });
+
+    $(document).on('click', 'form.coding-question-form #path_testcases table.test_table a.delete_test', function() {
+      var testType = $(this).data('testType');
+      path.deleteTest(this.parentNode.parentNode, testType);
     });
 
     if (document.getElementById("pathstep_content")) {

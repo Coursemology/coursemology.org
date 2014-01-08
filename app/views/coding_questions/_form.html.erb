@@ -142,3 +142,17 @@
   </div>
 <% end %>
 <%= render :partial => "layouts/html_editor" %>
+
+<script type="text/x-tmpl" id="coding-question-form-test-case">
+<tr class="test_case" data-test-no="{%= o.test_count %}">
+  <td>
+    <input type="text" class="code_to_run" value="{%= o.expression %}" data-test-type="{%= o.testType %}" />
+  </td>
+  <td>
+    <input type="text" class="expected_output" value="{%= o.expected %}" data-test-type="{%= o.testType %}" />
+  </td>
+  <td>
+    <a title="Delete this test" class="btn btn-danger delete_test"><i class="icon-trash"></i></a>
+  </td>
+</tr>
+</script>
