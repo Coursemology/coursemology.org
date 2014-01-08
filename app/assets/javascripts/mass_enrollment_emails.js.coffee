@@ -27,19 +27,24 @@ parseContacts = (contents)->
     return false
 
   header = raw_list[0].split(',')
-  nameIndex = header.indexOf('Name')
+  header = (item.toLowerCase().trim() for item in header)
+  nameIndex = header.indexOf('name')
 
   if header.length == 0 or nameIndex < 0
     alert error_msg
     return false
 
-  emailIndex = header.indexOf('E-mail 1 - Value')
 
-  if emailIndex < 0
+  emailHeaders = ['E-mail 1 - Value'.toLowerCase(),'E-mail'.toLowerCase(), 'email']
+  emailIndex = header.indexOf(val) for val in emailHeaders when header.indexOf(val) >= 0
+
+
+  if emailIndex == undefined
     alert "Can't find email feild in the file"
     return false
   contacts = []
-  contacts.push {name: row.split(',')[nameIndex], email: row.split(',')[emailIndex]} for row in raw_list[1..(raw_list.length - 2)]
+  contacts.push {name: row.split(',')[nameIndex].trim(), email: row.split(',')[emailIndex].trim()} for row in raw_list[1..(raw_list.length - 1)] when row.split(',')[emailIndex] != undefined
+  console.log(contacts)
 
   $('#emails-tbody').append "<tr><td><input type='checkbox' class='checkbox-emails' checked/></td><td class='name'>#{contact.name}</td><td class='email'>#{contact.email}</td></tr>" for contact in contacts
 

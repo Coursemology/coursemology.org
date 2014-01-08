@@ -23,6 +23,12 @@ class PythonEvaluator
     full_path
   end
 
+  def self.resource_limit(ram, cpu)
+"import resource
+#resource.setrlimit(resource.RLIMIT_AS, (#{ram}, #{ram}))
+resource.setrlimit(resource.RLIMIT_CPU, (#{cpu}, #{cpu}))"
+  end
+
   def self.combine_code(c1, c2)
     c1 << '
 ' << c2
@@ -35,7 +41,7 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 ' << code
   end
 
-  def self.eval_python(dir, code, data, eval = false)
+  def self.eval_python(dir, code, data, eval = false, resource_limit=false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
     code = add_importing_code(code)
 
@@ -44,7 +50,11 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
              evalTests:   data["evalTests"]}
 
     time_limit = data["timeLimitInSec"]
-    memory_limit = data["memoryLimitInMB"]
+    memory_limit = data["memoryLimitInMB"] * 1024
+
+    if resource_limit
+      code = combine_code(resource_limit(memory_limit, time_limit), code)
+    end
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
     summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
