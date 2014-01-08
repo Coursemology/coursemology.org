@@ -62,6 +62,13 @@
     <div class="cos_code path-code" id="path_dooptions">
       <h3>Options</h3>
       <div class="control-group">
+        <%= f.label :auto_graded, class: 'control-label' %>
+        <div class="controls">
+          <%= f.check_box :auto_graded, class: 'checkbox' %>
+        </div>
+      </div>
+
+      <div class="control-group">
         <%= f.label :time_limit, 'Time Limit (seconds)', class: 'control-label' %>
         <div class="controls">
           <%= f.number_field :time_limit, class: 'number_field' %>
