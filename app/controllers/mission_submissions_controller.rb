@@ -1,16 +1,16 @@
 class MissionSubmissionsController < ApplicationController
   load_and_authorize_resource :course
+  before_filter :load_resources
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :submission, through: :mission
 
   skip_load_and_authorize_resource :submission, only: :listall
   skip_load_and_authorize_resource :mission, only: :listall
 
-  before_filter :authorize, only: [:new, :create, :edit, :update]
-  before_filter :allow_only_one_submission, only: [:new, :create]
+  before_filter :authorize, only: [:new, :edit, :update]
+  before_filter :allow_only_one_submission, only: [:new]
   before_filter :no_update_after_submission, only: [:edit, :update]
-  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
-
+  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :edit]
 
   def listall
     @tab = "MissionSubmission"
@@ -110,18 +110,15 @@ class MissionSubmissionsController < ApplicationController
   end
 
   def new
-    if @submission.save
-      if @submission.attempt == 1 && curr_user_course.is_student?
-        Activity.attempted_asm(curr_user_course, @mission)
-      end
-      respond_to do |format|
-        format.html { redirect_to edit_course_mission_submission_path(@course,@mission,@submission)}
-      end
+    # Update the activity feed. We cannot arrive here if the student already has a submission.
+    @submission.save!
+    if curr_user_course.is_student?
+      Activity.attempted_asm(curr_user_course, @mission)
     end
-  end
 
-  def create
-    update
+    respond_to do |format|
+      format.html { redirect_to edit_course_assessment_mission_assessment_submission_path(@course, @mission, @submission) }
+    end
   end
 
   def edit
@@ -200,16 +197,28 @@ class MissionSubmissionsController < ApplicationController
     }
   end
 
-  private
+private
+  def load_resources
+    @mission = Assessment::Mission.find(params[:assessment_mission_id])
+    @submission = case params[:action]
+                    when 'new'
+                      Assessment::Submission.new
+                    when 'create'
+                      q = Assessment::Submission.new
+                      q.attributes = params[:assessment_submission]
+                      q
+                    else
+                      Assessment::Submission.find_by_id!(params[:id])
+                  end
+  end
 
   def allow_only_one_submission
     sub = @mission.submissions.where(std_course_id:curr_user_course.id).first
-    if sub
-      @submission = sub
-    else
-      @submission.std_course = curr_user_course
-    end
-    @submission.attempt_mission
+    redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, sub) and return if sub
+
+    @submission.std_course = curr_user_course
+    @submission.assessment = @mission
+    @submission.attempt
   end
 
   def no_update_after_submission
@@ -231,5 +240,4 @@ class MissionSubmissionsController < ApplicationController
       redirect_to course_mission_access_denied_path(@course, @mission)
     end
   end
-
 end
