@@ -1,7 +1,7 @@
 <%= form_for [@course, @assessment, @question], html: { class: 'form-horizontal' } do |f| %>
   <div id="pathstep_content">
     <div class="control-group">
-      <%= f.label :language, :class => 'control-label' %>
+      <%= f.label :language, class: 'control-label' %>
       <div class="controls">
         <select class="lang" onchange="path.changeLang(this.value)">
           <option selected="selected" value="Python">Python</option>
@@ -10,39 +10,35 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :title, 'Title', :class => 'control-label' %>
+      <%= f.label :title, class: 'control-label' %>
       <div class="controls">
-        <%= f.text_field :title, :class => 'text_field' %>
+        <%= f.text_field :title, class: 'text_field' %>
       </div>
     </div>
 
     <div class="control-group">
-      <%= f.label :max_grade, :class => 'control-label' %>
+      <%= f.label :max_grade, class: 'control-label' %>
       <div class="controls">
-        <%= f.number_field :max_grade, :class => 'number_field' %>
+        <%= f.number_field :max_grade, class: 'number_field' %>
       </div>
     </div>
 
     <div class="control-group">
-      <label>Include student code from question:</label>
+      <%= f.label :depends_on, class: 'control-label' %>
       <div class="controls">
-        <select id="select-question" name="coding_question[include_sol_qn_id]">
-          <option >None</option>
-          <% if @question.new_record? %>
-            <% qns = @assessment.questions.coding - [@question] %>
-          <% else %>
-            <% qns = @assessment.questions.coding.before(@question.asm_qns.first.pos) - [@question] %>
-          <% end %>
-
-          <%= qns.each do |cq| %>
-            <option value="<%= cq.id %>" <%= 'selected' if @question.include_sol_qn == cq %> ><%= cq.step_name %></option>
-          <% end %>
-        </select>
+        <%- questions = if @question.new_record? then
+                          @assessment.questions.coding - [@question]
+                        else
+                          @assessment.questions.coding.before(@question) - [@question]
+                        end
+            questions = questions.map { |q| [q.specific.title, q.id] }
+        %>
+        <%= f.select :depends_on, questions, class: 'select', include_blank: true %>
       </div>
     </div>
 
     <div class="control-group">
-      <%= f.label :description, :class => 'control-label' %>
+      <%= f.label :description, class: 'control-label' %>
       <div class="controls">
         <%= f.text_area :description, class:'text_area span7 html-editor',:rows => 10 %>
       </div>
@@ -51,18 +47,16 @@
 <% if @question.persisted? %>
     <div class="control-group">
       <h3>Comments (staff only)</h3>
-      <div class="controls" >
-        <% require 'digest/md5' %>
-        <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
-        <input type="hidden" id="question_url_<%= ecid %>" value="<%= url_for([@course, @assessment, @submission]) %>">
-        <div>
-          <%= render partial: "comments/list",
-                     locals: { comments:  CommentTopic.comments_to_json(@question.comment_topic, curr_user_course),
-                               target:    @question,
-                               header:    'Comments',
-                               ecid:      ecid
-                             } %>
-        </div>
+      <% require 'digest/md5' %>
+      <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
+      <input type="hidden" id="question_url_<%= ecid %>" value="<%= url_for([@course, @assessment, @submission]) %>">
+      <div>
+        <%= render partial: "comments/list",
+                   locals: { comments:  CommentTopic.comments_to_json(@question.comment_topic, curr_user_course),
+                             target:    @question,
+                             header:    'Comments',
+                             ecid:      ecid
+                           } %>
       </div>
     </div>
 <% end %>
@@ -70,22 +64,23 @@
     <div class="cos_code path-code" id="path_dooptions">
       <h3>Options</h3>
       <div class="control-group">
-        <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>
+        <%= f.label :time_limit, 'Time Limit (seconds)', class: 'control-label' %>
         <div class="controls">
-          <input type="text" id="timeLimit" value="1"  onchange="path.changeTimeLimit(this.value);" />
-        </div>
-      </div>
-      <div class="control-group">
-        <%= f.label :memoryLimit,"Memory Limit (mb)", class:'control-label' %>
-        <div class="controls">
-          <input type="text" id="memoryLimit" value="2"  onchange="path.changeMemoryLimit(this.value);" />
+          <%= f.number_field :time_limit, onchange: 'path.changeTimeLimit(this.value)' %>
         </div>
       </div>
 
       <div class="control-group">
-        <%= f.label :testLimit,"Test Limit (times)", class:'control-label' %>
+        <%= f.label :memory_limit, 'Memory Limit (MB)', class: 'control-label' %>
         <div class="controls">
-          <input type="number" min="0" id="testLimit" value="3"  onchange="path.changeTestLimit(this.value);" />
+          <%= f.number_field :memory_limit, onchange: 'path.changeMemoryLimit(this.value)' %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :test_limit, 'Test Limit (times)', class: 'control-label' %>
+        <div class="controls">
+          <%= f.number_field :test_limit, onchange: 'path.changeTestLimit(this.value)' %>
         </div>
       </div>
       
