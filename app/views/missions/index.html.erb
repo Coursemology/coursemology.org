@@ -60,7 +60,7 @@
         <% if to_display.include? 'title' %>
             <td>
               <% if can? :manage, Assessment::Mission %>
-                  <%= link_to course_mission_stats_path(@course, mission) do %>
+                  <%= link_to course_assessment_mission_stats_path(@course, mission) do %>
                       <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
                   <% end %>
               <% elsif mission.can_start?(curr_user_course).first %>
