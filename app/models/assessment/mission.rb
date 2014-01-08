@@ -10,8 +10,8 @@ class Assessment::Mission < ActiveRecord::Base
   alias :get_all_questions :questions
 
   # @deprecated
-  def get_final_sbm_by_std(std_course_id)
-    submissions.final(std_course_id)
+  def get_final_sbm_by_std(std_course)
+    submissions.where(std_course_id: std_course).last
   end
 
   def open?
