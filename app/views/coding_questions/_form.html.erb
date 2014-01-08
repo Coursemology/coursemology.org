@@ -3,9 +3,7 @@
     <div class="control-group">
       <%= f.label :language, class: 'control-label' %>
       <div class="controls">
-        <select class="lang">
-          <option selected="selected" value="Python">Python</option>
-        </select>
+        <%= f.select :language, ['Python', 'python'], class: 'lang' %>
       </div>
     </div>
 
@@ -24,7 +22,7 @@
     </div>
 
     <div class="control-group">
-      <%= f.label :depends_on, class: 'control-label' %>
+      <%= f.label :depends_on_id, class: 'control-label' %>
       <div class="controls">
         <%- questions = if @question.new_record? then
                           @assessment.questions.coding - [@question]
@@ -33,7 +31,7 @@
                         end
             questions = questions.map { |q| [q.specific.title, q.id] }
         %>
-        <%= f.select :depends_on, questions, class: 'select', include_blank: true %>
+        <%= f.select :depends_on_id, questions, class: 'select', include_blank: true %>
       </div>
     </div>
 
@@ -137,7 +135,7 @@
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary', id: 'savePath' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  nil, :class => 'btn' %>
+                  url_for([@course, @assessment]), :class => 'btn' %>
     </div>
   </div>
 <% end %>
