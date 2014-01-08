@@ -119,7 +119,7 @@
     <div class="form-actions">
       <%= f.submit nil, :class => 'btn btn-primary', id: 'mission-update', data: {disable_with: 'Submitting...'} %>
       <%= link_to t('.cancel', :default => t('helpers.links.cancel')),
-                  course_path(@course), :class => 'btn' %>
+                  course_assessment_mission_path(@course, @mission), :class => 'btn' %>
     </div>
 
     <%= render :partial => 'layouts/html_editor' %>
