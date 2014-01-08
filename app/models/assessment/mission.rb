@@ -47,17 +47,16 @@ class Assessment::Mission < ActiveRecord::Base
       queued_jobs.create(delayed_job_id: delayed_job.id)
     end
 
-    if type == Assessment::Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
+    if not course.email_notify_enabled?(PreferableItem.new_mission)
       return
     end
 
     assessment.schedule_mail(ucs, redirect_to)
 
-    if type == Assessment::Mission && close_at >= Time.now && publish?
+    if close_at >= Time.now && publish?
       delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, id, redirect_to, true), run_at: 1.day.ago(close_at))
       queued_jobs.create(delayed_job_id: delayed_job.id)
     end
-
   end
 
   # Converts this mission into a format that can be used by the lesson plan component
