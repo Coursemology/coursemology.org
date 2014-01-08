@@ -6,6 +6,8 @@ class Assessment::CodingQuestion < ActiveRecord::Base
 
   attr_accessible :title, :description, :max_grade, :language, :time_limit, :memory_limit, :test_limit, :auto_graded, :data, :depends_on_id
 
+  alias_attribute :is_auto_grading?, :auto_graded?
+
   def build_answer
     Assessment::CodingAnswer.new({
                                     question_id: self.question.id,

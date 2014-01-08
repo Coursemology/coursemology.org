@@ -4,7 +4,7 @@ class Assessment::TextQuestion < ActiveRecord::Base
   attr_accessible :description, :max_grade
 
   def build_answer
-    Assessment::CodingAnswer.new({
+    Assessment::TextAnswer.new({
                                    question_id: self.question.id
                                  }, without_protection: true)
   end
