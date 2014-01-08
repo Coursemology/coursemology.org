@@ -200,7 +200,7 @@ namespace :db do
                                                     created_at: answer['created_at'],
                                                     updated_at: answer['updated_at']
                                                 }, :without_protection => true)
-              @text_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
+              @text_answers_map[sbm_answer['answer_id']] = ans.answer.id
             end
           when :StdMcqAnswer
             connection.select_all(sanitize('SELECT * FROM std_mcq_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
@@ -213,7 +213,7 @@ namespace :db do
                                                    created_at: answer['created_at'],
                                                    updated_at: answer['updated_at']
                                                }, :without_protection => true)
-              @mcq_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
+              @mcq_answers_map[sbm_answer['answer_id']] = ans.answer.id
             end
           when :StdCodingAnswer
             connection.select_all(sanitize('SELECT * FROM std_coding_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
@@ -226,7 +226,7 @@ namespace :db do
                                                       created_at: answer['created_at'],
                                                       updated_at: answer['updated_at']
                                                   }, :without_protection => true)
-              @coding_answers_map[sbm_answer['answer_id']] = ans.question_submission.id
+              @coding_answers_map[sbm_answer['answer_id']] = ans.answer.id
             end
         end
       end
