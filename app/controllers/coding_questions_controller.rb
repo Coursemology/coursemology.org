@@ -65,7 +65,7 @@ class CodingQuestionsController < ApplicationController
   def destroy
     @question.destroy
     respond_to do |format|
-      format.html { redirect_to url_for(@course, @training || @mission) }
+      format.html { redirect_to url_for([@course, @assessment]) }
     end
   end
 
