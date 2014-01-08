@@ -114,6 +114,11 @@ namespace :db do
                   raise StandardError
                 end
               end
+              data = JSON.parse!(code['data'])
+              memory_limit = data['memoryLimitInMB']
+              time_limit = data['timeLimitInSec']
+              data.delete('memoryLimitInMB')
+              data.delete('timeLimitInSec')
               parent_q = Assessment::CodingQuestion.create({
                                                           assessment_id: parent['id'],
                                                           creator_id: code['creator_id'],
@@ -121,10 +126,25 @@ namespace :db do
                                                           description: code['description'],
                                                           max_grade: code['max_grade'],
                                                           depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? coding_questions_map.fetch(code['include_sol_qn_id']) : nil,
+                                                          data: JSON.generate(data),
                                                           created_at: code['created_at'],
                                                           updated_at: code['updated_at']
                                                          }, :without_protection => true)
               @coding_questions_map[q['qn_id']] = parent_q.question.id
+
+              if code['staff_comments'] && code['staff_comments'] != '' then
+                topic = CommentTopic.create({
+                                              course_id: item['course_id'],
+                                              topic_id: parent_q.id,
+                                              topic_type: parent_q.class
+                                            })
+                Comment.create({
+                                 text: code['staff_comments'],
+                                 commentable_id: parent_q.id,
+                                 commentable_type: parent_q.class,
+                                 comment_topic_id: topic.id
+                               })
+              end
             else
               raise StandardError
           end

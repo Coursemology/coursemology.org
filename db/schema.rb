@@ -173,7 +173,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
 
   create_table "assessment_coding_questions", :force => true do |t|
     t.string  "title"
-    t.text    "staff_comment"
+    t.integer "time_limit"
+    t.integer "memory_limit"
+    t.text    "data"
     t.integer "depends_on"
   end
 
@@ -241,6 +243,7 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.integer  "creator_id"
     t.text     "description"
     t.integer  "max_grade"
+    t.integer  "pos"
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
   end
