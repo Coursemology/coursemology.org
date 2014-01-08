@@ -3,6 +3,7 @@ class Assessment::Mission < ActiveRecord::Base
 
   has_many :dependent, class_name: Assessment::Mission, foreign_key: :id
   has_many :files, as: :owner, class_name: 'FileUpload', dependent: :destroy
+  has_many :required_for, class_name: 'Mission', foreign_key: :dependent_id
 
   attr_accessible :title, :description, :exp, :open_at, :close_at, :publish, :file_submission, :dependent_id
 
