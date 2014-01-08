@@ -68,7 +68,7 @@ namespace :db do
         end
 
         # Migrate the questions
-        connection.select_all(sanitize('SELECT * from asm_qns WHERE asm_id= ? AND asm_type = ?', [assessment['id'], type])).each do |q|
+        connection.select_all(sanitize('SELECT * from asm_qns WHERE asm_id= ? AND asm_type = ? ORDER BY pos', [assessment['id'], type])).each do |q|
           case q['qn_type'].to_sym
             when :Mcq
               mcq = connection.select_all(sanitize('SELECT * from mcqs WHERE id = ?', [q['qn_id']])).first
@@ -111,6 +111,7 @@ namespace :db do
               code = connection.select_all(sanitize('SELECT * FROM coding_questions WHERE id = ?', [q['qn_id']])).first
               if code['include_sol_qn_id'] != nil && code['include_sol_qn_id'] != 0 then
                 if @coding_questions_map[code['include_sol_qn_id']] == nil then
+                  puts "Dependency for Coding Question #{code['id']}: #{code['step_name']} dropped because it has not been migrated\n"
                   raise StandardError
                 end
               end
