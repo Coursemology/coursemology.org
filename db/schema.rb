@@ -173,10 +173,13 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
 
   create_table "assessment_coding_questions", :force => true do |t|
     t.string  "title"
+    t.string  "language"
     t.integer "time_limit"
     t.integer "memory_limit"
+    t.integer "test_limit"
+    t.boolean "auto_graded"
     t.text    "data"
-    t.integer "depends_on"
+    t.integer "depends_on_id"
   end
 
   create_table "assessment_coding_submissions", :force => true do |t|

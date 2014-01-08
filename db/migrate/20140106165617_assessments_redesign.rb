@@ -60,7 +60,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.boolean :auto_graded
       t.text :data
 
-      t.integer :depends_on # was include_sol_qn_id
+      t.references :depends_on # was include_sol_qn_id
     end
 
     create_table :assessment_mcq_questions do |t|
