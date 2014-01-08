@@ -11,7 +11,9 @@
       <h3>Your answer:</h3>
     <% end %>
 
-    <%- answer = @submission.answers.where(question_id: q.id).first.specific %>
+    <%- a = @submission.answers.where(question_id: q.id).first %>
+    <%- answer = a.specific %>
+    <% q = q.specific %>
     <% if q.class == Assessment::TextQuestion %>
       <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span8 html-editor" rows="8"/>
       <% if answer %>
@@ -21,6 +23,7 @@
     <% else %>
         <%=render partial: 'do_coding',
                   locals: { answer: answer,
+                            question: q,
                             mode: "edit"
                   } %>
     <% end %>
@@ -28,16 +31,15 @@
     <hr />
 
     <% require 'digest/md5' %>
-    <% ecid =  Digest::MD5.hexdigest(answer.class.to_s << answer.id.to_s) %>
-    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+    <% ecid =  Digest::MD5.hexdigest(a.class.to_s << a.id.to_s) %>
+    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_mission_assessment_submission_url(@course, @mission, @submission) %>">
 
     <div class="span8">
       <%= render partial: "comments/list",
-                 locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
-                           target:    answer,
+                 locals: { comments:  CommentTopic.comments_to_json(a.comment_topic, curr_user_course),
+                           target:    a,
                            header:    'Comments',
                            ecid:      ecid } %>
-      </div>
     </div>
   <% end %>
 
