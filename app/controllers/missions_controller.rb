@@ -1,5 +1,6 @@
 class MissionsController < ApplicationController
   load_and_authorize_resource :course
+  before_filter :load_resource, only: [:stats, :dump_code]
   load_and_authorize_resource :mission, through: :course, class: 'Assessment::Mission'
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
@@ -261,5 +262,10 @@ class MissionsController < ApplicationController
         format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file_url} }
       end
     end
+  end
+
+private
+  def load_resource
+    @mission = Assessment::Mission.find_by_id!(params[:assessment_mission_id])
   end
 end

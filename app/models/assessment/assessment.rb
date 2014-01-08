@@ -38,6 +38,10 @@ class Assessment::Assessment < ActiveRecord::Base
   end
   alias_method :single_question?, :single_question
 
+  def max_grade
+    questions.sum(:max_grade)
+  end
+
   def schedule_mail(ucs, redirect_to)
     type = specific.class
     if type == Assessment::Training && !course.email_notify_enabled?(PreferableItem.new_training)

@@ -47,8 +47,6 @@ JfdiAcademy::Application.routes.draw do
     match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
-    match "trainings/overview" => "trainings#overview", as: :trainings_overview
-    post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
       resources :exp_transactions
@@ -64,7 +62,10 @@ JfdiAcademy::Application.routes.draw do
       end
 
       get 'overview' => 'missions#overview', on: :collection
-      post  'bulk_update' => 'missions#bulk_update', as: :bulk_update
+      post 'bulk_update' => 'missions#bulk_update', as: :bulk_update
+      get 'stats' => 'missions#stats'
+      get 'dump_code' => 'missions#dump_code'
+
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
       post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
@@ -74,8 +75,6 @@ JfdiAcademy::Application.routes.draw do
         end
       end
     end
-    match "missions/:id/stats" => "missions#stats", as: :mission_stats
-    match "missions/:id/dump_code" => "missions#dump_code", as: :mission_dump_code
 
     resources :trainings do
       resources :mcqs
@@ -88,6 +87,9 @@ JfdiAcademy::Application.routes.draw do
           post 'reorder'
         end
       end
+
+      match "trainings/overview" => "trainings#overview", as: :trainings_overview
+      post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
     end
     match "trainings/:id/stats" => "trainings#stats", as: :training_stats
 
@@ -247,7 +249,7 @@ JfdiAcademy::Application.routes.draw do
     resources :file_uploads
   end
 
-  resources :missions do
+  resources :assessment_missions do
     resources :file_uploads
   end
 
