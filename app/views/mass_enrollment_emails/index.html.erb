@@ -21,12 +21,19 @@
 <div class="row-fluid">
   <span class="btn fileinput-button">
     <i class="icon-plus icon-white"></i>
-    <span>Get emails from Gmail CVS file</span>
+    <span>Get emails from CSV file</span>
     <input id="cvs_file" type="file" >
   </span>
   <input type="hidden" id="email-invitation-url" value="<%= course_send_enrollment_emails_path(@course) %>">
   <br>
   <br>
+  <div class="well">
+    Example: <br>
+    Name, Email  <br>
+    John, john@gmail.com
+    <br>
+
+  </div>
   <h5 class="or-separator-small">--- OR ---</h5>
   Manually add students:
   <span class="btn" id="manually-add-student" style="margin: 10px 0px">
