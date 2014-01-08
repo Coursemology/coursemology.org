@@ -1,72 +1,87 @@
-<%= form_for [@course, @asm, @coding_question], :html => { :class => 'form-horizontal' } do |f| %>
-    <div id="pathstep_content">
+<%= form_for [@course, @assessment, @question], html: { class: 'form-horizontal' } do |f| %>
+  <div id="pathstep_content">
+    <div class="control-group">
+      <%= f.label :language, :class => 'control-label' %>
+      <div class="controls">
+        <select class="lang" onchange="path.changeLang(this.value)">
+          <option selected="selected" value="Python">Python</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :title, 'Title', :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>Include student code from question:</label>
+      <div class="controls">
+        <select id="select-question" name="coding_question[include_sol_qn_id]">
+          <option >None</option>
+          <% if @question.new_record? %>
+            <% qns = @assessment.questions.coding - [@question] %>
+          <% else %>
+            <% qns = @assessment.questions.coding.before(@question.asm_qns.first.pos) - [@question] %>
+          <% end %>
+
+          <%= qns.each do |cq| %>
+            <option value="<%= cq.id %>" <%= 'selected' if @question.include_sol_qn == cq %> ><%= cq.step_name %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, class:'text_area span7 html-editor',:rows => 10 %>
+      </div>
+    </div>
+
+<% if @question.persisted? %>
+    <div class="control-group">
+      <h3>Comments (staff only)</h3>
+      <div class="controls" >
+        <% require 'digest/md5' %>
+        <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
+        <input type="hidden" id="question_url_<%= ecid %>" value="<%= url_for([@course, @assessment, @submission]) %>">
+        <div>
+          <%= render partial: "comments/list",
+                     locals: { comments:  CommentTopic.comments_to_json(@question.comment_topic, curr_user_course),
+                               target:    @question,
+                               header:    'Comments',
+                               ecid:      ecid
+                             } %>
+        </div>
+      </div>
+    </div>
+<% end %>
+
+    <div class="cos_code path-code" id="path_dooptions">
+      <h3>Options</h3>
       <div class="control-group">
-        <%= f.label :Language, :class => 'control-label' %>
+        <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>
         <div class="controls">
-          <select class="lang" onchange="path.changeLang(this.value)">
-            <option selected="selected" value="Python">Python</option>
-          </select>
+          <input type="text" id="timeLimit" value="1"  onchange="path.changeTimeLimit(this.value);" />
         </div>
       </div>
-
       <div class="control-group">
-        <%= f.label :step_name,"Step Name", :class => 'control-label' %>
+        <%= f.label :memoryLimit,"Memory Limit (mb)", class:'control-label' %>
         <div class="controls">
-          <%= f.text_field :step_name, :class => 'text_field' %>
+          <input type="text" id="memoryLimit" value="2"  onchange="path.changeMemoryLimit(this.value);" />
         </div>
       </div>
 
-      <div class="control-group">
-        <label>Include student code from question:</label>
-        <div class="controls">
-          <select id="select-question" name="coding_question[include_sol_qn_id]">
-            <option >None</option>
-            <% if @coding_question.new_record? %>
-            <% qns = @asm.coding_questions - [@coding_question] %>
-            <% else %>
-            <% qns = @asm.coding_questions_before(@coding_question.asm_qns.first.pos) - [@coding_question] %>
-            <% end %>
-
-            <%= qns.each do |cq| %>
-                <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.step_name %></option>
-            <% end %>
-          </select>
-        </div>
-      </div>
-      <div class="control-group">
-        <%= f.label :description, :class => 'control-label' %>
-        <div class="controls">
-          <%= f.text_area :description, class:'text_area span7 html-editor',:rows => 10 %>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <%= f.label :staff_comments,'Staff Comments (hidden)', :class => 'control-label' %>
-        <div class="controls" >
-          <%= f.text_area :staff_comments, :rows => 4, class:'text_area span7' %>
-        </div>
-      </div>
-
-      <div class="cos_code path-code" id="path_dooptions">
-        <h3>Options</h3>
-        <div class="control-group">
-          <%= f.label :timeLimit,"Time Limit (secs)", class:'control-label' %>
-          <div class="controls">
-            <input type="text" id="timeLimit" value="1"  onchange="path.changeTimeLimit(this.value);" />
-          </div>
-        </div>
-        <div class="control-group">
-          <%= f.label :memoryLimit,"Memory Limit (mb)", class:'control-label' %>
-          <div class="controls">
-            <input type="text" id="memoryLimit" value="2"  onchange="path.changeMemoryLimit(this.value);" />
-          </div>
-        </div>
-        <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
+      <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
         <div>Included code (optional, hidden):</div><textarea  rows="2" id="included"></textarea> <br />
       </div>
+
       <div id="path_testcases">
         <h3>Test Cases</h3>
-        <br/>
+        <br />
         <p><strong>NOTE:</strong> The expression in the <strong>'CODE TO RUN'</strong> column will be compared with the expression in the <strong>'EXPECTED OUTOUT'</strong> column using the equality operator. The return value of <code>print()</code> is <code>None</code> and the printed output should not be confused with the return value. </p>
         <div id="public_tests">
           Public Tests: <input type="button" id="addpublictest"  class="btn btn-info" value="Add New Test" onclick="path.addTest('public');"  />
@@ -116,6 +131,6 @@
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   nil, :class => 'btn' %>
     </div>
-    </div>
+  </div>
 <% end %>
 <%= render :partial => "layouts/html_editor" %>
