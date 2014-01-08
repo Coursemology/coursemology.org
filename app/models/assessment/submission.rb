@@ -5,6 +5,8 @@ class Assessment::Submission < ActiveRecord::Base
   belongs_to :course, class_name: 'Course'
   belongs_to :std_course, class_name: 'UserCourse'
 
+  has_many :answers, class_name: Assessment::QuestionSubmission
+
   STATUS_ATTEMPTING = 'attempting'
   STATUS_SUBMITTED = 'submitted'
   STATUS_GRADED = 'graded'
@@ -35,5 +37,19 @@ class Assessment::Submission < ActiveRecord::Base
 
   def set_graded
     status = STATUS_GRADED
+  end
+
+  # Initialises all the corresponding answers in this assessment for every question defined.
+  def build_initial_answers
+    assessment.questions.each do |qn|
+      if (answers.where(question_id: qn).count > 0)
+        next
+      end
+
+      question = qn.specific
+      answer = question.build_answer
+
+      answer.save
+    end
   end
 end

@@ -5,4 +5,17 @@ class Assessment::CodingQuestion < ActiveRecord::Base
   has_one :comment_topic, as: :topic
 
   attr_accessible :title, :description, :max_grade, :language, :time_limit, :memory_limit, :test_limit, :auto_graded, :data, :depends_on_id
+
+  def build_answer
+    Assessment::CodingSubmission.new({
+                                        question: self,
+                                        code: prefill
+                                     })
+  end
+
+private
+  # TODO: Factor this out to a project provider.
+  def prefill
+
+  end
 end
