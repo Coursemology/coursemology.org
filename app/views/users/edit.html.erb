@@ -33,7 +33,7 @@
 
   <% # The section is potentially misleading because linking facebook accounts doesn't belong to the form %>
   <div class="control-group">
-    <label>Facebook Account</label>
+    <label class="control-label">Facebook Account</label>
     <div class="controls">
       <% if current_user.provider == 'facebook' && !current_user.uid.nil? %>
         <%= link_to "http://facebook.com/profile.php?id=#{current_user.uid}" %>
