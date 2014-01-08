@@ -45,14 +45,10 @@ class TextQuestionsController < ApplicationController
     end
   end
 
-  def show
-    redirect_to course_assessment_mission_path(@course, @mission)
-  end
-
   def destroy
     @question.destroy
     respond_to do |format|
-      format.html { redirect_to @mission.get_path }
+      format.html { redirect_to url_for([@course, @assessment]) }
     end
   end
 
@@ -74,7 +70,7 @@ private
                     q.attributes = params[:assessment_text_question]
                     q
                   else
-                    Assessment::TextQuestion.find_by_id!!(params[:id])
+                    Assessment::TextQuestion.find_by_id!(params[:id])
                 end
   end
 end
