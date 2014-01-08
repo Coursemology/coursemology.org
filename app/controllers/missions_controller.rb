@@ -82,22 +82,24 @@ class MissionsController < ApplicationController
 
   def create
     @missions = @course.missions
-    @mission.pos = @course.missions.count + 1
+    @mission.course = @course
     @mission.creator = current_user
+    @mission.pos = @course.missions.count + 1
     @mission.update_tags(params[:tags])
+
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
-    if  @mission.single_question?
+    # TODO: Implement or remove
+    if @mission.single_question?
       qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
       qn.max_grade = params[:max_grade]
     end
 
     respond_to do |format|
       if @mission.save
-        @mission.update_grade
-        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
-        format.html { redirect_to course_mission_path(@course, @mission),
+        @mission.schedule_mail(@course.user_courses, course_assessment_mission_url(@course, @mission))
+        format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
       else
         format.html { render action: "new" }

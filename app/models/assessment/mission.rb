@@ -54,7 +54,7 @@ class Assessment::Mission < ActiveRecord::Base
     assessment.schedule_mail(ucs, redirect_to)
 
     if close_at >= Time.now && publish?
-      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, id, redirect_to, true), run_at: 1.day.ago(close_at))
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, self.class.to_s, id, redirect_to, true), run_at: 1.day.ago(close_at))
       queued_jobs.create(delayed_job_id: delayed_job.id)
     end
   end
