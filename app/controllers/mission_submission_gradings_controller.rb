@@ -35,16 +35,15 @@ class MissionSubmissionGradingsController < ApplicationController
     @do_grading = true
 
     if @submission.gradings.count > 0
-      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
+      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.gradings.first)
     end
 
   end
 
   def create
     if @submission.graded?
-      flash[:error] = "Submission has already been graded by " + @submission.final_grading.grader.name
-      redirect_to course_mission_submission_path(@course, @mission, @submission)
-      return
+      flash[:error] = 'Submission has already been graded by ' + @submission.final_grading.grader.name
+      redirect_to course_mission_submission_path(@course, @mission, @submission) and return
     end
     @submission_grading.total_grade = 0
     @submission_grading.total_exp = 0
@@ -172,8 +171,7 @@ class MissionSubmissionGradingsController < ApplicationController
     end
   end
 
-  private
-
+private
   def validate_gradings(ag_record, ag)
     grade = ag[:grade].strip
     max_grade = @mission.max_grade
@@ -213,15 +211,5 @@ private
   def load_resources
     @mission = Assessment::Mission.find_by_id!(params[:assessment_mission_id])
     @submission = Assessment::Submission.find_by_id!(params[:assessment_submission_id])
-    @grading = case params[:action]
-                  when 'new'
-                    Assessment::Grading.new
-                  when 'create'
-                    q = Assessment::Grading.new
-                    q.attributes = params[:assessment_grading]
-                    q
-                  else
-                    Assessment::Grading.find_by_id!(params[:id] || params[:assessment_grading_id])
-                  end
   end
 end

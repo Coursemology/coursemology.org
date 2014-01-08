@@ -78,7 +78,7 @@ class MissionSubmissionsController < ApplicationController
 
     #if staff is accessing the submitted mission, redirect to grading page
     if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
-      redirect_to new_course_assessment_mission_assessment_submission_assessment_grading_path(@course, @mission, @submission)
+      redirect_to course_assessment_mission_assessment_submission_assessment_gradings_path(@course, @mission, @submission)
       return
     end
 
