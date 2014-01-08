@@ -115,14 +115,22 @@ namespace :db do
                 end
               end
               data = JSON.parse!(code['data'])
+              language = data['language']
               memory_limit = data['memoryLimitInMB']
               time_limit = data['timeLimitInSec']
+              test_limit = data['testLimit']
+              data.delete('language')
               data.delete('memoryLimitInMB')
               data.delete('timeLimitInSec')
+              data.delete('testLimit')
               parent_q = Assessment::CodingQuestion.create({
                                                           assessment_id: parent['id'],
                                                           creator_id: code['creator_id'],
                                                           title: code['step_name'],
+                                                          language: language,
+                                                          time_limit: time_limit,
+                                                          memory_limit: memory_limit,
+                                                          test_limit: test_limit,
                                                           description: code['description'],
                                                           max_grade: code['max_grade'],
                                                           depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? coding_questions_map.fetch(code['include_sol_qn_id']) : nil,

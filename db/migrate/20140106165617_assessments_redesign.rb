@@ -53,8 +53,11 @@ class AssessmentsRedesign < ActiveRecord::Migration
 
     create_table :assessment_coding_questions do |t|
       t.string :title # was step_name
+      t.string :language # used to be in data, as JSON
       t.integer :time_limit # used to be in data, as JSON. This is in Seconds
       t.integer :memory_limit #used to be in data, as JSON. This is in MB
+      t.integer :test_limit # used to be in data, as JSON. Number of tries.
+      t.boolean :auto_graded
       t.text :data
 
       t.integer :depends_on # was include_sol_qn_id
