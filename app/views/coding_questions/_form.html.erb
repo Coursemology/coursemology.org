@@ -17,6 +17,13 @@
     </div>
 
     <div class="control-group">
+      <%= f.label :max_grade, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.number_field :max_grade, :class => 'number_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
       <label>Include student code from question:</label>
       <div class="controls">
         <select id="select-question" name="coding_question[include_sol_qn_id]">
@@ -75,6 +82,13 @@
         </div>
       </div>
 
+      <div class="control-group">
+        <%= f.label :testLimit,"Test Limit (times)", class:'control-label' %>
+        <div class="controls">
+          <input type="number" min="0" id="testLimit" value="3"  onchange="path.changeTestLimit(this.value);" />
+        </div>
+      </div>
+      
       <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
         <div>Included code (optional, hidden):</div><textarea  rows="2" id="included"></textarea> <br />
       </div>
