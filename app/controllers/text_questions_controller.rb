@@ -17,7 +17,8 @@ class TextQuestionsController < ApplicationController
   def create
     @question.creator = current_user
     @question.assessment = @mission.assessment
-    @question.pos = @mission.questions.last.pos + 1
+    @question.pos = @mission.questions.last ?
+                      @mission.questions.last.pos + 1 : 0
 
     respond_to do |format|
       if @question.save

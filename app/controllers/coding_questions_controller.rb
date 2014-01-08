@@ -16,7 +16,8 @@ class CodingQuestionsController < ApplicationController
   def create
     @question.creator = current_user
     @question.assessment = @assessment.assessment
-    @question.pos = @question.assessment.questions.last.pos + 1
+    @question.pos = @question.assessment.questions.last ?
+                      @question.assessment.questions.last.pos + 1 : 0
 
     # update max grade of the asm it belongs to
     respond_to do |format|
