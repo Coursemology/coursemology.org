@@ -66,7 +66,7 @@ private
                     q.attributes = params[:assessment_text_question]
                     q
                   else
-                    Assessment::TextQuestion.find(params[:id])
+                    Assessment::TextQuestion.find!(params[:id])
                 end
   end
 end
