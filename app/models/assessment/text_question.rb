@@ -5,7 +5,7 @@ class Assessment::TextQuestion < ActiveRecord::Base
 
   def build_answer
     Assessment::CodingSubmission.new({
-                                       question: self
+                                       question_id: self.id
                                      }, without_protection: true)
   end
 end

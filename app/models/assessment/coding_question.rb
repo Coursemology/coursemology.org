@@ -8,7 +8,7 @@ class Assessment::CodingQuestion < ActiveRecord::Base
 
   def build_answer
     Assessment::CodingSubmission.new({
-                                        question: self,
+                                        question_id: self.id,
                                         code: prefill
                                      }, without_protection: true)
   end
