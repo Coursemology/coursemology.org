@@ -1,33 +1,36 @@
-<div class="page-header">
+<div class="page-header center">
   <h1>Sign up</h1>
 </div>
 
-<div class="span6">
+<div style="display: table; margin: 0 auto; text-align: center">
+  <div class="span6">
 
-  <%= link_to user_omniauth_authorize_path(:facebook) do %>
-      <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
-  <% end %>
+    <% unless @token %>
+        <%= link_to user_omniauth_authorize_path(:facebook) do %>
+            <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
+        <% end %>
 
-  <h2 class="center or-separator">- OR -</h2>
+        <h2 class="center or-separator">- OR -</h2>
+    <% end %>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
-               html: { class: "form-horizontal signup-form" } ) do |f| %>
-      <!--TODO-->
-      <%= devise_error_messages! %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+                 html: { class: "form-horizontal signup-form" } ) do |f| %>
+        <!--TODO-->
+        <%= devise_error_messages! %>
 
-      <div class="control-group">
-        <%= f.label :name, class: "control-label"%>
-        <div class="controls">
-          <% if @token %>
-              <%= f.text_field :name, readonly:true %>
-              <p>(You need to use your official name for course enrollment)</p>
-          <% else %>
-              <%= f.text_field :name %>
-          <% end %>
+        <div class="control-group" >
+          <%= f.label :name, class: "control-label"%>
+          <div class="controls">
+            <% if @token %>
+                <%= f.text_field :name, readonly:true %>
+                <p>(You need to use your official name for course enrollment)</p>
+            <% else %>
+                <%= f.text_field :name %>
+            <% end %>
+          </div>
         </div>
-      </div>
 
-      <!--
+        <!--
     <div class="control-group">
       <%= f.label :display_name, class: "control-label" %>
       <div class="controls">
@@ -36,35 +39,36 @@
     </div>
     -->
 
-      <div class="control-group">
-        <%= f.label :email, class: "control-label" %>
-        <div class="controls">
-          <%= f.email_field :email %>
+        <div class="control-group">
+          <%= f.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= f.email_field :email %>
+          </div>
         </div>
-      </div>
 
-      <div class="control-group">
-        <%= f.label :password, class: "control-label" %>
-        <div class="controls">
-          <%= f.password_field :password %>
+        <div class="control-group">
+          <%= f.label :password, class: "control-label" %>
+          <div class="controls">
+            <%= f.password_field :password %>
+          </div>
         </div>
-      </div>
 
-      <div class="control-group">
-        <%= f.label :password_confirmation, class: "control-label" %>
-        <div class="controls">
-          <%= f.password_field :password_confirmation %>
+        <div class="control-group">
+          <%= f.label :password_confirmation, class: "control-label" %>
+          <div class="controls">
+            <%= f.password_field :password_confirmation %>
+          </div>
         </div>
-      </div>
-      <input type="hidden" name="_token" value="<%= @token %>">
+        <input type="hidden" name="_token" value="<%= @token %>">
 
-      <div class="form-actions">
-        <%= f.submit "Sign up", class: "btn btn-primary" %>
-      </div>
-  <% end %>
+        <div  style="text-align: center">
+          <%= f.submit "Sign up", class: "btn btn-primary" %>
+        </div>
+    <% end %>
 
+  </div>
+
+  <div class="clearfix"></div>
+
+  <%= render "devise/shared/links" %>
 </div>
-
-<div class="clearfix">
-
-<%= render "devise/shared/links" %>
