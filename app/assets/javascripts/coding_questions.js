@@ -46,11 +46,16 @@
         saving = true;
         $("#assessment_coding_question_data").val(JSON.stringify(path.data));
       },
+
       initialize: function() {
-        $("#savePath").click(path.savePath);
+        // Register our submission handler.
+        $("form.coding-question-form").submit(path.savePath);
         cStep = path.data;
-        if( $("#assessment_coding_question_data").val() != "") {
-          path.data =  JSON.parse($("#coding_question_data").val());
+
+        // Parse the stored question data.
+        var json = $("#assessment_coding_question_data").val();
+        if (json !== "") {
+          path.data = JSON.parse(json);
           path.loadStep();
         }
       },
