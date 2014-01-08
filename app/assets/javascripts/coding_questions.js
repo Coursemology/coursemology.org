@@ -1,4 +1,50 @@
-var path = function(){
+(function() {
+  "use strict";
+  var cmPrefill;
+  var cmIncluded;
+
+  $(document).ready(function() {
+    $('form.coding-question-form select.lang').change(function() {
+      path.changeLang(this.value);
+    });
+
+    $('form.coding-question-form input#add-public-test').click(function() {
+      path.addTest('public');
+    });
+
+    $('form.coding-question-form input#add-private-test').click(function() {
+      path.addTest('private');
+    });
+
+    if (document.getElementById("pathstep_content")) {
+      var options = {
+        mode: {
+          name: "python",
+          version: 3,
+          singleLineStringErrors: false
+        },
+        lineNumbers: true,
+        indentUnit: 4,
+        tabMode: "shift",
+        matchBrackets: true,
+        theme:'molokai'
+      };
+
+      cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);
+      cmIncluded = CodeMirror.fromTextArea(document.getElementById("included"), options);
+
+      cmPrefill.on("change", function() {
+        path.changePrefill(cmPrefill.getValue());
+      });
+      cmIncluded.on("change", function() {
+        path.changeIncluded(cmIncluded.getValue());
+      });
+      path.initialize();
+    }
+  });
+})();
+
+var path = function() {
     var saving = false;
     var cStep = null;
 
@@ -10,6 +56,12 @@ var path = function(){
             '<td><input type="text" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
             '<td><input type="text" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
             '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>');
+    }
+
+    function changeLang(lang) {
+      "use strict";
+      cmPrefill.setOption("mode", val);
+      cmIncluded.setOption("mode", val);
     }
 
     /** data types **/
@@ -24,10 +76,6 @@ var path = function(){
     return {
         data: {
             type: "do",
-            language: "python",
-            timeLimitInSec: "1",
-            memoryLimitInMB: "2",
-            testLimit: "3",
             included: "",
             prefill: "",
             privateTests: new Array(),
@@ -37,40 +85,24 @@ var path = function(){
 
         savePath: function(){
             saving = true;
-            $("#coding_question_data").val(JSON.stringify(path.data));
+            $("#assessment_coding_question_data").val(JSON.stringify(path.data));
         },
         initialize: function() {
             $("#savePath").click(path.savePath);
             cStep = path.data;
-            if( $("#coding_question_data").val() != "") {
+            if( $("#assessment_coding_question_data").val() != "") {
                 path.data =  JSON.parse($("#coding_question_data").val());
                 path.loadStep();
             }
         },
 
         /** metadata **/
-        changeLang: function(val){
-
-            cStep.language = val;
-
-            cmPrefill.setOption("mode",val);
-            cmIncluded.setOption("mode",val);
-        },
+        changeLang: changeLang,
         changePrefill: function(val){
             cStep.prefill = val;
         },
         changeIncluded: function(val){
             cStep.included = val;
-        },
-        changeMemoryLimit:function(val){
-            cStep.memoryLimitInMB = val;
-        },
-        changeTimeLimit: function(val){
-            cStep.timeLimitInSec = val;
-        },
-
-        changeTestLimit: function(val){
-            cStep.testLimit = val;
         },
 
         /** tests **/
@@ -104,11 +136,8 @@ var path = function(){
         } ,
         loadStep:function(){
             cStep = path.data;
-//            path.changeLang(cStep.language);
+            changeLang(cStep.language);
 
-            $("#timeLimit").attr("value", cStep.timeLimitInSec);
-            $("#memoryLimit").attr("value", cStep.memoryLimitInMB);
-            $("#testLimit").val(cStep.testLimit);
             $("#public_test_tbody").html("");
             $("#private_test_tbody").html("");
             $("#eval_test_tbody").html("");
@@ -128,33 +157,3 @@ var path = function(){
         }
     };
 }();
-
-
-var cmPrefill;
-var cmIncluded;
-
-$(document).ready(function() {
-    if(document.getElementById("pathstep_content")) {
-        var options = {
-            mode: {name: "python",
-                version: 3,
-                singleLineStringErrors: false},
-            lineNumbers: true,
-            indentUnit: 4,
-            tabMode: "shift",
-            matchBrackets: true,
-            theme:'molokai'
-        };
-
-        cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);
-        cmIncluded = CodeMirror.fromTextArea(document.getElementById("included"), options);
-
-        cmPrefill.on("change",function(){
-            path.changePrefill(cmPrefill.getValue());
-        });
-        cmIncluded.on("change",function(){
-            path.changeIncluded(cmIncluded.getValue());
-        });
-        path.initialize();
-    }
-});
