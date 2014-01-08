@@ -77,7 +77,7 @@ class MissionsController < ApplicationController
     @missions = @course.missions
     @tags = @course.tags
     @asm_tags = {}
-    @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
+    @mission.tags.each { |asm_tag| @asm_tags[asm_tag.id] = true }
   end
 
   def create
@@ -111,21 +111,21 @@ class MissionsController < ApplicationController
     @mission.update_tags(params[:tags])
 
     respond_to do |format|
-      if @mission.update_attributes(params[:mission])
+      if @mission.update_attributes(params[:assessment_mission])
 
+        # TODO: Implement or Remove
         if @mission.single_question? && @mission.get_all_questions.count > 1
           flash[:error] = "Mission already have several questions, can't change the format."
           @mission.single_question = false
           @mission.save
         end
         update_single_question_type
-        update_mission_max_grade
 
-        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
-        format.html { redirect_to course_mission_url(@course, @mission),
+        @mission.schedule_mail(@course.user_courses, course_assessment_mission_url(@course, @mission))
+        format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
       else
-        format.html {redirect_to edit_course_mission_path(@course, @mission) }
+        format.html { redirect_to edit_course_assessment_mission_path(@course, @mission) }
       end
     end
   end
@@ -138,16 +138,8 @@ class MissionsController < ApplicationController
     end
   end
 
-  def update_mission_max_grade
-    if @mission.single_question? && @mission.max_grade != params[:max_grade].to_i
-      qn = @mission.get_all_questions.first
-      qn.max_grade = params[:max_grade]
-      qn.save
-      @mission.update_grade
-    end
-  end
-
   def update_single_question_type
+    return
     puts "update single question"
     unless @mission.single_question?
       return

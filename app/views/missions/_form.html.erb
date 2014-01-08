@@ -81,8 +81,8 @@
             <div class="controls">
               <% qn = @mission.get_all_questions.first  %>
               <select name="answer_type" class="input-medium" >
-                <option value="code" <%= 'selected="selected"' if !qn or qn.class ==  CodingQuestion %>>Code</option>
-                <option value="essay" <%= 'selected="selected"' if qn and qn.class ==  Question %>> Essay </option>
+                <option value="code" <%= 'selected="selected"' if !qn or qn.class == Assessment::CodingQuestion %>>Code</option>
+                <option value="essay" <%= 'selected="selected"' if qn and qn.class == Assessment::Question %>> Essay </option>
               </select>
             </div>
           </div>

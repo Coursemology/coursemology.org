@@ -56,7 +56,7 @@ class Assessment::Assessment < ActiveRecord::Base
     all_tags = all_tags.collect { |id| id.to_i }
     existing_tags = []
     tags.each do |asm_tag|
-      if !all_tags.include?(asm_tag.tag_id)
+      if !all_tags.include?(asm_tag.id)
         tags.delete(asm_tag)
       else
         existing_tags << asm_tag.tag_id
@@ -70,7 +70,7 @@ private
   def add_tags(tags)
     tags ||= []
     tags.each do |tag_id|
-      self.tags.add(tag_id)
+      self.tags << Tag.find_by_id!(tag_id)
     end
   end
 end
