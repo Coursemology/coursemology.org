@@ -8,7 +8,7 @@
         </div>
     <% end %>
     <div id="source-code-<%= answer.id  %>" class="code-wrapper cos_code"></div>
-    <% if question.is_auto_grading? and mode != "view" %>
+    <% if question.is_auto_grading? and mode != 'view' %>
         <% if question.data_hash['publicTests'].length > 0 %>
             <h3>Public Tests</h3>
             <p>The following expressions will be executed.</p>
@@ -40,19 +40,19 @@
         <br>
         <div id="eval-result-<%= answer.id %>" style="font-size: 14px;padding-left: 10px">
         </div>
-  <% elsif qn.is_auto_grading? and curr_user_course.is_staff? %>
+  <% elsif question.is_auto_grading? and curr_user_course.is_staff? %>
         <h3>Auto Grading Summary</h3>
-        <% if qn.data_hash["publicTests"].length > 0 %>
+        <% if question.data_hash["publicTests"].length > 0 %>
             <%= render partial: "test_result_table", locals:{title: "Public Tests",
                                                              tests: qn.data_hash["publicTests"],
                                                              results: answer.result_hash["publicTests"]} %>
         <% end %>
-        <% if qn.data_hash["privateTests"].length > 0 %>
+        <% if question.data_hash["privateTests"].length > 0 %>
             <%= render partial: "test_result_table", locals:{title: "Private Tests",
                                                                          tests: qn.data_hash["privateTests"],
                                                                          results: answer.result_hash["privateTests"]} %>
         <% end %>
-        <% if qn.data_hash["evalTests"].length > 0 %>
+        <% if question.data_hash["evalTests"].length > 0 %>
             <%= render partial: "test_result_table", locals:{title: "Evaluation Tests",
                                                                          tests: qn.data_hash["evalTests"],
                                                                          results: answer.result_hash["evalTests"]} %>
@@ -69,7 +69,7 @@
   </div>
   <div class="span2"></div>
 </div>
-<input type="hidden" name="answers[<%=qn.class.to_s%>][<%= qn.id %>]" id="code_<%= answer.id  %>" >
+<input type="hidden" name="answers[<%=question.class.to_s%>][<%= question.id %>]" id="code_<%= answer.id  %>" >
 <input type="hidden" id="annotation-path-<%= answer.id  %>" value="/courses/<%=@course.id%>/annotations">
 <input type="hidden" class="code-ans" value="<%= answer.id  %>" >
 <input type="hidden" id="mode_<%= answer.id  %>" value="<%= mode %>">
