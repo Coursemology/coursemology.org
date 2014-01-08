@@ -21,7 +21,7 @@ class CourseAbility
 
     if !user.persisted?
       # not logged in user
-      cannot :read, [Mission, Training]
+      cannot :read, [Assessment::Mission, Assessment::Training]
     end
 
     if user.is_lecturer? || user.is_admin?
