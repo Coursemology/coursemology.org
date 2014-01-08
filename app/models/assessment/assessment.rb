@@ -4,6 +4,7 @@ class Assessment::Assessment < ActiveRecord::Base
   has_and_belongs_to_many :tags, class_name: Tag, join_table: :assessment_assessments_tags
   has_many :assessment_requirements, class_name: Assessment::AssessmentsRequirement, dependent: :destroy
   has_many :requirements, class_name: Requirement, through: :assessment_requirements
+  has_many :queued_jobs, as: :owner, class_name: QueuedJob, dependent: :destroy
   belongs_to :course, class_name: 'Course'
   belongs_to :creator, class_name: 'User'
 
@@ -36,4 +37,40 @@ class Assessment::Assessment < ActiveRecord::Base
     questions.count <= 1
   end
   alias_method :single_question?, :single_question
+
+  def schedule_mail(ucs, redirect_to)
+    type = specific.class
+    if type == Assessment::Training && !course.email_notify_enabled?(PreferableItem.new_training)
+      return
+    end
+
+    # Queue the open email
+    if open_at >= Time.now and publish?
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, id, redirect_to), run_at: open_at)
+      queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+  end
+
+  def update_tags(all_tags)
+    all_tags ||= []
+    all_tags = all_tags.collect { |id| id.to_i }
+    existing_tags = []
+    tags.each do |asm_tag|
+      if !all_tags.include?(asm_tag.tag_id)
+        tags.delete(asm_tag)
+      else
+        existing_tags << asm_tag.tag_id
+      end
+    end
+
+    add_tags(all_tags - existing_tags)
+  end
+
+private
+  def add_tags(tags)
+    tags ||= []
+    tags.each do |tag_id|
+      self.tags.add(tag_id)
+    end
+  end
 end
