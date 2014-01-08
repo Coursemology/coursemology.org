@@ -30,12 +30,26 @@ module Duplication
 
     def duplicate_asm_no_log(asm, files=true)
       clone = asm.dup_options(files)
+      clone_map = {}
       # duplicate question and create new asm_qn links
       asm.asm_qns.each do |asm_qn|
         clone_qn = duplicate_qn_no_log(asm_qn.qn)
         new_link = asm_qn.dup
         new_link.qn = clone_qn
         clone.asm_qns << new_link
+        clone_map[asm_qn.qn] = clone_qn
+      end
+
+      asm.asm_qns.each do |asm_qn|
+        qn = asm_qn.qn
+        if qn.class == CodingQuestion and
+            qn.include_sol_qn and
+            clone_map[qn.include_sol_qn]
+
+          clone_qn = clone_map[qn]
+          clone_qn.include_sol_qn = clone_map[qn.include_sol_qn]
+          clone_qn.save
+        end
       end
       clone
     end
@@ -159,12 +173,14 @@ module Duplication
         clone_map[asm] = clone_asm
       end
 
+      #mission dependency
       clone.missions.each do |asm|
         if asm.dependent_mission
           asm.dependent_mission = clone_map[asm.dependent_mission]
           asm.save
         end
       end
+
 
       (course.levels + course.achievements + course.tag_groups).each do |obj|
         clone_obj = obj.dup
