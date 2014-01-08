@@ -70,7 +70,7 @@ private
                     q.attributes = params[:assessment_text_question]
                     q
                   else
-                    Assessment::TextQuestion.find_by_id!(params[:id])
+                    Assessment::TextQuestion.find_by_id!(params[:id]  || params[:assessment_text_question_id])
                 end
   end
 end

@@ -1,26 +1,29 @@
+# This controller only handles viewing and grading missions
 class MissionSubmissionGradingsController < ApplicationController
   load_and_authorize_resource :course
+  before_filter :load_resources
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :submission, through: :mission
-  load_and_authorize_resource :submission_grading, through: :submission
+  load_and_authorize_resource :grading, through: :submission
 
   before_filter :load_general_course_data, only: [:new, :edit]
-
-  # note: it only handles view & grading of missions
 
   def new
     @qadata = {}
 
-    @mission.get_all_questions.each_with_index do |q,i|
+    @mission.questions.each_with_index do |q,i|
       @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
 
-    @submission.get_all_answers.each do |sa|
-      qn = sa.qn
+    @submission.answers.each do |sa|
+      answer = sa.specific
+      qn = sa.question
+      question = qn.specific
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
+
       #suggest grading for auto grading question
-      if sa.class == StdCodingAnswer and qn.is_auto_grading?
-        evals = sa.result_hash["evalTests"].select {|r| r}.length
+      if answer.class == Assessment::CodingAnswer and question.auto_graded?
+        evals = sa.result_hash['evalTests'].select {|r| r}.length
         tests = qn.data_hash["evalTests"].length
         grade = (qn.max_grade * evals / tests).to_i
         ag = AnswerGrading.new
@@ -31,7 +34,7 @@ class MissionSubmissionGradingsController < ApplicationController
 
     @do_grading = true
 
-    if @submission.submission_gradings.count > 0
+    if @submission.gradings.count > 0
       redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
     end
 
@@ -204,5 +207,21 @@ class MissionSubmissionGradingsController < ApplicationController
         format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
       end
     end
+  end
+
+private
+  def load_resources
+    @mission = Assessment::Mission.find_by_id!(params[:assessment_mission_id])
+    @submission = Assessment::Submission.find_by_id!(params[:assessment_submission_id])
+    @grading = case params[:action]
+                  when 'new'
+                    Assessment::Grading.new
+                  when 'create'
+                    q = Assessment::Grading.new
+                    q.attributes = params[:assessment_grading]
+                    q
+                  else
+                    Assessment::Grading.find_by_id!(params[:id] || params[:assessment_grading_id])
+                  end
   end
 end

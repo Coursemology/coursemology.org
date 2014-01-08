@@ -6,7 +6,16 @@ class Assessment::Submission < ActiveRecord::Base
   belongs_to :std_course, class_name: 'UserCourse'
 
   has_many :answers, class_name: Assessment::Answer
+  has_many :files, as: :owner, class_name: FileUpload, dependent: :destroy
 
+  def gradings
+    Assessment::Grading.
+      joins('INNER JOIN assessment_answers ON assessment_gradings.answer_id = assessment_answers.id').
+      joins('INNER JOIN assessment_submissions ON assessment_answers.submission_id = assessment_submissions.id').
+      where('assessment_submissions.id' => self.id)
+  end
+
+  has_many :gradings, through: :answers, class_name: Assessment::Grading
   STATUS_ATTEMPTING = 'attempting'
   STATUS_SUBMITTED = 'submitted'
   STATUS_GRADED = 'graded'

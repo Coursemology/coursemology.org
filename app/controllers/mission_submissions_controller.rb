@@ -151,7 +151,6 @@ class MissionSubmissionsController < ApplicationController
     respond_to do |format|
       if @submission.save
         if params[:commit] == 'Save'
-          @submission.set_attempting
           format.html { redirect_to edit_course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
                                     notice: 'Your submission has been saved.' }
         else
@@ -170,8 +169,9 @@ class MissionSubmissionsController < ApplicationController
 
   def unsubmit
     @submission.set_attempting
-    flash[:notice] = "Successfully unsubmited submission."
-    redirect_to course_mission_submission_path(@course, @mission, @submission)
+    @submission.save
+    redirect_to course_assessment_mission_assessment_submission_path(@course, @mission, @submission),
+                notice: 'Successfully unsubmitted submission.'
   end
 
   def test_answer
@@ -219,7 +219,7 @@ private
                       q.attributes = params[:assessment_submission]
                       q
                     else
-                      Assessment::Submission.find_by_id!(params[:id])
+                      Assessment::Submission.find_by_id!(params[:id] || params[:assessment_submission_id])
                   end
   end
 
