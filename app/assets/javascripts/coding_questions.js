@@ -6,10 +6,7 @@
     var saving = false;
     var cStep = null;
 
-    function addslashes(str){
-      return (str + '').replace(/[\"]/g, '&quot;');
-    }
-    function _appendTest(testType, test_count, expression, expected){
+    function appendTest(testType, test_count, expression, expected){
       $("#"+testType+"_test_tbody").append(tmpl('coding-question-form-test-case', {
         testType: testType,
         test_count: test_count,
@@ -25,7 +22,7 @@
 
     /** data types **/
 
-    function _newTest(){
+    function _newTest() {
       return {
         expected: "",
         expression: ""
@@ -37,12 +34,12 @@
         type: "do",
         included: "",
         prefill: "",
-        privateTests: new Array(),
-        publicTests: new Array(),
-        evalTests: new Array()
+        privateTests: [],
+        publicTests: [],
+        evalTests: []
       },
 
-      savePath: function(){
+      savePath: function() {
         saving = true;
         $("#assessment_coding_question_data").val(JSON.stringify(path.data));
       },
@@ -84,7 +81,7 @@
           test_count = ci.evalTests.length;
         }
 
-        _appendTest(testType, test_count, "", "");
+        appendTest(testType, test_count, "", "");
       },
       updateTest: function(testType, testCount, expr, value){
         testCount--;
@@ -100,20 +97,20 @@
       } ,
       loadStep:function(){
         cStep = path.data;
-        changeLang(cStep.language);
+        changeLang($('#assessment_coding_question_language').val());
 
         $("#public_test_tbody").html("");
         $("#private_test_tbody").html("");
         $("#eval_test_tbody").html("");
         for(var i = 0 ; i < cStep.privateTests.length; i++){
-          _appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected);
+          appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected);
         }
         for(var i = 0 ; i < cStep.publicTests.length; i++){
-          _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected);
+          appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected);
         }
 
         for(var i = 0 ; i < cStep.evalTests ? cStep.evalTests.length : 0; i++){
-          _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.publicTests[i].expected);
+          appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.publicTests[i].expected);
         }
         cmPrefill.setValue(cStep.prefill);
         if(cStep.included == null) cStep.included = "";
