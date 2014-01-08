@@ -191,7 +191,7 @@ namespace :db do
         case sbm_answer['answer_type'].to_sym
           when :StdAnswer
             connection.select_all(sanitize('SELECT * FROM std_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              ans = Assessment::TextSubmission.create({
+              ans = Assessment::TextAnswer.create({
                                                     submission_id: sbm.id,
                                                     question_id: @text_questions_map.fetch(answer['question_id']),
                                                     finalised: sbm_answer['is_final'],
@@ -204,7 +204,7 @@ namespace :db do
             end
           when :StdMcqAnswer
             connection.select_all(sanitize('SELECT * FROM std_mcq_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              ans = Assessment::McqSubmission.create({
+              ans = Assessment::McqAnswer.create({
                                                    submission_id: sbm.id,
                                                    question_id: @mcq_questions_map.fetch(answer['mcq_id']),
                                                    finalised: sbm_answer['is_final'],
@@ -217,7 +217,7 @@ namespace :db do
             end
           when :StdCodingAnswer
             connection.select_all(sanitize('SELECT * FROM std_coding_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
-              ans = Assessment::CodingSubmission.create({
+              ans = Assessment::CodingAnswer.create({
                                                       submission_id: sbm.id,
                                                       question_id: @coding_questions_map.fetch(answer['qn_id']),
                                                       finalised: sbm_answer['is_final'],
@@ -256,10 +256,10 @@ namespace :db do
     end
 
     connection.execute('TRUNCATE TABLE assessment_submissions')
-    connection.execute('TRUNCATE TABLE assessment_question_submissions')
-    connection.execute('TRUNCATE TABLE assessment_coding_submissions')
-    connection.execute('TRUNCATE TABLE assessment_mcq_submissions')
-    connection.execute('TRUNCATE TABLE assessment_text_submissions')
+    connection.execute('TRUNCATE TABLE assessment_answers')
+    connection.execute('TRUNCATE TABLE assessment_coding_answers')
+    connection.execute('TRUNCATE TABLE assessment_mcq_answers')
+    connection.execute('TRUNCATE TABLE assessment_text_answers')
 
     connection.select_all('SELECT * FROM submissions').each do |s|
       migrate_submission(s, :mission, connection)
@@ -292,7 +292,7 @@ namespace :db do
             raise StandardError
         end
         Assessment::Grading.create({
-                                       question_submission_id: answer_map.fetch(answer_g['student_answer_id']),
+                                       answer_id: answer_map.fetch(answer_g['student_answer_id']),
                                        grader_id: answer_g['grader_id'] || sbm_g['grader_id'],
                                        grader_course_id: sbm_g['grader_course_id'],
                                        grade: answer_g['grade'],
@@ -353,16 +353,16 @@ namespace :db do
 
     @text_answers_map.each_pair do |key, value|
       connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
-                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+                               ['Assessment::TextAnswer', value, 'StdAnswer', key]))
 
       connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
-                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+                               ['Assessment::TextAnswer', value, 'StdAnswer', key]))
 
       connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
-                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+                               ['Assessment::TextAnswer', value, 'StdAnswer', key]))
 
       connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
-                               ['Assessment::TextSubmission', value, 'StdAnswer', key]))
+                               ['Assessment::TextAnswer', value, 'StdAnswer', key]))
     end
 
     @mcq_questions_map.each_pair do |key, value|
@@ -381,19 +381,19 @@ namespace :db do
 
     @coding_answers_map.each_pair do |key, value|
       connection.exec(sanitize('UPDATE annotations SET annotable_type = ?, annotable_id = ? WHERE annotable_type = ? AND annotable_id = ?',
-                      ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+                      ['Assessment::CodingAnswer', value, 'StdCodingAnswer', key]))
 
       connection.exec(sanitize('UPDATE comments SET commentable_type = ?, commentable_id = ? WHERE commentable_type = ? AND commentable_id = ?',
-                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+                               ['Assessment::CodingAnswer', value, 'StdCodingAnswer', key]))
 
       connection.exec(sanitize('UPDATE comment_topics SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
-                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+                               ['Assessment::CodingAnswer', value, 'StdCodingAnswer', key]))
 
       connection.exec(sanitize('UPDATE comment_subscriptions SET topic_type = ?, topic_id = ? WHERE topic_type = ? AND topic_id = ?',
-                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+                               ['Assessment::CodingAnswer', value, 'StdCodingAnswer', key]))
 
       connection.exec(sanitize('UPDATE pending_comments SET answer_type = ?, answer_id = ? WHERE answer_type = ? AND answer_id = ?',
-                               ['Assessment::CodingSubmission', value, 'StdCodingAnswer', key]))
+                               ['Assessment::CodingAnswer', value, 'StdCodingAnswer', key]))
     end
 
     @missions_map.each_pair do |key, value|

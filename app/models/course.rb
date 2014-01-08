@@ -20,8 +20,8 @@ class Course < ActiveRecord::Base
                                 source: :as_assessment_assessment, source_type: Assessment::Training
   has_many :mcqs,               through: :trainings,    class_name: Assessment::Training
   has_many :coding_questions,   through: :trainings,    class_name: Assessment::CodingQuestion
-  has_many :std_answers,        through: :user_courses, class_name: Assessment::TextSubmission
-  has_many :std_coding_answers, through: :user_courses, class_name: Assessment::CodingSubmission
+  has_many :std_answers,        through: :user_courses, class_name: Assessment::TextAnswer
+  has_many :std_coding_answers, through: :user_courses, class_name: Assessment::CodingAnswer
   has_many :submissions,        through: :user_courses, class_name: Assessment::Submission do
     def missions
       joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').

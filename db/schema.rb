@@ -137,6 +137,19 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
 
+  create_table "assessment_answers", :force => true do |t|
+    t.integer  "as_assessment_answer_id"
+    t.string   "as_assessment_answer_type"
+    t.integer  "submission_id"
+    t.integer  "question_id"
+    t.boolean  "finalised"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "assessment_answers", ["question_id"], :name => "index_assessment_answers_on_question_id"
+  add_index "assessment_answers", ["submission_id"], :name => "index_assessment_answers_on_submission_id"
+
   create_table "assessment_assessments", :force => true do |t|
     t.integer  "as_assessment_assessment_id"
     t.string   "as_assessment_assessment_type"
@@ -171,6 +184,10 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   add_index "assessment_assessments_tags", ["assessment_id"], :name => "index_assessment_assessments_tags_on_assessment_id"
   add_index "assessment_assessments_tags", ["tag_id"], :name => "index_assessment_assessments_tags_on_tag_id"
 
+  create_table "assessment_coding_answers", :force => true do |t|
+    t.text "code"
+  end
+
   create_table "assessment_coding_questions", :force => true do |t|
     t.string  "title"
     t.string  "language"
@@ -182,21 +199,21 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.integer "depends_on_id"
   end
 
-  create_table "assessment_coding_submissions", :force => true do |t|
-    t.text "code"
-  end
-
   create_table "assessment_gradings", :force => true do |t|
-    t.integer  "question_submission_id"
+    t.integer  "answer_id"
     t.integer  "grader_id"
     t.integer  "grader_course_id"
     t.integer  "grade"
     t.integer  "exp_transaction_id"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
-  add_index "assessment_gradings", ["question_submission_id"], :name => "index_assessment_gradings_on_question_submission_id"
+  add_index "assessment_gradings", ["answer_id"], :name => "index_assessment_gradings_on_answer_id"
+
+  create_table "assessment_mcq_answers", :force => true do |t|
+    t.integer "option_id"
+  end
 
   create_table "assessment_mcq_options", :force => true do |t|
     t.integer  "creator_id"
@@ -214,10 +231,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.boolean "must_select_all", :default => false
   end
 
-  create_table "assessment_mcq_submissions", :force => true do |t|
-    t.integer "option_id"
-  end
-
   create_table "assessment_missions", :force => true do |t|
     t.integer  "pos"
     t.integer  "dependent_id"
@@ -225,19 +238,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   end
 
   add_index "assessment_missions", ["dependent_id"], :name => "index_assessment_missions_on_dependent_id"
-
-  create_table "assessment_question_submissions", :force => true do |t|
-    t.integer  "as_assessment_question_submission_id"
-    t.string   "as_assessment_question_submission_type"
-    t.integer  "submission_id"
-    t.integer  "question_id"
-    t.boolean  "finalised"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-  end
-
-  add_index "assessment_question_submissions", ["question_id"], :name => "index_assessment_question_submissions_on_question_id"
-  add_index "assessment_question_submissions", ["submission_id"], :name => "index_assessment_question_submissions_on_submission_id"
 
   create_table "assessment_questions", :force => true do |t|
     t.integer  "as_assessment_question_id"
@@ -269,11 +269,11 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
   add_index "assessment_submissions", ["status"], :name => "index_assessment_submissions_on_status"
   add_index "assessment_submissions", ["std_course_id"], :name => "index_assessment_submissions_on_std_course_id"
 
-  create_table "assessment_text_questions", :force => true do |t|
+  create_table "assessment_text_answers", :force => true do |t|
+    t.text "text"
   end
 
-  create_table "assessment_text_submissions", :force => true do |t|
-    t.text "text"
+  create_table "assessment_text_questions", :force => true do |t|
   end
 
   create_table "assessment_trainings", :force => true do |t|

@@ -108,7 +108,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.index [:status]
     end
 
-    create_table :assessment_question_submissions, :as_relation_superclass => true do |t|
+    create_table :assessment_answers, :as_relation_superclass => true do |t|
       t.references :submission, index: true
       t.references :question, index: true
       t.boolean :finalised
@@ -116,25 +116,25 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    change_table :assessment_question_submissions do |t|
+    change_table :assessment_answers do |t|
       t.index [:submission_id]
       t.index [:question_id]
     end
 
-    create_table :assessment_coding_submissions do |t|
+    create_table :assessment_coding_answers do |t|
       t.text :code
     end
 
-    create_table :assessment_mcq_submissions do |t|
+    create_table :assessment_mcq_answers do |t|
       t.references :option
     end
 
-    create_table :assessment_text_submissions do |t|
+    create_table :assessment_text_answers do |t|
       t.text :text
     end
 
     create_table :assessment_gradings do |t|
-      t.references :question_submission, index: true
+      t.references :answer, index: true
       t.references :grader
       t.references :grader_course # curr_user_course for the grader
       t.integer :grade
@@ -144,7 +144,7 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     change_table :assessment_gradings do |t|
-      t.index [:question_submission_id]
+      t.index [:answer_id]
     end
 
     create_table :assessment_trainings do |t|

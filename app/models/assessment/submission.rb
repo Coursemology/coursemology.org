@@ -5,7 +5,7 @@ class Assessment::Submission < ActiveRecord::Base
   belongs_to :course, class_name: 'Course'
   belongs_to :std_course, class_name: 'UserCourse'
 
-  has_many :answers, class_name: Assessment::QuestionSubmission
+  has_many :answers, class_name: Assessment::Answers
 
   STATUS_ATTEMPTING = 'attempting'
   STATUS_SUBMITTED = 'submitted'
