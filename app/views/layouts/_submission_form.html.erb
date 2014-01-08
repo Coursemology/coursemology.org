@@ -9,7 +9,7 @@
     <h3>Answer:</h3>
     <% if qa[:a] %>
         <% if qa[:q].class == CodingQuestion %>
-            <%= render partial: "submissions/do_coding",
+            <%= render partial: "mission_submissions/do_coding",
                        locals: {answer: qa[:a],
                                 qn:     qa[:q],
                                 mode:   "view"}%>

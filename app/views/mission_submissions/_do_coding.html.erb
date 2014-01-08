@@ -43,17 +43,17 @@
   <% elsif qn.is_auto_grading? and curr_user_course.is_staff? %>
         <h3>Auto Grading Summary</h3>
         <% if qn.data_hash["publicTests"].length > 0 %>
-            <%= render partial: "submissions/test_result_table", locals:{title: "Public Tests",
+            <%= render partial: "test_result_table", locals:{title: "Public Tests",
                                                              tests: qn.data_hash["publicTests"],
                                                              results: answer.result_hash["publicTests"]} %>
         <% end %>
         <% if qn.data_hash["privateTests"].length > 0 %>
-            <%= render partial: "submissions/test_result_table", locals:{title: "Private Tests",
+            <%= render partial: "test_result_table", locals:{title: "Private Tests",
                                                                          tests: qn.data_hash["privateTests"],
                                                                          results: answer.result_hash["privateTests"]} %>
         <% end %>
         <% if qn.data_hash["evalTests"].length > 0 %>
-            <%= render partial: "submissions/test_result_table", locals:{title: "Evaluation Tests",
+            <%= render partial: "test_result_table", locals:{title: "Evaluation Tests",
                                                                          tests: qn.data_hash["evalTests"],
                                                                          results: answer.result_hash["evalTests"]} %>
         <% end %>

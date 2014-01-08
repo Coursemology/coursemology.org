@@ -1,4 +1,4 @@
-class SubmissionsController < ApplicationController
+class MissionSubmissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :submission, through: :mission
@@ -105,7 +105,7 @@ class SubmissionsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render "submissions/show_question" }
+      format.html { render 'show_question' }
     end
   end
 

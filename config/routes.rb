@@ -39,7 +39,7 @@ JfdiAcademy::Application.routes.draw do
   resources :role_requests
 
   resources :courses do
-    match "/submissions" => "submissions#listall", as: :submissions
+    match "/submissions" => "mission_submissions#listall", as: :submissions
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
@@ -57,17 +57,16 @@ JfdiAcademy::Application.routes.draw do
       resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
       resources :assessment_text_questions, path: :text_questions, controller: :text_questions
 
-      resources :submissions do
-        resources :submission_gradings
+      resources :assessment_submissions, path: 'submissions', controller: :mission_submissions do
+        resources :assessment_gradings, path: 'gradings', controller: :submission_gradings
+        post 'unsubmit' => 'mission_submissions#unsubmit', as: :unsubmit
+        post 'test' => 'mission_submissions#test_answer', as: :test
       end
 
       get 'overview' => 'missions#overview', on: :collection
-      post 'bulk_update' => 'missions#bulk_update', as: :bulk_update
+      post 'bulk_update' => 'missions#bulk_update'
       get 'stats' => 'missions#stats'
       get 'dump_code' => 'missions#dump_code'
-
-      post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
-      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
       resources :asm_qns do
         collection do
