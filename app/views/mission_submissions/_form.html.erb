@@ -11,18 +11,16 @@
       <h3>Your answer:</h3>
     <% end %>
 
-    <% if q.class == Question %>
+    <%- answer = @submission.answers.where(question_id: q.id).first.specific %>
+    <% if q.class == Assessment::TextQuestion %>
       <textarea name="answers[<%=q.class.to_s%>][<%= q.id %>]" class="span8 html-editor" rows="8"/>
-      <% answer = @std_answers[q.id] %>
       <% if answer %>
         <%= answer.text %>
       <% end %>
       </textarea>
     <% else %>
-        <% answer = @std_coding_answers[q.id] %>
         <%=render partial: 'do_coding',
-                  locals: { answer: @std_coding_answers[q.id],
-                            qn: q,
+                  locals: { answer: answer,
                             mode: "edit"
                   } %>
     <% end %>
