@@ -24,19 +24,19 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def set_attempting
-    status = STATUS_ATTEMPTING
+    self.status = STATUS_ATTEMPTING
   end
   alias_method :attempt, :set_attempting
   alias_method :attempt_mission, :set_attempting
 
   def set_submitted(redirect_url)
-    status = STATUS_SUBMITTED
+    self.status = STATUS_SUBMITTED
     submitted_at = updated_at
     notify_submission(redirect_url)
   end
 
   def set_graded
-    status = STATUS_GRADED
+    self.status = STATUS_GRADED
   end
 
   # Initialises all the corresponding answers in this assessment for every question defined.
