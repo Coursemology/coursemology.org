@@ -1,9 +1,9 @@
 class Assessment::Mission < ActiveRecord::Base
   is_a :assessment, as: 'as_assessment_assessment', class_name: 'Assessment::Assessment'
 
-  has_many :dependent, class_name: Assessment::Mission, foreign_key: :id
+  has_many :dependent, class_name: Assessment::Mission, foreign_key: :id # Missions to complete before this can be attempted.
   has_many :files, as: :owner, class_name: 'FileUpload', dependent: :destroy
-  has_many :required_for, class_name: 'Mission', foreign_key: :dependent_id
+  has_many :required_for, class_name: 'Mission', foreign_key: :dependent_id # Missions unlocked by completing this mission.
 
   attr_accessible :title, :description, :exp, :open_at, :close_at, :publish, :file_submission, :dependent_id
 
