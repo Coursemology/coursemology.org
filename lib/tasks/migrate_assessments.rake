@@ -141,16 +141,16 @@ namespace :db do
               @coding_questions_map[q['qn_id']] = parent_q.question.id
 
               if code['staff_comments'] && code['staff_comments'] != '' then
-                topic = CommentTopic.where(course_id: item['course_id'], topic_id: q['qn_id'], topic_type: 'CodingQuestion')
+                topic = CommentTopic.where(course_id: item['course_id'], topic_id: q['qn_id'], topic_type: 'CodingQuestion').first
                 topic = CommentTopic.create({
                                               course_id: item['course_id'],
                                               topic_id: parent_q.id,
-                                              topic_type: parent_q.class
+                                              topic_type: parent_q.class.to_s
                                             }) if not topic
                 Comment.create({
                                  text: code['staff_comments'],
                                  commentable_id: parent_q.id,
-                                 commentable_type: parent_q.class,
+                                 commentable_type: parent_q.class.to_s,
                                  comment_topic_id: topic.id
                                })
               end
