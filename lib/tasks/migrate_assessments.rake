@@ -175,8 +175,12 @@ namespace :db do
         raise StandardError
       end
 
+      if not assessments_map.has_key?(assessment_id) then
+        puts 'Cannot find corresponding assessment for ' + type.to_s + ' #' + assessment_id.to_s
+      end
+
       sbm = Assessment::Submission.create({
-                                              assessment_id: assessments_map.fetch(assessment_id),
+                                              assessment_id: assessments_map[assessment_id],
                                               std_course_id: s['std_course_id'],
                                               status: s['status'],
                                               multiplier: s['multiplier'],
