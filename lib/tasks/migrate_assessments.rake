@@ -133,7 +133,7 @@ namespace :db do
                                                           test_limit: test_limit,
                                                           description: code['description'],
                                                           max_grade: code['max_grade'],
-                                                          depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? coding_questions_map.fetch(code['include_sol_qn_id']) : nil,
+                                                          depends_on: code['include_sol_qn_id'] && code['include_sol_qn_id'] != 0 ? @coding_questions_map.fetch(code['include_sol_qn_id']) : nil,
                                                           data: JSON.generate(data),
                                                           created_at: code['created_at'],
                                                           updated_at: code['updated_at']
