@@ -104,48 +104,83 @@ class MissionSubmissionGradingsController < ApplicationController
   def update
     authorize! :grade, @submission
 
-    @submission_grading.total_grade = 0
-    @submission_grading.total_exp = 0
-    invalid_assign = false
-    if @mission.single_question?
-      @submission_grading.total_grade = params[:grade_sum].to_i
+    def create_exp_transaction
+      ExpTransaction.new({
+                           user_course_id: @submission.std_course,
+                           reason: "EXP for #{@submission.assessment.title}",
+                           is_valid: true
+                         })
+    end
+
+    # Handle single-question submissions where the grade of the entire submission equals the grade of the answer.
+    gradings = []
+    grading_exp_transactions_to_save = []
+    exp_transaction = nil
+    if @mission.single_question? then
+      grading = @submission.answers.first.grading
+      grading.grade = params[:grade_sum].to_i
+
+      # Make sure we always reference a valid EXP transaction.
+      exp_transaction = grading.exp_transaction || create_exp_transaction
+      grading.exp_transaction = exp_transaction
+
+      if grading.changed? then
+        grading.grader = current_user
+        grading.grader_course = curr_user_course
+        gradings <<= grading
+      end
+
+    # Otherwise we need to assign the scores for every question.
     else
-      params[:ags].each do |agid, ag|
-        @ag = AnswerGrading.find(agid)
-        unless validate_gradings(@ag, ag)
-          invalid_assign = true
-          break
+      params[:grades].each_pair do |grade_id, grade|
+        grading = Assessment::Grading.find_by_id!(grade_id)
+        grading.update_attributes(grade)
+
+        # Make sure all the grades in this submission reference the same EXP transaction.
+        exp_transaction ||= grading.exp_transaction || create_exp_transaction
+        if grading.exp_transaction && grading.exp_transaction != exp_transaction then
+          # We have a grading which used a different EXP transaction. Delete that one.
+          grading.exp_transaction.is_valid = false
+          grading_exp_transactions_to_save <<= grading.exp_transaction
         end
-        @ag.update_attributes(ag)
-        #@ag.grader = current_user
-        @submission_grading.total_grade += ag[:grade].to_i
-        #@submission_grading.total_exp += ag[:exp].to_i
-      end
-    end
-    @submission_grading.last_grade_updated = Time.now
-    @submission.set_graded
-    #@submission_grading.grader = current_user
-    @submission_grading.total_exp = params[:exp_sum].to_i
-    if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
-      invalid_assign = true
-    end
-    unless @submission_grading.grader_course_id
-      @submission_grading.grader_course_id = curr_user_course.id
-    end
-    if invalid_assign
-      grade_error_response(true)
-    elsif @submission_grading.save
-      @submission_grading.update_exp_transaction
-      respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
-                                  notice: "Grading has been recorded." }
-      end
-    else
-      respond_to do |format|
-        format.html { render action: "new" }
+        grading.exp_transaction = exp_transaction
+
+        if grading.changed? then
+          grading.grader = current_user
+          grading.grader_course = curr_user_course
+          gradings <<= grading
+        end
       end
     end
 
+    exp_transaction.exp = params[:exp_sum]
+    exp_transaction.giver_id = current_user.id
+    exp_transaction.is_valid = true
+    grading_exp_transactions_to_save <<= exp_transaction
+    @submission.set_graded
+
+    Assessment::Submission.transaction do
+      grading_exp_transactions_to_save.each { |e| e.save! }
+      gradings.each { |g| g.save! }
+      @submission.save!
+    end
+
+    respond_to do |format|
+      format.html { redirect_to course_assessment_mission_assessment_submission_assessment_grading_path(@course, @mission, @submission),
+                                notice: 'Grading has been recorded.' }
+    end
+
+    # TODO: if the transaction was rolled back:
+=begin
+    respond_to do |format|
+      flash[:error] = "Grading appears to have failed. Did you, for example, try to give grade/exp > max? ;)"
+      if edit
+        format.html { redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
+      else
+        format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
+      end
+    end
+=end
   end
 
   rescue_from CanCan::AccessDenied do |exception|
@@ -162,42 +197,6 @@ class MissionSubmissionGradingsController < ApplicationController
   end
 
 private
-  def validate_gradings(ag_record, ag)
-    grade = ag[:grade].strip
-    max_grade = @mission.max_grade
-    unless ag[:exp]
-      return validate_grade(grade, max_grade)
-    end
-
-    max_exp = @mission.exp
-    qn_grade = ag_record.student_answer.qn.max_grade
-    qn_exp = max_exp * (qn_grade.to_f / max_grade.to_f)
-    exp = ag[:exp].strip
-    if !validate_grade(grade, qn_grade) || !validate_grade(exp, qn_exp.to_i)
-      return false
-    end
-    true
-  end
-
-  def validate_grade(grade, max_grade)
-    if grade.match(/^[\-|\+|\d]\d*$/) and (grade.to_i <= max_grade)
-      return true
-    end
-    false
-  end
-
-  def grade_error_response(edit = false)
-    respond_to do |format|
-      flash[:error] = "Grading appears to have failed. Did you, for example, try to give grade/exp > max? ;)"
-      if edit
-        format.html { redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
-      else
-        format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
-      end
-    end
-  end
-
-private
   def load_resources
     @mission = Assessment::Mission.find_by_id!(params[:assessment_mission_id])
     @submission = Assessment::Submission.find_by_id!(params[:assessment_submission_id])
@@ -210,9 +209,9 @@ private
       next if a.grading
 
       grading = Assessment::Grading.create({
-                                            answer_id: a.id,
-                                            grader_id: current_user.id,
-                                            grader_course_id: curr_user_course.id
+                                             answer_id: a.id,
+                                             grader_id: current_user.id,
+                                             grader_course_id: curr_user_course.id
                                            }, :without_protection => true)
       a.grading = grading
     end

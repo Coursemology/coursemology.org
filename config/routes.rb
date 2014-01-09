@@ -62,7 +62,7 @@ JfdiAcademy::Application.routes.draw do
         post 'test' => 'mission_submissions#test_answer'
 
         get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
-        post 'gradings' => 'mission_submission_gradings#update'
+        post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
       end
 
       get 'overview' => 'missions#overview', on: :collection
