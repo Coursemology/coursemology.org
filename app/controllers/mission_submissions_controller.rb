@@ -41,7 +41,7 @@ class MissionSubmissionsController < ApplicationController
     if @selected[:asm]
       @sbms = @selected[:asm].sbms
     else
-      @sbms = @course.submissions.accessible_by(current_ability).order(:submit_at).reverse_order
+      @sbms = @course.submissions.accessible_by(current_ability).order(:submitted_at).reverse_order
     end
 
     if @selected[:student]
@@ -80,12 +80,6 @@ class MissionSubmissionsController < ApplicationController
     if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
       redirect_to course_assessment_mission_assessment_submission_assessment_gradings_path(@course, @mission, @submission)
       return
-    end
-
-    if params[:grading_id]
-      @grading = SubmissionGrading.find(grading_id)
-    else
-      @grading = @submission.final_grading
     end
 
     @mission.get_all_questions.each_with_index do |q,i|
@@ -210,7 +204,7 @@ class MissionSubmissionsController < ApplicationController
 
 private
   def load_resources
-    @mission = Assessment::Mission.find(params[:assessment_mission_id])
+    @mission = Assessment::Mission.find(params[:assessment_mission_id]) unless params[:action] == 'listall'
     @submission = case params[:action]
                     when 'new'
                       Assessment::Submission.new
@@ -218,6 +212,7 @@ private
                       q = Assessment::Submission.new
                       q.attributes = params[:assessment_submission]
                       q
+                    when 'listall'
                     else
                       Assessment::Submission.find_by_id!(params[:id] || params[:assessment_submission_id])
                   end

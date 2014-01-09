@@ -1,4 +1,4 @@
-<%- model_class = Submission -%>
+<%- model_class = Assessment::Submission -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
@@ -13,7 +13,7 @@
   </li>
 </ul>
 
-<% if can? :see_all, Submission %>
+<% if can? :see_all, Assessment::Submission %>
     <form class="form-horizontal" action="<%= nil %>" method="GET">
       <h3>Show only Submissions:</h3>
       <div class="control-group">
@@ -24,7 +24,7 @@
             <% @all_asm.each do |asm| %>
                 <option value="<%= asm.id %>"
                         <%= "selected" if @selected[:asm] && asm == @selected[:asm] %>>
-                  <%= asm.get_title %>
+                  <%= asm.title %>
                 </option>
             <% end %>
           </select>
@@ -63,14 +63,14 @@
 <table class="table">
   <thead>
   <tr>
-    <% if can? :see_all, Submission %>
+    <% if can? :see_all, Assessment::Submission %>
         <th width="20%">Student</th>
     <% end %>
     <th>Mission</th>
     <th>Submitted at </th>
 
     <th width="15%">
-      <% if can? :manage, SubmissionGrading %>
+      <% if can? :manage, Assessment::Grading %>
           Grading
       <% else %>
           Status
@@ -85,24 +85,24 @@
   <tbody>
   <% @sbms.each do |sub| %>
       <tr>
-        <% if can? :see_all, Submission %>
+        <% if can? :see_all, Assessment::Submission %>
             <td>
               <%= render partial: 'layouts/user_name_link', locals: {user_course: sub.std_course} %>
             </td>
         <% end %>
-        <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
-        <td><%= datetime_format(sub.submit_at || sub.created_at) %> </td>
+        <td><%= link_to sub.assessment.title, url_for([@course, sub.assessment.specific]) %></td>
+        <td><%= datetime_format(sub.submitted_at || sub.created_at) %> </td>
         <!--TODO: refactoring-->
-        <% if can? :manage, SubmissionGrading %>
+        <% if can? :manage, Assessment::Grading %>
             <td>
               <% sub.submission_gradings.each do |sg| %>
                   <%= link_to sg.get_name, sub.get_path %><br/>
               <% end %>
             </td>
             <td>
-              <% grade = sub.submission_gradings.last %>
+              <% grade = sub.grade %>
               <% if grade %>
-                  <%= grade.total_grade %> / <%= sub.get_asm.max_grade %>
+                  <%= grade %> / <%= sub.assessment.max_grade %>
               <% end %>
             </td>
             <% if sub.submission_gradings.length == 0 %>
