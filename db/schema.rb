@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140106165916) do
+ActiveRecord::Schema.define(:version => 20140109030619) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -554,6 +554,7 @@ ActiveRecord::Schema.define(:version => 20140106165916) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.string   "confirm_token"
+    t.boolean  "pending_email",  :default => true
   end
 
   create_table "material_folders", :force => true do |t|

@@ -43,6 +43,9 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
   def enrollment_invitations(enrols, course)
     lecturer = User.find(type_id)
     enrols.each do |enrol|
+      unless enrol.pending_email?
+        next
+      end
       enrol.generate_confirm_token
       url = redirect_to + "?_token="+ enrol.confirm_token
       delayed_job = UserMailer.delay.enrollment_invitation(enrol.email, enrol.name, lecturer.name, course.title, url)
