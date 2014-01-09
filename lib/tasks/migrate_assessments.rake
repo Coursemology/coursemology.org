@@ -307,11 +307,12 @@ namespace :db do
     connection.select_all('SELECT * FROM submission_gradings').each do |sbm_g|
       case sbm_g['sbm_type'].to_sym
         when :TrainingSubmission
-          submission = @training_submissions_map.fetch(sbm_g['sbm_id'])
+          submission = @training_submissions_map[sbm_g['sbm_id']]
         when :Submission
-          submission = @mission_submissions_map.fetch(sbm_g['sbm_id'])
+          submission = @mission_submissions_map[sbm_g['sbm_id']]
         else
-          raise StandardError
+          puts "Cannot find corresponding sbm for grading ##{sbm_g['id']}"
+          next
       end
 
       connection.select_all(sanitize('SELECT * FROM answer_gradings WHERE submission_grading_id = ?', [sbm_g['id']])).each do |answer_g|
@@ -344,11 +345,17 @@ namespace :db do
       case tag['asm_type'].to_sym
         when :Training
           training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
-          training.tags << Tag.find_by_id(tag['tag_id'])
+          if training then
+            training.tags << Tag.find_by_id(tag['tag_id']) if training
+            training.save
+          end
 
         when :Mission
           mission = Assessment::Mission.find_by_id(@missions_map.fetch(tag['asm_id']))
-          mission.tags << Tag.find_by_id(tag['tag_id'])
+          if mission then
+            mission.tags << Tag.find_by_id(tag['tag_id'])
+            mission.save
+          end
 
         else
           raise StandardError
@@ -357,6 +364,7 @@ namespace :db do
 
     connection.execute('TRUNCATE TABLE assessment_assessments_requirements')
     connection.select_all('SELECT * FROM asm_reqs').each do |req|
+      next if (not req['asm_type']) || (not req[asm_id])
       case req['asm_type'].to_sym
         when :Training
           assessment_id = @trainings_map.fetch(req['asm_id'])
