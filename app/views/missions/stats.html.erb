@@ -57,7 +57,7 @@
         <% end %>
         <td><%= std.get_my_tutor_name %></td>
         <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
-        <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
+        <td><%= (sub and sub.grade) ? sub.grade : 0 %> / <%= @mission.max_grade %></td>
       </tr>
   <% end %>
   </tbody>
@@ -69,7 +69,7 @@
 
 <% if @std_courses_phantom.length > 0 %>
   <h3>Phantom Students</h3>
-  <% if @mission.single_question? and @mission.coding_questions.first %>
+  <% if @mission.single_question? and @mission.questions.coding.count > 0 %>
     <input type="button" id="dump_sub_phantom" class="btn dump_sub" value="Download Submissions">
   <% end %>
 
@@ -85,7 +85,7 @@
         <% sub = @submissions.select {|sub| sub.std_course == std }.first %>
         <tr>
           <% if sub %>
-            <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
+            <td><a href="<%= course_assessment_mission_assessment_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
           <% else %>
             <td><%= std.name %></td>
           <% end %>
