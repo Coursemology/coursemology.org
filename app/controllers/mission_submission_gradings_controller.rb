@@ -159,10 +159,15 @@ class MissionSubmissionGradingsController < ApplicationController
     grading_exp_transactions_to_save <<= exp_transaction
     @submission.set_graded
 
-    Assessment::Submission.transaction do
-      grading_exp_transactions_to_save.each { |e| e.save! }
-      gradings.each { |g| g.save! }
-      @submission.save!
+    begin
+      Assessment::Submission.transaction do
+        grading_exp_transactions_to_save.each { |e| e.save! }
+        gradings.each { |g| g.save! }
+        @submission.save!
+      end
+    rescue ActiveRecord::RecordInvalid
+      render :edit
+      return
     end
 
     respond_to do |format|
