@@ -100,31 +100,6 @@ class Submission < ActiveRecord::Base
     self.attach_files(sub_files)
   end
 
-  def attempting?
-    self.status == 'attempting'
-  end
-
-  def submitted?
-    self.status == 'submitted'
-  end
-
-  def graded?
-    self.status == 'graded'
-  end
-
-  def set_attempting
-    self.update_attribute(:status,'attempting')
-  end
-
-  def set_submitted(redirect_url)
-    self.update_attribute(:status,'submitted')
-    self.update_attribute(:submit_at, updated_at)
-    notify_submission(redirect_url)
-  end
-
-  def set_graded
-    self.update_attribute(:status,'graded')
-  end
 
   def attempt_mission
     self.set_attempting

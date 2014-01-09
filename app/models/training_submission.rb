@@ -5,7 +5,7 @@ class TrainingSubmission < ActiveRecord::Base
   include Sbm
 
   # current_step starts from 1, not 0
-  attr_accessible :current_step, :multiplier, :open_at, :std_course_id, :submit_at, :training_id
+  attr_accessible :current_step, :multiplier, :open_at, :std_course_id, :submit_at, :training_id, :status
 
   belongs_to :std_course, class_name: "UserCourse"
   belongs_to :training
@@ -19,7 +19,7 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_coding_answers, through: :sbm_answers,
            :source => :answer, :source_type => "StdCodingAnswer"
 
-  default_scope includes(:std_course, :training)
+  default_scope includes(:std_course)
 
   def get_asm
     self.training
@@ -53,6 +53,7 @@ class TrainingSubmission < ActiveRecord::Base
 
   def update_grade
     self.submit_at = DateTime.now
+    self.set_graded
     subm_grading = self.get_final_grading
     subm_grading.update_grade
     exp = subm_grading.update_exp_transaction
