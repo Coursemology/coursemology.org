@@ -90,7 +90,7 @@
     <tbody class="asm-qns" url="<%= reorder_course_assessment_mission_asm_qns_path(@course, @mission) %>">
       <% @questions.each_with_index do |q, i| %>
         <tr class="asm-qn" id="asm-qn_<%= q.question.id %>">
-          <td>
+          <td class="span12">
             <div class="asm-qn-handler">
               <i class="icon-move handler-icon"></i>
               <h3 class="handler-text">Question <%= i + 1 %></h3>
