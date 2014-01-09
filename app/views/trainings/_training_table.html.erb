@@ -104,11 +104,7 @@
             <td>
               <% if training.open_at < Time.now || can?(:manage, Training)%>
                   <% if submission %>
-                      <% if !submission.done? %>
-                          <%= link_to 'Continue',
-                                      edit_course_training_training_submission_path(@course, training, submission,
-                                                                                    anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
-                      <% else %>
+                      <% if submission.graded? %>
                           <% if @reattempt && @reattempt.display %>
                               <%= link_to "Revise",
                                           new_course_training_training_submission_path(@course, training),
@@ -118,6 +114,10 @@
                                           edit_course_training_training_submission_path(@course, training, submission,
                                                                                         anchor: 'training-stop-pos', step: 1), class: 'btn' %>
                           <% end %>
+                      <% else %>
+                          <%= link_to 'Continue',
+                                      edit_course_training_training_submission_path(@course, training, submission,
+                                                                                    anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
                       <% end %>
                   <% else %>
                       <%= link_to 'Start',

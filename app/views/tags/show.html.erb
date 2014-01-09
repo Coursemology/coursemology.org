@@ -38,12 +38,12 @@
         <td width="20%">
           <% submission = training.get_final_sbm_by_std(curr_user_course.id) %>
           <% if submission %>
-            <% if !submission.done? %>
-              <%= link_to 'Continue',
-                      edit_course_training_training_submission_path(@course, training, submission),
-                      class: 'btn btn-primary' %>
+            <% if submission.graded? %>
+                  <a href="#" class="btn disabled">Done</a>
             <% else %>
-              <a href="#" class="btn disabled">Done</a>
+                  <%= link_to 'Continue',
+                              edit_course_training_training_submission_path(@course, training, submission),
+                              class: 'btn btn-primary' %>
             <% end %>
           <% else %>
             <%= link_to 'Start',
