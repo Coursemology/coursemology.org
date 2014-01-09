@@ -10,6 +10,7 @@ namespace :db do
     @mcq_questions_map = {}
     @mcq_options_map = {}
     @mcq_answers_map = {}
+    @mcq_all_answers_map = {}
     @text_questions_map = {}
     @text_answers_map = {}
     @mission_submissions_map = {}
@@ -214,11 +215,34 @@ namespace :db do
                                                    question_id: @mcq_questions_map.fetch(answer['mcq_id']),
                                                    finalised: sbm_answer['is_final'],
 
-                                                   option_id: @mcq_options_map.fetch(answer['mcq_answer_id']),
                                                    created_at: answer['created_at'],
                                                    updated_at: answer['updated_at']
                                                }, :without_protection => true)
               @mcq_answers_map[sbm_answer['answer_id']] = ans.answer.id
+
+              Assessment::McqAnswerOption.create({
+                                                   answer_id: ans.id,
+                                                   option_id: @mcq_options_map.fetch(answer['mcq_answer_id']),
+                                                 })
+            end
+          when :StdMcqAllAnswer
+            connection.select_all(sanitize('SELECT * FROM std_mcq_all_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
+              ans = Assessment::McqAnswer.create({
+                                                   submission_id: sbm.id,
+                                                   question_id: @mcq_questions_map.fetch(answer['mcq_id']),
+                                                   finalised: sbm_answer['is_final'],
+
+                                                   created_at: answer['created_at'],
+                                                   updated_at: answer['updated_at']
+                                                 }, :without_protection => true)
+              @mcq_all_answers_map[sbm_answer['answer_id']] = ans.answer.id
+
+              JSON.parse(answer['selected_choices']).each do |answer|
+                Assessment::McqAnswerOption.create({
+                                                     answer_id: ans.id,
+                                                     option_id: @mcq_options_map.fetch(answer),
+                                                   })
+              end
             end
           when :StdCodingAnswer
             connection.select_all(sanitize('SELECT * FROM std_coding_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
@@ -289,6 +313,8 @@ namespace :db do
         case answer_g['student_answer_type'].to_sym
           when :StdMcqAnswer
             answer_map = @mcq_answers_map
+          when :StdMcqAllAnswer
+            answer_map = @mcq_all_answers_map
           when :StdAnswer
             answer_map = @text_answers_map
           when :StdCodingAnswer
