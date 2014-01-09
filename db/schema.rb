@@ -160,7 +160,6 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.boolean  "file_submission"
     t.boolean  "publish"
     t.integer  "exp"
-    t.integer  "max_grade"
     t.datetime "open_at"
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false

@@ -9,7 +9,6 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.boolean :file_submission # was mission.is_file_submission
       t.boolean :publish
       t.integer :exp
-      t.integer :max_grade
 
       t.datetime :open_at
       t.timestamps
