@@ -92,7 +92,7 @@ class MissionsController < ApplicationController
       @mission.attach_files(params[:files].values)
     end
     # TODO: Implement or remove
-    if @mission.single_question?
+    if params[:single_question]
       qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
       qn.max_grade = params[:max_grade]
     end
