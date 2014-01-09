@@ -27,10 +27,12 @@ var path = function(){
             language: "python",
             timeLimitInSec: "1",
             memoryLimitInMB: "2",
+            testLimit: "3",
             included: "",
             prefill: "",
             privateTests: new Array(),
-            publicTests: new Array()
+            publicTests: new Array(),
+            evalTests: new Array()
         },
 
         savePath: function(){
@@ -64,7 +66,11 @@ var path = function(){
             cStep.memoryLimitInMB = val;
         },
         changeTimeLimit: function(val){
-            cStep.changeTimeLimit = val;
+            cStep.timeLimitInSec = val;
+        },
+
+        changeTestLimit: function(val){
+            cStep.testLimit = val;
         },
 
         /** tests **/
@@ -74,9 +80,12 @@ var path = function(){
             if(testType=="public"){
                 ci.publicTests.push(_newTest());
                 test_count = ci.publicTests.length;
-            }else{
+            }else if (testType == 'private'){
                 ci.privateTests.push(_newTest());
                 test_count = ci.privateTests.length;
+            } else {
+                ci.evalTests.push(_newTest());
+                test_count = ci.evalTests.length;
             }
 
             _appendTest(testType, test_count, "", "");
@@ -99,13 +108,19 @@ var path = function(){
 
             $("#timeLimit").attr("value", cStep.timeLimitInSec);
             $("#memoryLimit").attr("value", cStep.memoryLimitInMB);
+            $("#testLimit").val(cStep.testLimit);
             $("#public_test_tbody").html("");
             $("#private_test_tbody").html("");
+            $("#eval_test_tbody").html("");
             for(var i = 0 ; i < cStep.privateTests.length; i++){
                 _appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected);
             }
             for(var i = 0 ; i < cStep.publicTests.length; i++){
                 _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected);
+            }
+            for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
+                console.log(cStep.evalTests);
+                _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected);
             }
             cmPrefill.setValue(cStep.prefill);
             if(cStep.included == null) cStep.included = "";

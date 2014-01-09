@@ -22,27 +22,42 @@ class TrainingSubmission < ActiveRecord::Base
   default_scope includes(:std_course, :training)
 
   def get_asm
-     self.training
+    self.training
   end
 
   def get_path
-     course_training_training_submission_path(training.course, training, self)
+    course_training_training_submission_path(training.course, training, self)
   end
 
   def get_new_grading_path
-     '#'
+    '#'
   end
 
   def done?
-    current_step > self.training.asm_qns.count
+    #if a training chanage between can skip and cannot, we will have problem
+    #if we check done by position
+    #if training.can_skip?
+    questions_left == []
+    #else
+    #  current_step > self.training.asm_qns.count
+    #end
+  end
+
+  def questions_left
+    training.questions - answered_questions
+  end
+
+  def answered_questions
+    sbm_answers.map {|sba| sba.answer.qn }.uniq
   end
 
   def update_grade
     self.submit_at = DateTime.now
     subm_grading = self.get_final_grading
     subm_grading.update_grade
-    subm_grading.update_exp_transaction
+    exp = subm_grading.update_exp_transaction
     subm_grading.save
+    exp
   end
 
   def status

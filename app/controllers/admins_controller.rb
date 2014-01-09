@@ -23,7 +23,18 @@ class AdminsController < ApplicationController
   end
 
   def masquerades
-       search
+    search
+  end
+
+  def courses
+    unless params[:search].nil?
+      @courses = Course.search(params[:search].strip).order(:title).page(params[:page]).per(50)
+    else
+      @courses = Course.order("created_at desc").limit(50).page(params[:page]).per(50)
+    end
+    if params[:origin]
+      redirect_to params[:origin]
+    end
   end
 
   private

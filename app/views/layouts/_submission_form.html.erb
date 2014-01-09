@@ -141,4 +141,8 @@
         total_grade.val(sum_grade);
     }
 
+    $(document).ready(function() {
+        suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> );
+    });
+
 </script>

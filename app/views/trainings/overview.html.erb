@@ -2,19 +2,7 @@
   <h1>Update Trainings</h1>
 </div>
 
-<ul class="nav nav-tabs">
-  <li class="<%= "active" if @tab == 'main' %>">
-    <a href="<%=  course_trainings_path(@course) %>?_tab=main" data-toggle="tab"><h4>Main</h4></a>
-  </li>
-  <li class="<%= "active" if @tab == 'extra' %>">
-    <a href="<%= course_trainings_path %>?_tab=extra" data-toggle="tab"><h4>Extra (Optional)</h4></a>
-  </li>
-  <% if can? :manage, :bulk_update %>
-      <li class="<%= "active" if @tab == 'overview' %>">
-        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
-      </li>
-  <% end %>
-</ul>
+<%= render  partial: "tabs" %>
 
 <%= form_tag course_trainings_bulk_update_path(@course), :method => 'POST' do %>
     <table class="table">
@@ -25,7 +13,7 @@
         <th><%= @display_columns['start'] %></th>
         <th><%= @display_columns['bonus-exp'] %></th>
         <th><%= @display_columns['bonus-cutoff'] %></th>
-        <th>Type</th>
+        <th>Tab</th>
         <th>Publish?</th>
       </tr>
       </thead>
@@ -59,10 +47,10 @@
               </div>
             </td>
             <td>
-              <select name="trainings[<%= training.id %>][t_type]" class="input-mini" >
-                <% AssignmentType.all.each do  |assign_type| %>
-                    <option value="<%= assign_type.id %>" <%= 'selected="selected"' if training.t_type == assign_type.id  %>> <%= assign_type.title  %></option>
-                <% end %>
+              <select name="trainings[<%= training.id %>][tab_id]" class="input-mini" >
+                    <% @course.training_tabs.each do  |tab| %>
+                        <option value="<%= tab.id %>" <%= 'selected="selected"' if training.tab and training.tab.id == tab.id  %>> <%= tab.title  %></option>
+                    <% end %>
               </select>
             </td>
             <td style="text-align: center">

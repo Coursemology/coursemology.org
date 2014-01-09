@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131220033623) do
+ActiveRecord::Schema.define(:version => 20140109030619) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -150,11 +150,12 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.text     "description"
     t.text     "data"
     t.integer  "max_grade"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "staff_comments"
     t.datetime "last_commented_at"
     t.integer  "include_sol_qn_id"
+    t.boolean  "is_auto_grading",   :default => false
   end
 
   create_table "comment_subscriptions", :force => true do |t|
@@ -514,9 +515,8 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.string   "title"
     t.text     "description"
     t.datetime "end_at"
+    t.datetime "start_at"
   end
-
-  add_index "lesson_plan_milestones", ["course_id", "end_at"], :name => "index_lesson_plan_milestones_on_course_id_and_end_at", :unique => true
 
   create_table "lesson_plan_resources", :force => true do |t|
     t.integer "lesson_plan_entry_id"
@@ -554,6 +554,7 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.string   "confirm_token"
+    t.boolean  "pending_email",  :default => true
   end
 
   create_table "material_folders", :force => true do |t|
@@ -623,6 +624,7 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.boolean  "is_file_submission", :default => false
     t.integer  "dependent_id"
     t.boolean  "publish",            :default => true
+    t.integer  "tab_id"
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
@@ -791,6 +793,8 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.boolean  "is_correct"
     t.integer  "std_course_id"
     t.datetime "last_commented_at"
+    t.integer  "test_left"
+    t.text     "result"
   end
 
   add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"
@@ -868,6 +872,15 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
   add_index "submissions", ["mission_id"], :name => "index_submissions_on_mission_id"
   add_index "submissions", ["std_course_id"], :name => "index_submissions_on_std_course_id"
 
+  create_table "survey_essay_answers", :force => true do |t|
+    t.integer  "user_course_id"
+    t.integer  "question_id"
+    t.text     "text"
+    t.time     "deleted_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "survey_mrq_answers", :force => true do |t|
     t.text     "selected_options"
     t.integer  "user_course_id"
@@ -911,6 +924,7 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.time     "deleted_at"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
+    t.boolean  "is_required",       :default => true
   end
 
   add_index "survey_questions", ["survey_id"], :name => "index_survey_questions_on_survey_id"
@@ -965,9 +979,20 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.time     "deleted_at"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.integer  "exp"
   end
 
   add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"
+
+  create_table "tabs", :force => true do |t|
+    t.integer  "course_id",   :null => false
+    t.string   "title",       :null => false
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "owner_type",  :null => false
+    t.integer  "pos"
+  end
 
   create_table "tag_groups", :force => true do |t|
     t.string   "name"
@@ -1038,14 +1063,16 @@ ActiveRecord::Schema.define(:version => 20131220033623) do
     t.integer  "exp"
     t.datetime "open_at"
     t.integer  "pos"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "max_grade"
     t.time     "deleted_at"
     t.integer  "bonus_exp"
     t.datetime "bonus_cutoff"
     t.boolean  "publish",      :default => true
     t.integer  "t_type",       :default => 1
+    t.integer  "tab_id"
+    t.boolean  "can_skip",     :default => false
   end
 
   add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"

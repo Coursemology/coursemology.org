@@ -5,9 +5,24 @@ module Duplication
     def duplicate_qn_no_log(qn)
       clone_qn = qn.dup
       if qn.is_a?(Mcq)
+        answer_map = {}
         qn.mcq_answers.each do |ma|
           clone_ma = ma.dup
+          clone_ma.save
           clone_qn.mcq_answers << clone_ma
+          answer_map[ma.id] = clone_ma.id
+        end
+
+        if qn.select_all?
+          begin
+            ca = []
+            eval(qn.correct_answers).each do |answer|
+              ca << answer_map[answer]
+            end
+            clone_qn.correct_answers = ca.to_json
+          rescue SyntaxError => se
+            puts 'RESCUED!'
+          end
         end
       end
       clone_qn
@@ -15,12 +30,26 @@ module Duplication
 
     def duplicate_asm_no_log(asm, files=true)
       clone = asm.dup_options(files)
+      clone_map = {}
       # duplicate question and create new asm_qn links
       asm.asm_qns.each do |asm_qn|
         clone_qn = duplicate_qn_no_log(asm_qn.qn)
         new_link = asm_qn.dup
         new_link.qn = clone_qn
         clone.asm_qns << new_link
+        clone_map[asm_qn.qn] = clone_qn
+      end
+
+      asm.asm_qns.each do |asm_qn|
+        qn = asm_qn.qn
+        if qn.class == CodingQuestion and
+            qn.include_sol_qn and
+            clone_map[qn.include_sol_qn]
+
+          clone_qn = clone_map[qn]
+          clone_qn.include_sol_qn = clone_map[qn.include_sol_qn]
+          clone_qn.save
+        end
       end
       clone
     end
@@ -106,7 +135,7 @@ module Duplication
       user_course.user = user
       user_course.role = Role.find_by_name(:lecturer)
       clone.is_publish = false
-      clone.start_at = (clone.start_at || 0) + options[:course_diff]
+      clone.start_at = clone.start_at ? clone.start_at + options[:course_diff] : clone.start_at
       clone.end_at = if clone.end_at then clone.end_at + options[:course_diff] else clone.end_at end
 
       clone.save
@@ -115,6 +144,13 @@ module Duplication
 
       clone_map = {}
 
+
+      course.tabs.each do |tab|
+        clone_tab = tab.dup
+        clone_tab.course = clone
+        clone_tab.save
+        clone_map[tab] = clone_tab
+      end
 
       # clone the entity
       (course.missions + course.trainings).each do |asm|
@@ -126,6 +162,9 @@ module Duplication
         else
           diff = options[:training_diff]
           clone_asm.bonus_cutoff = if clone_asm.bonus_cutoff then clone_asm.bonus_cutoff + diff else clone_asm.bonus_cutoff end
+          if asm.tab
+            clone_asm.tab = clone_map[asm.tab]
+          end
         end
         clone_asm.open_at = clone_asm.open_at + diff
 
@@ -134,12 +173,14 @@ module Duplication
         clone_map[asm] = clone_asm
       end
 
+      #mission dependency
       clone.missions.each do |asm|
         if asm.dependent_mission
           asm.dependent_mission = clone_map[asm.dependent_mission]
           asm.save
         end
       end
+
 
       (course.levels + course.achievements + course.tag_groups).each do |obj|
         clone_obj = obj.dup
@@ -207,7 +248,10 @@ module Duplication
       #clone lesson plan milestone
       course.lesson_plan_milestones.each do |milestone|
         clone_milestone = milestone.dup
-        clone_milestone.end_at += options[:course_diff]
+        clone_milestone.start_at += options[:course_diff]
+        if clone_milestone.end_at
+          clone_milestone.end_at += options[:course_diff]
+        end
         clone_milestone.course = clone
         clone_milestone.save
       end

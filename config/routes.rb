@@ -25,6 +25,7 @@ JfdiAcademy::Application.routes.draw do
   match "admins" => "admins#access_control"
   match "admins/search" => "admins#search"
   match "admins/masquerades" => 'admins#masquerades', as: :admin_masquerades
+  match "admins/courses" => "admins#courses", as: :admin_courses
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
@@ -63,6 +64,7 @@ JfdiAcademy::Application.routes.draw do
         resources :submission_gradings
       end
       post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
+      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
       resources :asm_qns do
         collection do
@@ -188,7 +190,16 @@ JfdiAcademy::Application.routes.draw do
     resources :staff_leaderboard
 
     resources :surveys do
-      resources :survey_questions
+      resources :survey_sections do
+        collection do
+          post 'reorder'
+        end
+      end
+      resources :survey_questions do
+        collection do
+          post 'reorder'
+        end
+      end
       resources :survey_submissions
       post "survey_submissions/:id/submit" => "survey_submissions#submit", as: :survey_submission_submit
     end
@@ -197,7 +208,7 @@ JfdiAcademy::Application.routes.draw do
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
-    get "lesson_plan/overview" => 'lesson_plan_milestones#overview', as: :lesson_plan_overview
+    get "lesson_plan/overview" => 'lesson_plan_entries#overview', as: :lesson_plan_overview
     post "lesson_plan/bulk_update" => 'lesson_plan_milestones#bulk_update', as: :lesson_plan_bulk_update
     resources :lesson_plan_entries, path: 'lesson_plan/entries', except: [:index, :show]
     resources :lesson_plan_milestones, path: 'lesson_plan/milestones', except: [:index]
@@ -229,6 +240,8 @@ JfdiAcademy::Application.routes.draw do
 
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
+
+    resources :tabs, module: :tabs
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

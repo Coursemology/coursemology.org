@@ -136,10 +136,14 @@
   background-color: #FBF3B9;
 }
 
-#path_dooptions .CodeMirror-scroll {
+.path-code .CodeMirror-scroll {
   min-height: 100px;
   overflow-y: hidden;
   overflow-x: auto;
+}
+
+.test-passed-row {
+  background-color: rgb(0, 128, 0);
 }
 //.CodeMirror textarea {
 //  font-family: inherit !important;

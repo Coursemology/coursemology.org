@@ -8,10 +8,11 @@ class Training < ActiveRecord::Base
   include ActivityObject
   include Assignment
 
-  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff, :publish, :t_type
+  attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff, :publish, :t_type, :tab_id, :can_skip
 
   belongs_to :creator, class_name: "User"
   belongs_to :course
+  belongs_to :tab
 
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
@@ -72,15 +73,7 @@ class Training < ActiveRecord::Base
     publish?
   end
 
-  def dup_options(dup_files = true)
-    clone = dup
-    if dup_files
-      files.each do |file|
-        file.dup_owner(clone)
-      end
-    end
-    clone
-  end
+
 
   alias_method :sbms, :training_submissions
 end

@@ -89,20 +89,15 @@
         <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
           Add Question
         </button>
-        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_coding_question_form">
-          Add Coding Question
-        </button>
+        <a href="<%= new_course_mission_coding_question_path(@course, @mission) %>" class="btn btn-primary">  Add Coding Question</a>
+
     <% end %>
     <div id="new_wquestion_form" class="collapse out">
       <div class="well">
         <%= render "questions/form" %>
       </div>
     </div>
-    <div id="new_coding_question_form" class="collapse out">
-      <div class="well">
-        <%= render "mission_coding_questions/form" %>
-      </div>
-    </div>
+
     <h2 class="assignments-questsions-title">Mission Questions</h2>
     <table class="table assignments-questions-table">
       <!-- <thead>

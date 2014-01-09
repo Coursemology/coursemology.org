@@ -37,13 +37,21 @@ class FileUploadsController < ApplicationController
       owner = Training.find_by_id(params[:training_id])
     end
 
+    file = params[:files].class == Array ? params[:files].first : params[:files]
     file_upload = FileUpload.create({
                                         creator: current_user,
                                         owner: owner || @course,
-                                        file: params[:files].class == Array ? params[:files].first : params[:files]
+                                        file: file
                                     })
 
     if file_upload.save
+
+      #save to local folder, in case the file will be included for code question.
+      #TODO: improve, should only save coding related file to local disk
+      if params[:mission_id] or params[:training_id]
+        PythonEvaluator.create_local_file_for_asm(owner, file)
+      end
+
       if file_upload.file_content_type == 'application/zip' && params[:_page_name] == "course_edit"
         course_theme = @course.course_themes.first_or_create
         theme_folder_url = course_theme.get_folder_url
@@ -74,7 +82,6 @@ class FileUploadsController < ApplicationController
   end
 
   def index
-    puts "file upload index",params
     owner = nil
     if params[:training_id]
       owner = Training.find(params[:training_id])
@@ -93,6 +100,7 @@ class FileUploadsController < ApplicationController
       format.json { render json: @uploads.map{|upload| upload.to_jq_upload } }
     end
   end
+
   def new
     @upload = FileUpload.new
 
@@ -119,4 +127,5 @@ class FileUploadsController < ApplicationController
 
   def show
   end
+
 end

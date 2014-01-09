@@ -9,7 +9,9 @@ class SurveyQuestionsController < ApplicationController
 
   def new
     @survey_question.type_id = 2
-
+    if params[:section_id]
+      @survey_question.survey_section_id = params[:section_id]
+    end
   end
 
   def show
@@ -119,6 +121,16 @@ class SurveyQuestionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_survey_url(@course, @survey) }
     end
+  end
+
+  def reorder
+    params['asm-qn'].each_with_index do |id, index|
+      # binding.pry
+      qn = @survey.questions.find(id)
+      qn.pos = index
+      qn.save
+    end
+    render nothing: true
   end
 end
 

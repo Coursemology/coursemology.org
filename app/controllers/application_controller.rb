@@ -219,7 +219,7 @@ class ApplicationController < ActionController::Base
 
       @admin_nav_items << {
           text: "Student Summary",
-          url:  main_app.course_student_summary_path(@course),
+          url:  main_app.course_student_summary_url(@course),
           icon: "icon-user"
       }
 
@@ -316,10 +316,6 @@ class ApplicationController < ActionController::Base
 
   def sort_column
     params[:sort]
-  end
-
-  def before_logout
-    puts "before logout"
   end
 
   private

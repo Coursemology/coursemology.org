@@ -3,6 +3,7 @@ class RoleRequestsController < ApplicationController
 
   def index
     # only admin should be able to access this page
+    authorize! :can, :manage, :role_request
     @admin = true
     @lecturer_requests = []
     @lecturer_role = Role.find_by_name('lecturer')
@@ -30,6 +31,7 @@ class RoleRequestsController < ApplicationController
   end
 
   def destroy
+    authorize! :can, :manage, :role_request
     if params[:approved]
       puts 'Request approved!'
       # create new UserCourse record

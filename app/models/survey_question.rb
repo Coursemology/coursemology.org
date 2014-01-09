@@ -10,13 +10,20 @@ class SurveyQuestion < ActiveRecord::Base
 
   has_many :options, class_name:"SurveyQuestionOption", foreign_key: "question_id"
   has_many :survey_mrq_answers, foreign_key: "question_id"
+  has_many :survey_essay_answers, :foreign_key => "question_id"
   has_many :files, through: :options
 
   def answer_for_user(user_course)
-    self.survey_mrq_answers.where(user_course_id: user_course)
+    is_essay? ?
+        self.survey_essay_answers.where(user_course_id: user_course).first :
+        self.survey_mrq_answers.where(user_course_id: user_course)
   end
 
   def no_unique_voters
     self.survey_mrq_answers.count(:user_course_id, distinct:true)
+  end
+
+  def is_essay?
+    type == SurveyQuestionType.Essay.first
   end
 end

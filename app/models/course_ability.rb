@@ -49,7 +49,7 @@ class CourseAbility
       can :manage, :all
       can :see_all, [Submission, TrainingSubmission, Level]
       can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :view_detail, [Mission, Training, Survey]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse

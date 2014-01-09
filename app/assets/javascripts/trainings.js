@@ -108,18 +108,26 @@ $(document).ready(function(){
             // send post request to the controller than can reorder asm_qns
             var asm_qns_reorder_url = $(this).attr('url');
             $.ajax({
-              url: asm_qns_reorder_url,
-              type: "POST",
-              data: asm_qns_positions
+                url: asm_qns_reorder_url,
+                type: "POST",
+                data: asm_qns_positions
             });
 
             // update question number in the view
-            var question_headers = $(".asm-qn-handler > h3", this.children);
+            var question_headers = $(this).children().children().children().children(".asm-qn-handler > h3");
+//            var question_headers = $(".asm-qn-handler > h3", this.children);
             $.each(question_headers, function(index, question_header){
                 var old_header = $(question_header).text();
-                var new_header = old_header.replace(/Question [0-9]+/, "Question " + (index + 1).toString());
+                if (old_header.indexOf('Question') != -1 ) {
+                    var new_header = old_header.replace(/Question [0-9]+/, "Question " + (index + 1).toString());
+                } else {
+                    var new_header = old_header.replace(/Section [0-9]+/, "Section " + (index + 1).toString());
+                }
                 $(question_header).text(new_header);
             });
         }
     });
+
 });
+
+

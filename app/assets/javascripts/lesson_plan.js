@@ -143,24 +143,28 @@ $(document).ready(function() {
     /*const*/ var DATE_FORMAT = 'DD-MM-YYYY';
 
     var milestone_count = $('input#input-number-milestones').val();
-    var milestone_length_in_days = $('input#input-length-milestones').val();
+    var milestone_length_in_days = parseInt($('input#input-length-milestones').val());
     var milestone_prefix = $('input#input-prefix-milestones').val();
     var first_milestone = $('input#input-start-milestones').val();
 
-    var current_milestone = moment(first_milestone, DATE_FORMAT);
+    var current_milestone_start = moment(first_milestone, DATE_FORMAT);
+    var current_milestone_end = current_milestone_start.clone().add('days', milestone_length_in_days - 1);
     var milestones = [];
     for (var i = 0; i < milestone_count; ++i) {
-      current_milestone.add('days', parseInt(milestone_length_in_days));
       milestones.push({
         title: milestone_prefix + ' ' + (i + 1),
-        end_at: current_milestone.clone()
+        start_at: current_milestone_start.clone(),
+        end_at: current_milestone_end.clone()
       });
+      current_milestone_start.add('days', milestone_length_in_days);
+      current_milestone_end.add('days', milestone_length_in_days);
     }
 
     var upload_milestones = milestones.map(function(milestone) {
       return {
         title: milestone.title,
         description: '',
+        start_at: milestone.start_at.format(DATE_FORMAT),
         end_at: milestone.end_at.format(DATE_FORMAT)
       };
     });
@@ -193,17 +197,37 @@ $(document).ready(function() {
   });
 
   // Install the validator for the event form
-  function validate_start_end_date() {
-    var start = $('#lesson_plan_entry_start_at_picker').data('datetimepicker').getDate();
-    var end = $('#lesson_plan_entry_end_at_picker').data('datetimepicker').getDate();
-    if (start > end) {
-      return 'The start date must be before the end date.';
-    } else {
-      return null;
+  function validate_start_end_date(startPickerId, endPickerId) {
+    return function() {
+      var start = $(startPickerId).data('datetimepicker').getDate();
+      var end = $(endPickerId).data('datetimepicker').getDate();
+      if (start > end) {
+        return 'The start date must be before the end date.';
+      } else {
+        return null;
+      }
     }
   }
+
+  function validate_milestone_start_end_date(startPickerId, endPickerId) {
+    return function() {
+      var endValue = $('#lesson_plan_milestone_end_at').val();
+      if (!endValue.length) {
+        return null;
+      }
+
+      return validate_start_end_date(startPickerId, endPickerId)();
+    }
+  }
+
   $('.lesson-plan-entry-form').validatr([
-    ['#lesson_plan_entry_start_at_picker', validate_start_end_date],
-    ['#lesson_plan_entry_end_at_picker', validate_start_end_date]
+    ['#lesson_plan_entry_start_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', '#lesson_plan_entry_end_at_picker')],
+    ['#lesson_plan_entry_end_at_picker', validate_start_end_date('#lesson_plan_entry_start_at_picker', '#lesson_plan_entry_end_at_picker')]
+  ]);
+
+  // Validator for milestone form.
+  $('.lesson-plan-milestone-form').validatr([
+    ['#lesson_plan_milestone_start_at_picker', validate_milestone_start_end_date('#lesson_plan_milestone_start_at_picker', '#lesson_plan_milestone_end_at_picker')],
+    ['#lesson_plan_milestone_end_at_picker', validate_milestone_start_end_date('#lesson_plan_milestone_start_at_picker', '#lesson_plan_milestone_end_at_picker')]
   ]);
 });

@@ -1,52 +1,55 @@
 <% provide(:title, "Sign in") %>
 <% if flash[:alert] %>
-  <div class="alert alert-error">
-    <%= flash[:alert] %>
-  </div>
+    <div class="alert alert-error">
+      <%= flash[:alert] %>
+    </div>
 <% end %>
 
-<div class="page-header">
+<div class="page-header center">
   <h1>Sign in</h1>
 </div>
 
-<div class="span6">
-  <%= link_to user_omniauth_authorize_path(:facebook) do %>
-    <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
-  <% end %>
+<div style="display: table; margin: 0 auto; text-align: center">
+  <div class="span6">
+    <%= link_to user_omniauth_authorize_path(:facebook) do %>
+        <img class="fb-login-btn" src="/images/login_fb.png" alt="Login with Facebook"/>
+    <% end %>
 
-  <h2 class="center or-separator">- OR -</h2>
+    <h2 class="center or-separator">- OR -</h2>
 
-  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name),
-               html: { class: 'form-horizontal signin-form' } ) do |f| %>
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name),
+                 html: { class: 'form-horizontal signin-form' } ) do |f| %>
 
-    <div class="control-group">
-      <%= f.label :email, class: "control-label" %>
-      <div class="controls">
-        <%= f.email_field :email %>
-      </div>
-    </div>
+        <div class="control-group">
+          <%= f.label :email, class: "control-label" %>
+          <div class="controls">
+            <%= f.email_field :email %>
+          </div>
+        </div>
 
-    <div class="control-group">
-      <%= f.label :password, class: "control-label" %>
-      <div class="controls">
-        <%= f.password_field :password%>
-      </div>
-    </div>
+        <div class="control-group">
+          <%= f.label :password, class: "control-label" %>
+          <div class="controls">
+            <%= f.password_field :password%>
+          </div>
+        </div>
 
-    <% if devise_mapping.rememberable? -%>
-      <div class="control-group">
-        <div class="controls">
-          <%= f.check_box :remember_me %> <%= f.label :remember_me %>
-       </div>
-      </div>
-    <% end -%>
+        <% if devise_mapping.rememberable? -%>
+            <div class="control-group">
+              <div class="controls checkbox-text">
+                <%= f.check_box :remember_me %> <%= f.label :remember_me %>
+              </div>
+            </div>
+        <% end -%>
 
-    <div class="form-actions">
-      <%= f.submit "Sign in", class: "btn btn-primary" %>
-    </div>
-  <% end %>
+        <div  style="text-align: center">
+          <%= f.submit "Sign in", class: "btn btn-primary" %>
+        </div>
+
+    <% end %>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <%= render "devise/shared/links" %>
 </div>
-
-<div class="clearfix">
-
-<%= render "devise/shared/links" %>

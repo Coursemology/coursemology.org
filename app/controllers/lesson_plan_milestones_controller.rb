@@ -23,6 +23,7 @@ class LessonPlanMilestonesController < ApplicationController
       milestone.course = @course
       milestone.attributes = value
       milestone.creator = current_user
+      milestone.start_at = milestone.start_at.beginning_of_day if milestone.start_at
       milestone.end_at = milestone.end_at.end_of_day if milestone.end_at
       milestones.push(milestone)
     end
@@ -57,7 +58,10 @@ class LessonPlanMilestonesController < ApplicationController
 
   def update
     @lesson_plan_milestone.update_attributes(params[:lesson_plan_milestone])
-    @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+    @lesson_plan_milestone.start_at = @lesson_plan_milestone.start_at.beginning_of_day
+    if @lesson_plan_milestone.end_at then
+      @lesson_plan_milestone.end_at = @lesson_plan_milestone.end_at.end_of_day
+    end
 
     respond_to do |format|
       if @lesson_plan_milestone.save then
@@ -73,14 +77,9 @@ class LessonPlanMilestonesController < ApplicationController
   def destroy
     @lesson_plan_milestone.destroy
     respond_to do |format|
-      format.html { redirect_to course_lesson_plan_path(@course),
+      format.html { redirect_to :back,
                     notice: "The lesson plan milestone #{@lesson_plan_milestone.title} has been removed." }
     end
-  end
-    
-  def overview
-    @milestones = @course.lesson_plan_milestones.order("end_at")
-    render "/lesson_plan/overview"
   end
 
   def bulk_update

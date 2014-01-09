@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
   belongs_to :system_role, class_name: "Role"
 
   def is_admin?
-    return self.system_role == Role.find_by_name('superuser')
+    self.system_role == Role.find_by_name('superuser')
   end
 
   def is_lecturer?
-    return self.is_admin? || self.system_role == Role.find_by_name('lecturer')
+    self.is_admin? || self.system_role == Role.find_by_name('lecturer')
   end
 
   def self.admins
@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
+  def self.find_for_facebook_oauth(auth, signed_in_resource = nil)
     puts auth.to_json
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     puts user.to_json
@@ -159,13 +159,13 @@ class User < ActiveRecord::Base
 
   private
   def set_default_role
-    if !self.system_role
+    unless self.system_role
       self.system_role = Role.find_by_name('normal')
     end
   end
 
   def set_default_profile_pic
-    if !self.profile_photo_url
+    unless self.profile_photo_url
       self.profile_photo_url =
           'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
     end

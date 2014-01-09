@@ -1,5 +1,5 @@
 class CodingQuestion < ActiveRecord::Base
-  attr_accessible :creator_id, :step_name, :description,:max_grade, :staff_comments, :data, :include_sol_qn_id
+  attr_accessible :creator_id, :step_name, :description,:max_grade, :staff_comments, :data, :include_sol_qn_id, :is_auto_grading
 
   belongs_to :creator, class_name: "User"
 
@@ -19,5 +19,21 @@ class CodingQuestion < ActiveRecord::Base
     unless self.data
       self.data = '{"type":"do","language":"python","prefill":""}'
     end
+  end
+
+  def prefilled_code
+    data_hash["prefill"] || "#Prefilled code \n#Auto generated"
+  end
+
+  def included_code
+    data_hash["included"] || ""
+  end
+
+  def test_code
+    data_hash["included"] || ""
+  end
+
+  def test_limit
+    data_hash["testLimit"] || 0
   end
 end

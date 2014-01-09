@@ -16,6 +16,7 @@
   <thead>
   <tr>
     <th>Title</th>
+    <th>Exp</th>
     <th>Open At</th>
     <th>Expire At</th>
     <th></th>
@@ -38,6 +39,9 @@
           <% else %>
               <%= survey.title %>
           <% end %>
+        </td>
+        <td>
+          <%= survey.exp %>
         </td>
         <td>
           <%= survey.open_at.strftime(@time_format.prefer_value) %>

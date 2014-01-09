@@ -2,38 +2,10 @@ class LessonPlanEntriesController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :lesson_plan_entry, through: :course
 
-  before_filter :load_general_course_data, :only => [:index, :new, :edit]
+  before_filter :load_general_course_data, :only => [:index, :new, :edit, :overview]
 
   def index
-    @milestones = @course.lesson_plan_milestones.order("end_at")
-    
-    if @milestones.length > 0
-      last_milestone = @milestones[@milestones.length - 1];
-      from = last_milestone.end_at
-    else
-      last_milestone = nil
-      from = nil
-    end
-    
-    if can? :manage, Mission
-      virtual_entries = @course.lesson_plan_virtual_entries(from)
-    else
-      virtual_entries = @course.lesson_plan_virtual_entries(from).select { |entry| entry.is_published }
-    end
-
-    # Add the entries which don't belong in any milestone
-    other_entries = if last_milestone then
-        @course.lesson_plan_entries.where("end_at > :end_at",
-          :end_at => from) +
-        virtual_entries
-      else
-        @course.lesson_plan_entries.all +
-        virtual_entries
-      end
-
-    other_entries_milestone = LessonPlanMilestone.create_virtual(other_entries)
-    other_entries_milestone.previous_milestone = last_milestone
-    @milestones <<= other_entries_milestone
+    @milestones = get_milestones_for_course(@course)
   end
 
   def new
@@ -87,9 +59,14 @@ class LessonPlanEntriesController < ApplicationController
   def destroy
     @lesson_plan_entry.destroy
     respond_to do |format|
-      format.html { redirect_to course_lesson_plan_path(@course),
+      format.html { redirect_to :back,
                     notice: "The lesson plan entry #{@lesson_plan_entry.title} has been removed." }
     end
+  end
+
+  def overview
+    @milestones = get_milestones_for_course(@course)
+    render "/lesson_plan/overview"
   end
 
 private
@@ -111,5 +88,71 @@ private
     }
 
     resources
+  end
+
+  def get_milestones_for_course(course)
+    milestones = course.lesson_plan_milestones.order("start_at")
+
+    other_entries_milestone = create_other_items_milestone(milestones)
+    prior_entries_milestone = create_prior_items_milestone(milestones)
+
+    milestones <<= other_entries_milestone
+    if prior_entries_milestone
+      milestones.insert(0, prior_entries_milestone)
+    end
+
+    milestones
+  end
+
+  def entries_between_date_range(start_date, end_date)
+    if can? :manage, Mission
+      virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date)
+    else
+      virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date).select { |entry| entry.is_published }
+    end
+
+    after_start = if start_date then "AND start_at > :start_date " else "" end
+    before_end = if end_date then "AND end_at < :end_date" else "" end
+
+    actual_entries = @course.lesson_plan_entries.where("TRUE " + after_start + before_end,
+      :start_date => start_date, :end_date => end_date)
+
+    entries_in_range = virtual_entries + actual_entries
+    entries_in_range.sort_by { |e| e.start_at }
+  end
+
+  def create_other_items_milestone(all_milestones)
+    last_milestone = if all_milestones.length > 0 then
+      all_milestones[all_milestones.length - 1]
+    else 
+      nil
+    end
+
+    other_entries = if last_milestone and last_milestone.end_at then
+      entries_between_date_range(last_milestone.end_at.advance(:days =>1), nil)
+    elsif last_milestone
+      []
+    else
+      entries_between_date_range(nil, nil)
+    end
+
+    other_entries_milestone = LessonPlanMilestone.create_virtual("Other Items", other_entries)
+    other_entries_milestone.previous_milestone = last_milestone
+    other_entries_milestone
+  end
+
+  def create_prior_items_milestone(all_milestones)
+    first_milestone = if all_milestones.length > 0 then
+      all_milestones[0]
+    else
+      nil
+    end
+
+    if first_milestone
+      entries_before_first = entries_between_date_range(nil, first_milestone.start_at)
+      prior_entries_milestone = LessonPlanMilestone.create_virtual("Prior Items", entries_before_first)
+      prior_entries_milestone.next_milestone = first_milestone
+      prior_entries_milestone
+    end
   end
 end

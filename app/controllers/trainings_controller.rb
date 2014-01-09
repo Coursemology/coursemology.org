@@ -21,18 +21,25 @@ class TrainingsController < ApplicationController
     if @selected_tags
       tags = Tag.find(@selected_tags)
       training_ids = tags.map{ |tag| tag.trainings.map { |t| t.id } }.reduce(:&)
-      @trainings = @trainings.where(id: training_ids).accessible_by(current_ability)
+      @trainings = @trainings.where(id: training_ids)
 
       tags.each { |tag| @tags_map[tag.id] = true }
     end
 
-    if params['_tab'] == 'extra'
-      @tab='extra'
-      @trainings = @trainings.where(t_type: AssignmentType.extra)
+    @tabs = @course.training_tabs
+    @tab_id = params['_tab']
+
+    if params['_tab'] and @tab = @course.tabs.where(id:@tab_id).first
+      @trainings = @tab.trainings
+      #@trainings = @trainings.where(t_type: AssignmentType.extra)
+    elsif @tabs.length > 0
+      @tab_id = @tabs.first.id.to_s
+      @trainings = @tabs.first.trainings
     else
-      @tab='main'
-      @trainings = @trainings.where(t_type: AssignmentType.main)
+      @tab_id='Trainings'
     end
+
+    @trainings = @trainings.accessible_by(current_ability)
 
     if @paging.display?
       @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
@@ -137,7 +144,8 @@ class TrainingsController < ApplicationController
 
   def overview
     authorize! :manage, :bulk_update
-    @tab = 'overview'
+    @tabs = @course.training_tabs
+    @tab_id = 'overview'
     @trainings = @course.trainings.order(:t_type, :open_at)
     @display_columns = {}
     @course.training_columns_display.each do |cp|

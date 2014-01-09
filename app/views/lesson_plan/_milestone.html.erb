@@ -19,20 +19,15 @@
               <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
               <% end %>
               <%= milestone.title %>
-              <% if milestone.previous_milestone or milestone.end_at %>
+              <% if milestone.start_at %>
               <small>
-                <% if milestone.previous_milestone %>
-                  <%= milestone.previous_milestone.end_at.advance(:days => 1).strftime("%d %b %Y") %>
-                  <% if milestone.end_at %>
-                    - 
-                  <% else %>
-                    onwards
-                  <% end %>
-                <% else %>
-                  Ending on
-                <% end %>
+                <%= milestone.start_at.strftime("%d %b %Y") %>
                 <% if milestone.end_at %>
-                  <%= milestone.end_at.strftime("%d %b %Y") %>
+                  - <%= milestone.end_at.strftime("%d %b %Y") %>
+                <% elsif milestone.next_milestone %>
+                  - <%= milestone.next_milestone.start_at.advance(:days => -1).strftime("%d %b %Y") %>
+                <% else %>
+                  onwards
                 <% end %>
               </small>
               <% end %>
@@ -48,7 +43,7 @@
         </div>
         <div class="pull-right lesson-plan-milestone-controls">
           <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
-            <% start_at = milestone.previous_milestone ? milestone.previous_milestone.end_at.advance(:days => 1) : nil %>
+            <% start_at = milestone.start_at %>
             <div class="btn-group pull-left">
               <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), :class => 'btn' do %>
                 <i class="icon-edit"></i>

@@ -164,22 +164,32 @@ class TrainingSubmissionsController < ApplicationController
     @step = @current_step
     @max_step = @training.questions.count
 
+    #staff can skip steps
     if params[:step] && params[:step].to_i >= 1
-      @step = [@step, params[:step].to_i].min
+      @step = curr_user_course.is_staff? || @training.can_skip? ? params[:step].to_i : [@step, params[:step].to_i].min
     end
 
+    left = @training_submission.questions_left
+    puts left, "left"
     if @step <= @max_step
+      puts @step
       @current_question = @training.questions[@step - 1]
+    elsif (left = @training_submission.questions_left).length > 0
+      puts left
+      @step = @training.questions.index(left.first) + 1
+      @current_question = left.first
     end
 
     if @current_question.class == CodingQuestion
       @prefilled_code = @current_question.data_hash["prefill"]
       if @current_question.include_sol_qn
         std_answer = @current_question.include_sol_qn.std_coding_answers.where("is_correct is TRUE AND std_course_id = ?", curr_user_course.id).last
-        @prefilled_code = "#Answer from your previous question \n" + std_answer.code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
+        code = std_answer ? std_answer.code : ""
+        @prefilled_code = "#Answer from your previous question \n" + code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
 
       end
     end
+
     respond_to do |format|
       format.html { render template: "training_submissions/do.html.erb" }
     end
@@ -189,7 +199,6 @@ class TrainingSubmissionsController < ApplicationController
     # what's the current question?
     # correct? => render continue
     # incorrect? => render the same one, with message showing what is wrong
-    puts 'Update', params, current_user.to_json
     @current_question = @training.questions[params[:current_step].to_i - 1]
 
     if @current_question.class == Mcq
@@ -323,9 +332,8 @@ class TrainingSubmissionsController < ApplicationController
     sma.code = code
 
     #evaluate
-    tmp_file = get_tmp_file_name
     code_to_write = get_code_to_write(@current_question.data_hash["included"],code)
-    eval_summary = eval_python(tmp_file,code_to_write,@current_question.data_hash)
+    eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@training), code_to_write, @current_question.data_hash)
     public_tests = if eval_summary[:publicTests].length == 0 then true else eval_summary[:publicTests].inject{|sum,a| sum and a} end
     private_tests = if eval_summary[:privateTests].length == 0 then true else eval_summary[:privateTests].inject{|sum,a| sum and a} end
 

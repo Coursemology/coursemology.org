@@ -45,6 +45,7 @@ class Course < ActiveRecord::Base
   has_many :tutor_monitorings,      dependent: :destroy
   has_many :surveys,                dependent: :destroy
   has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
+  has_many :tabs,                   dependent: :destroy
 
   def asms
     missions + trainings
@@ -282,6 +283,9 @@ class Course < ActiveRecord::Base
     Course.where(is_publish: true)
   end
 
+  # Note: this method returns entries in the closed interval
+  # of from and to: i.e. entries starting at both from and to
+  # are included. [from, to]
   def lesson_plan_virtual_entries(from = nil, to = nil)
     missions = self.missions.where("TRUE " +
       (if from then "AND open_at >= :from " else "" end) +
@@ -354,5 +358,19 @@ class Course < ActiveRecord::Base
     trainings.files = training_files
 
     [missions, trainings]
+  end
+
+  def self.search(search)
+    search_condition = "%" + search.downcase + "%"
+    Course.where(['lower(title) LIKE ?', search_condition])
+    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+  end
+
+  def training_tabs
+    tabs.where(owner_type: Training.to_s)
+  end
+
+  def mission_tabs
+    tabs.where(owner_type: Mission.to_s)
   end
 end

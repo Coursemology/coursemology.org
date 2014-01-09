@@ -5,8 +5,7 @@ class SurveySubmission < ActiveRecord::Base
   belongs_to :user_course
   belongs_to :survey
   has_many   :survey_mrq_answers, dependent: :destroy
-
-
+  has_many   :survey_essay_answers, dependent: :destroy
 
   default_scope includes(:user_course)
 

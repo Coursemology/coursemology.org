@@ -1,9 +1,8 @@
 <p>
-  Milestones start at the time the previous milestone (if any) ends. 
-  Events, Missions, or Trainings that fall between a milestone's date will appear as part of that milestone.
+  Events, Missions, or Trainings that fall between a milestone's start and end dates will appear as part of that milestone.
 </p>
     
-<%= form_for [@course, @lesson_plan_milestone], :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for [@course, @lesson_plan_milestone], :html => { :class => 'form-horizontal lesson-plan-milestone-form' } do |f| %>
     <div class="control-group">
       <%= f.label :title, :class => 'control-label' %>
       <div class="controls">
@@ -20,13 +19,29 @@
     </div>
 
     <div class="control-group">
-      <%= f.label "End Date", :class => 'control-label' %>
+      <%= f.label "Start Date", :class => 'control-label' %>
       <div class="controls">
-        <div class="datepicker input-append date">
-          <% if @lesson_plan_milestone.end_at %>
-          <%= f.text_field :end_at, :class => 'text_field', :value => date_mdY(@lesson_plan_milestone.end_at), :required => 'required' %>
+        <div id="lesson_plan_milestone_start_at_picker" class="datepicker input-append date">
+          <% if @lesson_plan_milestone.start_at %>
+          <%= f.text_field :start_at, :class => 'text_field', :value => date_mdY(@lesson_plan_milestone.start_at), :required => 'required' %>
           <% else %>
-          <%= f.text_field :end_at, :class=> 'text_field', :required => 'required' %>
+          <%= f.text_field :start_at, :class=> 'text_field', :required => 'required' %>
+          <% end %>
+          <span class="add-on">
+            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "End Date (Optional)", :class => 'control-label' %>
+      <div class="controls">
+        <div id="lesson_plan_milestone_end_at_picker" class="datepicker input-append date">
+          <% if @lesson_plan_milestone.end_at %>
+          <%= f.text_field :end_at, :class => 'text_field', :value => date_mdY(@lesson_plan_milestone.end_at) %>
+          <% else %>
+          <%= f.text_field :end_at, :class=> 'text_field' %>
           <% end %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>

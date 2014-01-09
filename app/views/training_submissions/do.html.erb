@@ -6,19 +6,20 @@
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @training}%>
 
-<p id="training-stop-pos"></p>
+<div id="training-stop-pos"><br></div>
 
 <hr/>
 <div class="step-list">
+  <% questions = @training.questions %>
+  <% questions_done = @training_submission.answered_questions %>
   <% (1..@max_step).each do |i| %>
-      <% if i <= @current_step %>
-          <% if i == @step %>
-              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
-          <% else %>
-              <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
-          <% end %>
+      <% if i == @step %>
+          <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
+      <% elsif questions_done.include? questions[i - 1] %>
+          <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
       <% else %>
-          <%= link_to i, '#training-stop-pos', class: "step" %>
+          <% can_access = (@training.can_skip? or i == @current_step) %>
+          <%= link_to i, "#{('?step=' + i.to_s) if can_access }#training-stop-pos", class: "step  #{can_access ? 'step-available' : 'step-disabled'}" %>
       <% end %>
   <% end %>
 </div>

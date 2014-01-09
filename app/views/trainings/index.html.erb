@@ -3,19 +3,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
 </div>
 
-<ul class="nav nav-tabs">
-  <li class="<%= "active" if @tab == 'main' %>">
-    <a href="<%=  course_trainings_path(@course) %>?_tab=main" data-toggle="tab"><h4>Main</h4></a>
-  </li>
-  <li class="<%= "active" if @tab == 'extra' %>">
-    <a href="<%= course_trainings_path %>?_tab=extra" data-toggle="tab"><h4>Extra (Optional)</h4></a>
-  </li>
-  <% if can? :manage, :bulk_update %>
-      <li class="<%= "active" if @tab == 'overview' %>">
-        <a href="<%= course_trainings_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
-      </li>
-  <% end %>
-</ul>
+<%= render  partial: "tabs" %>
 
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
