@@ -364,7 +364,7 @@ namespace :db do
 
     connection.execute('TRUNCATE TABLE assessment_assessments_requirements')
     connection.select_all('SELECT * FROM asm_reqs').each do |req|
-      next if (not req['asm_type']) || (not req[asm_id])
+      next if (not req['asm_type']) || (not req['asm_id'])
       case req['asm_type'].to_sym
         when :Training
           assessment_id = @trainings_map.fetch(req['asm_id'])
