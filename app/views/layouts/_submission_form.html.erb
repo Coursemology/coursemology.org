@@ -51,7 +51,7 @@
             <% else %>
               <input type="number"
                      name="grades[<%= grade.id %>][grade]"
-                     value="<%= grade.grade %>"
+                     value="<%= (params[:grades][grade.id.to_s][:grade] if params[:grades]) || grade.grade %>"
                      class="input-small grade-input"
                      max="<%= q.max_grade %>"
                      id="grade-awarded-<%= grade.id %>"
@@ -78,7 +78,7 @@
           <strong><%= @grading.total_grade %></strong>
       <% else %>
           <input type="number"
-                 value="<%= @submission.grade %>"
+                 value="<%= params[:grade_sum] || @submission.grade %>"
                  max="<%= @mission.max_grade %>"
                  class="input-small"
                  name="grade_sum"
@@ -94,7 +94,7 @@
       <% else %>
           <input type="number"
                  name="exp_sum"
-                 value="<%= @submission.exp %>"
+                 value="<%= params[:exp_sum] || @submission.exp %>"
                  max="<%= @mission.exp %>"
                  class="input-small exp-input"
                  id="exp-sum"
