@@ -4,10 +4,11 @@ class MissionSubmissionGradingsController < ApplicationController
   before_filter :load_resources
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :submission, through: :mission
-  load_and_authorize_resource :grading, through: :submission
+  before_filter :create_resources
 
   before_filter :load_general_course_data, only: [:new, :edit]
 
+  # @deprecated
   def new
     @qadata = {}
 
@@ -40,6 +41,7 @@ class MissionSubmissionGradingsController < ApplicationController
 
   end
 
+  # @deprecated
   def create
     if @submission.graded?
       flash[:error] = 'Submission has already been graded by ' + @submission.final_grading.grader.name
@@ -96,24 +98,12 @@ class MissionSubmissionGradingsController < ApplicationController
   end
 
   def edit
-    @qadata = {}
-
-    @mission.get_all_questions.each_with_index do |q,i|
-      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
-    end
-
-    @submission.get_all_answers.each do |sa|
-      qn = sa.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
-    end
-
-    @submission_grading.answer_gradings.each do |ag|
-      qn = ag.student_answer.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
-    end
+    authorize! :grade, @submission
   end
 
   def update
+    authorize! :grade, @submission
+
     @submission_grading.total_grade = 0
     @submission_grading.total_exp = 0
     invalid_assign = false
@@ -211,5 +201,20 @@ private
   def load_resources
     @mission = Assessment::Mission.find_by_id!(params[:assessment_mission_id])
     @submission = Assessment::Submission.find_by_id!(params[:assessment_submission_id])
+  end
+
+  def create_resources
+    # Ensure that the submission has associated gradings.
+    # TODO: Implement auto grading suggestions
+    @submission.answers.each do |a|
+      next if a.grading
+
+      grading = Assessment::Grading.create({
+                                            answer_id: a.id,
+                                            grader_id: current_user.id,
+                                            grader_course_id: curr_user_course.id
+                                           }, :without_protection => true)
+      a.grading = grading
+    end
   end
 end

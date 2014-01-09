@@ -1,16 +1,29 @@
-<table width="100%">
-  <col width="15%" />
-  <tr><td>Student: </td><td><%= render partial: "layouts/user_name_link", locals: {user_course: @submission.std_course} %></td></tr>
+<table class="mission-submission-grading">
+  <tr>
+    <th>Student:</th>
+    <td><%= render partial: 'layouts/user_name_link', locals: { user_course: @submission.std_course } %></td>
+  </tr>
   <% if @submission.std_course.get_my_tutors.first %>
-    <tr><td>Tutor: </td> <td> <%= @submission.std_course.get_my_tutor_name %></td></tr>
+    <tr>
+      <th>Tutor:</th>
+      <td><%= @submission.std_course.get_my_tutor_name %></td>
+    </tr>
   <% end %>
-  <% if @grading.id %>
-      <tr>
-        <td>Total grade: </td>
-        <td>
-          <%= @grading.total_grade %> / <%= @mission.max_grade %>
-        </td>
-      </tr>
+  <% if @submission.graded? %>
+    <tr>
+      <td>Total grade:</td>
+      <td><%= @submission.grade %> / <%= @submission.assessment.max_grade %></td>
+    </tr>
+    <tr>
+      <th>Grader:</th>
+      <td>
+        <% graders = @submission.gradings.reduce Set.new do |g, graders|
+            graders.add(g.grader)
+           end %>
+        <% graders = graders.to_a.map { |g| g.name } %>
+        <%= graders.join(', ') %>
+      </td>
+    </tr>
       <% if @grading.grader %>
           <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
       <% else %>
@@ -30,17 +43,16 @@
 </table>
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @submission}%>
-<hr/>
+<hr />
 
 <p class="well"><%= @mission.description.html_safe %></p>
 
 <% if (@submission.submitted_at || @submission.created_at) > @mission.close_at %>
-    <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
+  <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
 <% end %>
 
 
-<%= form_for [@course, @mission, @submission, @grading],
-             html: { class: "form-horizontal" } do |f| %>
+<%= form_for [@course, @mission, @submission], html: { class: 'form-horizontal' } do |f| %>
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
     <%= render partial: 'layouts/submission_form', locals: { mode: 'edit' } %>
 
