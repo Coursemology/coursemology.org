@@ -199,6 +199,8 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.integer "depends_on_id"
   end
 
+  add_index "assessment_coding_questions", ["depends_on_id"], :name => "index_assessment_coding_questions_on_depends_on_id"
+
   create_table "assessment_gradings", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "grader_id"
@@ -211,8 +213,15 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
 
   add_index "assessment_gradings", ["answer_id"], :name => "index_assessment_gradings_on_answer_id"
 
-  create_table "assessment_mcq_answers", :force => true do |t|
+  create_table "assessment_mcq_answer_options", :force => true do |t|
+    t.integer "answer_id"
     t.integer "option_id"
+  end
+
+  add_index "assessment_mcq_answer_options", ["answer_id"], :name => "index_assessment_mcq_answer_options_on_answer_id"
+  add_index "assessment_mcq_answer_options", ["option_id"], :name => "index_assessment_mcq_answer_options_on_option_id"
+
+  create_table "assessment_mcq_answers", :force => true do |t|
   end
 
   create_table "assessment_mcq_options", :force => true do |t|
@@ -733,9 +742,9 @@ ActiveRecord::Schema.define(:version => 20140106165617) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "max_grade"
-    t.datetime "last_commented_at"
     t.text     "correct_answers"
     t.boolean  "select_all"
+    t.datetime "last_commented_at"
   end
 
   add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"

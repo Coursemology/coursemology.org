@@ -63,6 +63,10 @@ class AssessmentsRedesign < ActiveRecord::Migration
       t.references :depends_on # was include_sol_qn_id
     end
 
+    change_table :assessment_coding_questions do |t|
+      t.index [:depends_on_id]
+    end
+
     create_table :assessment_mcq_questions do |t|
       t.boolean :must_select_all, :default => false # was select_all
     end
@@ -126,7 +130,17 @@ class AssessmentsRedesign < ActiveRecord::Migration
     end
 
     create_table :assessment_mcq_answers do |t|
+      # This just groups one set of options together to link a grade to.
+    end
+
+    create_table :assessment_mcq_answer_options do |t|
+      t.references :answer
       t.references :option
+    end
+
+    change_table :assessment_mcq_answer_options do |t|
+      t.index [:answer_id]
+      t.index [:option_id]
     end
 
     create_table :assessment_text_answers do |t|
