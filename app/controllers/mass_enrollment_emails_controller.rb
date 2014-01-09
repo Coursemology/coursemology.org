@@ -77,6 +77,11 @@ class MassEnrollmentEmailsController < ApplicationController
       invs = MassEnrollmentEmail.where(course_id: @course, signed_up: false)
     end
 
+    invs.each do |enrol|
+      enrol.pending_email = true
+      enrol.save
+    end
+
     Delayed::Job.enqueue(MailingJob.new(@course.id, MassEnrollmentEmail.to_s, current_user.id, new_user_registration_url), run_at: 5.minutes.from_now)
 
     respond_to do |format|

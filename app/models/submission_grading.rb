@@ -42,9 +42,9 @@ class SubmissionGrading < ActiveRecord::Base
 
   def get_name
     if self.grader
-      return "#{self.grader.name} (#{self.id})"
+      "#{self.grader.name} (#{self.id})"
     else
-      return "Auto (#{self.id})"
+      "Auto (#{self.id})"
     end
   end
 end
