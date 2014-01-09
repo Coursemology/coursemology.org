@@ -223,7 +223,7 @@ namespace :db do
               Assessment::McqAnswerOption.create({
                                                    answer_id: ans.id,
                                                    option_id: @mcq_options_map.fetch(answer['mcq_answer_id']),
-                                                 })
+                                                 }, :without_protection => true)
             end
           when :StdMcqAllAnswer
             connection.select_all(sanitize('SELECT * FROM std_mcq_all_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
@@ -237,11 +237,11 @@ namespace :db do
                                                  }, :without_protection => true)
               @mcq_all_answers_map[sbm_answer['answer_id']] = ans.answer.id
 
-              JSON.parse(answer['selected_choices']).each do |answer|
+              JSON.parse(answer['selected_choices']).each do |choice|
                 Assessment::McqAnswerOption.create({
                                                      answer_id: ans.id,
-                                                     option_id: @mcq_options_map.fetch(answer),
-                                                   })
+                                                     option_id: @mcq_options_map.fetch(choice),
+                                                   }, :without_protection => true)
               end
             end
           when :StdCodingAnswer
@@ -288,6 +288,7 @@ namespace :db do
     connection.execute('TRUNCATE TABLE assessment_answers')
     connection.execute('TRUNCATE TABLE assessment_coding_answers')
     connection.execute('TRUNCATE TABLE assessment_mcq_answers')
+    connection.execute('TRUNCATE TABLE assessment_mcq_answer_options')
     connection.execute('TRUNCATE TABLE assessment_text_answers')
 
     connection.select_all('SELECT * FROM submissions').each do |s|
