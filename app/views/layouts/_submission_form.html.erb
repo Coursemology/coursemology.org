@@ -78,7 +78,7 @@
           <strong><%= @grading.total_grade %></strong>
       <% else %>
           <input type="number"
-                 value="<%= @submission_grading.total_grade if @submission_grading %>"
+                 value="<%= @submission.grade %>"
                  max="<%= @mission.max_grade %>"
                  class="input-small"
                  name="grade_sum"
@@ -94,11 +94,11 @@
       <% else %>
           <input type="number"
                  name="exp_sum"
-                 value="<%= @submission_grading.total_exp if @submission_grading %>"
+                 value="<%= @submission.exp %>"
                  max="<%= @mission.exp %>"
                  class="input-small exp-input"
                  id="exp-sum"
-                 required/>
+                 required />
       <% end %>
       <strong> / <%= @mission.exp %></strong>
       <% if mode != 'view' %>

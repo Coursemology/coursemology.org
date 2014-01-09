@@ -19,6 +19,10 @@ class Assessment::Submission < ActiveRecord::Base
     graded? ? gradings.sum(:grade) : nil
   end
 
+  def exp
+    graded? ? gradings.first.exp_transaction.exp : nil
+  end
+
   has_many :gradings, through: :answers, class_name: Assessment::Grading
   STATUS_ATTEMPTING = 'attempting'
   STATUS_SUBMITTED = 'submitted'

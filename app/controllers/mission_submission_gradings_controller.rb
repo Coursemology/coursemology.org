@@ -106,7 +106,7 @@ class MissionSubmissionGradingsController < ApplicationController
 
     def create_exp_transaction
       ExpTransaction.new({
-                           user_course_id: @submission.std_course,
+                           user_course_id: @submission.std_course.id,
                            reason: "EXP for #{@submission.assessment.title}",
                            is_valid: true
                          })
@@ -166,7 +166,7 @@ class MissionSubmissionGradingsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to course_assessment_mission_assessment_submission_assessment_grading_path(@course, @mission, @submission),
+      format.html { redirect_to course_assessment_mission_assessment_submission_assessment_gradings_path(@course, @mission, @submission),
                                 notice: 'Grading has been recorded.' }
     end
 
