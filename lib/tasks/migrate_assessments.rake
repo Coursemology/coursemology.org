@@ -227,9 +227,13 @@ namespace :db do
             end
           when :StdMcqAllAnswer
             connection.select_all(sanitize('SELECT * FROM std_mcq_all_answers WHERE id = ?', [sbm_answer['answer_id']])).each do |answer|
+              if @mcq_questions_map[answer['mcq_id']] == nil then
+                puts "Cannot find corresponding MCQ for MCQ All Answer #{answer['id']}"
+              end
+
               ans = Assessment::McqAnswer.create({
                                                    submission_id: sbm.id,
-                                                   question_id: @mcq_questions_map.fetch(answer['mcq_id']),
+                                                   question_id: @mcq_questions_map[answer['mcq_id']],
                                                    finalised: sbm_answer['is_final'],
 
                                                    created_at: answer['created_at'],
@@ -240,7 +244,7 @@ namespace :db do
               JSON.parse(answer['selected_choices']).each do |choice|
                 Assessment::McqAnswerOption.create({
                                                      answer_id: ans.id,
-                                                     option_id: @mcq_options_map.fetch(choice),
+                                                     option_id: @mcq_options_map[choice],
                                                    }, :without_protection => true)
               end
             end
