@@ -302,9 +302,9 @@ namespace :db do
     connection.select_all('SELECT * FROM submission_gradings').each do |sbm_g|
       case sbm_g['sbm_type'].to_sym
         when :TrainingSubmission
-          submission = @training_submissions_map[sbm_g['sbm_id']]
+          submission = @training_submissions_map.fetch(sbm_g['sbm_id'])
         when :Submission
-          submission = @mission_submissions_map[sbm_g['sbm_id']]
+          submission = @mission_submissions_map.fetch(sbm_g['sbm_id'])
         else
           raise StandardError
       end
@@ -338,12 +338,15 @@ namespace :db do
     connection.select_all('SELECT * FROM asm_tags').each do |tag|
       case tag['asm_type'].to_sym
         when :Training
-          training = Assessment::Training.find_by_id(@trainings_map[tag['asm_id']])
+          training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
           training.tags << Tag.find_by_id(tag['tag_id'])
 
         when :Mission
-          mission = Assessment::Mission.find_by_id(@missions_map[tag['asm_id']])
+          mission = Assessment::Mission.find_by_id(@missions_map.fetch(tag['asm_id']))
           mission.tags << Tag.find_by_id(tag['tag_id'])
+
+        else
+          raise StandardError
       end
     end
 
@@ -351,9 +354,9 @@ namespace :db do
     connection.select_all('SELECT * FROM asm_reqs').each do |req|
       case req['asm_type'].to_sym
         when :Training
-          assessment_id = @trainings_map[req['asm_id']]
+          assessment_id = @trainings_map.fetch(req['asm_id'])
         when :Mission
-          assessment_id = @missions_map[req['asm_id']]
+          assessment_id = @missions_map.fetch(req['asm_id'])
         else
           raise StandardError
       end
