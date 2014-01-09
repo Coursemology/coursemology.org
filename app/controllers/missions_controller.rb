@@ -91,11 +91,6 @@ class MissionsController < ApplicationController
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
-    # TODO: Implement or remove
-    if params[:single_question]
-      qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
-      qn.max_grade = params[:max_grade]
-    end
 
     respond_to do |format|
       if @mission.save
@@ -113,15 +108,6 @@ class MissionsController < ApplicationController
 
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
-
-        # TODO: Implement or Remove
-        if @mission.single_question? && @mission.get_all_questions.count > 1
-          flash[:error] = "Mission already have several questions, can't change the format."
-          @mission.single_question = false
-          @mission.save
-        end
-        update_single_question_type
-
         @mission.schedule_mail(@course.user_courses, course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
@@ -136,26 +122,6 @@ class MissionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_assessment_missions_url,
                                 notice: "The mission #{@mission.title} has been removed." }
-    end
-  end
-
-  def update_single_question_type
-    return
-    puts "update single question"
-    unless @mission.single_question?
-      return
-    end
-    puts "get single question type"
-    type = params[:answer_type] == 'code' ? CodingQuestion : Question
-    previous_qn = @mission.get_all_questions.first
-    if type != previous_qn.class
-      if previous_qn
-        previous_qn.destroy
-      end
-      qn = type == CodingQuestion ? @mission.coding_questions.build : @mission.questions.build
-      qn.max_grade = params[:max_grade]
-      @mission.save
-      @mission.update_grade
     end
   end
 

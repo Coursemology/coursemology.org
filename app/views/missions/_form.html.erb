@@ -59,42 +59,6 @@
         <%= f.check_box :file_submission %>
       </div>
     </div>
-    <!--div class="control-group">
-      <%= f.label 'Format', class: 'control-label' %>
-      <div class="controls" >
-
-        <div class="checkbox-text">
-
-          <label>
-            <%= f.check_box :single_question,
-                            'data-toggle' => "collapse",
-                            'data-target' => '#question-types',
-                            id: "mission-format-checkbox"
-            %>
-            Questions are contained in mission files
-          </label>
-        </div>
-        <br />
-        <div id="question-types" class="collapse <%= @mission.single_question? ? 'in' : 'out'  %>">
-          <div class="control-group">
-            <%= f.label "Answer Type", class: 'control-label' %>
-            <div class="controls">
-              <% qn = @mission.get_all_questions.first  %>
-              <select name="answer_type" class="input-medium" >
-                <option value="code" <%= 'selected="selected"' if !qn or qn.class == Assessment::CodingQuestion %>>Code</option>
-                <option value="essay" <%= 'selected="selected"' if qn and qn.class == Assessment::Question %>> Essay </option>
-              </select>
-            </div>
-          </div>
-          <div class="control-group">
-            <%= f.label "Max Grade", class: 'control-label' %>
-            <div class="controls">
-              <input type="text" class="input-medium" name="max_grade" id="mission-max-grade" value="<%= @mission.max_grade %>">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div-->
 
     <div class="control-group">
       <%= f.label :dependent_id, 'Dependency', class: 'control-label' %>
