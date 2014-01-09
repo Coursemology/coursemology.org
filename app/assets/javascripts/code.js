@@ -116,7 +116,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
                     origin: document.URL,
                     annotation:{
                         annotable_id: self.code_id,
-                        annotable_type: "StdCodingAnswer",
+                        annotable_type: "Assessment::CodingAnswer",
                         text: t,
                         line_start: s,
                         line_end: e
@@ -454,7 +454,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
         $.get(self.annotation_url, {
             annotation:{
                 annotable_id: self.code_id,
-                annotable_type: "StdCodingAnswer"
+                annotable_type: "Assessment::CodingAnswer"
             }}, function(s){
             parseComments(s);
             setTimeout(refreshComments, 4000);
