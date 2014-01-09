@@ -3,6 +3,8 @@
     <th>Student:</th>
     <td><%= render partial: 'layouts/user_name_link', locals: { user_course: @submission.std_course } %></td>
   </tr>
+  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
+  <tr><td>Mission due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
   <% if @submission.std_course.get_my_tutors.first %>
     <tr>
       <th>Tutor:</th>
@@ -14,32 +16,30 @@
       <td>Total grade:</td>
       <td><%= @submission.grade %> / <%= @submission.assessment.max_grade %></td>
     </tr>
+
     <tr>
       <th>Grader:</th>
       <td>
-        <% graders = @submission.gradings.reduce Set.new do |g, graders|
-            graders.add(g.grader)
+        <% graders = @submission.gradings.reduce Set.new do |memo, g|
+            memo <<= g.grader
            end %>
         <% graders = graders.to_a.map { |g| g.name } %>
-        <%= graders.join(', ') %>
+        <% if graders.empty? %>
+          Auto graded
+        <% else %>
+          <%= graders.join(', ') %>
+        <% end %>
       </td>
     </tr>
-      <% if @grading.grader %>
-          <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
-      <% else %>
-          <tr><td>Grader: </td><td>Auto graded!</td></tr>
-      <% end %>
+    <tr>
+      <td>First graded at:</td><td><%= datetime_format(@submission.gradings.minimum(:created_at)) %></td>
+    </tr>
+    <% if @submission.gradings.minimum(:created_at) != @submission.gradings.maximum(:updated_at) %>
       <tr>
-        <td>First graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
+        <td>Last updated at:</td> <td> <%= datetime_format(@submission.gradings.maximum(:updated_at)) %></td>
       </tr>
-      <% if @grading.last_grade_updated  %>
-      <tr>
-       <td>Last updated at:</td> <td> <%= datetime_format(@grading.last_grade_updated) %></td>
-      </tr>
-      <% end %>
+    <% end %>
   <% end %>
-  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
-  <tr><td>Mission due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
 </table>
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @submission}%>
@@ -52,24 +52,22 @@
 <% end %>
 
 
-<%= form_for [@course, @mission, @submission], html: { class: 'form-horizontal' } do |f| %>
-    <input type="hidden" name="submission_id" value="<% @submission.id %>" />
-    <%= render partial: 'layouts/submission_form', locals: { mode: 'edit' } %>
+<%= form_tag course_assessment_mission_assessment_submission_assessment_gradings_path(@course, @mission, @submission),
+             class: 'form-horizontal' do %>
+  <%= render partial: 'layouts/submission_form', locals: { mode: 'edit' } %>
 
-    <div class="form-actions">
-      <%= f.submit "Save Grading", :class => 'btn btn-primary', id: "save_grading" %>
-      <%= link_to course_assessment_mission_assessment_submission_unsubmit_path(@course, @mission, @submission),
-                  method: :POST,
-                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default =>
-                          'This will permit the student to change his submission by uploading/reuploading his files.
+  <div class="form-actions">
+    <%= submit_tag 'Save Grading', class: 'btn btn-primary', id: 'save_grading' %>
+    <%= link_to course_assessment_mission_assessment_submission_unsubmit_path(@course, @mission, @submission),
+                method: :POST,
+                data: { confirm: t('.confirm', default: t('helpers.links.confirm',
+                                                          default: 'This will permit the student to change his submission by uploading/reuploading his files.
 
          NOTE THAT YOU CANNOT UNDO THIS!!
 
 Only the student can decide when to submit his/her work once it is unsubmitted."Are you sure you want to proceed?')) },
-                  class: 'btn btn-danger' do %>
-          Unsubmit This Submission
-      <% end %>
-    </div>
+                class: 'btn btn-danger' do %>
+        Unsubmit This Submission
+    <% end %>
+  </div>
 <% end %>
-
-

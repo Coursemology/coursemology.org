@@ -15,6 +15,10 @@ class Assessment::Submission < ActiveRecord::Base
       where('assessment_submissions.id' => self.id)
   end
 
+  def grade
+    graded? ? gradings.sum(:grade) : nil
+  end
+
   has_many :gradings, through: :answers, class_name: Assessment::Grading
   STATUS_ATTEMPTING = 'attempting'
   STATUS_SUBMITTED = 'submitted'
