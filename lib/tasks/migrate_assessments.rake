@@ -85,7 +85,7 @@ namespace :db do
               @mcq_questions_map[q['qn_id']] = parent_q.question.id
 
               connection.select_all(sanitize('SELECT * from mcq_answers WHERE mcq_id = ?', [mcq['id']])).each do |opt|
-                opt = Assessment::McqOption.create({
+                option = Assessment::McqOption.create({
                                                creator_id: opt['creator_id'],
                                                question_id: parent_q.id,
                                                text: opt['text'],
@@ -94,7 +94,7 @@ namespace :db do
                                                created_at: opt['created_at'],
                                                updated_at: opt['updated_at']
                                              }, :without_protection => true)
-                @mcq_options_map[opt['id']] = opt.id
+                @mcq_options_map[opt['id']] = option.id
               end
             when :Question
               text = connection.select_all(sanitize('SELECT * FROM questions WHERE id = ?', [q['qn_id']])).first
