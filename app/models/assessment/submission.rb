@@ -20,7 +20,12 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def exp
-    graded? ? gradings.first.exp_transaction.exp : nil
+    unless graded?
+      return nil
+    end
+
+    transaction = gradings.first.exp_transaction
+    transaction ? transaction.exp : nil
   end
 
   has_many :gradings, through: :answers, class_name: Assessment::Grading

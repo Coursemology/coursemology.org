@@ -127,8 +127,8 @@ class MissionSubmissionGradingsController < ApplicationController
       if grading.changed? then
         grading.grader = current_user
         grading.grader_course = curr_user_course
-        gradings <<= grading
       end
+      gradings <<= grading
 
     # Otherwise we need to assign the scores for every question.
     else
@@ -148,8 +148,8 @@ class MissionSubmissionGradingsController < ApplicationController
         if grading.changed? then
           grading.grader = current_user
           grading.grader_course = curr_user_course
-          gradings <<= grading
         end
+        gradings <<= grading
       end
     end
 
