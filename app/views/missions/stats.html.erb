@@ -51,7 +51,7 @@
       <% sub = @submissions.select {|sub| sub.std_course == std }.first %>
       <tr>
         <% if sub %>
-            <td><a href="<%= course_mission_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
+            <td><a href="<%= course_assessment_mission_assessment_submission_path(@course, @mission, sub) %>"><%= std.name %></a> </td>
         <% else %>
             <td><%= std.name %></td>
         <% end %>

@@ -35,7 +35,7 @@
           <a href="<%= edit_course_assessment_mission_assessment_submission_path(@course, @mission, submission) %>" class="btn">Edit</a>
         <% else %>
           <%= link_to 'Review',
-                      submission.get_path,
+                      course_assessment_mission_assessment_submission_path(@course, @mission, submission),
                       class: 'btn btn-info' %>
         <% end %>
       <% else %>
@@ -70,8 +70,8 @@
 
 <div class="clearfix"></div>
 
-<% if (can? :view_detail, @mission) && !@mission.single_question? %>
-  <hr/>
+<% if can? :view_detail, @mission %>
+  <hr />
   <% if can? :manage, @mission %>
     <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
       Add Question
