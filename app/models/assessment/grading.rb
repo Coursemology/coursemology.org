@@ -11,13 +11,13 @@ class Assessment::Grading < ActiveRecord::Base
 
 private
   def grade_less_than_question_maximum
-    if grade && answer.question.max_grade < grade then
+    if grade && answer.question && answer.question.max_grade < grade then
       errors.add(:grade, 'cannot be greater than question maximum')
     end
   end
 
   def exp_less_than_assignment_maximum
-    if exp_transaction && answer.question.assessment.exp < exp_transaction.exp then
+    if exp_transaction && answer.question && answer.question.assessment.exp < exp_transaction.exp then
       errors.add(:exp, 'cannot be greater than assignment maximum')
     end
   end
