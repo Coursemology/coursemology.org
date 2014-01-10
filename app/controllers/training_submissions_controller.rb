@@ -170,7 +170,6 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     left = @training_submission.questions_left
-    puts left, "left"
     if @step <= @max_step
       puts @step
       @current_question = @training.questions[@step - 1]

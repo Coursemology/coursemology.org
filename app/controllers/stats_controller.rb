@@ -3,10 +3,6 @@ class StatsController < ApplicationController
   before_filter :load_general_course_data
 
   def general
-    @missions = @course.missions
-    @trainings = @course.trainings
-    @levels = @course.levels
-    @achievements = @course.achievements
   end
 
   # data is a map of the chart column to list of student submission
@@ -57,24 +53,37 @@ class StatsController < ApplicationController
     @training = Training.find(params[:training_id])
     authorize! :view_stat, @training
 
-    @sbms = @training.sbms
-    @submitted = @sbms.map { |sbm| sbm.std_course }
+    @summary = {}
+    is_all = ((params[:mode] != nil) && params[:mode] == "all") || (curr_user_course.std_courses.count == 0)
+    puts is_all
 
-    all_std = @course.student_courses
-    @unsubmitted = all_std - @submitted
+    #TODO: may want to deal with phantom students here
+    @summary[:all] = is_all
+    std_courses = is_all ? @course.student_courses : curr_user_course.std_courses
+    @summary[:student_courses] = std_courses
 
-    sbms_graded = @sbms
-    sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_grading.total_grade }
-    @grade_chart = produce_submission_graph(sbms_by_grade, 'Grade', 'Grade distribution')
+    submissions =  @training.sbms.where(std_course_id: std_courses)
+    submitted = submissions.map { |sbm| sbm.std_course }
 
-    sbms_by_date = sbms_graded.group_by { |sbm| sbm.created_at.to_date.to_s }
-    @date_chart = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
+    @not_started = std_courses - submitted
+    @summary[:not_started] = @not_started
 
-    @sbms_by_progress = sbms_graded.group_by(&:current_step).sort.reverse
-    @progress_chart = produce_submission_graph(@sbms_by_progress, 'Step', 'Current step of students')
+    sbms_by_grade = submissions.group_by { |sbm| sbm.get_final_grading.total_grade }
+    @summary[:grade_chart] = produce_submission_graph(sbms_by_grade, 'Grade', 'Grade distribution')
 
-    @mcqs = @training.mcqs
-    @coding_question = @training.coding_questions
+    sbms_by_date = submissions.group_by { |sbm| sbm.created_at.strftime("%m-%d") }
+    @summary[:date_chart] = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
+
+    if @training.can_skip?
+      @summary[:progress] = submissions.group_by{ |sbm| sbm.answered_questions.size + 1 }
+    else
+      @summary[:progress] = submissions.group_by(&:current_step).sort.reverse
+    end
+
+    @summary[:progress_chart] = produce_submission_graph(@summary[:progress], 'Step', 'Current step of students')
+
+    #@mcqs = @training.mcqs
+    #@coding_question = @training.coding_questions
 
     @missions = @course.missions
     @trainings = @course.trainings
