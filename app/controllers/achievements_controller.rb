@@ -5,6 +5,7 @@ class AchievementsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def index
+    @achievements = @achievements.includes(:requirements, :as_requirements)
     @achievements_with_info = []
     @achievements.each do |ach|
       req_check = {}
