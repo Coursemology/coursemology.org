@@ -4,6 +4,10 @@
 
 <% question_count = @training.asm_qns.count %>
 
+<div>
+  <a class="btn" style="float: right" href="<%= course_stats_training_path(@course, @training) %>">View Detailed Statistics</a>
+</div>
+
 <% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
     <table class="table">
