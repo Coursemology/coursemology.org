@@ -1,0 +1,23 @@
+<div class="page-header">
+  <h1>Level: <%= @level.title %></h1>
+</div>
+
+<% reached = @level.user_courses.student.where(is_phantom: false).order('lower(name)')%>
+<% if reached.length > 0 %>
+    <h3> <%= reached.length %> students reached this level:</h3>
+    <table class="table table-no-border">
+      <% reached.each_with_index do |uc, index| %>
+          <% if index % 2 == 0 %>
+              <tr>
+          <% end %>
+          <td class="studentlist_box">
+            <%= render partial: "layouts/user_thumb_profile", locals: { user_course: uc } %>
+          </td>
+          <% if index % 2 == 1 %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+<% else %>
+    <h3>No one has reached this level yet.</h3>
+<% end %>
