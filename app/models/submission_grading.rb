@@ -7,6 +7,7 @@ class SubmissionGrading < ActiveRecord::Base
   belongs_to :sbm, polymorphic: true
   belongs_to :exp_transaction
 
+  default_scope { order("created_at") }
   default_scope includes(:grader)
   def update_grade
     self.total_grade = answer_gradings.sum(&:grade)

@@ -22,10 +22,10 @@ module Sbm
   end
 
   def get_final_grading
-    if self.submission_gradings.count > 0
-      self.submission_gradings.order("created_at").last
+    if self.submission_gradings.length > 0
+      self.submission_gradings.last
     else
-      return nil
+      nil
     end
   end
 
