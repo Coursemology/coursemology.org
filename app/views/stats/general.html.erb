@@ -8,7 +8,7 @@
     <td>Mission</td>
     <td>
       <select id="select-mission">
-        <%= @missions.each do |asm| %>
+        <%= @course.missions.each do |asm| %>
             <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
@@ -19,7 +19,7 @@
     <td>Training</td>
     <td>
       <select id="select-training">
-        <%= @trainings.each do |asm| %>
+        <%= @course.trainings.each do |asm| %>
             <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
@@ -36,16 +36,20 @@
     <th width="10%">Count</th>
     <th>Students</th>
   </tr>
-  <% @levels.each do |lvl| %>
+  <% @course.levels.each do |lvl| %>
       <% lvl_stds = lvl.user_courses.student.where(is_phantom:false) %>
-      <% if lvl_stds.size > 0 %>
+      <% no = lvl_stds.count %>
+      <% if no > 0 %>
           <tr>
             <td><%= lvl.get_title %></td>
-            <td><%= lvl_stds.size %></td>
+            <td><%= no %></td>
             <td>
-              <% lvl_stds.each do |sc| %>
+              <% lvl_stds.first(20).each do |sc| %>
                   <%= render partial: "user_courses/short_name_display",
                              locals: { user_course: sc } %>
+              <% end %>
+              <% if no > 20 %>
+                  <a href="<%= course_level_url(@course, lvl) %>">more...</a>
               <% end %>
             </td>
           </tr>
@@ -62,17 +66,21 @@
     <th width="10%">Count</th>
     <th>Students</th>
   </tr>
-  <% @achievements.each do |ach| %>
+  <% @course.achievements.each do |ach| %>
       <% std_ucs = ach.user_courses.student.where(is_phantom: false) %>
-      <% if std_ucs.size > 0 %>
+      <% no = std_ucs.count  %>
+      <% if no > 0 %>
           <tr>
             <td><img src="<%= ach.icon_url %>" /></td>
             <td><%= ach.title %></td>
-            <td><%= std_ucs.size %></td>
+            <td><%= no %></td>
             <td>
-              <% std_ucs.each do |uach| %>
+              <% std_ucs.first(20).each do |uach| %>
                   <%= render partial: "user_courses/short_name_display",
                              locals: { user_course: uach } %>
+              <% end %>
+              <%if no > 20 %>
+                  <a href="<%= course_achievement_path(@course, ach) %>">more...</a>
               <% end %>
             </td>
           </tr>
@@ -80,4 +88,5 @@
   <% end %>
 </table>
 <!-- A graph to show statistical exp -->
+
 
