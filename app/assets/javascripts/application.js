@@ -365,8 +365,6 @@ function _jfdiFormatFunc(i, elem) {
         $elem.addClass('cm-s-molokai');
     }
 
-    console.log($elem);
-
     /*if($(d).hasClass("pythonCode"))*/{
         CodeMirror.runMode(code, 'python', elem);
     }

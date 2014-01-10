@@ -23,8 +23,6 @@ class UserCourse < ActiveRecord::Base
         .group('user_courses.id')
         .order('ach_count DESC, ach_last_updated ASC, id ASC')
 
-  default_scope includes(:user)
-
   after_create :fetch_name
 
   belongs_to :role

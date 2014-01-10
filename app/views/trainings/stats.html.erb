@@ -2,7 +2,11 @@
   <h1>Training Grading: <%= @training.title %></h1>
 </div>
 
-<% question_count = @training.questions.count %>
+<% question_count = @training.asm_qns.count %>
+
+<div>
+  <a class="btn" style="float: right" href="<%= course_stats_training_path(@course, @training) %>">View Detailed Statistics</a>
+</div>
 
 <% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
@@ -21,7 +25,7 @@
             <% else %>
                 <td><%= std.name %></td>
             <% end %>
-            <td><%= sub.nil? ?  '<span class="not-started">Not Started</span>'.html_safe : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+            <td><%= sub.nil? ?  '<span class="not-started">Not Started</span>'.html_safe : (sub.graded? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
             <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
           </tr>
       <% end %>
@@ -48,7 +52,7 @@
             <td><%= std.name %></td>
         <% end %>
         <td><%= std.get_my_tutor_name %></td>
-        <td><%= sub.nil? ?  '<span class="not-started">Not Started</span>'.html_safe : (sub.done? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
+        <td><%= sub.nil? ?  '<span class="not-started">Not Started</span>'.html_safe : (sub.graded? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
         <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
       </tr>
   <% end %>

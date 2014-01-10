@@ -38,14 +38,15 @@
     <% if can? :manage, TrainingSubmission %>
         <td>
           <% if @submission %>
-              <% if !@submission.done? %>
-                  <%= link_to 'Continue',
-                              edit_course_training_training_submission_path(@course, @training, @submission,
-                                                                            anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
-              <% else %>
+              <% if @submission.graded? %>
                   <%= link_to "Revise",
                               edit_course_training_training_submission_path(@course, @training, @submission,
                                                                             anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+
+              <% else %>
+                  <%= link_to 'Continue',
+                              edit_course_training_training_submission_path(@course, @training, @submission,
+                                                                            anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
               <% end %>
           <% else %>
               <%= link_to 'Start',

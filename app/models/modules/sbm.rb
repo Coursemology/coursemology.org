@@ -22,10 +22,10 @@ module Sbm
   end
 
   def get_final_grading
-    if self.submission_gradings.count > 0
-      self.submission_gradings.order("created_at").last
+    if self.submission_gradings.length > 0
+      self.submission_gradings.last
     else
-      return nil
+      nil
     end
   end
 
@@ -54,6 +54,34 @@ module Sbm
         return training.bonus_exp
       end
     end
-     0
+    0
+  end
+
+  def set_attempting
+    self.update_attribute(:status,'attempting')
+  end
+
+  def set_submitted(redirect_url = "", notify = true)
+    self.update_attribute(:status,'submitted')
+    self.update_attribute(:submit_at, updated_at)
+    if notify
+      notify_submission(redirect_url)
+    end
+  end
+
+  def set_graded
+    self.update_attribute(:status,'graded')
+  end
+
+  def attempting?
+    self.status == 'attempting'
+  end
+
+  def submitted?
+    self.status == 'submitted'
+  end
+
+  def graded?
+    self.status == 'graded'
   end
 end

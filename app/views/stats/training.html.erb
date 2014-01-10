@@ -1,77 +1,141 @@
 <div class="page-header">
-  <h1>Training Statistics</h1>
+  <h1>Training Statistics: <span style="font-style: italic; font-weight: normal"><%= @training.title %></span> </h1>
+  <%= link_to "Click here",
+              course_submissions_path(@course, asm: {id: @training.id,
+                                                     type: @training.class.name}.to_json),
+              method: "GET" %>
+  to review all submission for this training.
 </div>
-<h3>Training: <%= @training.title %></h3>
-<%= link_to "Click here",
-  course_submissions_path(@course, asm: {id: @training.id,
-                                         type: @training.class.name}.to_json),
-  method: "GET" %>
-to review all submission for this training.
+
+<div class="btn-group">
+  <a class="btn <%= 'active' unless @summary[:all] %>" href="<%= course_stats_training_path(@course, @training) %>?mode=mine">My Students</a>
+  <a class="btn <%= 'active' if @summary[:all] %>" href="<%= course_stats_training_path(@course, @training) %>?mode=all">All Students</a>
+</div>
 <br/>
-<br/>
-<table class="table">
+
+<h3>Summary</h3>
+<table class="table table-bordered">
   <tr>
     <th width="15%">Current Step</th>
     <th>Count</th>
     <th>Students</th>
   </tr>
-  <% @sbms_by_progress.each do |current_step, sbms| %>
-    <tr>
-      <td><%= current_step > @training.questions.count ? 'Finished' : current_step %></td>
-      <td><%= sbms.size %></td>
-      <td>
-        <% sbms.each do |sbm| %>
-          <%= render partial: "user_courses/short_name_display",
-            locals: { user_course: sbm.std_course } %>
-        <% end %>
-      </td>
-    </tr>
+  <% @summary[:progress].each do |current_step, sbms| %>
+      <tr>
+        <td><%= current_step > @training.asm_qns.count ? 'Finished' : current_step %></td>
+        <td><%= sbms.size %></td>
+        <td>
+          <% sbms.each do |sbm| %>
+              <%= render partial: "user_courses/short_name_display",
+                         locals: { user_course: sbm.std_course } %>
+          <% end %>
+        </td>
+      </tr>
   <% end %>
   <tr>
     <td>Not started</td>
-    <td><%= @unsubmitted.size %></td>
+    <td><%= @summary[:not_started].length %></td>
     <td>
-      <% @unsubmitted.each do |uc| %>
-        <%= render partial: "user_courses/short_name_display",
-          locals: { user_course: uc } %>
+      <% @summary[:not_started].each do |uc| %>
+          <%= render partial: "user_courses/short_name_display",
+                     locals: { user_course: uc } %>
       <% end %>
     </td>
   </tr>
 </table>
-<h3>Grade</h3>
+
+<h3>Grade Distribution</h3>
 <div class="graph-container">
   <div id="asm_grade_graph" class="graph"></div>
 </div>
-<%= render_chart(@grade_chart, "asm_grade_graph") %>
+<%= render_chart(@summary[:grade_chart], "asm_grade_graph") %>
 <h3>Start time</h3>
 <div id="asm_starttime_graph" class="graph"></div>
-<%= render_chart(@date_chart, "asm_starttime_graph") %>
+<%= render_chart(@summary[:date_chart], "asm_starttime_graph") %>
 <h3>Progress</h3>
 <div id="asm_progress_graph" class="graph"></div>
-<%= render_chart(@progress_chart, "asm_progress_graph") %>
-<h3>Mcq stats</h3>
-<% @mcqs.each do |mcq| %>
-  <p class="well"><%= mcq.description.html_safe %></p>
-  <table class="table">
-    <colgroup>
-      <col width="5%"></col>
-      <col width="35%"></col>
-      <col width="5%"></col>
-    </colgroup>
-    <% mcq.mcq_answers.each do |choice| %>
-      <% uniq_stds = choice.std_mcq_answers.map { |sma| sma.student }.uniq %>
+<%= render_chart(@summary[:progress_chart], "asm_progress_graph") %>
+<div id="summary" style="padding-top: 30px">
+    <h3>Question Summary</h3>
+</div>
+<table class="table table-bordered table-striped" style="width: 250px">
+  <thead>
+  <tr>
+    <td>Question No.</td>
+    <td>Wrong/ Total Attempts</td>
+  </tr>
+  </thead>
+  <tbody>
+  <% @training.questions.each_with_index do |qn, i| %>
+      <% if qn.class == Mcq && qn.select_all? %>
+          <% next %>
+      <% end %>
       <tr>
-        <td><input type="checkbox" disabled <%= "checked" if choice.is_correct %> /></td>
-        <td><%= choice.text %></td>
-        <td><%= uniq_stds.size %></td>
-        <td>
-          <% uniq_stds.each do |std| %>
-            <span class="label label-info"><%= std.name %></span>
+        <td style="text-align: center"><a href="#question_<%= i + 1%>"> <%= i + 1 %></a></td>
+        <td style="text-align: center">
+          <% wrong = 0 %>
+          <% total = 0 %>
+          <% if qn.class == CodingQuestion %>
+              <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]) %>
+              <% wrong = answers.where(is_correct:false).length %>
+              <% total = answers.length %>
+          <% else %>
+              <% qn.mcq_answers.each do |choice| %>
+                  <% ans_no = choice.std_mcq_answers.where(std_course_id:@summary[:student_courses]).length %>
+                  <% wrong += choice.is_correct ? 0 : ans_no %>
+                  <% total += ans_no %>
+              <% end %>
           <% end %>
+          <strong style="color: red"> <%= wrong %> </strong> / <%= total %>
         </td>
       </tr>
-    <% end %>
-  </table>
+  <% end %>
+  </tbody>
+</table>
+
+<div id="ruler">&nbsp;</div>
+<h3>Question stats</h3>
+<% @training.questions.each_with_index do |qn, i| %>
+    <section id="question_<%= i + 1%>" style="padding-top: 40px">
+      <div class="grey_background" style="margin: 10px">
+        <strong><%= i + 1 %>. </strong>
+        <%= style_format qn.description %>
+      </div>
+      <% if qn.class == Mcq %>
+          <table class="table" style="margin: 10px; margin-left: 50px; width: auto; min-width: 90%">
+            <colgroup>
+              <col width="5%"/>
+              <col width="35%"/>
+              <col width="5%"/>
+            </colgroup>
+            <% qn.mcq_answers.each do |choice| %>
+                <% uniq_stds = choice.std_mcq_answers.where(std_course_id:@summary[:student_courses]).includes(:std_course).map {|ans| ans.std_course }.uniq %>
+                <tr>
+                  <td><input type="checkbox" disabled <%= "checked" if choice.is_correct %> /></td>
+                  <td><%= choice.text %></td>
+                  <td><%= uniq_stds.size %></td>
+                  <td>
+                    <% uniq_stds.each do |std| %>
+                        <span class="label label-info"><%= std.name %></span>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
+          </table>
+      <% else %>
+          <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]) %>
+          Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(is_correct:false).length %> </strong> / <%= answers.length %>
+          <% answers.each_with_index do |ans, index| %>
+              <div class="code-review-header <%= ans.is_correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>" style="margin-left: 50px">
+                <%= index + 1 %> : <%= ans.std_course.name %>
+                <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
+              </div>
+              <div style="margin-left: 60px">
+                <%= style_format('[mc]' + ans.code + '[/mc]', false) %>
+              </div>
+          <% end %>
+      <% end %>
+    </section>
 <% end %>
 <hr>
 <p>View detail statistics of other assignment:</p>
@@ -81,7 +145,7 @@ to review all submission for this training.
     <td>
       <select id="select-mission">
         <%= @missions.each do |asm| %>
-          <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
+            <option value="<%= course_stats_mission_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
     </td>
@@ -92,10 +156,25 @@ to review all submission for this training.
     <td>
       <select id="select-training">
         <%= @trainings.each do |asm| %>
-          <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
+            <option value="<%= course_stats_training_path(@course, asm) %>"><%= asm.title %></option>
         <% end %>
       </select>
     </td>
     <td><a href="#" class="btn btn-select-nav" data-target="#select-training">View</a></td>
   </tr>
 </table>
+
+<div data-spy="affix" data-offset-top="800" class="float-submit" style="top:50px" id="back-to-top">
+  <a class="btn" style="height: 45px; width: 45px;font-size: 40px" href="#summary"><i class="icon-arrow-up"></i></a>
+</div>
+<script>
+  $(document).ready(function(){
+
+      $('#back-to-top').affix({
+          offset: {
+              top: $("#ruler").height() * 2
+          }
+      });
+
+  });
+</script>

@@ -6,7 +6,7 @@ Coursemology, an open source online education platform for school :-)
 To get started, you will need to do the following:
 
  1. Clone the repository
- 2. Created a Facebook app and retrive it `App ID` and `App secret`
+ 2. Created a Facebook app and retrieve it `App ID` and `App secret`
 
 ## Setting up
 
