@@ -15,6 +15,14 @@ class Assessment::Submission < ActiveRecord::Base
       where('assessment_submissions.id' => self.id)
   end
 
+  # Returns the graders for this submission, or an empty array if auto-graded.
+  def graders
+    graders = gradings.reduce Set.new do |memo, g|
+      memo <<= g.grader
+    end
+    graders.to_a.map { |g| g.name }
+  end
+
   def grade
     graded? ? gradings.sum(:grade) : nil
   end

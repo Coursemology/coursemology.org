@@ -20,14 +20,10 @@
     <tr>
       <th>Grader:</th>
       <td>
-        <% graders = @submission.gradings.reduce Set.new do |memo, g|
-            memo <<= g.grader
-           end %>
-        <% graders = graders.to_a.map { |g| g.name } %>
-        <% if graders.empty? %>
+        <% if @submission.graders.empty? %>
           Auto graded
         <% else %>
-          <%= graders.join(', ') %>
+          <%= @submission.graders.join(', ') %>
         <% end %>
       </td>
     </tr>
