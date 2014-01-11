@@ -61,13 +61,13 @@ class TrainingSubmission < ActiveRecord::Base
     exp
   end
 
-  def status
-    if self.submission_gradings.count > 0
-      "Auto graded"
-    else
-      "Pending"
-    end
-  end
+  #def status
+  #  if self.submission_gradings.count > 0
+  #    "Auto graded"
+  #  else
+  #    "Pending"
+  #  end
+  #end
 
   def graded?
     if self.submission_gradings.count > 0
