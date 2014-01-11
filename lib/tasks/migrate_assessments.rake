@@ -313,7 +313,8 @@ namespace :db do
           next
       end
 
-      connection.select_all(sanitize('SELECT * FROM answer_gradings WHERE submission_grading_id = ?', [sbm_g['id']])).each do |answer_g|
+      gradings = connection.select_all(sanitize('SELECT * FROM answer_gradings WHERE submission_grading_id = ?', [sbm_g['id']]))
+      gradings.each do |answer_g|
         case answer_g['student_answer_type'].to_sym
           when :StdMcqAnswer
             answer_map = @mcq_answers_map
@@ -335,6 +336,39 @@ namespace :db do
                                        created_at: answer_g['created_at'],
                                        updated_at: answer_g['updated_at']
                                    }, :without_protection => true)
+      end
+
+      if gradings.empty? then
+        # No gradings for answers. Strange. Create a grading for every answer with 0 grade and 0 exp.
+        if sbm_g['total_grade'].to_i != 0 then
+          raise StandardError
+        end
+
+        answers = connection.select_all(sanitize('SELECT * FROM sbm_answers WHERE sbm_type = ? AND sbm_id = ?', [sbm_g['sbm_type'], sbm_g['id']]))
+        answers.each do |a|
+          case a['answer_type'].to_sym
+            when :StdMcqAnswer
+              answer_map = @mcq_answers_map
+            when :StdMcqAllAnswer
+              answer_map = @mcq_all_answers_map
+            when :StdAnswer
+              answer_map = @text_answers_map
+            when :StdCodingAnswer
+              answer_map = @coding_answers_map
+            else
+              raise StandardError
+          end
+
+          Assessment::Grading.create({
+                                       answer_id: answer_map.fetch(a['answer_id']),
+                                       grader_id: sbm_g['grader_id'],
+                                       grader_course_id: sbm_g['grader_course_id'],
+                                       grade: 0,
+                                       exp_transaction_id: sbm_g['exp_transaction_id'],
+                                       created_at: sbm_g['created_at'],
+                                       updated_at: sbm_g['updated_at']
+                                     }, :without_protection => true)
+        end
       end
     end
 
