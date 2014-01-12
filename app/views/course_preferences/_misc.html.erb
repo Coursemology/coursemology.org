@@ -6,7 +6,7 @@
     <table class="table table-bordered table-striped">
       <thead>
       <th>
-        Current Section Title
+        Default Section Title
       </th>
       <th>
         Description
@@ -26,13 +26,13 @@
           <% item = pref.preferable_item %>
           <tr>
             <td>
-              <%= pref.prefer_value %>
+              <%= item.default_value %>
             </td>
             <td>
               <%= item.description %>
             </td>
             <td>
-              <input name="preferences[<%= pref.id%>][prefer_value]" type="text">
+              <input name="preferences[<%= pref.id%>][prefer_value]" type="text" value="<%= pref.prefer_value %>">
             </td>
             <td>
               <% if item.name != "leaders" %>
@@ -49,7 +49,7 @@
     <table class="table table-bordered table-striped">
       <thead>
       <th>
-        Current Value
+        Default Value
       </th>
       <th>
         Description
@@ -66,13 +66,13 @@
           <% item = pref.preferable_item %>
           <tr>
             <td>
-              <%= pref.prefer_value %>
+              <%= item.default_value %>
             </td>
             <td>
               <%= item.description %>
             </td>
             <td>
-              <input name="preferences[<%= pref.id%>][prefer_value]" type="number" min="0">
+              <input name="preferences[<%= pref.id%>][prefer_value]" type="number" min="0" value="<%= pref.prefer_value %>">
             </td>
           </tr>
       <% end %>
