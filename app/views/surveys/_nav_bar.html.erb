@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == 'stats' %>">
+    <a href="<%=  course_survey_stats_path %>?_tab=stats" data-toggle="tab"><h4>Stats</h4></a>
+  </li>
+  <li class="<%= "active" if @tab == 'summary' %>">
+    <a href="<%= course_survey_summary_path %>?_tab=summary" data-toggle="tab"><h4>Summary</h4></a>
+  </li>
+</ul>

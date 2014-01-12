@@ -2,6 +2,8 @@
   <h1>Survey Summary: <%=  @survey.title %></h1>
 </div>
 
+<%= render partial: "nav_bar" %>
+
 <% if @survey.has_section? %>
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">

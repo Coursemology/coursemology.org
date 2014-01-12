@@ -54,6 +54,7 @@ class SurveysController < ApplicationController
   end
 
   def stats
+    @tab = "stats"
     @submissions = @survey.survey_submissions.all
     @staff_courses = @course.user_courses.staff.order(:name)
     @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
@@ -61,6 +62,7 @@ class SurveysController < ApplicationController
   end
 
   def summary
+    @tab = "summary"
     @summaries = []
     if @survey.has_section?
       @survey.sections.each do |section|
