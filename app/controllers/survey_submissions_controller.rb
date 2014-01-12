@@ -22,6 +22,8 @@ class SurveySubmissionsController < ApplicationController
     @current_qn = @survey_submission.current_qn || 1
     @step = @current_qn
 
+    @editable = !@survey_submission.submitted? ||  @survey.allow_modify?
+
     if params[:_pos] && params[:_pos].to_i >= 1
       @step = params[:_pos].to_i
     else
@@ -37,38 +39,65 @@ class SurveySubmissionsController < ApplicationController
   end
 
   def submit
+    unless !@survey_submission.submitted? ||  @survey.allow_modify?
+      respond_to do |format|
+        flash[:error] ="No Modification is allowed"
+        format.html { redirect_to course_survey_survey_submission_path(@course, @survey, @survey_submission)}
+      end
+      return
+    end
+
     if @survey.has_section?
+      answers = {}
       params[:answers].each do |vals|
         qn = @survey.questions.where(id: vals.first).first
+        if qn
+          answers[qn] = vals.last
+        end
+      end
+      @survey.questions.each do |qn|
         if qn.is_essay?
-          essay =  qn.survey_essay_answers.first || qn.survey_essay_answers.build({user_course_id: curr_user_course})
-          essay.text = vals.last
-          essay.save
-        else
-          options = SurveyQuestionType.MCQ.first == qn.type ? [vals.last] : vals.last
-          answers = qn.survey_mrq_answers.where(user_course_id:curr_user_course)
-          was_selected = answers.map{|ans| ans.option_id }
-          (was_selected - options).each_with_index do |id, index|
-            answers[index].option.decrease_count
-            answers[index].destroy
+          essay =  qn.survey_essay_answers.where(user_course_id:curr_user_course).first || qn.survey_essay_answers.build({user_course_id: curr_user_course.id})
+          if answers.has_key? qn
+            essay.text = answers[qn]
+            essay.save
+          else
+            essay.destory
           end
+        else
+          #TODO: improve
+          selected = qn.survey_mrq_answers.where(user_course_id:curr_user_course)
+          selected.each do |ans|
+            ans.option.decrease_count
+            ans.destroy
+          end
+          if answers.has_key? qn
+            options = SurveyQuestionType.MCQ.first == qn.type ? [answers[qn]] : answers[qn]
 
-          (options - was_selected).each do |option|
-            answer = qn.survey_mrq_answers.build({option_id: option, user_course_id: curr_user_course.id})
-            answer.save
-            answer.option.increase_count
+            options.each do |option|
+              answer = qn.survey_mrq_answers.build({option_id: option, user_course_id: curr_user_course.id})
+              answer.save
+              answer.option.increase_count
+            end
           end
         end
       end
+      is_submit = params[:commit] != 'Save'
+      is_finished = false
+      if is_submit
+        answered_qns = answers.keys
+        required_qns = @survey.questions.select {|qn| qn.is_required? }
+        is_finished = (required_qns - answered_qns) == []
+      end
 
       respond_to do |format|
-        if params[:commit] == 'Save'
-          format.html {redirect_to edit_course_survey_survey_submission_path(@course, @survey, @survey_submission),
-                                   notice: "Survey status has been saved."}
-        else
+        if is_submit and is_finished
           @survey_submission.set_submitted
           format.html {redirect_to course_surveys_path,
                                    notice: "You have submitted survey: #{@survey.title}"}
+        else
+          format.html {redirect_to edit_course_survey_survey_submission_path(@course, @survey, @survey_submission),
+                                   notice: "Survey status has been saved."}
         end
       end
     else

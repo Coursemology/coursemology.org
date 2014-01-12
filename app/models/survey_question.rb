@@ -1,7 +1,7 @@
 class SurveyQuestion < ActiveRecord::Base
   acts_as_paranoid
   default_scope { order("pos") }
-  attr_accessible :type_id,:survey_id, :survey_section_id, :description, :max_response, :publish
+  attr_accessible :type_id,:survey_id, :survey_section_id, :description, :max_response, :publish, :is_required
 
 
   belongs_to :survey

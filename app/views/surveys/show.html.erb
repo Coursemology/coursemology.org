@@ -45,6 +45,7 @@
       </div>
     </td>
     <% if can? :manage, Survey %>
+        <td><%= render partial: "survey_action", locals: {survey: @survey} %></td>
         <td width="10%">
           <%= link_to edit_course_survey_path(@course, @survey), class: "btn" do %>
               <i class="icon-edit"></i>
@@ -99,6 +100,7 @@
                             <div class="asm-qn-handler" style="background-color: #d9edf7">
                               <i class="icon-move handler-icon"></i>
                               <h3 class="handler-text">Question <%= i + 1 %> :  <%= q.type.title %></h3>
+                              <strong style="color: #ff0000"><%= '(* required)' if q.is_required? %></strong>
                             </div>
                             <%= render partial: "survey_questions/one", :locals => {q: q} %>
                           </td>

@@ -50,18 +50,7 @@
           <%= survey.expire_at.strftime(@time_format.prefer_value) %>
         </td>
         <td>
-          <% if survey.can_start? ||  can?(:manage, Survey) %>
-              <% submission = survey.submission_by(curr_user_course.id) %>
-              <% if  !submission %>
-                  <a href="<%= new_course_survey_survey_submission_path(@course, survey) %>" class="btn">Start</a>
-              <% elsif submission.started? %>
-                  <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Continue</a>
-              <% elsif submission.submitted? and survey.allow_modify? %>
-                  <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Update</a>
-              <% else %>
-                  <a href="<%= course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Review</a>
-              <% end %>
-          <% end %>
+          <%= render partial: "survey_action", locals: {survey: survey} %>
         </td>
         <% if can? :view_detail, Survey %>
             <td><a href="<%= course_survey_stats_path(@course, survey) %>" rel="tooltip" title="Number of students started"><%= @stats[survey][:started] %></a> / <%= @stats[survey][:total] %></td>
