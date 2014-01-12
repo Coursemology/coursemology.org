@@ -1,7 +1,7 @@
 <% questions.each_with_index do |summary, i| %>
     <h3><%= "#{i + 1}." %><%= style_format(summary[:question].description) %></h3>
     <% if summary[:question].is_essay? %>
-        <ol style="margin-left: 6%; width: 90%; margin-top: 0px">
+        <ul style="margin-left: 6%; width: 90%; margin-top: 0px">
           <% summary[:responds].each do |resp| %>
             <li>
               <div class="well">
@@ -9,7 +9,7 @@
               </div>
             </li>
           <% end %>
-        </ol>
+        </ul>
     <% else %>
         <%= render partial: "mrq_summary", locals: {summary: summary} %>
     <% end %>
