@@ -2,8 +2,10 @@
   <table>
     <tr>
       <td>
-        <img class="user-profile-pic"
-             src="<%= @user_course.user.get_profile_photo_url %>" />
+        <a href="<%= get_social_media_url(@course, @user_course) %>">
+          <img class="user-profile-pic"
+               src="<%= @user_course.user.get_profile_photo_url %>" />
+        </a>
       </td>
       <td style="padding-left: 10px">
         <% if @user_course.user.uid %>
