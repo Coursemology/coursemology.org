@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Leaderboards</h1>
+  <h1><%= @course.customized_leaderboard_title %></h1>
 </div>
 
 <div class="span4 leaderboard-table leaderboard-experience-table">
@@ -27,7 +27,7 @@
 
 <div class="span4 leaderboard-table leaderboard-achievement-table">
   <table class="table">
-    <caption class="leaderboard-type">By Achievement</caption>
+    <caption class="leaderboard-type">By <%= @course.customized_title_by_model(Achievement).singularize %></caption>
     <% @top_ach.each_with_index do |std_course, index| %>
       <!-- <tr class="<%= "leaderboard-top-row" if index == 0 %>"> -->
       <tr>

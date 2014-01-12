@@ -41,6 +41,18 @@ class CoursePreference < ActiveRecord::Base
       ann = course.home_sections.where("preferable_items.name = 'announcements'").first
       ann.prefer_value = prefer_value
       ann.save
+    elsif preferable_item.name == 'missions' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      col = course.mission_columns.where("preferable_items.name = 'title'").first
+      col.prefer_value = prefer_value.singularize
+      col.save
+    elsif preferable_item.name == 'trainings' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      col = course.training_columns.where("preferable_items.name = 'title'").first
+      col.prefer_value = prefer_value.singularize
+      col.save
     end
   end
 end

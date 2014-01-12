@@ -247,6 +247,62 @@ class Course < ActiveRecord::Base
         pref.preferable_item.name == 'auto' }.first
   end
 
+  def customized_missions_title
+    customized_title('missions')
+  end
+
+  def customized_trainings_title
+    customized_title('trainings')
+  end
+
+  def customized_announcements_title
+    customized_title('announcements')
+  end
+
+  def customized_submissions_title
+    customized_title('submissions')
+  end
+
+  def customized_achievements_title
+    customized_title('achievements')
+  end
+
+  def customized_leaderboard_title
+    customized_title('leaderboard')
+  end
+
+  def customized_students_title
+    customized_title('students')
+  end
+
+  def customized_surveys_title
+    customized_title('surveys')
+  end
+
+  def customized_materials_title
+    customized_title('materials')
+  end
+
+  def customized_lesson_plan_title
+    customized_title('lesson_plan')
+  end
+
+  def customized_forums_title
+    customized_title('forums')
+  end
+
+  def customized_comments_title
+    customized_title('comments')
+  end
+
+  def customized_title(tab)
+    student_sidebar_items.where("preferable_items.name = '#{tab}'").first.prefer_value
+  end
+
+  def customized_title_by_model(model_class)
+    student_sidebar_items.where("preferable_items.name = '#{model_class.model_name.downcase.pluralize}'").first.prefer_value
+  end
+
   def populate_preference
     course_preferences.each do |pref|
       item = PreferableItem.where(id: pref.preferable_item_id).first
@@ -295,17 +351,17 @@ class Course < ActiveRecord::Base
   # are included. [from, to]
   def lesson_plan_virtual_entries(from = nil, to = nil)
     missions = self.missions.where("TRUE " +
-      (if from then "AND open_at >= :from " else "" end) +
-      (if to then "AND open_at <= :to" else "" end),
-      :from => from, :to => to
+                                       (if from then "AND open_at >= :from " else "" end) +
+                                       (if to then "AND open_at <= :to" else "" end),
+                                   :from => from, :to => to
     )
 
     entries = missions.map { |m| m.as_lesson_plan_entry }
 
     trainings = self.trainings.where("TRUE " +
-      (if from then "AND open_at >= :from " else "" end) +
-      (if to then "AND open_at <= :to" else "" end),
-      :from => from, :to => to
+                                         (if from then "AND open_at >= :from " else "" end) +
+                                         (if to then "AND open_at <= :to" else "" end),
+                                     :from => from, :to => to
     )
 
     entries += trainings.map { |t| t.as_lesson_plan_entry }
@@ -313,20 +369,20 @@ class Course < ActiveRecord::Base
 
   def materials_virtual_entries
     mission_files =
-      # Get the missions' files, and map it to the virtual entries.
-      (self.missions.map { |m|
-        m.files.map { |f|
-          material = Material.create_virtual(m, f)
-          material.file = f
-          material.filename = m.title + ": " + f.display_filename
-          material.filesize = f.file_file_size
-          material.updated_at = f.file_updated_at
-          material.url = f.file_url
+        # Get the missions' files, and map it to the virtual entries.
+        (self.missions.map { |m|
+          m.files.map { |f|
+            material = Material.create_virtual(m, f)
+            material.file = f
+            material.filename = m.title + ": " + f.display_filename
+            material.filesize = f.file_file_size
+            material.updated_at = f.file_updated_at
+            material.url = f.file_url
 
-          material
-        }
-      })
-      .reduce { |mission, files| mission + files }
+            material
+          }
+        })
+        .reduce { |mission, files| mission + files }
 
     # Make sure we return at least an empty list, in case there are no missions.
     if mission_files == nil
@@ -339,20 +395,20 @@ class Course < ActiveRecord::Base
     missions.files = mission_files
 
     training_files =
-      # Get the trainings' files, and map it to the virtual entries.
-      (self.trainings.map { |t|
-        t.files.map { |f|
-          material = Material.create_virtual(t, f)
-          material.file = f
-          material.filename = t.title + ": " + f.display_filename
-          material.filesize = f.file_file_size
-          material.updated_at = f.file_updated_at
-          material.url = f.file_url
+        # Get the trainings' files, and map it to the virtual entries.
+        (self.trainings.map { |t|
+          t.files.map { |f|
+            material = Material.create_virtual(t, f)
+            material.file = f
+            material.filename = t.title + ": " + f.display_filename
+            material.filesize = f.file_file_size
+            material.updated_at = f.file_updated_at
+            material.url = f.file_url
 
-          material
-        }
-      })
-      .reduce { |training, files| training + files }
+            material
+          }
+        })
+        .reduce { |training, files| training + files }
 
     # Make sure we return at least an empty list, in case there are no trainings.
     if training_files == nil

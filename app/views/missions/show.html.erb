@@ -2,7 +2,7 @@
 <div class="page-header">
   <h1><%= @mission.title %></h1>
 </div>
-<h2 class="assignments-description-title">Mission Description</h2>
+<h2 class="assignments-description-title"><%= @course.customized_title_by_model(model_class).singularize %> Description</h2>
 <table class="table-top-align">
   <tr>
     <td>
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <h2 class="assignments-questsions-title">Mission Questions</h2>
+    <h2 class="assignments-questsions-title"><%= @course.customized_title_by_model(model_class).singularize%> Questions</h2>
     <table class="table assignments-questions-table">
       <!-- <thead>
       <tr>

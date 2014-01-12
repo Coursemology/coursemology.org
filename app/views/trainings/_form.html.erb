@@ -1,3 +1,4 @@
+<%- display_name = @course.customized_title_by_model(Training).singularize -%>
 <%= form_for [@course, @training], :html => { :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :title, :class => 'control-label' %>
@@ -75,7 +76,7 @@
     <div class="control-group">
       <%= f.label "Publish?", class: 'control-label' %>
       <div class="controls checkbox-text">
-        <%= f.check_box :publish %> Check to publish training
+        <%= f.check_box :publish %> Check to publish <%= display_name.downcase %>
       </div>
     </div>
     <div class="control-group">
@@ -90,7 +91,7 @@
     <!--for file uploads-->
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: "training-update" %>
+      <%= f.submit "#{@training.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary', id: "training-update" %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>

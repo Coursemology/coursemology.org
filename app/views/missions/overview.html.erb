@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Update Missions</h1>
+  <h1>Update <%= @course.customized_title_by_model(Mission).pluralize %></h1>
 </div>
 <% if can? :manage, :bulk_update %>
     <ul class="nav nav-tabs">

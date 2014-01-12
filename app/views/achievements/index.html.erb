@@ -1,5 +1,6 @@
+<%- display_name = @course.customized_title_by_model(Achievement).pluralize -%>
 <div class="page-header">
-  <h1>Achievements</h1>
+  <h1><%= display_name %></h1>
 </div>
 
 <% if can? :manage, Achievement %>

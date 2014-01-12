@@ -1,5 +1,6 @@
+<%- submission_display_name = @course.customized_title_by_model(Submission).singularize -%>
 <div class="page-header">
-  <h1>Submission:  <%= @mission.title %></h1>
+  <h1><%= submission_display_name %>:  <%= @mission.title %></h1>
 </div>
 <% require 'digest/md5' %>
 <table class="table table-bordered" style="width: 300px">
@@ -32,7 +33,7 @@
   <% if @submission.submitted? || @submission.graded? %>
       <tr><td>Submitted at:</td><td><%= datetime_format(@submission.submit_at || @submission.updated_at) %> </td></tr>
   <% end %>
-  <tr><td>Mission due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
+  <tr><td>Due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
   </tbody>
 </table>
 

@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Mission Grading: <%= @mission.title %></h1>
+  <h1><%= @course.customized_title_by_model(Mission).singularize %> Grading: <%= @mission.title %></h1>
 </div>
 
 <input type="hidden" value="<%= course_mission_dump_code_path %>" id="dump_url">
