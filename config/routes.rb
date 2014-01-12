@@ -29,6 +29,7 @@ JfdiAcademy::Application.routes.draw do
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades
+  get "/my_courses" => "courses#my_courses", as: :my_courses
 
   resources :users do
     resources :masquerades, only: [:new]

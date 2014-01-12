@@ -3,7 +3,7 @@ class UserCourse < ActiveRecord::Base
 
   include Rails.application.routes.url_helpers
 
-  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom
+  attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom, :last_active_time
 
   before_create :init
   after_create  :notify_student
