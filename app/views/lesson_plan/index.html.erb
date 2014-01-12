@@ -2,7 +2,7 @@
   <div id="lesson-plan-toolbar" class="page-header">
     <div class="row">
       <div class="span5">
-        <h1>Lesson Plan</h1>
+        <h1><%= @course.customized_lesson_plan_title %></h1>
       </div>
       <div class="pull-right btn-toolbar">
         <% if can? :manage, LessonPlanEntry %>
