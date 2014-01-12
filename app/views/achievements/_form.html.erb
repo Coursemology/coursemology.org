@@ -1,3 +1,4 @@
+<%- display_name = @course.customized_title_by_model(Achievement).singularize -%>
 <%= form_for [@course, @achievement], html: { class: 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :title, class: 'control-label' %>
@@ -81,7 +82,7 @@
       </div>
 
       <div class="control-group">
-        <label class="control-label">Achievements</label>
+        <label class="control-label"><%= display_name.pluralize %></label>
         <div class="controls">
           <table>
             <% @achievement.requirements.ach_req.each do |ach_req| %>
@@ -142,7 +143,7 @@
     </div>
 
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary form-submit' %>
+      <%= f.submit "#{@achievement.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary form-submit' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   courses_path, :class => 'btn' %>
     </div>

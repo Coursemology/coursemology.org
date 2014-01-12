@@ -54,7 +54,7 @@ module ApplicationHelper
       str = str.gsub(/\[b\](.+?)\[\/b\]/m,'<strong>\1</strong>')
       str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
       str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
-') <<'</div></pre></div>'}
+      ') <<'</div></pre></div>'}
       return str.html_safe
     end
     ""
@@ -118,5 +118,13 @@ module ApplicationHelper
     #  true
     #end
     @user and !@user.is_logged_in?
+  end
+
+  def get_social_media_url(course, user_course)
+    if  user_course.user.provider == "facebook" and user_course.user.uid
+      "https://www.facebook.com/#{user_course.user.uid}"
+    else
+      course_user_course_path(course, user_course)
+    end
   end
 end

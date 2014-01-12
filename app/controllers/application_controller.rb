@@ -116,43 +116,43 @@ class ApplicationController < ActionController::Base
 
     if can? :manage, Course
       @nav_items = [{
-                        text:   "Announcements",
+                        text:   @course.customized_title_by_model(Announcement),
                         url:    main_app.course_announcements_url(@course),
                         img:    @theme_settings["Announcements Icon"],
                         icon:   "icon-bullhorn",
                         count:  counts[:announcements] || 0
                     }, {
-                        text:   "Missions",
+                        text:   @course.customized_title_by_model(Mission),
                         url:    main_app.course_missions_url(@course),
                         img:    @theme_settings["Missions Icon"],
                         icon:   "icon-fighter-jet",
                         count:   counts[:missions] || 0
                     }, {
-                        text:   "Trainings",
+                        text:   @course.customized_title_by_model(Training),
                         url:    main_app.course_trainings_url(@course),
                         img:    @theme_settings["Trainings Icon"],
                         icon:   "icon-upload-alt",
                         count:  counts[:trainings] || 0
                     }, {
-                        text:   "Submissions",
+                        text:   @course.customized_title_by_model(Submission),
                         url:    main_app.course_submissions_url(@course),
                         img:    @theme_settings["Submissions Icon"],
                         icon:   "icon-envelope-alt",
                         #count:  counts[:submissions] || 0
                     }, {
-                        text:   "Lesson Plan",
+                        text:   @course.customized_lesson_plan_title,
                         url:    main_app.course_lesson_plan_url(@course),
                         img:    @theme_settings["Lesson Plan Icon"],
                         icon:   "icon-time"
                     }, {
-                        text:   "Workbin",
+                        text:   @course.customized_materials_title,
                         url:    main_app.course_materials_url(@course),
                         img:    @theme_settings["Materials Icon"],
                         icon:   "icon-download",
                         count:  counts[:materials] || 0
                     }]
       @nav_items <<   {
-          text:   "Comments",
+          text:   @course.customized_title_by_model(Comment),
           url:    main_app.course_comments_url(@course),
           icon:   "icon-comments",
           count:  counts[:pending_comments] || 0
@@ -164,28 +164,28 @@ class ApplicationController < ActionController::Base
           count: counts[:pending_grading] || 0
       }
       @nav_items << {
-          text:   "Achievements",
+          text:   @course.customized_title_by_model(Achievement),
           url:    main_app.course_achievements_url(@course),
           icon:   "icon-trophy"
       }
       @nav_items <<    {
-          text:   "Leaderboard",
+          text:   @course.customized_leaderboard_title,
           url:    main_app.course_leaderboards_url(@course),
           img:    @theme_settings["Leaderboards Icon"],
           icon:   "icon-star-empty"
       }
       @nav_items <<    {
-          text:   "Students",
+          text:   @course.customized_students_title,
           url:    main_app.course_students_url(@course),
           icon:   "icon-group",
       }
       @nav_items << {
-          text: "Survey",
+          text: @course.customized_title_by_model(Survey),
           url: main_app.course_surveys_path(@course),
           icon: "icon-edit"
       }
       @nav_items << {
-          text:   "Forums",
+          text:   @course.customized_title("Forums"),
           url:    main_app.course_forums_url(@course),
           icon:   "icon-th-list",
           count: counts[:forums]
@@ -375,7 +375,7 @@ class ApplicationController < ActionController::Base
       when 'forums'
         url = main_app.course_forums_url(@course)
         icon = 'icon-th-list'
-      when 'lessonplan'
+      when 'lesson_plan'
         url = main_app.course_lesson_plan_path(@course)
         icon = 'icon-time'
       when 'materials'

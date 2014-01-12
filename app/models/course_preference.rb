@@ -8,6 +8,7 @@ class CoursePreference < ActiveRecord::Base
   scope :mission_columns,       where(preferable_item_id: PreferableItem.mission_columns)
   scope :training_columns,      where(preferable_item_id: PreferableItem.training_columns)
   scope :student_sidebar_items, where(preferable_item_id: PreferableItem.student_sidebar_items)
+  scope :other_sidebar_items,   where(preferable_item_id: PreferableItem.other_sidebar_items)
   scope :email_notifications,   where(preferable_item_id: PreferableItem.email_notifications)
   scope :course_home_sections,  where(preferable_item_id: PreferableItem.course_home_sections)
   scope :course_home_events_no, where(preferable_item_id: PreferableItem.home_sections_events_no)
@@ -17,6 +18,7 @@ class CoursePreference < ActiveRecord::Base
 
 
   before_update :schedule_auto_sbm_job, :if => :display_changed?
+  after_update :update_related_pref, :if => :prefer_value_changed?
 
   def schedule_auto_sbm_job
     if preferable_item == PreferableItem.where(item: 'Mission', item_type: 'Submission', name: 'auto').first
@@ -30,5 +32,27 @@ class CoursePreference < ActiveRecord::Base
 
   def self.fetch
 
+  end
+
+  def update_related_pref
+    if preferable_item.name == 'announcements' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      ann = course.home_sections.where("preferable_items.name = 'announcements'").first
+      ann.prefer_value = prefer_value
+      ann.save
+    elsif preferable_item.name == 'missions' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      col = course.mission_columns.where("preferable_items.name = 'title'").first
+      col.prefer_value = prefer_value.singularize
+      col.save
+    elsif preferable_item.name == 'trainings' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      col = course.training_columns.where("preferable_items.name = 'title'").first
+      col.prefer_value = prefer_value.singularize
+      col.save
+    end
   end
 end

@@ -2,7 +2,7 @@
 <%- model_class = Mission -%>
 <div class="page-header">
   <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
-                                   :default => "Edit #{model_class.model_name.human}") %></h1>
+                                   :default => "Edit #{@course.customized_title_by_model(model_class).singularize}") %></h1>
 </div>
 <p><i>Click <%= link_to "here", course_mission_path(@course, @mission) %> if you wish to review the questions for this assignment.</i></p>
 <%= render :partial => 'form' %>

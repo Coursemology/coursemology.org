@@ -1,3 +1,4 @@
+<%- display_name = @course.customized_title_by_model(Mission).singularize -%>
 <%= form_for [@course, @mission], :html => { :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :title, :class => 'control-label' %>
@@ -50,7 +51,7 @@
     <div class="control-group">
       <%= f.label "Publish?", class: 'control-label' %>
       <div class="controls checkbox-text">
-        <%= f.check_box :publish %> Check to publish mission
+        <%= f.check_box :publish %> Check to publish <%= display_name.downcase %>
       </div>
     </div>
     <div class="control-group">
@@ -71,7 +72,7 @@
                             'data-target' => '#question-types',
                             id: "mission-format-checkbox"
             %>
-            Questions are contained in mission files
+            Questions are contained in <%= display_name.downcase %> files
           </label>
         </div>
         <br>
@@ -119,14 +120,14 @@
     </div>
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
+      <%= f.submit "#{@mission.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
     </div>
 
     <%= render :partial => "layouts/html_editor" %>
 <% end %>
-<h3>Upload mission files</h3>
+<h3>Upload <%= display_name.downcase %> files</h3>
 <br/>
 <%= render partial: "layouts/file_uploader_complicated",
            locals: { owner: @mission } %>

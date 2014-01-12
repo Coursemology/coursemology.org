@@ -6,6 +6,7 @@ class PreferableItem < ActiveRecord::Base
   scope :mission_columns,         where(item: "Mission", item_type: "Column")
   scope :training_columns,        where(item: "Training", item_type: "Column")
   scope :student_sidebar_items,   where(item: "Sidebar", item_type: "Student")
+  scope :other_sidebar_items,     where(item: "Sidebar", item_type: "Other")
   scope :email_notifications,     where(item: "Email", item_type: "Course")
   scope :course_home_sections,    where(item: "CourseHome", item_type: "Section")
   scope :home_sections_events_no, where(item: "CourseHome", item_type: "SectionShow")
@@ -46,5 +47,4 @@ class PreferableItem < ActiveRecord::Base
   def self.mission_due
     'mission_due'
   end
-
 end

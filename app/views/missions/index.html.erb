@@ -1,12 +1,12 @@
 <%- model_class = Mission -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+  <h1><%=t '.title', :default => @course.customized_title_by_model(model_class).pluralize %></h1>
 </div>
 
 <% if can? :manage, :bulk_update %>
     <ul class="nav nav-tabs">
       <li class="<%= "active" if @tab == 'missions' %>">
-        <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4>Missions</h4></a>
+        <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4><%= @course.customized_title_by_model(model_class).pluralize %></h4></a>
       </li>
       <li class="<%= "active" if @tab == 'overview' %>">
         <a href="<%= course_missions_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
@@ -32,14 +32,14 @@
 
 <% if can? :manage, Mission %>
     <p>
-      <%= link_to "New Mission",
+      <%= link_to "New #{@course.customized_title_by_model(model_class).singularize}",
                   new_course_mission_path(@course),
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>
 <% to_display = @display_columns.keys %>
 <% if to_display.include? 'tag' %>
-    <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+    <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title_by_model(Mission).pluralize.downcase %> and <%= @course.customized_title_by_model(Training).pluralize.downcase %> in that tag.</em></p>
 <% end %>
 
 <table class="table assignments missions-list-table">

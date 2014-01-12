@@ -25,7 +25,7 @@
           <% sub = @submissions.select {|sub| sub.user_course == std }.first %>
           <tr>
             <% if sub %>
-                <td><%= std.name %> </td>
+                <td> <a href="<%= course_survey_survey_submission_path(@course, @survey, sub) %>">  <%= std.name %> </a> </td>
             <% else %>
                 <td><%= std.name %></td>
             <% end %>

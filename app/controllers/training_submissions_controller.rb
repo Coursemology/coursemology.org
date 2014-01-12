@@ -12,7 +12,8 @@ class TrainingSubmissionsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :edit, :listall]
 
   def listall
-    @tab = "TrainingSubmission"
+    @tab = Training
+
 
     @selected = {}
     # find selected assignment

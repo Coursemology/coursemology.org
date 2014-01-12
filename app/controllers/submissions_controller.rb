@@ -13,7 +13,7 @@ class SubmissionsController < ApplicationController
 
 
   def listall
-    @tab = "MissionSubmission"
+    @tab = Mission
 
     @selected = {}
     # find selected assignment

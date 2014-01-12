@@ -34,6 +34,7 @@ class CoursePreferencesController < ApplicationController
       else
         @tab = 'Sidebar'
         @preferences = @course.student_sidebar_items
+        @ranking = @course.student_sidebar_ranking
     end
   end
 
@@ -43,7 +44,7 @@ class CoursePreferencesController < ApplicationController
          curr_pref = @course.course_preferences.where(id: val).first
          if curr_pref
            if key["prefer_value"] && key["prefer_value"].strip.size > 0
-             curr_pref.prefer_value = key["prefer_value"]
+             curr_pref.prefer_value = key["prefer_value"].strip
            end
            curr_pref.display = key["display"] ? true : false
            curr_pref.save

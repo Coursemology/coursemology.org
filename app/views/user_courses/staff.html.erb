@@ -38,7 +38,7 @@
   <th width="40%">Email</th>
   <th width="10%">Role</th>
   <th>Phantom</th>
-  <th width="15%"></th>
+  <th style="min-width: 70px">Actions</th>
   </thead>
   <tbody>
   <% @staff_courses.each do |s_course| %>
@@ -76,9 +76,11 @@
                   <i class="icon-ok"></i>
               <% end %>
               <% unless s_course.is_creator? %>
+                  <input type="hidden" class="user-course-id" value="<%= s_course.id %>"/>
+                  <input type="hidden" class="remove-staff-url" value="<%= course_remove_staff_path(@course, s_course) %>">
                   <%= link_to '#',
                               class: 'btn remove-staff',
-                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }  do %>
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to remove #{s_course.name} from staff?")) }  do %>
                       <i class="icon-remove"></i>
                   <% end %>
               <% end %>

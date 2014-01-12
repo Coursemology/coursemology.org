@@ -13,7 +13,7 @@
     <table class="table table-bordered table-striped">
       <thead>
       <th>
-        Current Title
+        Default Title
       </th>
       <th>
         Description
@@ -33,13 +33,13 @@
           <% item = pref.preferable_item %>
           <tr>
             <td>
-              <%= pref.prefer_value %>
+              <%= item.default_value %>
             </td>
             <td>
               <%= item.description %>
             </td>
             <td>
-              <input name="preferences[<%= pref.id%>][prefer_value]" type="text">
+              <input name="preferences[<%= pref.id%>][prefer_value]" type="text" value="<%= pref.prefer_value %>">
             </td>
             <td>
               <input name="preferences[<%= pref.id%>][display]" type="checkbox" <% if pref.display? %> checked <% end %>>
@@ -55,6 +55,17 @@
     <% elsif @tab == 'MissionPreference' %>
         <h3>Time Format:</h3>
         <p>Customize the time format to display for mission's start and end time.</p>
+    <% end %>
+    <% if @tab == 'Sidebar' %>
+        <h3>Levels and Achievement:</h3>
+        <p><%= @ranking.preferable_item.description %></p>
+        <div class="info-block checkbox-text">
+          <input type="checkbox"
+                 name="preferences[<%= @ranking.id %>][display]"
+                 <%= "checked" if @ranking.display %>>
+          </input>Display
+          <input type="hidden" name="preferences[<%= @ranking.id %>][prefer_value]" value="<%= @ranking.prefer_value %>" >
+        </div>
     <% end %>
     <% if @tab != 'Sidebar' %>
         <div class="info-block">

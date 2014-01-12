@@ -582,3 +582,12 @@ if PreferableItem.count == 61
                          description:     "Number of topics to display per forum page",
                          default_display: true
 end
+
+if PreferableItem.count == 62
+  PreferableItem.create! item:            "Sidebar",
+                         item_type:       "Other",
+                         name:            "ranking",
+                         default_value:   "",
+                         description:     "Student's level and achievement status",
+                         default_display: true
+end

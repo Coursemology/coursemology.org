@@ -8,7 +8,7 @@ class Activity < ActiveRecord::Base
   belongs_to :target_course, class_name: "UserCourse"
   belongs_to :obj, polymorphic: true
 
-  default_scope includes(:actor_course, :obj, :action)
+  default_scope includes(:obj, :action, :actor_course=>:user)
 
   def self.attempted_asm(user_course, asm)
     action = Action.find_by_text("attempted")

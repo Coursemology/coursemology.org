@@ -1,7 +1,7 @@
 <%- model_class = Training %>
 <% to_display = @display_columns.keys %>
 <% if to_display.include? 'tag' %>
-    <p class="assignments-blurb"><em>* Click on the tags to view missions and trainings in that tag.</em></p>
+    <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title_by_model(Mission).pluralize.downcase %> and <%= @course.customized_title_by_model(Training).pluralize.downcase %> in that tag.</em></p>
 <% end %>
 
 <table class="table assignments">
