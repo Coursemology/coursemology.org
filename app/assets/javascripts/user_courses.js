@@ -3,12 +3,16 @@ $(document).ready(function() {
     $(document).on('click', '.remove-staff', function(e) {
         e.preventDefault();
         var staff_row = $(this).parents('tr');
-        var url = staff_row.find('.uc-url').attr('href');
+//        var url = staff_row.find('.uc-url').attr('href');
+        var value = staff_row.find('.user-course-id').val();
+        var url = staff_row.find('.remove-staff-url').val();
+        console.log(value);
+        console.log(url);
         $.ajax({
             url: url,
-            type: 'DELETE',
+            type: 'POST',
             success: function() {
-                staff_row.remove();
+                staff_row.animate({'line-height':0}, 100).hide(1000);
             }
         });
     });

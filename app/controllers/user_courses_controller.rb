@@ -60,6 +60,15 @@ class UserCoursesController < ApplicationController
     end
   end
 
+  def remove_staff
+    @user_course.role = Role.student.first
+    @user_course.save
+    respond_to do |format|
+      format.json { render json: { status: 'OK' } }
+      format.html { redirect_to course_students_path(@course) }
+    end
+  end
+
   private
 
   def tut_group_assign
