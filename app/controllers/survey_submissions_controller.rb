@@ -41,7 +41,7 @@ class SurveySubmissionsController < ApplicationController
       params[:answers].each do |vals|
         qn = @survey.questions.where(id: vals.first).first
         if qn.is_essay?
-          essay =  qn.survey_essay_answers.first || qn.survey_essay_answers.build({user_course_id: curr_user_course})
+          essay =  qn.survey_essay_answers.where(user_course_id:curr_user_course).first || qn.survey_essay_answers.build({user_course_id: curr_user_course.id})
           essay.text = vals.last
           essay.save
         else
