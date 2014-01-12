@@ -8,6 +8,7 @@ class CoursePreference < ActiveRecord::Base
   scope :mission_columns,       where(preferable_item_id: PreferableItem.mission_columns)
   scope :training_columns,      where(preferable_item_id: PreferableItem.training_columns)
   scope :student_sidebar_items, where(preferable_item_id: PreferableItem.student_sidebar_items)
+  scope :other_sidebar_items,   where(preferable_item_id: PreferableItem.other_sidebar_items)
   scope :email_notifications,   where(preferable_item_id: PreferableItem.email_notifications)
   scope :course_home_sections,  where(preferable_item_id: PreferableItem.course_home_sections)
   scope :course_home_events_no, where(preferable_item_id: PreferableItem.home_sections_events_no)

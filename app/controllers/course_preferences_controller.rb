@@ -34,6 +34,7 @@ class CoursePreferencesController < ApplicationController
       else
         @tab = 'Sidebar'
         @preferences = @course.student_sidebar_items
+        @ranking = @course.student_sidebar_ranking
     end
   end
 

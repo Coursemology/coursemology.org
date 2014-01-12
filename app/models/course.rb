@@ -108,6 +108,13 @@ class Course < ActiveRecord::Base
     mission_columns.select {|pref| pref.display }
   end
 
+  def student_sidebar_ranking
+    self.course_preferences.other_sidebar_items.where("preferable_items.name = 'ranking'").first
+  end
+  def show_ranking?
+    student_sidebar_ranking.display?
+  end
+
   def training_columns_display
     training_columns.select {|pref| pref.display }
   end

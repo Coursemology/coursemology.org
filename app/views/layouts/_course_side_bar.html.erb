@@ -12,7 +12,7 @@
           <%= current_user.name %></a></div>
         <div class="clearfix"></div>
       </div>
-      <% if curr_user_course.is_student? %>
+      <% if curr_user_course.is_student? and @course.show_ranking? %>
           <hr>
           <table class="table user-short-stat" style="text-align:center">
             <thead>
