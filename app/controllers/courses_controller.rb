@@ -99,7 +99,9 @@ class CoursesController < ApplicationController
   def show
     if can?(:participate, Course) || can?(:share, Course)
 
-      curr_user_course.update_attribute(:last_active_time, Time.now)
+      unless curr_user_course.new_record?
+        curr_user_course.update_attribute(:last_active_time, Time.now)
+      end
       @announcement_pref = @course.home_announcement_pref
       if @announcement_pref.display?
         no_to_display = @course.home_announcement_no_pref.prefer_value.to_i
