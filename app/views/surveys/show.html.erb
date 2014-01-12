@@ -45,6 +45,7 @@
       </div>
     </td>
     <% if can? :manage, Survey %>
+        <td><%= render partial: "survey_action", locals: {survey: @survey} %></td>
         <td width="10%">
           <%= link_to edit_course_survey_path(@course, @survey), class: "btn" do %>
               <i class="icon-edit"></i>

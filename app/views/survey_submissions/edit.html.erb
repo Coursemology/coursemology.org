@@ -14,12 +14,12 @@
 <script>
   $(document).ready(function(){
       $("input[type='checkbox']").change(function(){
+          $("label[for='"+$(this).parent().parent().attr('name')+"']").hide();
           var grp_cb = $('input[name="'+$(this).attr('name')+'"]:checked');
-          console.log(grp_cb.length);
           if (grp_cb.length == 0) {
               return
           }
-          var max = grp_cb.attr('max') - 0;
+          var max = grp_cb.attr('max_response') - 0;
           if(!max) {
               return
           }
@@ -27,6 +27,26 @@
               alert("Exceeds max responds limit.");
               $(this).attr('checked', false);
           }
-      })
+      });
+
+      var validator = $("#survey-form").validate();
+
+      $(".cancel").click(function() {
+          validator.resetForm();
+      });
+
+      $(".submit").click(function(e){
+          var pass = true;
+          $("#survey-form").valid();
+          $('ul.required').each(function(){
+              var checked = $("input[type='checkbox']:checked", this.children).length;
+              pass = pass && (checked > 0);
+              if (checked <= 0)
+                $("label[for='"+$(this).attr('name')+"']").show();
+          });
+
+          if (!pass)
+            e.preventDefault();
+      });
   });
 </script>

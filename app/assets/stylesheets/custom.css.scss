@@ -763,6 +763,10 @@ $grayMediumLight: #eaeaea;
     margin: 0 0 18px 0;
   }
 }
+
+.error {
+  color: #f00;
+}
 .field_with_errors {
   @extend .control-group;
   @extend .error;

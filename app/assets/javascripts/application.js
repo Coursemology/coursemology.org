@@ -19,6 +19,8 @@
 //= require angular-resource
 //= require angular-route
 //= require angular-ui-sortable-rails
+//= require jquery.validate
+//= require jquery.validate.additional-methods
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
