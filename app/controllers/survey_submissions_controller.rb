@@ -84,8 +84,11 @@ class SurveySubmissionsController < ApplicationController
       end
       is_submit = params[:commit] != 'Save'
       is_finished = false
+      answered_qns = answers.keys
+      @survey_submission.current_qn = answered_qns.length
+      @survey_submission.save
+
       if is_submit
-        answered_qns = answers.keys
         required_qns = @survey.questions.select {|qn| qn.is_required? }
         is_finished = (required_qns - answered_qns) == []
       end

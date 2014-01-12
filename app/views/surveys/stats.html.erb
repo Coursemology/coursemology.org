@@ -2,6 +2,7 @@
   <h1>Survey Statistics: <%= @survey.title %></h1>
 </div>
 
+<%= render partial: "nav_bar" %>
 
 <% [@staff_courses, @std_courses, @std_courses_phantom].each_with_index do |user_courses, index| %>
     <% case index  %>
