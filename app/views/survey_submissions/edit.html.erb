@@ -28,6 +28,9 @@
               $(this).attr('checked', false);
           }
       });
+      $("input[type='radio']").change(function(){
+          $("label[for='"+$(this).parent().parent().attr('name')+"']").hide();
+      });
 
       var validator = $("#survey-form").validate();
 
@@ -39,7 +42,10 @@
           var pass = true;
           $("#survey-form").valid();
           $('ul.required').each(function(){
-              var checked = $("input[type='checkbox']:checked", this.children).length;
+              var checkbox = $("input[type='checkbox']:checked", this.children).length;
+              var radio = $("input[type='radio']:checked", this.children).length;
+              var checked = checkbox + radio;
+              console.log(radio);
               pass = pass && (checked > 0);
               if (checked <= 0)
                 $("label[for='"+$(this).attr('name')+"']").show();
