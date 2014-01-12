@@ -99,6 +99,7 @@
                             <div class="asm-qn-handler" style="background-color: #d9edf7">
                               <i class="icon-move handler-icon"></i>
                               <h3 class="handler-text">Question <%= i + 1 %> :  <%= q.type.title %></h3>
+                              <strong style="color: #ff0000"><%= '(* required)' if q.is_required? %></strong>
                             </div>
                             <%= render partial: "survey_questions/one", :locals => {q: q} %>
                           </td>

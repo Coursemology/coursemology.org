@@ -15,12 +15,17 @@
               <% @survey.survey_sections.each do |s| %>
                   <option value="<%= s.id %>" <%= 'selected' if s.id == @survey_question.survey_section_id %>><%= s.title %></option>
               <% end %>
-
-
             </select>
           </div>
         </div>
     <% end %>
+
+    <div class="control-group">
+      <%= f.label "Is Required ?", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :is_required %> Check to require answer this question to get EXP
+      </div>
+    </div>
 
     <div class="control-group">
       <label class="control-label">Question Type</label>
