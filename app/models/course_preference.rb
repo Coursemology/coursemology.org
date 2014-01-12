@@ -18,6 +18,7 @@ class CoursePreference < ActiveRecord::Base
 
 
   before_update :schedule_auto_sbm_job, :if => :display_changed?
+  after_update :update_related_pref, :if => :prefer_value_changed?
 
   def schedule_auto_sbm_job
     if preferable_item == PreferableItem.where(item: 'Mission', item_type: 'Submission', name: 'auto').first
@@ -31,5 +32,15 @@ class CoursePreference < ActiveRecord::Base
 
   def self.fetch
 
+  end
+
+  def update_related_pref
+    if preferable_item.name == 'announcements' and
+        preferable_item.item == 'Sidebar' and
+        preferable_item.item_type == 'Student'
+      ann = course.home_sections.where("preferable_items.name = 'announcements'").first
+      ann.prefer_value = prefer_value
+      ann.save
+    end
   end
 end
