@@ -390,8 +390,8 @@ class Course < ActiveRecord::Base
     end
 
     missions = MaterialFolder.create_virtual("missions", material_folder.id)
-    missions.name = "Missions"
-    missions.description = "Mission descriptions and other files"
+    missions.name = customized_title_by_model(Mission).pluralize
+    missions.description = missions.name.singularize + " descriptions and other files"
     missions.files = mission_files
 
     training_files =
@@ -416,8 +416,8 @@ class Course < ActiveRecord::Base
     end
 
     trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
-    trainings.name = "Trainings"
-    trainings.description = "Training descriptions and other files"
+    trainings.name = customized_title_by_model(Training).pluralize
+    trainings.description = trainings.name + " descriptions and other files"
     trainings.files = training_files
 
     [missions, trainings]

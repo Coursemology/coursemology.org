@@ -68,18 +68,18 @@ class UserMailer < ActionMailer::Base
     mail(to: user_email, subject: "#{course_name} New Announcement: #{ann.title}")
   end
 
-  def new_mission(user_name, user_email, mission_title, course_name, redirect_to)
+  def new_mission(user_name, user_email, mission_title, course, redirect_to)
     @user_name = user_name
     @mission_title = mission_title
     @redirect_to = redirect_to
-    mail(to: user_email, subject: "#{course_name}: New Mission Available!")
+    mail(to: user_email, subject: "#{course.title}: New #{course.customized_title_by_model(Mission).singularize} Available!")
   end
 
-  def new_training(user_name, user_email, training_title, course_name, redirect_to)
+  def new_training(user_name, user_email, training_title, course, redirect_to)
     @user_name = user_name
     @training_title = training_title
     @redirect_to = redirect_to
-    mail(to: user_email, subject: "#{course_name}: New Training Available!")
+    mail(to: user_email, subject: "#{course.title}: New #{course.customized_title_by_model(Training).singularize} Available!")
   end
 
   def mission_due(user, mission, course, redirect_to)

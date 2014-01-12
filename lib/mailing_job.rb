@@ -29,14 +29,14 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
   def new_mission(mission, course)
     course.user_courses.each do |uc|
       user = uc.user
-      UserMailer.delay.new_mission(user.name , user.email, mission.title, course.title, redirect_to)
+      UserMailer.delay.new_mission(user.name , user.email, mission.title, course, redirect_to)
     end
   end
 
   def new_training(training, course)
     course.user_courses.each do |uc|
       user = uc.user
-      UserMailer.delay.new_training(user.name , user.email, training.title, course.title, redirect_to)
+      UserMailer.delay.new_training(user.name , user.email, training.title, course, redirect_to)
     end
   end
 
