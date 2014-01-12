@@ -5,7 +5,7 @@
 <p><%= @survey.description.html_safe %></p>
 
 <% if @survey.has_section? %>
-    <%= render partial: "with_section_template", locals: {mode: "Edit"} %>
+    <%= render partial: "with_section_template", locals: {mode: "#{@editable ? 'Edit' : 'Review'}"} %>
 <% else %>
     <%= render partial: "no_section_template" %>
 <% end %>
