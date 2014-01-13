@@ -120,6 +120,7 @@ class CourseAbility
 
       # Students can edit their own posts
       can :edit, ForumPost, author: user_course
+      can :update, ForumPost, author: user_course
 
       # Students cannot make topics sticky nor announcements, they also cannot lock and make posts hidden
       cannot :set_sticky, ForumTopic
