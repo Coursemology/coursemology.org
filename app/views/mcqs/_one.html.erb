@@ -4,9 +4,9 @@
 <br/>
 <ul>
   <% q.mcq_answers.each do |ans| %>
-    <li>
+    <li class="checkbox-text">
     <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
-    <span><%= ans.text %></span>
+    <span><%= style_format ans.text %></span>
   </li>
 <% end %>
 </ul>
