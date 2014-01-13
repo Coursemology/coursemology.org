@@ -25,6 +25,14 @@ module ApplicationHelper
     end
   end
 
+  def datetime_no_seconds_no_year(datetime)
+    if datetime.nil?
+      ""
+    else
+      datetime.strftime("%d %b %H:%M")
+    end
+  end
+
   def datetime_iso(datetime)
     if datetime.nil?
       ''
