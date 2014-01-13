@@ -17,3 +17,4 @@
 <% if reply_to %>
 <%= form.hidden_field :parent_id, value: reply_to.id %>
 <% end %>
+<%= render :partial => 'layouts/html_editor' %>
