@@ -13,7 +13,7 @@
                    value="<%= opt.id %>" <%= 'checked' if answers.include? opt.id %>
                    <%= 'disabled' unless editable %>/>
         <% end %>
-        <label for="value=<%= opt.id %>"> <%= opt.description %></label>
+        <label for="value=<%= opt.id %>"><%= style_format opt.description%></label>
       </li>
   <% end %>
 </ul>

@@ -900,14 +900,17 @@ $grayMediumLight: #eaeaea;
   padding-top: 5px;
 }
 .checkbox-text label {
-  //display: block;
-  padding-left: 15px;
-  text-indent: -15px;
+  display: inline-table;
+  //padding-left: 5px;
+  max-width: 90%;
+  //text-indent: -15px;
 }
 
 .checkbox-text span {
   padding-left: 7px;
-  text-indent: -15px;
+  //text-indent: -15px;
+  display: inline-table;
+  max-width: 90%;
 }
 
 .checkbox-text input {
@@ -919,6 +922,12 @@ $grayMediumLight: #eaeaea;
   //position: relative;
   top: -1px;
   *overflow: hidden;
+}
+
+.checkbox-text div {
+  display: inline-table;
+  width: 90%;
+  padding-left: 5px;
 }
 
 .late-submission {

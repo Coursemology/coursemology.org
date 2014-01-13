@@ -10,7 +10,7 @@
         <% else %>
           <input class="choices" type="radio" name="answers" value="<%= ans.id %>" id="value=<%= ans.id %>"/>
         <% end %>
-        <label for="value=<%= ans.id %>"> <%= ans.text %></label>
+        <label for="value=<%= ans.id %>"> <%= style_format ans.text %></label>
       </li>
   <% end %>
 </ul>
