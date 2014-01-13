@@ -4,7 +4,7 @@ class FileUpload < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
   belongs_to :creator, class_name: "User"
 
-  has_attached_file :file
+  has_attached_file :file, :restricted_characters => /[:\/\\]/
 
   before_post_process :hash_filename
   after_save :sync_filename
@@ -82,7 +82,7 @@ class FileUpload < ActiveRecord::Base
     end
   end
 
-private
+  private
   # Stores on disk the hash of the file, for uniqueness as well as to obfuscate the file name, where necessary
   # for example, in surveys.
   def hash_filename
@@ -116,7 +116,7 @@ private
 
     # Copy the file in place -- this replaces the headers but retains content
     options = {
-      content_disposition: (filename ? 'attachment; filename="' + filename + '"' : '')
+        content_disposition: (filename ? 'attachment; filename="' + filename + '"' : '')
     }
     new_obj = obj.copy_to(obj.key, options)
 
