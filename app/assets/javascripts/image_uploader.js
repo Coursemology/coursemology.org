@@ -33,24 +33,28 @@ $(document).ready(function(){
     });
 
     // setup fileuploader
-    $('#image-upload-form').fileupload({
-        maxFileSize: 5000000,
-        acceptFileTypes: '/(\.|\/)(gif|jpe?g|png)$/i',
-        autoUpload: true,
-        dropZone: $('#image-dropzone'),
-        dataType: 'json',
-        url: $('#image-upload-form').attr('action'),
-        formData: [
-            {
-                name: '_method',
-                value: 'POST ' }
-        ],
-        done: function(e, data) {
-            $('.image-uploader-input-url').val(data.result.url);
-            $('.image-uploader-preview-img').attr('src', data.result.url);
-            $(target_el + '-preview').attr('src', data.result.url);
-            $(target_el + '-input').attr('value', data.result.url);
-            $('.image-uploader-insert-btn').click();
-        }
+    $(document).on('DOMNodeInserted', function(e) {
+      $('textarea.html-editor', e.target).each(function() {
+        $('#image-upload-form').fileupload({
+            maxFileSize: 5000000,
+            acceptFileTypes: '/(\.|\/)(gif|jpe?g|png)$/i',
+            autoUpload: true,
+            dropZone: $('#image-dropzone'),
+            dataType: 'json',
+            url: $('#image-upload-form').attr('action'),
+            formData: [
+                {
+                    name: '_method',
+                    value: 'POST ' }
+            ],
+            done: function(e, data) {
+                $('.image-uploader-input-url').val(data.result.url);
+                $('.image-uploader-preview-img').attr('src', data.result.url);
+                $(target_el + '-preview').attr('src', data.result.url);
+                $(target_el + '-input').attr('value', data.result.url);
+                $('.image-uploader-insert-btn').click();
+            }
+        });
+      });
     });
 });

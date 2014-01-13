@@ -112,14 +112,15 @@ class CourseAbility
       can :create, ForumTopic
       can :read, ForumTopic, hidden: false
       can :reply, ForumTopic, locked: false
-      can :delete, ForumTopic, locked: false, author: user_course
+      can :destroy, ForumTopic, locked: false, author: user_course
       can :set_answer, ForumTopic, locked: false, author: user_course
       can :read, ForumPost
       can :create, ForumPost
-      can :delete, ForumPost, author: user_course
+      can :destroy, ForumPost, author: user_course
 
       # Students can edit their own posts
       can :edit, ForumPost, author: user_course
+      can :update, ForumPost, author: user_course
 
       # Students cannot make topics sticky nor announcements, they also cannot lock and make posts hidden
       cannot :set_sticky, ForumTopic

@@ -2,7 +2,7 @@
   <div class="row-fluid control-group">
     <%= form.label :title %>
     <div class="controls">
-      <%= form.text_field :title, required: true, class: 'span10' %>
+      <%= form.text_field :title, required: true, class: 'span10', required: 'required' %>
     </div>
   </div>
 
@@ -17,3 +17,4 @@
 <% if reply_to %>
 <%= form.hidden_field :parent_id, value: reply_to.id %>
 <% end %>
+<%= render :partial => 'layouts/html_editor' %>
