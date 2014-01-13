@@ -69,11 +69,11 @@ class TrainingSubmission < ActiveRecord::Base
   #  end
   #end
 
-  def graded?
-    if self.submission_gradings.count > 0
-      true
-    else
-      false
-    end
-  end
+  #def graded?
+  #  if self.submission_gradings.count > 0
+  #    true
+  #  else
+  #    false
+  #  end
+  #end
 end
