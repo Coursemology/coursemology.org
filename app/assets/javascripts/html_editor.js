@@ -64,9 +64,6 @@ $(document).ready(function() {
         return imgUploadHtml;
       }
     };
-      $('textarea.html-editor').wysihtml5(options);
-  } else {
-      $("textarea.html-editor").each(function(){$(this).wysihtml5();});
   }
 
   var handler = function() {
@@ -82,8 +79,7 @@ $(document).ready(function() {
     $(this).wysihtml5(options);
   };
 
-//  $(document).on('DOMNodeInserted', function(e) {
-//
-//    $('textarea.html-editor', e.target).each(handler);
-//  });
+  $(document).on('DOMNodeInserted', function(e) {
+    $('textarea.html-editor', e.target).each(handler);
+  });
 });
