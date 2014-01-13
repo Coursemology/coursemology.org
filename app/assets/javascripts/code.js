@@ -60,7 +60,6 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
             }
         }
         function box_up(){
-            console.log(self.code_id);
             if (self.start){
                 var s = (self.start_line < self.end_line) ? self.start_line : self.end_line;
                 var e = (self.start_line > self.end_line) ? self.start_line : self.end_line;
@@ -309,9 +308,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
         if (typeof Comment != 'undefined'){
             Comment.parseComment(annotations, self.code_id);
         }
-        console.log(self.code_id);
-        console.log(annotations.length);
-        console.log("parse comments");
+
         for (var i=0;i<annotations.length;++i){
             if (typeof _annotate_ids[annotations[i].id] != 'undefined') continue;
             _annotate_ids[annotations[i].id] = true;
