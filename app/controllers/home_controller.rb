@@ -3,6 +3,10 @@ class HomeController < ApplicationController
   def index
     @courses = current_user.courses
 
+    if @courses.count == 0
+      @all_courses = Course.where(is_publish: true)
+      return
+    end
     redirect_course = @courses.count == 1 ? @courses.first :
         current_user.user_courses.order("last_active_time desc").first.course
 
