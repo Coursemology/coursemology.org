@@ -33,7 +33,7 @@
           <% end %>
         </ul>
       <% end %>
-      <% if can? :delete, @topic %>
+      <% if can? :destroy, @topic %>
         <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
       <% end %>
      </div>
@@ -88,7 +88,6 @@
       <h3>Post a Reply</h3>
 
       <% new_post = ForumPost.new %>
-      <% new_post.title = replize_title(@topic.posts.last.title) %>
       <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
                    html: { class: 'form-horizontal' } do |f| %>
         <%= render partial: 'forums/posts/form', locals: { reply_to: @topic.posts.last, form: f } %>
