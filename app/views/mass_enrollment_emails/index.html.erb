@@ -75,7 +75,7 @@
             <td><input type="checkbox" class="checkbox-students" value="<%= std.id %>"/></td>
             <td><%= std.name %></td>
             <td><%= std.email %></td>
-            <td><%= std.status %></td>
+            <td><%= std.status %> on <%= datetime_no_seconds_no_year std.updated_at %></td>
             <td>
               <%= link_to course_mass_enrollment_email_path(@course, std),
                           method: :delete,
