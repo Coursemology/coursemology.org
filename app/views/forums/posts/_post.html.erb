@@ -65,7 +65,7 @@
         <% if can? :edit, post %>
           <%= link_to 'Edit', edit_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn' %>
         <% end %>
-        <% if can? :delete, post %>
+        <% if can? :destroy, post %>
           <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
         <% end %>
       </div>
