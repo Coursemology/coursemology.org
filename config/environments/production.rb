@@ -79,12 +79,12 @@ JfdiAcademy::Application.configure do
   config.action_mailer.default :charset => "utf-8"
 
   ActionMailer::Base.smtp_settings = {
-    :address => "smtp.mandrillapp.com",
-    :port => 587,
-    :authentication => :plain,
-    :domain => ENV['MANDRILL_SMTP_USER'],
-    :user_name => ENV['MANDRILL_SMTP_USER'],
-    :password => ENV['MANDRILL_SMTP_PASSWORD'],
+      :address => "smtp.mandrillapp.com",
+      :port => 587,
+      :authentication => :plain,
+      :domain => ENV['MANDRILL_SMTP_USER'],
+      :user_name => ENV['MANDRILL_SMTP_USER'],
+      :password => ENV['MANDRILL_SMTP_PASSWORD'],
   }
 
   config.paperclip_defaults = {
@@ -96,4 +96,11 @@ JfdiAcademy::Application.configure do
           secret_access_key:  ENV['AWS_SECRET_ACCESS_KEY']
       }
   }
+
+  Whatever::Application.config.middleware.use ExceptionNotification::Rack,
+                                              :email => {
+                                                  :email_prefix => "[ERROR] ",
+                                                  :sender_address => %{"Coursemology Exception" <exception.notifier@coursemology.com>},
+                                                  :exception_recipients => "raymoondtang@gmail.com"
+                                              }
 end
