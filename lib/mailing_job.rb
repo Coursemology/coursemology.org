@@ -14,6 +14,8 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
         new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
+      when ForumPost.to_s
+        forum_notification(ForumPost.find(type_id), course)
       when 'ForumDigests'
         forum_digests
     end
@@ -71,7 +73,27 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
     end
   end
 
-private
+  def forum_notification(post, course)
+
+    # send out notifications for subscribers
+    topic = post.topic
+    forum = topic.forum
+    ucs = []
+    forum.subscriptions.each do |sub|
+      uc = sub.user
+      ucs << uc
+      UserMailer.delay.forum_new_post(uc, post, course)
+    end
+    topic.subscriptions.each do |sub|
+      uc = sub.user
+      #make sure only one email is sent to each subscribed user
+      unless ucs.include? uc
+        UserMailer.delay.forum_new_post(sub.user, @post, @course)
+      end
+    end
+  end
+
+  private
   def forum_digests
     Course.all.each do |course|
       course_forum_digests(course)
@@ -92,19 +114,19 @@ private
     # Iterate over every subscription, sending out only the forums where the user specified he wanted
     # daily digests by concatenating the arrays together
     last_subscription = ForumForumSubscription.where(forum_id: forums.keys). # TODO: only do digests
-      reduce({ posts: [], user: nil }) do |posts, subscription|
-        if (posts[:user] != subscription.user)
-          # Send out the posts for the previous user
-          UserMailer.delay.forum_digest(posts[:user], posts.posts, course, digest_date) if posts[:user] && (not posts[:posts].empty?)
+        reduce({ posts: [], user: nil }) do |posts, subscription|
+      if (posts[:user] != subscription.user)
+        # Send out the posts for the previous user
+        UserMailer.delay.forum_digest(posts[:user], posts.posts, course, digest_date) if posts[:user] && (not posts[:posts].empty?)
 
-          # Reset the accumulator
-          posts[:posts] = []
-          posts[:user] = subscription.user
-        end
-
-        posts[:posts] += forums[subscription.forum.id.to_s][1]
-        posts
+        # Reset the accumulator
+        posts[:posts] = []
+        posts[:user] = subscription.user
       end
+
+      posts[:posts] += forums[subscription.forum.id.to_s][1]
+      posts
+    end
 
     # Handle the last user accumulated.
     if last_subscription[:user] && (not last_subscription[:posts].empty?)

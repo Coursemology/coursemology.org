@@ -7,6 +7,12 @@ class ForumPost < ActiveRecord::Base
   attr_accessible :title, :text, :parent_id
   acts_as_votable
 
+  after_create :send_notification
+
+  def send_notification
+    Delayed::Job.enqueue(MailingJob.new(author.course.id, ForumPost.to_s, self.id, "", ""), run_at: Time.now)
+  end
+
   def unread?(user_course)
     SeenByUser.forum_posts.where(user_course_id: user_course, obj_id: self).empty?
   end
