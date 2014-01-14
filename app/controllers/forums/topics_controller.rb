@@ -45,11 +45,6 @@ class Forums::TopicsController < ApplicationController
       post.save
     end
 
-    # send out notifications for subscribers
-    @forum.subscriptions.each do |sub|
-      UserMailer.delay.forum_new_topic(sub.user, @topic, post, @course)
-    end
-
     respond_to do |format|
       format.html { redirect_to course_forum_topic_path(@course, @forum, @topic),
                                 notice: 'The topic was successfully created.' }
