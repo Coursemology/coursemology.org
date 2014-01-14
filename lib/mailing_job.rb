@@ -79,16 +79,17 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
     topic = post.topic
     forum = topic.forum
     ucs = []
-    forum.subscriptions.each do |sub|
+    first = topic.posts.count == 1
+    (forum.subscriptions + topic.subscriptions).each do |sub|
       uc = sub.user
+      if ucs.include? uc
+        next
+      end
       ucs << uc
-      UserMailer.delay.forum_new_post(uc, post, course)
-    end
-    topic.subscriptions.each do |sub|
-      uc = sub.user
-      #make sure only one email is sent to each subscribed user
-      unless ucs.include? uc
-        UserMailer.delay.forum_new_post(sub.user, @post, @course)
+      if first
+        UserMailer.delay.forum_new_topic(uc, topic, post, course)
+      else
+        UserMailer.delay.forum_new_post(uc, post, course)
       end
     end
   end

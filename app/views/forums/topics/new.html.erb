@@ -9,7 +9,7 @@
   <% end %>
 
   <div class="control-group">
-    <%= f.label :topic_type %>
+    <%= f.label :topic_type, class:"control-label" %>
     <div class="controls">
       <%= f.select :topic_type, ForumTopic::TOPIC_TYPES.select {|t| can? t[2], @topic}, required: true, class: 'span7' %>
     </div>
