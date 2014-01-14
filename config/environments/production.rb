@@ -96,11 +96,10 @@ JfdiAcademy::Application.configure do
           secret_access_key:  ENV['AWS_SECRET_ACCESS_KEY']
       }
   }
-
-  Whatever::Application.config.middleware.use ExceptionNotification::Rack,
-                                              :email => {
-                                                  :email_prefix => "[ERROR] ",
-                                                  :sender_address => %{"Coursemology Exception" <exception.notifier@coursemology.com>},
-                                                  :exception_recipients => "raymoondtang@gmail.com"
-                                              }
+  config.middleware.use ExceptionNotification::Rack,
+                        :email => {
+                            :email_prefix => "[ERROR]",
+                            :sender_address => %{"Coursemology Exception" <exception.notifier@coursemology.com>},
+                            :exception_recipients => "raymoondtang@gmail.com"
+                        }
 end
