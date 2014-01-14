@@ -1,13 +1,13 @@
 <div class="post-content">
   <div class="row-fluid control-group">
-    <%= form.label :title %>
+    <%= form.label :title, class:"control-label" %>
     <div class="controls">
       <%= form.text_field :title, required: true, class: 'span10', required: 'required' %>
     </div>
   </div>
 
   <div class="row-fluid control-group">
-    <%= form.label :text %>
+    <%= form.label :text, class:"control-label" %>
     <div class="controls">
       <%= form.text_area :text , label: false, required: false, class: 'text_area span10 html-editor' %>
     </div>
