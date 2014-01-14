@@ -6,7 +6,7 @@
     <table width="100%">
       <col width="10%" />
       <tr><td><strong>Student:</strong> </td><td><%= render partial: "layouts/user_name_link", locals: {user_course: @survey_submission.user_course} %></td></tr>
-      <tr><td><strong>Submitted at:</strong> </td><td><%= time_ago_in_words(@survey_submission.submitted_at) %> ago</td></tr>
+      <tr><td><strong>Submitted at:</strong> </td><td><%= @survey_submission.submitted_at ? time_ago_in_words(@survey_submission.submitted_at) : ""%> ago</td></tr>
     </table>
 <% end %>
 
