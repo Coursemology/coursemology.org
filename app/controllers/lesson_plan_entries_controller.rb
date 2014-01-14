@@ -91,7 +91,8 @@ private
   end
 
   def get_milestones_for_course(course)
-    milestones = course.lesson_plan_milestones.order("start_at")
+    milestones = course.lesson_plan_milestones.accessible_by(current_ability).order("start_at")
+
 
     other_entries_milestone = create_other_items_milestone(milestones)
     prior_entries_milestone = create_prior_items_milestone(milestones)

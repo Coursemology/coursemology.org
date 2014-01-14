@@ -128,7 +128,8 @@ class CourseAbility
       cannot :set_lock, ForumTopic
       cannot :set_hidden, ForumTopic
 
-      can :read, [LessonPlanEntry, LessonPlanMilestone]
+      can :read, [LessonPlanEntry]
+      can :read, [LessonPlanMilestone], is_publish: true
 
       can :read, [Mission, Training, Survey], publish: true
 

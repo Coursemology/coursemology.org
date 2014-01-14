@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140112180643) do
+ActiveRecord::Schema.define(:version => 20140114091219) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -516,6 +516,7 @@ ActiveRecord::Schema.define(:version => 20140112180643) do
     t.text     "description"
     t.datetime "end_at"
     t.datetime "start_at"
+    t.boolean  "is_publish",  :default => true
   end
 
   create_table "lesson_plan_resources", :force => true do |t|

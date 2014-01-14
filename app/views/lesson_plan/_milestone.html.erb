@@ -1,10 +1,10 @@
 <% if milestone.is_virtual? == false %>
-  <a class="lesson-plan-anchor" name="milestone-<%= milestone.id %>"></a>
+    <a class="lesson-plan-anchor" name="milestone-<%= milestone.id %>"></a>
 <% end %>
 
 <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
 <% if cannot? :manage, Mission %>
-<% entries = entries.select { |entry| entry.is_published } %>
+    <% entries = entries.select { |entry| entry.is_published } %>
 <% end %>
 
 <div class="lesson-plan-item">
@@ -15,48 +15,48 @@
           <div>
             <h2>
               <% if entries.length > 0 %>
-              <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
-              <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
+                  <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
+                  <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
               <% end %>
               <%= milestone.title %>
               <% if milestone.start_at %>
-              <small>
-                <%= milestone.start_at.strftime("%d %b %Y") %>
-                <% if milestone.end_at %>
-                  - <%= milestone.end_at.strftime("%d %b %Y") %>
-                <% elsif milestone.next_milestone %>
-                  - <%= milestone.next_milestone.start_at.advance(:days => -1).strftime("%d %b %Y") %>
-                <% else %>
-                  onwards
-                <% end %>
-              </small>
+                  <small>
+                    <%= milestone.start_at.strftime("%d %b %Y") %>
+                    <% if milestone.end_at %>
+                        - <%= milestone.end_at.strftime("%d %b %Y") %>
+                    <% elsif milestone.next_milestone %>
+                        - <%= milestone.next_milestone.start_at.advance(:days => -1).strftime("%d %b %Y") %>
+                    <% else %>
+                        onwards
+                    <% end %>
+                  </small>
               <% end %>
             </h2>
           </div>
           <% if milestone.description %>
-          <div>
-            <p>
-              <%= milestone.description.html_safe %>
-            </p>
-          </div>
+              <div>
+                <p>
+                  <%= milestone.description.html_safe %>
+                </p>
+              </div>
           <% end %>
         </div>
         <div class="pull-right lesson-plan-milestone-controls">
           <% if (can? :manage, LessonPlanEntry) && milestone.is_virtual? != true %>
-            <% start_at = milestone.start_at %>
-            <div class="btn-group pull-left">
-              <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), :class => 'btn' do %>
-                <i class="icon-edit"></i>
-              <% end %>
-              <button class="btn dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <%= link_to "Add Event", new_course_lesson_plan_entry_path(:start_at => start_at ? date_mdY(start_at): nil, :end_at => date_mdY(milestone.end_at)) %>
-                </li>
-              </ul>
-            </div>
+              <% start_at = milestone.start_at %>
+              <div class="btn-group pull-left">
+                <%= link_to edit_course_lesson_plan_milestone_path(@course, milestone), :class => 'btn' do %>
+                    <i class="icon-edit"></i>
+                <% end %>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <%= link_to "Add Event", new_course_lesson_plan_entry_path(:start_at => start_at ? date_mdY(start_at): nil, :end_at => date_mdY(milestone.end_at)) %>
+                  </li>
+                </ul>
+              </div>
             <span class="lesson-plan-delete-controls">
               <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
             </span>
@@ -65,13 +65,13 @@
       </div>
     </div>
   </div>
-  
+
   <% if entries.length > 0 then %>
-  <div class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
-    <% entries.each {|entry| %>
-    <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
-    <% } %>
-  </div>
+      <div class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
+        <% entries.each {|entry| %>
+            <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
+        <% } %>
+      </div>
   <% end %>
   <hr class="hr-shrink-margin" />
 </div>

@@ -3,83 +3,90 @@
   <div class="span3">
     <h4>Title</h4>
   </div>
-  <% if !milestone.is_virtual? %>
-  <div class="span2">
-    <h4>Start Date</h4>
-  </div>
-  <div class="span2">
-    <h4>End Date (Optional)</h4>
-  </div>
+  <% unless milestone.is_virtual? %>
+      <div class="span2">
+        <h4>Start Date</h4>
+      </div>
+      <div class="span2">
+        <h4>End Date (Optional)</h4>
+      </div>
+      <div class="span1">
+        <h4>Publish?</h4>
+      </div>
   <% end %>
 </div>
 <div class="row">
   <div class="span3 offset1">
     <% if !milestone.is_virtual? %>
-      <input name="milestones[<%= milestone.id %>][title]" type="text" class="span3" required="true" value="<%= milestone.title %>">
+        <input name="milestones[<%= milestone.id %>][title]" type="text" class="span3" required="true" value="<%= milestone.title %>">
     <% else %>
-      <h3 class="no-margin"><%= milestone.title %></h3>
+        <h3 class="no-margin"><%= milestone.title %></h3>
     <% end %>
   </div>
   <% if !milestone.is_virtual? %>
-  <div class="span2">
-    <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][start_at]" type="datetime"
-       value="<%= milestone.start_at.strftime('%d-%m-%Y') %>" 
-       class="input-medium" required="true">
+      <div class="span2">
+        <div class="datepicker input-append date">
+          <input name="milestones[<%= milestone.id %>][start_at]" type="datetime"
+                 value="<%= milestone.start_at.strftime('%d-%m-%Y') %>"
+                 class="input-medium" required="true">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
-    </div>
-  </div>
-  <div class="span2">
-    <div class="datepicker input-append date">
-      <input name="milestones[<%= milestone.id %>][end_at]" type="datetime" 
-      <% if milestone.end_at %> value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" <% end %> 
-      class="input-medium">
+        </div>
+      </div>
+      <div class="span2">
+        <div class="datepicker input-append date">
+          <input name="milestones[<%= milestone.id %>][end_at]" type="datetime"
+                 <% if milestone.end_at %> value="<%= milestone.end_at.strftime('%d-%m-%Y') %>" <% end %>
+                 class="input-medium">
       <span class="add-on">
         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
       </span>
-    </div>
-  </div>
+        </div>
+      </div>
+      <div class="span1" style="width: auto">
+        <input type="hidden" name="milestones[<%= milestone.id %>][is_publish]" value="0">
+        <input name="milestones[<%= milestone.id %>][is_publish]" type="checkbox" <%= 'checked' if milestone.is_publish? %>>
+      </div>
 
-  <div class="span1">
-    <div class="pull-right">
-    <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
-    </div>
-  </div>
+      <div class="span1" style="width: auto">
+        <div class="pull-right">
+          <%= render :partial => 'layouts/delete_confirm', locals: { :path_to_item => course_lesson_plan_milestone_path(@course, milestone) } %>
+        </div>
+      </div>
   <% end %>
 </div>
 
 <% if (milestone.entries.select { |m| not(m.is_virtual?) }).length > 0 %>
-  <div>
-    <h3 class="muted">Entries</h3>
-    
-    <div class="row">
-      <div class="span1">
-        <h4>Type</h4>
+    <div>
+      <h3 class="muted">Entries</h3>
+
+      <div class="row">
+        <div class="span1">
+          <h4>Type</h4>
+        </div>
+
+        <div class="span3">
+          <h4>Title</h4>
+        </div>
+
+        <div class="span2">
+          <h4>Start</h4>
+        </div>
+
+        <div class="span2">
+          <h4>End</h4>
+        </div>
       </div>
-      
-      <div class="span3">
-        <h4>Title</h4>
-      </div>
-      
-      <div class="span2">
-        <h4>Start</h4>
-      </div>
-      
-      <div class="span2">
-        <h4>End</h4>
-      </div>
+
+      <hr class="hr-shrink-margin">
+      <% sorted_entries = milestone.entries.sort_by { |e| e.start_at  } %>
+      <% sorted_entries.each { |entry| %>
+          <% if !entry.is_virtual? %>
+              <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
+          <% end %>
+      <% } %>
     </div>
-    
-    <hr class="hr-shrink-margin">
-    <% sorted_entries = milestone.entries.sort_by { |e| e.start_at  } %>
-    <% sorted_entries.each { |entry| %>
-      <% if !entry.is_virtual? %>
-        <%= render :partial => "lesson_plan/overview_entry", :locals => { :entry => entry } %>
-      <% end %>
-    <% } %>
-  </div>
 <% end %>
 
 <hr />
