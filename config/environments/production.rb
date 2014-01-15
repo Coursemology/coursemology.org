@@ -100,6 +100,6 @@ JfdiAcademy::Application.configure do
                         :email => {
                             :email_prefix => "[ERROR]",
                             :sender_address => %{"Coursemology Exception" <exception.notifier@coursemology.com>},
-                            :exception_recipients => "coursemology@googlegroups.com"
+                            :exception_recipients => "coursemology@gmail.com"
                         }
 end
