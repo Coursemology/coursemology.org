@@ -99,7 +99,7 @@
     </div>
 
     <h2 class="assignments-questsions-title"><%= @course.customized_title_by_model(model_class).singularize%> Questions</h2>
-    <table class="table assignments-questions-table">
+    <table class="table asm-qns-table sort">
       <!-- <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:description) %></th>
@@ -108,7 +108,7 @@
       <tbody class="asm-qns" url="<%= reorder_course_mission_asm_qns_path(@course, @mission) %>">
       <% @questions.each_with_index do |q, i| %>
           <tr class="asm-qn" id="asm-qn_<%= q.asm_qns.first.id %>">
-            <td>
+            <td style="width:100%">
               <div class="asm-qn-handler">
                 <i class="icon-move handler-icon"></i>
                 <h3 class="handler-text">Question <%= i + 1 %></h3>
@@ -116,7 +116,7 @@
               <%= style_format(q.description) %>
             </td>
             <% if can? :manage, @mission %>
-                <td>
+                <td class="action-two-icons">
                   <% if q.class == Question %>
                       <%= link_to edit_course_mission_question_path(@course, @mission, q), class: 'btn' do %>
 

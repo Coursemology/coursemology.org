@@ -58,7 +58,7 @@
     <% end %>
 
     <% if can? :manage, Training %>
-        <td width="10%">
+        <td>
           <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
               <i class="icon-edit"></i>
           <% end %>
@@ -110,7 +110,7 @@
               <% end %>
             </td>
             <% if can? :manage, Training %>
-                <td>
+                <td class="action-two-icons">
                   <% if q.class == Mcq %>
                       <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
                           <i class="icon-edit"></i>
