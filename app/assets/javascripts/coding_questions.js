@@ -135,7 +135,8 @@ var cmIncluded;
 
 $(document).ready(function() {
     if(document.getElementById("pathstep_content")) {
-        var options = {
+        //TODO: refactoring
+        var options1 = {
             mode: {name: "python",
                 version: 3,
                 singleLineStringErrors: false},
@@ -147,13 +148,30 @@ $(document).ready(function() {
             extraKeys: {
                 "Tab": function(){
                     cmPrefill.replaceSelection("    " , "end");
+                }
+            }
+        };
+
+        var options2 = {
+            mode: {name: "python",
+                version: 3,
+                singleLineStringErrors: false},
+            lineNumbers: true,
+            indentUnit: 4,
+            tabMode: "shift",
+            matchBrackets: true,
+            theme:'molokai',
+            extraKeys: {
+                "Tab": function(){
                     cmIncluded.replaceSelection("    " , "end");
                 }
             }
         };
 
-        cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);
-        cmIncluded = CodeMirror.fromTextArea(document.getElementById("included"), options);
+
+
+        cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options1);
+        cmIncluded = CodeMirror.fromTextArea(document.getElementById("included"), options2);
 
         cmPrefill.on("change",function(){
             path.changePrefill(cmPrefill.getValue());
