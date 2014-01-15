@@ -14,16 +14,15 @@ class ForumParticipationController < ApplicationController
     @actual_cap = actual_exp_cap(@from_date, @to_date, @weekly.to_i)
 
     @students_courses = @course.user_courses.real_students
-    category = Forem::Category.find(@course.id)
-    result = Forem::Post
+    #category = Forum::Category.find(@course.id)
+    result = ForumPost
       .joins(topic: :forum)
-      .where(forem_forums: {category_id: category.id})
       .includes(:votes)
     if (from_date_db)
-      result = result.where('forem_posts.created_at >= ?', from_date_db)
+      result = result.where('forum_posts.created_at >= ?', from_date_db)
     end
     if (to_date_db)
-      result = result.where('forem_posts.created_at <= ?', to_date_db)
+      result = result.where('forum_posts.created_at <= ?', to_date_db)
     end
 
     std_courses = @students_courses.collect {|i| i} # array of UserCourses
@@ -31,7 +30,7 @@ class ForumParticipationController < ApplicationController
     @post_count = Array.new # array of hashes
 
     result.each do |post| # to save memory, this can be changed to find_each
-      if std_index = std_courses.index {|i| i.user_id == post.user_id}
+      if std_index = std_courses.index {|i| i.user_id == post.author_id}
         if post_index = @post_count.index {|i| i[:std_course_id] == std_courses[std_index].id}
           @post_count[post_index][:count] += 1
           @post_count[post_index][:likes] += post.likes.size
