@@ -58,15 +58,20 @@ $(document).ready(function(){
     if(document.getElementById("ans")) {
         var pathcm;
         pathcm = CodeMirror.fromTextArea(document.getElementById("ans"), {
-                mode: {name: "python",
-                    version: 3,
-                    singleLineStringErrors: false},
-                lineNumbers: true,
-                indentUnit: 4,
-                tabMode: "shift",
-                matchBrackets: true,
-                theme:"molokai"
-            });
+            mode: {name: "python",
+                version: 3,
+                singleLineStringErrors: false},
+            lineNumbers: true,
+            indentUnit: 4,
+            tabMode: "shift",
+            matchBrackets: true,
+            theme:"molokai",
+            extraKeys: {
+                "Tab": function(){
+                    pathcm.replaceSelection("    " , "end");
+                }
+            }
+        });
         $(document).keydown(function(evt){
             if(evt.altKey && evt.which == 82){
                 submitCode();

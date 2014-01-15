@@ -143,7 +143,13 @@ $(document).ready(function() {
             indentUnit: 4,
             tabMode: "shift",
             matchBrackets: true,
-            theme:'molokai'
+            theme:'molokai',
+            extraKeys: {
+                "Tab": function(){
+                    cmPrefill.replaceSelection("    " , "end");
+                    cmIncluded.replaceSelection("    " , "end");
+                }
+            }
         };
 
         cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options);
