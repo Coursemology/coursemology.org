@@ -2,7 +2,7 @@
 <a class="user-thumb-profile" href="<%= get_social_media_url(@course, user_course)%>">
   <img class="user-profile-pic" src="<%= user.get_profile_photo_url %>" />
 </a>
-<a>
+<a href="<%= course_user_course_path(@course, user_course) %>">
   <strong><%= user.name %></strong>
 </a>
 
