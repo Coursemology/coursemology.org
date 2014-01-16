@@ -1,8 +1,8 @@
 <% user = user_course.user %>
-<a class="user-thumb-profile" href="<%= get_social_media_url(@course, user_course)%>">
+<a class="user-thumb-profile" href="<%= get_social_media_url(user_course)%>">
   <img class="user-profile-pic" src="<%= user.get_profile_photo_url %>" />
 </a>
-<a href="<%= course_user_course_path(@course, user_course) %>">
+<a href="<%= user_course.get_path %>">
   <strong><%= user.name %></strong>
 </a>
 

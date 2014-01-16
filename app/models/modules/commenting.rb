@@ -14,6 +14,7 @@ module Commenting
                 t: datetime_no_seconds(self.created_at),
                 u: '<span class="student-link"><a href="'+uc.get_path+'">'+name+'</a></span>',
                 p: uc.user.get_profile_photo_url,
+                f: get_social_media_url(uc),
                 name: name,
                 edit: false
         }

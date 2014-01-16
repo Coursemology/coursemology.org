@@ -441,7 +441,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
             .append('<div class="comment">'+annotation.c.nl2br()+'</div>')
             .append('<div class="timestamp">'+annotation.t+'</div>');
         $li
-            .append('<img class="small-profile-pic" src="'+annotation.p+'" width="32" height="32" />')
+            .append('<a href="' + annotation.f + '"><img class="small-profile-pic" src="'+annotation.p+'" width="32" height="32" /></a>')
             .append($div)
             .appendTo(parent.find('.annotate-area'));
         jfdiFormat($li.find('.comment').get(0));

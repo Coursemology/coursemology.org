@@ -12,7 +12,7 @@ var Comment = (function(){
 
     self.makeComment = function(obj){
         var $li = $('<li class="comment"/>');
-        $li.append('<img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" />');
+        $li.append('<a href="' + obj.f + '"><img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" /></a>');
         var $div = $('<div class="comment-text-container">');
         $div.append('<div class="commentor">'+obj.u+'</div>')
             .append('<div class="comment">'+obj.c.nl2br()+'</div>')
@@ -23,7 +23,7 @@ var Comment = (function(){
 
     self.makeEditableComment = function(obj, ecid) {
         var $li = $('<li class="comment"/>');
-        $li.append('<img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" />');
+        $li.append('<a href="' + obj.f + '"><img class="small-profile-pic" src="'+obj.p+'" width="32" height="32" /></a>');
         var $div = $('<div class="comment-text-container">');
         var $hidden = $('<input class="comment-obj" type="hidden" o="" c="" cid="" author="" >');
         $hidden.attr('o', obj.o);
