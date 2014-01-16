@@ -216,7 +216,7 @@ div.error { color: #f55;}
 
 .annotate-code-lines { position: relative;}
 .annotate-code-lines pre.line { margin-left: 21px; }
-.annotate-code-lines .line-numbers { font-size: 0.8em; background-color: #151515; color: white; float: left; width: 19px; position: absolute; top: 0px; left: 0px;}
+.annotate-code-lines .line-numbers { font-size: 0.8em; background-color: #151515; color: white; float: left;  position: absolute; top: 0px; left: 0px;}
 
 .active .annotate-area { max-height: 450px; overflow: auto; color: #000; }
 .annotate-message { color: #000; }
