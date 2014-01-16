@@ -129,11 +129,11 @@ module ApplicationHelper
     @user and !@user.is_logged_in?
   end
 
-  def get_social_media_url(course, user_course)
+  def get_social_media_url(user_course)
     if  user_course.user.provider == "facebook" and user_course.user.uid
       "https://www.facebook.com/#{user_course.user.uid}"
     else
-      course_user_course_path(course, user_course)
+      user_course.get_path
     end
   end
 end

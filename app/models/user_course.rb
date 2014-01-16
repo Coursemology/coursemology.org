@@ -62,6 +62,7 @@ class UserCourse < ActiveRecord::Base
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
 
+  default_scope includes(:course)
 
   def is_student?
     self.role == Role.find_by_name('student')
