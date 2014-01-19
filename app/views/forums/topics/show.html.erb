@@ -71,9 +71,11 @@
         # indent at every reply, only those with forks.
         child_level = posts.select {|c| c.parent == p}
         fork = level < 3 && (this_level.length > 1 || child_level.length > 1)
-        if fork %><div class="thread"><% end
-        level_iter.call(p, level + 1)
-        if fork %></div><% end
+        if fork then %>
+          <div class="thread"><% level_iter.call(p, level + 1) %></div>
+        <% else %>
+          <% level_iter.call(p, level) %>
+        <% end
       end
     end
 
