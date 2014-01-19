@@ -13,7 +13,7 @@ module MaterialsHelper
   end
 
   def get_materials_display_name
-    preferable = @course.student_sidebar_display.joins(:preferable_item).
+    preferable = @course.student_sidebar_items.joins(:preferable_item).
       where(preferable_items: {name: 'materials'}).first
     preferable.prefer_value
   end
