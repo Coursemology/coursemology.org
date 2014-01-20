@@ -2,6 +2,15 @@
 <div class="topic <%= @topic.locked ? 'locked' : 'unlocked' %>">
   <div id="menu" class="pull-right btn-toolbar">
     <div class="btn-group">
+      <%= link_to 'Next unread', next_unread_course_forums_path(@course), class: 'btn', title: 'Jump to next unread topic' %>
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
+      </ul>
+    </div>
+    <div class="btn-group">
       <% if @topic.subscribed?(curr_user_course) %>
         <%= link_to 'Unsubscribe', unsubscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
       <% else %>
@@ -71,9 +80,11 @@
         # indent at every reply, only those with forks.
         child_level = posts.select {|c| c.parent == p}
         fork = level < 3 && (this_level.length > 1 || child_level.length > 1)
-        if fork %><div class="thread"><% end
-        level_iter.call(p, level + 1)
-        if fork %></div><% end
+        if fork then %>
+          <div class="thread"><% level_iter.call(p, level + 1) %></div>
+        <% else %>
+          <% level_iter.call(p, level) %>
+        <% end
       end
     end
 
@@ -88,6 +99,7 @@
       <h3>Post a Reply</h3>
 
       <% new_post = ForumPost.new %>
+      <% new_post.title = replize_title(@topic.posts.last.title) %>
       <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
                    html: { class: 'form-horizontal' } do |f| %>
         <%= render partial: 'forums/posts/form', locals: { reply_to: @topic.posts.last, form: f } %>

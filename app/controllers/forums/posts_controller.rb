@@ -22,13 +22,20 @@ class Forums::PostsController < ApplicationController
     @post.parent = parent
     @post.author = curr_user_course
 
-    respond_to do |format|
-      if @post.save
+    begin
+      ForumPost.transaction do
+        @post.save
+
+        # Make sure the topic is marked as new
+        SeenByUser.delete_all(obj_id: @topic, obj_type: @topic.class)
+      end
+
+      respond_to do |format|
         format.html { redirect_to course_forum_topic_path(@course, @forum, @topic, anchor: "post-#{@post.id}"),
                                   notice: 'The post was successfully created.' }
-      else
-        redirect_to course_forum_topic_path(@course, @forum, @topic)
       end
+    rescue
+      redirect_to course_forum_topic_path(@course, @forum, @topic)
     end
   end
 
