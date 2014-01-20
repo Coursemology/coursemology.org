@@ -40,7 +40,7 @@ $(document).ready(function() {
       autoUpload: true,
       dropZone: $('#image-dropzone'),
       dataType: 'json',
-      url: $('#image-upload-form').attr('action'),
+      url: $('#image-upload-form').attr('data-url'),
       formData: [
         {
           name: '_method',
