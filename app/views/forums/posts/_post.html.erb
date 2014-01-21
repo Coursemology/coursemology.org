@@ -16,6 +16,7 @@
   </div>
 
   <div class="contents <%= post.answer? ? 'answer' : '' -%>">
+    <h4 class="title"><%= post.title %></h4>
     <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
     <div class="info">
