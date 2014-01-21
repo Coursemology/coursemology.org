@@ -5,6 +5,12 @@
     }
   }
 
+  .post-status-icons {
+    display: block;
+    text-align: center;
+    font-size: 130%;
+  }
+
   .post {
     // In case the previous post was too short.
     clear: both;

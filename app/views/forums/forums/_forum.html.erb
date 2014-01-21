@@ -1,8 +1,8 @@
 <tr class="forum">
-  <td style="vertical-align: middle; text-align: center">
+  <td>
     <span class="post-status-icons">
       <% if not forum.unread_topics(curr_user_course).empty? %>
-          <a href="<%= next_unread_course_forums_path(@course) %>" rel="tooltip" title="Next Unread" style="font-size: 1.4em"><i class="icon-envelope"></i></a>
+          <a href="<%= next_unread_course_forums_path(@course) %>" rel="tooltip" title="Next Unread"><i class="icon-envelope"></i></a>
 
       <% end %>
     </span>
