@@ -24,15 +24,8 @@
     <h1>Forums</h1>
 
     <ul class="breadcrumb">
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown">
-          Jump to
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><%= link_to 'Next unread topic', next_unread_course_forums_path(@course) %></li>
-          <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
-        </ul>
+      <li>
+        <%= link_to course_forums_path(@course), data: { toggle: 'dropdown' } do %><i class="icon-home"></i><% end %>
       </li>
     </ul>
   </div>
