@@ -100,8 +100,8 @@ $(document).ready(function() {
             each(function() { setDefaultDateSuggestion.call(this, tomorrow); });
         $('.datetimepicker.past-only:not(.future-only)').datetimepicker('setEndDate', now).
             each(function() { setDefaultDateSuggestion.call(this, now); });
-        $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', yesterday).
-            each(function() { setDefaultDateSuggestion.call(this, yesterday); });
+        $('.datepicker.past-only:not(.future-only)').datetimepicker('setEndDate', now).
+            each(function() { setDefaultDateSuggestion.call(this, now); });
 
         // Extra code so that we will use the HTML5 data attribute of a date picker if we have one; otherwise
         // we let the code above handle it for us. The behaviour of a date picker becomes more and more specific.
