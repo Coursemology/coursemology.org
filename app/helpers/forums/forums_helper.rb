@@ -7,7 +7,7 @@ module Forums::ForumsHelper
   # @param title The title to make into a reply.
   # @returns string
   def replize_title(title)
-    if /^re:/ =~ title
+    if /^re:/i =~ title
       title
     else
       'RE: ' + title
