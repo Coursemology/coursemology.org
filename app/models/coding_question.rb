@@ -36,4 +36,8 @@ class CodingQuestion < ActiveRecord::Base
   def test_limit
     data_hash["testLimit"] || 0
   end
+
+  def title
+    step_name
+  end
 end

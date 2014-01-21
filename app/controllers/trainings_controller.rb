@@ -177,6 +177,31 @@ class TrainingsController < ApplicationController
     redirect_to course_trainings_overview_path
   end
 
+  def duplicate_qn
+    asm_qn = AsmQn.where(qn_type:params[:qtype], qn_id: params[:qid]).first
+    to_asm = Training.find(params[:to])
+    is_move = params[:move] == 'true'
+
+    clone = Duplication.duplicate_qn_no_log(asm_qn.qn)
+    new_link = asm_qn.dup
+    new_link.qn = clone
+    new_link.asm = to_asm
+    new_link.pos = to_asm.asm_qns.count
+
+    clone.save
+    new_link.save
+    to_asm.update_grade
+
+    if is_move
+      asm = asm_qn.asm
+      asm_qn.destroy
+      asm.update_grade
+      asm.update_qns_pos
+    end
+
+    render nothing: true
+  end
+
   def access_denied
   end
 

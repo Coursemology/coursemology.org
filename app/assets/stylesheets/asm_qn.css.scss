@@ -30,3 +30,31 @@ this table is styled based on the rules here*/
   margin-left: 10px;
   margin-top: 5px;
 }
+
+.qn-detail-div .asm-qn-handler {
+  background-color: #f5f5f5;
+}
+
+.qn-detail-div .handler-icon {
+  display: none;
+}
+
+.qn-detail-div .handler-text {
+  display: inline;
+  font-size: 1em;
+  color: #333333;
+  text-transform: uppercase;
+}
+
+.qn-detail-div {
+  padding: 5px;
+}
+
+.qn-dup-action-div {
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: #E6E6E6;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}

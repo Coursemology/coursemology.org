@@ -25,6 +25,10 @@ module Duplication
           end
         end
       end
+
+      if qn.is_a? CodingQuestion
+        clone_qn.include_sol_qn_id = nil
+      end
       clone_qn
     end
 
@@ -315,6 +319,11 @@ module Duplication
   def Duplication.duplicate_folder(user, folder, origin_course, dest_course)
     d = Duplicator.new
     return d.duplicate_folder(user, folder, origin_course, dest_course)
+  end
+
+  def Duplication.duplicate_qn_no_log(qn)
+    d = Duplicator.new
+    return d.duplicate_qn_no_log(qn)
   end
 
 end
