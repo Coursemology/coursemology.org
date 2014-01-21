@@ -1,4 +1,6 @@
 class ForumTopic < ActiveRecord::Base
+  include ActivityObject
+
   has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id, dependent: :delete_all
   has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id, dependent: :delete_all
   has_many :subscriptions, class_name: 'ForumTopicSubscription', foreign_key: :topic_id
@@ -72,5 +74,10 @@ class ForumTopic < ActiveRecord::Base
 
   def subscribed?(user_course)
     not subscriptions.where(user_id: user_course).empty?
+  end
+
+  # Implements ActivityObject
+  def get_title
+    title
   end
 end

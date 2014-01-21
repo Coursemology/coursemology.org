@@ -5,47 +5,50 @@ class ForumParticipationController < ApplicationController
   before_filter :load_general_course_data, only: [:manage, :individual]
 
   def manage
-    @from_date = params[:from]
-    @to_date = params[:to]
+    monday = Date.today.at_beginning_of_week.at_beginning_of_day
+    @from_date = params[:from] || ApplicationHelper.date_mdY(monday - 7.days)
+    @to_date = params[:to] || ApplicationHelper.date_mdY(monday)
 
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
     @weekly = params[:weekly].blank? ? 100 : params[:weekly] # defaults to 100 EXP per week for now
     @actual_cap = actual_exp_cap(@from_date, @to_date, @weekly.to_i)
 
-    @students_courses = @course.user_courses.real_students
-    #category = Forum::Category.find(@course.id)
+    @students_courses = @course.user_courses.student
+                                                             #category = Forum::Category.find(@course.id)
     result = ForumPost
-      .joins(topic: :forum)
-      .includes(:votes)
-    if (from_date_db)
+    .joins(topic: :forum)
+    .where("forum_forums.id in (?)", @course.forums.map {|f| f.id })
+    .includes(:author)
+    if from_date_db
       result = result.where('forum_posts.created_at >= ?', from_date_db)
     end
-    if (to_date_db)
+    if to_date_db
       result = result.where('forum_posts.created_at <= ?', to_date_db)
     end
 
     std_courses = @students_courses.collect {|i| i} # array of UserCourses
 
-    @post_count = Array.new # array of hashes
+    @post_count = {} # array of hashes
 
     result.each do |post| # to save memory, this can be changed to find_each
-      if std_index = std_courses.index {|i| i.user_id == post.author_id}
-        if post_index = @post_count.index {|i| i[:std_course_id] == std_courses[std_index].id}
-          @post_count[post_index][:count] += 1
-          @post_count[post_index][:likes] += post.likes.size
+      author = post.author
+      if std_courses.include? author
+        if @post_count.has_key? author.id
+          @post_count[author.id][:count] += 1
+          @post_count[author.id][:likes] += post.likes.count
         else
-          @post_count << {std_course_id: std_courses[std_index].id,
-                          name: std_courses[std_index].name,
-                          level: std_courses[std_index].level ? std_courses[std_index].level.level : 0,
-                          exp: std_courses[std_index].exp,
-                          likes: post.likes.size,
-                          count: 1}
+          @post_count[author.id] = { std_course_id: author.id,
+                                  name: author.name,
+                                  level: author.level ? author.level.level : 0,
+                                  exp: author.exp,
+                                  likes: post.likes.count,
+                                  count: 1}
         end
       end
     end
 
-    @post_count.sort! {|a, b| post_score(b) <=> post_score(a) }
+    @post_count = @post_count.values.sort! {|a, b| post_score(b) <=> post_score(a) }
 
     prev_score = -1
     prev_exp = -1
@@ -71,29 +74,28 @@ class ForumParticipationController < ApplicationController
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
 
-    category = Forem::Category.find(@course.id)
-    result = Forem::Post
-        .includes(topic: :forum).where(forem_forums: {category_id: category.id})
-        .includes(:votes)
+    result = ForumPost
+    .includes(topic: :forum).where("forum_forums.id in (?)", @course.forums.map {|f| f.id })
+    .includes(:votes)
     if (from_date_db)
-      result = result.where('forem_posts.created_at >= ?', from_date_db)
+      result = result.where('forum_posts.created_at >= ?', from_date_db)
     end
     if (to_date_db)
-      result = result.where('forem_posts.created_at <= ?', to_date_db)
+      result = result.where('forum_posts.created_at <= ?', to_date_db)
     end
-    result = result.where('forem_posts.user_id = ?', @user_course.user_id)
+    result = result.where('forum_posts.author_id = ?', @user_course.id)
 
     @result = Array.new
 
     result.each do |post|
-      @result << {subject: post.topic.subject,
+      @result << {subject: post.title,
                   text: post.text,
                   likes: post.likes.size,
                   created: post.created_at,
                   id: post.id,
                   topic_id: post.topic.id,
                   forum: post.topic.forum
-                  }
+      }
     end
 
     @result.sort! {|a, b| b[:likes] <=> a[:likes]}

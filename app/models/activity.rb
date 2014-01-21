@@ -30,7 +30,27 @@ class Activity < ActiveRecord::Base
     Activity.add(user_course.course, user_course, action, obj, nil, nil)
   end
 
-  private
+  def self.created_forum_topic(user_course, topic)
+    action = Action.find_by_text('created Forum topic')
+    Activity.add(user_course.course, user_course, action, topic, nil, nil)
+  end
+
+  def self.asked_question(user_course, topic)
+    action = Action.find_by_text('asked')
+    Activity.add(user_course.course, user_course, action, topic, nil, nil)
+  end
+
+  def self.replied_post(user_course, post)
+    action = Action.find_by_text('replied to')
+    Activity.add(user_course.course, user_course, action, post, nil, nil)
+  end
+
+  def self.voted_forum_post(user_course, post)
+    action = Action.find_by_text('voted on')
+    Activity.add(user_course.course, user_course, action, post, nil, nil)
+  end
+
+private
   def self.add(course, actor_course, action, obj, target_course, extra)
     act = Activity.new
     act.course = course

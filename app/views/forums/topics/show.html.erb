@@ -37,7 +37,9 @@
           <li class="divider"></li>
           <% ForumTopic::TOPIC_TYPES.each do |t| %>
             <% if can? t[2], @topic %>
-              <li><%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %></li>
+              <li class="<%= t[1] == @topic.topic_type ? 'active' : '' %>">
+                <%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %>
+              </li>
             <% end %>
           <% end %>
         </ul>

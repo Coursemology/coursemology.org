@@ -5,6 +5,12 @@
     }
   }
 
+  .post-status-icons {
+    display: block;
+    text-align: center;
+    font-size: 130%;
+  }
+
   .post {
     // In case the previous post was too short.
     clear: both;
@@ -39,9 +45,20 @@
       // Block formatting context
       overflow: hidden;
 
+      // Post title
+      .title {
+        margin: -0.4em 0 0.75em 0;
+        font-size: 90%;
+      }
+
       // The post info, like post time etc
       .info {
         margin-top: 1em;
+      }
+
+      // Voting
+      .voting {
+        font-size: 130%;
       }
     }
 

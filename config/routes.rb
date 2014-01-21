@@ -52,6 +52,7 @@ JfdiAcademy::Application.routes.draw do
     match "missions/overview" => "missions#overview", as: :missions_overview
     post  "missions/bulk_update" => "missions#bulk_update", as: :missions_bulk_update
     match "trainings/overview" => "trainings#overview", as: :trainings_overview
+    post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :trainings_duplicate_qn
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
     resources :user_courses do
