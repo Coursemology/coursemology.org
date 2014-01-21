@@ -112,6 +112,7 @@ class CourseAbility
       can :create, ForumTopic
       can :read, ForumTopic, hidden: false
       can :reply, ForumTopic, locked: false
+      can [:edit, :update], ForumTopic, locked: false
       can :destroy, ForumTopic, locked: false, author: user_course
       can :set_answer, ForumTopic, locked: false, author: user_course
       can :read, ForumPost
