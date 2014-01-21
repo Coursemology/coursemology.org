@@ -45,6 +45,14 @@ class Forums::TopicsController < ApplicationController
       @topic.save
       post.topic = @topic
       post.save
+
+      # Create the activity feed record
+      case @topic.topic_type
+        when ForumTopic::TOPIC_TYPE_QUESTION
+          Activity.asked_question(curr_user_course, @topic)
+        else
+          Activity.created_forum_topic(curr_user_course, @topic)
+      end
     end
 
     respond_to do |format|
