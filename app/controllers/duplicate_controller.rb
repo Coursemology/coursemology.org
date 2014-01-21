@@ -7,8 +7,8 @@ class DuplicateController < ApplicationController
     authorize! :can, :duplicate, @course
     @missions = @course.missions
     @trainings = @course.trainings
-    lecturer_courses = current_user.user_courses.lecturer
-    @my_courses = lecturer_courses.map { |uc| uc.course }
+    staff_courses = current_user.user_courses.staff
+    @my_courses = staff_courses.map { |uc| uc.course }
     @duplicable_items = {
         Mission     => @course.missions,
         Training    => @course.trainings,
@@ -87,7 +87,7 @@ class DuplicateController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to course_path(dest_course),
-                    notice: "The specified items have been duplicated." }
+                                notice: "The specified items have been duplicated." }
     end
   end
 
