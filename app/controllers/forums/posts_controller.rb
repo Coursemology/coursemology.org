@@ -28,6 +28,9 @@ class Forums::PostsController < ApplicationController
 
         # Make sure the topic is marked as new
         SeenByUser.delete_all(obj_id: @topic, obj_type: @topic.class)
+
+        # Create the activity feed record
+        Activity.replied_post(curr_user_course, parent)
       end
 
       respond_to do |format|
@@ -71,13 +74,18 @@ class Forums::PostsController < ApplicationController
   end
 
   def set_vote
-    case params[:vote].to_i <=> 0
-      when -1
-        @post.downvote_from curr_user_course.user
-      when 0
-        @post.unvote_for curr_user_course.user
-      when 1
-        @post.upvote_from curr_user_course.user
+    @post.transaction do
+      case params[:vote].to_i <=> 0
+        when -1
+          @post.downvote_from curr_user_course.user
+        when 0
+          @post.unvote_for curr_user_course.user
+        when 1
+          @post.upvote_from curr_user_course.user
+      end
+
+      # Create the activity feed record
+      Activity.voted_forum_post(curr_user_course, @post)
     end
 
     respond_to do |format|
