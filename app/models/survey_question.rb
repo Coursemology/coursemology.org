@@ -15,9 +15,9 @@ class SurveyQuestion < ActiveRecord::Base
 
   def user_answered?(user_course)
     answers = answer_for_user(curr_user_course)
-    result = not not answers
+    result = answers
 
-    if result && not(is_essay?) then
+    if result && (not is_essay?) then
       result = answers.first
     end
 
