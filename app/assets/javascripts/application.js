@@ -133,7 +133,7 @@ $(document).ready(function() {
         });
     })();
 
-    $('*[rel=tooltip]').tooltip();
+    $('*[rel~=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();

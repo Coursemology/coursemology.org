@@ -13,6 +13,17 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :survey_essay_answers, :foreign_key => "question_id"
   has_many :files, through: :options
 
+  def user_answered?(user_course)
+    answers = answer_for_user(curr_user_course)
+    result = not not answers
+
+    if result && not(is_essay?) then
+      result = answers.first
+    end
+
+    result
+  end
+
   def answer_for_user(user_course)
     is_essay? ?
         self.survey_essay_answers.where(user_course_id: user_course).first :

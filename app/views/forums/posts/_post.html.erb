@@ -2,49 +2,17 @@
 <div id="post-<%= post.id %>" class="post <%= cycle('odd', 'even') -%>">
   <div class="user">
     <% if post.author %>
-        <h5 class="username">
-          <%= link_to post.author.user, course_user_course_path(@course, post.author) %>
-        </h5>
-        <div class="icon pull-right">
-          <a href="<%= get_social_media_url(post.author) %>">
-            <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
-          </a>
-        </div>
+      <h5 class="username">
+        <%= link_to post.author.user, course_user_course_path(@course, post.author) %>
+      </h5>
+      <div class="icon pull-right">
+        <a href="<%= get_social_media_url(post.author) %>">
+          <img class="user-profile-pic" src="<%= post.author.user.get_profile_photo_url %>"/>
+        </a>
+      </div>
     <% else %>
-        <h5 class="username">(unknown)</h5>
+      <h5 class="username">(unknown)</h5>
     <% end %>
-
-    <div class="voting pull-right">
-      <% if post.topic.question? and can? :set_answer, @topic %>
-          <% if post.answer? %>
-              <%= link_to course_forum_topic_post_answer_path(@course, @forum, @topic, post, answer: 0), method: :put, title: 'Unmark as Answer' do %>
-                  <i class="icon-ok"></i>
-              <% end %>
-          <% else %>
-              <%= link_to course_forum_topic_post_answer_path(@course, @forum, @topic, post, answer: 1), method: :put, title: 'Mark as Answer' do %>
-                  <i class="icon-ok"></i>
-              <% end %>
-          <% end %>
-      <% end %>
-      <% votes = post.upvotes.size - post.downvotes.size %>
-      <% if not current_user.voted_for? post %>
-          <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, title: 'Downvote' do %>
-              <i class="icon-thumbs-down"></i>
-          <% end %>
-          <span class="muted"><%= votes %></span>
-          <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, title: 'Upvote' do %>
-              <i class="icon-thumbs-up"></i>
-          <% end %>
-      <% else %>
-          <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, title: 'Downvote' do %>
-              <i class="icon-thumbs-down"></i>
-          <% end %>
-          <strong><%= votes %></strong>
-          <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, title: 'Upvote' do %>
-              <i class="icon-thumbs-up"></i>
-          <% end %>
-      <% end %>
-    </div>
   </div>
 
   <div class="contents <%= post.answer? ? 'answer' : '' -%>">
@@ -59,7 +27,7 @@
           <% end %>
         </time>
       </a>
-
+ 
       <div class="pull-right">
         <% if post.topic.can_be_replied_to? %>
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id, 'data-post-title' => post.title %>
@@ -69,6 +37,38 @@
         <% end %>
         <% if can? :destroy, post %>
             <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_post_path(@course, @forum, post.topic, post) } %>
+        <% end %>
+      </div>
+
+      <div class="voting">
+        <% if post.topic.question? and can? :set_answer, @topic %>
+            <% if post.answer? %>
+                <%= link_to course_forum_topic_post_answer_path(@course, @forum, @topic, post, answer: 0), method: :put, title: 'Unmark as Answer' do %>
+                    <i class="icon-ok"></i>
+                <% end %>
+            <% else %>
+                <%= link_to course_forum_topic_post_answer_path(@course, @forum, @topic, post, answer: 1), method: :put, title: 'Mark as Answer' do %>
+                    <i class="icon-ok"></i>
+                <% end %>
+            <% end %>
+        <% end %>
+        <% votes = post.upvotes.size - post.downvotes.size %>
+        <% if not current_user.voted_for? post %>
+            <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: -1), method: :put, rel: 'tooltip', title: 'Downvote' do %>
+                <i class="icon-thumbs-down"></i>
+            <% end %>
+            <span class="muted"><%= votes %></span>
+            <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 1), method: :put, rel: 'tooltip', title: 'Upvote' do %>
+                <i class="icon-thumbs-up"></i>
+            <% end %>
+        <% else %>
+            <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, rel: 'tooltip', title: 'Downvote' do %>
+                <i class="icon-thumbs-down"></i>
+            <% end %>
+            <strong><%= votes %></strong>
+            <%= link_to course_forum_topic_post_vote_path(@course, @forum, @topic, post, vote: 0), method: :put, rel: 'tooltip', title: 'Upvote' do %>
+                <i class="icon-thumbs-up"></i>
+            <% end %>
         <% end %>
       </div>
     </div>
