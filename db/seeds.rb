@@ -591,3 +591,9 @@ if PreferableItem.count == 62
                          description:     "Student's level and achievement status",
                          default_display: true
 end
+
+if Action.count == 8 then
+  Action.create! text: 'created Forum topic', description: 'actor created Forum topic'
+  Action.create! text: 'asked', description: 'actor asked Forum question'
+  Action.create! text: 'voted on', description: 'actor voted on Forum post'
+end
