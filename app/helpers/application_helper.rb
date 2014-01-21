@@ -1,7 +1,7 @@
 module ApplicationHelper
   require 'htmlentities'
 
-  def date_mdY(date)
+  def self.date_mdY(date)
     if date.nil?
       ""
     else
@@ -9,12 +9,20 @@ module ApplicationHelper
     end
   end
 
-  def datetime_format(datetime)
+  def date_mdY(date)
+    ApplicationHelper.date_mdY(date)
+  end
+
+  def self.datetime_format(datetime)
     if datetime.nil?
       ""
     else
       datetime.strftime("%d-%m-%Y %H:%M")
     end
+  end
+
+  def datetime_format(datetime)
+    ApplicationHelper.datetime_format(datetime)
   end
 
   def datetime_no_seconds(datetime)

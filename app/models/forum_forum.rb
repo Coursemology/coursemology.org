@@ -4,6 +4,7 @@ class ForumForum < ActiveRecord::Base
   has_many :posts, through: :topics
   has_many :subscriptions, class_name: 'ForumForumSubscription', foreign_key: :forum_id
 
+
   is_sluggable :name, history: false
 
   attr_accessible :name, :description
