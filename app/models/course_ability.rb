@@ -116,6 +116,7 @@ class CourseAbility
       can :set_answer, ForumTopic, locked: false, author: user_course
       can :read, ForumPost
       can :create, ForumPost
+      can :set_vote, ForumPost
       can :destroy, ForumPost, author: user_course
 
       # Students can edit their own posts
