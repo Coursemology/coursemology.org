@@ -16,18 +16,22 @@
   </div>
 
   <div class="contents <%= post.answer? ? 'answer' : '' -%>">
+    <div class="pull-right">
+      <time datetime="<%= post.created_at.to_s(:db) -%>">
+        Posted <%= time_ago_in_words(post.created_at) %> ago
+      </time>
+    </div>
+
+    <h4 class="title">
+      <% if post.unread?(curr_user_course)  %>
+        <span class="label">New!</span>
+      <% end %>
+      <a href="#post-<%= post.id %>"><%= post.title %></a>
+    </h4>
+
     <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
 
     <div class="info">
-      <a href="#post-<%= post.id %>">
-        <time datetime="<%= post.created_at.to_s(:db) -%>">
-          Posted <%= time_ago_in_words(post.created_at) %> ago
-          <% if post.unread?(curr_user_course)  %>
-              <span class="label">New!</span>
-          <% end %>
-        </time>
-      </a>
- 
       <div class="pull-right">
         <% if post.topic.can_be_replied_to? %>
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id, 'data-post-title' => post.title %>
