@@ -14,6 +14,11 @@ class HomeController < ApplicationController
   end
 
   def my_courses
+    authorize! :read, Course
+    if not current_user then
+      raise CanCan::AccessDenied
+    end
+
     @courses = current_user.courses
 
     @courses_std = current_user.user_courses.student.map { |uc| uc.course }
