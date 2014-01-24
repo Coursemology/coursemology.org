@@ -1,10 +1,10 @@
 <p>Hello, <%= @user.user %>!</p>
 <p>There is a new post in the topic <%= @post.topic.title %> in <%= @course.title %>.</p>
 
-<h1>
+<div>
   <%= link_to @post.topic.title, course_forum_topic_url(@course, @post.topic.forum, @post.topic, anchor: 'post-' + @post.id.to_s) %>
   by <%= @post.author ? @post.author.user : '(unknown)' %>
-</h1>
+</div>
 
 <blockquote>
   <%= CoursemologyFormatter.sanitize(@post.text).html_safe %>
