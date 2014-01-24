@@ -149,7 +149,7 @@ class MaterialsController < ApplicationController
 
   def show_by_name
     # Resolve the subfolder ID + file name to an ID
-    folder = MaterialFolder.find_by_id(params[:id])
+    folder = MaterialFolder.find_by_id!(params[:id])
     file = folder.find_material_by_filename!(params[:filename])
     authorize! :show, file
     params[:id] = file.id
