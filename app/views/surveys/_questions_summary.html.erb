@@ -1,5 +1,5 @@
 <% questions.each_with_index do |summary, i| %>
-    <h3><%= "#{i + 1}." %><%= style_format(summary[:question].description) %></h3>
+   <%= "#{i + 1}. " %><%= style_format(summary[:question].description) %>
     <% if summary[:question].is_essay? %>
         <ul style="margin-left: 6%; width: 90%; margin-top: 0px">
           <% summary[:responds].each do |resp| %>
