@@ -16,6 +16,14 @@ class SurveySubmission < ActiveRecord::Base
     self.save
   end
 
+  def get_answer(qn)
+    if qn.is_essay?
+      survey_essay_answers.where(question_id: qn)
+    else
+      survey_mrq_answers.where(question_id: qn)
+    end
+  end
+
 
   def set_submitted
     if !submitted? and survey.exp.to_i > 0

@@ -4,6 +4,10 @@
 
 <%= render partial: "nav_bar" %>
 
+<div style="margin-bottom: 20px">
+  <a class="btn" href="<%= course_survey_summary_with_format_path(format:"csv") %>">Export Summary as .csv</a>
+</div>
+
 <% if @survey.has_section? %>
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">
