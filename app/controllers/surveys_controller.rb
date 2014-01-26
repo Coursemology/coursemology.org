@@ -84,7 +84,7 @@ class SurveysController < ApplicationController
 
   def summary_with_format
     respond_to do |format|
-      format.csv { send_data summary_csv() }
+      format.csv { send_data summary_csv(), :disposition => "attachment; filename=#{@survey.title}.csv" }
     end
   end
 
