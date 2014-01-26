@@ -13,6 +13,10 @@ class Survey < ActiveRecord::Base
   has_many :survey_submissions
 
 
+  def submissions
+    survey_submissions
+  end
+
   def questions
     survey_questions
   end

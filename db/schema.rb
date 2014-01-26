@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140114091219) do
+ActiveRecord::Schema.define(:version => 20140126173510) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -878,8 +878,9 @@ ActiveRecord::Schema.define(:version => 20140114091219) do
     t.integer  "question_id"
     t.text     "text"
     t.time     "deleted_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "survey_submission_id"
   end
 
   create_table "survey_mrq_answers", :force => true do |t|
@@ -887,9 +888,10 @@ ActiveRecord::Schema.define(:version => 20140114091219) do
     t.integer  "user_course_id"
     t.integer  "question_id"
     t.time     "deleted_at"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
     t.integer  "option_id"
+    t.integer  "survey_submission_id"
   end
 
   add_index "survey_mrq_answers", ["question_id"], :name => "index_survey_mrq_answers_on_question_id"

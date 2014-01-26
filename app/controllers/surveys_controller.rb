@@ -82,6 +82,29 @@ class SurveysController < ApplicationController
     end
   end
 
+  def summary_with_format
+    respond_to do |format|
+      format.csv { send_data summary_csv() }
+    end
+  end
+
+  def summary_csv()
+    CSV.generate({}) do |csv|
+      questions = @survey.questions
+      csv << ["Name"] + questions.map {|qn| qn.description }
+      @survey.submissions.order(:submitted_at).each do |submission|
+        row = []
+        row << (submission.user_course.nil? ? "" :  submission.user_course.name)
+        questions.each do |qn|
+          ans = submission.get_answer(qn)
+          ans = qn.is_essay? ? ans.text : ans.map {|q| q.option.description }.join(",")
+          row << ans
+        end
+        csv << row
+      end
+    end
+  end
+
   def question_summary(question)
     summary = {}
     summary[:question] = question
@@ -91,7 +114,10 @@ class SurveysController < ApplicationController
     else
       summary[:total] = question.no_unique_voters
       #TODO: hardcoded 10
-      summary[:options] = question.options.order("count desc").first(10)
+      summary[:options] = question.options.order("count desc")
+      unless @survey.has_section?
+        summary[:options] = summary[:options].first(10)
+      end
     end
     summary
   end
