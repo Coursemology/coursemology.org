@@ -97,7 +97,7 @@ class SurveysController < ApplicationController
         row << (submission.user_course.nil? ? "" :  submission.user_course.name)
         questions.each do |qn|
           ans = submission.get_answer(qn)
-          ans = qn.is_essay? ? ans.text : ans.map {|q| q.option.description }.join(",")
+          ans = qn.is_essay? ? ans.map {|a| a.text }.join(",") : ans.map {|q| q.option.description }.join(",")
           row << ans
         end
         csv << row
