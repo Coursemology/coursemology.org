@@ -6,8 +6,9 @@ class ForumParticipationController < ApplicationController
 
   def manage
     monday = Date.today.at_beginning_of_week.at_beginning_of_day
+    #inclusive start and end date
     @from_date = params[:from] || ApplicationHelper.date_mdY(monday - 7.days)
-    @to_date = params[:to] || ApplicationHelper.date_mdY(monday)
+    @to_date = params[:to] || ApplicationHelper.date_mdY(monday - 1.days)
 
     from_date_db = parse_start_date(@from_date)
     to_date_db = parse_end_date(@to_date)
