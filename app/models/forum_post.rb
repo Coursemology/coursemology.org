@@ -38,6 +38,10 @@ class ForumPost < ActiveRecord::Base
     end
   end
 
+  def vote_count
+    upvotes.count - downvotes.count
+  end
+
   # Implements ActivityObject
   def get_title
     topic.title
