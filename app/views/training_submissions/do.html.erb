@@ -18,7 +18,7 @@
       <% elsif questions_done.include? questions[i - 1] %>
           <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-done" %>
       <% else %>
-          <% can_access = (@training.can_skip? or i == @current_step) %>
+          <% can_access = (curr_user_course.is_staff? or @training.can_skip? or i == @current_step) %>
           <%= link_to i, "#{('?step=' + i.to_s) if can_access }#training-stop-pos", class: "step  #{can_access ? 'step-available' : 'step-disabled'}" %>
       <% end %>
   <% end %>
