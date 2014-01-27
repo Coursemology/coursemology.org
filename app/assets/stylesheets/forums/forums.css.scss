@@ -75,4 +75,162 @@
   .thread {
     padding-left: 75px;
   }
+
+  #question-mini-list {
+    overflow: auto;
+    margin-top: -10px;
+    margin-bottom: 30px;
+  }
+
+  .question-summary {
+    border-bottom: 1px solid #eaeaea;
+    overflow: hidden;
+    padding: 11px 0px;
+    width: 100%;
+    float: left;
+  }
+
+  .cp {
+    cursor: pointer;
+  }
+
+  .narrow .posts {
+    float: left;
+    margin: 0 3px 0 0;
+    padding: 5px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .new-post {
+    background: #b96a1d;
+    color: #ffffff;
+  }
+
+  .old-post {
+    color: #555555;
+  }
+
+  .posts {
+    padding: 0 0 7px 0;
+    text-align: center;
+  }
+
+  .mini-counts {
+    height: 25px;
+    font-size: 160%;
+    font-weight: normal;
+    text-align: center;
+  }
+
+  .narrow .status {
+    float: left;
+    margin: 0 3px 0 0;
+    padding: 5px;
+    width: 48px;
+    height: 38px;
+  }
+
+  .unanswered {
+    background: #9A4444;
+    color: #ffffff;
+  }
+
+  .answered {
+    background: #75845C;
+    color: #ffffff;
+    font-weight: normal;
+  }
+
+  .status {
+    margin-top: -3px;
+    padding: 4px 0 4px;
+    text-align: center;
+  }
+
+  .narrow .summary {
+    max-width: 80%;
+    /*width: 550px;*/
+  }
+
+  .summary {
+    /*float: left;*/
+  }
+
+  .narrow .started {
+    width: auto;
+    line-height: inherit;
+    padding-top: 4px;
+    white-space: nowrap;
+  }
+
+  .started {
+    width: 185px;
+    color: #999;
+    float: right;
+    line-height: 18px;
+  }
+
+  .started .reputation-score {
+    margin-left: 1px;
+    font-size: 100%!important;
+    font-weight: normal!important;
+  }
+
+  .reputation-score {
+    font-weight: bold;
+    color: #444;
+    font-size: 100%;
+    margin-right: 2px;
+  }
+
+  .narrow .views {
+    float: left;
+    margin: 0 7px 0 0;
+    padding: 5px 0px 5px 4px;
+    width: 40px;
+    height: 38px;
+  }
+
+  .views {
+    padding-top: 4px;
+    color: #999;
+    text-align: center;
+  }
+
+  .narrow .votes {
+    float: left;
+    margin: 0 3px 0 0;
+    padding: 5px;
+    width: 48px;
+    height: 38px;
+  }
+
+  .votes {
+    margin-top: -3px;
+    padding: 4px 0 4px;
+    color: #737373;
+    text-align: center;
+  }
+
+  .last-link, .last-link:visited {
+    color: #999;
+  }
+
+  .topic-status-icon {
+    padding: 5px;
+    float: right;
+    height: 38px;
+    font-size: 38px;
+    margin-right: 10px;
+    opacity: 0.5;
+
+    i{
+      margin: 5px;
+    }
+  }
+
+  .topics-count, .posts-count {
+    vertical-align: middle;
+  }
 }

@@ -5,13 +5,13 @@
       <%= link_to course_forums_path(@course), data: { toggle: 'dropdown' } do %><i class="icon-home"></i><% end %>
       <span class="divider">/</span>
     </li>
-    <li class="dropdown">
+    <li class="dropdown dropdown-trigger-on-hover">
       <a class="dropdown-toggle" data-toggle="dropdown">
         <%= topic.forum.name %> <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
         <% @course.forums.each do |f|  %>
-          <li><%= link_to f.name, course_forum_path(@course, f) %></li>
+          <li class="<%= 'active' if f == topic.forum %>"><%= link_to f.name, course_forum_path(@course, f) %></li>
         <% end %>
       </ul>
       <span class="divider">/</span>
