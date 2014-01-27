@@ -337,6 +337,13 @@ class TrainingSubmissionsController < ApplicationController
     public_tests = if eval_summary[:publicTests].length == 0 then true else eval_summary[:publicTests].inject{|sum,a| sum and a} end
     private_tests = if eval_summary[:privateTests].length == 0 then true else eval_summary[:privateTests].inject{|sum,a| sum and a} end
 
+    #if fail private test cases, show hints
+    if public_tests and eval_summary[:privateTests].length > 0 and !private_tests
+      index = eval_summary[:privateTests].find_index(false)
+      eval_summary[:hint] = coding_question.data_hash["privateTests"][index]["hint"]
+      puts eval_summary[:hint]
+    end
+
     sma.is_correct = false
     puts "judge:", eval_summary[:errors].length, public_tests, private_tests
     if eval_summary[:errors].length == 0 and public_tests and private_tests

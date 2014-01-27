@@ -5,10 +5,11 @@ var path = function(){
     function addslashes(str){
         return (str + '').replace(/[\"]/g, '&quot;');
     }
-    function _appendTest(testType, test_count, expression, expected){
+    function _appendTest(testType, test_count, expression, expected, hint){
         $("#"+testType+"_test_tbody").append('<tr testNo="'+test_count+'">' +
-            '<td><input type="text" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
-            '<td><input type="text" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
+            '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
+            '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
+            (testType == 'private' ? '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(hint)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'hint\', this.value)" /></td>' : '') +
             '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>');
     }
 
@@ -17,7 +18,8 @@ var path = function(){
     function _newTest(){
         return {
             expected: "",
-            expression: ""
+            expression: "",
+            hint:""
         };
     }
 
@@ -88,7 +90,7 @@ var path = function(){
                 test_count = ci.evalTests.length;
             }
 
-            _appendTest(testType, test_count, "", "");
+            _appendTest(testType, test_count, "", "","");
         },
         updateTest: function(testType, testCount, expr, value){
             testCount--;
@@ -113,14 +115,14 @@ var path = function(){
             $("#private_test_tbody").html("");
             $("#eval_test_tbody").html("");
             for(var i = 0 ; i < cStep.privateTests.length; i++){
-                _appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected);
+                _appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected, cStep.privateTests[i].hint || "" );
             }
             for(var i = 0 ; i < cStep.publicTests.length; i++){
-                _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected);
+                _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected, cStep.publicTests[i].hint || "" );
             }
             for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
                 console.log(cStep.evalTests);
-                _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected);
+                _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.publicTests[i].hint || "" );
             }
             cmPrefill.setValue(cStep.prefill);
             if(cStep.included == null) cStep.included = "";
