@@ -126,7 +126,7 @@ $(document).ready(function(){
                 var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
                 if(publicTestFlag){
                     if(resp.privateTests == null || !privateTestFlag){
-                        $er.html("Your answer failed to pass one or more of the private test cases.").animate(failcolor, animateOpt);
+                        $er.html("Your answer failed to pass one or more of the private test cases."  + (resp.hint ? " <br>Hint: " + resp.hint : "")).animate(failcolor, animateOpt);
                     }else{
                         $er.html("You have successfully completed this step!").animate(passcolor, animateOpt);
                         $('#continue-btn').removeClass('disabled');

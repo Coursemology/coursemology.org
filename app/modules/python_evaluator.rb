@@ -61,7 +61,7 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
     range = eval ? 2 : 1
 
     #user could print to stdout, use unique hash to filter out test results
-    hash = Digest::MD5.hexdigest(file_path)
+    hash = Digest::MD5.hexdigest(rand().to_s)
 
     for i in 0..range
       file = File.open(file_path, 'w+')
