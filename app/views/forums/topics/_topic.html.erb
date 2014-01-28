@@ -2,19 +2,19 @@
   <td class="icon" style="vertical-align: middle">
     <span class="post-status-icons">
       <% if topic.locked? %>
-        <i class="icon-lock" title="Locked Post"></i>
+        <i class="icon-lock" title="Locked Post" rel="tooltip"></i>
       <% end %>
       <% if topic.sticky? || topic.announcement? %>
-        <i class="icon-chevron-up" title="Sticky"></i>
+        <i class="icon-chevron-up" title="Sticky" rel="tooltip"></i>
       <% end %>
       <% if topic.question? %>
         <i class="icon-question-sign" rel="tooltip" title="<%= topic.answered? ? 'Answered' : 'Unanswered'  %> question" style="<%= topic.answered? ?  'color:green' : 'color:#da4e49' %>"></i>
       <% end %>
       <% if topic.hidden? %>
-        <i class="icon-eye-close" title="Hidden"></i>
+        <i class="icon-eye-close" title="Hidden" rel="tooltip"></i>
       <% end %>
       <% if topic.unread?(curr_user_course) %>
-        <i class="icon-envelope" title="New posts"></i>
+        <i class="icon-envelope" title="New posts" rel="tooltip"></i>
       <% end %>
     </span>
   </td>

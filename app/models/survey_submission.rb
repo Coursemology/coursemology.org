@@ -24,7 +24,6 @@ class SurveySubmission < ActiveRecord::Base
     end
   end
 
-
   def set_submitted
     if !submitted? and survey.exp.to_i > 0
       self.exp_transaction = ExpTransaction.new
