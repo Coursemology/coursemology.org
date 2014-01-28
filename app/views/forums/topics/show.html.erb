@@ -1,116 +1,116 @@
 <div class="forum">
-<div class="topic <%= @topic.locked ? 'locked' : 'unlocked' %>">
-  <div id="menu" class="pull-right btn-toolbar">
-    <div class="btn-group">
-      <%= link_to 'Next unread', next_unread_course_forums_path(@course), class: 'btn', title: 'Jump to next unread topic' %>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
-      </ul>
-    </div>
-    <div class="btn-group">
-      <% if @topic.subscribed?(curr_user_course) %>
-        <%= link_to 'Unsubscribe', unsubscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
-      <% else %>
-        <%= link_to 'Subscribe', subscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
-      <% end %>
-      <% if @topic.can_be_replied_to? %>
-        <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id, 'data-post-title' => @topic.title %>
-      <% end %>
-    </div>
-    <div class="btn-group dropdown-trigger-on-hover">
-      <% if can? :edit, @topic %>
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-          Manage topic
+  <div class="topic <%= @topic.locked ? 'locked' : 'unlocked' %>">
+    <div id="menu" class="pull-right btn-toolbar">
+      <div class="btn-group">
+        <%= link_to 'Next unread', next_unread_course_forums_path(@course), class: 'btn', title: 'Jump to next unread topic' %>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
-        </a>
+        </button>
         <ul class="dropdown-menu">
-          <li><%= link_to 'Edit/Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
-          <% if can? :set_hidden, @topic %>
-            <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, hide: @topic.hidden? ? 0 : 1), method: :put %></li>
-          <% end %>
-          <% if can? :set_locked, @topic %>
-            <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic, lock: @topic.locked? ? 0 : 1), method: :put %></li>
-          <% end %>
-          <li class="divider"></li>
-          <% ForumTopic::TOPIC_TYPES.each do |t| %>
-            <% if can? t[2], @topic %>
-              <li class="<%= t[1] == @topic.topic_type ? 'active' : '' %>">
-                <%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %>
-              </li>
-            <% end %>
-          <% end %>
+          <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
         </ul>
-      <% end %>
-      <% if can? :destroy, @topic %>
-        <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
-      <% end %>
-     </div>
-
-  </div>
-
-  <%= render partial: 'header', locals: { topic: @topic } %>
-
-  <% if @topic.locked? %>
-    <div class="alert">
-      <strong>This topic is locked.</strong>
-    </div>
-  <% end %>
-
-  <div class="posts">
-    <%
-    posts = @topic.posts.all.sort do |a, b|
-      if not a.parent then
-        -1
-      elsif not b.parent then
-        1
-      else
-        a.parent.id <=> b.parent.id
-      end
-    end
-
-    # This is basically a DFS: we have to emit the conversation style layout without the
-    # tree information from the database.
-    level_iter = lambda do |common_parent, level|
-      this_level = posts.select {|p| p.parent == common_parent}
-      this_level.each do |p|
-        %><%= render partial: 'forums/posts/post', locals: { post: p } %><%
-
-        # We start a new thread only if the current level has more than one post so that we do not
-        # indent at every reply, only those with forks.
-        child_level = posts.select {|c| c.parent == p}
-        fork = level < 3 && (this_level.length > 1 || child_level.length > 1)
-        if fork then %>
-          <div class="thread"><% level_iter.call(p, level + 1) %></div>
+      </div>
+      <div class="btn-group">
+        <% if @topic.subscribed?(curr_user_course) %>
+            <%= link_to 'Unsubscribe', unsubscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
         <% else %>
-          <% level_iter.call(p, level) %>
-        <% end
-      end
-    end
+            <%= link_to 'Subscribe', subscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
+        <% end %>
+        <% if @topic.can_be_replied_to? %>
+            <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id, 'data-post-title' => @topic.title %>
+        <% end %>
+      </div>
+      <div class="btn-group dropdown-trigger-on-hover">
+        <% if can? :edit, @topic %>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              Manage topic
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to 'Edit/Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
+              <% if can? :set_hidden, @topic %>
+                  <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, hide: @topic.hidden? ? 0 : 1), method: :put %></li>
+              <% end %>
+              <% if can? :set_locked, @topic %>
+                  <li><%= link_to 'Lock', course_forum_topic_lock_path(@course, @forum, @topic, lock: @topic.locked? ? 0 : 1), method: :put %></li>
+              <% end %>
+              <li class="divider"></li>
+              <% ForumTopic::TOPIC_TYPES.each do |t| %>
+                  <% if can? t[2], @topic %>
+                      <li class="<%= t[1] == @topic.topic_type ? 'active' : '' %>">
+                        <%= link_to t[0], course_forum_topic_type_path(@course, @forum, @topic, type: t[1]), method: :put %>
+                      </li>
+                  <% end %>
+              <% end %>
+            </ul>
+        <% end %>
+        <% if can? :destroy, @topic %>
+            <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete', path_to_item: course_forum_topic_path(@course, @forum, @topic) } %>
+        <% end %>
+      </div>
 
-    level_iter.call(nil, 1)
-    %>
-  </div>
-
-  <% if @topic.can_be_replied_to? %>
-    <hr />
-
-    <div class="quick-reply">
-      <h3>Post a Reply</h3>
-
-      <% new_post = ForumPost.new %>
-      <% new_post.title = replize_title(@topic.posts.last.title) %>
-      <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
-                   html: { class: 'form-horizontal' } do |f| %>
-        <%= render partial: 'forums/posts/form', locals: { reply_to: @topic.posts.last, form: f } %>
-
-        <div class="form-actions">
-          <%= f.submit 'Reply', class: 'btn btn-primary' %>
-        </div>
-      <% end %>
     </div>
-  <% end %>
-</div>
+
+    <%= render partial: 'header', locals: { topic: @topic } %>
+
+    <% if @topic.locked? %>
+        <div class="alert">
+          <strong>This topic is locked.</strong>
+        </div>
+    <% end %>
+
+    <div class="posts">
+      <%
+         posts = @topic.posts.all.sort do |a, b|
+           if not a.parent then
+             -1
+           elsif not b.parent then
+             1
+           else
+             a.parent.id <=> b.parent.id
+           end
+         end
+
+         # This is basically a DFS: we have to emit the conversation style layout without the
+         # tree information from the database.
+         level_iter = lambda do |common_parent, level|
+           this_level = posts.select {|p| p.parent == common_parent}
+           this_level.each do |p|
+      %><%= render partial: 'forums/posts/post', locals: { post: p } %><%
+
+       # We start a new thread only if the current level has more than one post so that we do not
+       # indent at every reply, only those with forks.
+       child_level = posts.select {|c| c.parent == p}
+       fork = level < 3 && (this_level.length > 1 || child_level.length > 1)
+       if fork then %>
+                  <div class="thread"><% level_iter.call(p, level + 1) %></div>
+              <% else %>
+                  <% level_iter.call(p, level) %>
+              <% end
+                 end
+                 end
+
+                 level_iter.call(nil, 1)
+              %>
+    </div>
+
+    <% if @topic.can_be_replied_to? %>
+        <hr />
+
+        <div class="quick-reply">
+          <h3>Post a Reply</h3>
+
+          <% new_post = ForumPost.new %>
+          <% new_post.title = replize_title(@topic.posts.last.title) %>
+          <%= form_for new_post, url: course_forum_topic_posts_path(@course, @forum, @topic, new_post),
+                       html: { class: 'form-horizontal' } do |f| %>
+              <%= render partial: 'forums/posts/form', locals: { reply_to: @topic.posts.last, form: f } %>
+
+              <div class="form-actions">
+                <%= f.submit 'Reply', class: 'btn btn-primary' %>
+              </div>
+          <% end %>
+        </div>
+    <% end %>
+  </div>
 </div>

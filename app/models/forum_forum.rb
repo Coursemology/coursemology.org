@@ -37,4 +37,8 @@ class ForumForum < ActiveRecord::Base
     name
   end
 
+  def views_count
+    ForumTopicView.where(topic_id: topics).count
+  end
+
 end
