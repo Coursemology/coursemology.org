@@ -26,7 +26,7 @@
   </td>
   <td class="posts-count text-center"><%= topic.posts.count %></td>
   <td class="views-count text-center"><%= topic.views.count %></td>
-  <td class="latest-post text-center">
+  <td class="latest-post">
     <%  last_post = topic.posts.last %>
     <%  if last_post.author %>
       <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
