@@ -57,7 +57,7 @@ class SurveySubmissionsController < ApplicationController
       end
       @survey.questions.each do |qn|
         if qn.is_essay?
-          essay =  qn.survey_essay_answers.where(user_course_id:curr_user_course).first || qn.survey_essay_answers.build({user_course_id: curr_user_course.id})
+          essay =  qn.survey_essay_answers.where(user_course_id:curr_user_course).first || @survey_submission.survey_essay_answers.build({user_course_id: curr_user_course.id, question_id: qn.id})
           if answers.has_key? qn
             essay.text = answers[qn]
             essay.save
@@ -75,7 +75,7 @@ class SurveySubmissionsController < ApplicationController
             options = SurveyQuestionType.MCQ.first == qn.type ? [answers[qn]] : answers[qn]
 
             options.each do |option|
-              answer = qn.survey_mrq_answers.build({option_id: option, user_course_id: curr_user_course.id})
+              answer = @survey_submission.survey_mrq_answers.build({option_id: option, user_course_id: curr_user_course.id, question_id: qn.id})
               answer.save
               answer.option.increase_count
             end
