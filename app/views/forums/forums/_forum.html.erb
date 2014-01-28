@@ -3,7 +3,7 @@
     <span class="post-status-icons">
       <% if forum.has_unanswered_question? %>
           <a href="<%= course_forum_topic_url(@course, forum, forum.topics.unanswered.first) %>" rel="tooltip" title="Unanswered Question">
-            <i class="icon-question-sign" style="color:#9A4444"></i>
+            <i class="icon-question-sign" style="color:#da4e49"></i>
           </a>
       <% elsif forum.topics.unread(curr_user_course).count > 0 %>
           <a href="<%= course_forum_topic_url(@course, forum, forum.topics.unread(curr_user_course).first) %>" rel="tooltip" title="Next Unread"><i class="icon-envelope"></i></a>
