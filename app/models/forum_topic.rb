@@ -72,10 +72,6 @@ class ForumTopic < ActiveRecord::Base
     views.count
   end
 
-  def answer_count
-    posts.where(parent_id:nil).count + posts.first.children.count - 1
-  end
-
   def subscribed?(user_course)
     not subscriptions.where(user_id: user_course).empty?
   end

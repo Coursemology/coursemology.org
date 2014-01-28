@@ -1,48 +1,38 @@
-<div class="question-summary narrow">
-  <div>
-    <span class="topic-status-icon">
-    <% if topic.locked? %>
-        <i class="icon-lock" title="Locked Post" rel="tooltip"></i>
-    <% end %>
-      <% if topic.sticky? || topic.announcement? %>
-        <i class="icon-chevron-up" title="Sticky" rel="tooltip"></i>
-    <% end %>
-      <% if topic.hidden? %>
-        <i class="icon-eye-close" title="Hidden" rel="tooltip"></i>
-    <% end %>
-        </span>
-  </div>
-  <div onclick="window.location.href='<%= course_forum_topic_path(@course, @forum, topic) %>'" class="cp">
-    <div class="posts <%= topic.unread?(curr_user_course) ? 'new-post' : 'old-post'%>" rel="tooltip" title="<%= 'new posts' if topic.unread?(curr_user_course) %>">
-      <div class="mini-counts"><%= topic.posts.count %></div>
-      <div class="text-center">posts</div>
-    </div>
-    <% if topic.question? %>
-        <div class="status <%= topic.answered? ? 'answered' : 'unanswered'%>" rel="tooltip" title="<%= topic.answered? ? 'answered' : 'unanswered'%>">
-          <div class="mini-counts"><%= topic.answer_count %></div>
-          <div class="text-center">answers</div>
-        </div>
-    <% else %>
-        <div class="votes">
-          <div class="mini-counts"><%= topic.posts.first.vote_count %></div>
-          <div class="text-center">votes</div>
-        </div>
-    <% end %>
-    <div class="views">
-      <div class="mini-counts"><%= topic.views.count %></div>
-      <div class="text-center">views</div>
-    </div>
-  </div>
-  <div class="summary">
-    <h3><a href="<%= course_forum_topic_path(@course, @forum, topic) %>" class="question-hyperlink" title="<%= topic.posts.first.text %>" rel="tooltip"><%= topic.title %></a></h3>
-    <div class="started">
-      <%  last_post = topic.posts.last %>
-      <%= link_to "#{time_ago_in_words(last_post.created_at)} ago", topic_latest_post_path(@course, topic.forum, topic),class:"last-link" -%>
-      <%  if last_post.author %>
-          <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %>
-      <% else %>
-          (unknown)
+<tr class="topic <%= topic.locked? ? 'locked' : 'unlocked' %>">
+  <td class="icon" style="vertical-align: middle">
+    <span class="post-status-icons">
+      <% if topic.locked? %>
+        <i class="icon-lock" title="Locked Post"></i>
       <% end %>
+      <% if topic.sticky? || topic.announcement? %>
+        <i class="icon-chevron-up" title="Sticky"></i>
+      <% end %>
+      <% if topic.question? %>
+        <i class="icon-question-sign" rel="tooltip" title="<%= topic.answered? ? 'Answered' : 'Unanswered'  %> question" style="<%= topic.answered? ?  'color:green' : 'color:#da4e49' %>"></i>
+      <% end %>
+      <% if topic.hidden? %>
+        <i class="icon-eye-close" title="Hidden"></i>
+      <% end %>
+      <% if topic.unread?(curr_user_course) %>
+        <i class="icon-envelope" title="New posts"></i>
+      <% end %>
+    </span>
+  </td>
+  <td class="byline">
+    <div class="subject">
+      <%= link_to topic.title, course_forum_topic_path(@course, @forum, topic) %>
     </div>
-  </div>
-</div>
+    <div class="started-by">Started by <%= topic.author ? topic.author.user : '(unknown)' %></div>
+  </td>
+  <td class="posts-count text-center"><%= topic.posts.count %></td>
+  <td class="views-count text-center"><%= topic.views.count %></td>
+  <td class="latest-post text-center">
+    <%  last_post = topic.posts.last %>
+    <%  if last_post.author %>
+      <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
+    <% else %>
+      (unknown)
+    <% end %>
+    <%= link_to "#{time_ago_in_words(last_post.created_at)} ago", topic_latest_post_path(@course, topic.forum, topic) -%>
+  </td>
+</tr>
