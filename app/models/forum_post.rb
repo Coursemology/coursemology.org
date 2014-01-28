@@ -19,6 +19,10 @@ class ForumPost < ActiveRecord::Base
     SeenByUser.forum_posts.where(user_course_id: user_course, obj_id: self).empty?
   end
 
+  def vote_count
+    upvotes.count - downvotes.count
+  end
+
   def destroy
     ForumPost.transaction do
       # Set all child references to the parent of the item we are deleting.
