@@ -49,7 +49,7 @@
     <hr>
     <table class="activities">
       <% @activities.each do |act| %>
-          <% unless act.actor_course.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? %>
+          <% unless act.actor_course.nil? || act.action.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? %>
               <tr>
                 <td width="25px">
                   <a class="pull-left activity-icon" href="<%= get_social_media_url(act.actor_course) %>">
