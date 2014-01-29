@@ -114,7 +114,9 @@ class CourseAbility
       can :reply, ForumTopic, locked: false
       can [:edit, :update], ForumTopic, locked: false
       can :destroy, ForumTopic, locked: false, author: user_course
-      can :set_answer, ForumTopic, locked: false, author: user_course
+      can :set_answer, ForumPost do |post|
+          post.topic.author == user_course && !post.topic.locked
+      end
       can :read, ForumPost
       can :create, ForumPost
       can :set_vote, ForumPost

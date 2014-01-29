@@ -80,4 +80,9 @@ class ForumTopic < ActiveRecord::Base
   def get_title
     title
   end
+
+  def votes_count
+    votes = ActsAsVotable::Vote.where(votable_type: ForumPost.to_s, votable_id: posts )
+    votes.where(vote_flag: true).count - votes.where(vote_flag: false).count
+  end
 end

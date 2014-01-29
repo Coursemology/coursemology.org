@@ -35,7 +35,7 @@
         <div class="datetimepicker input-append" id="lesson_plan_entry_start_at_picker"
           <%= @start_at ? " data-date-startdate=\"#{datetime_iso(@start_at)}\"".html_safe : '' %>
           <%= @end_at ? " data-date-enddate=\"#{datetime_iso(@end_at)}\"".html_safe : '' %>>
-          <%= f.text_field :start_at, :value => datetime_format(@lesson_plan_entry.start_at), :required => 'required' %>
+          <%= f.text_field :start_at, :value => datetime_format(@lesson_plan_entry.start_at || @start_at ), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
           </span>
@@ -49,7 +49,7 @@
         <div class="datetimepicker input-append" id="lesson_plan_entry_end_at_picker"
           <%= @start_at ? " data-date-startdate=\"#{datetime_iso(@start_at)}\"".html_safe : '' %>
           <%= @end_at ? " data-date-enddate=\"#{datetime_iso(@end_at)}\"".html_safe : '' %>>
-          <%= f.text_field :end_at, :value => datetime_format(@lesson_plan_entry.end_at), :required => 'required' %>
+          <%= f.text_field :end_at, :value => datetime_format(@lesson_plan_entry.end_at || @end_at), :required => 'required' %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
           </span>
