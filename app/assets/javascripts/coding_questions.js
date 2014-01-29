@@ -7,10 +7,10 @@ var path = function(){
     }
     function _appendTest(testType, test_count, expression, expected, hint){
         $("#"+testType+"_test_tbody").append('<tr testNo="'+test_count+'">' +
-            '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
-            '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
-            (testType == 'private' ? '<td><input type="text" style="padding: 4px 3px" value="'+addslashes(hint)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'hint\', this.value)" /></td>' : '') +
-            '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>');
+            '<td><input type="text" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
+            '<td style="border-left: 0"><input type="text" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
+            '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>' +
+            (testType == 'private' ? '<tr><td colspan="2" style="border-top: 0">Hint: <textarea style="width: 98%;" rows="2" onchange="path.updateTest(\''+testType+'\',' + test_count + ', \'hint\', this.value)">' + addslashes(hint) + '</textarea></td><td style="border-top: 0"></td></tr>' : ''));
     }
 
     /** data types **/
@@ -98,6 +98,8 @@ var path = function(){
         },
         deleteTest: function(testDiv, testType){
             var i = $(testDiv).attr("testNo");
+            if (testType == 'private')
+                $(testDiv).next().remove();
             $(testDiv).remove();
             eval('cStep.'+testType+'Tests.splice(i-1,1)');
             $("#"+testType+"_test_tbody").children().each(function(index, e){
