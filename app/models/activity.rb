@@ -12,52 +12,53 @@ class Activity < ActiveRecord::Base
 
   def self.attempted_asm(user_course, asm)
     action = Action.find_by_text("attempted")
-    Activity.add(user_course.course, user_course, action, asm, nil, nil)
+    Activity.add(user_course.course, user_course, action, asm, nil, asm.get_path, nil)
   end
 
   def self.started_asm(user_course, asm)
     action = Action.find_by_text("started")
-    Activity.add(user_course.course, user_course, action, asm, nil, nil)
+    Activity.add(user_course.course, user_course, action, asm, nil, asm.get_path, nil)
   end
 
   def self.earned_smt(user_course, obj)
     action = Action.find_by_text("earned")
-    Activity.add(user_course.course, user_course, action, obj, nil, nil)
+    Activity.add(user_course.course, user_course, action, obj, nil, obj.get_path, nil)
   end
 
   def self.reached_lvl(user_course, obj)
     action = Action.find_by_text("reached")
-    Activity.add(user_course.course, user_course, action, obj, nil, nil)
+    Activity.add(user_course.course, user_course, action, obj, nil, nil, nil)
   end
 
   def self.created_forum_topic(user_course, topic)
     action = Action.find_by_text('created Forum topic')
-    Activity.add(user_course.course, user_course, action, topic, nil, nil)
+    Activity.add(user_course.course, user_course, action, topic, nil, topic.get_path, nil)
   end
 
   def self.asked_question(user_course, topic)
     action = Action.find_by_text('asked')
-    Activity.add(user_course.course, user_course, action, topic, nil, nil)
+    Activity.add(user_course.course, user_course, action, topic, nil, topic.get_path, nil)
   end
 
   def self.replied_post(user_course, post)
     action = Action.find_by_text('replied to')
-    Activity.add(user_course.course, user_course, action, post, nil, nil)
+    Activity.add(user_course.course, user_course, action, post, nil, post.topic.get_path + "#post-#{post.id.to_s}", nil)
   end
 
   def self.voted_forum_post(user_course, post)
     action = Action.find_by_text('voted on')
-    Activity.add(user_course.course, user_course, action, post, nil, nil)
+    Activity.add(user_course.course, user_course, action, post, nil, post.topic.get_path + "#post-#{post.id.to_s}", nil)
   end
 
 private
-  def self.add(course, actor_course, action, obj, target_course, extra)
+  def self.add(course, actor_course, action, obj, target_course, url, extra)
     act = Activity.new
     act.course = course
     act.actor_course = actor_course
     act.action = action
     act.obj = obj
     act.target_course = target_course
+    act.obj_url = url
     act.extra = extra
     act.save
   end

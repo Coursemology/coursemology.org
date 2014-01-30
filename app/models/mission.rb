@@ -79,6 +79,10 @@ class Mission < ActiveRecord::Base
     publish?
   end
 
+  def get_path
+    course_mission_path(self.course, self)
+  end
+
 
   alias_method :sbms, :submissions
 end

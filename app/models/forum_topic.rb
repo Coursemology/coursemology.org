@@ -1,5 +1,6 @@
 class ForumTopic < ActiveRecord::Base
   include ActivityObject
+  include Rails.application.routes.url_helpers
 
   has_many :posts, class_name: 'ForumPost', foreign_key: :topic_id, dependent: :delete_all
   has_many :views, class_name: 'ForumTopicView', foreign_key: :topic_id, dependent: :delete_all
@@ -84,5 +85,9 @@ class ForumTopic < ActiveRecord::Base
   def votes_count
     votes = ActsAsVotable::Vote.where(votable_type: ForumPost.to_s, votable_id: posts )
     votes.where(vote_flag: true).count - votes.where(vote_flag: false).count
+  end
+
+  def get_path
+    course_forum_topic_path(forum.course, forum, self)
   end
 end
