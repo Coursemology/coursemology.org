@@ -83,4 +83,18 @@
   .text-center {
     text-align: center;
   }
+
+  .unread-count {
+    background-color: #bd362f;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.7em;
+    font-weight: bold;
+    line-height: 25px;
+    margin-top: 5px;
+    padding: 0 6px;
+    margin-left: 5px;
+  }
 }

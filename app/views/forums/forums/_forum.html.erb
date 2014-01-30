@@ -5,8 +5,15 @@
           <a href="<%= course_forum_topic_url(@course, forum, forum.topics.unanswered.first) %>" rel="tooltip" title="Unanswered Question">
             <i class="icon-question-sign" style="color:#da4e49"></i>
           </a>
-      <% elsif forum.topics.unread(curr_user_course).count > 0 %>
-          <a href="<%= course_forum_topic_url(@course, forum, forum.topics.unread(curr_user_course).first) %>" rel="tooltip" title="Next Unread"><i class="icon-envelope"></i></a>
+          <% end %>
+
+      <% if forum.topics.unread(curr_user_course).count > 0 %>
+          <a href="<%= course_forum_topic_url(@course, forum, forum.topics.unread(curr_user_course).first) %>" rel="tooltip" title="Next Unread">
+            <span class="unread-count">
+            <%= ForumTopic.unread(curr_user_course).
+                        where(forum_id: forum).count %>
+          </span>
+          </a>
       <% end %>
     </span>
   </td>
@@ -16,9 +23,9 @@
     Last post:
     <span class="last_post">
     <% last_post = forum.last_post %>
-    <% if last_post %>
+      <% if last_post %>
       <%= link_to last_post.topic.title, course_forum_topic_path(@course, forum, last_post.topic) -%> by <%= last_post.author ? last_post.author.user : '(unknown)' %>
-      <time datetime="<%= last_post.created_at.to_s(:db) -%>"><%= time_ago_in_words(last_post.created_at) %> ago</time>
+          <time datetime="<%= last_post.created_at.to_s(:db) -%>"><%= time_ago_in_words(last_post.created_at) %> ago</time>
     <% else %>
       none
     <% end %>
