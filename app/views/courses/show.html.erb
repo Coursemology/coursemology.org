@@ -61,10 +61,9 @@
                   <a href="<%= course_user_course_path(@course, act.actor_course) %>">
                     <%= act.actor_course.name %>
                   </a> <%= act.action.text %>
-                  <strong><%= act.obj.get_title %></strong>
+                  <strong> <%= act.obj_url ? "<a href=\"#{act.obj_url}\">#{act.obj.get_title}</a>".html_safe : act.obj.get_title%></strong>
                   <br/>
                   <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
-                  </div>
                 </td>
               </tr>
           <% end %>

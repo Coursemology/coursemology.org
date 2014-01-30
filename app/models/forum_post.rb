@@ -1,5 +1,6 @@
 class ForumPost < ActiveRecord::Base
   include ActivityObject
+  include Rails.application.routes.url_helpers
 
   belongs_to :topic, class_name: 'ForumTopic', foreign_key: 'topic_id'
   belongs_to :author, class_name: 'UserCourse', foreign_key: 'author_id'
@@ -45,5 +46,9 @@ class ForumPost < ActiveRecord::Base
   # Implements ActivityObject
   def get_title
     topic.title
+  end
+
+  def get_path
+    edit_course_forum_topic_post_path(topic.forum.course, topic.forum, topic, self)
   end
 end

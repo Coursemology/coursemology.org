@@ -73,6 +73,9 @@ class Training < ActiveRecord::Base
     publish?
   end
 
+  def get_path
+    course_training_path(self.course, self)
+  end
 
 
   alias_method :sbms, :training_submissions
