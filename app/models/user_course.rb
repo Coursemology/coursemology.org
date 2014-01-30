@@ -61,6 +61,7 @@ class UserCourse < ActiveRecord::Base
   has_many :submission_gradings, foreign_key: "grader_course_id"
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
+  has_many :activities, foreign_key: "actor_course_id", dependent: :destroy
 
   default_scope includes(:course)
 
@@ -101,7 +102,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def mark_as_seen(obj)
-    obj = obj.to_a if (obj.is_a?(Enumerable) && not(obj.is_a?(Array)))
+    obj = obj.to_a if (obj.is_a?(Enumerable) && (not obj.is_a?(Array)))
     obj = [obj] unless obj.is_a?(Enumerable)
     mark_as_seen_array(obj)
   end
