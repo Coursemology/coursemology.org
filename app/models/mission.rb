@@ -83,6 +83,10 @@ class Mission < ActiveRecord::Base
     course_mission_path(self.course, self)
   end
 
+  def missions_dep_on_published
+    missions_dependent_on.where(publish:true)
+  end
+
 
   alias_method :sbms, :submissions
 end
