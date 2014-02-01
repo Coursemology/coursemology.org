@@ -33,10 +33,10 @@
 </table>
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @mission}%>
-<% if @mission.missions_dependent_on.count > 0 %>
+<% if @mission.missions_dep_on_published.count > 0 %>
     <h3>Finish to unlock:</h3>
     <ul>
-      <% @mission.missions_dependent_on.each do |mission| %>
+      <% @mission.missions_dep_on_published.each do |mission| %>
           <h4><li><%= mission.title %></li></h4>
       <% end %>
     </ul>
