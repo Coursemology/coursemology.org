@@ -90,7 +90,7 @@ class TrainingSubmissionsController < ApplicationController
     @qadata = {}
     @grading = @training_submission.get_final_grading
     @training.questions.each_with_index do |qn, index|
-      break if @training_submission.current_step <= index
+      break if @training_submission.current_step <= index and !@training.can_skip?
       @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
     end
 
@@ -341,7 +341,6 @@ class TrainingSubmissionsController < ApplicationController
     if public_tests and eval_summary[:privateTests].length > 0 and !private_tests
       index = eval_summary[:privateTests].find_index(false)
       eval_summary[:hint] = coding_question.data_hash["privateTests"][index]["hint"]
-      puts eval_summary[:hint]
     end
 
     sma.is_correct = false
@@ -361,8 +360,8 @@ class TrainingSubmissionsController < ApplicationController
         @training_submission.current_step = pos + 1
         AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
         # only update grade after finishing the assignments
-        if @training_submission.done?
-          @training_submission.update_grade
+        if !@training_submission.graded? &&  @training_submission.done?
+            @training_submission.update_grade
         end
       end
     end
