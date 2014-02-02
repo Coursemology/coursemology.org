@@ -107,7 +107,7 @@ class TrainingSubmissionsController < ApplicationController
 
     if @grading
       @grading.answer_gradings.each do |ag|
-        if sta = ag.student_answer
+        if sta = ag.stud  ent_answer
           @qadata[sta.qn_id.to_s + sta.qn.class.to_s][:g] = ag
         end
       end
@@ -167,15 +167,12 @@ class TrainingSubmissionsController < ApplicationController
 
     #staff can skip steps
     if params[:step] && params[:step].to_i >= 1
-      @step = curr_user_course.is_staff? || @training.can_skip? ? params[:step].to_i : [@step, params[:step].to_i].min
+      @step = (curr_user_course.is_staff? || @training.can_skip?) ? params[:step].to_i : [@step, params[:step].to_i].min
     end
 
-    left = @training_submission.questions_left
     if @step <= @max_step
-      puts @step
       @current_question = @training.questions[@step - 1]
     elsif (left = @training_submission.questions_left).length > 0
-      puts left
       @step = @training.questions.index(left.first) + 1
       @current_question = left.first
     end
@@ -354,13 +351,13 @@ class TrainingSubmissionsController < ApplicationController
 
     pos = @training.get_qn_pos(coding_question)
     puts "correct!",pos,@training_submission.current_step
-    if @training_submission.current_step == pos
+    if @training_submission.current_step == pos || (@training.can_skip? && !@training_submission.graded?)
       if sma.is_correct
         puts "correct!",pos,@training_submission.current_step
         @training_submission.current_step = pos + 1
         AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
         # only update grade after finishing the assignments
-        if !@training_submission.graded? &&  @training_submission.done?
+        if  @training_submission.done?
             @training_submission.update_grade
         end
       end
