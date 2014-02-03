@@ -57,6 +57,7 @@ class CourseAbility
       can :see, :pending_comments
       can :unsubmit, Submission
       can :view, :staff_leaderboard
+      can :manage, :forum_participation
 
       cannot :modify, TrainingSubmission
     end
