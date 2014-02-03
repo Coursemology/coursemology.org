@@ -5,6 +5,7 @@ class ForumParticipationController < ApplicationController
   before_filter :load_general_course_data, only: [:manage, :individual]
 
   def manage
+    authorize! :can, :manage, :forum_participation
     monday = Date.today.at_beginning_of_week.at_beginning_of_day
     #inclusive start and end date
     @from_date = params[:from] || ApplicationHelper.date_mdY(monday - 7.days)
@@ -67,7 +68,7 @@ class ForumParticipationController < ApplicationController
   end
 
   def individual
-
+    authorize! :can, :manage, :forum_participation
     @user_course = @course.user_courses.find(params[:poster_id])
 
     @from_date =  params[:from_date]
