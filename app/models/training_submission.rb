@@ -48,7 +48,8 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def answered_questions
-    sbm_answers.map {|sba| sba.answer.qn }.uniq
+    answers = sbm_answers.map {|sba| sba.answer }
+    answers.select {|a| a.answer_grading }.map {|a| a.qn}.uniq
   end
 
   def update_grade

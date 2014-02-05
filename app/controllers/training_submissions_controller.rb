@@ -90,7 +90,7 @@ class TrainingSubmissionsController < ApplicationController
     @qadata = {}
     @grading = @training_submission.get_final_grading
     @training.questions.each_with_index do |qn, index|
-      break if @training_submission.current_step <= index and !@training.can_skip?
+      break if @training_submission.current_step <= index && !@training.can_skip?
       @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
     end
 
@@ -107,7 +107,7 @@ class TrainingSubmissionsController < ApplicationController
 
     if @grading
       @grading.answer_gradings.each do |ag|
-        if sta = ag.student_answer
+        if (sta = ag.student_answer) and sta.qn
           @qadata[sta.qn_id.to_s + sta.qn.class.to_s][:g] = ag
         end
       end
@@ -238,7 +238,7 @@ class TrainingSubmissionsController < ApplicationController
       is_correct, grade = AutoGrader.mcq_grader(@training_submission, mcq, sbm_ans)
     end
 
-    if is_correct && @training_submission.current_step == mcq_pos
+    if is_correct && !@training_submission.graded?
       @training_submission.current_step = mcq_pos + 1
       if @training_submission.done?
         @training_submission.update_grade
@@ -288,7 +288,7 @@ class TrainingSubmissionsController < ApplicationController
       is_correct, grade = AutoGrader.mcq_select_all_grader(@training_submission, mcq, sbm_ans)
     end
 
-    if is_correct && @training_submission.current_step == mcq_pos
+    if is_correct && !@training_submission.graded?
       @training_submission.current_step = mcq_pos + 1
       if @training_submission.done?
         @training_submission.update_grade
