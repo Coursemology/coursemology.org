@@ -14,6 +14,7 @@ class Course < ActiveRecord::Base
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
+  has_many :material_folders
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
