@@ -34,6 +34,7 @@ module Duplication
 
     def duplicate_asm_no_log(asm, files=true)
       clone = asm.dup_options(files)
+      clone.publish = false
       clone_map = {}
       # duplicate question and create new asm_qn links
       asm.asm_qns.each do |asm_qn|
