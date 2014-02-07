@@ -21,9 +21,7 @@
                   <%= current_user.name %><b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu" role="menu" arial-labelled-by="usercontrol">
-                  <% if can?(:manage, Course) or current_user.courses.count > 1  %>
-                      <li><%= link_to "My Courses", main_app.my_courses_path %></li>
-                  <% end %>
+                  <li><%= link_to "My Courses", main_app.my_courses_path %></li>
                   <li><%= link_to "Account management", main_app.users_settings_path %></li>
                   <% if can? :manage, :user %>
                       <li><%= link_to "Admin panel", main_app.admins_path %></li>

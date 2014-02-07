@@ -1,9 +1,23 @@
+<% if flash[:notice] %>
+    <div class="alert alert-success">
+      <%= flash[:notice].html_safe %>
+    </div>
+<% end %>
+<% if flash[:error] %>
+    <div class="alert alert-error">
+      <%= flash[:error].html_safe %>
+    </div>
+<% end %>
 <div class="page-header">
   <h1>Hello, <%= current_user.display_name || current_user.name %>!</h1>
   <% if can? :manage, Course %>
       <%= link_to 'New Course',
                   new_course_path,
                   :class => 'btn btn-primary' %>
+  <% elsif request = RoleRequest.exist_lecturer_request?(current_user) %>
+      <a href="<%= edit_role_request_path(request) %>" class="btn btn-primary">Update your lecturer request</a>
+  <% else %>
+      <a href="<%= new_role_request_path %>" class="btn btn-primary">Request to be a lecturer</a>
   <% end %>
 </div>
 

@@ -14,20 +14,46 @@ class RoleRequestsController < ApplicationController
     end
   end
 
-  def new
-    @lecturer_role = Role.find_by_name('lecturer')
-    @admin_role = Role.find_by_name('superuser')
-    @request = RoleRequest.find_by_user_id_and_role_id(
-      current_user.id,
-      @lecturer_role.id
-    )
-    if current_user && !current_user.is_lecturer? && !@request
-      User.admins.each { |u| UserMailer.delay.new_lecturer_request(u, current_user) }
-      @request = RoleRequest.new
-      @request.user = current_user
-      @request.role = @lecturer_role
-      @request.save
+  def create
+    @role_request.user = current_user
+    @role_request.role = Role.lecturer.first
+    respond_to do |format|
+      if @role_request.save
+        flash[:notice] = "Your request has been submitted."
+        redirect_to my_courses_path
+        return
+      end
     end
+  end
+
+  def new
+    request = RoleRequest.find_by_user_id_and_role_id(
+        current_user.id,
+        Role.lecturer.first.id
+    )
+    @admin_role = Role.find_by_name('superuser')
+
+    if request
+      redirect_to role_request_path(request)
+    end
+  end
+
+  def edit
+
+  end
+
+  def update
+    respond_to do |format|
+      if @role_request.update_attributes(params[:role_request])
+        flash[:notice] = "Your request has been updated."
+        redirect_to my_courses_path
+        return
+      end
+    end
+  end
+
+  def show
+
   end
 
   def destroy
