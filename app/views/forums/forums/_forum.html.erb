@@ -34,4 +34,8 @@
   <td class="topics-count text-center"><%= forum.topics.count %></td>
   <td class="posts-count text-center"><%= forum.posts.count %></td>
   <td class="views-count text-center"><%= forum.views_count %></td>
+  <td style="vertical-align: middle">
+        <a href="#" rel="tooltip" title="Click to Unsubscribe" class="subscription unsubscribe <%= 'hidden' unless forum.subscribed? curr_user_course %>" url="<%= unsubscribe_course_forum_path(@course, forum) %>"><i class="icon-ok subscribe-icon"></i>Subscribed</a>
+        <a href="#" rel="tooltip" title="Click to Subscribe" class="subscription subscribe <%= 'hidden' if forum.subscribed? curr_user_course %>" url="<%= subscribe_course_forum_path(@course, forum) %>">Subscribe</a>
+  </td>
 </tr>

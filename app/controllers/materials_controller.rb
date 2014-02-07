@@ -60,7 +60,7 @@ class MaterialsController < ApplicationController
         }
 
         gon.currentFolder = @folder
-        gon.folders = build_subtree(@course.material_folder)
+        gon.folders = build_subtree(@course.root_folder)
       }
       format.json {
         render :json => build_subtree(@folder, true)
@@ -99,7 +99,7 @@ class MaterialsController < ApplicationController
         }
 
         gon.currentFolder = @folder
-        gon.folders = build_subtree(@course.material_folder)
+        gon.folders = build_subtree(@course.root_folder)
         render "materials/index"
       }
 
@@ -342,7 +342,7 @@ private
 
   def build_zip(folder, options = {})
     result = nil
-    recursive = not(not(options[:recursive]))
+    recursive = !(not(options[:recursive]))
     include = options[:include]
     include = include.map {|i| Integer(i)} if include
 

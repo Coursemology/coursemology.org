@@ -1,6 +1,6 @@
 class Forums::ForumsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read, :next_unread, :next_unanswered]
+  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read, :next_unread, :next_unanswered, :subscribe, :unsubscribe]
 
   before_filter :load_forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
   load_and_authorize_resource :forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
@@ -66,6 +66,7 @@ class Forums::ForumsController < ApplicationController
       if subscription.save
         format.html { redirect_to course_forum_path(@course, @forum),
                                   notice: 'You have subscribed to the forum.' }
+        format.json { render json: {status: 'OK'}}
       end
     end
   end
@@ -76,6 +77,7 @@ class Forums::ForumsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to course_forum_path(@course, @forum),
                                 notice: 'You have been unsubscribed from the forum.' }
+      format.json { render json: {status: 'OK'}}
     end
   end
 
