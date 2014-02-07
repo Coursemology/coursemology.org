@@ -13,7 +13,7 @@ class Course < ActiveRecord::Base
   has_many :trainings,         dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
-  has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
+  has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
@@ -389,7 +389,7 @@ class Course < ActiveRecord::Base
       mission_files = []
     end
 
-    missions = MaterialFolder.create_virtual("missions", material_folder.id)
+    missions = MaterialFolder.create_virtual("missions", root_folder.id)
     missions.name = customized_title_by_model(Mission).pluralize
     missions.description = missions.name.singularize + " descriptions and other files"
     missions.files = mission_files
@@ -415,7 +415,7 @@ class Course < ActiveRecord::Base
       training_files = []
     end
 
-    trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
+    trainings = MaterialFolder.create_virtual("trainings", root_folder.id)
     trainings.name = customized_title_by_model(Training).pluralize
     trainings.description = trainings.name + " descriptions and other files"
     trainings.files = training_files

@@ -110,7 +110,7 @@ module Duplication
 
     def duplicate_folder(user, folder, origin_course, dest_course)
       clone = folder.dup_course(dest_course)
-      clone.parent_folder = dest_course.material_folder
+      clone.parent_folder = dest_course.root_folder
       clone.save
 
       duplicate_log(user, folder, clone, origin_course, dest_course)
@@ -248,7 +248,7 @@ module Duplication
       end
 
       #clone materials
-      course.material_folder.dup_course(clone, clone_map, options[:workbin_files])
+      course.root_folder.dup_course(clone, clone_map, options[:workbin_files])
 
       #clone lesson plan milestone
       course.lesson_plan_milestones.each do |milestone|

@@ -15,7 +15,7 @@ class DuplicateController < ApplicationController
         Achievement => @course.achievements,
         Level       => @course.levels,
         TagGroup    => @course.tag_groups,
-        MaterialFolder  => @course.material_folder,
+        MaterialFolder  => @course.root_folder,
         LessonPlanMilestone => @course.lesson_plan_milestones,
         ForumForum          => @course.forums,
         Survey              => @course.surveys
@@ -81,7 +81,7 @@ class DuplicateController < ApplicationController
     groups.map {|grp| Duplication.duplicate_tag_group(current_user, grp, tags, @course, dest_course)}
 
     material_folder_ids = params[MaterialFolder.model_name] || []
-    folders = @course.material_folder.subfolders.where(id: material_folder_ids)
+    folders = @course.root_folder.subfolders.where(id: material_folder_ids)
     folders.map {|folder| Duplication.duplicate_folder(current_user, folder, @course, dest_course) }
 
 
