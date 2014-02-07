@@ -15,7 +15,7 @@
     <% end %>
   </div>
 
-  <div class="contents <%= post.answer? ? 'answer' : '' -%>">
+  <div class="contents <%= post.answer? ? 'answer' : '' -%> <%= 'unread-post' if post.unread?(curr_user_course) %>">
     <div class="pull-right">
       <time datetime="<%= post.created_at.to_s(:db) -%>">
         Posted <%= time_ago_in_words(post.created_at) %> ago
