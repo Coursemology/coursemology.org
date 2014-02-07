@@ -342,7 +342,7 @@ private
 
   def build_zip(folder, options = {})
     result = nil
-    recursive = not(not(options[:recursive]))
+    recursive = !(not(options[:recursive]))
     include = options[:include]
     include = include.map {|i| Integer(i)} if include
 
