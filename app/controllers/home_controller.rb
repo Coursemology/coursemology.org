@@ -4,7 +4,7 @@ class HomeController < ApplicationController
     @courses = current_user.courses
 
     if @courses.count == 0
-      @all_courses = Course.where(is_publish: true)
+      redirect_to my_courses_path
       return
     end
     redirect_course = @courses.count == 1 ? @courses.first :
