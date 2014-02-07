@@ -11,7 +11,7 @@ class Ability
       end
 
       can :manage, User, id: user.id
-      can :new, RoleRequest
+      can :manage, RoleRequest, user_id: user.id
     end
     can :read, :all
   end

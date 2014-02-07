@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140130091537) do
+ActiveRecord::Schema.define(:version => 20140207072305) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -728,8 +728,11 @@ ActiveRecord::Schema.define(:version => 20140130091537) do
   create_table "role_requests", :force => true do |t|
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "organization"
+    t.string   "designation"
+    t.text     "reason"
   end
 
   add_index "role_requests", ["role_id"], :name => "index_role_requests_on_role_id"

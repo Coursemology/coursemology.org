@@ -1,0 +1,30 @@
+<% if not current_user %>
+    Please <%= link_to new_user_session_path, 'log in' %> first.
+<% elsif @role_request %>
+    <div class="span4">
+      <strong>Request Details</strong>
+      <br>
+      <br>
+     <table class="table">
+       <tbody>
+       <tr>
+         <td>Status</td>
+         <td>Pending Approval</td>
+       </tr>
+       <tr>
+         <td>Organization</td>
+         <td><%= @role_request.organization %></td>
+       </tr>
+       <tr>
+         <td>Designation</td>
+         <td><%= @role_request.designation %></td>
+       </tr>
+       <tr>
+         <td>Reason</td>
+         <td><%= @role_request.reason %></td>
+       </tr>
+       </tbody>
+     </table>
+      <a href="<%= edit_role_request_path(@role_request) %>" class="btn btn-primary">Update your lecturer request</a>
+    </div>
+<% end %>
