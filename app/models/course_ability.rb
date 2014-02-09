@@ -111,8 +111,10 @@ class CourseAbility
       # Students can delete their own posts and threads.
       can :read, ForumForum
       can :subscribe, ForumForum
+      can :unsubscribe, ForumForum
       can :create, ForumTopic
       can :subscribe, ForumTopic
+      can :unsubscribe, ForumTopic
       can :read, ForumTopic, hidden: false
       can :read, ForumTopic, author_id: user_course.id
       can :reply, ForumTopic, locked: false

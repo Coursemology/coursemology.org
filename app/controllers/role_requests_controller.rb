@@ -21,7 +21,6 @@ class RoleRequestsController < ApplicationController
       if @role_request.save
         flash[:notice] = "Your request has been submitted."
         redirect_to my_courses_path
-        return
       end
     end
   end
@@ -47,7 +46,6 @@ class RoleRequestsController < ApplicationController
       if @role_request.update_attributes(params[:role_request])
         flash[:notice] = "Your request has been updated."
         redirect_to my_courses_path
-        return
       end
     end
   end
