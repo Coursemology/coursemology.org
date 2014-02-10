@@ -99,7 +99,7 @@ class TrainingsController < ApplicationController
 
     respond_to do |format|
       if @training.save
-        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
+        @training.schedule_tasks(course_training_url(@course, @training))
         format.html { redirect_to course_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }
       else
@@ -118,7 +118,7 @@ class TrainingsController < ApplicationController
     @training.update_tags(params[:tags])
     respond_to do |format|
       if @training.update_attributes(params[:training])
-        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
+        @training.schedule_tasks(course_training_url(@course, @training))
         format.html { redirect_to course_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else
