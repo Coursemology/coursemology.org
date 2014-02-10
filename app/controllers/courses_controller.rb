@@ -123,6 +123,10 @@ class CoursesController < ApplicationController
         @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
       end
 
+      @pending_actions = curr_user_course.pending_actions.to_show.
+          select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
+          sort_by {|pa| pa.item.close_at unless pa.item.close_at.nil? }
+
       respond_to do |format|
         format.html
       end
