@@ -351,7 +351,7 @@ class TrainingSubmissionsController < ApplicationController
 
     pos = @training.get_qn_pos(coding_question)
     puts "correct!",pos,@training_submission.current_step
-    if @training_submission.current_step == pos || (@training.can_skip? && !@training_submission.graded?)
+    if @training_submission.current_step == pos || !@training_submission.graded?
       if sma.is_correct
         puts "correct!",pos,@training_submission.current_step
         @training_submission.current_step = pos + 1
