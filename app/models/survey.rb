@@ -5,13 +5,29 @@ class Survey < ActiveRecord::Base
                   :open_at, :expire_at, :anonymous, :publish,
                   :allow_modify, :has_section, :exp
 
+
+  scope :opened, lambda { where("open_at <= ? ", Time.now) }
+
+
   belongs_to :course
   belongs_to :creator, class_name: "User"
 
   has_many :survey_sections,    dependent: :destroy
   has_many :survey_questions,   dependent: :destroy
   has_many :survey_submissions
+  has_many :pending_actions, as: :item, dependent: :destroy
+  has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
 
+  after_create :update_pending_actions
+  after_update :update_pending_actions
+
+  def update_pending_actions
+    QueuedJob.destroy(self.queued_jobs)
+
+    #enqueue pending action job
+    delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, Survey.to_s, self.id), run_at: self.open_at)
+    self.queued_jobs.create(delayed_job_id: delayed_job.id)
+  end
 
   def submissions
     survey_submissions
@@ -64,4 +80,11 @@ class Survey < ActiveRecord::Base
     clone
   end
 
+  def close_at
+    expire_at
+  end
+
+  def current_exp
+    exp
+  end
 end

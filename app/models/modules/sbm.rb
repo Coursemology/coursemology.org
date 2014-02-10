@@ -64,8 +64,12 @@ module Sbm
   def set_submitted(redirect_url = "", notify = true)
     self.update_attribute(:status,'submitted')
     self.update_attribute(:submit_at, updated_at)
-    if notify
-      notify_submission(redirect_url)
+
+    if self.class == Submission
+      pending_action = std_course.pending_actions.where(item_type: Mission.to_s, item_id: self.mission.id).first
+      pending_action.set_done if pending_action
+
+      notify_submission(redirect_url) if notify
     end
   end
 

@@ -62,6 +62,7 @@ class UserCourse < ActiveRecord::Base
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
   has_many :activities, foreign_key: "actor_course_id", dependent: :destroy
+  has_many :pending_actions, dependent: :destroy
 
   default_scope includes(:course)
 

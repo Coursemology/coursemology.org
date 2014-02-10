@@ -17,6 +17,7 @@ module Assignment
       has_many :asm_tags, as: :asm, dependent: :destroy
       has_many :tags, through: :asm_tags
       has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
+      has_many :pending_actions, as: :item, dependent: :destroy
 
       after_save :after_save_asm
 
@@ -88,10 +89,14 @@ module Assignment
     self.tags.each { |tag| tag.update_max_exp }
   end
 
-  def schedule_mail(ucs, redirect_to)
+  def schedule_tasks(redirect_to)
     type = self.class
     QueuedJob.destroy(self.queued_jobs)
     course = self.course
+
+    #enqueue pending action job
+    delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, type.to_s, self.id), run_at: self.open_at)
+    self.queued_jobs.create(delayed_job_id: delayed_job.id)
 
     if self.open_at > Time.now && type == Mission && course.auto_create_sbm_pref.display?
       BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel', self.id)

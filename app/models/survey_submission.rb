@@ -25,6 +25,10 @@ class SurveySubmission < ActiveRecord::Base
   end
 
   def set_submitted
+    unless submitted?
+      pending_action = user_course.pending_actions.where(item_type: Survey.to_s, item_id: self.survey.id).first
+      pending_action.set_done if pending_action
+    end
     if !submitted? and survey.exp.to_i > 0
       self.exp_transaction = ExpTransaction.new
       self.exp_transaction.user_course = self.user_course
