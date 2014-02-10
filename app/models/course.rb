@@ -47,6 +47,7 @@ class Course < ActiveRecord::Base
   has_many :surveys,                dependent: :destroy
   has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
   has_many :tabs,                   dependent: :destroy
+  has_many :pending_actions
 
   def asms
     missions + trainings

@@ -87,6 +87,10 @@ class Mission < ActiveRecord::Base
     missions_dependent_on.where(publish:true)
   end
 
+  def current_exp
+    exp
+  end
+
 
   alias_method :sbms, :submissions
 end

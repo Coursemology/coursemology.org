@@ -97,7 +97,7 @@ class MissionsController < ApplicationController
     respond_to do |format|
       if @mission.save
         @mission.update_grade
-        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
+        @mission.schedule_tasks(course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
       else
@@ -120,7 +120,7 @@ class MissionsController < ApplicationController
         update_single_question_type
         update_mission_max_grade
 
-        @mission.schedule_mail(@course.user_courses, course_mission_url(@course, @mission))
+        @mission.schedule_tasks(course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_url(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
       else

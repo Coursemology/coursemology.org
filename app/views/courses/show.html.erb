@@ -44,6 +44,48 @@
     </div>
 <% end %>
 
+<% if @pending_actions and @pending_actions.first %>
+    <div class="pending-actions-block">
+      <h2>Pending Actions</h2>
+      <hr>
+      <table class="table table-hover table-striped no-boarder pending-actions span9">
+        <thead>
+        <tr style="background-color: #f9f9f9">
+          <th>Item</th>
+          <th>Open Date</th>
+          <th>End Date</th>
+          <th>EXP</th>
+          <th>Action</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @pending_actions.each_with_index do |pa, i| %>
+            <% item = pa.item %>
+            <tr class="<%= 'error' if i == 0 %> ">
+              <td style="vertical-align: middle"><%= item.title %></td>
+              <td style="vertical-align: middle"><%= date_mdY(item.open_at) %></td>
+              <td style="vertical-align: middle"><%= date_mdY(item.close_at) %></td>
+              <td style="vertical-align: middle"><%= item.current_exp %></td>
+              <td style="vertical-align: middle">
+                <% if item.class == Mission %>
+                    <%= render partial: "missions/action", locals: {mission: item} %>
+                <% elsif item.class == Training %>
+                    <%= render partial: "trainings/action", locals: {training: item} %>
+                <% elsif item.class == Survey %>
+                    <%= render partial: "surveys/action", locals:{survey: item} %>
+                <% end %>
+              </td>
+              <td style="vertical-align: middle">
+                <a url="<%= course_pending_actions_ignore_path(@course, pa) %>" class="btn btn-info ignore">Ignore</a>
+              </td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+<% end %>
+
 <% if @activities and @activities.first %>
     <h2><%= @activities_pref.prefer_value%></h2>
     <hr>

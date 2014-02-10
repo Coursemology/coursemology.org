@@ -22,7 +22,7 @@
 <% if can? :create, Training %>
     <p>
       <%= link_to "New #{@course.customized_title_by_model(Training).singularize}",
-                  new_course_training_path(@course),
+                  new_course_training_path(@course, tab: @tab_id),
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>

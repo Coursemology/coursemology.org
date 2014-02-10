@@ -40,20 +40,7 @@
     </td>
 
     <td>
-      <% submission = @mission.get_final_sbm_by_std(curr_user_course.id) %>
-      <% if submission %>
-          <% if submission.attempting? %>
-              <a href="<%= edit_course_mission_submission_path(@course, @mission, submission) %>" class="btn">Edit</a>
-          <% else %>
-              <%= link_to 'Review',
-                          submission.get_path,
-                          class: 'btn btn-info' %>
-          <% end %>
-      <% else %>
-          <%= link_to 'Attempt',
-                      new_course_mission_submission_path(@course, @mission),
-                      class: 'btn btn-success' %>
-      <% end %>
+      <%= render partial: "action", locals: {mission: @mission} %>
     </td>
 
     <% if can? :manage, @mission %>

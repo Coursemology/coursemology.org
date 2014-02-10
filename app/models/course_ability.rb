@@ -157,6 +157,8 @@ class CourseAbility
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
       can :manage, ExpTransaction, user_course_id: user_course.id
 
+      can :ignore, PendingAction, user_course: user_course
+
       cannot :modify, TrainingSubmission
 
       cannot :see_all, [Submission, TrainingSubmission]

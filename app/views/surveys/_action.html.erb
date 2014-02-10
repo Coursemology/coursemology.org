@@ -1,7 +1,7 @@
 <% if !curr_user_course.new_record? and (survey.can_start? ||  can?(:manage, Survey)) %>
     <% submission = survey.submission_by(curr_user_course.id) %>
     <% if  !submission %>
-        <a href="<%= new_course_survey_survey_submission_path(@course, survey) %>" class="btn">Start</a>
+        <a href="<%= new_course_survey_survey_submission_path(@course, survey) %>" class="btn btn-primary">Start</a>
     <% elsif submission.started? %>
         <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Continue</a>
     <% elsif submission.submitted? and survey.allow_modify? %>
