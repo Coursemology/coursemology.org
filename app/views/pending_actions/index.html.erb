@@ -1,0 +1,21 @@
+<h1>Listing pending_actions</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @pending_actions.each do |pending_action| %>
+  <tr>
+    <td><%= link_to 'Show', pending_action %></td>
+    <td><%= link_to 'Edit', edit_pending_action_path(pending_action) %></td>
+    <td><%= link_to 'Destroy', pending_action, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Pending action', new_pending_action_path %>
