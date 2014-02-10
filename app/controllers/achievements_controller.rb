@@ -54,7 +54,6 @@ class AchievementsController < ApplicationController
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.save
-        Delayed::Job.enqueue(BackgroundJob.new(@course.id, 'RewardAchievement', '', @achievement.id))
         format.html { redirect_to course_achievements_url(@course),
                       notice: "The achievement '#{@achievement.title}' has been created." }
       else
@@ -67,7 +66,6 @@ class AchievementsController < ApplicationController
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
-        Delayed::Job.enqueue(BackgroundJob.new(@course.id, 'RewardAchievement', '', @achievement.id))
         format.html { redirect_to course_achievements_url(@course),
                       notice: "The achievement '#{@achievement.title}' has been updated." }
       else
