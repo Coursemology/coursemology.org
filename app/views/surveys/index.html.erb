@@ -50,7 +50,7 @@
           <%= survey.expire_at.strftime(@time_format.prefer_value) %>
         </td>
         <td>
-          <%= render partial: "survey_action", locals: {survey: survey} %>
+          <%= render partial: "action", locals: {survey: survey} %>
         </td>
         <% if can? :view_detail, Survey %>
             <td><a href="<%= course_survey_stats_path(@course, survey) %>" rel="tooltip" title="Number of students started"><%= @stats[survey][:started] %></a> / <%= @stats[survey][:total] %></td>
