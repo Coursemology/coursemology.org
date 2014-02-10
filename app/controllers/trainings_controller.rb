@@ -81,6 +81,10 @@ class TrainingsController < ApplicationController
   end
 
   def new
+    tab_id = params[:tab]
+    if Tab.find_by_id(tab_id)
+      @training.tab_id = tab_id
+    end
     @training.exp = 200
     @training.open_at = DateTime.now.beginning_of_day
     @training.bonus_exp = 0
