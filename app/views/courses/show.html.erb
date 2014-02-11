@@ -69,15 +69,15 @@
               <td style="vertical-align: middle"><%= item.current_exp %></td>
               <td style="vertical-align: middle">
                 <% if item.class == Mission %>
-                    <%= render partial: "missions/action", locals: {mission: item, event_label: "_pendingActions"} %>
+                    <%= render partial: "missions/action", locals: {mission: item, event_label: "PendingActions"} %>
                 <% elsif item.class == Training %>
-                    <%= render partial: "trainings/action", locals: {training: item, event_label: "_pendingActions"} %>
+                    <%= render partial: "trainings/action", locals: {training: item, event_label: "PendingActions"} %>
                 <% elsif item.class == Survey %>
-                    <%= render partial: "surveys/action", locals:{survey: item, event_label: "_pendingActions"} %>
+                    <%= render partial: "surveys/action", locals:{survey: item, event_label: "PendingActions"} %>
                 <% end %>
               </td>
               <td style="vertical-align: middle">
-                <a onclick="event_log('_pendingActions', 'ignore', 'clicked')" url="<%= course_pending_actions_ignore_path(@course, pa) %>" class="btn btn-info ignore">Ignore</a>
+                <a onclick="event_log('PendingActions', 'ignore', 'clicked', true)" url="<%= course_pending_actions_ignore_path(@course, pa) %>" class="btn btn-info ignore">Ignore</a>
               </td>
             </tr>
         <% end %>

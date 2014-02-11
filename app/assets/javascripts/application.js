@@ -398,8 +398,8 @@ function escapeHtml(unsafe) {
         .replace(/\s/g,"&nbsp;");
 }
 
-function event_log(event, label, action, push){
+function event_log(category, label, action, push){
     if(typeof push != 'undefined' && push) {
-        _gaq.push([event, label, action]);
+        _gaq.push(['_trackEvent',category, action, label]);
     }
 }
