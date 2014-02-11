@@ -1,4 +1,5 @@
 <% submission = training.get_final_sbm_by_std(curr_user_course) %>
+<% event_label = defined?(event_label) ? event_label : false %>
 <% if submission %>
     <% if submission.graded? %>
         <% if @reattempt && @reattempt.display %>
@@ -8,15 +9,19 @@
         <% else %>
             <%= link_to "Revise",
                         edit_course_training_training_submission_path(@course, training, submission,
-                                                                      anchor: 'training-stop-pos', step: 1), class: 'btn' %>
+                                                                      anchor: 'training-stop-pos', step: 1),
+                        class: 'btn' %>
         <% end %>
     <% else %>
         <%= link_to 'Continue',
                     edit_course_training_training_submission_path(@course, training, submission,
-                                                                  anchor: 'training-stop-pos'), class: 'btn btn-primary' %>
+                                                                  anchor: 'training-stop-pos'),
+                    onclick: "event_log('#{event_label}', 'training', 'clicked'#{ ', true' if event_label})",
+                    class: 'btn btn-primary' %>
     <% end %>
 <% else %>
     <%= link_to 'Start',
                 new_course_training_training_submission_path(@course, training),
+                onclick: "event_log('#{event_label}', 'training', 'clicked'#{ ', true' if event_label})",
                 class: 'btn btn-success' %>
 <% end %>

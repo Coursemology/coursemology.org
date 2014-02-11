@@ -1,12 +1,23 @@
+<% event_label = defined?(event_label) ? event_label : false %>
 <% if !curr_user_course.new_record? and (survey.can_start? ||  can?(:manage, Survey)) %>
     <% submission = survey.submission_by(curr_user_course.id) %>
     <% if  !submission %>
-        <a href="<%= new_course_survey_survey_submission_path(@course, survey) %>" class="btn btn-primary">Start</a>
+        <%= link_to "Start",
+                    new_course_survey_survey_submission_path(@course, survey),
+                    onclick: "event_log('#{event_label}', 'survey', 'clicked'#{ ', true' if event_label})",
+                    class: 'btn btn-primary' %>
     <% elsif submission.started? %>
-        <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Continue</a>
+        <%= link_to "Continue",
+                    edit_course_survey_survey_submission_path(@course, survey, submission),
+                    onclick: "event_log('#{event_label}', 'survey', 'clicked'#{ ', true' if event_label})",
+                    class: 'btn' %>
     <% elsif submission.submitted? and survey.allow_modify? %>
-        <a href="<%= edit_course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Update</a>
+        <%= link_to "Update",
+                    edit_course_survey_survey_submission_path(@course, survey, submission),
+                    class: 'btn' %>
     <% else %>
-        <a href="<%= course_survey_survey_submission_path(@course, survey, submission) %>" class="btn">Review</a>
+        <%= link_to "Review",
+                    course_survey_survey_submission_path(@course, survey, submission),
+                    class: 'btn' %>
     <% end %>
 <% end %>
