@@ -25,10 +25,6 @@ class Training < ActiveRecord::Base
     self.save
   end
 
-  def get_path
-     course_training_path(course, self)
-  end
-
   def questions
     self.asm_qns.includes(:qn).order(:pos).map {|q| q.qn}
   end
