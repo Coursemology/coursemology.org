@@ -351,17 +351,17 @@ class TrainingSubmissionsController < ApplicationController
 
     pos = @training.get_qn_pos(coding_question)
     puts "correct!",pos,@training_submission.current_step
-    if @training_submission.current_step == pos || !@training_submission.graded?
-      if sma.is_correct
-        puts "correct!",pos,@training_submission.current_step
-        @training_submission.current_step = pos + 1
-        AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
-        # only update grade after finishing the assignments
-        if  @training_submission.done?
-            @training_submission.update_grade
-        end
+
+    if sma.is_correct && !@training_submission.graded?
+      puts "correct!",pos,@training_submission.current_step
+      @training_submission.current_step = pos + 1
+      AutoGrader.coding_question_grader(@training_submission, coding_question,sbm_ans)
+      # only update grade after finishing the assignments
+      if  @training_submission.done?
+        @training_submission.update_grade
       end
     end
+
     if @training_submission.save
       respond_to do |format|
         format.html {render json: eval_summary }

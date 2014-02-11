@@ -54,6 +54,7 @@ class TrainingSubmission < ActiveRecord::Base
 
   def update_grade
     self.submit_at = DateTime.now
+    self.current_step = training.asm_qns.count + 1
     self.set_graded
 
     pending_action = std_course.pending_actions.where(item_type: Training.to_s, item_id: self.training).first

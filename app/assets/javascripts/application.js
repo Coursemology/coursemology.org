@@ -397,3 +397,9 @@ function escapeHtml(unsafe) {
         .replace(/\n/g, "<br/>")
         .replace(/\s/g,"&nbsp;");
 }
+
+function event_log(event, label, action, push){
+    if(typeof push != 'undefined' && push) {
+        _gaq.push([event, label, action]);
+    }
+}
