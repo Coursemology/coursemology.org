@@ -14,7 +14,7 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :files, through: :options
 
   def user_answered?(user_course)
-    answers = answer_for_user(curr_user_course)
+    answers = answer_for_user(user_course)
     result = answers
 
     if result && (not is_essay?) then
