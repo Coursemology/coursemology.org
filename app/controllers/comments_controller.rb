@@ -62,8 +62,19 @@ class CommentsController < ApplicationController
         when 'mine'
           @topics = @my_topics
         else
-          @tab = 'pending'
-          @topics = @pending_comments
+          if @mine_pending_comments.count > 0
+            @tab = 'minepending'
+            @topics = @mine_pending_comments
+          elsif @pending_comments.count > 0
+            @tab = 'pending'
+            @topics = @pending_comments
+          elsif @my_topics.count > 0
+            @tab = 'mine'
+            @topics = @my_topics
+          else
+            @tab = 'all'
+            @topics = @all_topics
+          end
       end
     else
       @topics = curr_user_course.comment_topics
@@ -73,8 +84,6 @@ class CommentsController < ApplicationController
     if @comments_paging.display?
       @topics = @topics.page(params[:page]).per(@comments_paging.prefer_value.to_i)
     end
-
-    @topics
   end
 
   def pending_toggle
