@@ -8,7 +8,10 @@
     <h3>My Students</h3>
     <br>
     <% if @mission.single_question? and @mission.coding_questions.first %>
-        <input type="button" id="dump_sub_mine" class="btn dump_sub" value="Download Submissions">
+        <%= link_to "Download Submissions",
+            "#{course_mission_dump_code_path(:format => 'zip')}?_type=mine",
+            class: "btn"
+        %>
     <% end %>
     <table class="table">
       <thead>
@@ -37,7 +40,10 @@
 <h3>All Students</h3>
 <br>
 <% if @mission.single_question? and @mission.coding_questions.first %>
-    <input type="button" id="dump_sub_all" class="btn dump_sub" value="Download Submissions">
+    <%= link_to "Download Submissions",
+                course_mission_dump_code_path(:format => 'zip'),
+                class: "btn"
+    %>
 <% end %>
 <table class="table">
   <thead>
@@ -71,7 +77,10 @@
     <h3>Phantom Students</h3>
     <br>
     <% if @mission.single_question? and @mission.coding_questions.first %>
-        <input type="button" id="dump_sub_phantom" class="btn dump_sub" value="Download Submissions">
+        <%= link_to "Download Submissions",
+                    "#{course_mission_dump_code_path(:format => 'zip')}?_type=phantom",
+                    class: "btn"
+        %>
     <% end %>
     <table class="table">
       <thead>

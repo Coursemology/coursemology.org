@@ -246,7 +246,12 @@ class MissionsController < ApplicationController
         #TODO: hardcoded
         #title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
         #only student name
-        title = "#{ sbm.std_course.name.gsub(/\//,"_") }.py"
+        if sbm.files.count > 0
+          fold_title = sbm.std_course.name.gsub(/\//,"_")
+
+
+        end
+        title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
         file = File.open(temp_folder + title, 'w+')
         file.write(ans.code)
         file.close
@@ -257,16 +262,16 @@ class MissionsController < ApplicationController
       end
     end
 
-    file_upload = FileUpload.create({
-                                        creator: current_user,
-                                        owner: @course,
-                                        file: t
-                                    })
-    t.close
-    if file_upload.save
-      respond_to do |format|
-        format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file_url} }
-      end
+    respond_to do |format|
+      format.zip {
+        #filename = build_zip @folder, :recursive => false, :include => params['include']
+        send_file(t, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => @mission.title + ".zip"
+        }
+        )
+      }
     end
   end
 end
