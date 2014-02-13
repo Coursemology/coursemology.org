@@ -23,6 +23,7 @@
             <%=render partial: "do_coding",
                       locals:{answer: @std_coding_answers[q.id],
                               qn: q,
+                              submission: @submission,
                               mode: "edit"
                       }%>
         <% end %>
