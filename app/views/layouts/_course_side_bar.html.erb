@@ -17,7 +17,6 @@
           <table class="table user-short-stat" style="text-align:center">
             <thead>
             <tr>
-              <% # <th>Ranking</th> %>
               <th><%= link_to 'Achievement', main_app.course_achievements_path(@course) %></th>
               <th><%= link_to 'Level', main_app.course_user_course_exp_transactions_path(@course, curr_user_course) %><th>
             </tr>

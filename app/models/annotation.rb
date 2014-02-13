@@ -20,4 +20,10 @@ class Annotation < ActiveRecord::Base
       nil
     end
   end
+
+  def notify_user(ucs, assignment, redirect_url)
+    ucs.each do |uc|
+      UserMailer.delay.new_annotation(uc.user, self, assignment, redirect_url)
+    end
+  end
 end

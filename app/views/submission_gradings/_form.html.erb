@@ -42,7 +42,7 @@
 <%= form_for [@course, @mission, @submission, @submission_grading],
              html: { class: "form-horizontal" } do |f| %>
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
-    <%= render partial: "layouts/submission_form", locals: { mode: 'edit' }%>
+    <%= render partial: "layouts/submission_form", locals: { mode: 'edit', submission: @submission }%>
 
     <div class="form-actions">
       <%= f.submit "Save Grading", :class => 'btn btn-primary', id: "save_grading" %>

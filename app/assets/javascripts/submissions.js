@@ -124,7 +124,8 @@ $(document).ready(function() {
             var _source_code = $("#code_" + id).val();
             var _vt = $("#mode_" + id).val();
             var _language = $("#code-language-" + id).val();
-            var cv = new CodeViewer($("#source-code-"+id), _source_code, 'molokai', id, _vt, _language);
+            var _sub_id = $("#submission-id-" + id).val();
+            var cv = new CodeViewer($("#source-code-"+id), _source_code, 'molokai', id, _sub_id, _vt, _language);
             cvs.push(cv);
 //        cv.parseComments(_c);
 

@@ -74,7 +74,7 @@ class Training < ActiveRecord::Base
   end
 
   def current_exp
-    exp + (bonus_cutoff > Time.now ? bonus_exp : 0)
+    exp + (bonus_exp > 0 && bonus_cutoff > Time.now ? bonus_exp : 0)
   end
 
   def close_at

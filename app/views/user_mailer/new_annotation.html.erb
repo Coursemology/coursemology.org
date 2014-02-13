@@ -1,6 +1,7 @@
 Hello, <%= @user.name %>
 
-<p><%= @comment.user_course.name %> has made a new comment to a thread you are subscribed to:</p>
+<p>New annotation by <strong> <%= @comment.user_course.name %> </strong> on <span style="font-style: italic"><%= @assignment.title %></span>:</p>
+
 <blockquote>
   <%= @comment.text.html_safe %>
 </blockquote>
