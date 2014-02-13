@@ -12,6 +12,7 @@
             <%= render partial: "submissions/do_coding",
                        locals: {answer: qa[:a],
                                 qn:     qa[:q],
+                                submission: submission,
                                 mode:   "view"}%>
         <% else %>
             <div class="row-fluid">

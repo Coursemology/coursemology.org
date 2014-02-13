@@ -125,7 +125,7 @@ class CoursesController < ApplicationController
 
       @pending_actions = curr_user_course.pending_actions.to_show.
           select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
-          sort_by {|pa| pa.item.close_at unless pa.item.close_at.nil? }
+          sort_by {|pa| pa.item.close_at || Time.now }
 
       respond_to do |format|
         format.html

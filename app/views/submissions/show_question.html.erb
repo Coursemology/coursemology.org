@@ -46,6 +46,6 @@
 
 <div class="well"><%= @mission.description.html_safe %></div>
 
-<%= render partial: "layouts/submission_form", locals: {mode: "view"} %>
+<%= render partial: "layouts/submission_form", locals: {mode: "view", submission: @submission} %>
 
 

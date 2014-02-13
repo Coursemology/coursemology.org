@@ -8,12 +8,13 @@
 
 //code from JFDI acedamy
 
-function CodeViewer($wrapper, source, theme, code_id, _vt, language){
+function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
     var self = this;
     var edit = _vt =='edit';
     this.wrapper = $wrapper;
     this.code_id = code_id;
     this.cb_class = "comment-box-"+code_id;
+    this.sub_id = sub_id;
 
     function setUpLines(){
         var $lines = self.output.find("div.lines");
@@ -113,6 +114,7 @@ function CodeViewer($wrapper, source, theme, code_id, _vt, language){
                 $ab.attr('disabled','disabled');
                 $.post(self.annotation_url, {
                     origin: document.URL,
+                    submission_id: self.sub_id,
                     annotation:{
                         annotable_id: self.code_id,
                         annotable_type: "StdCodingAnswer",
