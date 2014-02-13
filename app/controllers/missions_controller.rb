@@ -233,40 +233,56 @@ class MissionsController < ApplicationController
     sbms = @mission.submissions.
         where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:std_coding_answers)
 
-    temp_folder = "#{Rails.root}/paths/tmp/"
+    result = nil
 
-    t = Tempfile.new("my-temp-filename-#{Time.now}")
-
-    Zip::ZipOutputStream.open(t.path) do |z|
+    Dir.mktmpdir("mission-dump-temp-#{Time.now}") { |dir|
       sbms.each do |sbm|
         ans = sbm.std_coding_answers.first
         unless ans
           next
         end
-        #TODO: hardcoded
-        #title = "#{ sbm.std_course.name.gsub(/\//,"_") } - #{@mission.title.gsub(/\//,"_") }.py"
-        #only student name
-        title = "#{ sbm.std_course.name.gsub(/\//,"_") }.py"
-        file = File.open(temp_folder + title, 'w+')
+
+        path = dir
+
+        if sbm.files.count > 0
+          title = sbm.std_course.name.gsub(/\//,"_")
+          dir_path = File.join(dir, title)
+          Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
+          sbm.files.each do |file|
+            temp_path = File.join(dir_path, file.original_name.gsub(/\//,"_"))
+            file.file.copy_to_local_file :original, temp_path
+          end
+          path = dir_path
+        end
+
+        title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
+        file = File.open(File.join(path, title), 'w+')
         file.write(ans.code)
         file.close
-
-        z.put_next_entry(title)
-        z.print IO.read(file.path)
-        File.delete(file.path)
       end
-    end
 
-    file_upload = FileUpload.create({
-                                        creator: current_user,
-                                        owner: @course,
-                                        file: t
-                                    })
-    t.close
-    if file_upload.save
-      respond_to do |format|
-        format.json {render json: {file_name: @mission.title + ".zip", file_url: file_upload.file_url} }
-      end
+      zip_name = File.join(File.dirname(dir),
+                           Dir::Tmpname.make_tmpname([@mission.title, ".zip"], nil))
+      Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
+        # Add every file in the directory to the zip file, preserving structure.
+        Dir[File.join(dir, '**', '**')].each {|file|
+          zipfile.add(file.sub(File.join(dir + '/'), ''), file)
+        }
+      }
+
+      result = zip_name
+    }
+
+    respond_to do |format|
+      format.zip {
+        #filename = build_zip @folder, :recursive => false, :include => params['include']
+        send_file(result, {
+            :type => "application/zip, application/octet-stream",
+            :disposition => "attachment",
+            :filename => @mission.title + ".zip"
+        }
+        )
+      }
     end
   end
 end
