@@ -28,6 +28,7 @@ class CoursesController < ApplicationController
 
   respond_to :html, :json
   def update
+    message = nil
     if params[:user_course_id]
       uc = @course.user_courses.where(id:params[:user_course_id]).first
       uc.role_id = params[:role_id]
@@ -53,6 +54,7 @@ class CoursesController < ApplicationController
     if params[:course_owner]
       user = User.where(id: params[:course_owner]).first
       @course.creator = user
+      @course.is_publish = params[:is_publish] == 'true'
       @course.save
     end
     respond_to do |format|

@@ -12,6 +12,7 @@ class UserCourse < ActiveRecord::Base
   scope :tutor, where(:role_id => Role.tutor.first)
   scope :student, where(:role_id => Role.student.first)
   scope :real_students, where(:role_id => Role.student.first, is_phantom: false)
+  scope :active_last_week, where("last_active_time > ?", (Time.now - 7.days))
 
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).

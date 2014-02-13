@@ -189,6 +189,6 @@ class CommentsController < ApplicationController
           return course_mission_submission_url(@course, mission, submission)
         end
     end
-    return course_comments_url(@course)
+    course_comments_url(@course)
   end
 end

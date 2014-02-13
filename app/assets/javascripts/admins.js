@@ -37,6 +37,7 @@ $(document).ready(function(){
         e.preventDefault();
         var course_row = $(this).parents('tr');
         var owner_id = course_row.find("#select-owner_").val();
+        var is_publish = course_row.find('#select-publish_').val();
         var course_id = course_row.find(".course-id").val();
         var url = course_row.find(".course-owner-update-path").val();
         var notice = $('.alert');
@@ -45,16 +46,17 @@ $(document).ready(function(){
             url:url,
             type: 'PUT',
             data: {
-                course_owner: owner_id
+                course_owner: owner_id,
+                is_publish: is_publish
             },
             dataType:'json',
             success: function(data) {
-                notice.html("Update successful, " + data.owner + " is now owner of " +data.course.title);
+                notice.html(data.course.title + " has been successfully updated.");
                 notice.slideDown();
                 notice._removeClass('hidden');
                 setTimeout(function(){
                     notice.slideUp()
-                }, 8000);
+                }, 2000);
             }
         });
     });

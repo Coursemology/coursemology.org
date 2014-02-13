@@ -10,14 +10,15 @@
 <% end %>
 
 <% if @courses %>
-    <table class="table assignments">
+    <table class="table assignments table-middle-align">
       <thead>
       <tr>
-        <th>Title</th>
+        <th></th>
+        <th style="text-align: center">Title</th>
         <th>Status</th>
         <th>Created At</th>
-        <th>No. of Students</th>
-        <th width="10%">Owner</th>
+        <th rel="tooltip" title="No. Active Students / Total Students">Active Level</th>
+        <th>Owner</th>
         <th>Action</th>
       </tr>
       </thead>
@@ -26,20 +27,32 @@
       <% @courses.each do |course| %>
           <tr>
             <td>
+              <a href="<%= course_path(course) %>" target="_blank">
+                <img src="<%= course.logo_url %>" class="course-thumb-small"/>
+              </a>
+            </td>
+            <td style="max-width: 250px">
               <input type="hidden" class="course-id" value="<%= course.id %>">
               <input type="hidden" class="course-owner-update-path" value="<%= course_path(course)  %>">
-              <%= course.title %>
+              <a href="<%= course_path(course) %>" target="_blank">
+                <%= course.title %>
+              </a>
             </td>
-            <td>
-              <%= course.is_publish? ? "Published" : "Unpublished" %>
+            <td class="select-status">
+              <%= select "select-publish","", [["Published", true], ['Unpublished', false]], {:selected => "#{course.is_publish?}" }%>
             </td>
             <td>
               <%= date_mdY(course.created_at) %>
             </td>
             <td style="text-align: center">
-              <%= course.student_courses.count %>
+              <% total = course.student_courses.count  %>
+              <% active = course.student_courses.active_last_week.count %>
+              <div class="progress" style="margin-bottom: 3px">
+                <div class="bar bar-success" style="width: <%= active == 0 ? 0 : active * 100 / total.to_f %>%"></div>
+              </div>
+              <%= "#{active} / #{total}"  %>
             </td>
-            <td>
+            <td style="max-width: 100px" class="select-name">
               <%= select "select-owner","", course.user_courses.staff.map {|uc| [uc.user.name, uc.user.id] }, {:selected => "#{course.creator.id}" }%>
             </td>
             <td>

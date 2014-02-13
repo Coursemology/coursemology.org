@@ -1,3 +1,24 @@
 // Place all the styles related to the Admins controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.course-thumb-small {
+  max-height: 50px;
+  max-width: 50px;
+
+}
+
+.select-name {
+  select {
+    max-width: 100px;
+  }
+}
+
+.select-status {
+  select {
+    max-width: 120px;
+  }
+}
+.clickable-row:hover {
+  cursor: pointer;
+}
