@@ -2,11 +2,15 @@ class AdminsController < ApplicationController
   before_filter :authorize_admin
 
   def access_control
+    if params[:search].nil? || params[:search].empty?
+      @users = User.order("lower(name) asc").page(params[:page]).per(50)
+    end
     search
   end
 
   def initialize
     @admin = true
+    @request_count = RoleRequest.count
     super
   end
   def show
@@ -40,9 +44,10 @@ class AdminsController < ApplicationController
       @courses = Course.search(params[:search].strip).order(:title)
       ids = @courses.map {|c| c.id }
       @summary[:total_course] = @courses.length
-      @summary[:active_course] = UserCourse.where(course_id: ids).active_last_week.group(:course_id).length
-      @summary[:active_students] = UserCourse.where(course_id: ids).student.active_last_week.count
-      @summary[:total_students] = UserCourse.where(course_id: ids).student.count
+      ucs = UserCourse.where(course_id: ids)
+      @summary[:active_course] = ucs.active_last_week.group(:course_id).length
+      @summary[:active_students] = ucs.student.active_last_week.count
+      @summary[:total_students] = ucs.student.count
       @courses = @courses.page(params[:page]).per(30)
     end
 
