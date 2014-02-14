@@ -5,6 +5,7 @@ class RoleRequestsController < ApplicationController
     # only admin should be able to access this page
     authorize! :can, :manage, :role_request
     @admin = true
+    @request_count = RoleRequest.count
     @lecturer_requests = []
     @lecturer_role = Role.find_by_name('lecturer')
     @role_requests.each do |role_request|

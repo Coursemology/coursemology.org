@@ -7,11 +7,13 @@
 <% end %>
 
 <% if @users %>
-    <table class="table assignments">
+    <table class="table assignments table-middle-align">
       <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>Email</th>
+        <th>Related Courses</th>
         <th width="10%">Role</th>
         <th>Action</th>
       </tr>
@@ -21,14 +23,20 @@
       <% @users.each do |user| %>
           <tr>
             <td>
-               <input type="hidden" class="user-id" value="<%= user.id %>">
+              <img src="<%= user.profile_photo_url %>" class="user-thumb-small"/>
+            </td>
+            <td>
+              <input type="hidden" class="user-id" value="<%= user.id %>">
               <input type="hidden" class="user-role-update-path" value="<%= users_update_path %>">
               <%= user.name %>
             </td>
             <td>
               <%= user.email %>
             </td>
-            <td width="10%">
+            <td style="text-align: center">
+              <%= user.user_courses.count %>
+            </td>
+            <td class="select-role">
               <%= select "select-role","", Role.all.map {|role| [role.title, role.id] }, {:selected => "#{user.system_role_id}" }%>
             </td>
             <td>

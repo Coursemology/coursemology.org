@@ -427,8 +427,9 @@ class Course < ActiveRecord::Base
 
   def self.search(search)
     search_condition = "%" + search.downcase + "%"
-    Course.where(['lower(title) LIKE ?', search_condition])
-    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    #User.where('lower(name) LIKE ?', search_condition)
+    Course.includes(:creator).where(['lower(title) LIKE ? or lower(users.name) LIKE ?', search_condition, search_condition])
+    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) dLIKE ?', search_condition, search_condition])
   end
 
   def training_tabs
