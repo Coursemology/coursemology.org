@@ -27,11 +27,25 @@ class AdminsController < ApplicationController
   end
 
   def courses
-    unless params[:search].nil?
-      @courses = Course.search(params[:search].strip).order(:title).page(params[:page]).per(50)
+    @summary = {all:false, query: params[:search]}
+
+    if params[:search].nil? or params[:search].empty?
+      @courses = Course.order("created_at desc").page(params[:page]).per(30)
+      @summary[:total_course] = Course.count
+      @summary[:active_course] = UserCourse.active_last_week.group(:course_id).length
+      @summary[:active_students] = UserCourse.student.active_last_week.count
+      @summary[:total_students] = UserCourse.student.count
+      @summary[:all] = true
     else
-      @courses = Course.order("created_at desc").limit(50).page(params[:page]).per(50)
+      @courses = Course.search(params[:search].strip).order(:title)
+      ids = @courses.map {|c| c.id }
+      @summary[:total_course] = @courses.length
+      @summary[:active_course] = UserCourse.where(course_id: ids).active_last_week.group(:course_id).length
+      @summary[:active_students] = UserCourse.where(course_id: ids).student.active_last_week.count
+      @summary[:total_students] = UserCourse.where(course_id: ids).student.count
+      @courses = @courses.page(params[:page]).per(30)
     end
+
     if params[:origin]
       redirect_to params[:origin]
     end
