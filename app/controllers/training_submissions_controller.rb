@@ -107,7 +107,8 @@ class TrainingSubmissionsController < ApplicationController
 
     if @grading
       @grading.answer_gradings.each do |ag|
-        if sta = ag.student_answer
+        sta = ag.student_answer
+        if sta && sta.qn then
           @qadata[sta.qn_id.to_s + sta.qn.class.to_s][:g] = ag
         end
       end
