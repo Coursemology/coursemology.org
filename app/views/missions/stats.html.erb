@@ -7,7 +7,7 @@
 <% if @my_std_courses.size > 0 %>
     <h3>My Students</h3>
     <br>
-    <% if @mission.single_question? and @mission.coding_questions.first %>
+    <% if (@mission.single_question? and @mission.coding_questions.first) || @mission.file_submission_only?  %>
         <%= link_to "Download Submissions",
             "#{course_mission_dump_code_path(:format => 'zip')}?_type=mine",
             class: "btn"
@@ -39,7 +39,7 @@
 
 <h3>All Students</h3>
 <br>
-<% if @mission.single_question? and @mission.coding_questions.first %>
+<% if (@mission.single_question? and @mission.coding_questions.first) || @mission.file_submission_only?  %>
     <%= link_to "Download Submissions",
                 course_mission_dump_code_path(:format => 'zip'),
                 class: "btn"
@@ -76,7 +76,7 @@
 <% if @std_courses_phantom.length > 0 %>
     <h3>Phantom Students</h3>
     <br>
-    <% if @mission.single_question? and @mission.coding_questions.first %>
+    <% if (@mission.single_question? and @mission.coding_questions.first) || @mission.file_submission_only?  %>
         <%= link_to "Download Submissions",
                     "#{course_mission_dump_code_path(:format => 'zip')}?_type=phantom",
                     class: "btn"

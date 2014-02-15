@@ -8,7 +8,9 @@ class Mission < ActiveRecord::Base
   include Assignment
 
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
-                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question, :is_file_submission, :dependent_id, :publish
+                  :description, :exp, :open_at, :pos, :timelimit, :title, :single_question,
+                  :is_file_submission, :dependent_id, :publish,
+                  :file_submission_only
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
@@ -25,10 +27,6 @@ class Mission < ActiveRecord::Base
   def update_grade
     self.max_grade = self.questions.sum(&:max_grade) + self.coding_questions.sum(&:max_grade)
     self.save
-  end
-
-  def get_path
-    course_mission_path(course, self)
   end
 
   def get_all_questions

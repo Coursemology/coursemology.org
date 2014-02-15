@@ -115,7 +115,7 @@ module ApplicationHelper
     else
       icon = ''
     end
-    "<a href='#{url}?#{params}&sort=#{column}&direction=#{direction}' >#{title} #{icon}</a>".html_safe
+    "<a href='#{url}#{'?' unless url.include?('?')}#{params}&sort=#{column}&direction=#{direction}' >#{title} #{icon}</a>".html_safe
   end
 
   def distance_of_time(seconds)
