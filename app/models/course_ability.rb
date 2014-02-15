@@ -115,8 +115,7 @@ class CourseAbility
       can :subscribe, ForumTopic
       can :read, ForumTopic, hidden: false
       can :reply, ForumTopic, locked: false
-      can [:edit, :update], ForumTopic, locked: false, author: user_course
-      can :destroy, ForumTopic, locked: false, author: user_course
+      can [:edit, :update, :destroy], ForumTopic, locked: false, author: user_course
       can :set_answer, ForumPost do |post|
           post.topic.author == user_course && !post.topic.locked
       end
