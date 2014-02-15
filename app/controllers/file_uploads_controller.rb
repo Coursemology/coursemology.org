@@ -37,6 +37,10 @@ class FileUploadsController < ApplicationController
       owner = Training.find_by_id(params[:training_id])
     end
 
+    if params[:submission_id]
+      owner = Submission.find_by_id(params[:submission_id])
+    end
+
     file = params[:files].class == Array ? params[:files].first : params[:files]
     file_upload = FileUpload.create({
                                         creator: current_user,

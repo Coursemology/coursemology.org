@@ -21,11 +21,19 @@
       <thead>
       <tr>
         <th></th>
-        <th style="text-align: center">Title</th>
-        <th>Status</th>
-        <th>Created At</th>
+        <th style="text-align: center">
+          <%= sortable "title", admin_courses_url ,"search=#{@summary[:query]}" %>
+        </th>
+        <th>
+          <%= sortable "is_publish", admin_courses_url ,"search=#{@summary[:query]}", "Status" %>
+        </th>
+        <th>
+          <%= sortable "created_at", admin_courses_url ,"search=#{@summary[:query]}" %>
+        </th>
         <th rel="tooltip" title="No. Active Students Last Week / Total Students">Active Level</th>
-        <th>Owner</th>
+        <th>
+          <%= sortable "creator_id", admin_courses_url ,"search=#{@summary[:query]}", "Owner" %>
+        </th>
         <th>Action</th>
       </tr>
       </thead>

@@ -34,7 +34,7 @@ class AdminsController < ApplicationController
     @summary = {all:false, query: params[:search]}
 
     if params[:search].nil? or params[:search].empty?
-      @courses = Course.order("created_at desc").page(params[:page]).per(30)
+      @courses = Course
       @summary[:total_course] = Course.count
       @summary[:active_course] = UserCourse.active_last_week.group(:course_id).length
       @summary[:active_students] = UserCourse.student.active_last_week.count
@@ -48,8 +48,14 @@ class AdminsController < ApplicationController
       @summary[:active_course] = ucs.active_last_week.group(:course_id).length
       @summary[:active_students] = ucs.student.active_last_week.count
       @summary[:total_students] = ucs.student.count
-      @courses = @courses.page(params[:page]).per(30)
     end
+
+    if sort_column
+      @courses = @courses.order("#{sort_column} #{sort_direction}")
+    else
+      @courses = @courses.order(:title)
+    end
+    @courses = @courses.page(params[:page]).per(30)
 
     if params[:origin]
       redirect_to params[:origin]

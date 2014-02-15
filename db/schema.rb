@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140210123944) do
+ActiveRecord::Schema.define(:version => 20140215164332) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -618,15 +618,16 @@ ActiveRecord::Schema.define(:version => 20140210123944) do
     t.integer  "pos"
     t.text     "description"
     t.integer  "creator_id"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.string   "title"
     t.integer  "max_grade"
-    t.boolean  "single_question",    :default => false
-    t.boolean  "is_file_submission", :default => false
+    t.boolean  "single_question",      :default => false
+    t.boolean  "is_file_submission",   :default => false
     t.integer  "dependent_id"
-    t.boolean  "publish",            :default => true
+    t.boolean  "publish",              :default => true
     t.integer  "tab_id"
+    t.boolean  "file_submission_only", :default => false
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
