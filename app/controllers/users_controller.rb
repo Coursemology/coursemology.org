@@ -6,6 +6,11 @@ class UsersController < ApplicationController
     @setting = true
   end
 
+  def show
+    @setting = current_user == @user
+    @admin = current_user.is_admin?
+  end
+
   respond_to :html, :json
   def update
     #TODO: update user role could cause database inconsistency
