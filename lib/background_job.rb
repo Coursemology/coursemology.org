@@ -19,6 +19,9 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
       create_pending_actions(course, type, item_id)
     end
 
+    if name == "DeleteCourse"
+      course.destroy
+    end
   end
 
   def create_submissions_course(course)

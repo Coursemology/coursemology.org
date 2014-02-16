@@ -56,7 +56,7 @@
 <div id="asm_progress_graph" class="graph"></div>
 <%= render_chart(@summary[:progress_chart], "asm_progress_graph") %>
 <div id="summary" style="padding-top: 30px">
-    <h3>Question Summary</h3>
+  <h3>Question Summary</h3>
 </div>
 <table class="table table-bordered table-striped" style="width: 250px">
   <thead>
@@ -123,17 +123,22 @@
             <% end %>
           </table>
       <% else %>
-          <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]) %>
-          Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(is_correct:false).length %> </strong> / <%= answers.length %>
-          <% answers.each_with_index do |ans, index| %>
-              <div class="code-review-header <%= ans.is_correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>" style="margin-left: 50px">
-                <%= index + 1 %> : <%= ans.std_course.name %>
-                <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
-              </div>
-              <div style="margin-left: 60px">
-                <%= style_format('[mc]' + ans.code + '[/mc]', false) %>
-              </div>
-          <% end %>
+          <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]).order(:std_course_id) %>
+          <div style="margin: 10px; margin-left: 50px;">
+            Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(is_correct:false).length %> </strong> / <%= answers.length %>
+            <a class="btn" data-toggle="collapse"  href="#code<%= i + 1%>">Click To Expand / Collapse Code</a>
+          </div>
+          <div id="code<%= i + 1%>" class="collapse out">
+            <% answers.each_with_index do |ans, index| %>
+                <div class="code-review-header <%= ans.is_correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>" style="margin-left: 50px">
+                  <%= index + 1 %> : <%= ans.std_course.name %>
+                  <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
+                </div>
+                <div style="margin-left: 60px">
+                  <%= style_format('[mc]' + ans.code + '[/mc]', false) %>
+                </div>
+            <% end %>
+          </div>
       <% end %>
     </section>
 <% end %>
@@ -168,13 +173,13 @@
   <a class="btn" style="height: 45px; width: 45px;font-size: 40px" href="#summary"><i class="icon-arrow-up"></i></a>
 </div>
 <script>
-  $(document).ready(function(){
+    $(document).ready(function(){
 
-      $('#back-to-top').affix({
-          offset: {
-              top: $("#ruler").height() * 2
-          }
-      });
+        $('#back-to-top').affix({
+            offset: {
+                top: $("#ruler").height() * 2
+            }
+        });
 
-  });
+    });
 </script>

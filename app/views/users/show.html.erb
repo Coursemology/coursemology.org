@@ -1,0 +1,80 @@
+<div class="page-header">
+  <table>
+    <tr>
+      <td>
+        <a href="<%= "https://www.facebook.com/#{@user.uid}" if @user.uid %>">
+          <img class="user-profile-pic"
+               src="<%= @user.get_profile_photo_url %>" />
+        </a>
+      </td>
+      <td style="padding-left: 10px">
+        <% if @user.uid %>
+            <a id="student-large" href="https://www.facebook.com/<%= @user.uid %>"><%= @user.name %></a>
+        <% else %>
+            <h3><%= @user.name %></h3>
+        <% end %>
+        <p><%= @user.email %></p>
+      </td>
+    </tr>
+  </table>
+
+  <h1>User Summary</h1>
+  <table class="table  table-middle-align table-bordered">
+    <thead>
+    <tr>
+      <td></td>
+      <td>
+        Course
+      </td>
+      <td>
+        Role
+      </td>
+      <td>
+        Level
+      </td>
+      <td>
+        Achievements
+      </td>
+      <td>
+        Enrolled At
+      </td>
+      <td>
+        Last Active Time
+      </td>
+    </tr>
+    </thead>
+    <tbody>
+    <% @user.user_courses.each do |uc| %>
+    <tr>
+      <td>
+        <a href="<%= course_path(uc.course) %>">
+          <img src="<%= uc.course.logo_url %>" class="course-thumb-small">
+        </a>
+      </td>
+      <td>
+        <a href="<%= course_user_course_path(uc.course, uc) %>">
+          <%= uc.course.title %>
+        </a>
+      </td>
+      <td>
+        <%= uc.role.title %>
+      </td>
+      <td style="text-align: center">
+        <%= uc.level ? uc.level.title : 0  %>
+      </td>
+      <td style="text-align: center">
+        <%= uc.user_achievements.count %>
+      </td>
+      <td>
+        <%= datetime_no_seconds uc.created_at %>
+      </td>
+      <td>
+        <%= datetime_no_seconds uc.last_active_time %>
+      </td>
+    </tr>
+
+    <% end %>
+    </tbody>
+  </table>
+</div>
+

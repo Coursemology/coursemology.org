@@ -106,7 +106,7 @@ module ApplicationHelper
   def sortable(column, url, params = "", title = nil)
     title ||= column.titleize
     css_class = column == sort_column ? "current #{sort_direction}" : nil
-    direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+    direction = column == sort_column && sort_direction == "desc" ? "asc" : "desc"
 
     if css_class && sort_direction == "asc"
       icon = '<i class="icon-chevron-up"></i>'
