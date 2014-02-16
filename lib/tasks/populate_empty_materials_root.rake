@@ -3,7 +3,7 @@ namespace :db do
 
   task populate_empty_materials_root: :environment do
     Course.all.each do |course|
-      unless course.material_folder
+      unless course.root_folder
         MaterialFolder.create(:course => course, :name => "Root")
       end
     end

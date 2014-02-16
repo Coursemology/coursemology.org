@@ -28,6 +28,7 @@ class CoursesController < ApplicationController
 
   respond_to :html, :json
   def update
+    message = nil
     if params[:user_course_id]
       uc = @course.user_courses.where(id:params[:user_course_id]).first
       uc.role_id = params[:role_id]
@@ -53,6 +54,7 @@ class CoursesController < ApplicationController
     if params[:course_owner]
       user = User.where(id: params[:course_owner]).first
       @course.creator = user
+      @course.is_publish = params[:is_publish] == 'true'
       @course.save
     end
     respond_to do |format|
@@ -122,6 +124,10 @@ class CoursesController < ApplicationController
       if @activities_pref.display?
         @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
       end
+
+      @pending_actions = curr_user_course.pending_actions.to_show.
+          select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
+          sort_by {|pa| pa.item.close_at || Time.now }
 
       respond_to do |format|
         format.html

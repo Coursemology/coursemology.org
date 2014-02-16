@@ -1,0 +1,14 @@
+Hello, <%= @user.name %>
+
+<p>New annotation by <strong> <%= @comment.user_course.name %> </strong> on <span style="font-style: italic"><%= @assignment.title %></span>:</p>
+
+<blockquote>
+  <%= @comment.text.html_safe %>
+</blockquote>
+
+<p><a href="<%= @redirect_url %>"> Click here</a> to view the full thread.</p>
+
+Best Regards,
+<br/>
+
+The Coursemology Team

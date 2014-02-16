@@ -13,7 +13,8 @@ class Course < ActiveRecord::Base
   has_many :trainings,         dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
-  has_one  :material_folder,   dependent: :destroy, :conditions => { :parent_folder_id => nil }
+  has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
+  has_many :material_folders
 
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
@@ -46,6 +47,7 @@ class Course < ActiveRecord::Base
   has_many :surveys,                dependent: :destroy
   has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
   has_many :tabs,                   dependent: :destroy
+  has_many :pending_actions
 
   def asms
     missions + trainings
@@ -389,7 +391,7 @@ class Course < ActiveRecord::Base
       mission_files = []
     end
 
-    missions = MaterialFolder.create_virtual("missions", material_folder.id)
+    missions = MaterialFolder.create_virtual("missions", root_folder.id)
     missions.name = customized_title_by_model(Mission).pluralize
     missions.description = missions.name.singularize + " descriptions and other files"
     missions.files = mission_files
@@ -415,7 +417,7 @@ class Course < ActiveRecord::Base
       training_files = []
     end
 
-    trainings = MaterialFolder.create_virtual("trainings", material_folder.id)
+    trainings = MaterialFolder.create_virtual("trainings", root_folder.id)
     trainings.name = customized_title_by_model(Training).pluralize
     trainings.description = trainings.name + " descriptions and other files"
     trainings.files = training_files
@@ -425,8 +427,9 @@ class Course < ActiveRecord::Base
 
   def self.search(search)
     search_condition = "%" + search.downcase + "%"
-    Course.where(['lower(title) LIKE ?', search_condition])
-    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    #User.where('lower(name) LIKE ?', search_condition)
+    Course.includes(:creator).where(['lower(title) LIKE ? or lower(users.name) LIKE ?', search_condition, search_condition])
+    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) dLIKE ?', search_condition, search_condition])
   end
 
   def training_tabs

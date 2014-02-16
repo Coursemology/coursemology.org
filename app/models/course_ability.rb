@@ -111,9 +111,12 @@ class CourseAbility
       # Students can delete their own posts and threads.
       can :read, ForumForum
       can :subscribe, ForumForum
+      can :unsubscribe, ForumForum
       can :create, ForumTopic
       can :subscribe, ForumTopic
+      can :unsubscribe, ForumTopic
       can :read, ForumTopic, hidden: false
+      can :read, ForumTopic, author_id: user_course.id
       can :reply, ForumTopic, locked: false
       can [:edit, :update, :destroy], ForumTopic, locked: false, author: user_course
       can :set_answer, ForumPost do |post|
@@ -153,6 +156,8 @@ class CourseAbility
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
       can :manage, ExpTransaction, user_course_id: user_course.id
+
+      can :ignore, PendingAction, user_course: user_course
 
       cannot :modify, TrainingSubmission
 

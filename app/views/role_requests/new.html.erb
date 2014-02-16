@@ -1,8 +1,13 @@
-<% if not current_user %>
-  Please <%= link_to new_user_session_path, 'log in' %> first.
-<% elsif current_user.is_lecturer? %>
-  You are already given lecturer right!
-<% elsif @request %>
-  Your request is being processed. Please come back later.<br/>
-  Request id: <%= @request.id %>
+<div class="alert alert-error hidden"></div>
+<%- model_class = Training -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
+                                   :default => "New Lecturer Role Request") %></h1>
+</div>
+
+<% if current_user.is_lecturer? %>
+    You are already given lecturer right!
+<% else %>
+    <%= render :partial => 'form' %>
 <% end %>
+

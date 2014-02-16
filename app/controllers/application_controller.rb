@@ -74,7 +74,9 @@ class ApplicationController < ActionController::Base
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
 
-      all_materials = @course.material_folder.materials.accessible_by(current_ability)
+      all_materials = Material.where(folder_id: (curr_user_course.is_student? ?
+          @course.material_folders.opened_folder :
+          @course.material_folders)).accessible_by(current_ability)
       unseen_materials = all_materials - curr_user_course.seen_materials
       counts[:materials] = unseen_materials.count
 

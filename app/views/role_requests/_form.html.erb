@@ -1,0 +1,29 @@
+<%= form_for [@role_request], :html => { :class => 'form-horizontal' } do |f| %>
+    <span style="display: block; margin-bottom: 10px">
+    Please provide the following information for us to review your request.
+    </span>
+    <div class="control-group">
+      <%= f.label :organization, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :organization, :class => 'text_field span4', required: true%>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :designation, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :designation, :class => 'text_field span4', required: true %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :reason, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :reason, :class => 'text_area span4', :rows => 4, required: true %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit "Submit", :class =>"btn btn-primary" %>
+    </div>
+<% end %>

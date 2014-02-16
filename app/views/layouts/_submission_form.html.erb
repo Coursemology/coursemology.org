@@ -8,10 +8,13 @@
     <% end %>
     <h3>Answer:</h3>
     <% if qa[:a] %>
-        <% if qa[:q].class == CodingQuestion %>
+        <% if @mission.file_submission_only? %>
+            <p style="font-style: italic">Answer is contained in the submission file(s).</p>
+        <% elsif qa[:q].class == CodingQuestion %>
             <%= render partial: "submissions/do_coding",
                        locals: {answer: qa[:a],
                                 qn:     qa[:q],
+                                submission: submission,
                                 mode:   "view"}%>
         <% else %>
             <div class="row-fluid">

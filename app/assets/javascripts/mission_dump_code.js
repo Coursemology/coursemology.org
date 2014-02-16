@@ -19,16 +19,17 @@ $(document).ready(function() {
                 params = "?_type=phantom";
                 break;
         }
-        $.ajax({
-            url: $("#dump_url").val() + params,
-            type: 'GET',
-            dataType: 'json',
-            success: function(resp){
-                $(".dump_sub").removeAttr('disabled');
-                $(".dump_sub").val("Download Submissions");
-                downloadURL(resp["file_url"], resp["file_name"]);
-            }
-        });
+        downloadURL($("#dump_url").val() + params, "Code");
+//        $.ajax({
+//            url: $("#dump_url").val() + params,
+//            type: 'GET',
+//            dataType: 'json',
+//            success: function(resp){
+//                $(".dump_sub").removeAttr('disabled');
+//                $(".dump_sub").val("Download Submissions");
+//                downloadURL(resp["file_url"], resp["file_name"]);
+//            }
+//        });
 
     }
     $("#dump_sub_mine").click(function(){

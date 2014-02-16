@@ -1,23 +1,39 @@
-<div class="page-header">
+<!--<div class="page-header">-->
   <h3>Courses</h3>
-</div>
+  <div class="<%= @summary[:all] ? 'courses-summary' : 'courses-search-summary' %>">
+    <blockquote>
+      <p>Total Courses:   <strong> <%= @summary[:total_course] %></strong></p>
+      <p>Active Courses:  <strong><%= @summary[:active_course] %></strong></p>
+      <p>Active / Total Students: <strong><%= @summary[:active_students] %> </strong>  / <%= @summary[:total_students] %></p> (Active in the past 7 days)
+    </blockquote>
+  </div>
+<!--</div>-->
 
 <div class="alert alert-success hidden"></div>
 
 <%= form_tag admin_courses_path, :method => 'get', class: "form-search" do %>
-    <input type="text" class="input-medium search-query" id="search_field" name="search" placeholder="Search title">
+    <input type="text" class="input-medium search-query" id="search_field" name="search" placeholder="Search title or owner" value="<%= @summary[:query] %>">
     <button type="submit" class="btn">Search</button>
 <% end %>
 
 <% if @courses %>
-    <table class="table assignments">
+    <table class="table assignments table-middle-align">
       <thead>
       <tr>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Created At</th>
-        <th>No. of Students</th>
-        <th width="10%">Owner</th>
+        <th></th>
+        <th style="text-align: center">
+          <%= sortable "title", admin_courses_url ,"search=#{@summary[:query]}" %>
+        </th>
+        <th>
+          <%= sortable "is_publish", admin_courses_url ,"search=#{@summary[:query]}", "Status" %>
+        </th>
+        <th>
+          <%= sortable "created_at", admin_courses_url ,"search=#{@summary[:query]}" %>
+        </th>
+        <th rel="tooltip" title="No. Active Students Last Week / Total Students">Active Level</th>
+        <th>
+          <%= sortable "creator_id", admin_courses_url ,"search=#{@summary[:query]}", "Owner" %>
+        </th>
         <th>Action</th>
       </tr>
       </thead>
@@ -26,21 +42,33 @@
       <% @courses.each do |course| %>
           <tr>
             <td>
+              <a href="<%= course_path(course) %>" target="_blank">
+                <img src="<%= course.logo_url %>" class="course-thumb-small"/>
+              </a>
+            </td>
+            <td style="max-width: 250px">
               <input type="hidden" class="course-id" value="<%= course.id %>">
               <input type="hidden" class="course-owner-update-path" value="<%= course_path(course)  %>">
-              <%= course.title %>
+              <a href="<%= course_path(course) %>" target="_blank">
+                <%= course.title %>
+              </a>
             </td>
-            <td>
-              <%= course.is_publish? ? "Published" : "Unpublished" %>
+            <td class="select-status">
+              <%= select "select-publish","", [["Published", true], ['Unpublished', false]], {:selected => "#{course.is_publish?}" }%>
             </td>
             <td>
               <%= date_mdY(course.created_at) %>
             </td>
             <td style="text-align: center">
-              <%= course.student_courses.count %>
+              <% total = course.student_courses.count  %>
+              <% active = course.student_courses.active_last_week.count %>
+              <div class="progress" style="margin-bottom: 3px">
+                <div class="bar bar-success" style="width: <%= active == 0 ? 0 : active * 100 / total.to_f %>%"></div>
+              </div>
+              <%= "#{active} / #{total}"  %>
             </td>
-            <td>
-              <%= select "select-owner","", course.user_courses.staff.map {|uc| [uc.user.name, uc.user.id] }, {:selected => "#{course.creator.id}" }%>
+            <td style="max-width: 100px" class="select-name">
+              <%= select "select-owner","", course.user_courses.includes(:user).staff.map {|uc| [uc.user.name, uc.user.id] }, {:selected => "#{course.creator.id}" }%>
             </td>
             <td>
               <%= link_to '#', class: 'btn update-course-owner' do %>

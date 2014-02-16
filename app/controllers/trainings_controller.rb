@@ -75,12 +75,13 @@ class TrainingsController < ApplicationController
     end
 
     @steps = @training.questions
-    if curr_user_course.is_student?
-      @submission = @training.get_final_sbm_by_std(curr_user_course)
-    end
   end
 
   def new
+    tab_id = params[:tab]
+    if Tab.find_by_id(tab_id)
+      @training.tab_id = tab_id
+    end
     @training.exp = 200
     @training.open_at = DateTime.now.beginning_of_day
     @training.bonus_exp = 0
@@ -99,7 +100,7 @@ class TrainingsController < ApplicationController
 
     respond_to do |format|
       if @training.save
-        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
+        @training.schedule_tasks(course_training_url(@course, @training))
         format.html { redirect_to course_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }
       else
@@ -118,7 +119,7 @@ class TrainingsController < ApplicationController
     @training.update_tags(params[:tags])
     respond_to do |format|
       if @training.update_attributes(params[:training])
-        @training.schedule_mail(@course.user_courses, course_training_url(@course, @training))
+        @training.schedule_tasks(course_training_url(@course, @training))
         format.html { redirect_to course_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else

@@ -61,11 +61,15 @@
       </div>
     </div>
     <div class="control-group">
+      <%= f.label "Submission Format", class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :file_submission_only %> Check to <strong style="color: red">only</strong>  allow file submission
+      </div>
+    </div>
+    <div class="control-group">
       <%= f.label "Format", class: 'control-label' %>
       <div class="controls" >
-
         <div class="checkbox-text">
-
           <label>
             <%= f.check_box :single_question,
                             'data-toggle' => "collapse",

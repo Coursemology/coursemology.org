@@ -35,4 +35,24 @@ $(document).ready(function() {
 
     e.preventDefault();
   })
+    var icon_toggle = $('.forum .subscribe-icon');
+    icon_toggle.hover(function(){
+        $(this).removeClass('icon-ok').addClass('icon-remove');
+    });
+
+    icon_toggle.mouseleave(function(){
+        $(this).removeClass('icon-remove').addClass('icon-ok');
+    });
+
+    $('.forum .subscription').click(function(e){
+        e.preventDefault();
+        var url = $(this).attr('url');
+        var alter = $(this).parent().children($(this).hasClass('subscribe') ? '.unsubscribe' : '.subscribe');
+        var self = $(this);
+
+        $.get(url, function(resp){
+            alter.removeClass('hidden');
+            self.addClass('hidden');
+        }, "json");
+    });
 });

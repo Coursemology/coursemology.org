@@ -12,6 +12,7 @@ class UserCourse < ActiveRecord::Base
   scope :tutor, where(:role_id => Role.tutor.first)
   scope :student, where(:role_id => Role.student.first)
   scope :real_students, where(:role_id => Role.student.first, is_phantom: false)
+  scope :active_last_week, where("last_active_time > ?", (Time.now - 7.days))
 
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).
@@ -62,6 +63,7 @@ class UserCourse < ActiveRecord::Base
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
   has_many :activities, foreign_key: "actor_course_id", dependent: :destroy
+  has_many :pending_actions, dependent: :destroy
 
   default_scope includes(:course)
 

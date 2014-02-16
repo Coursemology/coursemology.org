@@ -48,7 +48,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><%= link_to "Mark entire #{get_materials_display_name} as seen", course_material_folder_mark_read_path(@course, @course.material_folder) %></li>
+        <li><%= link_to "Mark entire #{get_materials_display_name} as seen", course_material_folder_mark_read_path(@course, @course.root_folder) %></li>
       </ul>
     <% else %>
     <%# Otherwise we are at root, then marking the root folder read is as

@@ -14,6 +14,9 @@ class Achievement < ActiveRecord::Base
   has_many :user_achievements, dependent: :destroy
   has_many :user_courses, through: :user_achievements
 
+  after_create :check_and_reward
+  after_update :check_and_reward
+
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case
     # it can only be assigned manually, since there is no condition to check
@@ -52,7 +55,10 @@ class Achievement < ActiveRecord::Base
     new_reqs.each do |new_req|
       self.requirements.build(JSON.parse(new_req))
     end
-    self.save
+  end
+
+  def check_and_reward
+    Delayed::Job.enqueue(BackgroundJob.new(course_id, 'RewardAchievement', '', self.id))
   end
 
 end

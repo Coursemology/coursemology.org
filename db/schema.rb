@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140130091537) do
+ActiveRecord::Schema.define(:version => 20140215164332) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -618,15 +618,16 @@ ActiveRecord::Schema.define(:version => 20140130091537) do
     t.integer  "pos"
     t.text     "description"
     t.integer  "creator_id"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.string   "title"
     t.integer  "max_grade"
-    t.boolean  "single_question",    :default => false
-    t.boolean  "is_file_submission", :default => false
+    t.boolean  "single_question",      :default => false
+    t.boolean  "is_file_submission",   :default => false
     t.integer  "dependent_id"
-    t.boolean  "publish",            :default => true
+    t.boolean  "publish",              :default => true
     t.integer  "tab_id"
+    t.boolean  "file_submission_only", :default => false
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
@@ -645,6 +646,19 @@ ActiveRecord::Schema.define(:version => 20140130091537) do
 
   add_index "notifications", ["actor_course_id"], :name => "index_notifications_on_actor_course_id"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
+
+  create_table "pending_actions", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "user_course_id"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.boolean  "is_ignored",     :default => false
+    t.boolean  "is_done",        :default => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "pending_actions", ["user_course_id"], :name => "index_pending_actions_on_user_course_id"
 
   create_table "pending_comments", :force => true do |t|
     t.integer  "answer_id"
@@ -728,8 +742,11 @@ ActiveRecord::Schema.define(:version => 20140130091537) do
   create_table "role_requests", :force => true do |t|
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "organization"
+    t.string   "designation"
+    t.text     "reason"
   end
 
   add_index "role_requests", ["role_id"], :name => "index_role_requests_on_role_id"

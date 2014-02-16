@@ -25,10 +25,6 @@ class Training < ActiveRecord::Base
     self.save
   end
 
-  def get_path
-     course_training_path(course, self)
-  end
-
   def questions
     self.asm_qns.includes(:qn).order(:pos).map {|q| q.qn}
   end
@@ -77,6 +73,13 @@ class Training < ActiveRecord::Base
     course_training_path(self.course, self)
   end
 
+  def current_exp
+    exp + (bonus_exp > 0 && bonus_cutoff > Time.now ? bonus_exp : 0)
+  end
+
+  def close_at
+    bonus_cutoff
+  end
 
   alias_method :sbms, :training_submissions
 end

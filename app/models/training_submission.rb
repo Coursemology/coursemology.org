@@ -48,12 +48,18 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def answered_questions
-    sbm_answers.map {|sba| sba.answer.qn }.uniq
+    answers = sbm_answers.map {|sba| sba.answer }
+    answers.select {|a| a.answer_grading }.map {|a| a.qn}.uniq
   end
 
   def update_grade
     self.submit_at = DateTime.now
+    self.current_step = training.asm_qns.count + 1
     self.set_graded
+
+    pending_action = std_course.pending_actions.where(item_type: Training.to_s, item_id: self.training).first
+    pending_action.set_done if pending_action
+
     subm_grading = self.get_final_grading
     subm_grading.update_grade
     exp = subm_grading.update_exp_transaction

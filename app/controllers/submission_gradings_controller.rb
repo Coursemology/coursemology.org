@@ -54,7 +54,7 @@ class SubmissionGradingsController < ApplicationController
         @ag = @submission_grading.answer_gradings.build(ag)
         unless validate_gradings(@ag, ag)
           invalid_assign = true
-          break                                          O
+          break
         end
 
         @ag.grader = current_user

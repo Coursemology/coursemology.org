@@ -91,6 +91,7 @@ JfdiAcademy::Application.routes.draw do
       end
     end
     match "trainings/:id/stats" => "trainings#stats", as: :training_stats
+    get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
 
     resources :mcq_answers
 

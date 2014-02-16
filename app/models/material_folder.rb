@@ -7,6 +7,8 @@ class MaterialFolder < ActiveRecord::Base
   has_many :subfolders, dependent: :destroy, class_name: "MaterialFolder", foreign_key: "parent_folder_id"
   has_many :files, dependent: :destroy, class_name: "Material", foreign_key: "folder_id"
 
+  scope :opened_folder, where("(open_at IS NULL OR open_at <= ?) and (close_at is NULL or close_at >= ?)", DateTime.now, DateTime.now)
+
   attr_accessible :parent_folder, :course, :course_id, :name, :description, :can_student_upload, :open_at, :close_at
 
   # Creates a virtual item of this class that is backed by some other data store.

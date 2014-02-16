@@ -1,7 +1,21 @@
-Hello, <%= @user.name %>!
+Hello, <%= @user.name %>
 
-<p><%= @request_user.name %>(<%= @request_user.email %>) requests to become a lecturer.</p>
-
+<p><%= @request.user.name %> (<%= @request.user.email %>) requests to become a lecturer.</p>
+<div>
+  <strong>Organization</strong>
+  <br>
+  <%= @request.organization %>
+  <br>
+  <br>
+  <strong>Designation</strong>
+  <br>
+  <%= @request.designation %>
+  <br>
+  <br>
+  <strong>Reason</strong>
+  <br>
+  <%= @request.reason %>
+</div>
 <p>Please <%= link_to "click here", role_requests_url %> to review the request.</p>
 
 Best Regards,

@@ -1,0 +1,13 @@
+<div class="alert alert-error hidden"></div>
+<%- model_class = Training -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
+                                   :default => "Update Lecturer Role Request") %></h1>
+</div>
+
+<% if current_user.is_lecturer? %>
+    You are already given lecturer right!
+<% else %>
+    <%= render :partial => 'form' %>
+<% end %>
+

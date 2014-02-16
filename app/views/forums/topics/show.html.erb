@@ -20,13 +20,13 @@
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id, 'data-post-title' => @topic.title %>
         <% end %>
       </div>
-      <div class="btn-group dropdown-trigger-on-hover">
+      <div class="btn-group dropdown-trigger-on-hover" style="padding-bottom: 4px">
         <% if can? :edit, @topic %>
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
               Manage topic
               <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="margin-top: -2px">
               <li><%= link_to 'Edit/Move', edit_course_forum_topic_path(@course, @forum, @topic) %></li>
               <% if can? :set_hidden, @topic %>
                   <li><%= link_to 'Hide', course_forum_topic_hide_path(@course, @forum, @topic, hide: @topic.hidden? ? 0 : 1), method: :put %></li>

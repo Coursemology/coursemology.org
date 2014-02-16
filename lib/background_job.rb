@@ -14,6 +14,11 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
     if name == 'RewardAchievement'
       check_achievement(course, Achievement.find(item_id))
     end
+
+    if name == PendingAction.to_s
+      create_pending_actions(course, type, item_id)
+    end
+
   end
 
   def create_submissions_course(course)
@@ -21,7 +26,9 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
       if mission.open_at > Time.now
         q = QueuedJob.new
         q.owner = mission
-        q.delayed_job_id = Delayed::Job.enqueue(BackgroundJob.new(course.id, 'AutoSubmissions', 'Create', mission.id), run_at: mission.open_at).id
+        q.delayed_job_id = Delayed::Job.enqueue(
+            BackgroundJob.new(course.id, 'AutoSubmissions', 'Create', mission.id),
+            run_at: mission.open_at).id
         q.save
       end
     end
@@ -58,6 +65,20 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
       if user_course.is_student?
         user_course.check_achievement(achievement)
       end
+    end
+  end
+
+  def create_pending_actions(course, item_type, item_id)
+    course.user_courses.student.each do |std_course|
+      exist = std_course.pending_actions.where(item_type: item_type, item_id: item_id).first
+      if exist
+        next
+      end
+      pending_act = std_course.pending_actions.build
+      pending_act.course = course
+      pending_act.item_type = item_type
+      pending_act.item_id = item_id
+      pending_act.save
     end
   end
 
