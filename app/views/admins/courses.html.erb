@@ -1,12 +1,22 @@
 <!--<div class="page-header">-->
-  <h3>Courses</h3>
-  <div class="<%= @summary[:all] ? 'courses-summary' : 'courses-search-summary' %>">
-    <blockquote>
-      <p>Total Courses:   <strong> <%= @summary[:total_course] %></strong></p>
-      <p>Active Courses:  <strong><%= @summary[:active_course] %></strong></p>
-      <p>Active / Total Students: <strong><%= @summary[:active_students] %> </strong>  / <%= @summary[:total_students] %></p> (Active in the past 7 days)
-    </blockquote>
-  </div>
+<h3>Courses</h3>
+<% if flash[:notice] %>
+    <div class="alert alert-success">
+      <%= flash[:notice].html_safe %>
+    </div>
+<% end %>
+<% if flash[:error] %>
+    <div class="alert alert-error">
+      <%= flash[:error].html_safe %>
+    </div>
+<% end %>
+<div class="<%= @summary[:all] ? 'courses-summary' : 'courses-search-summary' %>">
+  <blockquote>
+    <p>Total Courses:   <strong> <%= @summary[:total_course] %></strong></p>
+    <p>Active Courses:  <strong><%= @summary[:active_course] %></strong></p>
+    <p>Active / Total Students: <strong><%= @summary[:active_students] %> </strong>  / <%= @summary[:total_students] %></p> (Active in the past 7 days)
+  </blockquote>
+</div>
 <!--</div>-->
 
 <div class="alert alert-success hidden"></div>
@@ -34,7 +44,7 @@
         <th>
           <%= sortable "creator_id", admin_courses_url ,"search=#{@summary[:query]}", "Owner" %>
         </th>
-        <th>Action</th>
+        <th>Actions</th>
       </tr>
       </thead>
 
@@ -73,6 +83,12 @@
             <td>
               <%= link_to '#', class: 'btn update-course-owner' do %>
                   <i class="icon-ok"></i>
+              <% end %>
+              <%= link_to "#{course_path(course)}?origin=#{admin_courses_url}",
+                          method:"DELETE",
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete course: #{course.title}?")) },
+                          class: "btn btn-danger" do %>
+              <i class="icon-remove"></i>
               <% end %>
             </td>
           </tr>
