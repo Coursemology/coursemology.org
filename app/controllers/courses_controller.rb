@@ -142,10 +142,12 @@ class CoursesController < ApplicationController
   def destroy
     authorize! :destroy, @course
     title = @course.title
-    @course.destroy
+    #@course.destroy
+    Delayed::Job.enqueue(BackgroundJob.new(@course.id, "DeleteCourse"))
     respond_to do |format|
-      flash[:notice] = "The course '#{title}' has been deleted."
-      format.html { redirect_to courses_url }
+      flash[:notice] = "The course '#{title}' is pending for deletion."
+      redirect_url = params[:origin] || courses_url
+      format.html { redirect_to redirect_url }
       format.json { head :no_content }
     end
   end
