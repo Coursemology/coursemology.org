@@ -6,7 +6,7 @@
 
 <%= form_for(@course, url: course_manage_update_exp_path,
              html: { method: :post, class: "form-horizontal" } ) do |f| %>
-    <table class="table" id="dg-std-table">
+    <table class="table table-hover table-middle-align" id="dg-std-table">
       <thead>
       <th>
         <%= sortable 'Name', course_manage_group_path %>
