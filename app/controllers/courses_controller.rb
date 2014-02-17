@@ -142,6 +142,8 @@ class CoursesController < ApplicationController
   def destroy
     authorize! :destroy, @course
     title = @course.title
+    @course.is_pending_deletion = true
+    @course.save
     #@course.destroy
     Delayed::Job.enqueue(BackgroundJob.new(@course.id, "DeleteCourse"))
     respond_to do |format|

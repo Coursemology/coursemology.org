@@ -2,10 +2,26 @@ class AdminsController < ApplicationController
   before_filter :authorize_admin
 
   def access_control
-    if params[:search].nil? || params[:search].empty?
-      @users = User.order("lower(name) asc").page(params[:page]).per(50)
+    @summary = {query: params[:search], show: "all"}
+    @summary[:admins] = User.admins.count
+    @summary[:instructors] = User.lecturers.count
+    @summary[:normals] = User.normals.count
+    role = (params[:role].nil? || params[:role].empty?) ? nil : params[:role]
+    search_param = (params[:search].nil? || params[:search].empty?) ? nil : params[:search]
+
+    unless role.nil?
+      puts role
+      @summary[:role] = role
+      @summary[:show] = Role.find_by_id(role).title
     end
-    search
+
+    if role && search_param.nil?
+      @users = User.where(system_role_id: params[:role]).page(params[:page]).per(50)
+    elsif search_param.nil?
+      @users = User.order("lower(name) asc").page(params[:page]).per(50)
+    else
+      search(role)
+    end
   end
 
   def initialize
@@ -17,9 +33,9 @@ class AdminsController < ApplicationController
     #logger.info "admin show"
   end
 
-  def search
+  def search(role)
     unless params[:search].nil?
-      @users = User.search(params[:search].strip).order(:name).page(params[:page]).per(50)
+      @users = User.search(params[:search].strip, role).order(:name).page(params[:page]).per(50)
     end
     if params[:origin]
       redirect_to params[:origin]

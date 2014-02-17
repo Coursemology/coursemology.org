@@ -52,6 +52,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    authorize! :destroy, @user
+    @user.is_pending_deletion = true
+    @user.save
+    Delayed::Job.enqueue(BackgroundJob.new(0, "DeleteUser", "User", @user.id))
+    respond_to do |format|
+      flash[:notice] = "'#{@user.name}' is pending for deletion."
+      redirect_url = params[:origin] || courses_url
+      format.html { redirect_to redirect_url }
+      format.json { head :no_content }
+    end
+  end
+
   private
   def change_role_not_allowed
     redirect_to access_denied_path, alert: "You are not allowed to change your role."

@@ -77,6 +77,7 @@ module JfdiAcademy
       elements = Nokogiri::HTML::DocumentFragment.parse(html_tag).css "label, input"
       elements.each do |e|
         if e.node_name.eql? 'label'
+          e['class'] ||= ''
           e['class'] += ' error'
           html = e.to_s.html_safe
         elsif e.node_name.eql? 'input'

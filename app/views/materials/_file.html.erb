@@ -62,7 +62,7 @@
                             %>
                             <tbody>
                             <tr>
-                              <th><%= view.user_course.user.name %></th>
+                              <th><%= view.user_course.user ? view.user_course.user.name : '(unknown)' %></th>
                               <td><%= datetime_format(view.created_at) %></td>
                             </tr>
                             </tbody>

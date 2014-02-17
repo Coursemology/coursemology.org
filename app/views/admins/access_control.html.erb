@@ -1,56 +1,90 @@
 <div class="page-header">
-  <h3>Users</h3>
+  <h3><%= @summary[:show] == 'all' ? "All Users" : @summary[:show].pluralize %></h3>
+
 </div>
 <div class="alert alert-success hidden">Update role successful</div>
-<%= form_tag admins_path, :method => 'get', class: "form-search" do %>
-    <%= render :partial => 'search_form'%>
+
+<% if @summary[:show] == 'all' %>
+    <div class="users-summary">
+      <blockquote>
+        <p><a href="<%= "#{admins_path}?role=#{Role.admin.first.id}" %>">Admins: <%= @summary[:admins] %></a></p>
+        <p><a href="<%= "#{admins_path}?role=#{Role.lecturer.first.id}" %>">Lecturers: <%= @summary[:instructors] %> </a></p>
+        <p><a href="<%= "#{admins_path}?role=#{Role.normal.first.id}" %>">Normal Users: <%= @summary[:normals] %></a></p>
+      </blockquote>
+    </div>
 <% end %>
 
-<% if @users %>
-    <table class="table assignments table-middle-align">
-      <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Related Courses</th>
-        <th>Role</th>
-        <th>Action</th>
-      </tr>
-      </thead>
+<div class="row-fluid">
+  <div class="span10">
+    <%= form_tag admins_path, :method => 'get', class: "form-search" do %>
+        <input type="hidden" name="role" value="<%= @summary[:role] %>">
+        <%= render :partial => 'search_form', locals:{value: @summary[:query]} %>
+    <% end %>
 
-      <tbody class="table-hover">
-      <% @users.each do |user| %>
+    <% if @users %>
+        <table class="table assignments table-middle-align">
+          <thead>
           <tr>
-            <td>
-              <a href="<%= user_path(user) %>">
-                <img src="<%= user.profile_photo_url %>" class="user-thumb-small"/>
-              </a>
-            </td>
-            <td>
-              <input type="hidden" class="user-id" value="<%= user.id %>">
-              <input type="hidden" class="user-role-update-path" value="<%= users_update_path %>">
-              <a href="<%= user_path(user) %>">
-                <%= user.name %>
-              </a>
-            </td>
-            <td>
-              <%= user.email %>
-            </td>
-            <td style="text-align: center">
-              <%= user.user_courses.count %>
-            </td>
-            <td class="select-role">
-              <%= select "select-role","", Role.all.map {|role| [role.title, role.id] }, {:selected => "#{user.system_role_id}" }%>
-            </td>
-            <td>
-              <%= link_to '#', class: 'btn update-user-role' do %>
-                  <i class="icon-ok"></i>
-              <% end %>
-            </td>
+            <th></th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Related Courses</th>
+            <th>Role</th>
+            <th>Actions</th>
           </tr>
-      <% end %>
-      </tbody>
-    </table>
-    <%= paginate @users %>
-<% end %>
+          </thead>
+
+          <tbody class="table-hover">
+          <% @users.each do |user| %>
+              <tr>
+                <td>
+                  <a href="<%= user_path(user) %>">
+                    <img src="<%= user.profile_photo_url %>" class="user-thumb-small"/>
+                  </a>
+                </td>
+                <td>
+                  <input type="hidden" class="user-id" value="<%= user.id %>">
+                  <input type="hidden" class="user-role-update-path" value="<%= users_update_path %>">
+                  <a href="<%= user_path(user) %>">
+                    <%= user.name %>
+                  </a>
+                </td>
+                <td>
+                  <%= user.email %>
+                </td>
+                <td style="text-align: center">
+                  <a href="<%= user_path(user) %>">
+                    <%= user.user_courses.count %>
+                  </a>
+                </td>
+                <td class="select-role">
+                  <%= select "select-role","", Role.all.map {|role| [role.title, role.id] }, {:selected => "#{user.system_role_id}" }%>
+                </td>
+                <td style="min-width: 70px">
+                  <%= link_to '#', class: 'btn update-user-role' do %>
+                      <i class="icon-ok"></i>
+                  <% end %>
+                  <%= link_to "#{user_path(user)}?origin=#{CGI::escape(request.original_url)}",
+                              method:"DELETE",
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete user: #{user.name} ? All data related to this user will also be deleted.")) },
+                              class: "btn btn-danger" do %>
+                      <i class="icon-remove"></i>
+                  <% end %>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @users %>
+    <% end %>
+
+  </div>
+  <div class="span2 sunken-menu-contents">
+    <ul class="nav sidenav users-sidebar">
+      <li class="<%= 'active' if @summary[:show] == 'all' %>"><a class="item" href="<%= admins_path %>">All</a></li>
+      <li class="<%= 'active' if @summary[:show] == Role.admin.first.title %>"><a class="item" href="<%= "#{admins_path}?role=#{Role.admin.first.id}" %>">Admins</a></li>
+      <li class="<%= 'active' if @summary[:show] == Role.lecturer.first.title %>"><a class="item" href="<%= "#{admins_path}?role=#{Role.lecturer.first.id}" %>">Lecturers</a></li>
+      <li class="<%= 'active' if @summary[:show] == Role.normal.first.title %>"><a class="item" href="<%= "#{admins_path}?role=#{Role.normal.first.id}" %>">Normal</a></li>
+    </ul>
+  </div>
+</div>

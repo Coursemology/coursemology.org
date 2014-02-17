@@ -118,8 +118,7 @@ class CourseAbility
       can :read, ForumTopic, hidden: false
       can :read, ForumTopic, author_id: user_course.id
       can :reply, ForumTopic, locked: false
-      can [:edit, :update], ForumTopic, locked: false, author: user_course
-      can :destroy, ForumTopic, locked: false, author: user_course
+      can [:edit, :update, :destroy], ForumTopic, locked: false, author: user_course
       can :set_answer, ForumPost do |post|
           post.topic.author == user_course && !post.topic.locked
       end
@@ -151,7 +150,8 @@ class CourseAbility
       can :access_denied, Mission
       can :access_denied, Training
 
-      can :manage, [Submission, TrainingSubmission, Annotation, Comment], std_course_id: user_course.id
+      can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
+      can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
       can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
