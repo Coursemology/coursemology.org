@@ -25,7 +25,7 @@
   cursor: pointer;
 }
 
-.courses-summary, .courses-search-summary {
+.courses-summary, .courses-search-summary, .users-summary {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 14px;
@@ -36,7 +36,7 @@
   border-radius: 4px;
 }
 
-.courses-summary:after, .courses-search-summary:after {
+.courses-summary:after, .courses-search-summary:after, .users-summary:after {
   position: absolute;
   top: -1px;
   left: -1px;
@@ -50,7 +50,7 @@
   border-radius: 4px 0 4px 0;
 }
 
-.courses-summary:after {
+.courses-summary:after, .users-summary:after {
   content: "Summary";
   color: #9da0a4;
 }
@@ -58,4 +58,34 @@
 .courses-search-summary:after {
   content: "Search Summary";
   color: #000000;
+}
+
+.users-sidebar > li {
+
+}
+
+.users-sidebar .item{
+  padding: 8px 10px;
+  display: block;
+  text-shadow: 0 1px 0 #fff;
+  text-decoration: none;
+  border: 1px solid transparent;
+  outline: 0;
+}
+.users-sidebar > .active > a {
+  background: #fff;
+  border: 1px solid #eee;
+  color: #333333;
+  font-weight: bold;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+  border-left: 1px solid transparent;
+}
+
+
+.sunken-menu-contents {
+  padding: 12px 0 15px;
+  box-shadow: inset 1px 0 0 #eee;
+  background-image: -webkit-linear-gradient(left, #f6f6f6 0%, #fff 8px);
+  background-image: -moz-linear-gradient(left, #f6f6f6 0%, #fff 8px);
+  background-image: linear-gradient(to right, #f6f6f6 0%, #fff 8px);
 }

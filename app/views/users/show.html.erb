@@ -17,64 +17,65 @@
       </td>
     </tr>
   </table>
-
-  <h1>User Summary</h1>
-  <table class="table  table-middle-align table-bordered">
-    <thead>
-    <tr>
-      <td></td>
-      <td>
-        Course
-      </td>
-      <td>
-        Role
-      </td>
-      <td>
-        Level
-      </td>
-      <td>
-        Achievements
-      </td>
-      <td>
-        Enrolled At
-      </td>
-      <td>
-        Last Active Time
-      </td>
-    </tr>
-    </thead>
-    <tbody>
-    <% @user.user_courses.each do |uc| %>
-    <tr>
-      <td>
-        <a href="<%= course_path(uc.course) %>">
-          <img src="<%= uc.course.logo_url %>" class="course-thumb-small">
-        </a>
-      </td>
-      <td>
-        <a href="<%= course_user_course_path(uc.course, uc) %>">
-          <%= uc.course.title %>
-        </a>
-      </td>
-      <td>
-        <%= uc.role.title %>
-      </td>
-      <td style="text-align: center">
-        <%= uc.level ? uc.level.title : 0  %>
-      </td>
-      <td style="text-align: center">
-        <%= uc.user_achievements.count %>
-      </td>
-      <td>
-        <%= datetime_no_seconds uc.created_at %>
-      </td>
-      <td>
-        <%= datetime_no_seconds uc.last_active_time %>
-      </td>
-    </tr>
-
-    <% end %>
-    </tbody>
-  </table>
 </div>
+
+<h2>User Summary</h2>
+<table class="table  table-middle-align table-bordered assignments">
+  <thead>
+  <tr>
+    <td></td>
+    <td>
+      Course
+    </td>
+    <td>
+      Role
+    </td>
+    <td>
+      Level
+    </td>
+    <td>
+      Achievements
+    </td>
+    <td>
+      Enrolled At
+    </td>
+    <td>
+      Last Active Time
+    </td>
+  </tr>
+  </thead>
+  <tbody>
+  <% @user.user_courses.each do |uc| %>
+      <tr>
+        <td>
+          <a href="<%= course_path(uc.course) %>">
+            <img src="<%= uc.course.logo_url %>" class="course-thumb-small">
+          </a>
+        </td>
+        <td>
+          <a href="<%= course_user_course_path(uc.course, uc) %>">
+            <%= uc.course.title %>
+          </a>
+        </td>
+        <td>
+          <%= uc.role.title %>
+        </td>
+        <td style="text-align: center">
+          <%= uc.level ? uc.level.title : 0  %>
+        </td>
+        <td style="text-align: center">
+          <%= uc.user_achievements.count %>
+        </td>
+        <td>
+          <%= datetime_no_seconds uc.created_at %>
+        </td>
+        <td>
+          <%= datetime_no_seconds uc.last_active_time %>
+        </td>
+      </tr>
+
+  <% end %>
+  </tbody>
+</table>
+
 

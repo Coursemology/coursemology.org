@@ -5,7 +5,8 @@ class Role < ActiveRecord::Base
   scope :shared, where(name: 'shared')
   scope :student, where(name: 'student')
   scope :lecturer, where(name: 'lecturer')
-  scope :admin, where(name: 'admin')
+  scope :admin, where(name: 'superuser')
+  scope :normal, where(name: 'normal')
   scope :tutor, where(name:'ta')
 
   def self.get_staff_roles

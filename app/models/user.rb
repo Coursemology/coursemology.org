@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   acts_as_paranoid
   acts_as_voter
 
+  default_scope where(:is_pending_deletion => false)
+
   before_create :set_default_role
   before_create :set_default_profile_pic
   after_create  :auto_enroll_for_invited
@@ -37,7 +39,15 @@ class User < ActiveRecord::Base
   end
 
   def self.admins
-    return User.joins(:system_role).where('roles.name' => 'superuser')
+    User.where(system_role_id: Role.admin.first)
+  end
+
+  def self.lecturers
+    User.where(system_role_id: Role.lecturer.first)
+  end
+
+  def self.normals
+    User.where(system_role_id: Role.normal.first)
   end
 
   def update_external_account(auth)
@@ -95,9 +105,13 @@ class User < ActiveRecord::Base
         'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
   end
 
-  def self.search(search)
+  def self.search(search, role = nil)
     search_condition = "%" + search.downcase + "%"
-    User.where(['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    result = User.where(['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    if role
+      result = result.where(system_role_id: role)
+    end
+    result
     #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
   end
 
@@ -147,8 +161,8 @@ class User < ActiveRecord::Base
 
   def get_user_course(course)
     UserCourse.find_by_user_id_and_course_id(
-      self.id,
-      course.id
+        self.id,
+        course.id
     )
   end
 

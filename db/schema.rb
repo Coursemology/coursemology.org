@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140215164332) do
+ActiveRecord::Schema.define(:version => 20140217143202) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -241,16 +241,17 @@ ActiveRecord::Schema.define(:version => 20140215164332) do
     t.string   "title"
     t.integer  "creator_id"
     t.text     "description"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "logo_url"
     t.string   "banner_url"
     t.time     "deleted_at"
-    t.boolean  "is_publish",  :default => false
-    t.boolean  "is_open",     :default => true
-    t.boolean  "is_active",   :default => true
+    t.boolean  "is_publish",          :default => false
+    t.boolean  "is_open",             :default => true
+    t.boolean  "is_active",           :default => true
     t.datetime "start_at"
     t.datetime "end_at"
+    t.boolean  "is_pending_deletion", :default => false
   end
 
   add_index "courses", ["creator_id"], :name => "index_courses_on_creator_id"
@@ -1179,10 +1180,10 @@ ActiveRecord::Schema.define(:version => 20140215164332) do
     t.string   "name"
     t.string   "profile_photo_url"
     t.string   "display_name"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.string   "email",                  :default => "",   :null => false
-    t.string   "encrypted_password",     :default => "",   :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -1200,6 +1201,7 @@ ActiveRecord::Schema.define(:version => 20140215164332) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.boolean  "is_logged_in",           :default => true
+    t.boolean  "is_pending_deletion",    :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
