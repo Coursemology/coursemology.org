@@ -199,7 +199,7 @@ JfdiAcademy::Application.routes.draw do
           post 'reorder'
         end
       end
-      resources :survey_questions do
+      resources :survey_questions, only: [:new, :create, :edit, :update, :destroy] do
         collection do
           post 'reorder'
         end
