@@ -1,7 +1,7 @@
 class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
   require 'enumerable'
   def perform
-    course = Course.find(course_id)
+    course = Course.find_by_id(course_id)
 
     if name == 'AutoSubmissions'
       if type == 'Create'
@@ -21,6 +21,11 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
 
     if name == "DeleteCourse"
       course.destroy
+    end
+
+    if name == "DeleteUser"
+      user = User.find_by_id(item_id)
+      user.destroy if user
     end
   end
 
