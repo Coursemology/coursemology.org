@@ -33,7 +33,7 @@ class AdminsController < ApplicationController
     #logger.info "admin show"
   end
 
-  def search(role)
+  def search(role = nil)
     unless params[:search].nil?
       @users = User.search(params[:search].strip, role).order(:name).page(params[:page]).per(50)
     end
