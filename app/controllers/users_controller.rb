@@ -9,6 +9,9 @@ class UsersController < ApplicationController
   def show
     @setting = current_user == @user
     @admin = current_user.is_admin?
+    if @admin
+      @request_count = RoleRequest.count
+    end
   end
 
   respond_to :html, :json

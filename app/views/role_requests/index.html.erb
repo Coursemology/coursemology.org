@@ -3,35 +3,60 @@
 </div>
 
 <% if @lecturer_requests.size == 0 %>
-  There is no outstanding requests.
+    There is no outstanding requests.
 <% else %>
-  <table class="table enroll-requests">
-    <thead>
+    <table class="table enroll-requests table-middle-align">
+      <thead>
       <tr>
-        <td>Id</td>
+        <td></td>
         <td>Name</td>
         <td>Email</td>
-        <td>Action</td>
+        <td>Organization</td>
+        <td>Designation</td>
+        <td>Reason</td>
+        <td>Actions</td>
       </tr>
-    </thead>
-    <tbody class="table-hover">
+      </thead>
+      <tbody class="table-hover">
       <% @lecturer_requests.each do |rq| %>
-        <tr>
-          <input type="hidden" class="destroy-url"
-              value="<%= role_request_path(rq.id) %>" />
-          <td><%= rq.id %></td>
-          <td><%= rq.user.name %></td>
-          <td><%= rq.user.email %></td>
-          <td>
-            <%= link_to '#', class: "btn btn-primary request-approve" do %>
-              <i class="icon-ok"></i>
-            <% end %>
-            <%= link_to '#', class: "btn btn-danger request-del" do %>
-              <i class="icon-remove"></i>
-            <% end %>
-          </td>
-        </tr>
+          <tr>
+            <input type="hidden" class="destroy-url"
+                   value="<%= role_request_path(rq.id) %>" />
+            <td>
+              <a href="<%= user_path(rq.user) %>">
+                <img src="<%= rq.user.profile_photo_url %>" class="user-thumb-small"/>
+              </a>
+            </td>
+            <td>
+              <a href="<%= user_path(rq.user) %>">
+                <%= rq.user.name %>
+              </a>
+            </td>
+            <td>
+              <a href="mailto:<%= rq.user.email %>"><%= rq.user.email %></a>
+            </td>
+            <td>
+              <%= rq.organization %>
+            </td>
+            <td>
+              <%= rq.designation %>
+            </td>
+            <td style="min-width: 150px">
+              <%= rq.reason %>
+            </td>
+            <td style="min-width: 70px">
+              <%= link_to '#', class: "btn btn-primary request-approve" do %>
+                  <i class="icon-ok"></i>
+              <% end %>
+
+              <%= link_to role_request_path(rq.id), class: "btn btn-danger",
+                          method: "DELETE",
+                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to reject the enrol request by #{rq.user.name}?"))}                do %>
+                  <i class="icon-remove"></i>
+              <% end %>
+            </td>
+          </tr>
       <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 <% end %>
