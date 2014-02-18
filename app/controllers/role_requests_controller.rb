@@ -16,13 +16,18 @@ class RoleRequestsController < ApplicationController
   end
 
   def create
-    @role_request.user = current_user
-    @role_request.role = Role.lecturer.first
+    request = RoleRequest.find_by_user_id_and_role_id(
+        current_user.id,
+        Role.lecturer.first.id
+    )
+    unless request
+      @role_request.user = current_user
+      @role_request.role = Role.lecturer.first
+      @role_request.save
+    end
     respond_to do |format|
-      if @role_request.save
-        flash[:notice] = "Your request has been submitted."
-        redirect_to my_courses_path
-      end
+      flash[:notice] = "Your request has been submitted."
+      format.html {redirect_to my_courses_path}
     end
   end
 
@@ -70,6 +75,7 @@ class RoleRequestsController < ApplicationController
 
     respond_to do |format|
       format.json { render json: { status: 'OK' } }
+      format.html {redirect_to role_requests_path}
     end
   end
 end

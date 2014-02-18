@@ -26,7 +26,10 @@
             <%= link_to '#', class: "btn btn-primary request-approve" do %>
               <i class="icon-ok"></i>
             <% end %>
-            <%= link_to '#', class: "btn btn-danger request-del" do %>
+
+            <%= link_to role_request_path(rq.id), class: "btn btn-danger",
+                        method: "DELETE",
+                        data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to reject the enrol request by #{rq.user.name}?"))}                do %>
               <i class="icon-remove"></i>
             <% end %>
           </td>
