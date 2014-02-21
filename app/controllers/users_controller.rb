@@ -59,6 +59,7 @@ class UsersController < ApplicationController
     authorize! :destroy, @user
     @user.is_pending_deletion = true
     @user.save
+    UserMailer.delay.user_deleted(@user.name, @user.email)
     Delayed::Job.enqueue(BackgroundJob.new(0, "DeleteUser", "User", @user.id))
     respond_to do |format|
       flash[:notice] = "'#{@user.name}' is pending for deletion."
