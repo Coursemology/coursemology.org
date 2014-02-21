@@ -144,4 +144,15 @@ class UserMailer < ActionMailer::Base
     @due_date = mission.close_at
     mail(to:staff.email,  subject: "Reminder about #{mission.title}")
   end
+
+  def course_deleted(title, user)
+    @user = user
+    @title = title
+    mail(to: user.email, subject: "Your course has been deleted")
+  end
+
+  def user_deleted(name, email)
+    @name = name
+    mail(to:email, subject: "Your account has been deleted")
+  end
 end

@@ -145,6 +145,9 @@ class CoursesController < ApplicationController
     @course.is_pending_deletion = true
     @course.save
     #@course.destroy
+    @course.lect_courses.each do |uc|
+      UserMailer.delay.course_deleted(@course.title, uc.user)
+    end
     Delayed::Job.enqueue(BackgroundJob.new(@course.id, "DeleteCourse"))
     respond_to do |format|
       flash[:notice] = "The course '#{title}' is pending for deletion."
