@@ -97,7 +97,7 @@ class FileUploadsController < ApplicationController
       owner = SurveyQuestion.find(params[:survey_question_id])
     end
 
-    @uploads = owner ? owner.files : []
+    @uploads = owner ? owner.files.order(:is_public).reverse : []
 
     respond_to do |format|
       format.html
@@ -116,9 +116,7 @@ class FileUploadsController < ApplicationController
 
   def destroy
     @upload = FileUpload.find(params[:id])
-    puts @upload.owner.to_json
     if @upload.owner.class == SurveyQuestionOption
-      puts "destroy"
       @upload.owner.destroy
     end
     @upload.destroy
@@ -126,6 +124,18 @@ class FileUploadsController < ApplicationController
     respond_to do |format|
       #format.html { redirect_to uploads_url }
       format.json { head :no_content }
+    end
+  end
+
+  def toggle_access
+    @upload = FileUpload.find(params[:id])
+    @upload.is_public = !@upload.is_public
+
+    respond_to do |format|
+      #format.html { redirect_to uploads_url }
+      if @upload.save
+        format.json { render json: {is_public: @upload.is_public } }
+      end
     end
   end
 

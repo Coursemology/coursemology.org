@@ -7,7 +7,7 @@ class FileUpload < ActiveRecord::Base
   has_attached_file :file, :restricted_characters => /[:\/\\]/
 
   before_post_process :hash_filename
-  after_save :sync_filename
+  after_save :sync_filename, if: :original_name_changed?
 
   include Rails.application.routes.url_helpers
   require 'digest/md5'
@@ -19,8 +19,10 @@ class FileUpload < ActiveRecord::Base
         "size"  => read_attribute(:file_file_size),
         "url"   => file_url,
         "original" => read_attribute(:original_name),
+        "is_public" => read_attribute(:is_public),
         "timestamp" => created_at.strftime("%d-%m-%Y %H:%M:%S"),
         "delete_url"  => file_upload_path(self),
+        "toggle_url"  => file_uploads_toggle_access_path(self),
         "delete_type" => "DELETE"
     }
   end

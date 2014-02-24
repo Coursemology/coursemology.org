@@ -255,6 +255,8 @@ JfdiAcademy::Application.routes.draw do
 
   resources :file_uploads
 
+  match "file_uploads/:id/toggle_access" => "file_uploads#toggle_access", as: :file_uploads_toggle_access
+
   resources :trainings do
     resources :file_uploads
   end
