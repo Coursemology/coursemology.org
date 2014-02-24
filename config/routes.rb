@@ -237,6 +237,7 @@ JfdiAcademy::Application.routes.draw do
 
       get 'subscribe' => 'forums#subscribe', on: :member
       get 'unsubscribe' => 'forums#unsubscribe', on: :member
+      get 'toggle_lock'   => 'forums#toggle_lock', on: :member
       get 'mark_read' => 'forums#mark_read', on: :member
       get 'mark_read' => 'forums#mark_all_read', on: :collection
       get 'next_unread' => 'forums#next_unread', on: :collection

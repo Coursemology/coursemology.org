@@ -1,6 +1,6 @@
 class Forums::ForumsController < ApplicationController
   load_and_authorize_resource :course
-  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read, :next_unread, :next_unanswered, :subscribe, :unsubscribe]
+  before_filter :load_general_course_data, except: [:destroy, :mark_read, :mark_all_read, :next_unread, :next_unanswered, :subscribe, :unsubscribe, :toggle_lock]
 
   before_filter :load_forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
   load_and_authorize_resource :forum, except: [:index, :mark_all_read, :next_unread, :next_unanswered]
@@ -129,7 +129,18 @@ class Forums::ForumsController < ApplicationController
                 notice: 'Hooray! All topics have been answered'
   end
 
-private
+  def toggle_lock
+    @forum.locked = !@forum.locked
+    @forum.save
+
+    respond_to do |format|
+      format.html { redirect_to course_forum_path(@course, @forum),
+                                notice: "Forum: '#{@forum.title}' has been #{@forum.locked? ? 'locked' : 'unlocked'}."}
+      format.json { render json: {status: 'OK'}}
+    end
+  end
+
+  private
   def load_forum
     @forum = ForumForum.find_using_slug(params[:id] || params[:forum_id])
     if %w(new create).include?(params[:action])
