@@ -237,6 +237,7 @@ JfdiAcademy::Application.routes.draw do
 
       get 'subscribe' => 'forums#subscribe', on: :member
       get 'unsubscribe' => 'forums#unsubscribe', on: :member
+      get 'toggle_lock'   => 'forums#toggle_lock', on: :member
       get 'mark_read' => 'forums#mark_read', on: :member
       get 'mark_read' => 'forums#mark_all_read', on: :collection
       get 'next_unread' => 'forums#next_unread', on: :collection
@@ -254,6 +255,8 @@ JfdiAcademy::Application.routes.draw do
   match "courses/:id//pending_gradings"   => "courses#pending_gradings", as: :course_pending_gradings
 
   resources :file_uploads
+
+  match "file_uploads/:id/toggle_access" => "file_uploads#toggle_access", as: :file_uploads_toggle_access
 
   resources :trainings do
     resources :file_uploads

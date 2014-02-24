@@ -1,6 +1,12 @@
 <% unless owner && owner.has_attribute?(:id) && owner.id%>
-   <% owner = nil %>
+    <% owner = nil %>
 <% end %>
+
+<% if defined?(access_control) && access_control
+     access_control = true
+   else
+     access_control = false
+   end %>
 
 <%= form_for [owner, FileUpload.new], :html => { :multipart => true, :id => "fileupload"  } do |f| %>
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
@@ -29,13 +35,16 @@
     <!-- The table listing the files available for upload/download -->
     <table class="table table-striped">
       <thead>
-        <tr>
-          <th class="fileupload-buttonbar"><input type="checkbox" class="toggle"></th>
-          <th>Name</th>
-          <th>Size</th>
-          <th>Uploaded At</th>
-          <th></th>
-        </tr>
+      <tr>
+        <th class="fileupload-buttonbar"><input type="checkbox" class="toggle"></th>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Uploaded At</th>
+        <% if access_control %>
+            <th>Pubic?</th>
+        <% end %>
+        <th></th>
+      </tr>
       </thead>
       <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
     </table>
@@ -62,8 +71,8 @@
     {% if (file.error) { %}
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
     {% } else if (o.files.valid && !i) { %}
-    <td {% if (o.options.autoUpload) { %}colspan="2"{% } %}>
-      <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
+    <td {% if (o.options.autoUpload) { %} colspan="2" {% } %} >
+    <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
     </td>
     {% if (!o.options.autoUpload) { %}
     <td class="start">
@@ -104,7 +113,13 @@
       <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{% if (file.original) { %}{%=file.original%}{% } else { %}{%=file.name%}{% } %}</a>
     </td>
     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-    <td class="timestamp" colspan="2"><span>{%= file.timestamp %}</span></td>
+    <td class="timestamp"><span>{%= file.timestamp %}</span></td>
+    <% if access_control %>
+        <td class="is-public">
+          <a href="#" rel="tooltip" url="{%= file.toggle_url %}"
+             data-original-title="Click to Toggle Access" onclick="window.toggle_access(event, this)">{%= file.is_public ? 'Public' : 'Private' %}</a>
+        </td>
+    <% end %>
     {% } %}
     <td class="delete">
       <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
@@ -116,71 +131,85 @@
 </script>
 
 <script type="text/javascript" charset="utf-8">
-$(function () {
-    // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload({
-        maxFileSize: 50000000,
-        autoUpload: true,
-        uploadTemplateId: 'template-upload-complicated',
-        downloadTemplateId: 'template-download-complicated',
-        formData: [
-            {
-                name: '_mode',
-                value: 'MUL'
-            }]
+    var toggle_access;
+    (function(){
+        toggle_access=function(e, self){
+            e.preventDefault();
+            $.get($(self).attr('url'), function(resp){
+                $(self).html(resp.is_public ? 'Public' : 'Private');
+            }, "json");
+        };
+    }());
+
+    $(function () {
+
+
+        // Initialize the jQuery File Upload widget:
+
+        $('#fileupload').fileupload({
+            maxFileSize: 50000000,
+            autoUpload: true,
+            uploadTemplateId: 'template-upload-complicated',
+            downloadTemplateId: 'template-download-complicated',
+            formData: [
+                {
+                    name: '_mode',
+                    value: 'MUL'
+                }]
+        });
+
+        var uploaded_files = []
+        $('#fileupload').bind('fileuploaddone', function (e, data) {
+            // Log the current bitrate for this upload:
+            var that = $(this).data('blueimp-fileupload') ||
+                            $(this).data('fileupload'),
+                    file = that._getFilesFromResponse(data)[0];
+            $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
+            uploaded_files.push(file.original);
+        });
+
+        // Register our handler for deleting items so deleted IDs won't be sent
+        // to the server.
+        $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
+            var $row = $(this).parents('tr.template-download')
+            var input = $('input.uploaded-files', $row)[0];
+
+            // Match the input with the same name as the file we are deleting.
+            $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
+        });
+
+        // Prevent files with the same filename from being uploaded twice in the
+        // same session.
+        $('#fileupload').on('fileuploadadd', function(e,data) {
+            var current_files = [];
+            $(this).fileupload('option').filesContainer.children().each(function() {
+                var data = $(this).data('data');
+                if (data) {
+                    current_files.push(data.files[0].name);
+                }
+            });
+
+            data.files = $.map(data.files, function(file, i) {
+                if ($.inArray(file.name, uploaded_files) >= 0 || $.inArray(file.name, current_files) >= 0) {
+                    return null;
+                } else {
+                    return file;
+                }
+            });
+        });
+
+        // Load existing files:
+        $.getJSON($('#fileupload').prop('action'), function (files) {
+            var fu = $('#fileupload').data('blueimpFileupload');
+            fu._adjustMaxNumberOfFiles(-files.length);
+            var template = fu._renderDownload(files)
+                    .appendTo($('#fileupload .files'));
+            // Force reflow:
+            fu._reflow = fu._transition && template.length &&
+                    template[0].offsetWidth;
+            template.addClass('in');
+            $('#loading').remove();
+            $('*[rel~=tooltip]').tooltip();
+        });
     });
-
-    var uploaded_files = []
-    $('#fileupload').bind('fileuploaddone', function (e, data) {
-      // Log the current bitrate for this upload:
-      var that = $(this).data('blueimp-fileupload') ||
-              $(this).data('fileupload'),
-          file = that._getFilesFromResponse(data)[0];
-      $("#uploaded_files_div").append('<input type="hidden" name="files['+ file.name + ']" value="'+file.id+'">');
-      uploaded_files.push(file.original);
-    });
-
-    // Register our handler for deleting items so deleted IDs won't be sent
-    // to the server.
-    $('#fileupload').on('click', 'td.delete .btn-danger', undefined, function() {
-      var $row = $(this).parents('tr.template-download')
-      var input = $('input.uploaded-files', $row)[0];
-
-      // Match the input with the same name as the file we are deleting.
-      $('#uploaded_files_div input[name=\'' + input.name.replace(/(\[|\])/g, "\\$&") + '\']').remove();
-    });
-
-    // Prevent files with the same filename from being uploaded twice in the
-    // same session.
-    $('#fileupload').on('fileuploadadd', function(e,data) {
-      var current_files = [];
-      $(this).fileupload('option').filesContainer.children().each(function() {
-        var data = $(this).data('data');
-        if (data) {
-          current_files.push(data.files[0].name);
-        }
-      });
-
-      data.files = $.map(data.files, function(file, i) {
-        if ($.inArray(file.name, uploaded_files) >= 0 || $.inArray(file.name, current_files) >= 0) {
-          return null;
-        } else {
-          return file;
-        }
-      });
-    });
-
-    // Load existing files:
-    $.getJSON($('#fileupload').prop('action'), function (files) {
-        var fu = $('#fileupload').data('blueimpFileupload');
-        fu._adjustMaxNumberOfFiles(-files.length);
-        var template = fu._renderDownload(files)
-                .appendTo($('#fileupload .files'));
-        // Force reflow:
-        fu._reflow = fu._transition && template.length &&
-                template[0].offsetWidth;
-        template.addClass('in');
-        $('#loading').remove();
-    });
-});
 </script>

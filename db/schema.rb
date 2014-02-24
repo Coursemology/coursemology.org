@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140217143202) do
+ActiveRecord::Schema.define(:version => 20140224171045) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -313,8 +313,8 @@ ActiveRecord::Schema.define(:version => 20140217143202) do
   create_table "file_uploads", :force => true do |t|
     t.integer  "owner_id"
     t.integer  "creator_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
@@ -322,6 +322,7 @@ ActiveRecord::Schema.define(:version => 20140217143202) do
     t.string   "owner_type"
     t.string   "original_name"
     t.string   "copy_url"
+    t.boolean  "is_public",         :default => true
   end
 
   create_table "forem_categories", :force => true do |t|
@@ -444,6 +445,7 @@ ActiveRecord::Schema.define(:version => 20140217143202) do
     t.string  "name"
     t.string  "cached_slug"
     t.text    "description"
+    t.boolean "locked",      :default => false
   end
 
   add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true

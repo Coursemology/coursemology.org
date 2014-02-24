@@ -16,7 +16,7 @@
         <% else %>
             <%= link_to 'Subscribe', subscribe_course_forum_topic_path(@course, @forum, @topic), class: 'btn' %>
         <% end %>
-        <% if @topic.can_be_replied_to? %>
+        <% if can? :reply_topic, @topic %>
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, @topic, @topic.posts.last), class: 'btn btn-primary reply', 'data-post-id' => @topic.posts.last.id, 'data-post-title' => @topic.title %>
         <% end %>
       </div>

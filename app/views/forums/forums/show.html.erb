@@ -2,40 +2,46 @@
   <div id="forum_topic_links" class="btn-toolbar pull-right">
     <div class="btn-group">
       <% if @forum.subscribed?(curr_user_course) %>
-        <%= link_to 'Unsubscribe', unsubscribe_course_forum_path(@course, @forum), class: 'btn' %>
+          <%= link_to 'Unsubscribe', unsubscribe_course_forum_path(@course, @forum), class: 'btn' %>
       <% else %>
-        <%= link_to 'Subscribe', subscribe_course_forum_path(@course, @forum), class: 'btn' %>
+          <%= link_to 'Subscribe', subscribe_course_forum_path(@course, @forum), class: 'btn' %>
       <% end %>
 
       <% unread = @forum.unread_topics(curr_user_course) %>
       <% if unread.count > 0 %>
-        <%= link_to 'Mark forum read', mark_read_course_forum_path(@course, @forum), class: 'btn' %>
-        <%= link_to 'Next unread', next_unread_course_forums_path(@course), class: 'btn', title: 'Jump to next unread topic' %>
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
-        </ul>
+          <%= link_to 'Mark forum read', mark_read_course_forum_path(@course, @forum), class: 'btn' %>
+          <%= link_to 'Next unread', next_unread_course_forums_path(@course), class: 'btn', title: 'Jump to next unread topic' %>
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><%= link_to 'Next unanswered question', next_unanswered_course_forums_path(@course) %></li>
+          </ul>
       <% end %>
     </div>
     <div class="btn-group">
-      <% if can?(:create, ForumTopic) %>
-        <%= link_to 'New Topic', new_course_forum_topic_path(@course, @forum), class: 'btn btn-primary' %>
+      <% if can?(:create_topic, @forum) %>
+          <%= link_to 'New Topic', new_course_forum_topic_path(@course, @forum), class: 'btn btn-primary' %>
       <% end %>
     </div>
 
     <div class="btn-group">
       <% if can?(:edit, @forum) %>
-        <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), class: 'btn' %>
+          <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), class: 'btn' %>
+      <% end %>
+      <% if can?(:edit, @forum) %>
+          <%= link_to "#{@forum.locked? ? 'Unlock' : 'Lock' } Forum", toggle_lock_course_forum_path(@course, @forum), class: 'btn btn-warning' %>
       <% end %>
       <% if can?(:destroy, @forum) %>
-        <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete Forum', path_to_item: course_forum_path(@course, @forum) } %>
+          <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete Forum', path_to_item: course_forum_path(@course, @forum) } %>
       <% end %>
     </div>
   </div>
 
   <%= render partial: 'header', locals: { } %>
+  <% if @forum.locked %>
+      <span style="font-style: italic; color: #b76d6d">* This forum has been locked for students. Students will only be able to read posts.</span>
+<% end %>
 
   <table class="topics table-striped table">
     <thead>
@@ -50,11 +56,11 @@
     </thead>
     <tbody>
     <% if @topics.empty? %>
-      <tr><td colspan="5" align="center">There are currently no topics in this forum</td></tr>
+        <tr><td colspan="5" align="center">There are currently no topics in this forum</td></tr>
     <% else %>
-      <% @topics.each do |t| %>
-        <%= render partial: 'forums/topics/topic', locals: { topic: t } %>
-      <% end %>
+        <% @topics.each do |t| %>
+            <%= render partial: 'forums/topics/topic', locals: { topic: t } %>
+        <% end %>
     <% end %>
     </tbody>
   </table>
