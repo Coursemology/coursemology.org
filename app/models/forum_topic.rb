@@ -61,7 +61,7 @@ class ForumTopic < ActiveRecord::Base
   end
 
   def can_be_replied_to?
-    not(locked?)
+    not(locked?) && (not forum.locked?)
   end
 
   def subject

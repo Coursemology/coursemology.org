@@ -33,7 +33,7 @@
 
     <div class="info">
       <div class="pull-right">
-        <% if post.topic.can_be_replied_to? %>
+        <% if can? :reply_topic, post.topic %>
             <%= link_to 'Reply', reply_course_forum_topic_post_path(@course, @forum, post.topic, post), class: 'btn reply', 'data-post-id' => post.id, 'data-post-title' => post.title %>
         <% end %>
         <% if can? :edit, post %>

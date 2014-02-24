@@ -72,7 +72,6 @@ class SurveyQuestionsController < ApplicationController
   end
 
   def create_option(file, question)
-    puts file.to_json
     option = question.options.build
     option.description = File.basename(file.original_name, File.extname(file.original_name)).gsub("_", " ")
     option.save

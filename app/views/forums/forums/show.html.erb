@@ -20,7 +20,7 @@
       <% end %>
     </div>
     <div class="btn-group">
-      <% if can?(:create, ForumTopic) %>
+      <% if can?(:create_topic, @forum) %>
         <%= link_to 'New Topic', new_course_forum_topic_path(@course, @forum), class: 'btn btn-primary' %>
       <% end %>
     </div>
@@ -28,6 +28,9 @@
     <div class="btn-group">
       <% if can?(:edit, @forum) %>
         <%= link_to 'Edit Forum', edit_course_forum_path(@course, @forum), class: 'btn' %>
+      <% end %>
+      <% if can?(:edit, @forum) %>
+          <%= link_to "#{@forum} Forum", edit_course_forum_path(@course, @forum), class: 'btn' %>
       <% end %>
       <% if can?(:destroy, @forum) %>
         <%= render partial: 'layouts/delete_confirm', locals: { display_label: 'Delete Forum', path_to_item: course_forum_path(@course, @forum) } %>
