@@ -85,10 +85,10 @@ class MissionsController < ApplicationController
     @missions = @course.missions
     @mission.pos = @course.missions.count + 1
     @mission.creator = current_user
-    @mission.update_tags(params[:tags])
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
+    @mission.update_tags(params[:tags])
     if  @mission.single_question?
       qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
       qn.max_grade = params[:max_grade]
@@ -96,6 +96,7 @@ class MissionsController < ApplicationController
 
     respond_to do |format|
       if @mission.save
+        @mission.create_local_file
         @mission.update_grade
         @mission.schedule_tasks(course_mission_url(@course, @mission))
         format.html { redirect_to course_mission_path(@course, @mission),

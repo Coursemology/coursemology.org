@@ -17,7 +17,6 @@ class Training < ActiveRecord::Base
   has_many :mcqs, through: :asm_qns, source: :qn, source_type: "Mcq"
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion"
   has_many :training_submissions, dependent: :destroy
-  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
 
   def update_grade

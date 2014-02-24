@@ -9,10 +9,18 @@ class PythonEvaluator
     dir = get_asm_file_path(asm)
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
-
-    path = File.join(dir, file.original_filename)
-    File.open(path, "wb") { |f| f.write(file.read) }
+    path = File.join(dir, file.original_name)
+    file.file.copy_to_local_file :original, path
   end
+
+  #def self.add_local_file_to_asm(asm, file)
+  #  dir = get_asm_file_path(asm)
+  #
+  #  FileUtils.mkdir_p(dir) unless File.exist?(dir)
+  #
+  #  path = File.join(dir, file.original_filename)
+  #  File.open(path, "wb") { |f| f.write(file.read) }
+  #end
 
   def self.get_tmp_file_name(dir, extension = "")
     rand_str = ''

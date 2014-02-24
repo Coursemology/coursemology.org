@@ -100,6 +100,7 @@ class TrainingsController < ApplicationController
 
     respond_to do |format|
       if @training.save
+        @training.create_local_file
         @training.schedule_tasks(course_training_url(@course, @training))
         format.html { redirect_to course_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }

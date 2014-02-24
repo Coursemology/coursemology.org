@@ -53,7 +53,7 @@ class FileUploadsController < ApplicationController
       #save to local folder, in case the file will be included for code question.
       #TODO: improve, should only save coding related file to local disk
       if params[:mission_id] or params[:training_id]
-        PythonEvaluator.create_local_file_for_asm(owner, file)
+        PythonEvaluator.create_local_file_for_asm(owner, file_upload)
       end
 
       if file_upload.file_content_type == 'application/zip' && params[:_page_name] == "course_edit"

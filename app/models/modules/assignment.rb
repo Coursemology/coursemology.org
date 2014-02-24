@@ -18,6 +18,7 @@ module Assignment
       has_many :tags, through: :asm_tags
       has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
       has_many :pending_actions, as: :item, dependent: :destroy
+      has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
       after_save :after_save_asm
 
@@ -118,6 +119,14 @@ module Assignment
     if type == Mission and self.close_at >= Time.now and self.publish?
       delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to, true), run_at: 1.day.ago(self.close_at))
       self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+  end
+
+  #TOFIX: it's better to have callback rather than currently directly call this in
+  #create. Can't use after_create because files association won't be updated upon save
+  def create_local_file
+    files.each do |file|
+      PythonEvaluator.create_local_file_for_asm(self, file)
     end
   end
 
