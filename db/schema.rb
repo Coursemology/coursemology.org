@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140224151448) do
+ActiveRecord::Schema.define(:version => 20140224171045) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -445,6 +445,7 @@ ActiveRecord::Schema.define(:version => 20140224151448) do
     t.string  "name"
     t.string  "cached_slug"
     t.text    "description"
+    t.boolean "locked",      :default => false
   end
 
   add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true
