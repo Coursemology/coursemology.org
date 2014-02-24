@@ -113,23 +113,32 @@ class CourseAbility
       can :subscribe, ForumForum
       can :unsubscribe, ForumForum
       can :create, ForumTopic
+      can :create_topic, ForumForum, locked: false
+      can :reply_topic, ForumTopic do |topic|
+        !topic.locked? && !topic.forum.locked?
+      end
       can :subscribe, ForumTopic
       can :unsubscribe, ForumTopic
       can :read, ForumTopic, hidden: false
       can :read, ForumTopic, author_id: user_course.id
       can :reply, ForumTopic, locked: false
-      can [:edit, :update, :destroy], ForumTopic, locked: false, author: user_course
+      can [:edit, :update, :destroy], ForumTopic do |topic|
+        !topic.locked? && topic.author == user_course && !topic.forum.locked?
+      end
       can :set_answer, ForumPost do |post|
-          post.topic.author == user_course && !post.topic.locked
+          post.topic.author == user_course && !post.topic.locked?
       end
       can :read, ForumPost
-      can :create, ForumPost
+      can :create, ForumPost do |post|
+        !post.topic.forum.locked
+      end
       can :set_vote, ForumPost
-      can :destroy, ForumPost, author: user_course
 
       # Students can edit their own posts
-      can :edit, ForumPost, author: user_course
-      can :update, ForumPost, author: user_course
+      can [:edit, :update, :destroy], ForumPost do |post|
+        post.author == user_course && !post.topic.locked? && !post.topic.forum.locked?
+      end
+
 
       # Students cannot make topics sticky nor announcements, they also cannot lock and make posts hidden
       cannot :set_sticky, ForumTopic
