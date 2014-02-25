@@ -129,9 +129,7 @@ class CourseAbility
           post.topic.author == user_course && !post.topic.locked?
       end
       can :read, ForumPost
-      can :create, ForumPost do |post|
-        !post.topic.forum.locked
-      end
+      can :create, ForumPost
       can :set_vote, ForumPost
 
       # Students can edit their own posts
