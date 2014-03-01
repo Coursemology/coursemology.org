@@ -22,6 +22,7 @@ class SubmissionGradingsController < ApplicationController
       if sa.class == StdCodingAnswer and qn.is_auto_grading?
         evals = sa.result_hash["evalTests"].select {|r| r}.length
         tests = qn.data_hash["evalTests"].length
+        tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
         ag = AnswerGrading.new
         ag.grade = grade
