@@ -77,10 +77,19 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
         end
         test_cases = tests[test_type]
         test_code = ''
-        puts tests
-        test_cases.each do |test|
-          test_code << "\nprint('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
+        if test_type == :evalTests
+          test_cases.each do |test|
+            test_code << "\ntry:\n"
+            test_code << "    print('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
+            test_code << "except Exception as e:\n"
+            test_code << "    print('#{hash} %r' % False)\n"
+          end
+        else
+          test_cases.each do |test|
+            test_code << "\nprint('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
+          end
         end
+
         file.write(test_code)
         file.close
 
@@ -98,9 +107,8 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
         @stdout,@stderr, status = Open3.capture3("python3.3 #{file_path}")
         errors = @stderr
         stdout = @stdout
-        puts "stdout",stdout
         results = stdout.split("\n").select{|r| r.include? hash }.map{|r| if r.gsub(hash + " ", '').gsub("\n",'') == "True" then true else false end}
-        puts "results",results
+        puts results
         File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)

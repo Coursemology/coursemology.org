@@ -10,9 +10,9 @@
       </div>
 
       <div class="control-group">
-        <%= f.label :step_name,"Step Name", :class => 'control-label' %>
+        <%= f.label :title,"Step Name", :class => 'control-label' %>
         <div class="controls">
-          <%= f.text_field :step_name, :class => 'text_field' %>
+          <%= f.text_field :title, :class => 'text_field' %>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
             <% end %>
 
             <%= qns.each do |cq| %>
-                <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.step_name %></option>
+                <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.title %></option>
             <% end %>
           </select>
         </div>

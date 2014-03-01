@@ -83,8 +83,8 @@
                   <i class="icon-move handler-icon"></i>
                   <h3 class="handler-text">Question <%= index + 1 %>
                     <% if q.class == CodingQuestion %>
-                        <% if !q.step_name.to_s.strip.empty? %>
-                            : <%=q.step_name %>
+                        <% unless q.title.to_s.strip.empty? %>
+                            : <%=q.title %>
                         <% end %>
                     <% end %>
                   </h3>
