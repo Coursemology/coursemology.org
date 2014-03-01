@@ -1,5 +1,5 @@
 class Question < ActiveRecord::Base
-  attr_accessible :creator_id, :description, :max_grade
+  attr_accessible :creator_id, :description, :max_grade, :title
 
   belongs_to :creator, class_name: "User"
 

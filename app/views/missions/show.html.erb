@@ -73,19 +73,19 @@
 <% if (can? :view_detail, @mission) && !@mission.single_question? %>
     <hr/>
     <% if can? :manage, @mission %>
-        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
+        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_question_form">
           Add Question
         </button>
         <a href="<%= new_course_mission_coding_question_path(@course, @mission) %>" class="btn btn-primary">  Add Coding Question</a>
 
     <% end %>
-    <div id="new_wquestion_form" class="collapse out">
+    <div id="new_question_form" class="collapse out">
       <div class="well">
         <%= render "questions/form" %>
       </div>
     </div>
 
-    <h2 class="assignments-questsions-title"><%= @course.customized_title_by_model(model_class).singularize%> Questions</h2>
+    <h2 class="assignments-questions-title"><%= @course.customized_title_by_model(model_class).singularize%> Questions</h2>
     <table class="table asm-qns-table sort">
       <!-- <thead>
       <tr>
@@ -98,7 +98,7 @@
             <td style="width:100%">
               <div class="asm-qn-handler">
                 <i class="icon-move handler-icon"></i>
-                <h3 class="handler-text">Question <%= i + 1 %></h3>
+                <h3 class="handler-text"><%= q.title || "Question #{i + 1}" %></h3>
               </div>
               <%= style_format(q.description) %>
             </td>
