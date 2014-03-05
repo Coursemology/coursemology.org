@@ -12,7 +12,7 @@ end
 
 group :production do
   gem 'mysql2'
-  gem 'puma'
+  gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
 end
 
@@ -64,7 +64,7 @@ gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
 gem 'newrelic_rpm'
-gem 'aws-sdk'
+gem 'aws-sdk', '1.28.0'
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
 gem 'gon'
