@@ -12,7 +12,7 @@ end
 
 group :production do
   gem 'mysql2'
-  gem 'puma'
+  gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
 end
 
