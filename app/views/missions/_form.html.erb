@@ -102,6 +102,17 @@
     </div>
 
     <div class="control-group">
+      <%= f.label "Display Mode", class: 'control-label' %>
+      <div class="controls">
+        <select id="select-display-mode" name="mission[display_mode]">
+          <% AssignmentDisplayMode.all.each do |mode| %>
+            <option value="<%= mode.id %>" <%= 'selected' if @mission.display_mode == mode.id %> > <%= mode.title %></option>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group">
       <%= f.label "Dependency", class: 'control-label' %>
       <div class="controls">
         <select id="select-mission" name="mission[dependent_id]">
