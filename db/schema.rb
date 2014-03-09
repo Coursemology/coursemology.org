@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140301064203) do
+ActiveRecord::Schema.define(:version => 20140307163937) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -137,6 +137,11 @@ ActiveRecord::Schema.define(:version => 20140301064203) do
 
   add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
   add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
+
+  create_table "assignment_display_modes", :force => true do |t|
+    t.string "title"
+    t.string "description"
+  end
 
   create_table "assignment_types", :force => true do |t|
     t.string   "title"
@@ -631,6 +636,7 @@ ActiveRecord::Schema.define(:version => 20140301064203) do
     t.boolean  "publish",              :default => true
     t.integer  "tab_id"
     t.boolean  "file_submission_only", :default => false
+    t.integer  "display_mode",         :default => 1
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"

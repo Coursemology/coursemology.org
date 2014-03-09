@@ -26,6 +26,7 @@
 //= require bootstrap-transition
 //= require bootstrap-collapse
 //= require bootstrap-button
+//= require bootstrap-tab
 //= require bootstrap-tooltip
 //= require bootstrap-affix
 //= require bootstrap-scrollspy

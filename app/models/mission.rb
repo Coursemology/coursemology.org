@@ -10,13 +10,14 @@ class Mission < ActiveRecord::Base
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
                   :description, :exp, :open_at, :pos, :timelimit, :title, :single_question,
                   :is_file_submission, :dependent_id, :publish,
-                  :file_submission_only
+                  :file_submission_only, :display_mode
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
   belongs_to :course
   belongs_to :creator, class_name: "User"
   belongs_to :dependent_mission, class_name: "Mission", foreign_key: "dependent_id"
+  belongs_to :assignment_display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode"
 
   has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
   has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy

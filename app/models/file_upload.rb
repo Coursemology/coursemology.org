@@ -34,7 +34,7 @@ class FileUpload < ActiveRecord::Base
 
   # Sets whether the filename will be preserved when this record is saved
   def preserve_filename=(preserve = true)
-    @hash_filenames = not(preserve)
+    @hash_filenames = !(preserve)
   end
 
   # Sets that the filename will be preserved when this record is saved
