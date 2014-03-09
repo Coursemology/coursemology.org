@@ -117,6 +117,14 @@ $(document).ready(function() {
         });
     }
 
+    $('#assign-qn-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+        cvs.map(function(c, i){
+            c.editor.refresh();
+        });
+    });
+
     if(ans.size() > 0) {
 
         ans_ids = $.map(ans, function(value, key){return $(value).val();});
