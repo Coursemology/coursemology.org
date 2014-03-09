@@ -6,16 +6,16 @@
 <% if can? :see, :pending_comments %>
     <ul class="nav nav-tabs">
       <li class="<%= "active" if @tab == "minepending" %>">
-        <a href="<%=  course_comments_url(@course) %>?_tab=minepending" data-toggle="tab">My Students Pending (<%= @mine_pending_comments.count %>)</a>
+        <a href="<%=  course_comments_url(@course) %>?_tab=minepending">My Students Pending (<%= @mine_pending_comments.count %>)</a>
       </li>
       <li class="<%= "active" if @tab == "pending" %>">
-        <a href="<%= course_comments_url(@course) %>?_tab=pending" data-toggle="tab">Pending Comments (<%= @pending_comments.count %>)</a>
+        <a href="<%= course_comments_url(@course) %>?_tab=pending">Pending Comments (<%= @pending_comments.count %>)</a>
       </li>
       <li class="<%= "active" if @tab == "mine" %>">
-        <a href="<%=  course_comments_url(@course) %>?_tab=mine" data-toggle="tab">My Students</a>
+        <a href="<%=  course_comments_url(@course) %>?_tab=mine">My Students</a>
       </li>
       <li class="<%= "active" if @tab == "all" %>">
-        <a href="<%= course_comments_url(@course) %>?_tab=all" data-toggle="tab">All Comments </a>
+        <a href="<%= course_comments_url(@course) %>?_tab=all">All Comments </a>
       </li>
     </ul>
 <% end %>
@@ -37,6 +37,8 @@
         <%= render partial: "commentable_std_answer", locals: { std_answer: comment_topic.topic, ecid: ecid } %>
     <% elsif comment_topic.topic.class == Mcq || comment_topic.topic.class == CodingQuestion %>
         <%= render partial: "commentable_training_question", locals: { question: comment_topic.topic, ecid: ecid } %>
+    <% elsif comment_topic.topic.class == Submission %>
+        <%= render partial: "commentable_sbm", locals: { sbm: comment_topic.topic} %>
     <% end %>
 
     <% if comment_topic.topic.class == StdCodingAnswer %>

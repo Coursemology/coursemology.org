@@ -4,12 +4,12 @@
 </div>
 
 <% if can? :manage, :bulk_update %>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="mission-tabs">
       <li class="<%= "active" if @tab == 'missions' %>">
-        <a href="<%=  course_missions_path %>?_tab=main" data-toggle="tab"><h4><%= @course.customized_title_by_model(model_class).pluralize %></h4></a>
+        <a href="<%=  course_missions_path %>?_tab=main" ><h4><%= @course.customized_title_by_model(model_class).pluralize %></h4></a>
       </li>
       <li class="<%= "active" if @tab == 'overview' %>">
-        <a href="<%= course_missions_overview_path %>" data-toggle="tab"><h4>Overview</h4></a>
+        <a href="<%= course_missions_overview_path %>"><h4>Overview</h4></a>
       </li>
     </ul>
 <% end %>
@@ -151,3 +151,4 @@
 <% if @paging.display? %>
     <%= paginate @missions %>
 <% end %>
+

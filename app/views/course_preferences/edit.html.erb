@@ -1,25 +1,25 @@
 
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "Sidebar" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=sidebar" data-toggle="tab">Sidebar</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=sidebar">Sidebar</a>
   </li>
   <li class="<%= "active" if @tab == "MissionPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=mission" data-toggle="tab">Mission</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=mission">Mission</a>
   </li>
   <li class="<%= "active" if @tab == "TrainingPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=training" data-toggle="tab">Training</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=training">Training</a>
   </li>
   <li class="<%= "active" if @tab == "McqPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=mcq" data-toggle="tab">MCQ</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=mcq">MCQ</a>
   </li>
   <li class="<%= "active" if @tab == "NotificationPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=email" data-toggle="tab">Notifications</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=email">Notifications</a>
   </li>
   <li class="<%= "active" if @tab == "PagingPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=paging" data-toggle="tab">Paging</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=paging">Paging</a>
   </li>
   <li class="<%= 'active' if @tab == "OtherPreference" %>">
-    <a href="<%= course_preferences_path(@course) %>?_tab=other" data-toggle="tab">Others</a>
+    <a href="<%= course_preferences_path(@course) %>?_tab=other">Others</a>
   </li>
 </ul>
 

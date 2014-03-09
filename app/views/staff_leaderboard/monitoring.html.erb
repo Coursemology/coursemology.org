@@ -1,9 +1,9 @@
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "Monitoring" %>">
-    <a href="<%= course_staff_monitoring_path(@course) %>" data-toggle="tab">Tutor Monitoring</a>
+    <a href="<%= course_staff_monitoring_path(@course) %>">Tutor Monitoring</a>
   </li>
   <li class="<%= "active" if @tab == "Summary" %>">
-    <a href="<%= course_staff_leaderboard_index_path(@course) %>" data-toggle="tab">Tutor Summary</a>
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>">Tutor Summary</a>
   </li>
 </ul>
 <% if @tutor_details %>

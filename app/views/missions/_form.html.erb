@@ -55,6 +55,12 @@
       </div>
     </div>
     <div class="control-group">
+      <%= f.label "Comment Mode", Class: 'control-label' %>
+      <div class="controls checkbox-text">
+        <%= f.check_box :comment_per_qn %> Check to have comment box per question (Otherwise per mission)
+      </div>
+    </div>
+    <div class="control-group">
       <%= f.label "Submission Type", class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :is_file_submission %> Allow File Submission

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140307163937) do
+ActiveRecord::Schema.define(:version => 20140309163444) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -637,6 +637,7 @@ ActiveRecord::Schema.define(:version => 20140307163937) do
     t.integer  "tab_id"
     t.boolean  "file_submission_only", :default => false
     t.integer  "display_mode",         :default => 1
+    t.boolean  "comment_per_qn",       :default => true
   end
 
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
