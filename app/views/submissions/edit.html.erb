@@ -41,6 +41,9 @@
       <% end %>
     </ul>
 <% end %>
-<hr/>
+<% unless @mission.assignment_display_mode == AssignmentDisplayMode.tab_mode %>
+    <hr/>
+<% end %>
+
 
 <%=render "form" %>

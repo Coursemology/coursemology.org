@@ -37,6 +37,8 @@
         <%= render partial: "commentable_std_answer", locals: { std_answer: comment_topic.topic, ecid: ecid } %>
     <% elsif comment_topic.topic.class == Mcq || comment_topic.topic.class == CodingQuestion %>
         <%= render partial: "commentable_training_question", locals: { question: comment_topic.topic, ecid: ecid } %>
+    <% elsif comment_topic.topic.class == Submission %>
+        <%= render partial: "commentable_sbm", locals: { sbm: comment_topic.topic} %>
     <% end %>
 
     <% if comment_topic.topic.class == StdCodingAnswer %>

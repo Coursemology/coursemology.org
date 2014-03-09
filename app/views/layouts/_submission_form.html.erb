@@ -25,19 +25,21 @@
         <% end %>
         <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
         <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_type]" value="<%= qa[:a].class.name %>">
-        <div class="row-fluid">
-          <div class="span10">
-            <% require 'digest/md5' %>
-            <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
-            <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
-            <%= render partial: "comments/list",
-                       locals: { comments:  CommentTopic.comments_to_json(qa[:a].comment_topic, curr_user_course),
-                                 target:    qa[:a],
-                                 header:    "Comments",
-                                 ecid:      ecid,
-                                 margin_left: "0px"} %>
-          </div>
-        </div>
+        <% if @mission.comment_per_qn? %>
+            <div class="row-fluid">
+              <div class="span10">
+                <% require 'digest/md5' %>
+                <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
+                <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+                <%= render partial: "comments/list",
+                           locals: { comments:  CommentTopic.comments_to_json(qa[:a].comment_topic, curr_user_course),
+                                     target:    qa[:a],
+                                     header:    "Comments",
+                                     ecid:      ecid,
+                                     margin_left: "0px"} %>
+              </div>
+            </div>
+        <% end %>
         <!--show condition: new grading, review grading, update grading -->
         <% if  !@mission.single_question? and (@submission_grading || @grading)%>
             <div class="row-fluid">
@@ -116,9 +118,20 @@
       </div>
     </div>
 <% end %>
+<% unless @mission.comment_per_qn? %>
+    <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+    <div class="row">
+      <div class="span8">
+        <%= render partial: "comments/list",
+                   locals: { comments:  CommentTopic.comments_to_json(@submission.comment_topic, curr_user_course),
+                             target:    @submission,
+                             header:    "Comments",
+                             ecid:      @submission.id,
+                             margin_left: "0px"} %>
+      </div>
+    </div>
+<% end %>
 <script>
-
-
     function suggestEXP(max, exp, sum) {
 
         var sum_grade = 0;
@@ -147,5 +160,4 @@
     $(document).ready(function() {
 //        suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> );
     });
-
 </script>

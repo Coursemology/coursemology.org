@@ -10,7 +10,7 @@ class Mission < ActiveRecord::Base
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
                   :description, :exp, :open_at, :pos, :timelimit, :title, :single_question,
                   :is_file_submission, :dependent_id, :publish,
-                  :file_submission_only, :display_mode
+                  :file_submission_only, :display_mode, :comment_per_qn
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 

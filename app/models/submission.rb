@@ -19,6 +19,8 @@ class Submission < ActiveRecord::Base
 
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
+  has_one :comment_topic, as: :topic
+
   scope :graded, where(status: 'graded')
 
   default_scope includes(:mission, :std_course, :final_grading)
