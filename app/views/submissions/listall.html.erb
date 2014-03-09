@@ -8,10 +8,10 @@
 
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == Mission %>">
-    <a href="<%= course_submissions_path(@course) %>" data-toggle="tab"><%= "#{@course.customized_title_by_model(Mission).singularize} #{submission_display_name }" %></a>
+    <a href="<%= course_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Mission).singularize} #{submission_display_name }" %></a>
   </li>
   <li class="<%= "active" if @tab == Training %>">
-    <a href="<%= course_training_submissions_path(@course) %>" data-toggle="tab"><%= "#{@course.customized_title_by_model(Training).singularize} #{submission_display_name }" %></a>
+    <a href="<%= course_training_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Training).singularize} #{submission_display_name }" %></a>
   </li>
 </ul>
 
