@@ -18,6 +18,7 @@ class MissionCodingQuestionsController < ApplicationController
     @asm_qn = AsmQn.new
     @asm_qn.asm = @mission
     @asm_qn.qn = @coding_question
+    @asm_qn.pos = @mission.asm_qns.count + 1
 
     respond_to do |format|
       if @coding_question.save && @asm_qn.save
