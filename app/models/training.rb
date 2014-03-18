@@ -80,5 +80,7 @@ class Training < ActiveRecord::Base
     bonus_cutoff
   end
 
+
+
   alias_method :sbms, :training_submissions
 end

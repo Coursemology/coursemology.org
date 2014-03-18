@@ -21,6 +21,7 @@ module Assignment
       has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
       after_save :after_save_asm
+      before_update :clean_up_description, :if => :description_changed?
 
       paginates_per 10
     end
@@ -128,6 +129,11 @@ module Assignment
     files.each do |file|
       PythonEvaluator.create_local_file_for_asm(self, file)
     end
+  end
+
+  #clean up messed html tags
+  def clean_up_description
+    self.description = description.gsub(/\[mc\](.+?)\[\/mc\]/m){"[mc]" << $1.gsub(/<div><\/div>/,'') << "[/mc]"}
   end
 
   def dup_options(dup_files = true)

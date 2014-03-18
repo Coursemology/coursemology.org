@@ -1,5 +1,7 @@
 class Mcq < ActiveRecord::Base
 
+  include Assessment
+
   attr_accessible :correct_answers, :correct_answer_id, :creator_id, :description, :max_grade, :order, :select_all
 
   belongs_to :creator, class_name: "User"

@@ -8,7 +8,7 @@
   <tr>
     <td>
       <div class="pull-left">
-        <p><%= @training.description.html_safe %></p>
+        <p><%= style_format(@training.description) %></p>
         <table class="table table-bordered assignments-details-table">
           <tr>
             <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
