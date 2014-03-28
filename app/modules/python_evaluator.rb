@@ -5,6 +5,14 @@ class PythonEvaluator
     "#{Rails.root}/#{assign.class.to_s}/#{assign.id}/files/"
   end
 
+  def self.get_exec_path
+    "#{Rails.root}/python/sandbox/"
+  end
+
+  def self.get_sandbox_file
+    "#{Rails.root}/python/sandbox/cos_sandbox.py"
+  end
+
   def self.create_local_file_for_asm(asm, file)
     dir = get_asm_file_path(asm)
 
@@ -22,38 +30,18 @@ class PythonEvaluator
     full_path
   end
 
-  def self.resource_limit(ram, cpu)
-"import resource
-#resource.setrlimit(resource.RLIMIT_AS, (#{ram}, #{ram}))
-resource.setrlimit(resource.RLIMIT_CPU, (#{cpu}, #{cpu}))"
-  end
-
   def self.combine_code(c1, c2)
-    c1 << '
-' << c2
+    c1 + "\n" + c2
   end
 
-  def self.add_importing_code(code)
-    #change the default directory to current file's directory
-'import os
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
-' << code
-  end
-
-  def self.eval_python(dir, code, data, eval = false, resource_limit=false)
+  def self.eval_python2(dir, code, data, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
-    code = add_importing_code(code)
 
     tests = {publicTests: data["publicTests"],
              privateTests:data["privateTests"],
              evalTests:   data["evalTests"]}
 
-    time_limit = data["timeLimitInSec"]
-    memory_limit = data["memoryLimitInMB"] * 1024
-
-    if resource_limit
-      code = combine_code(resource_limit(memory_limit, time_limit), code)
-    end
+    max_execute_lines = data['maxExecuteLines'] || 1001000
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
     summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
@@ -104,17 +92,152 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
         #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
         #}
         #@stderr, @stderw = IO.pipe
-        @stdout,@stderr, status = Open3.capture3("python3.3 #{file_path}")
+        Dir.chdir(dir){
+          @stdout,@stderr, @status = Open3.capture3("python3 #{get_exec_path}exec.py -m #{max_execute_lines} #{file_path}")
+          #@stdout,@stderr, @status = Open3.capture3("python3 #{get_exec_path}#{"exec.py -m "<< max_execute_lines << " "<< file_path}")
+        }
         errors = @stderr
         stdout = @stdout
+        status = @status
+
+        File.delete(file_path)
+
+        if status.to_s.include?('(signal 24)')
+          summary[:errors] = "CPU time limit exceeded"
+          break
+        end
+
+        #if errors.length > 0
+        #  if errors.include?('signal 24')
+        #    summary[:errors] = "CPU time limit exceeded"
+        #  else
+        #    summary[:errors] = "An error occurred and the execution is terminated"
+        #  end
+        #  break
+        #end
+
+        trace = JSON.parse(stdout)["trace"]
+
+        puts "trace", trace
+
+        if trace.empty?
+          next
+        end
+
+        last =  trace.last
+
+        print_out = last["event"] == 'return' ? last['stdout'] : nil
+
+        unless print_out
+          for t in trace.reverse
+            if t['event'] == 'return' and t['stdout'] != ""
+              print_out = t['stdout']
+              break
+            end
+          end
+        end
+
+        if print_out
+          results = print_out.split("\n").select{|r| r.include? hash }.map{|r| if r.gsub(hash + " ", '').gsub("\n",'') == "True" then true else false end}
+          summary[test_type] = results
+        end
+
+        if last["event"] == "instruction_limit_reached"
+          summary[:errors] =  last["exception_msg"]
+          break
+        end
+
+        if last["event"] != "return"
+          #we need to trace back the stack to find exception line
+          code = last['code']
+          exception_msg = last['exception_msg']
+          for t in trace[0..-2].reverse
+            if t['exception_msg'] == exception_msg
+              code = t['code']
+            end
+          end
+          summary[:errors] = last["event"] << ((!code || code.empty?) ? "" : " at line: #{code}") << " \n  " << last["exception_msg"]
+          break
+        end
+      end
+    end
+    summary
+  end
+
+  def self.eval_python(dir, code, data, eval = false)
+    file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
+
+    tests = {publicTests: data["publicTests"],
+             privateTests:data["privateTests"],
+             evalTests:   data["evalTests"]}
+
+    time_limit = data["timeLimitInSec"]
+    memory_limit = data["memoryLimitInMB"] * 1024
+    sandbox = File.open(get_sandbox_file, 'r')
+    code = combine_code(sandbox.read, code)
+
+    #if resource_limit
+    #  code = combine_code(resource_limit(memory_limit, time_limit), code)
+    #end
+
+
+    FileUtils.mkdir_p(dir) unless File.exist?(dir)
+    summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
+    range = eval ? 2 : 1
+
+    #user could print to stdout, use unique hash to filter out test results
+    hash = Digest::MD5.hexdigest(rand().to_s)
+
+    for i in 0..range
+      file = File.open(file_path, 'w+')
+      #code = code % [memory_limit.to_i * 1024, memory_limit.to_i * 1024, time_limit, time_limit]
+      if file
+        file.write(code)
+        case i
+          when 0
+            test_type = :publicTests
+          when 1
+            test_type = :privateTests
+          else
+            test_type = :evalTests
+        end
+        test_cases = tests[test_type]
+        test_code = ''
+        test_cases.each do |test|
+          test_code << "\nprint('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
+        end
+        file.write(test_code)
+        file.close
+
+        #stdout,stderr,status = Open3.capture3("time python3 #{file_path}")
+        #puts "out: ", stdout
+        #puts "err: ", stderr
+        #puts "status: ", status
+        #@stdin,@stdout,@stderr = Open3.pipeline_start("python3 #{file_path}") {|ts|
+        #  sleep 2
+        #  t = ts[0]
+        #  Process.kill("TERM", t.pid)
+        #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
+        #}
+        #@stderr, @stderw = IO.pipe
+        Dir.chdir(dir){
+          @stdout,@stderr, @status = Open3.capture3("python3.3 #{file_path}")
+        }
+        errors = @stderr
+        stdout = @stdout
+        status = @status
+        #puts "status", status
+        #puts "stdout",stdout
+        #puts "error", errors
         results = stdout.split("\n").select{|r| r.include? hash }.map{|r| if r.gsub(hash + " ", '').gsub("\n",'') == "True" then true else false end}
-        puts results
+        #puts "results",results
         File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)
 
-        if  status.to_s.include?('(signal 24)')
-          errors = "CPU time limit exceeded: running time limit set to #{time_limit} second to prevent possible infinite loop."
+        if status.to_s.include?('(signal 24)')
+          summary[:errors] = "CPU time limit exceeded: running time limit set to #{time_limit} second to prevent possible infinite loop."
+          break
         end
 
         if exec_fail
@@ -123,13 +246,19 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
         summary[test_type] = results
         if errors.length > 0
-          error_message = errors.scan(/", line \d*.(.*)/m).map{ |m| m}
           error_array = errors.split("\n")
+
           if error_array.length > 10
             #don't display super long error message
-            error_message = error_array.last.split("\n")
+            error_message = error_array.last.split("\n").join
+          else
+            error_message = errors.gsub(/File "(.+?), line \d*,/m, '')
           end
-          summary[:errors] = exec_fail ? errors : error_message.join
+
+
+          puts error_message
+          summary[:errors] = exec_fail ? errors : error_message
+          puts summary[:errors]
           break
         end
 

@@ -12,9 +12,9 @@ var codeEvaluator = function(){
     var self = this;
     this.running = false;
 
-    var failcolor = {backgroundColor: "#e1c1b1"}
+    var failColor = {backgroundColor: "#e1c1b1"}
     var animateOpt = {duration: 1000, queue: false};
-    var passcolor = {backgroundColor: "#008000"};
+    var passColor = {backgroundColor: "#008000"};
 
     return {
         testRun: function(ans_id, url, btn) {
@@ -37,45 +37,57 @@ var codeEvaluator = function(){
                 dataType:"json",
                 success: function(resp){
                     var $er = $("#eval-result-" + ans_id );
-                    if(resp.errors.length > 0){
-//                $er.text(resp.errors).animate({backgroundColor: "#3C2502",color:"#FF0000"}, animateOpt);
-//                console.log("error")
-                        $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
-                    }else{
-                        var publicTestFlag = true;
-                        $("#public-test-table-" + ans_id + " tbody tr").each(function(index, e){
-//                    console.log("change table")
-                            if(resp.publicTests[index]){
-                                var temp = $("td:last",e);
-                                if(temp.hasClass("pathTestFail")){
-                                    temp.switchClass("pathTestFail","pathTestPass").animate(passcolor,animateOpt);
-                                }else if(!temp.hasClass("pathTestPass")){
-                                    temp.addClass("pathTestPass").animate(passcolor,animateOpt);;
-                                }
-                            }else{
-                                publicTestFlag = false;
-                                var temp = $("td:last",e);
-                                if(temp.hasClass("pathTestPass")){
+                    console.log(resp);
+                    if(resp.access_error) {
+                        $er.html(escapeHtml(resp.msg)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
+                        self.running = false;
+                        return
+                    }
 
-                                    temp.switchClass("pathTestPass", "pathTestFail").animate(failcolor, animateOpt);
-                                }else if(!temp.hasClass("pathTestFail")){
-                                    temp.addClass("pathTestFail", 1000).animate(failcolor,animateOpt);
-                                }
+                    var publicTestFlag = true;
+                    $("#public-test-table-" + ans_id + " tbody tr").each(function(index, e){
+//                    console.log("change table")
+                        var temp = $("td:last",e);
+                        if(resp.publicTests[index]){
+                            if(temp.hasClass("pathTestFail")){
+                                temp.switchClass("pathTestFail","pathTestPass").animate(passColor,animateOpt);
+                            }else if(!temp.hasClass("pathTestPass")){
+                                temp.addClass("pathTestPass").animate(passColor,animateOpt);
                             }
-                        });
-                        var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
-                        if(publicTestFlag){
-                            if(resp.privateTests == null || !privateTestFlag){
-                                $er.html("Your answer failed to pass one or more of the private test cases.").animate(failcolor, animateOpt);
-                            }else{
-                                $er.html("You have successfully passed all public and private test cases!").animate(passcolor, animateOpt);
-                                $(btn).attr("disabled",true);
-                                self.running = false;
-                                return; // we do not undisable the run
+                        } else if (resp.publicTests.length < index + 1) {
+                            temp.removeAttr('style')
+                            if(temp.hasClass("pathTestPass")){
+                                temp.removeClass("pathTestPass");
+                            }else if(temp.hasClass("pathTestFail")){
+                                temp.removeClass("pathTestFail");
                             }
-                        }else{
-                            $er.html("Your answer failed to pass one or more of the public test cases.").animate(failcolor,animateOpt);
+                            publicTestFlag = false;
+
+                        } else {
+                            publicTestFlag = false;
+                            if(temp.hasClass("pathTestPass")){
+                                temp.switchClass("pathTestPass", "pathTestFail").animate(failColor, animateOpt);
+                            }else if(!temp.hasClass("pathTestFail")){
+                                temp.addClass("pathTestFail", 1000).animate(failColor,animateOpt);
+                            }
                         }
+                    });
+                    var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
+                    if(publicTestFlag){
+                        if(resp.privateTests == null || !privateTestFlag){
+                            $er.html("Your answer failed to pass one or more of the private test cases.").animate(failColor, animateOpt);
+                        }else{
+                            $er.html("You have successfully passed all public and private test cases!").animate(passColor, animateOpt);
+                            $(btn).attr("disabled",true);
+                            self.running = false;
+                            return; // we do not undisable the run
+                        }
+                    }else{
+                        $er.html("Your answer failed to pass one or more of the public test cases.").animate(failColor,animateOpt);
+                    }
+
+                    if(resp.errors.length > 0){
+                        $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
                     }
 
                     $(btn).attr("disabled",false);

@@ -268,7 +268,8 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
             }else{
                 if (ct < self.topOffset || ct + 20 >= self.bottomOffset) {
                     if ($this.is('#temporary-comment-box')){
-                        removeComment.call($this);
+//                        removeComment.call($this);
+                        $this.fadeOut('fast');
                     }else{
                         $this.fadeOut('fast');
                     }

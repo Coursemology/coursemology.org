@@ -16,14 +16,12 @@ def json_finalizer(input_code, output_trace):
   return json_output
 
 parser = OptionParser(usage="Generate JSON trace for pytutor")
-parser.add_option('-m', '--memory', default=2, action='store',
-        help='memory limit')
-parser.add_option('-t', '--time', default=1, action='store',
-        help='time limit')
+parser.add_option('-m', '--max', default=1000, action='store',
+        help='max executes limit')
 
 (options, args) = parser.parse_args()
 INDENT_LEVEL = 2
 
 fin = sys.stdin if args[0] == "-" else open(args[0])
 # print(pg_sandbox.exec_script_str(fin.read(), options.time, options.memory, json_finalizer))
-print(pg_sandbox.exec_script_str(fin.read(),int(options.time),int(options.memory),json_finalizer))
+print(pg_sandbox.exec_script_str(fin.read(),json_finalizer, int(options.max)))
