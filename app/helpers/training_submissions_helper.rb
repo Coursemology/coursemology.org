@@ -8,9 +8,6 @@ module TrainingSubmissionsHelper
 
   def get_code_to_write(included_code, code_to_run)
 included_code << '
-import resource
-#resource.setrlimit(resource.RLIMIT_AS, (1000, 1000))
-resource.setrlimit(resource.RLIMIT_CPU, (4, 4))' <<'
 ' << code_to_run
 
   end
@@ -18,8 +15,7 @@ resource.setrlimit(resource.RLIMIT_CPU, (4, 4))' <<'
   def eval_python2(file_path, code, data)
     tests = {publicTests:data["publicTests"],
              privateTests:data["privateTests"]}
-    timeLimit = data["timeLimitInSec"]
-    memoryLimit = data["memoryLimitInMB"]
+    max_execute_lines = data['maxExecuteLines']
     FileUtils.mkdir_p(path_temp_folder) unless File.exist?(path_temp_folder)
     summary ={publicTests:[],privateTests:[],errors:[]}
     for i in 0..1
@@ -39,7 +35,7 @@ resource.setrlimit(resource.RLIMIT_CPU, (4, 4))' <<'
         file.write(test_code)
         file.close
 
-        @stdin,@stdout,@stderr = Open3.popen3("python3 #{path_temp_folder}#{"exec.py -t "<< timeLimit << " -m "<<memoryLimit << " "<< file_path}")
+        @stdin,@stdout,@stderr = Open3.popen3("python3 #{path_temp_folder}#{"exec.py -m "<< max_execute_lines << " "<< file_path}")
         output = @stdout.readlines
         @stdin.close
         @stderr.close
