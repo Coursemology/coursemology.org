@@ -164,6 +164,26 @@ ActiveRecord::Schema.define(:version => 20140309163444) do
     t.boolean  "is_auto_grading",   :default => false
   end
 
+  create_table "comic_pages", :force => true do |t|
+    t.integer  "comic_id"
+    t.integer  "page"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "is_tbc",     :default => false
+  end
+
+  create_table "comics", :force => true do |t|
+    t.string   "name"
+    t.integer  "chapter"
+    t.integer  "episode"
+    t.boolean  "visible"
+    t.integer  "course_id"
+    t.integer  "dependent_mission_id"
+    t.integer  "next_mission_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
   create_table "comment_subscriptions", :force => true do |t|
     t.integer  "topic_id"
     t.string   "topic_type"

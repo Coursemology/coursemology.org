@@ -1,0 +1,49 @@
+.comic {
+
+  a.comic-link {
+    margin-left: 20px;
+  }
+
+  table.comic-previews {
+    text-align: center;
+    width: 100%;
+  }
+
+  img.comic-preview {
+    width: 200px;
+  }
+
+  input.comic-page-number {
+    width: 2em;
+  }
+
+  .comic-image-container {
+    display: table;
+    width: 100%;
+  }
+
+  .comic-image-container .image-cell {
+    display:table-cell;
+    vertical-align: middle;
+  }
+
+  .comic-image-container .comic-nav {
+    font-size: 30px;
+    margin: 0 auto;
+
+  }
+
+  img#current-image {
+    max-height: 600px;
+    width: auto;
+    margin: 0 auto;
+  }
+
+  #loading-indicator {
+    text-align: center;
+  }
+
+  .disabled-navigator {
+    opacity: 0;
+  }
+}

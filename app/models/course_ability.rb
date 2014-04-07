@@ -166,6 +166,8 @@ class CourseAbility
 
       can :ignore, PendingAction, user_course: user_course
 
+      can :read, Comic
+      can :info, Comic
       cannot :modify, TrainingSubmission
 
       cannot :see_all, [Submission, TrainingSubmission]

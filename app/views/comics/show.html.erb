@@ -1,0 +1,20 @@
+<%- model_class = Comic -%>
+<div class="page-header">
+  <h1><%= link_to 'Comics', course_comics_path(@course) %></h1>
+</div>
+
+<div class='comic comic-view-container'>
+  <h2 id='current-episode-title'><%= comic_link_text(@comic) %></h2>
+  <div id='loading-indicator'>
+    <p>
+      <i class="icon-spinner icon-spin"></i>
+      Loading...
+    </p>
+  </div>
+  <div class="comic-image-container">
+    <a id="prev_btn" class="comic-nav image-cell" href='#'><i class="icon-chevron-left"></i></a>
+    <img src="<%= @comic_pages.first.file.file.url if @comic_pages.first %>" class="current-image image-cell" id="current-image" />
+    <a id="next_btn" class="comic-nav image-cell" href='#'><i class="icon-chevron-right"></i></a>
+  </div>
+  <input type="hidden" id="episode_id" value="<%= @comic.id %>" />
+</div>
