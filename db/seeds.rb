@@ -592,13 +592,22 @@ if PreferableItem.count == 62
                          default_display: true
 end
 
-if Action.count == 8 then
+if Action.count == 8
   Action.create! text: 'created Forum topic', description: 'actor created Forum topic'
   Action.create! text: 'asked', description: 'actor asked Forum question'
   Action.create! text: 'voted on', description: 'actor voted on Forum post'
 end
 
-if AssignmentDisplayMode.count == 0 then
+if AssignmentDisplayMode.count == 0
   AssignmentDisplayMode.create! title: "Single Page", description: 'Put all questions in a single page'
   AssignmentDisplayMode.create! title: "Tab", description: 'Put each question under one tab'
+end
+
+if PreferableItem.count == 63
+  PreferableItem.create! item:          "Sidebar",
+                         item_type:     "Student",
+                         name:          "comics",
+                         default_value: "Comics",
+                         description:   "Comics",
+                         default_display: true
 end

@@ -255,10 +255,7 @@ class PythonEvaluator
             error_message = errors.gsub(/File "(.+?), line \d*,/m, '')
           end
 
-
-          puts error_message
           summary[:errors] = exec_fail ? errors : error_message
-          puts summary[:errors]
           break
         end
 

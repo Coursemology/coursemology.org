@@ -1,0 +1,47 @@
+<%- model_class = Comic -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+  <% if can? :manage, Comic %>
+    <%= link_to t('.new', :default => "New #{model_class.model_name.human.pluralize}"),
+                new_course_comic_path(@course),
+                :class => 'btn btn-primary' %>
+
+  <% end %>
+</div>
+
+<div class='comic'>
+  <% chapter = -1 %>
+  <% if @comics.empty? %>
+    No Comics Available
+  <% else %>
+    <% @comics.each do |comic| %>
+      <% if !comic.can_view?(curr_user_course) %>
+        <% next %>
+      <% end %>
+      <% if comic.chapter > chapter %>
+        <h4>Chapter <%= chapter = comic.chapter %></h4>
+      <% end %>
+      <div>
+        <% if can? :manage, Comic %>
+          <%= link_to course_comic_path(@course, comic),
+                      class: "btn btn-danger",
+                      method: "DELETE",
+                      data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} do %>
+            <i class="icon-trash"></i>
+            <%= link_to edit_course_comic_path(@course, comic), class: "btn" do %>
+              <i class="icon-edit"></i>
+            <% end %>
+          <% end %>
+
+        <% end %>
+        <%= link_to comic_link_text(comic),
+                    course_comic_path(@course, comic),
+                    class: 'comic-link' %>
+        <% if @is_new.has_key?(comic.id) %>
+          <span class="label">New!</span>
+        <% end %>
+      </div>
+
+    <% end %>
+  <% end %>
+</div>

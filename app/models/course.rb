@@ -18,6 +18,8 @@ class Course < ActiveRecord::Base
   has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
   has_many :material_folders
 
+  has_many :comics,            dependent: :destroy
+
   has_many :mcqs,             through: :trainings
   has_many :coding_questions, through: :trainings
 
@@ -440,5 +442,9 @@ class Course < ActiveRecord::Base
 
   def mission_tabs
     tabs.where(owner_type: Mission.to_s)
+  end
+
+  def accessible_comics(user_course)
+    comics.select {|comic| comic.can_view?(user_course)}
   end
 end

@@ -1,0 +1,87 @@
+<%= form_for [@course, @comic], :html => { :class => 'form-horizontal' } do |f| %>
+  <h3>General Information</h3>
+  <div class="control-group">
+    <%= f.label :chapter, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :chapter, :class => 'text_field span1' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :episode, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :episode, :class => 'text_field span1' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field span7' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :dependent_mission_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :dependent_mission_id, @course.missions.map { |s| [s.title, s.id] }, :include_blank => true %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :next_mission_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :next_mission_id, @course.missions.map { |s| [s.title, s.id] }, :include_blank => true %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :visible, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :visible %>
+    </div>
+  </div>
+
+  <% if action == :edit %>
+    <h3>Pages</h3>
+
+    <table class="comic-previews">
+      <% @comic_pages.each_with_index do |comic_page, index| %>
+        <% if index % 3 == 0 %>
+          <tr>
+        <% end %>
+        <td>
+          <img src="<%= comic_page.file.file.url %>" class='comic-preview' />
+          <br />
+          <p><%= comic_page.file.display_filename %></p>
+          <%= f.fields_for comic_page, index: comic_page.id do |page_form| %>
+            <%= page_form.label :page, :class => 'control-label' %>
+            <%= page_form.text_field :page, :size => 3, :class => 'comic-page-number' %>
+            <%= page_form.label :is_tbc, 'TBC', :class => 'control-label' %>
+            <%= page_form.check_box :is_tbc %>
+          <% end %>
+          <%= link_to course_comic_comic_page_path(@course, @comic, comic_page),
+                      class: "btn btn-danger",
+                      method: "DELETE",
+                      data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+        <% if (index % 3 == 2 || index == @comic_pages.size - 1) %>
+          </tr>
+        <% end %>
+      <% end %>
+    </table>
+    <br/>
+    <em>'TBC' (To Be Continued) pages will not be displayed if the next episode is viewable</em>
+  <% end %>
+
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel',
+                  :default => t("helpers.links.cancel")),
+                course_comics_path,
+                :class => 'btn'%>
+  </div>
+<% end %>
