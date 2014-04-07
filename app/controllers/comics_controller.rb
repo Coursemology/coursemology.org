@@ -19,10 +19,10 @@ class ComicsController < ApplicationController
   end
 
   def new
-    last_chapter = Comic.where(course_id: @course).order('chapter DESC').first.chapter
-    last_episode = Comic.where(course_id: @course).order('chapter DESC, episode DESC').first.episode
-    @comic.chapter = last_chapter || 1
-    @comic.episode = (last_episode || 0) + 1
+    last_chapter = Comic.where(course_id: @course).order('chapter DESC').first
+    last_episode = Comic.where(course_id: @course).order('chapter DESC, episode DESC').first
+    @comic.chapter = last_chapter ? last_chapter.chapter : 1
+    @comic.episode = (last_episode ? last_episode.episode : 0) + 1
   end
 
   def show
