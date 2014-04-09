@@ -58,13 +58,10 @@
                                                                          results: answer.result_hash["evalTests"]} %>
         <% end %>
 
-        <% if answer.result_hash["errors"].length > 0 %>
+        <% if answer.result_hash["errors"] && answer.result_hash["errors"].length > 0 %>
             <h4>Error Message</h4>
             <div id="eval-error-message" style="font-size: 14px; padding-left: 10px; background-color: rgb(225, 193, 177);"><%= answer.result_hash["errors"] %></div>
         <% end %>
-
-
-
   <% end %>
   </div>
   <div class="span2"></div>
