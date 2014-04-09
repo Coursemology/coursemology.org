@@ -16,7 +16,7 @@ class StdCodingAnswer < ActiveRecord::Base
   end
 
   def result_hash
-    JSON.parse(self.result)
+    self.result ? JSON.parse(self.result) : {}
   end
 
 end
