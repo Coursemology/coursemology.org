@@ -62,7 +62,8 @@ class SurveysController < ApplicationController
   end
 
   def summary
-    @tab = "summary"
+    @tab = params[:_tab]
+    include_phantom = @tab == "summary_phantom"
     @summaries = []
     if @survey.has_section?
       @survey.sections.each do |section|
@@ -70,7 +71,7 @@ class SurveysController < ApplicationController
         summary[:section] = section
         summary_qns = []
         section.questions.each do |question|
-          summary_qns << question_summary(question)
+          summary_qns << question_summary(question, include_phantom)
         end
         summary[:questions] = summary_qns
         @summaries << summary
@@ -84,15 +85,15 @@ class SurveysController < ApplicationController
 
   def summary_with_format
     respond_to do |format|
-      format.csv { send_data summary_csv(), :disposition => "attachment; filename=#{@survey.title}.csv" }
+      format.csv { send_data summary_csv(params[:_tab] == "summary_phantom"), :disposition => "attachment; filename=#{@survey.title}.csv" }
     end
   end
 
-  def summary_csv()
+  def summary_csv(include_phantom = true)
     CSV.generate({}) do |csv|
       questions = @survey.questions
       csv << ["Name"] + questions.map {|qn| qn.description }
-      @survey.submissions.order(:submitted_at).each do |submission|
+      (include_phantom ? @survey.submissions : @survey.submissions.exclude_phantom).order(:submitted_at).each do |submission|
         row = []
         row << (submission.user_course.nil? ? "" :  submission.user_course.name)
         questions.each do |qn|
@@ -105,14 +106,14 @@ class SurveysController < ApplicationController
     end
   end
 
-  def question_summary(question)
+  def question_summary(question, include_phantom = true)
     summary = {}
     summary[:question] = question
 
     if question.type == SurveyQuestionType.Essay.first
-      summary[:responds] = question.survey_essay_answers
+      summary[:responds] = question.essay_answers(include_phantom)
     else
-      summary[:total] = question.no_unique_voters
+      summary[:total] = question.no_unique_voters(include_phantom)
       #TODO: hardcoded 10
       summary[:options] = question.options.order("count desc")
       unless @survey.has_section?
