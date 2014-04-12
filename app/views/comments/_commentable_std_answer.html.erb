@@ -20,6 +20,6 @@
     </span>
   </div>
   <% unless mission.single_question? %>
-      <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"> <%= question.description.split(" ").first(13).join(" ").html_safe if question.description%>... </span></div>
+      <div class="code"><label>Question <%= pos.to_i + 1 %>:</label><span style="color: #FCDF9A"><%= (CoursemologyFormatter.sanitize(question.description.split(" ").first(13).join(" ")+ "...")).html_safe  if question.description %></span></div>
   <% end %>
 </div>
