@@ -16,7 +16,6 @@
   <div class="title"><%= mission.title.html_safe %></div>
   <div class="student"><label>by:</label><span class="student-link">
     <a href="<%= course_user_course_path(@course, std_course) %>"><%= std_course.name %></a>
-    <!--<span class="student-tag common ">Chao Recruit</span>-->
     </span>
   </div>
   <% unless mission.single_question? %>

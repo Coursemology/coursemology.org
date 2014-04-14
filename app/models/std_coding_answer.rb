@@ -19,4 +19,8 @@ class StdCodingAnswer < ActiveRecord::Base
     self.result ? JSON.parse(self.result) : {}
   end
 
+  def can_run_test?(uc)
+    test_left > 0 || uc.is_staff?
+  end
+
 end

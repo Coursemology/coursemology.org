@@ -177,6 +177,7 @@ class SubmissionsController < ApplicationController
       std_answer.save
       qn = std_answer.qn
       combined_code = PythonEvaluator.combine_code(code, qn.test_code)
+      #TOFIX, change to false
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, false)
     end
     result[:can_test] = std_answer.can_run_test? curr_user_course
@@ -195,6 +196,7 @@ class SubmissionsController < ApplicationController
         combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
         result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
         answer.result = result.to_json
+        puts result
         answer.save
       end
     }
