@@ -169,7 +169,7 @@ class SubmissionsController < ApplicationController
   def test_answer
     code = params[:code]
     std_answer = @submission.std_coding_answers.where(id: params[:answer_id]).first
-    if std_answer.test_left <= 0
+    if std_answer.test_left <= 0 and !curr_user_course.is_staff?
       result = {access_error: true, msg: "exceeds maximum testing times"}
     else
       std_answer.test_left -= 1
@@ -177,9 +177,9 @@ class SubmissionsController < ApplicationController
       std_answer.save
       qn = std_answer.qn
       combined_code = PythonEvaluator.combine_code(code, qn.test_code)
-      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
+      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, false)
     end
-
+    result[:can_test] = std_answer.can_run_test? curr_user_course
     respond_to do |format|
       format.html {render json: result}
     end

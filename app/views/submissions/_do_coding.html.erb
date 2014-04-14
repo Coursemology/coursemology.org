@@ -30,22 +30,30 @@
             </table>
         <% end %>
         <h3>Testing</h3>
-        <div style="font-size: 14px;padding-left: 10px">
-          Click Run to test your answer. You can maximally run <%= qn.test_limit %> times.
-        </div>
-        <button class="btn btn-large btn-block btn-danger <%= 'disabled' if answer.test_left <= 0 %>" type="button" id="run-qn-test"
+        <% unless curr_user_course.is_staff? %>
+            <div style="font-size: 14px;padding-left: 10px">
+              Click Run to test your answer. You can maximally run <%= qn.test_limit %> times.
+            </div>
+        <% end %>
+        <button class="btn btn-large btn-block btn-danger"
+                type="button"
+                id="run-qn-test"
+                <%= 'disabled' unless answer.can_run_test?(curr_user_course) %>
                 onclick="codeEvaluator.testRun('<%= answer.id %>','<%= course_mission_submission_test_path(@course, @mission, @submission) %>', this);" >
-          RUN ( <span id="run-count-down-<%= answer.id %>"><%= answer.test_left %></span> times left )
+          RUN
+          <% unless curr_user_course.is_staff? %>
+              ( <span id="run-count-down-<%= answer.id %>"><%= answer.test_left %></span> times left )
+          <% end %>
         </button>
         <br>
         <div id="eval-result-<%= answer.id %>" style="font-size: 14px;padding-left: 10px">
         </div>
-  <% elsif qn.is_auto_grading? and curr_user_course.is_staff? %>
+    <% elsif qn.is_auto_grading? and curr_user_course.is_staff? %>
         <h3>Auto Grading Summary</h3>
         <% if qn.data_hash["publicTests"].length > 0 %>
             <%= render partial: "submissions/test_result_table", locals:{title: "Public Tests",
-                                                             tests: qn.data_hash["publicTests"],
-                                                             results: answer.result_hash["publicTests"]} %>
+                                                                         tests: qn.data_hash["publicTests"],
+                                                                         results: answer.result_hash["publicTests"]} %>
         <% end %>
         <% if qn.data_hash["privateTests"].length > 0 %>
             <%= render partial: "submissions/test_result_table", locals:{title: "Private Tests",
@@ -62,7 +70,7 @@
             <h4>Error Message</h4>
             <div id="eval-error-message" style="font-size: 14px; padding-left: 10px; background-color: rgb(225, 193, 177);"><%= answer.result_hash["errors"] %></div>
         <% end %>
-  <% end %>
+    <% end %>
   </div>
   <div class="span2"></div>
 </div>
