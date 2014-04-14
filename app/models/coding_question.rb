@@ -12,6 +12,7 @@ class CodingQuestion < ActiveRecord::Base
   belongs_to :include_sol_qn, class_name: "CodingQuestion"
 
   before_create :set_default_data
+  after_update :update_test_limit
 
   def data_hash
     JSON.parse(self.data)
@@ -37,5 +38,20 @@ class CodingQuestion < ActiveRecord::Base
 
   def test_limit
     data_hash["testLimit"] || 0
+  end
+
+  def update_test_limit
+    if changed_attributes.has_key? "data"
+      old_data_hash = JSON.parse(changed_attributes["data"])
+      diff = test_limit.to_i - old_data_hash["testLimit"].to_i
+      if  diff != 0
+        Thread.start {
+          std_coding_answers.each do |std_answer|
+            std_answer.test_left = [0, std_answer.test_left + diff].max
+            std_answer.save
+          end
+        }
+      end
+    end
   end
 end
