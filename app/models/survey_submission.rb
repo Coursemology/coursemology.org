@@ -10,6 +10,8 @@ class SurveySubmission < ActiveRecord::Base
 
   default_scope includes(:user_course)
 
+  scope :exclude_phantom, where("user_courses.is_phantom = 0")
+
 
   def set_started
     self.status = 'started'

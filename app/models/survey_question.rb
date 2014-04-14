@@ -30,8 +30,12 @@ class SurveyQuestion < ActiveRecord::Base
         self.survey_mrq_answers.where(user_course_id: user_course)
   end
 
-  def no_unique_voters
-    self.survey_mrq_answers.count(:user_course_id, distinct:true)
+  def essay_answers(include_phantom = true)
+    include_phantom ? survey_essay_answers : survey_essay_answers.includes(:user_course).where("user_courses.is_phantom = 0")
+  end
+
+  def no_unique_voters(include_phantom = true)
+    (include_phantom ? self.survey_mrq_answers : self.survey_mrq_answers.includes(:user_course).where("user_courses.is_phantom = 0")).count(:user_course_id, distinct:true)
   end
 
   def is_essay?

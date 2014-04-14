@@ -5,4 +5,7 @@
   <li class="<%= "active" if @tab == 'summary' %>">
     <a href="<%= course_survey_summary_path %>?_tab=summary"><h4>Summary</h4></a>
   </li>
+  <li class="<%= "active" if @tab == 'summary_phantom' %>">
+    <a href="<%= course_survey_summary_path %>?_tab=summary_phantom"><h4>Summary(With Phantom)</h4></a>
+  </li>
 </ul>

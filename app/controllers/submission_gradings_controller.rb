@@ -19,8 +19,10 @@ class SubmissionGradingsController < ApplicationController
       qn = sa.qn
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
       #suggest grading for auto grading question
+
       if sa.class == StdCodingAnswer and qn.is_auto_grading?
-        evals = sa.result_hash["evalTests"].select {|r| r}.length
+        results = sa.result_hash["evalTests"]
+        evals = results ? results.select {|r| r}.length : 0
         tests = qn.data_hash["evalTests"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i

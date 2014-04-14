@@ -89,8 +89,9 @@ var codeEvaluator = function(){
                     if(resp.errors.length > 0){
                         $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
                     }
-
-                    $(btn).attr("disabled",false);
+                    if (resp.can_test) {
+                        $(btn).attr("disabled", false);
+                    }
                     self.running = false;
                 }
             });

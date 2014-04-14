@@ -34,136 +34,6 @@ class PythonEvaluator
     c1 + "\n" + c2
   end
 
-  def self.eval_python2(dir, code, data, eval = false)
-    file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
-
-    tests = {publicTests: data["publicTests"],
-             privateTests:data["privateTests"],
-             evalTests:   data["evalTests"]}
-
-    max_execute_lines = data['maxExecuteLines'] || 1001000
-
-    FileUtils.mkdir_p(dir) unless File.exist?(dir)
-    summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
-    range = eval ? 2 : 1
-
-    #user could print to stdout, use unique hash to filter out test results
-    hash = Digest::MD5.hexdigest(rand().to_s)
-
-    for i in 0..range
-      file = File.open(file_path, 'w+')
-      #code = code % [memory_limit.to_i * 1024, memory_limit.to_i * 1024, time_limit, time_limit]
-      if file
-        file.write(code)
-        case i
-          when 0
-            test_type = :publicTests
-          when 1
-            test_type = :privateTests
-          else
-            test_type = :evalTests
-        end
-        test_cases = tests[test_type]
-        test_code = ''
-        if test_type == :evalTests
-          test_cases.each do |test|
-            test_code << "\ntry:\n"
-            test_code << "    print('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
-            test_code << "except Exception as e:\n"
-            test_code << "    print('#{hash} %r' % False)\n"
-          end
-        else
-          test_cases.each do |test|
-            test_code << "\nprint('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
-          end
-        end
-
-        file.write(test_code)
-        file.close
-
-        #stdout,stderr,status = Open3.capture3("time python3 #{file_path}")
-        #puts "out: ", stdout
-        #puts "err: ", stderr
-        #puts "status: ", status
-        #@stdin,@stdout,@stderr = Open3.pipeline_start("python3 #{file_path}") {|ts|
-        #  sleep 2
-        #  t = ts[0]
-        #  Process.kill("TERM", t.pid)
-        #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
-        #}
-        #@stderr, @stderw = IO.pipe
-        Dir.chdir(dir){
-          @stdout,@stderr, @status = Open3.capture3("python3 #{get_exec_path}exec.py -m #{max_execute_lines} #{file_path}")
-          #@stdout,@stderr, @status = Open3.capture3("python3 #{get_exec_path}#{"exec.py -m "<< max_execute_lines << " "<< file_path}")
-        }
-        errors = @stderr
-        stdout = @stdout
-        status = @status
-
-        File.delete(file_path)
-
-        if status.to_s.include?('(signal 24)')
-          summary[:errors] = "CPU time limit exceeded"
-          break
-        end
-
-        #if errors.length > 0
-        #  if errors.include?('signal 24')
-        #    summary[:errors] = "CPU time limit exceeded"
-        #  else
-        #    summary[:errors] = "An error occurred and the execution is terminated"
-        #  end
-        #  break
-        #end
-
-        trace = JSON.parse(stdout)["trace"]
-
-        puts "trace", trace
-
-        if trace.empty?
-          next
-        end
-
-        last =  trace.last
-
-        print_out = last["event"] == 'return' ? last['stdout'] : nil
-
-        unless print_out
-          for t in trace.reverse
-            if t['event'] == 'return' and t['stdout'] != ""
-              print_out = t['stdout']
-              break
-            end
-          end
-        end
-
-        if print_out
-          results = print_out.split("\n").select{|r| r.include? hash }.map{|r| if r.gsub(hash + " ", '').gsub("\n",'') == "True" then true else false end}
-          summary[test_type] = results
-        end
-
-        if last["event"] == "instruction_limit_reached"
-          summary[:errors] =  last["exception_msg"]
-          break
-        end
-
-        if last["event"] != "return"
-          #we need to trace back the stack to find exception line
-          code = last['code']
-          exception_msg = last['exception_msg']
-          for t in trace[0..-2].reverse
-            if t['exception_msg'] == exception_msg
-              code = t['code']
-            end
-          end
-          summary[:errors] = last["event"] << ((!code || code.empty?) ? "" : " at line: #{code}") << " \n  " << last["exception_msg"]
-          break
-        end
-      end
-    end
-    summary
-  end
-
   def self.eval_python(dir, code, data, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
 
@@ -184,42 +54,51 @@ class PythonEvaluator
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
     summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
     range = eval ? 2 : 1
+    times = eval ? 1 : 0
 
+    puts eval
     #user could print to stdout, use unique hash to filter out test results
     hash = Digest::MD5.hexdigest(rand().to_s)
 
-    for i in 0..range
-      file = File.open(file_path, 'w+')
-      #code = code % [memory_limit.to_i * 1024, memory_limit.to_i * 1024, time_limit, time_limit]
-      if file
+    for time in 0..times
+      for i in 0..range
+        file = File.open(file_path, 'w+')
+        #code = code % [memory_limit.to_i * 1024, memory_limit.to_i * 1024, time_limit, time_limit]
+        unless file
+          next
+        end
         file.write(code)
+        need_std_answer = time == 1
         case i
           when 0
             test_type = :publicTests
+            result_type = :publicResults
           when 1
             test_type = :privateTests
+            result_type = :privateResults
           else
             test_type = :evalTests
+            result_type = :evalResults
         end
+
         test_cases = tests[test_type]
         test_code = ''
         test_cases.each do |test|
-          test_code << "\nprint('#{hash} %r' % (#{test["expression"]} == #{test["expected"]}))\n"
+          exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
+          exp_excep = need_std_answer ? "e" : "False"
+          if test_type == :evalTests || need_std_answer
+            test_code << "\ntry:\n"
+            test_code << "    print('#{hash} %r' % (#{exp}))\n"
+            test_code << "except Exception as e:\n"
+            test_code << "    print('#{hash} %r' % (#{exp_excep}))\n"
+          else
+            test_code << "\nprint('#{hash} %r' % (#{exp}))\n"
+          end
         end
+
         file.write(test_code)
         file.close
 
-        #stdout,stderr,status = Open3.capture3("time python3 #{file_path}")
-        #puts "out: ", stdout
-        #puts "err: ", stderr
-        #puts "status: ", status
-        #@stdin,@stdout,@stderr = Open3.pipeline_start("python3 #{file_path}") {|ts|
-        #  sleep 2
-        #  t = ts[0]
-        #  Process.kill("TERM", t.pid)
-        #  p t.value #=> #<Process::Status: pid 911 SIGTERM (signal 15)>
-        #}
-        #@stderr, @stderw = IO.pipe
         Dir.chdir(dir){
           @stdout,@stderr, @status = Open3.capture3("python3.3 #{file_path}")
         }
@@ -228,9 +107,13 @@ class PythonEvaluator
         status = @status
         #puts "status", status
         #puts "stdout",stdout
-        #puts "error", errors
-        results = stdout.split("\n").select{|r| r.include? hash }.map{|r| if r.gsub(hash + " ", '').gsub("\n",'') == "True" then true else false end}
-        #puts "results",results
+        # puts "error", errors
+        print_outs = stdout.split("\n").select{|r| r.include? hash }.map{|r| r.gsub(hash + " ", '').gsub("\n",'') }
+        if need_std_answer
+          results = print_outs
+        else
+          results = print_outs.map{|r| r == "True" ? true : false }
+        end
         File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)
@@ -244,7 +127,7 @@ class PythonEvaluator
           errors = "You might have an infinite loop or your recursion level is too deep."
         end
 
-        summary[test_type] = results
+        summary[need_std_answer ? result_type : test_type] = results
         if errors.length > 0
           error_array = errors.split("\n")
 
@@ -252,13 +135,12 @@ class PythonEvaluator
             #don't display super long error message
             error_message = error_array.last.split("\n").join
           else
-            error_message = errors.gsub(/File "(.+?), line \d*,/m, '')
+            error_message = errors.gsub(/File "(.+?)", line \d*[\n,]/m, '')
           end
 
           summary[:errors] = exec_fail ? errors : error_message
           break
         end
-
       end
     end
     summary
