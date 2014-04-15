@@ -101,7 +101,7 @@ class ApplicationController < ActionController::Base
       # TODO students see the number of new gradings
 
       counts[:forums] = ForumTopic.unread(curr_user_course).
-        where(forum_id: @course.forums.accessible_by(current_ability)).count
+          where(forum_id: @course.forums.accessible_by(current_ability)).count
     end
     # in the future, nav items can be loaded from the database
     @nav_items = []
@@ -274,15 +274,13 @@ class ApplicationController < ActionController::Base
           url: main_app.course_mass_enrollment_emails_path(@course),
           icon: "icon-bolt"
       }
-    end
-    if can? :share, Course
+
       @admin_nav_items << {
           text: "Duplicate Data",
           url: main_app.course_duplicate_url(@course),
           icon: "icon-bolt"
       }
-    end
-    if can? :manage, Course
+
       @admin_nav_items << {
           text: "Course Settings",
           url: main_app.edit_course_url(@course),
