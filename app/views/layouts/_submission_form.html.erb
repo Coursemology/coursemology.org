@@ -1,7 +1,7 @@
 <% @qadata.each do |qid, qa| %>
     <hr/>
     <% unless @mission.single_question? %>
-        <h3>Question <%= qa[:i] %>:</h3>
+        <h3><%=  qa[:q].get_title(qa[:i])%></h3>
         <div class="row-fluid">
           <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
         </div>
