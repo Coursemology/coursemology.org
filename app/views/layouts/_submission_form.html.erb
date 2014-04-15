@@ -1,7 +1,7 @@
 <% @qadata.each do |qid, qa| %>
     <hr/>
     <% unless @mission.single_question? %>
-        <h3>Question <%= qa[:i] %>:</h3>
+        <h3><%=  qa[:q].get_title(qa[:i])%></h3>
         <div class="row-fluid">
           <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
         </div>
@@ -75,6 +75,24 @@
     <div class="row-fluid">
       <div class="span10">
         <div class="grade-summary">
+          <% unless @mission.single_question? %>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @qadata.each do |qid, qa| %>
+                    <tr>
+                      <td><%=  qa[:q].get_title(qa[:i])%></td>
+                      <td><%= qa[:g].grade if qa[:g]  %>  <strong> / <%= qa[:q].max_grade %> </strong></td>
+                    </tr>
+                <% end %>
+                </tbody>
+              </table>
+          <% end %>
           <h4>Total Grade:</h4>
           <% if mode == 'view' %>
               <strong><%= @grading.total_grade %></strong>

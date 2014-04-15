@@ -33,6 +33,7 @@ class SubmissionGradingsController < ApplicationController
     end
 
     @do_grading = true
+    eval_answer
 
     if @submission.submission_gradings.count > 0
       redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
@@ -112,6 +113,7 @@ class SubmissionGradingsController < ApplicationController
       qn = ag.student_answer.qn
       @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
     end
+    eval_answer
   end
 
   def update
@@ -207,5 +209,21 @@ class SubmissionGradingsController < ApplicationController
         format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
       end
     end
+  end
+
+  def eval_answer
+    # Thread.start {
+    @submission.std_coding_answers.each do |answer|
+      qn = answer.qn
+      unless qn.is_auto_grading?
+        next
+      end
+      combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
+      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
+      answer.result = result.to_json
+      puts result
+      answer.save
+    end
+    # }
   end
 end
