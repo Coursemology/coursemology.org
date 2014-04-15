@@ -150,7 +150,6 @@ class SubmissionsController < ApplicationController
                                     notice: "Your submission has been saved." }
         else
           @submission.set_submitted(course_mission_submission_url(@course, @mission, @submission))
-          eval_answer
           format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
                                     notice: "Your submission has been updated." }
         end
@@ -184,22 +183,6 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       format.html {render json: result}
     end
-  end
-
-  def eval_answer
-    Thread.start {
-      @submission.std_coding_answers.each do |answer|
-        qn = answer.qn
-        unless qn.is_auto_grading?
-          next
-        end
-        combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
-        result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
-        answer.result = result.to_json
-        puts result
-        answer.save
-      end
-    }
   end
 
   private
