@@ -15,6 +15,7 @@ class SubmissionGradingsController < ApplicationController
       @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
 
+    eval_answer
     @submission.get_all_answers.each do |sa|
       qn = sa.qn
       @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
@@ -33,7 +34,6 @@ class SubmissionGradingsController < ApplicationController
     end
 
     @do_grading = true
-    eval_answer
 
     if @submission.submission_gradings.count > 0
       redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
@@ -99,7 +99,7 @@ class SubmissionGradingsController < ApplicationController
 
   def edit
     @qadata = {}
-
+    eval_answer
     @mission.get_all_questions.each_with_index do |q,i|
       @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
@@ -113,7 +113,6 @@ class SubmissionGradingsController < ApplicationController
       qn = ag.student_answer.qn
       @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
     end
-    eval_answer
   end
 
   def update
