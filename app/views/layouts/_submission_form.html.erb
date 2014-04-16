@@ -176,6 +176,7 @@
     }
 
     $(document).ready(function() {
-        suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> );
+        if ($("#exp-sum").val() == "")
+            suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> );
     });
 </script>
