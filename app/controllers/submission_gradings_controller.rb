@@ -80,7 +80,7 @@ class SubmissionGradingsController < ApplicationController
       @submission_grading.update_exp_transaction
       @submission.save
 
-      if @course.email_notify_enabled? PreferableItem.new_grading
+      if @course.email_notify_enabled? PreferableItem.new_grading and @mission.published?
         UserMailer.delay.new_grading(
             @submission.std_course.user,
             course_mission_submission_url(@course, @mission, @submission)
