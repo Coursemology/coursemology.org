@@ -16,9 +16,13 @@ class CommentSubscription < ActiveRecord::Base
     end
 
     CommentSubscription.subscribe(comment_topic, commentator)
-    if comment_topic.topic && comment_topic.topic.respond_to?(:user_course)
+    topic = comment_topic.topic
+    if topic && (topic.respond_to?(:user_course) || topic.respond_to?(:std_course))
       # add the owner of the topic to the subscription list
-      CommentSubscription.subscribe(comment_topic, comment_topic.topic.user_course)
+      CommentSubscription.subscribe(comment_topic,
+                                    topic.respond_to?(:user_course) ?
+                                        comment_topic.topic.user_course :
+                                        comment_topic.topic.std_course )
     end
     if commentator.is_student?
       # add the ta to the subscription list
@@ -39,7 +43,6 @@ class CommentSubscription < ActiveRecord::Base
       cs.user_course = user_course
       cs.course = user_course.course
       cs.save
-      puts cs.to_json
     end
   end
 
