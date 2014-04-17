@@ -2,9 +2,7 @@ module Assessment
 
   def self.included(base)
     base.class_eval do
-
       before_update :clean_up_description, :if => :description_changed?
-
     end
   end
 

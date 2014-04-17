@@ -34,7 +34,17 @@ class CommentsController < ApplicationController
     CommentSubscription.populate_subscription(@comment)
 
     if @course.email_notify_enabled? PreferableItem.new_comment
-      comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
+      submission = nil
+      if comment_topic.topic.respond_to?(:sbm_answers)
+        sbm_answer = comment_topic.topic.sbm_answers.first
+        submission = sbm_answer ? sbm_answer.sbm : nil
+      elsif comment_topic.topic.class == Submission
+        submission = comment_topic.topic
+      end
+
+      if submission.nil? || (submission && submission.mission.published?)
+        comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
+      end
     end
 
     respond_to do |format|
