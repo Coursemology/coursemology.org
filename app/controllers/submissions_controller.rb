@@ -54,6 +54,10 @@ class SubmissionsController < ApplicationController
 
     @sbms = @sbms.where('status != ?','attempting')
 
+    if curr_user_course.is_student?
+      @sbms = @sbms.where("missions.publish =  1")
+    end
+
     #@unseen = []
     #if curr_user_course.id
     #  @unseen = @sbms - curr_user_course.get_seen_sbms

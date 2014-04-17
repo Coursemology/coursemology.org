@@ -33,18 +33,8 @@ class CommentsController < ApplicationController
 
     CommentSubscription.populate_subscription(@comment)
 
-    if @course.email_notify_enabled? PreferableItem.new_comment
-      submission = nil
-      if comment_topic.topic.respond_to?(:sbm_answers)
-        sbm_answer = comment_topic.topic.sbm_answers.first
-        submission = sbm_answer ? sbm_answer.sbm : nil
-      elsif comment_topic.topic.class == Submission
-        submission = comment_topic.topic
-      end
-
-      if submission.nil? || (submission && submission.mission.published?)
-        comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
-      end
+    if @course.email_notify_enabled? PreferableItem.new_comment and comment_topic.can_access?
+      comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
     end
 
     respond_to do |format|
@@ -87,7 +77,8 @@ class CommentsController < ApplicationController
           end
       end
     else
-      @topics = curr_user_course.comment_topics
+      topic_ids = curr_user_course.comment_topics.select{|t| t.can_access?}.map{ |t| t.id }
+      @topics = curr_user_course.comment_topics.where(id: topic_ids)
     end
 
     @comments_paging = @course.comments_paging_pref
