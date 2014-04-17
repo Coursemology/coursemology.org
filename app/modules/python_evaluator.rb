@@ -92,7 +92,7 @@ class PythonEvaluator
             test_code << "except Exception as e:\n"
             test_code << "    print('#{hash} %r' % (#{exp_excep}))\n"
           else
-            test_code << "\nprint('#{hash} %r' % (#{exp}))\n"
+            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
           end
         end
 
