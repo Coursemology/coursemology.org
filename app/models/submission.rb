@@ -131,4 +131,8 @@ class Submission < ActiveRecord::Base
     end
   end
 
+  def assignment
+    mission
+  end
+
 end

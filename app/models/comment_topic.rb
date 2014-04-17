@@ -20,6 +20,17 @@ class CommentTopic < ActiveRecord::Base
     end
   end
 
+  def can_access?
+    submission = nil
+    if topic.respond_to?(:sbm_answers)
+      sbm_answer = topic.sbm_answers.first
+      submission = sbm_answer ? sbm_answer.sbm : nil
+    elsif topic.class == Submission
+      submission = comment_topic.topic
+    end
+    submission.nil? || (submission && submission.assignment.published?)
+  end
+
   def comments_json(curr_user_course = nil, brief = false)
     responds = []
 
