@@ -116,15 +116,22 @@ var path = function(){
             $("#public_test_tbody").html("");
             $("#private_test_tbody").html("");
             $("#eval_test_tbody").html("");
-            for(var i = 0 ; i < cStep.privateTests.length; i++){
-                _appendTest("private",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected, cStep.privateTests[i].hint || "" );
+            if(cStep.privateTests) {
+                for(var i = 0 ; i < cStep.privateTests.length; i++){
+                    _appendTest("private" +
+                        "",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected, cStep.privateTests[i].hint || "" );
+                }
             }
-            for(var i = 0 ; i < cStep.publicTests.length; i++){
-                _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected, cStep.publicTests[i].hint || "" );
+
+            if(cStep.publicTests) {
+                for(var i = 0 ; i < cStep.publicTests.length; i++){
+                    _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected, cStep.publicTests[i].hint || "" );
+                }
             }
-            for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
-                console.log(cStep.evalTests);
-                _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.publicTests[i].hint || "" );
+            if(cStep.evalTests) {
+                for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
+                    _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.publicTests[i].hint || "" );
+                }
             }
             cmPrefill.setValue(cStep.prefill);
             if(cStep.included == null) cStep.included = "";
