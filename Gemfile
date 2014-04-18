@@ -8,7 +8,9 @@ gem 'rails', '3.2.14'
 group :development do
   gem 'sqlite3'
   gem 'pry'
+  gem 'meta_request'
 end
+
 
 group :production do
   gem 'mysql2'
