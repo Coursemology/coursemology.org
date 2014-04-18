@@ -24,4 +24,12 @@ class SurveyQuestionOption < ActiveRecord::Base
     end
     self.save
   end
+
+  def get_count(include_phantom)
+    if include_phantom
+      count
+    else
+      answers.includes(:user_course).where("user_courses.is_phantom = 0").count
+    end
+  end
 end
