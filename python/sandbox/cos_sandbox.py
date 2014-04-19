@@ -67,7 +67,7 @@ else:
 # whitelist of module imports
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
-                          'collections', 're', 'json', 'csv',
+                          'collections', 're', 'json', 'csv','copy',
                           'heapq', 'bisect','inspect','__future__')
 
 # whitelist of custom modules to import into OPT
