@@ -9,7 +9,7 @@
     <% end %>
     <div id="source-code-<%= answer.id  %>" class="code-wrapper cos_code"></div>
     <% if qn.is_auto_grading? and mode != "view" %>
-        <% if qn.data_hash["publicTests"].length > 0 %>
+        <% if  qn.data_hash["publicTests"] and qn.data_hash["publicTests"].length > 0 %>
             <h3>Public Tests</h3>
             <p>The following expressions will be executed.</p>
             <table class="table table-striped table-bordered" id="public-test-table-<%= answer.id %>">
