@@ -67,7 +67,8 @@ else:
 # whitelist of module imports
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
-                          'collections', 're', 'json', 'csv','copy',
+                          'collections', 're', 'json', 'csv','copy','copyreg',
+                          'engine','hungry_games_classes','hungry_games',
                           'heapq', 'bisect','inspect','__future__')
 
 # whitelist of custom modules to import into OPT
@@ -96,7 +97,10 @@ CUSTOM_MODULE_IMPORTS = ()
 # NB: All modules in CUSTOM_MODULE_IMPORTS will be imported, warts and
 # all, so they better work on Python 2 and 3!
 for m in ALLOWED_STDLIB_MODULE_IMPORTS + CUSTOM_MODULE_IMPORTS:
-  __import__(m)
+  try:
+    __import__(m)
+  except:
+    pass
 
 # Restrict imports to a whitelist
 def __restricted_import__(*args):
