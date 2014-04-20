@@ -31,11 +31,11 @@ class SurveyQuestion < ActiveRecord::Base
   end
 
   def essay_answers(include_phantom = true)
-    include_phantom ? survey_essay_answers : survey_essay_answers.includes(:user_course).where("user_courses.is_phantom = 0")
+    include_phantom ? survey_essay_answers : survey_essay_answers.includes(:user_course).where("user_courses.is_phantom = 0 and user_courses.role_id = 5")
   end
 
   def no_unique_voters(include_phantom = true)
-    (include_phantom ? self.survey_mrq_answers : self.survey_mrq_answers.includes(:user_course).where("user_courses.is_phantom = 0")).count(:user_course_id, distinct:true)
+    (include_phantom ? self.survey_mrq_answers : self.survey_mrq_answers.includes(:user_course).where("user_courses.is_phantom = 0 and user_courses.role_id = 5")).count(:user_course_id, distinct:true)
   end
 
   def is_essay?
