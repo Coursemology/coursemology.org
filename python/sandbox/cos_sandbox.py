@@ -68,7 +68,7 @@ else:
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json', 'csv','copy','copyreg',
-                          'engine','hungry_games_classes','hungry_games',
+                          'engine','hungry_games_classes','hungry_games','simulation',
                           'heapq', 'bisect','inspect','__future__')
 
 # whitelist of custom modules to import into OPT
