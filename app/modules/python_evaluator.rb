@@ -107,7 +107,7 @@ class PythonEvaluator
         status = @status
         #puts "status", status
         #puts "stdout",stdout
-        # puts "error", errors
+        #puts "error", errors
         print_outs = stdout.split("\n").select{|r| r.include? hash }.map{|r| r.gsub(hash + " ", '').gsub("\n",'') }
         if need_std_answer
           results = print_outs
@@ -143,6 +143,7 @@ class PythonEvaluator
         end
       end
     end
+    puts summary
     summary
   end
 
