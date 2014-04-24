@@ -222,8 +222,3 @@ def resource_limit():
 
 resource_limit()
 sandbox()
-
-# x = 2 
-# while True:
-#   x = x * x
-
