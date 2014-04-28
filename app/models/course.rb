@@ -1,7 +1,7 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
 
-  default_scope where(:is_pending_deletion => false)
+  # default_scope where(:is_pending_deletion => false)
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open, :start_at, :end_at
   before_create :populate_preference
