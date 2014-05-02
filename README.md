@@ -6,7 +6,7 @@ Coursemology, an open source online education platform for school :-)
 To get started, you will need to do the following:
 
  1. Clone the repository
- 2. Created a Facebook app and retrieve it `App ID` and `App secret`
+ 2. Create a [Facebook app][1] and retrieve its `App ID` and `App secret`
 
 ## Setting up
 
@@ -89,3 +89,5 @@ You should skim through the README of these following gems to get a gist of how 
 * File upload: [Paperclip](https://github.com/thoughtbot/paperclip) (Very easy to use)
 * Icon: [Font Awesome](http://fortawesome.github.com/Font-Awesome/) and [font-awesome-sass-rails](https://github.com/littlebtc/font-awesome-sass-rails)
 * Datepicker: [Bootstrap Datepicker for Rails](https://github.com/Nerian/bootstrap-datepicker-rails)
+
+[1]: https://developers.facebook.com/apps    "Facebook Apps"
