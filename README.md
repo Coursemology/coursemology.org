@@ -7,6 +7,8 @@ To get started, you will need to do the following:
 
  1. Clone the repository
  2. Create a [Facebook app][1] and retrieve its `App ID` and `App secret`
+ 3. Install [rvm][2] and install ruby 1.9.3
+ 4. Install mysql
 
 ## Setting up
 
@@ -91,3 +93,4 @@ You should skim through the README of these following gems to get a gist of how 
 * Datepicker: [Bootstrap Datepicker for Rails](https://github.com/Nerian/bootstrap-datepicker-rails)
 
 [1]: https://developers.facebook.com/apps    "Facebook Apps"
+[2]: https://rvm.io/                         "Ruby Version Manager"
