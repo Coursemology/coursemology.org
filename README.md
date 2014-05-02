@@ -18,6 +18,9 @@ To get started, you will need to do the following:
     $ cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
     # Edit the file (mailer_sender, omniauth)
 
+    $ cp config/database.yml.sample config/database.yml
+    # Change the username and password in the development section as appropriate
+
     # Set 2 environment variables: GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD
     # either just run this commands or add them into a .rvmrc file
     $ export GMAIL_SMTP_USER='your_email@gmail.com'
