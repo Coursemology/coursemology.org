@@ -1,6 +1,6 @@
 # Introduction
 
-Coursemology, an open source online education platform for school :-)
+Coursemology, an open source online education platform for schools :-)
 
 # Quick Start
 To get started, you will need to do the following:
