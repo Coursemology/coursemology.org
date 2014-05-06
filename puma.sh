@@ -43,7 +43,7 @@ puma_high_memo() {
   do
     p=$word
   done
-  echo $p
+  echo "mem $p%"
   
   if [ $(echo "$p > 40" | bc) -ne 0 ]  ; then
     return 0
@@ -60,8 +60,10 @@ if [ $# -gt 0 ]; then
     if puma_high_memo ; then
       echo "we need to clean memo"
       pumactl -P $PUMA_PID_FILE restart
-      exit 0
+    else 
+      echo "memory usage normal"
     fi
+    exit 0
   fi
 else
   #restart
