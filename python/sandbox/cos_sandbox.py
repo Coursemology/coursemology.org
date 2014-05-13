@@ -69,7 +69,7 @@ ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
                           'functools', 'itertools', 'operator', 'string',
                           'collections', 're', 'json', 'csv','copy','copyreg',
                           'engine','hungry_games_classes','hungry_games','simulation',
-                          'heapq', 'bisect','inspect','__future__')
+                          'heapq', 'bisect','inspect','__future__', 'urllib')
 
 # whitelist of custom modules to import into OPT
 # (TODO: support modules in a subdirectory, but there are various
