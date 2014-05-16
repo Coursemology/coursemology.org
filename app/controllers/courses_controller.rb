@@ -121,9 +121,9 @@ class CoursesController < ApplicationController
       end
 
       @activities_pref = @course.home_activities_pref
-      if @activities_pref.display?
-        @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
-      end
+      # if @activities_pref.display?
+      #   @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
+      # end
 
       @pending_actions = curr_user_course.pending_actions.to_show.
           select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
