@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_sidebar_data
+  def load_sidebar_notifications
     counts = {}
     if curr_user_course.id
       all_trainings = @course.trainings.accessible_by(current_ability)
@@ -103,6 +103,10 @@ class ApplicationController < ActionController::Base
       counts[:forums] = ForumTopic.unread(curr_user_course).
           where(forum_id: @course.forums.accessible_by(current_ability)).count
     end
+  end
+
+  def load_sidebar_data
+    counts = {}
     # in the future, nav items can be loaded from the database
     @nav_items = []
     # home
