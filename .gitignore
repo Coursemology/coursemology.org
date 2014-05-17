@@ -34,6 +34,7 @@
 
 #.rvmrc perform certain actions when developer cd into the folder
 .rvmrc
+.ruby-version
 
 /config/database.yml
 /config/puma.rb
