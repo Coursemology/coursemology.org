@@ -3,7 +3,10 @@
     <% submission = mission.get_final_sbm_by_std(curr_user_course.id) %>
     <% if submission %>
         <% if submission.attempting? %>
-            <a  onclick="event_log('<%= event_label %>', 'mission', 'clicked'<%= ', true' if event_label %>)" href="<%= edit_course_mission_submission_path(@course, mission, submission) %>" class="btn">Edit</a>
+            <%= link_to 'Edit',
+                        edit_course_mission_submission_path(@course, mission, submission),
+                        onclick: "event_log('#{event_label}', 'mission', 'clicked'#{ ', true' if event_label})",
+                        class: 'btn' %>
         <% else %>
             <%= link_to 'Review',
                         submission.get_path,
