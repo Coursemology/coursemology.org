@@ -5,6 +5,7 @@
 import sys
 import types
 
+
 # TODO: use the 'six' package to smooth out Py2 and Py3 differences
 is_python3 = (sys.version_info[0] == 3)
 
@@ -63,14 +64,16 @@ else:
 	assert type(__builtins__) is types.ModuleType
 	BUILTIN_IMPORT = __builtins__.__import__
 
+USER_ALLOWED_MODULE_IMPORTS = (('urllib.request', {}, {}, ['urlopen']),
+								('urllib.parse', {}, {}, ['urlsplit']))
+
 
 # whitelist of module imports
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
 													'functools', 'itertools', 'operator', 'string',
 													'collections', 're', 'json', 'csv','copy','copyreg',
 													'engine','hungry_games_classes','hungry_games','simulation',
-													'heapq', 'bisect','inspect','__future__',
-													'urllib','urllib.request', 'urllib.parse', 'urllib.error')
+													'heapq', 'bisect','inspect','__future__', 'encodings.idna', 'encodings', 'urllib', 'urllib.error')
 
 # whitelist of custom modules to import into OPT
 # (TODO: support modules in a subdirectory, but there are various
@@ -103,24 +106,31 @@ for m in ALLOWED_STDLIB_MODULE_IMPORTS + CUSTOM_MODULE_IMPORTS:
 	except:
 		pass
 
+for m in USER_ALLOWED_MODULE_IMPORTS:
+	try:
+		__import__(*m)
+	except:
+		pass
+
 # Restrict imports to a whitelist
-def __restricted_import__(*args):
-	print('args', args)
-	# filter args to ONLY take in real strings so that someone can't
-	# subclass str and bypass the 'in' test on the next line
-	args = [e for e in args if type(e) is str]
+def __restricted_import__(name, globals=None, locals=None, fromlist=(), level=0):
+	# return BUILTIN_IMPORT(name, globals, locals, fromlist, level)
 
-	if args[0] in ALLOWED_STDLIB_MODULE_IMPORTS + CUSTOM_MODULE_IMPORTS:
-		if 'urllib' in args[0]:
-			imported_mod = BUILTIN_IMPORT('urllib.parse', {}, {}, ['urlsplit'], 0)
-			imported_mod = BUILTIN_IMPORT('urllib.request', {}, {}, ['urlopen'], 0)
-		else:
-			imported_mod = BUILTIN_IMPORT(*args)
+	imported_mod = None
+	if fromlist and len(fromlist) > 0:
+		for m in USER_ALLOWED_MODULE_IMPORTS:
+			if name in m and (set(fromlist).issubset(set(m[3])) or fromlist in [('*',), ['*']]):
+				imported_mod = BUILTIN_IMPORT(name, globals, locals, fromlist, level)
 
-		print(imported_mod)
-		# imported_mod = BUILTIN_IMPORT('urllib.parse', globals(), locals(), ['urlsplit'], 0)
 
-		if args[0] in CUSTOM_MODULE_IMPORTS:
+	#handle import of subdirectory
+
+	if name in ALLOWED_STDLIB_MODULE_IMPORTS + CUSTOM_MODULE_IMPORTS:
+		imported_mod = BUILTIN_IMPORT(name, globals, locals, fromlist, level)
+
+	if imported_mod:
+
+		if name in CUSTOM_MODULE_IMPORTS:
 			# add special magical functions to custom imported modules
 			setattr(imported_mod, 'setHTML', setHTML)
 			setattr(imported_mod, 'setCSS', setCSS)
@@ -129,26 +139,27 @@ def __restricted_import__(*args):
 		# somewhat weak protection against imported modules that contain one
 		# of these troublesome builtins. again, NOTHING is foolproof ...
 		# just more defense in depth :)
-		for mod in ('os', 'sys', 'posix', 'gc'):
+		for mod in ('sys', 'posix', 'gc'):
 			if hasattr(imported_mod, mod):
 				delattr(imported_mod, mod)
 
 		return imported_mod
 	else:
-		raise ImportError('{0} not supported'.format(args[0]))
+		raise ImportError('{0} not supported'.format(name))
 
 
 def sandbox():
 	a_method_that_should_not_be_seen = open
 
 	def open_wrapper(f, *m):
-		return a_method_that_should_not_be_seen(f, 'r')
+		if f in ['impossible.txt', 'fail.txt']:
+			return a_method_that_should_not_be_seen(f, *m)
+		return a_method_that_should_not_be_seen(f, 'wb')
 
 
 	BANNED_BUILTINS = ['reload', 'compile',
-										 'file', 'eval', 'exec', 'execfile',
-										 'exit', 'quit', 'help',
-										 'dir', 'globals', 'locals', 'vars']
+										'file', 'eval', 'exec', 'execfile',
+										'exit', 'quit', 'help','globals', 'locals', 'vars']
 
 	if type(__builtins__) is dict:
 		builtin_items = __builtins__.items()
@@ -206,7 +217,7 @@ def resource_limit():
 		for a in dir(sys.modules['os']):
 			# 'path' is needed for __restricted_import__ to work
 			# and 'stat' is needed for some errors to be reported properly
-			if a not in ('path', 'stat'):
+			if a not in ('path', 'stat', '__builtins__','environ'):
 				delattr(sys.modules['os'], a)
 		# ppl can dig up trashed objects with gc.get_objects()
 		import gc
