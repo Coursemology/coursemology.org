@@ -154,7 +154,7 @@ def sandbox():
 	def open_wrapper(f, *m):
 		if f in ['impossible.txt', 'fail.txt']:
 			return a_method_that_should_not_be_seen(f, *m)
-		return a_method_that_should_not_be_seen(f, 'wb')
+		return a_method_that_should_not_be_seen(f, 'r')
 
 
 	BANNED_BUILTINS = ['reload', 'compile',
