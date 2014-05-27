@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140309163444) do
+ActiveRecord::Schema.define(:version => 20140526073057) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -229,6 +229,24 @@ ActiveRecord::Schema.define(:version => 20140309163444) do
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_course_id"], :name => "index_comments_on_user_course_id"
 
+  create_table "course_navbar_preferences", :force => true do |t|
+    t.integer  "course_id"
+    t.integer  "navbar_preferable_item_id"
+    t.integer  "navbar_link_type_id"
+    t.string   "item"
+    t.string   "name"
+    t.boolean  "is_displayed"
+    t.boolean  "is_enabled"
+    t.string   "description"
+    t.string   "link_to"
+    t.integer  "order"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "course_navbar_preferences", ["course_id", "navbar_preferable_item_id"], :name => "index_cnp_on_course_id_and_navbar_preferable_item_id"
+  add_index "course_navbar_preferences", ["course_id"], :name => "index_course_navbar_preferences_on_course_id"
+
   create_table "course_preferences", :force => true do |t|
     t.integer  "course_id"
     t.integer  "preferable_item_id"
@@ -238,6 +256,8 @@ ActiveRecord::Schema.define(:version => 20140309163444) do
     t.datetime "updated_at",         :null => false
   end
 
+  add_index "course_preferences", ["course_id", "preferable_item_id"], :name => "index_course_preferences_on_course_id_and_preferable_item_id", :unique => true
+  add_index "course_preferences", ["course_id"], :name => "course_id"
   add_index "course_preferences", ["course_id"], :name => "index_course_preferences_on_course_id"
   add_index "course_preferences", ["preferable_item_id"], :name => "index_course_preferences_on_preferable_item_id"
 
@@ -663,6 +683,25 @@ ActiveRecord::Schema.define(:version => 20140309163444) do
   add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
   add_index "missions", ["creator_id"], :name => "index_missions_on_creator_id"
 
+  create_table "navbar_link_types", :force => true do |t|
+    t.string   "type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "navbar_preferable_items", :force => true do |t|
+    t.string   "item"
+    t.integer  "navbar_link_type_id"
+    t.string   "name"
+    t.boolean  "is_displayed"
+    t.boolean  "is_enabled"
+    t.string   "description"
+    t.string   "link_to"
+    t.integer  "order"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "notifications", :force => true do |t|
     t.integer  "target_course_id"
     t.integer  "actor_course_id"
@@ -819,6 +858,19 @@ ActiveRecord::Schema.define(:version => 20140309163444) do
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
+
+  create_table "sidebar_preferable_items", :force => true do |t|
+    t.string   "item"
+    t.string   "item_type"
+    t.string   "title"
+    t.boolean  "is_displayed"
+    t.boolean  "is_enabled"
+    t.string   "description"
+    t.string   "link_to"
+    t.integer  "order"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "std_answers", :force => true do |t|
     t.text     "text"
