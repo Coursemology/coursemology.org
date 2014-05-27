@@ -24,7 +24,7 @@
             <tbody>
             <tr>
               <% # <td>10</td> %>
-              <td><%= curr_user_course.user_achievements.count() %></td>
+              <td><%= curr_user_course.user_achievements.count %></td>
               <td><%= curr_user_course.level ? curr_user_course.level.level : 0 %></td>
             </tr>
             </tbody>
@@ -50,7 +50,7 @@
 </div>
 <div class="clearfix"></div>
 <div class="sidenav-collapse collapse" style="height: 0px;">
-  <ul class="nav nav-list sidenav">
+  <ul class="nav nav-list sidenav" id="navbar_tabs" url="<%= course_notifications_path(@course)%>">
     <% if @nav_items %>
         <% @nav_items.each do |item| %>
             <li>
@@ -63,10 +63,8 @@
             <% end %>
           </span>
                 <%= item[:text] %>
-                <% if item.has_key?(:count) && item[:count] && item[:count] > 0 %>
-                    <input type="hidden" id="<%= item[:text] %>_count" value="<%= item[:count] %>">
-                    <span class="sidenav-count " id="badge_<%= item[:text].split(" ").join %>"><%= item[:count] %></span>
-                <% end %>
+                    <span class="sidenav-count" style="display: none"
+                          id="badge_<%= item[:item] %>"><%= item[:count] %></span>
               </a>
             </li>
         <% end %>
