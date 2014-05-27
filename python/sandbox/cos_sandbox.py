@@ -151,10 +151,10 @@ def __restricted_import__(name, globals=None, locals=None, fromlist=(), level=0)
 def sandbox():
 	a_method_that_should_not_be_seen = open
 
-	def open_wrapper(f, *m):
-		if f in ['impossible.txt', 'fail.txt']:
-			return a_method_that_should_not_be_seen(f, *m)
-		return a_method_that_should_not_be_seen(f, 'r')
+	def open_wrapper(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
+		if file in ['impossible.txt', 'fail.txt']:
+			return a_method_that_should_not_be_seen(file, mode, buffering, encoding, errors, newline, closefd, opener)
+		return a_method_that_should_not_be_seen(file, 'r', buffering, encoding, errors, newline, closefd, opener)
 
 
 	BANNED_BUILTINS = ['reload', 'compile',
