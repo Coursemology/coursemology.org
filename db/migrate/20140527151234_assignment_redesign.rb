@@ -99,5 +99,17 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.datetime  :deleted_at
       t.timestamps
     end
+
+    create_table  :taggable_tags do |t|
+      t.string  :taggable_type
+      t.integer :taggable_id, index: true
+      t.references  :tag
+
+      t.timestamps
+    end
+
+    change_table  :taggable_tags do |t|
+      t.index [:taggable_id, :taggable_tags]
+    end
   end
 end
