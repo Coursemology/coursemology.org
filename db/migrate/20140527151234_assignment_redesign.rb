@@ -109,7 +109,7 @@ class AssignmentRedesign < ActiveRecord::Migration
     end
 
     change_table  :taggable_tags do |t|
-      t.index [:taggable_id, :taggable_tags]
+      t.index [:taggable_id, :taggable_type]
     end
   end
 end
