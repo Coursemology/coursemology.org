@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140531134517) do
+ActiveRecord::Schema.define(:version => 20140531152553) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20140531134517) do
   add_index "activities", ["action_id"], :name => "index_activities_on_action_id"
   add_index "activities", ["actor_course_id"], :name => "index_activities_on_actor_course_id"
   add_index "activities", ["course_id"], :name => "index_activities_on_course_id"
+  add_index "activities", ["created_at"], :name => "index_activities_on_created_at"
   add_index "activities", ["obj_id", "obj_type"], :name => "index_activities_on_obj_id_and_obj_type"
   add_index "activities", ["target_course_id"], :name => "index_activities_on_target_course_id"
 
