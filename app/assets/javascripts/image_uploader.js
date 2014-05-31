@@ -49,7 +49,7 @@ $(document).ready(function() {
       ],
 
       progress: function(e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10),
+        var progress = parseInt(data.loaded / data.total * 100, 10) - 10,
             $bar = $(this).find('.bar'),
             progress_percent = progress + '%';
 
@@ -71,6 +71,9 @@ $(document).ready(function() {
       },
 
       always: function(e, data) {
+        $bar = $(this).find('.bar');
+        $bar.width('0%');
+        $bar.html('');
         // dismiss modal upon success, abort or error. ie. always
         $('.image-uploader-insert-btn').click();
       }
