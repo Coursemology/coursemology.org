@@ -47,11 +47,34 @@ $(document).ready(function() {
           value: 'POST '
         }
       ],
+
+      progress: function(e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10) - 10,
+            $bar = $(this).find('.bar'),
+            progress_percent = progress + '%';
+
+        $bar.width(progress_percent);
+        $bar.html(progress_percent);
+      },
+
       done: function(e, data) {
         $('.image-uploader-input-url').val(data.result.url);
         $('.image-uploader-preview-img').attr('src', data.result.url);
         $(target_el + '-preview').attr('src', data.result.url);
         $(target_el + '-input').attr('value', data.result.url);
+      },
+
+      fail: function(e, data) {
+        var $alert = $('.alert');
+        $alert.removeClass('hidden');
+        $alert.html("Error uploading image: " + data.errorThrown);
+      },
+
+      always: function(e, data) {
+        $bar = $(this).find('.bar');
+        $bar.width('0%');
+        $bar.html('');
+        // dismiss modal upon success, abort or error. ie. always
         $('.image-uploader-insert-btn').click();
       }
     });

@@ -1,12 +1,14 @@
 # Introduction
 
-Coursemology, an open source online education platform for school :-)
+Coursemology, an open source online education platform for schools :-)
 
 # Quick Start
 To get started, you will need to do the following:
 
  1. Clone the repository
- 2. Created a Facebook app and retrieve it `App ID` and `App secret`
+ 2. Create a [Facebook app][1] and retrieve its `App ID` and `App secret`
+ 3. Install [rvm][2] and install ruby 1.9.3
+ 4. Install mysql
 
 ## Setting up
 
@@ -15,6 +17,9 @@ To get started, you will need to do the following:
 
     $ cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
     # Edit the file (mailer_sender, omniauth)
+
+    $ cp config/database.yml.sample config/database.yml
+    # Change the username and password in the development section as appropriate
 
     # Set 2 environment variables: GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD
     # either just run this commands or add them into a .rvmrc file
@@ -89,3 +94,6 @@ You should skim through the README of these following gems to get a gist of how 
 * File upload: [Paperclip](https://github.com/thoughtbot/paperclip) (Very easy to use)
 * Icon: [Font Awesome](http://fortawesome.github.com/Font-Awesome/) and [font-awesome-sass-rails](https://github.com/littlebtc/font-awesome-sass-rails)
 * Datepicker: [Bootstrap Datepicker for Rails](https://github.com/Nerian/bootstrap-datepicker-rails)
+
+[1]: https://developers.facebook.com/apps    "Facebook Apps"
+[2]: https://rvm.io/                         "Ruby Version Manager"

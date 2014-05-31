@@ -118,6 +118,9 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.9.3)
     ffi (1.9.3-x86-mingw32)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     font-awesome-sass-rails (3.0.2.2)
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
@@ -355,6 +358,7 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails
   faker
+  figaro
   font-awesome-sass-rails
   gon
   google_visualr (>= 2.1)

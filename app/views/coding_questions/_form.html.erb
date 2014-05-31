@@ -27,7 +27,7 @@
             <% qns = @asm.coding_questions_before(@coding_question.asm_qns.first.pos) - [@coding_question] %>
             <% end %>
 
-            <%= qns.each do |cq| %>
+            <% qns.each do |cq| %>
                 <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.title %></option>
             <% end %>
           </select>
