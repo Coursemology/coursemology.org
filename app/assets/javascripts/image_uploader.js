@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  "use strict";
     // setup the drag drop zone
     var target_el = '';
 
