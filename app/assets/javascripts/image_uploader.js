@@ -10,22 +10,26 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).bind('dragover', function (e) {
-    var dropZone = $('#image-dropzone'),
+  $(document).on('dragover', function (e) {
+    var $this = $(this),
+        $dropZone = $this.find('#image-uploader-modal #image-dropzone'),
         timeout = window.dropZoneTimeout;
+
     if (!timeout) {
-      dropZone.addClass('in');
+      $dropZone.addClass('in');
     } else {
       clearTimeout(timeout);
     }
-    if (e.target === dropZone[0]) {
-      dropZone.addClass('hover');
+
+    if ($(e.target).is($dropZone)) {
+      $dropZone.addClass('hover');
     } else {
-      dropZone.removeClass('hover');
+      $dropZone.removeClass('hover');
     }
+
     window.dropZoneTimeout = setTimeout(function () {
       window.dropZoneTimeout = null;
-      dropZone.removeClass('in hover');
+      $dropZone.removeClass('in hover');
     }, 100);
   });
 
@@ -39,7 +43,7 @@ $(document).ready(function() {
       maxFileSize: 5000000,
       acceptFileTypes: '/(\.|\/)(gif|jpe?g|png)$/i',
       autoUpload: true,
-      dropZone: $('#image-dropzone'),
+      dropZone: $('#image-uploader-modal #image-dropzone'),
       dataType: 'json',
       url: $('#image-upload-form').attr('data-url'),
       formData: [
