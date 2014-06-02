@@ -48,6 +48,31 @@ $(document).ready(function() {
         }
       ],
 
+      add: function(e, data) {
+        // the jquery-fileupload-rails gem doesn't include the validation
+        // scripts, we have to do the check manually. >_<
+
+        var file = data.files[0],
+            that = $(this).data('blueimp-fileupload') || $(this).data('fileupload'),
+            options = that.options,
+            fileSize;
+
+        if (options.maxFileSize) {
+          fileSize = file.size;
+        }
+
+        if ($.type(fileSize) === 'number' &&
+            fileSize > options.maxFileSize) {
+          console.log("File is too large");
+        } else if (options.acceptFileTypes &&
+            !(options.acceptFileTypes.test(file.type) ||
+            options.acceptFileTypes.test(file.name))) {
+          console.log("Unaccepted file type");
+        } else {
+          data.submit();
+        }
+      },
+
       progress: function(e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10),
             $bar = $(this).find('.bar'),
