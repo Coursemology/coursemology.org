@@ -9,6 +9,7 @@ group :development do
   gem 'sqlite3'
   gem 'pry'
   gem 'meta_request'
+  gem "better_errors"
 end
 
 
