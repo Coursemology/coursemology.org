@@ -613,8 +613,8 @@ if PreferableItem.count == 63
 end
 
 if NavbarLinkType.count == 0
-  NavbarLinkType.create! type: 'module'
-  NavbarLinkType.create! type: 'admin'
+  NavbarLinkType.create! link_type: 'module'
+  NavbarLinkType.create! link_type: 'admin'
 end
 
 if NavbarPreferableItem.count == 0

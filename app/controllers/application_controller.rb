@@ -58,16 +58,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_sidebar_data
-    counts = {}
-    # in the future, nav items can be loaded from the database
-    @nav_items = []
-    # home
+  def sidebar_general_items
+    general_items = []
 
     @course.navbar_tabs(curr_user_course.is_staff?).each do |item|
       url_and_icon = get_url_and_icon(item.item)
-
-      @nav_items << {
+      general_items << {
           item: item.item,
           text: item.name,
           url:  url_and_icon.first,
@@ -75,104 +71,97 @@ class ApplicationController < ActionController::Base
       }
     end
 
+    #TO REMOVE
     if can? :manage, Course
 
-      @nav_items <<    {
+      general_items <<    {
           item: "pending_gradings",
           text: "Pending Gradings",
           url:  main_app.course_pending_gradings_url(@course),
           icon: "icon-question-sign",
       }
-
     end
 
+    general_items
+  end
+
+  def sidebar_admin_items
+    admin_nav_items = []
+    if curr_user_course.is_staff?
+      admin_nav_items += [{
+                              text: "My Students",
+                              url: main_app.course_manage_group_url(@course),
+                              icon: "icon-group"
+                          },{
+                              text: "Forum Participation",
+                              url:  main_app.course_forum_participation_url(@course),
+                              icon: "icon-group"
+                          }]
+    end
+    admin_nav_items + [{
+                            text: "Manage Staff",
+                            url:  main_app.course_staff_url(@course),
+                            icon: "icon-user"
+                        },{
+                            text: "Manage Students",
+                            url:  main_app.course_manage_students_url(@course),
+                            icon: "icon-user"
+                        },{
+                            text: "Student Summary",
+                            url:  main_app.course_student_summary_url(@course),
+                            icon: "icon-user"
+                        },{
+                            text: "Tutor Summary",
+                            url: main_app.course_staff_monitoring_path(@course),
+                            icon: "icon-trophy"
+                        },{
+                            text:   "Levels",
+                            url:    main_app.course_levels_url(@course),
+                            icon:   "icon-star-empty"
+                        },{
+                            text: "Tags",
+                            url: main_app.course_tags_url(@course),
+                            icon: "icon-tags"
+                        },{
+                            text: "Award Give-away",
+                            url: main_app.course_manual_exp_url(@course),
+                            icon: "icon-star"
+                        }, {
+                            text: "Statistics",
+                            url: main_app.course_stats_url(@course),
+                            icon: "icon-bar-chart"
+                        },{
+                            text: "Enrollment",
+                            url: main_app.course_enroll_requests_url(@course),
+                            icon: "icon-bolt"
+                        }, {
+                            text: "Mass Enrollment",
+                            url: main_app.course_mass_enrollment_emails_path(@course),
+                            icon: "icon-bolt"
+                        }, {
+                            text: "Duplicate Data",
+                            url: main_app.course_duplicate_url(@course),
+                            icon: "icon-bolt"
+                        }, {
+                            text: "Course Settings",
+                            url: main_app.edit_course_url(@course),
+                            icon: "icon-cog"
+                        }, {
+                            text: "Preference Settings",
+                            url: main_app.course_preferences_path(@course),
+                            icon: "icon-cog"
+                        }]
+  end
+
+
+  def load_sidebar_data
+    # in the future, nav items can be loaded from the database
+    # home
+    # @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course.role}") { sidebar_general_items }
+    @nav_items = sidebar_general_items
+
     if can? :manage, Course
-      @admin_nav_items = []
-      if curr_user_course.is_staff?
-        @admin_nav_items << {
-            text: "My Students",
-            url: main_app.course_manage_group_url(@course),
-            icon: "icon-group"
-        }
-        @admin_nav_items << {
-            text: "Forum Participation",
-            url:  main_app.course_forum_participation_url(@course),
-            icon: "icon-group"
-        }
-      end
-      @admin_nav_items << {
-          text: "Manage Staff",
-          url:  main_app.course_staff_url(@course),
-          icon: "icon-user"
-      }
-      @admin_nav_items << {
-          text: "Manage Students",
-          url:  main_app.course_manage_students_url(@course),
-          icon: "icon-user"
-      }
-
-      @admin_nav_items << {
-          text: "Student Summary",
-          url:  main_app.course_student_summary_url(@course),
-          icon: "icon-user"
-      }
-
-      @admin_nav_items << {
-          text: "Tutor Summary",
-          url: main_app.course_staff_monitoring_path(@course),
-          icon: "icon-trophy"
-      }
-      @admin_nav_items << {
-          text:   "Levels",
-          url:    main_app.course_levels_url(@course),
-          icon:   "icon-star-empty"
-      }
-
-      @admin_nav_items << {
-          text: "Tags",
-          url: main_app.course_tags_url(@course),
-          icon: "icon-tags"
-      }
-      @admin_nav_items << {
-          text: "Award Give-away",
-          url: main_app.course_manual_exp_url(@course),
-          icon: "icon-star"
-      }
-      @admin_nav_items << {
-          text: "Statistics",
-          url: main_app.course_stats_url(@course),
-          icon: "icon-bar-chart"
-      }
-
-      @admin_nav_items << {
-          text: "Enrollment",
-          url: main_app.course_enroll_requests_url(@course),
-          icon: "icon-bolt",
-          count: counts[:pending_enrol] || 0
-      }
-
-      @admin_nav_items << {
-          text: "Mass Enrollment",
-          url: main_app.course_mass_enrollment_emails_path(@course),
-          icon: "icon-bolt"
-      }
-
-      @admin_nav_items << {
-          text: "Duplicate Data",
-          url: main_app.course_duplicate_url(@course),
-          icon: "icon-bolt"
-      }
-
-      @admin_nav_items << {
-          text: "Course Settings",
-          url: main_app.edit_course_url(@course),
-          icon: "icon-cog"
-      }
-      @admin_nav_items << {
-          text: "Preference Settings",
-          url: main_app.course_preferences_path(@course),
-          icon: "icon-cog"
-      }
+      @admin_nav_items = sidebar_admin_items
     end
   end
 

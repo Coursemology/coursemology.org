@@ -3,7 +3,8 @@ class Course < ActiveRecord::Base
 
   # default_scope where(:is_pending_deletion => false)
 
-  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open, :start_at, :end_at
+  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish,
+                  :is_active, :is_open, :start_at, :end_at, :course_navbar_preferences_attributes
   before_create :populate_preference
   after_create :create_materials_root
 
@@ -45,6 +46,7 @@ class Course < ActiveRecord::Base
   has_many :file_uploads,           as: :owner
   has_many :course_preferences,     dependent: :destroy
   has_many :course_navbar_preferences, dependent: :destroy
+  accepts_nested_attributes_for :course_navbar_preferences
   has_many :comment_topics,         dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy

@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(:version => 20140526073057) do
     t.boolean  "is_enabled"
     t.string   "description"
     t.string   "link_to"
-    t.integer  "order"
+    t.integer  "pos"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
@@ -257,7 +257,6 @@ ActiveRecord::Schema.define(:version => 20140526073057) do
   end
 
   add_index "course_preferences", ["course_id", "preferable_item_id"], :name => "index_course_preferences_on_course_id_and_preferable_item_id", :unique => true
-  add_index "course_preferences", ["course_id"], :name => "course_id"
   add_index "course_preferences", ["course_id"], :name => "index_course_preferences_on_course_id"
   add_index "course_preferences", ["preferable_item_id"], :name => "index_course_preferences_on_preferable_item_id"
 
@@ -684,7 +683,7 @@ ActiveRecord::Schema.define(:version => 20140526073057) do
   add_index "missions", ["creator_id"], :name => "index_missions_on_creator_id"
 
   create_table "navbar_link_types", :force => true do |t|
-    t.string   "type"
+    t.string   "link_type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -697,7 +696,7 @@ ActiveRecord::Schema.define(:version => 20140526073057) do
     t.boolean  "is_enabled"
     t.string   "description"
     t.string   "link_to"
-    t.integer  "order"
+    t.integer  "pos"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
   end
@@ -858,19 +857,6 @@ ActiveRecord::Schema.define(:version => 20140526073057) do
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
-
-  create_table "sidebar_preferable_items", :force => true do |t|
-    t.string   "item"
-    t.string   "item_type"
-    t.string   "title"
-    t.boolean  "is_displayed"
-    t.boolean  "is_enabled"
-    t.string   "description"
-    t.string   "link_to"
-    t.integer  "order"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
 
   create_table "std_answers", :force => true do |t|
     t.text     "text"

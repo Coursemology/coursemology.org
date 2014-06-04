@@ -31,6 +31,8 @@
     <%= render partial: "paging" %>
 <% elsif @tab == 'OtherPreference' %>
     <%= render partial: "misc" %>
+<% elsif @tab == 'Sidebar' %>
+    <%= render partial: "navbar_form" %>
 <% else %>
     <%=render partial: "form" %>
 <% end %>
