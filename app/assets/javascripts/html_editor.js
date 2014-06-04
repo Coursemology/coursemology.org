@@ -57,6 +57,8 @@ $(document).ready(function() {
   };
   options.parserRules.classes['jfdiCode'] = 1;
 
+  options.customTemplates = {};
+
   if (imgUploadHtml) {
     options.html = true;
     options.customTemplates = {
@@ -79,7 +81,7 @@ $(document).ready(function() {
              "<a class='btn' data-wysihtml5-command='Indent' title='Indent'><i class='icon-indent-right'></i></a>" +
              "</div>" +
              "</li>";
-  }
+  };
   options.customTemplates.html = modifiedListHtml;
 
   var handler = function() {
