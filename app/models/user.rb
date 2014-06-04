@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   attr_accessible :provider, :uid
 
   validates :name, presence: true
-  validates_uniqueness_of :email, :if => :email_changed?
   before_update :send_out_notification_email, :if => :email_changed?
   after_update :update_user_course, :if => :name_changed?
 
