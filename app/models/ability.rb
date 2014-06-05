@@ -6,6 +6,7 @@ class Ability
       if user.is_admin?
         can :manage, :all
         can :masquerade, :user
+        can :update_role, :all
       elsif user.is_lecturer?
         can :manage, Course, creator_id: user.id
       end
