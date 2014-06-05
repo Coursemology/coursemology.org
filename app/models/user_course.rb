@@ -219,7 +219,7 @@ class UserCourse < ActiveRecord::Base
     exp_transaction.reason = reason
     exp_transaction.is_valid = true
     exp_transaction.save
-    user_course.update_exp_and_level
+    user_course.update_exp_and_level_async
   end
 
   def get_staff_incharge
