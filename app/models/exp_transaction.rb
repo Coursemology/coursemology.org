@@ -4,12 +4,13 @@ class ExpTransaction < ActiveRecord::Base
   after_destroy :update_user_data
 
   attr_accessible :exp, :giver_id, :is_valid, :reason, :user_course_id, :created_at
+  attr_accessible :rewardable_id, :rewardable_type
 
   belongs_to :giver, class_name: "User"
   belongs_to :user_course
+  belongs_to :rewardable, polymorphic: true
 
   def update_user_data
-    puts "AFTER SAVE EXP TRANSACTION"
     self.user_course.update_exp_and_level
   end
 end
