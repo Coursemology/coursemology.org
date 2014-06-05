@@ -17,15 +17,15 @@ class LevelsController < ApplicationController
       num_level.to_i.times do |i|
         lvl = i + 1
         @course.levels.build({
-          level: lvl,
-          exp_threshold: lvl * lvl * 1000
-        })
+                                 level: lvl,
+                                 exp_threshold: lvl * lvl * 1000
+                             })
       end
       @course.save
     end
     respond_to do |format|
       format.html { redirect_to course_levels_path(@course),
-                    notice: "#{params[:num_level]} levels has been generated!"}
+                                notice: "#{params[:num_level]} levels has been generated!"}
     end
   end
 
@@ -65,7 +65,9 @@ class LevelsController < ApplicationController
     end
 
     # update students level
-    @course.user_courses.each { |uc| uc.update_exp_and_level }
+    Thread.new {
+      @course.user_courses.each { |uc| uc.update_exp_and_level }
+    }
 
     redirect_to course_levels_path(@course), notice: "Levels updated!"
   end

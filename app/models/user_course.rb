@@ -110,6 +110,12 @@ class UserCourse < ActiveRecord::Base
     mark_as_seen_array(obj)
   end
 
+  def update_exp_and_level_async
+    Thread.new {
+      update_exp_and_level
+    }
+  end
+
   def update_exp_and_level
     # recalculate the EXP and level of the student (user)
     # find all submission_grading and calculate the score
@@ -164,7 +170,7 @@ class UserCourse < ActiveRecord::Base
         self.give_achievement(ach, should_notify)
       end
     end
-    return fulfilled
+    fulfilled
   end
 
   def give_achievement(ach, should_notify=true)
