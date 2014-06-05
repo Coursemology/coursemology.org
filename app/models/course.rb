@@ -337,7 +337,7 @@ class Course < ActiveRecord::Base
     end
 
     course_navbar_preferences.each do |pref|
-      if pref.navbar_prefereable_item
+      if pref.navbar_preferable_item
         item = NavbarPreferableItem.find_by_id(pref.navbar_prefereable_item_id)
         unless item
           CourseNavbarPreference.destroy(pref)
