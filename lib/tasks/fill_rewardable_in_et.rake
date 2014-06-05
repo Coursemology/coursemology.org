@@ -2,9 +2,13 @@ namespace :db do
   desc "fill rewardable_id and rewardable_type in exp transaction table"
 
   task fill_rewardable_in_et: :environment do
-    SubmissionGrading.all.each do |sg|
+    SubmissionGrading.includes(:exp_transaction).each do |sg|
       et = sg.exp_transaction
       unless et
+        next
+      end
+
+      if et.rewardable_type
         next
       end
       sbm = sg.sbm
