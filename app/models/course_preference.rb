@@ -35,6 +35,10 @@ class CoursePreference < ActiveRecord::Base
   end
 
   def update_related_pref
+    #expire cache
+    course.student_courses.each do |uc|
+      ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{uc.id}")
+    end
     if preferable_item.name == 'announcements' and
         preferable_item.item == 'Sidebar' and
         preferable_item.item_type == 'Student'
