@@ -1,42 +1,44 @@
-<table width="100%">
-  <% tag_groups.each do |tag_group| %>
-    <% if tag_group.tags.size > 0 %>
-      <tr><td><strong><%= tag_group.name %></strong></td></tr>
-      <% tag_group.tags.each_with_index do |tag, i| %>
-        <% if i % 4 == 0 %>
-          <tr>
-        <% end %>
-        <td width="20%">
-          <label class="checkbox">
-            <input type="checkbox" name="tags[]" value="<%= tag.id %>"
-               <%= 'checked' if exist_tags_hash.has_key?(tag.id) %> >
-             <%= tag.name %>
-            </input>
-          </label>
-        </td>
-        <% if i % 4 == 3 %>
-          </tr>
-        <% end %>
+<% cache("course/#{@course.id}/tags") do %>
+    <% tag_groups = @course.tag_groups.includes(:tags) %>
+    <% uncats = @course.tags.uncategorized %>
+    <table width="100%">
+      <% tag_groups.each do |tag_group| %>
+          <% if tag_group.tags.length > 0 %>
+              <tr><td><strong><%= tag_group.name %></strong></td></tr>
+              <% tag_group.tags.each_with_index do |tag, i| %>
+                  <% if i % 4 == 0 %>
+                      <tr>
+                  <% end %>
+                  <td width="20%">
+                    <label class="checkbox">
+                      <input type="checkbox" name="tags[]" value="<%= tag.id %>">
+                      <%= tag.name %>
+                      </input>
+                    </label>
+                  </td>
+                  <% if i % 4 == 3 %>
+                      </tr>
+                  <% end %>
+              <% end %>
+          <% end %>
       <% end %>
-    <% end %>
-  <% end %>
-  <% if uncats.count > 0 %>
-    <tr><td><strong>Other</strong></td></tr>
-    <% uncats.each_with_index do |tag, i| %>
-      <% if i % 4 == 0 %>
-        <tr>
+      <% if uncats.length > 0 %>
+          <tr><td><strong>Other</strong></td></tr>
+          <% uncats.each_with_index do |tag, i| %>
+              <% if i % 4 == 0 %>
+                  <tr>
+              <% end %>
+              <td width="20%">
+                <label class="checkbox">
+                  <input type="checkbox" name="tags[]" value="<%= tag.id %>" >
+                  <%= tag.name %>
+                  </input>
+                </label>
+              </td>
+              <% if i % 4 == 3 %>
+                  </tr>
+              <% end %>
+          <% end %>
       <% end %>
-      <td width="20%">
-        <label class="checkbox">
-          <input type="checkbox" name="tags[]" value="<%= tag.id %>"
-             <%= 'checked' if exist_tags_hash.has_key?(tag.id) %> >
-           <%= tag.name %>
-          </input>
-        </label>
-      </td>
-      <% if i % 4 == 3 %>
-        </tr>
-      <% end %>
-    <% end %>
-  <% end %>
-</table>
+    </table>
+<% end %>

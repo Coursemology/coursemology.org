@@ -8,6 +8,8 @@ class Training < ActiveRecord::Base
   include ActivityObject
   include Assignment
 
+  default_scope { order("trainings.open_at") }
+
   attr_accessible :course_id, :creator_id, :description, :exp, :max_grade, :open_at, :pos, :title, :bonus_exp, :bonus_cutoff, :publish, :t_type, :tab_id, :can_skip
 
   belongs_to :creator, class_name: "User"
@@ -45,7 +47,7 @@ class Training < ActiveRecord::Base
   end
 
   def can_start?(curr_user_course)
-    if self.open_at > Time.now then
+    if self.open_at > Time.now
       return false, "Training hasn't opened yet :)"
     end
     return true, ""

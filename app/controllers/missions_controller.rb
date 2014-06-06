@@ -29,7 +29,7 @@ class MissionsController < ApplicationController
     end
 
     if @paging.display?
-      @missions = @missions.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
+      @missions = @missions.page(params[:page]).per(@paging.prefer_value.to_i)
     end
 
     if curr_user_course.id

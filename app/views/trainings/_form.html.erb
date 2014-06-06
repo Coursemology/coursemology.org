@@ -83,8 +83,7 @@
       <%= f.label "Topic", class: 'control-label' %>
       <div class="controls">
         <%= render partial: "tags/form_checkboxes",
-                   locals: { tag_groups: @course.tag_groups,
-                             uncats: @course.tags.uncategorized,
+                   locals: { course: @course,
                              exist_tags_hash: @asm_tags } %>
       </div>
     </div>
