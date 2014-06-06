@@ -9,36 +9,68 @@ class MissionsController < ApplicationController
   def index
     @tab = 'missions'
     @is_new = {}
-    @tags_map = {}
-    @selected_tags = params[:tags]
+    selected_tags = params[:tags]
     @display_columns = {}
     @course.mission_columns_display.each do |cp|
       @display_columns[cp.preferable_item.name] = cp.prefer_value
     end
     @time_format =  @course.mission_time_format
 
-    @missions = @course.missions.accessible_by(current_ability)
+    @missions = @course.missions
     @paging = @course.missions_paging_pref
 
 
-    if @selected_tags
-      tags = Tag.find(@selected_tags)
+    if selected_tags
+      tags = Tag.find(selected_tags)
       mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
-      @missions = @missions.where(id: mission_ids).accessible_by(current_ability)
-      tags.each { |tag| @tags_map[tag.id] = true }
+      @missions = @missions.where(id: mission_ids)
     end
 
     if @paging.display?
-      @missions = @missions.page(params[:page]).per(@paging.prefer_value.to_i)
+      @missions = @missions.accessible_by(current_ability).page(params[:page]).per(@paging.prefer_value.to_i)
+    end
+
+    @submissions = @course.submissions.where(mission_id: @missions.map {|m| m.id},
+                                             std_course_id: curr_user_course.id)
+
+    sub_ids = @submissions.map {|s| s.mission_id }
+    sub_map = {}
+    @submissions.each do |sub|
+      sub_map[sub.mission_id] = sub
+    end
+
+    action_map = {}
+    @missions.each do |m|
+      if sub_ids.include? m.id
+        attempting = sub_map[m.id].attempting?
+        action_map[m.id] = {action: attempting ? "Edit" : "Review",
+                            url: edit_course_mission_submission_path(@course, m, sub_map[m.id]) }
+      elsif  m.dependent_id == 0 or
+          can?(:manage, m) or
+          (sub_ids.include? m.dependent_id and sub_map[m.dependent_id].submitted?)
+        action_map[m.id] = {action: "Attempt",
+                            url: new_course_mission_submission_path(@course, m)}
+      else
+        action_map[m.id] = {action: nil}
+      end
+      action_map[m.id][:new] = false
+      action_map[m.id][:opened] = m.open_at <= Time.now
+      action_map[m.id][:published] = m.publish
+      action_map[m.id][:title_link] =
+          can?(:manage, m) ?
+          course_mission_stats_path(@course, m) :
+          course_mission_path(@course, m)
     end
 
     if curr_user_course.id
       unseen = @missions - curr_user_course.seen_missions
       unseen.each do |um|
-        @is_new[um.id] = true
+        action_map[um.id][:new] = true
         curr_user_course.mark_as_seen(um)
       end
     end
+    @summary = {selected_tags: selected_tags, actions: action_map}
+
     respond_to do |format|
       format.html # index.html.erb
     end
