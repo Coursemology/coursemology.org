@@ -157,11 +157,10 @@ class ApplicationController < ActionController::Base
   def load_sidebar_data
     # in the future, nav items can be loaded from the database
     # home
-    # @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course.role}") { sidebar_general_items }
-    @nav_items = sidebar_general_items
+    @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course.role.id}") { sidebar_general_items }
 
     if can? :manage, Course
-      @admin_nav_items = sidebar_admin_items
+      @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
     end
   end
 

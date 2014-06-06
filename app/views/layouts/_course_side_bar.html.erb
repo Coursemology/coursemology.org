@@ -43,19 +43,20 @@
     </div>
 <% end %>
 
-<div class="navbar">
-  <a class="btn btn-navbar collapsed" data-toggle="collapse"
-     data-target=".sidenav-collapse">
-    <span class="icon-chevron-down"></span>
-  </a>
-</div>
-<div class="clearfix"></div>
-<div class="sidenav-collapse collapse" style="height: 0px;">
-  <ul class="nav nav-list sidenav" id="navbar_tabs" url="<%= course_notifications_path(@course)%>">
-    <% if @nav_items %>
-        <% @nav_items.each do |item| %>
-            <li>
-              <a href="<%= item[:url] %>">
+<% cache("sidebar/#{@course.id}/role/#{curr_user_course.role_id}") do %>
+    <div class="navbar">
+      <a class="btn btn-navbar collapsed" data-toggle="collapse"
+         data-target=".sidenav-collapse">
+        <span class="icon-chevron-down"></span>
+      </a>
+    </div>
+    <div class="clearfix"></div>
+    <div class="sidenav-collapse collapse" style="height: 0px;">
+      <ul class="nav nav-list sidenav" id="navbar_tabs" url="<%= course_notifications_path(@course)%>">
+        <% if @nav_items %>
+            <% @nav_items.each do |item| %>
+                <li>
+                  <a href="<%= item[:url] %>">
           <span class="nav-icon">
             <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
               <img src="<%= item[:img] %>" />
@@ -63,22 +64,22 @@
               <i class="<%= item[:icon] %>"></i>
             <% end %>
           </span>
-                <%= item[:text] %>
-                <span class="sidenav-count" style="display: none"
-                      id="badge_<%= item[:item] %>"></span>
-              </a>
-            </li>
+                    <%= item[:text] %>
+                    <span class="sidenav-count" style="display: none"
+                          id="badge_<%= item[:item] %>"></span>
+                  </a>
+                </li>
+            <% end %>
         <% end %>
-    <% end %>
-  </ul>
-  <% if @admin_nav_items %>
-      <br>
-      <h3>Admin Functions</h3>
-      <ul class="nav nav-list sidenav">
-        <!--TODO: refactoring-->
-        <% @admin_nav_items.each do |item| %>
-            <li>
-              <a href="<%= item[:url] %>">
+      </ul>
+      <% if @admin_nav_items %>
+          <br>
+          <h3>Admin Functions</h3>
+          <ul class="nav nav-list sidenav">
+            <!--TODO: refactoring-->
+            <% @admin_nav_items.each do |item| %>
+                <li>
+                  <a href="<%= item[:url] %>">
             <span class="nav-icon">
               <% if item.has_key?(:img) && item[:img] && !item[:img].empty? %>
                 <img src="<%= item[:img] %>" />
@@ -86,13 +87,14 @@
                 <i class="<%= item[:icon] %>"></i>
               <% end %>
             </span>
-                <%= item[:text] %>
-                <% if item.has_key?(:count) and item[:count] > 0 %>
-                    <span class="sidenav-count" id="badge_<%= item[:text].split(" ").join %>"></span>
-                <% end %>
-              </a>
-            </li>
-        <% end %>
-      </ul>
-  <% end %>
-</div>
+                    <%= item[:text] %>
+                    <% if item.has_key?(:count) and item[:count] > 0 %>
+                        <span class="sidenav-count" id="badge_<%= item[:text].split(" ").join %>"></span>
+                    <% end %>
+                  </a>
+                </li>
+            <% end %>
+          </ul>
+      <% end %>
+    </div>
+<% end %>
