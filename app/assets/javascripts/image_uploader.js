@@ -3,6 +3,12 @@ $(document).ready(function() {
   // setup the drag drop zone
   var target_el = '';
 
+  var showError = function(message) {
+    var $alert = $('.alert');
+    $alert.removeClass('hidden');
+    $alert.html("Error uploading image: " + message);
+  };
+
   $('.image-uploader-trigger').click(function() {
     target_el = $(this).attr('data-target');
     var modal = $(this).attr('href');
@@ -60,6 +66,7 @@ $(document).ready(function() {
         var file = data.files[0],
             that = $(this).data('blueimp-fileupload') || $(this).data('fileupload'),
             options = that.options,
+            $modal = $('.modal'),
             fileSize;
 
         if (options.maxFileSize) {
@@ -68,11 +75,13 @@ $(document).ready(function() {
 
         if ($.type(fileSize) === 'number' &&
             fileSize > options.maxFileSize) {
-          console.log("File is too large");
+          showError("File is too large");
+          $modal.modal('hide');
         } else if (options.acceptFileTypes &&
             !(options.acceptFileTypes.test(file.type) ||
             options.acceptFileTypes.test(file.name))) {
-          console.log("Unaccepted file type");
+          showError("Unaccepted file type");
+          $modal.modal('hide');
         } else {
           data.submit();
         }
@@ -95,9 +104,7 @@ $(document).ready(function() {
       },
 
       fail: function(e, data) {
-        var $alert = $('.alert');
-        $alert.removeClass('hidden');
-        $alert.html("Error uploading image: " + data.errorThrown);
+        showError(data.errorThrown);
       },
 
       always: function(e, data) {
