@@ -38,6 +38,11 @@ class CoursePreferencesController < ApplicationController
   end
 
   def update
+    #dalli don't support regualr expression
+    Role.all.each do |role|
+      expire_fragment("sidebar/#{@course.id}/role/#{role.id}")
+    end
+
     @course.update_attributes(params[:course])
     preferences = params[:preferences]
     preferences.each do |val, key|

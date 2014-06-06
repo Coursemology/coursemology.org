@@ -11,6 +11,7 @@ class TagGroupsController < ApplicationController
   end
 
   def create
+    expire_fragment("course/#{@course.id}/tags")
     respond_to do |format|
       if @tag_group.save
         format.html { redirect_to course_tags_path(@course),
@@ -22,6 +23,7 @@ class TagGroupsController < ApplicationController
   end
 
   def update
+    expire_fragment("course/#{@course.id}/tags")
     respond_to do |format|
       if @tag_group.update_attributes(params[:tag_group])
         format.html { redirect_to course_tags_path(@course),
@@ -33,6 +35,7 @@ class TagGroupsController < ApplicationController
   end
 
   def destroy
+    expire_fragment("course/#{@course.id}/tags")
     @tag_group.destroy
     respond_to do |format|
       format.html { redirect_to course_tags_url(@course),
