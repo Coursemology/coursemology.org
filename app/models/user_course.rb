@@ -145,6 +145,7 @@ class UserCourse < ActiveRecord::Base
     self.exp_updated_at = Time.now
     self.save
     self.update_achievements
+    ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
   end
 
   def update_achievements
