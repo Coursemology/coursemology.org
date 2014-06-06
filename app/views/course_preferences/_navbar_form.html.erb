@@ -1,0 +1,37 @@
+<%= simple_form_for @course,url: course_preferences_path(@course),method: "POST", :html => { :multipart => true } do |f| %>
+    <input type="hidden" name="origin" class="origin_url">
+    <table class="table table-bordered table-center">
+      <thead>
+      <th>
+        Name
+      </th>
+      <th>
+        Order
+      </th>
+      <th>
+        Display?(Hide for students)
+      </th>
+      <th>
+        Enabled?
+      </th>
+
+      </thead>
+      <tbody>
+      <%= f.simple_fields_for :course_navbar_preferences do |pref| %>
+        <%= render 'course_navbar_preference_fields', f: pref %>
+      <% end %>
+      </tbody>
+    </table>
+    <h3>Levels and Achievement:</h3>
+    <p><%= @ranking.preferable_item.description %></p>
+    <div class="info-block checkbox-text">
+      <input type="checkbox"
+             name="preferences[<%= @ranking.id %>][display]"
+             <%= "checked" if @ranking.display %>>
+      </input>Display
+      <input type="hidden" name="preferences[<%= @ranking.id %>][prefer_value]" value="<%= @ranking.prefer_value %>" >
+    </div>
+    <div class="center">
+        <%= f.button :submit, "Update", class: " btn-large btn-primary"%>
+    </div>
+<% end %>

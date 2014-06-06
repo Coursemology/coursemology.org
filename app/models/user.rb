@@ -17,11 +17,12 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
-  attr_accessible :display_name, :name, :profile_photo_url, :system_role_id
+  attr_accessible :display_name, :name, :profile_photo_url
   attr_accessible :provider, :uid
 
+  protected_attributes :system_role_id
+
   validates :name, presence: true
-  validates_uniqueness_of :email, :if => :email_changed?
   before_update :send_out_notification_email, :if => :email_changed?
   after_update :update_user_course, :if => :name_changed?
 
@@ -169,6 +170,11 @@ class User < ActiveRecord::Base
   def after_database_authentication
     #self.update_attribute(:invite_code, nil)
     self.is_logged_in = true
+  end
+
+  def update_user_role(role_id)
+    self.system_role_id = role_id
+    self.save
   end
 
   private

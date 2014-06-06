@@ -33,23 +33,28 @@ class CoursePreferencesController < ApplicationController
         @preferences = @course.course_paging_prefs
       else
         @tab = 'Sidebar'
-        @preferences = @course.student_sidebar_items
         @ranking = @course.student_sidebar_ranking
     end
   end
 
   def update
-       preferences = params[:preferences]
-       preferences.each do |val, key|
-         curr_pref = @course.course_preferences.where(id: val).first
-         if curr_pref
-           if key["prefer_value"] && key["prefer_value"].strip.size > 0
-             curr_pref.prefer_value = key["prefer_value"].strip
-           end
-           curr_pref.display = key["display"] ? true : false
-           curr_pref.save
-         end
-       end
+    #dalli don't support regualr expression
+    Role.all.each do |role|
+      expire_fragment("sidebar/#{@course.id}/role/#{role.id}")
+    end
+
+    @course.update_attributes(params[:course])
+    preferences = params[:preferences]
+    preferences.each do |val, key|
+      curr_pref = @course.course_preferences.where(id: val).first
+      if curr_pref
+        if key["prefer_value"] && key["prefer_value"].strip.size > 0
+          curr_pref.prefer_value = key["prefer_value"].strip
+        end
+        curr_pref.display = key["display"] ? true : false
+        curr_pref.save
+      end
+    end
     redirect_to params[:origin], :notice => "Updated successfully"
   end
   private

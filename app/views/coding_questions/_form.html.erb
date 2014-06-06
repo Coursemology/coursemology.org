@@ -27,7 +27,7 @@
             <% qns = @asm.coding_questions_before(@coding_question.asm_qns.first.pos) - [@coding_question] %>
             <% end %>
 
-            <%= qns.each do |cq| %>
+            <% qns.each do |cq| %>
                 <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.title %></option>
             <% end %>
           </select>
@@ -103,7 +103,7 @@
       <%= f.submit nil, :class => 'btn btn-primary', id:"savePath" %>
       <!--<input type="button" id="savePath" class="btn btn-primary" value="Create Coding Question">-->
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  nil, :class => 'btn' %>
+                  :back, :class => 'btn' %>
     </div>
     </div>
 <% end %>

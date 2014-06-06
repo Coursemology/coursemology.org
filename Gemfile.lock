@@ -48,6 +48,9 @@ GEM
     best_in_place (2.1.0)
       jquery-rails
       rails (~> 3.1)
+    better_errors (1.1.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
     bootstrap-colorpicker-rails (0.3.1)
       railties (>= 3.0)
     bootstrap-datetimepicker-rails (0.0.11)
@@ -80,6 +83,7 @@ GEM
       tzinfo
     cocaine (0.5.4)
       climate_control (>= 0.0.3, < 1.0)
+    cocoon (1.2.6)
     codemirror-rails (3.23)
       railties (>= 3.0, < 5)
     coderay (1.1.0)
@@ -90,7 +94,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    connection_pool (2.0.0)
     daemons (1.1.9)
+    dalli (2.7.2)
     delayed_job (4.0.1)
       activesupport (>= 3.0, < 4.2)
     delayed_job_active_record (4.0.1)
@@ -138,6 +144,8 @@ GEM
     guard-rspec (4.2.8)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
+    haml (4.0.5)
+      tilt
     hashie (2.1.1)
     hike (1.2.3)
     htmlentities (4.3.1)
@@ -289,6 +297,9 @@ GEM
       tilt (~> 1.3)
     scrollToFixed_rails (1.0.1)
       railties (>= 3.1)
+    simple_form (2.1.0)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
     slop (3.5.0)
     slugged (2.0.0)
       activerecord (>= 3.0)
@@ -341,6 +352,7 @@ DEPENDENCIES
   angularjs-rails
   aws-sdk (= 1.28.0)
   best_in_place
+  better_errors
   bootstrap-colorpicker-rails
   bootstrap-datetimepicker-rails
   bootstrap-sass (= 2.1.0.0)
@@ -350,9 +362,12 @@ DEPENDENCIES
   capistrano
   capybara
   clockwork
+  cocoon
   codemirror-rails (~> 3.14)
   coffee-rails
+  connection_pool
   daemons
+  dalli
   delayed_job_active_record
   devise (= 3.0)
   exception_notification
@@ -363,6 +378,7 @@ DEPENDENCIES
   gon
   google_visualr (>= 2.1)
   guard-rspec
+  haml
   htmlentities
   jqtree-rails
   jquery-fileupload-rails
@@ -386,6 +402,7 @@ DEPENDENCIES
   sanitize
   sass-rails (~> 3.2.3)
   scrollToFixed_rails (~> 1.0.0)
+  simple_form
   slugged (~> 2.0)
   sqlite3
   truncate_html

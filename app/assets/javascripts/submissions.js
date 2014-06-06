@@ -73,7 +73,9 @@ var codeEvaluator = function(){
                         }
                     });
                     var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
-                    if(publicTestFlag){
+                    var errorFlag = resp.errors.length > 0;
+
+                    if(publicTestFlag && !errorFlag){
                         if(resp.privateTests == null || !privateTestFlag){
                             $er.html("Your answer failed to pass one or more of the private test cases.").animate(failColor, animateOpt);
                         }else{

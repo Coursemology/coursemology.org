@@ -1,44 +1,49 @@
 $(document).ready(function() {
-    // setup the drag drop zone
-    var target_el = '';
+  "use strict";
+  // setup the drag drop zone
+  var target_el = '';
 
-    $('.image-uploader-trigger').click(function() {
-        target_el = $(this).attr('data-target');
-        var modal = $(this).attr('href');
-        $(modal).modal('show');
-        return false;
-    });
+  $('.image-uploader-trigger').click(function() {
+    target_el = $(this).attr('data-target');
+    var modal = $(this).attr('href');
+    $(modal).modal('show');
+    return false;
+  });
 
-    $(document).bind('dragover', function (e) {
-        var dropZone = $('#image-dropzone'),
-            timeout = window.dropZoneTimeout;
-        if (!timeout) {
-            dropZone.addClass('in');
-        } else {
-            clearTimeout(timeout);
-        }
-        if (e.target === dropZone[0]) {
-            dropZone.addClass('hover');
-        } else {
-            dropZone.removeClass('hover');
-        }
-        window.dropZoneTimeout = setTimeout(function () {
-            window.dropZoneTimeout = null;
-            dropZone.removeClass('in hover');
-        }, 100);
-    });
+  $(document).on('dragover', function (e) {
+    var $this = $(this),
+        $dropZone = $this.find('#image-uploader-modal #image-dropzone'),
+        timeout = window.dropZoneTimeout;
 
-    $(document).bind('drop dragover', function (e) {
-        e.preventDefault();
-    });
+    if (!timeout) {
+      $dropZone.addClass('in');
+    } else {
+      clearTimeout(timeout);
+    }
 
-    // setup fileuploader
+    if ($(e.target).is($dropZone)) {
+      $dropZone.addClass('hover');
+    } else {
+      $dropZone.removeClass('hover');
+    }
+
+    window.dropZoneTimeout = setTimeout(function () {
+      window.dropZoneTimeout = null;
+      $dropZone.removeClass('in hover');
+    }, 100);
+  });
+
+  $(document).bind('drop dragover', function (e) {
+    e.preventDefault();
+  });
+
+  // setup fileuploader
   $(document).on('DOMNodeInserted', function(e) {
     $('#image-upload-form', e.target).fileupload({
       maxFileSize: 5000000,
       acceptFileTypes: '/(\.|\/)(gif|jpe?g|png)$/i',
       autoUpload: true,
-      dropZone: $('#image-dropzone'),
+      dropZone: $('#image-uploader-modal #image-dropzone'),
       dataType: 'json',
       url: $('#image-upload-form').attr('data-url'),
       formData: [
@@ -96,6 +101,9 @@ $(document).ready(function() {
       },
 
       always: function(e, data) {
+        var $bar = $(this).find('.bar');
+        $bar.width(0);
+        $bar.html('');
         // dismiss modal upon success, abort or error. ie. always
         $('.image-uploader-insert-btn').click();
       }
