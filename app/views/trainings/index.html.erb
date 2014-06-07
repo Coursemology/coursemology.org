@@ -10,9 +10,7 @@
       <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
         <div class="well">
           <%= render partial: "tags/form_checkboxes",
-                     locals: { tag_groups: @course.tag_groups,
-                               uncats: @course.tags.uncategorized,
-                               exist_tags_hash: @tags_map } %>
+                     locals: { course: @course } %>
           <button class="btn">Filter</button>
         </div>
       </div>

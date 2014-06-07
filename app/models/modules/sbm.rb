@@ -5,7 +5,7 @@ module Sbm
       has_many :sbm_answers, as: :sbm, dependent: :destroy
       has_many :submission_gradings, as: :sbm, dependent: :destroy
 
-      default_scope includes(:submission_gradings)
+      # default_scope includes(:submission_gradings)
     end
   end
 

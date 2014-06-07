@@ -130,7 +130,7 @@ var path = function(){
             }
             if(cStep.evalTests) {
                 for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
-                    _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.publicTests[i].hint || "" );
+                    _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.evalTests[i].hint || "" );
                 }
             }
             cmPrefill.setValue(cStep.prefill);

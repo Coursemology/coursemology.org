@@ -7,6 +7,8 @@ class Mission < ActiveRecord::Base
   include ActivityObject
   include Assignment
 
+  default_scope { order("missions.open_at") }
+
   attr_accessible :attempt_limit, :auto_graded, :course_id, :close_at, :creator_id, :deadline,
                   :description, :exp, :open_at, :pos, :timelimit, :title, :single_question,
                   :is_file_submission, :dependent_id, :publish,

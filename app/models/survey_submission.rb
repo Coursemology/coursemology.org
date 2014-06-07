@@ -37,6 +37,7 @@ class SurveySubmission < ActiveRecord::Base
       self.exp_transaction.reason = "Exp for #{survey.title}"
       self.exp_transaction.is_valid = true
       self.exp_transaction.exp = survey.exp
+      self.exp_transaction.rewardable = survey
       self.save
       self.exp_transaction.update_user_data
     end

@@ -77,7 +77,6 @@ $(document).ready(function() {
 
       always: function(e, data) {
         var $bar = $(this).find('.bar');
-
         $bar.width(0);
         $bar.html('');
         // dismiss modal upon success, abort or error. ie. always

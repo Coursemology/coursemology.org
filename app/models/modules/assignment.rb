@@ -2,7 +2,7 @@ module Assignment
 
   def self.included(base)
     base.class_eval do
-      default_scope { order("open_at") }
+
       scope :closed, lambda { where("close_at < ?", Time.now) }
       scope :still_open, lambda { where("close_at >= ? ", Time.now) }
       scope :opened, lambda { where("open_at <= ? ", Time.now) }
