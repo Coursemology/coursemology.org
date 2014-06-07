@@ -41,7 +41,7 @@ class SubmissionsController < ApplicationController
     if @selected[:asm]
       @sbms = @selected[:asm].sbms
     else
-      @sbms = @course.submissions.accessible_by(current_ability).order(:submit_at).reverse_order
+      @sbms = @course.submissions.includes(:mission).accessible_by(current_ability).order(:submit_at).reverse_order
     end
 
     if @selected[:student]
