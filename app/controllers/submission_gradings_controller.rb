@@ -9,6 +9,12 @@ class SubmissionGradingsController < ApplicationController
   # note: it only handles view & grading of missions
 
   def new
+
+    if @submission.submission_gradings.count > 0
+      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
+      return
+    end
+
     @qadata = {}
 
     @mission.get_all_questions.each_with_index do |q,i|
@@ -34,11 +40,6 @@ class SubmissionGradingsController < ApplicationController
     end
 
     @do_grading = true
-
-    if @submission.submission_gradings.count > 0
-      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
-    end
-
   end
 
   def create
