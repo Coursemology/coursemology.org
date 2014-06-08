@@ -92,7 +92,7 @@
     <table class="activities">
       <% @activities.each do |act| %>
           <% unless act.actor_course.nil? || act.action.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? || act.obj.nil? %>
-              <% cache ("activity/#{act.id}") do %>
+              <% cache ("activities/#{act.id}") do %>
                   <tr>
                     <td width="25px">
                       <a class="pull-left activity-icon" href="<%= get_social_media_url(act.actor_course) %>">
@@ -106,10 +106,10 @@
                       </a> <%= act.action.text %>
                       <strong> <%= act.obj_url ? "<a href=\"#{act.obj_url}\">#{act.obj.get_title}</a>".html_safe : act.obj.get_title%></strong>
                       <br/>
-                      <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
-                    </td>
-                  </tr>
               <% end %>
+              <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
+              </td>
+              </tr>
           <% end %>
       <% end %>
     </table>
