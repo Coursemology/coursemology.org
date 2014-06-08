@@ -13,6 +13,7 @@ class CodingQuestion < ActiveRecord::Base
 
   before_create :set_default_data
   after_update :update_test_limit
+  after_save :refresh_asm_autograding, :if => :data_changed?
 
   def data_hash
     JSON.parse(self.data)
@@ -53,5 +54,10 @@ class CodingQuestion < ActiveRecord::Base
         }
       end
     end
+  end
+
+
+  def refresh_asm_autograding
+    asm_qns.first.asm.mark_refresh_autograding
   end
 end

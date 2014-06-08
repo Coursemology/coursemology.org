@@ -1,5 +1,6 @@
 class SubmissionGrading < ActiveRecord::Base
-  attr_accessible :comment, :grader_id, :publish_at, :sbm_id, :sbm_type, :total_grade, :total_exp, :grader_course_id
+  attr_accessible :comment, :grader_id, :publish_at, :sbm_id, :sbm_type, :total_grade,
+                  :total_exp, :grader_course_id, :autograding_refresh
 
   has_many :answer_gradings, dependent: :destroy
 

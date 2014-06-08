@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140605155859) do
+ActiveRecord::Schema.define(:version => 20140608144533) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1003,13 +1003,14 @@ ActiveRecord::Schema.define(:version => 20140605155859) do
     t.text     "comment"
     t.integer  "sbm_id"
     t.datetime "publish_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "sbm_type"
     t.integer  "exp_transaction_id"
     t.integer  "total_exp"
     t.datetime "last_grade_updated"
     t.integer  "grader_course_id"
+    t.boolean  "autograding_refresh", :default => false
   end
 
   add_index "submission_gradings", ["exp_transaction_id"], :name => "index_submission_gradings_on_exp_transaction_id"
