@@ -267,6 +267,10 @@ class ApplicationController < ActionController::Base
     [url, icon]
   end
 
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   helper_method :masquerading?
   helper_method :curr_user_course
   #helper_method :fb_liked?

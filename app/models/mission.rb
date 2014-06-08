@@ -91,6 +91,15 @@ class Mission < ActiveRecord::Base
     exp
   end
 
+  def mark_refresh_autograding
+    Thread.new {
+      submissions.each do |s|
+        s.submission_gradings.each do |sg|
+          sg.update_attribute(:autograding_refresh, true)
+        end
+      end
+    }
+  end
 
   alias_method :sbms, :submissions
 end

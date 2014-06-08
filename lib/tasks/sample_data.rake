@@ -125,14 +125,15 @@ namespace :db do
       'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/371036_100002869350779_1623535236_n.jpg',
       'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/275026_1472645898_1699627684_n.jpg'
     ]
-    return User.create!(
+    u = User.create!(
       name: name,
       email: email,
       password: password,
       password_confirmation: password,
-      system_role_id: role.id,
       profile_photo_url: profile_pics.sample
     )
+    u.system_role_id = role.id
+    return u
   end
 
   def gen_course(user)

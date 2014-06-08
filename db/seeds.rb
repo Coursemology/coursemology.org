@@ -21,8 +21,8 @@ end
 if User.count == 0
   admin = User.create!(name: "Admin", email: "jfdi@academy.com",
                        password: "supersecretpass",
-                       password_confirmation: "supersecretpass",
-                       system_role_id: super_role.id)
+                       password_confirmation: "supersecretpass")
+  admin.system_role_id = super_role.id
   admin.skip_confirmation!
   admin.save!
 end

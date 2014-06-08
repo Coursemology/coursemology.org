@@ -23,6 +23,8 @@ class Submission < ActiveRecord::Base
 
   scope :graded, where(status: 'graded')
 
+  after_save :mark_autograding_need_refresh, :if => :status_changed?
+
   # default_scope includes(:mission, :std_course, :final_grading)
 
   # implement method of Sbm interface
@@ -135,4 +137,11 @@ class Submission < ActiveRecord::Base
     mission
   end
 
+  def mark_autograding_need_refresh
+    if submitted? and self.submission_gradings
+      self.submission_gradings.each do |sg|
+        sg.update_attribute(:autograding_refresh, true)
+      end
+    end
+  end
 end
