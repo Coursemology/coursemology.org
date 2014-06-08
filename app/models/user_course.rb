@@ -232,8 +232,8 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_my_tutors
-    self.tut_courses
-    # Rails.cache.fetch("my_tutor_#{id}") { self.tut_courses }
+    # self.tut_courses
+    Rails.cache.fetch("my_tutor_#{id}") { self.tut_courses }
   end
 
   def get_my_tutor_name
