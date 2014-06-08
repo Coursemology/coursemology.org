@@ -165,6 +165,7 @@ class SubmissionGradingsController < ApplicationController
       redirect_to new_user_session_path
       return
     end
+    @submission ||= not_found
     if @submission.std_course == curr_user_course
       redirect_to course_mission_submission_path(@course, @mission, @submission)
     else
