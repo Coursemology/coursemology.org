@@ -1182,3 +1182,31 @@ td.action-there-icons {
 .table td {
   vertical-align: middle;
 }
+
+.float-alert {
+  position: fixed;
+  top: 0px;
+  left: 10px;
+  right: 10px;
+  text-align: center;
+}
+
+@media (min-width: 1200px) {
+  .float-alert {
+    top: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .float-alert {
+    top: 0px;
+  }
+}
+
+.exp-input-mini {
+  width: 50px;
+}
+
+.exp-input-reason {
+  width: 90%;
+}

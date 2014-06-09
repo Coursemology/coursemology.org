@@ -9,6 +9,8 @@ group :development do
   gem 'sqlite3'
   gem 'pry'
   gem 'meta_request'
+  gem 'figaro'
+  gem "better_errors"
 end
 
 
@@ -16,6 +18,8 @@ group :production do
   gem 'mysql2'
   gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
+  gem 'dalli'
+  gem 'connection_pool'
 end
 
 
@@ -80,6 +84,9 @@ gem 'clockwork'
 gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
+gem 'simple_form'
+gem "cocoon"
+gem "haml"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

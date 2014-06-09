@@ -9,6 +9,12 @@ class SubmissionGradingsController < ApplicationController
   # note: it only handles view & grading of missions
 
   def new
+
+    if @submission.submission_gradings.count > 0
+      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
+      return
+    end
+
     @qadata = {}
 
     @mission.get_all_questions.each_with_index do |q,i|
@@ -34,11 +40,6 @@ class SubmissionGradingsController < ApplicationController
     end
 
     @do_grading = true
-
-    if @submission.submission_gradings.count > 0
-      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
-    end
-
   end
 
   def create
@@ -99,7 +100,10 @@ class SubmissionGradingsController < ApplicationController
 
   def edit
     @qadata = {}
-    eval_answer
+    if @submission_grading.autograding_refresh
+      eval_answer
+      @submission_grading.update_attribute :autograding_refresh, false
+    end
     @mission.get_all_questions.each_with_index do |q,i|
       @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
     end
@@ -165,6 +169,7 @@ class SubmissionGradingsController < ApplicationController
       redirect_to new_user_session_path
       return
     end
+    @submission ||= not_found
     if @submission.std_course == curr_user_course
       redirect_to course_mission_submission_path(@course, @mission, @submission)
     else
@@ -212,6 +217,7 @@ class SubmissionGradingsController < ApplicationController
 
   def eval_answer
     # Thread.start {
+    puts "Eval Coding Answer"
     @submission.std_coding_answers.each do |answer|
       qn = answer.qn
       unless qn.is_auto_grading?

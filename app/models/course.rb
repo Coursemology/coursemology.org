@@ -3,7 +3,8 @@ class Course < ActiveRecord::Base
 
   # default_scope where(:is_pending_deletion => false)
 
-  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish, :is_active, :is_open, :start_at, :end_at
+  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish,
+                  :is_active, :is_open, :start_at, :end_at, :course_navbar_preferences_attributes
   before_create :populate_preference
   after_create :create_materials_root
 
@@ -57,6 +58,8 @@ class Course < ActiveRecord::Base
   has_many :tutorial_groups,        dependent: :destroy
   has_many :file_uploads,           as: :owner
   has_many :course_preferences,     dependent: :destroy
+  has_many :course_navbar_preferences, dependent: :destroy
+  accepts_nested_attributes_for :course_navbar_preferences
   has_many :comment_topics,         dependent: :destroy
   has_many :mass_enrollment_emails, dependent: :destroy
   has_many :enroll_requests,        dependent: :destroy
@@ -316,28 +319,58 @@ class Course < ActiveRecord::Base
   end
 
   def customized_title(tab)
-    student_sidebar_items.where("preferable_items.name = '#{tab}'").first.prefer_value
+    self.course_navbar_preferences.find_by_item(tab).name
   end
 
   def customized_title_by_model(model_class)
-    student_sidebar_items.where("preferable_items.name = '#{model_class.model_name.downcase.pluralize}'").first.prefer_value
+    self.course_navbar_preferences.find_by_item(model_class.model_name.downcase.pluralize).name
+  end
+
+  def navbar_tabs(is_staff = false)
+    tabs = self.course_navbar_preferences.where(is_enabled: true).order(:pos)
+    is_staff ? tabs : tabs.where(is_displayed: true)
   end
 
   def populate_preference
     course_preferences.each do |pref|
-      item = PreferableItem.where(id: pref.preferable_item_id).first
+      item = PreferableItem.find_by_id(pref.preferable_item_id)
       unless item
         CoursePreference.destroy(pref)
       end
     end
 
     PreferableItem.all.each do |item|
-      cp = CoursePreference.where(course_id:self.id, preferable_item_id: item.id).first
+      cp = CoursePreference.find_by_course_id_and_preferable_item_id(self.id, item.id)
       unless cp
         pref = self.course_preferences.build
         pref.preferable_item = item
         pref.prefer_value = item.default_value
         pref.display = item.default_display
+        pref.save
+      end
+    end
+
+    course_navbar_preferences.each do |pref|
+      if pref.navbar_preferable_item
+        item = NavbarPreferableItem.find_by_id(pref.navbar_preferable_item_id)
+        unless item
+          CourseNavbarPreference.destroy(pref)
+        end
+      end
+    end
+
+    NavbarPreferableItem.all.each do |item|
+      cp = CourseNavbarPreference.find_by_course_id_and_navbar_preferable_item_id(self.id, item.id)
+      unless cp
+        pref = self.course_navbar_preferences.build
+        pref.navbar_preferable_item = item
+        pref.name = item.name
+        pref.item = item.item
+        pref.navbar_link_type= item.navbar_link_type
+        pref.is_displayed= item.is_displayed
+        pref.is_enabled = item.is_enabled
+        pref.link_to = item.link_to
+        pref.pos = item.pos
         pref.save
       end
     end

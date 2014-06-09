@@ -11,12 +11,10 @@
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
   <%= form_tag(course_assessment_missions_path(@course), method: :get) do %>
-      <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
+      <div class="collapse <%= @summary[:selected_tags] ? "in" : "out" %>" id="tag-checklist">
         <div class="well">
           <%= render partial: "tags/form_checkboxes",
-                     locals: { tag_groups: @course.tag_groups,
-                               uncats: @course.tags.uncategorized,
-                               exist_tags_hash: @tags_map } %>
+                     locals: { course: @course } %>
           <button class="btn">Filter</button>
         </div>
       </div>
@@ -58,19 +56,11 @@
 
   <tbody class="table-hover">
   <% @missions.each do |mission| %>
-      <tr class="<%= "future" if mission.open_at > Time.now %>">
+      <tr id="row-<%= mission.id %>">
         <% if to_display.include? 'title' %>
             <td>
-              <% if can? :manage, Assessment::Mission %>
-                  <%= link_to course_assessment_mission_stats_path(@course, mission) do %>
-                      <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
-                  <% end %>
-              <% elsif mission.can_start?(curr_user_course).first %>
-                  <%= link_to course_mission_path(@course, mission) do %>
-                      <%= render partial: "layouts/mission_title", locals: {mission: mission} %>
-                  <% end %>
-              <% else %>
-                  <h4>
+              <%= link_to "", id: "link-#{mission.id}" do %>
+                  <h4 id="title-<%= mission.id %>">
                     <%= mission.title %>
                   </h4>
               <% end %>
@@ -116,20 +106,21 @@
               <% end %>
             </td>
         <% end %>
-        <% if curr_user_course.id && can?(:manage, Assessment::Submission) %>
+        <% if curr_user_course.id%>
             <td>
-              <%= render :partial => "action", locals: {mission:mission} %>
+              <div id="<%= mission.id %>"></div>
             </td>
         <% end %>
-        <% if can? :view_detail, Assessment::Mission %>
+        <% if can? :view_detail, mission %>
             <td>
               <%= link_to course_assessment_mission_path(@course, mission), class: 'btn' do %>
                   <i class="icon-external-link"></i>
               <% end %>
-              <% if can? :manage, Assessment::Mission %>
+              <% if can? :manage, mission %>
                   <%= link_to course_assessment_mission_path(@course, mission),
+
                               method: :delete,
-                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete: #{mission.title}?")) },
                               class: 'btn btn-danger' do %>
                       <i class="icon-trash"></i>
                   <% end %>
@@ -146,3 +137,5 @@
 <% end %>
 
 </div>
+<input type="hidden" class="json-data" value='<%= @summary.to_json %>'>
+

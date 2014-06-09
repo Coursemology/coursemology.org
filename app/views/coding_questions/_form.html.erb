@@ -62,22 +62,21 @@
     <div class="cos_code path-code" id="path_dooptions">
       <h3>Options</h3>
       <div class="control-group">
-<<<<<<< HEAD
         <%= f.label :title,"Step Name", :class => 'control-label' %>
         <div class="controls">
           <%= f.text_field :title, :class => 'text_field' %>
-=======
+         </div>
+        </div>
+      <div class="control-group">
         <%= f.label :auto_graded, class: 'control-label' %>
         <div class="controls">
           <%= f.check_box :auto_graded, class: 'checkbox' %>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
         </div>
       </div>
 
       <div class="control-group">
         <%= f.label :time_limit, 'Time Limit (seconds)', class: 'control-label' %>
         <div class="controls">
-<<<<<<< HEAD
           <select id="select-question" name="coding_question[include_sol_qn_id]">
             <option >None</option>
             <% if @coding_question.new_record? %>
@@ -86,13 +85,11 @@
             <% qns = @asm.coding_questions_before(@coding_question.asm_qns.first.pos) - [@coding_question] %>
             <% end %>
 
-            <%= qns.each do |cq| %>
+            <% qns.each do |cq| %>
                 <option value="<%= cq.id %>" <%= 'selected' if @coding_question.include_sol_qn == cq %> ><%= cq.title %></option>
             <% end %>
           </select>
-=======
           <%= f.number_field :time_limit, class: 'number_field' %>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
         </div>
       </div>
 
@@ -122,11 +119,6 @@
           <table id="public_test" class="table table-bordered test_table">
             <thead>
             <tr>
-<<<<<<< HEAD
-              <th>Code to Run</th>
-              <th>Expected Output</th>
-              <th width="35px"></th>
-=======
               <th>
                 Code to Run
               </th>
@@ -135,7 +127,6 @@
               </th>
               <th class="test-delete-col">
               </th>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
             </tr>
             </thead>
             <tbody id="public_test_tbody">
@@ -147,11 +138,6 @@
           <table id="private_test" class="table table-bordered test_table">
             <thead>
             <tr>
-<<<<<<< HEAD
-              <th>Code to Run</th>
-              <th>Expected Output</th>
-              <th style="width: 35px"></th>
-=======
               <th>
                 Code to Run
               </th>
@@ -160,7 +146,6 @@
               </th>
               <th class="test-delete-col">
               </th>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
             </tr>
             </thead>
             <tbody id="private_test_tbody">

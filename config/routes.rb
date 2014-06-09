@@ -42,6 +42,7 @@ JfdiAcademy::Application.routes.draw do
   resources :courses do
     match "/submissions" => "mission_submissions#listall", as: :submissions
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
+    get "/notifications" => "course_notifications#get"
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
     match "/staff"            => "user_courses#staff", as: :staff

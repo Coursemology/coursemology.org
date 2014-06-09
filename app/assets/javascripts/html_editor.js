@@ -57,6 +57,8 @@ $(document).ready(function() {
   };
   options.parserRules.classes['jfdiCode'] = 1;
 
+  options.customTemplates = {};
+
   if (imgUploadHtml) {
     options.html = true;
     options.customTemplates = {
@@ -65,6 +67,22 @@ $(document).ready(function() {
       }
     };
   }
+
+  // FontAwesome's semantics are wrong >_<. This fix removes the default
+  // indent/outdent tools and insert our modified indent and outdent buttons.
+  // See https://github.com/jhollingworth/bootstrap-wysihtml5/pull/253
+  options.lists = false;
+  var modifiedListHtml = function(locale) {
+      return "<li>" +
+             "<div class='btn-group'>" +
+             "<a class='btn' data-wysihtml5-command='insertUnorderedList' title='Unordered List'><i class='icon-list'></i></a>" +
+             "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Ordered List'><i class='icon-th-list'></i></a>" +
+             "<a class='btn' data-wysihtml5-command='Outdent' title='Outdent'><i class='icon-indent-left'></i></a>" +
+             "<a class='btn' data-wysihtml5-command='Indent' title='Indent'><i class='icon-indent-right'></i></a>" +
+             "</div>" +
+             "</li>";
+  };
+  options.customTemplates.html = modifiedListHtml;
 
   var handler = function() {
     var $this = $(this);

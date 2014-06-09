@@ -162,7 +162,7 @@ class CourseAbility
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
       can :manage, [Assessment::TextAnswer, Assessment::McqAnswer, Assessment::CodingAnswer], student_id: user_course.user.id
-      can :manage, ExpTransaction, user_course_id: user_course.id
+      can :read, ExpTransaction, user_course_id: user_course.id
 
       can :ignore, PendingAction, user_course: user_course
 

@@ -46,6 +46,7 @@
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
 //= require moment
+//= require cocoon
 //
 //= require_self
 //= require_tree .
@@ -138,7 +139,7 @@ $(document).ready(function() {
 
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();
-
+    $('.origin_url').val(document.URL);
     // For our delete buttons, detach the companion button so it looks nicer in a .btn-group.
     // Then move it one level up so it acts like a first class citizen.
     $('.delete-button').each(function(n, elem) {

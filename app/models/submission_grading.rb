@@ -1,5 +1,6 @@
 class SubmissionGrading < ActiveRecord::Base
-  attr_accessible :comment, :grader_id, :publish_at, :sbm_id, :sbm_type, :total_grade, :total_exp, :grader_course_id
+  attr_accessible :comment, :grader_id, :publish_at, :sbm_id, :sbm_type, :total_grade,
+                  :total_exp, :grader_course_id, :autograding_refresh
 
   has_many :answer_gradings, dependent: :destroy
 
@@ -23,6 +24,7 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.user_course = self.sbm.std_course
       self.exp_transaction.reason = "Exp for #{asm.get_title}"
       self.exp_transaction.is_valid = true
+      self.exp_transaction.rewardable = asm
       self.save
     end
     if asm.max_grade == 0

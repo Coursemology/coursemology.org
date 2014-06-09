@@ -145,7 +145,7 @@
     <div class="form-actions">
       <%= f.submit "#{@achievement.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary form-submit' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  courses_path, :class => 'btn' %>
+                  :back, :class => 'btn' %>
     </div>
 <% end %>
 <%= render :partial => "layouts/html_editor" %>
