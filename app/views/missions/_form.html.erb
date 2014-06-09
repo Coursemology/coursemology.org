@@ -9,24 +9,24 @@
     <div class="control-group">
       <%= f.label :description, :class => 'control-label' %>
       <div class="controls">
-        <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10, id: "wyshhtml5-textarea" %>
+        <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
       </div>
     </div>
     <div class="control-group">
-      <%= f.label :exp, :class => 'control-label' %>
+      <%= f.label :exp, 'EXP', :class => 'control-label' %>
       <div class="controls">
         <%= f.text_field :exp, :class => 'number_field input-medium',id:"mission-exp" %>
       </div>
     </div>
     <div class="control-group">
-      <%= f.label :open_time, :class => 'control-label' %>
+      <%= f.label :open_at, :class => 'control-label' %>
       <div class="controls">
         <div class="datetimepicker future-only input-append date">
           <%= f.text_field :open_at,
                            :value => datetime_format(@mission.open_at),
                            :class => 'input-medium',
-                           id: "open_at",
-                           required: true%>
+                           id: 'open_at',
+                           required: true %>
           <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
@@ -34,14 +34,14 @@
       </div>
     </div>
     <div class="control-group">
-      <%= f.label :close_time, :class => 'control-label' %>
+      <%= f.label :close_at, :class => 'control-label' %>
       <div class="controls">
         <div class="datetimepicker future-only input-append date">
           <%= f.text_field :close_at,
                            :value => datetime_format(@mission.close_at),
                            :class => 'input-medium',
-                           id: "close_at",
-                           required: true%>
+                           id: 'close_at',
+                           required: true %>
           <span class="add-on">
             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
            </span>
@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="control-group">
-      <%= f.label "Publish?", class: 'control-label' %>
+      <%= f.label :publish, 'Publish?', class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :publish %> Check to publish <%= display_name.downcase %>
       </div>
@@ -58,10 +58,11 @@
       <%= f.label "Comment Mode", Class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :comment_per_qn %> Check to have comment box per question (Otherwise per mission)
+        <%= f.check_box :publish %>
       </div>
     </div>
     <div class="control-group">
-      <%= f.label "Submission Type", class: 'control-label' %>
+      <%= f.label :file_submission, 'Allow file submissions?', class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :is_file_submission %> Allow File Submission
       </div>
@@ -104,6 +105,7 @@
             </div>
           </div>
         </div>
+        <%= f.check_box :file_submission %>
       </div>
     </div>
 
@@ -120,20 +122,19 @@
 
     <div class="control-group">
       <%= f.label "Dependency", class: 'control-label' %>
+      <%= f.label :dependent_id, 'Dependency', class: 'control-label' %>
       <div class="controls">
-        <select id="select-mission" name="mission[dependent_id]">
-          <option >No Dependency</option>
-          <%= (@missions - [@mission]).each do |asm| %>
-              <option value="<%= asm.id %>" <%= 'selected' if asm == @mission.dependent_mission %>><%= asm.title %></option>
-          <% end %>
-        </select>
+        <%- missions = @missions - [@mission]
+            missions = missions.map { |m| [m.title, m.id] }
+        %>
+        <%= f.select :dependent_id, missions, class: 'select', include_blank: true %>
       </div>
     </div>
 
     <div class="control-group">
-      <%= f.label "Topic", class: 'control-label' %>
+      <%= f.label 'Topics', class: 'control-label' %>
       <div class="controls">
-        <%= render partial: "tags/form_checkboxes",
+        <%= render partial: 'tags/form_checkboxes',
                    locals: { tag_groups: @course.tag_groups,
                              uncats: @course.tags.uncategorized,
                              exist_tags_hash: @asm_tags } %>
@@ -144,9 +145,14 @@
       <%= f.submit "#{@mission.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   course_path(@course), :class => 'btn' %>
+      <%= f.submit nil, :class => 'btn btn-primary', id: 'mission-update', data: {disable_with: 'Submitting...'} %>
+      <%= link_to t('.cancel', :default => t('helpers.links.cancel')),
+                  @mission.persisted? ? course_assessment_mission_path(@course, @mission) :
+                                        course_assessment_missions_path(@course),
+                  :class => 'btn' %>
     </div>
 
-    <%= render :partial => "layouts/html_editor" %>
+    <%= render :partial => 'layouts/html_editor' %>
 <% end %>
 <h3>Upload <%= display_name.downcase.humanize %> files</h3>
 <br/>

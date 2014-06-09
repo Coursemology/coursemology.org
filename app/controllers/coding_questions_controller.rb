@@ -1,43 +1,39 @@
 class CodingQuestionsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :training, through: :course
-  load_and_authorize_resource :coding_question, through: :training
+  before_filter :load_resources
+  load_and_authorize_resource :question
 
-  before_filter :init_asm
-
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
-
-  def init_asm
-    @asm = @training
-  end
+  before_filter :load_general_course_data, only: [:new, :edit]
 
   def new
-    @coding_question.max_grade = 1
+    @question.max_grade = @mission ? 10 : 1
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @coding_question }
+      format.json { render json: @question }
     end
   end
 
   def create
-    @coding_question.creator = current_user
-    @coding_question.max_grade = 2
-    @asm_qn = AsmQn.new
-    @asm_qn.asm = @asm
-    @asm_qn.qn = @coding_question
-    @asm_qn.pos = @asm.asm_qns.count
+    @question.creator = current_user
+    @question.assessment = @assessment.assessment
+    @question.pos = @question.assessment.questions.last ?
+                      @question.assessment.questions.last.pos.to_i + 1 : 0
 
     # update max grade of the asm it belongs to
     respond_to do |format|
-      if @coding_question.save && @asm_qn.save
-        #update_details(@coding_question)
-        @asm.update_grade
-        if @asm.is_a?(Training)
+      if @question.save
+        if @training
           format.html { redirect_to course_training_url(@course, @training),
                                     notice: 'New question added.' }
+        elsif @mission
+          format.html { redirect_to course_assessment_mission_path(@course, @mission),
+                                    notice: 'New question added.' }
         end
+
+        format.json { render json: @question, status: :created, location: @question }
       else
-        format.html { render action: "new" }
+        format.html { render action: 'new' }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -46,28 +42,52 @@ class CodingQuestionsController < ApplicationController
   end
 
   def update
-    updated = @coding_question.update_attributes(params[:coding_question])
-    #updated = updated && update_answers(@mcq)
+    @question.update_attributes(params[:assessment_coding_question])
 
     respond_to do |format|
-      if updated
-        @asm.update_grade
-        if @asm.is_a?(Training)
+      if @question.save
+        if @training
           format.html { redirect_to course_training_url(@course, @training),
-                                    notice: 'Question updated.' }
+                                    notice: 'Question has been updated.' }
+          format.json { head :no_content }
+        elsif @mission
+          format.html { redirect_to course_assessment_mission_path(@course, @mission),
+                                    notice: 'Question has been updated.' }
+          format.json { head :no_content }
         end
       else
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def destroy
-    @coding_question.destroy
-    @asm.update_grade
-    @asm.update_qns_pos
+    @question.destroy
     respond_to do |format|
-      format.html { redirect_to @asm.get_path }
+      format.html { redirect_to url_for([@course, @assessment]) }
     end
+  end
+
+private
+  def load_resources
+    if params[:assessment_mission_id] then
+      @mission = Assessment::Mission.find(params[:assessment_mission_id])
+    elsif params[:assessment_training_id]
+      @training = Assessment::Training.find(params[:assessment_training_id])
+    end
+    @assessment = @mission || @training
+    authorize! params[:action].to_sym, @assessment
+
+    @question = case params[:action]
+                  when 'new'
+                    Assessment::CodingQuestion.new
+                  when 'create'
+                    q = Assessment::CodingQuestion.new
+                    q.attributes = params[:assessment_coding_question]
+                    q
+                  else
+                    Assessment::CodingQuestion.find_by_id!(params[:id] || params[:assessment_coding_question_id])
+                end
   end
 end

@@ -21,7 +21,7 @@ class CourseAbility
 
     if !user.persisted?
       # not logged in user
-      cannot :read, [Mission, Training]
+      cannot :read, [Assessment::Mission, Assessment::Training]
     end
 
     if user.is_lecturer? || user.is_admin?
@@ -36,8 +36,8 @@ class CourseAbility
       can :share, Course
       can :participate, Course
       can :duplicate, Course
-      can :read, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :read, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
       can :read, [Level, Achievement, Title, Reward]
       can :students, Course
@@ -47,15 +47,15 @@ class CourseAbility
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all
-      can :see_all, [Submission, TrainingSubmission, Level]
-      can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training, Survey]
+      can :see_all, [Assessment::Submission, Level]
+      can :view_stat, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
       can :see, :pending_grading
       can :see, :pending_comments
-      can :unsubmit, Submission
+      can :unsubmit, Assessment::Submission
       can :view, :staff_leaderboard
       can :manage, :forum_participation
 
@@ -161,7 +161,7 @@ class CourseAbility
       can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
-      can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
+      can :manage, [Assessment::TextAnswer, Assessment::McqAnswer, Assessment::CodingAnswer], student_id: user_course.user.id
       can :manage, ExpTransaction, user_course_id: user_course.id
 
       can :ignore, PendingAction, user_course: user_course

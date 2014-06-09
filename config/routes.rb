@@ -40,7 +40,7 @@ JfdiAcademy::Application.routes.draw do
   resources :role_requests
 
   resources :courses do
-    match "/submissions" => "submissions#listall", as: :submissions
+    match "/submissions" => "mission_submissions#listall", as: :submissions
     match "/training_submissions" => "training_submissions#listall", as: :training_submissions
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
@@ -55,19 +55,28 @@ JfdiAcademy::Application.routes.draw do
     post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :trainings_duplicate_qn
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
+
     resources :user_courses do
       resources :exp_transactions
       resources :user_achievements
     end
 
-    resources :missions do
-      resources :mission_coding_questions, as: :coding_questions
-      resources :questions
-      resources :submissions do
-        resources :submission_gradings
+    resources :assessment_missions, path: 'missions', controller: :missions do
+      resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
+      resources :assessment_text_questions, path: :text_questions, controller: :text_questions
+
+      resources :assessment_submissions, path: 'submissions', controller: :mission_submissions, except: [:create] do
+        post 'unsubmit' => 'mission_submissions#unsubmit'
+        post 'test' => 'mission_submissions#test_answer'
+
+        get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
+        post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
       end
-      post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
-      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
+
+      get 'overview' => 'missions#overview', on: :collection
+      post 'bulk_update' => 'missions#bulk_update'
+      get 'stats' => 'missions#stats'
+      get 'dump_code' => 'missions#dump_code'
 
       resources :asm_qns do
         collection do
@@ -75,8 +84,6 @@ JfdiAcademy::Application.routes.draw do
         end
       end
     end
-    match "missions/:id/stats" => "missions#stats", as: :mission_stats
-    match "missions/:id/dump_code" => "missions#dump_code", as: :mission_dump_code
 
     resources :trainings do
       resources :mcqs
@@ -89,6 +96,9 @@ JfdiAcademy::Application.routes.draw do
           post 'reorder'
         end
       end
+
+      match "trainings/overview" => "trainings#overview", as: :trainings_overview
+      post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
     end
     match "trainings/:id/stats" => "trainings#stats", as: :training_stats
     get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
@@ -271,11 +281,11 @@ JfdiAcademy::Application.routes.draw do
     resources :file_uploads
   end
 
-  resources :missions do
+  resources :assessment_missions do
     resources :file_uploads
   end
 
-  resources :submissions do
+  resources :assessment_submissions do
     resources :file_uploads
   end
 

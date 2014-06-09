@@ -98,7 +98,7 @@ $(document).ready(function(){
         return new Date(year, month, day, hour, min, sec);
     }
 
-    // Make the table rows (the questions / asm-qns) sortable
+    // Make the table rows (the text_questions / asm-qns) sortable
     $(".asm-qns").sortable({
         update: function(event, ui){
 

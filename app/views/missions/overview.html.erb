@@ -1,18 +1,10 @@
+<div class="missions missions-overview">
 <div class="page-header">
-  <h1>Update <%= @course.customized_title_by_model(Mission).pluralize %></h1>
+  <h1>Update Missions</h1>
 </div>
-<% if can? :manage, :bulk_update %>
-    <ul class="nav nav-tabs">
-      <li class="<%= "active" if @tab == 'missions' %>">
-        <a href="<%=  course_missions_path %>?_tab=main" ><h4>Missions</h4></a>
-      </li>
-      <li class="<%= "active" if @tab == 'overview' %>">
-        <a href="<%= course_missions_overview_path %>" ><h4>Overview</h4></a>
-      </li>
-    </ul>
-<% end %>
+<%= render partial: 'navigation' %>
 
-<%= form_tag course_missions_bulk_update_path(@course), :method => 'POST' do %>
+<%= form_tag course_assessment_missions_bulk_update_path(@course), :method => 'POST' do %>
 <table class="table">
   <thead>
   <tr>
@@ -25,7 +17,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @missions.each do |mission| %>
+    <% @missions.each do |mission| %>
       <tr>
         <td>
           <input name="missions[<%= mission.id %>][title]" class="input-medium" type="text"  value="<%= mission.title %>" required>
@@ -53,11 +45,11 @@
           <select id="select-mission" name="missions[<%= mission.id %>][dependent_id]" class="input-medium">
             <option value="0" >No Dependency</option>
             <%= (@missions - [mission]).each do |asm| %>
-                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent_mission %>><%= asm.title %></option>
+                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent %>><%= asm.title %></option>
             <% end %>
           </select>
         </td>
-        <td style="text-align: center">
+        <td class="publish">
           <input type="hidden" name="missions[<%= mission.id %>][publish]" value="0">
           <input name="missions[<%= mission.id %>][publish]" type="checkbox" <%= 'checked' if mission.publish? %>>
         </td>
@@ -65,7 +57,8 @@
   <% end%>
   </tbody>
 </table>
-    <div class="center">
-      <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
-    </div>
+<div class="center">
+  <button class="btn btn-large" id="submit-button">Update</button>
+</div>
 <% end %>
+</div>

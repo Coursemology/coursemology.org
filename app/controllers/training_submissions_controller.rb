@@ -66,7 +66,7 @@ class TrainingSubmissionsController < ApplicationController
 
 
     respond_to do |format|
-      format.html { render "submissions/listall" }
+      format.html { render "mission_submissions/listall" }
     end
   end
 

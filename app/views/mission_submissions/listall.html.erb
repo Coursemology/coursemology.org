@@ -1,6 +1,10 @@
+<<<<<<< HEAD:app/views/submissions/listall.html.erb
 <%- model_class = Submission -%>
 <%- submission_display_name = @course.customized_title_by_model(Submission).pluralize -%>
 <%- assign_display_name = @course.customized_title_by_model(@tab).singularize -%>
+=======
+<%- model_class = Assessment::Submission -%>
+>>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4:app/views/mission_submissions/listall.html.erb
 <div class="page-header">
   <h1><%=t '.title', :default => submission_display_name %></h1>
 </div>
@@ -15,9 +19,15 @@
   </li>
 </ul>
 
+<<<<<<< HEAD:app/views/submissions/listall.html.erb
 <% if can? :see_all, Submission %>
     <form class="form-horizontal" action="<%= @tab == Mission ? course_submissions_path : course_training_submissions_path%>" method="GET">
       <h3>Show only <%= submission_display_name %>:</h3>
+=======
+<% if can? :see_all, Assessment::Submission %>
+    <form class="form-horizontal" action="<%= nil %>" method="GET">
+      <h3>Show only Submissions:</h3>
+>>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4:app/views/mission_submissions/listall.html.erb
       <div class="control-group">
         <label class="control-label">Assignments</label>
         <div class="controls">
@@ -26,7 +36,7 @@
             <% @all_asm.each do |asm| %>
                 <option value="<%= asm.id %>"
                         <%= "selected" if @selected[:asm] && asm == @selected[:asm] %>>
-                  <%= asm.get_title %>
+                  <%= asm.title %>
                 </option>
             <% end %>
           </select>
@@ -65,14 +75,14 @@
 <table class="table">
   <thead>
   <tr>
-    <% if can? :see_all, Submission %>
+    <% if can? :see_all, Assessment::Submission %>
         <th width="20%">Student</th>
     <% end %>
     <th><%= assign_display_name %></th>
     <th>Submitted at </th>
 
     <th width="15%">
-      <% if can? :manage, SubmissionGrading %>
+      <% if can? :manage, Assessment::Grading %>
           Grading
       <% else %>
           Status
@@ -87,37 +97,41 @@
   <tbody>
   <% @sbms.each do |sub| %>
       <tr>
-        <% if can? :see_all, Submission %>
+        <% if can? :see_all, Assessment::Submission %>
             <td>
               <%= render partial: 'layouts/user_name_link', locals: {user_course: sub.std_course} %>
             </td>
         <% end %>
-        <td><%= link_to sub.get_asm.get_title, sub.get_asm.get_path %></td>
-        <td><%= datetime_format(sub.submit_at || sub.created_at) %> </td>
+        <td><%= link_to sub.assessment.title, url_for([@course, sub.assessment.specific]) %></td>
+        <td><%= datetime_format(sub.submitted_at || sub.created_at) %> </td>
         <!--TODO: refactoring-->
-        <% if can? :manage, SubmissionGrading %>
-            <td>
-              <% sub.submission_gradings.each do |sg| %>
-                  <%= link_to sg.get_name, sub.get_path %><br/>
-              <% end %>
-            </td>
-            <td>
-              <% grade = sub.submission_gradings.last %>
-              <% if grade %>
-                  <%= grade.total_grade %> / <%= sub.get_asm.max_grade %>
-              <% end %>
-            </td>
-            <% if sub.submission_gradings.length == 0 %>
-                <td>
-                  <%= link_to "Evaluate",
-                              sub.get_new_grading_path,
-                              class: "btn btn-primary" %>
-                </td>
+        <% if can? :manage, Assessment::Grading %>
+          <td>
+            <% if sub.graded? %>
+              <%= sub.graders.empty? ? 'Auto graded' : sub.graders.join(', ') %>
             <% else %>
-                <td>
-                  <%= link_to "View", sub.get_path, class: "btn"%>
-                </td>
+              Not graded
             <% end %>
+          </td>
+          <td>
+             <% grade = sub.grade %>
+            <% if grade %>
+                <%= grade %> / <%= sub.assessment.max_grade %>
+            <% end %>
+          </td>
+          <% if sub.gradings.empty? == 0 %>
+            <td>
+              <%= link_to 'Evaluate',
+                          course_assessment_mission_assessment_submission_assessment_gradings_path(@course, sub.assessment.specific, sub),
+                          class: 'btn btn-primary' %>
+            </td>
+          <% else %>
+            <td>
+              <%= link_to 'View',
+                          course_assessment_mission_assessment_submission_assessment_gradings_path(@course, sub.assessment.specific, sub),
+                          class: 'btn'%>
+            </td>
+          <% end %>
         <% else %>
             <td>
               <%= sub.status %>
