@@ -86,14 +86,10 @@ class PythonEvaluator
         test_cases.each do |test|
           exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
           exp_excep = need_std_answer ? "e" : "False"
-          if test_type == :evalTests || need_std_answer
-            test_code << "\ntry:\n"
-            test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
-            test_code << "except Exception as e:\n"
-            test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
-          else
-            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
-          end
+          test_code << "\ntry:\n"
+          test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
+          test_code << "except Exception as e:\n"
+          test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
         end
 
         file.write(test_code)
