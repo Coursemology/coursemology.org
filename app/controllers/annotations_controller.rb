@@ -23,7 +23,7 @@ class AnnotationsController < ApplicationController
       # currently this method wouldn't find the correct users to notify, marking pending wouldn't work either
       # I think it can be resolved by adding the annotable to the CommentTopic list. However, need to avoid
       # it being removed (when comments count == 0, the topic is removed -- see CommentController#destroy)
-      if mission.published?
+      if sub.mission.published?
         @annotation.notify_user(to_notify, sub.mission, course_mission_submission_url(@course, sub.mission, sub))
       end
       respond_to do |format|
