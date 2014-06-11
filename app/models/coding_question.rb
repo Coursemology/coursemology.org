@@ -58,6 +58,8 @@ class CodingQuestion < ActiveRecord::Base
 
 
   def refresh_asm_autograding
-    asm_qns.first.asm.mark_refresh_autograding
+    if asm_qns.first
+      asm_qns.first.asm.mark_refresh_autograding
+    end
   end
 end
