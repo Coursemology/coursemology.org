@@ -48,7 +48,7 @@
         <br>
         <div id="eval-result-<%= answer.id %>" style="font-size: 14px;padding-left: 10px">
         </div>
-    <% elsif qn.is_auto_grading? and curr_user_course.is_staff? %>
+    <% elsif qn.is_auto_grading?  %>
         <h3>Auto Grading Summary</h3>
         <% if qn.data_hash["publicTests"].length > 0 %>
             <%= render partial: "submissions/test_result_table", locals:{title: "Public Tests",
@@ -56,22 +56,24 @@
                                                                          results: answer.result_hash["publicTests"],
                                                                          actual: answer.result_hash["publicResults"] } %>
         <% end %>
-        <% if qn.data_hash["privateTests"].length > 0 %>
-            <%= render partial: "submissions/test_result_table", locals:{title: "Private Tests",
-                                                                         tests: qn.data_hash["privateTests"],
-                                                                         results: answer.result_hash["privateTests"],
-                                                                         actual: answer.result_hash["privateResults"] } %>
-        <% end %>
-        <% if qn.data_hash["evalTests"].length > 0 %>
-            <%= render partial: "submissions/test_result_table", locals:{title: "Evaluation Tests",
-                                                                         tests: qn.data_hash["evalTests"],
-                                                                         results: answer.result_hash["evalTests"],
-                                                                         actual: answer.result_hash["evalResults"] } %>
-        <% end %>
+        <% if  curr_user_course.is_staff? %>
+            <% if qn.data_hash["privateTests"].length > 0 %>
+                <%= render partial: "submissions/test_result_table", locals:{title: "Private Tests",
+                                                                             tests: qn.data_hash["privateTests"],
+                                                                             results: answer.result_hash["privateTests"],
+                                                                             actual: answer.result_hash["privateResults"] } %>
+            <% end %>
+            <% if qn.data_hash["evalTests"].length > 0 %>
+                <%= render partial: "submissions/test_result_table", locals:{title: "Evaluation Tests",
+                                                                             tests: qn.data_hash["evalTests"],
+                                                                             results: answer.result_hash["evalTests"],
+                                                                             actual: answer.result_hash["evalResults"] } %>
+            <% end %>
 
-        <% if answer.result_hash["errors"] && answer.result_hash["errors"].length > 0 %>
-            <h4>Error Message</h4>
-            <div id="eval-error-message" style="font-size: 14px; padding-left: 10px; background-color: rgb(225, 193, 177);"><%= answer.result_hash["errors"] %></div>
+            <% if answer.result_hash["errors"] && answer.result_hash["errors"].length > 0 %>
+                <h4>Error Message</h4>
+                <div id="eval-error-message" style="font-size: 14px; padding-left: 10px; background-color: rgb(225, 193, 177);"><%= answer.result_hash["errors"] %></div>
+            <% end %>
         <% end %>
     <% end %>
   </div>
