@@ -24,10 +24,14 @@ end
 
 
 gem "rspec-rails", :group => [:test, :development]
+gem "guard-rspec", :group => [:test, :development]
+gem 'spork-rails', :group => [:test, :development]
+gem "guard-spork", :group => [:test, :development]
+
+
 group :test do
   gem "factory_girl_rails"
   gem "capybara"
-  gem "guard-rspec"
 end
 
 # Gems used only for assets and not required
@@ -86,7 +90,6 @@ gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
 gem 'simple_form'
 gem "cocoon"
-gem "haml"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
