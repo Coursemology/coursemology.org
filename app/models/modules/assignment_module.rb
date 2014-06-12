@@ -1,4 +1,4 @@
-module Assignment
+module AssignmentModule
 
   def self.included(base)
     base.class_eval do
