@@ -1,9 +1,9 @@
-class AssignmentRedesign < ActiveRecord::Migration
+class AssessmentRedesign < ActiveRecord::Migration
   def up
-    create_table :assignments do |t|
+    create_table :assessments do |t|
       #for multiple table inheritance
-      t.integer :assignment_id
-      t.string  :assignment_type
+      t.integer :as_assessment_id
+      t.string  :as_assessment_type
 
       t.references  :course, index: true
       t.references  :creator
@@ -20,7 +20,7 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_missions do |t|
+    create_table  :assessment_missions do |t|
       t.boolean     :file_submission, default: false
       t.boolean     :single_question, default: false
       t.boolean     :file_submission_only, default: false
@@ -30,21 +30,23 @@ class AssignmentRedesign < ActiveRecord::Migration
 
       t.datetime    :close_at
       t.datetime    :deleted_at
+      t.timestamps
     end
 
-    create_table  :assignment_trainings do |t|
+    create_table  :assessment_trainings do |t|
       t.integer     :bonus_exp
       t.boolean     :skippable
 
       t.datetime    :bonus_cutoff_at
       t.datetime    :deleted_at
+      t.timestamps
     end
 
 
-    create_table  :assignment_questions do |t|
+    create_table  :assessment_questions do |t|
       #for MTI
-      t.integer     :question_id
-      t.string      :question_type
+      t.integer     :as_question_id
+      t.string      :as_question_type
 
       t.references  :creator
       t.string      :title
@@ -57,7 +59,7 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_coding_questions do |t|
+    create_table  :assessment_coding_questions do |t|
       t.references  :dependent
       t.references  :language
       t.integer     :time_limit
@@ -67,32 +69,38 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.text        :data
 
       t.datetime  :deleted_at
+      t.timestamps
     end
 
     create_table  :programming_languages do |t|
       t.string  :language
       t.string  :version
+
+      t.timestamps
     end
 
-    create_table  :assignment_essay_questions do |t|
-
-      t.datetime  :deleted_at
-    end
-
-    create_table  :assignments_and_questions do |t|
-      t.references :assignment, index: true
-      t.references :question,   index: true
+    create_table  :assessment_general_questions do |t|
 
       t.datetime  :deleted_at
       t.timestamps
     end
 
-    create_table  :assignment_mcq_questions do |t|
-      t.boolean :select_all, default: false
+    create_table  :question_assessments do |t|
+      t.references :question,   index: true
+      t.references :assessment, index: true
+
       t.datetime  :deleted_at
+      t.timestamps
     end
 
-    create_table  :assignment_mcq_options do |t|
+    create_table  :assessment_mcq_questions do |t|
+      t.boolean :select_all, default: false
+      t.datetime  :deleted_at
+
+      t.timestamps
+    end
+
+    create_table  :assessment_mcq_options do |t|
       t.references  :creator
       t.references  :question, index: true
       t.text        :text
@@ -103,8 +111,8 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_submissions do |t|
-      t.references  :assignment, index: true
+    create_table  :assessment_submissions do |t|
+      t.references  :assessment, index: true
       t.references  :std_course, index: true
       t.string      :status,     index: true
       t.float       :multiplier
@@ -115,11 +123,11 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_answers do |t|
-      t.integer   :answer_id
-      t.string    :answer_type
+    create_table  :assessment_answers do |t|
+      t.integer   :as_answer_id
+      t.string    :as_answer_type
 
-      t.references  :assignment, index: true
+      t.references  :assessment, index: true
       t.references  :submission, index: true
       t.references  :question,   index: true
       t.references  :std_course, index: true
@@ -130,19 +138,20 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table :assignment_coding_answers do |t|
+    create_table :assessment_coding_answers do |t|
       t.integer     :attempt_left, default: 0
       t.boolean     :correct,   default: false
 
       t.datetime  :deleted_at
+      t.timestamps
     end
 
 
-    change_table  :assignment_answers do |t|
-      t.index [:assignment_id, :std_course_id]
+    change_table  :assessment_answers do |t|
+      t.index [:assessment_id, :std_course_id]
     end
 
-    create_table  :assignment_answer_options do |t|
+    create_table  :assessment_answer_options do |t|
       t.references  :answer, index: true
       t.references  :option, index: true
 
@@ -150,8 +159,8 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_gradings  do |t|
-      t.references  :answer, index: true
+    create_table  :assessment_gradings  do |t|
+      t.references  :submission
       t.references  :grader_course
       t.decimal     :grade
       t.references  :exp_transaction
@@ -161,9 +170,9 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_answer_gradings do |t|
+    create_table  :assessment_answer_gradings do |t|
       t.references  :answer
-      t.references  :assignment_grading, index: true
+      t.references  :grading, index: true
       t.references  :grader_course, index: true
       t.decimal     :grade
 
@@ -171,8 +180,8 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table :assignment_grading_logs do |t|
-      t.references  :assignment_grading, index: true
+    create_table :assessment_grading_logs do |t|
+      t.references  :grading, index: true
       t.references  :grader_course
       t.decimal     :grade
 
@@ -180,8 +189,8 @@ class AssignmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    create_table  :assignment_answer_grading_logs do |t|
-      t.references  :assignment_answer_grading_id, index: true
+    create_table  :assessment_answer_grading_logs do |t|
+      t.references  :answer_grading, index: true
       t.references  :grader_course
       t.decimal     :grade
 
@@ -218,22 +227,23 @@ class AssignmentRedesign < ActiveRecord::Migration
   end
 
   def down
-    drop_table  :assignments
-    drop_table  :assignment_missions
-    drop_table  :assignment_trainings
-    drop_table  :assignment_questions
-    drop_table  :assignment_coding_questions
-    drop_table  :assignment_essay_questions
-    drop_table  :assignments_and_questions
-    drop_table  :assignment_mcq_questions
-    drop_table  :assignment_mcq_options
-    drop_table  :assignment_submissions
-    drop_table  :assignment_answers
-    drop_table  :assignment_coding_answers
-    drop_table  :assignment_answer_options
-    drop_table  :assignment_gradings
-    drop_table  :assignment_grading_logs
-    drop_table  :assignment_answer_grading_logs
+    drop_table  :assessments
+    drop_table  :assessment_missions
+    drop_table  :assessment_trainings
+    drop_table  :assessment_questions
+    drop_table  :assessment_coding_questions
+    drop_table  :assessment_general_questions
+    drop_table  :question_assessments
+    drop_table  :assessment_mcq_questions
+    drop_table  :assessment_mcq_options
+    drop_table  :assessment_submissions
+    drop_table  :assessment_answers
+    drop_table  :assessment_coding_answers
+    drop_table  :assessment_answer_options
+    drop_table  :assessment_answer_gradings
+    drop_table  :assessment_gradings
+    drop_table  :assessment_grading_logs
+    drop_table  :assessment_answer_grading_logs
 
     drop_table  :programming_languages
     drop_table  :taggable_tags
