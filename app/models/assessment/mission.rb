@@ -1,33 +1,17 @@
 class Assessment::Mission < ActiveRecord::Base
-  is_a :assessment, as: 'as_assessment_assessment', class_name: 'Assessment::Assessment'
+  acts_as_paranoid
+  is_a :assessment, as: :as_assessment, class_name: "Assessment"
 
-  has_many :dependent, class_name: Assessment::Mission, foreign_key: :id # Missions to complete before this can be attempted.
-  has_many :files, as: :owner, class_name: 'FileUpload', dependent: :destroy
-  has_many :required_for, class_name: 'Mission', foreign_key: :dependent_id # Missions unlocked by completing this mission.
+  attr_accessible :close_at
 
-  attr_accessible :title, :description, :exp, :open_at, :close_at, :publish, :file_submission, :dependent_id
+  validates_with DateValidator, fields: [:open_at, :close_at]
 
-  alias :get_all_questions :questions
+  belongs_to  :dependent_on, class_name: "Assessment::Mission", foreign_key: "dependent_id"
+  has_many    :dependent_by, class_name: Assessment::Mission, foreign_key: 'dependent_id'
+  belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
 
-  # @deprecated
-  def get_final_sbm_by_std(std_course)
-    submissions.where(std_course_id: std_course).last
-  end
-
-  def open?
-    return open_at <= Time.now
-  end
-
-  def can_start?(curr_user_course)
-    return false if not open?
-
-    if dependent
-      submission = Assessment::Submission.where(id: dependent.map { |d| d.assessment }, std_course_id: curr_user_course).first
-      return false if !submission || (not submission.submitted?)
-    end
-
-    return true
-  end
+  # has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
+  # has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
 
   def attach_files(files)
     files.each do |id|
@@ -39,25 +23,22 @@ class Assessment::Mission < ActiveRecord::Base
     end
   end
 
-  def schedule_mail(ucs, redirect_to)
-    QueuedJob.destroy(self.queued_jobs)
+  def total_exp
+    exp
+  end
 
-    if open_at > Time.now && course.auto_create_sbm_pref.display?
-      BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel', id)
-      delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create', id), run_at: open_at)
-      queued_jobs.create(delayed_job_id: delayed_job.id)
-    end
-
-    if not course.email_notify_enabled?(PreferableItem.new_mission)
-      return
-    end
-
-    assessment.schedule_mail(ucs, redirect_to)
-
-    if close_at >= Time.now && publish?
-      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, self.class.to_s, id, redirect_to, true), run_at: 1.day.ago(close_at))
-      queued_jobs.create(delayed_job_id: delayed_job.id)
-    end
+  #TODO
+  def can_start?(curr_user_course)
+    # if open_at > Time.now
+    #   return  false, "Mission hasn't open yet :)"
+    # end
+    # if dependent_on
+    #   sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
+    #   if !sbm || sbm.attempting?
+    #     return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
+    #   end
+    # end
+    # return true, ""
   end
 
   # Converts this mission into a format that can be used by the lesson plan component
@@ -72,4 +53,36 @@ class Assessment::Mission < ActiveRecord::Base
     entry.is_published = self.publish
     entry
   end
+
+  def published?
+    publish?
+  end
+
+  def get_path
+    course_mission_path(self.course, self)
+  end
+
+  def missions_dep_on_published
+    missions_dependent_on.where(publish:true)
+  end
+
+  def current_exp
+    exp
+  end
+
+  #TODO
+  def mark_refresh_autograding
+    # Thread.new {
+    #   submissions.each do |s|
+    #     s.submission_gradings.each do |sg|
+    #       sg.update_attribute(:autograding_refresh, true)
+    #     end
+    #   end
+    # }
+  end
+
+  #TODO
+
+  #TODO
+  alias_method :sbms, :submissions
 end

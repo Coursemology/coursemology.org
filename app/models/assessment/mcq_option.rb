@@ -1,4 +1,7 @@
 class Assessment::McqOption < ActiveRecord::Base
-  belongs_to :creator, class_name: 'User'
-  belongs_to :question, class_name: 'McqQuestion'
+  acts_as_paranoid
+
+  belongs_to :question, class_name: Assessment::Question
+  has_many   :answer_options, class_name: Assessment::AnswerOption
+
 end

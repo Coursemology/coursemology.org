@@ -1,103 +1,129 @@
 class Assessment::Submission < ActiveRecord::Base
-  acts_as_superclass as: :as_assessment_submission
+  acts_as_paranoid
 
   belongs_to :assessment
-  belongs_to :course, class_name: 'Course'
-  belongs_to :std_course, class_name: 'UserCourse'
+  belongs_to :std_course, class_name: "UserCourse"
+  has_many :answers, class_name: Assessment::Answer, dependent: :destroy
+  has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
 
-  has_many :answers, class_name: Assessment::Answer
-  has_many :files, as: :owner, class_name: FileUpload, dependent: :destroy
-
-  def gradings
-    Assessment::Grading.
-      joins('INNER JOIN assessment_answers ON assessment_gradings.answer_id = assessment_answers.id').
-      joins('INNER JOIN assessment_submissions ON assessment_answers.submission_id = assessment_submissions.id').
-      where('assessment_submissions.id' => self.id)
-  end
-
-  # Returns the graders for this submission, or an empty array if auto-graded.
-  def graders
-    graders = gradings.reduce Set.new do |memo, g|
-      memo <<= g.grader
+  def get_final_grading
+    if self.gradings.length > 0
+      self.gradings.last
+    else
+      nil
     end
-    graders.to_a.map { |g| g.name }
   end
 
-  def grade
-    graded? ? gradings.sum(:grade) : nil
+  def get_all_answers
+    self.answers
   end
 
-  def exp
-    unless graded?
-      return nil
+  #TODO
+  def clear_final_answer(qn)
+    self.answers.final.each do |sbm_ans|
+      if sbm_ans.qn == qn
+        sbm_ans.final = false
+        sbm_ans.save
+        break
+      end
     end
-
-    transaction = gradings.first.exp_transaction
-    transaction ? transaction.exp : nil
   end
 
-  has_many :gradings, through: :answers, class_name: Assessment::Grading
-  STATUS_ATTEMPTING = 'attempting'
-  STATUS_SUBMITTED = 'submitted'
-  STATUS_GRADED = 'graded'
-
-  def attempting?
-    self.status == STATUS_ATTEMPTING
+  def has_multiplier?
+    self.respond_to?(:multiplier) && self.multiplier
   end
 
-  def submitted?
-    self.status == STATUS_SUBMITTED
-  end
-
-  def graded?
-    self.status == STATUS_GRADED
+  def get_bonus
+    if self.assessment.respond_to? :bonus_cutoff
+      if  self.assessment.bonus_cutoff && self.assessment.bonus_cutoff > Time.now
+        return self.assessment.bonus_exp
+      end
+    end
+    0
   end
 
   def set_attempting
-    self.status = STATUS_ATTEMPTING
+    self.update_attribute(:status,'attempting')
   end
-  alias_method :attempt, :set_attempting
-  alias_method :attempt_mission, :set_attempting
 
-  def set_submitted(redirect_url)
-    self.status = STATUS_SUBMITTED
-    submitted_at = updated_at
-    notify_submission(redirect_url)
+  #TODO
+  def set_submitted(redirect_url = "", notify = true)
+    self.update_attribute(:status,'submitted')
+    self.update_attribute(:submit_at, updated_at)
+
+    if self.class == Submission
+      pending_action = std_course.pending_actions.where(item_type: Mission.to_s, item_id: self.mission.id).first
+      pending_action.set_done if pending_action
+
+      notify_submission(redirect_url) if notify
+    end
   end
 
   def set_graded
-    self.status = STATUS_GRADED
+    self.update_attribute(:status,'graded')
   end
 
-  # Initialises all the corresponding answers in this assessment for every question defined.
-  def build_initial_answers
-    assessment.questions.each do |qn|
-      if (answers.where(question_id: qn).count > 0)
-        next
-      end
-
-      question = qn.specific
-      answer = question.build_answer
-      answer.submission = self
-
-      answer.save if answer
-    end
+  def attempting?
+    self.status == 'attempting'
   end
 
-private
-  def notify_submission(redirect_url)
-    unless std_course.course.email_notify_enabled?(PreferableItem.new_submission)
-      return
-    end
-
-    std_course.get_staff_incharge.each do |uc|
-      #TODO: logging
-      UserMailer.delay.new_submission(
-        uc.user,
-        std_course.user,
-        assessment.specific,
-        redirect_url
-      )
-    end
+  def submitted?
+    self.status == 'submitted'
   end
+
+  def graded?
+    self.status == 'graded'
+  end
+
+  def get_asm
+    self.training
+  end
+
+  def get_path
+    course_training_training_submission_path(training.course, training, self)
+  end
+
+  def get_new_grading_path
+    '#'
+  end
+
+  def done?
+    #if a training chanage between can skip and cannot, we will have problem
+    #if we check done by position
+    #if training.can_skip?
+    questions_left == []
+    #else
+    #  current_step > self.training.asm_qns.count
+    #end
+  end
+
+  def questions_left
+    assessment.questions - answered_questions
+  end
+
+  #TODO
+  def answered_questions
+    answers = sbm_answers.map {|sba| sba.answer }
+    answers.select {|a| a.answer_grading }.map {|a| a.qn}.uniq
+  end
+
+  def update_grade
+    self.submit_at = DateTime.now
+    self.current_step = training.asm_qns.count + 1
+    self.set_graded
+
+    pending_action = std_course.pending_actions.where(item_type: Training.to_s, item_id: self.training).first
+    pending_action.set_done if pending_action
+
+    subm_grading = self.get_final_grading
+    subm_grading.update_grade
+    exp = subm_grading.update_exp_transaction
+    subm_grading.save
+    exp
+  end
+
+  #TODO
+  # def assignment
+  #   training
+  # end
 end

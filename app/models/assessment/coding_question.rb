@@ -1,23 +1,59 @@
 class Assessment::CodingQuestion < ActiveRecord::Base
-  is_a :question, as: 'as_assessment_question', class_name: 'Assessment::Question'
+  acts_as_paranoid
+  is_a :question, as: :as_question
 
-  has_one :depends_on, class_name: 'Assessment::CodingQuestion'
-  has_one :comment_topic, as: :topic
+  belongs_to :dependent_on, class_name: Assessment::CodingQuestion, foreign_key: "dependent_id"
 
-  attr_accessible :title, :description, :max_grade, :language, :time_limit, :memory_limit, :test_limit, :auto_graded, :data, :depends_on_id
+  before_create :set_default_data
+  after_update :update_test_limit
+  after_save :refresh_asm_autograding, :if => :data_changed?
 
-  alias_attribute :is_auto_grading?, :auto_graded?
-
-  def build_answer
-    Assessment::CodingAnswer.new({
-                                    question_id: self.question.id,
-                                    code: prefill
-                                 }, without_protection: true)
+  def data_hash
+    JSON.parse(self.data)
   end
 
-private
-  # TODO: Factor this out to a project provider.
-  def prefill
+  #TODO
+  def set_default_data
+    # unless self.data
+    #   self.data = '{"type":"do","language":"python","prefill":""}'
+    # end
+  end
 
+  def prefilled_code
+    data_hash["prefill"] || "#Prefilled code \n#Auto generated"
+  end
+
+  def included_code
+    data_hash["included"] || ""
+  end
+
+  def test_code
+    data_hash["included"] || ""
+  end
+
+  def test_limit
+    data_hash["testLimit"] || 0
+  end
+
+  def update_test_limit
+    if changed_attributes.has_key? "data"
+      old_data_hash = JSON.parse(changed_attributes["data"])
+      diff = test_limit.to_i - old_data_hash["testLimit"].to_i
+      if  diff != 0
+        Thread.start {
+          std_coding_answers.each do |std_answer|
+            std_answer.test_left = [0, std_answer.test_left + diff].max
+            std_answer.save
+          end
+        }
+      end
+    end
+  end
+
+
+  def refresh_asm_autograding
+    if asm_qns.first
+      asm_qns.first.asm.mark_refresh_autograding
+    end
   end
 end
