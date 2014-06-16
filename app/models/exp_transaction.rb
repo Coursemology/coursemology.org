@@ -11,7 +11,8 @@ class ExpTransaction < ActiveRecord::Base
   belongs_to :giver, class_name: "User"
   belongs_to :user_course
   belongs_to :rewardable, polymorphic: true
-
+  
+    
   def update_user_data
     self.user_course.update_exp_and_level_async
   end
@@ -28,14 +29,8 @@ class ExpTransaction < ActiveRecord::Base
   
   #Linking transaction to submission 
   def get_submission_path
-    if rewardable_type == Mission.to_s
-      ms = Submission.where(std_course_id: self.user_course_id,mission_id: self.rewardable_id).first
-      ms.nil? ? ms : ms.get_path
-    elsif rewardable_type == Training.to_s
-      ts = TrainingSubmission.where(std_course_id: self.user_course_id,training_id: self.rewardable_id).first
-      ts.nil? ? ts : ts.get_path
-    else nil
-    end
+    s = SubmissionGrading.where(exp_transaction_id: self.id).first
+    s.nil? ? nil : s.sbm.get_path
   end
 
 end
