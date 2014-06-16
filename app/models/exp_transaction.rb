@@ -16,7 +16,7 @@ class ExpTransaction < ActiveRecord::Base
     self.user_course.update_exp_and_level_async
   end
 
-
+  
   #Only training exp transaction is not editable, since it's auto-graded
   def can_edit_exp?
     rewardable_type != Training.to_s
@@ -25,4 +25,17 @@ class ExpTransaction < ActiveRecord::Base
   def is_manual_reward?
     rewardable_type.nil?
   end
+  
+  #Linking transaction to submission 
+  def get_submission_path
+    if rewardable_type == Mission.to_s
+      ms = Submission.where(std_course_id: self.user_course_id,mission_id: self.rewardable_id).first
+      ms.nil? ? ms : ms.get_path
+    elsif rewardable_type == Training.to_s
+      ts = TrainingSubmission.where(std_course_id: self.user_course_id,training_id: self.rewardable_id).first
+      ts.nil? ? ts : ts.get_path
+    else nil
+    end
+  end
+
 end

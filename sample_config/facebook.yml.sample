@@ -1,11 +1,11 @@
 development:
-  app_id: 'abcxyz'
-  secret_key: 'abcxyz'
+  app_id: '693636284006152'
+  secret_key: '581016ca073dcbdc5483353ad4252f4b'
 
 test:
-  app_id: 'abcxyz'
-  secret_key: 'abcxyz'
+  app_id: '693636284006152'
+  secret_key: '581016ca073dcbdc5483353ad4252f4b'
 
 production:
-  app_id: 'abcxyz'
-  secret_key: 'abcxyz'
+  app_id: '693636284006152'
+  secret_key: '581016ca073dcbdc5483353ad4252f4b'
