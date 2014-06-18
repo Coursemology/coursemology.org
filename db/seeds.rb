@@ -727,3 +727,10 @@ if NavbarPreferableItem.count == 12
                                description: "course comics",
                                pos: 13
 end
+
+
+if ProgrammingLanguage.count == 0
+  ProgrammingLanguage.create! language: "Python",
+                              version:  "3.3"
+
+end
