@@ -1,8 +1,11 @@
 class Assessment::CodingQuestion < ActiveRecord::Base
   acts_as_paranoid
-  is_a :question, as: :as_question
+  is_a :question, as: :as_question, class_name: "Assessment::Question"
 
-  belongs_to :dependent_on, class_name: Assessment::CodingQuestion, foreign_key: "dependent_id"
+  attr_accessible :language_id
+
+  belongs_to  :dependent_on, class_name: "Assessment::CodingQuestion", foreign_key: "dependent_id"
+  belongs_to  :language, class_name: "ProgrammingLanguage"
 
   before_create :set_default_data
   after_update :update_test_limit
@@ -14,9 +17,9 @@ class Assessment::CodingQuestion < ActiveRecord::Base
 
   #TODO
   def set_default_data
-    # unless self.data
-    #   self.data = '{"type":"do","language":"python","prefill":""}'
-    # end
+    unless self.data
+      self.data = '{"type":"do","language":"python","prefill":""}'
+    end
   end
 
   def prefilled_code

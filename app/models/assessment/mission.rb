@@ -1,13 +1,19 @@
 class Assessment::Mission < ActiveRecord::Base
   acts_as_paranoid
-  is_a :assessment, as: :as_assessment, class_name: "Assessment"
+  is_a :assessment, as: :as_assessment, auto_join: false, class_name: "Assessment"
 
   attr_accessible :close_at
+  attr_accessible  :single_question,
+                   :file_submission,
+                   :file_submission_only,
+                   :comment_per_qn
+  attr_accessible :display_mode_id,
+                  :dependent_id
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
   belongs_to  :dependent_on, class_name: "Assessment::Mission", foreign_key: "dependent_id"
-  has_many    :dependent_by, class_name: Assessment::Mission, foreign_key: 'dependent_id'
+  has_many    :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
   belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
 
   # has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy

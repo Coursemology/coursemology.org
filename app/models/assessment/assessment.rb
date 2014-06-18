@@ -5,7 +5,9 @@ class Assessment < ActiveRecord::Base
 
   default_scope { order("assessments.open_at") }
 
-  attr_accessible :open_at, :exp
+  attr_accessible   :open_at,:close_at, :exp
+  attr_accessible   :title, :description
+  attr_accessible   :published
 
   include HasRequirement
   include ActivityObject
@@ -24,7 +26,15 @@ class Assessment < ActiveRecord::Base
   has_many :as_requirements, through: :as_asm_reqs
 
   has_many  :question_assessments
-  has_many  :questions, through: :question_assessments
+  has_many  :questions, through: :question_assessments do
+    def coding
+      where(as_question_type: Assessment::CodingQuestion)
+    end
+
+    def before(question)
+      where(pos: ['< ?', question.pos])
+    end
+  end
 
   #tags through question tags
   has_many :taggable_tags, as: :taggable, dependent: :destroy
@@ -59,7 +69,7 @@ class Assessment < ActiveRecord::Base
   end
 
   def get_final_sbm_by_std(std_course_id)
-    self.sbms.find_by_std_course_id(std_course_id)
+    self.submissions.find_by_std_course_id(std_course_id)
   end
 
   def get_qn_pos(qn)
@@ -89,20 +99,20 @@ class Assessment < ActiveRecord::Base
     self.save
   end
 
-  def update_tags(all_tags)
-    all_tags ||= []
-    all_tags = all_tags.collect { |id| id.to_i }
-    removed_asm_tags = []
-    existing_tags = []
-    self.asm_tags.each do |asm_tag|
-      if !all_tags.include?(asm_tag.tag_id)
-        removed_asm_tags << asm_tag.id
-      else
-        existing_tags << asm_tag.tag_id
-      end
-    end
-    AsmTag.delete(removed_asm_tags)
-    self.add_tags(all_tags - existing_tags)
+  #TODO
+  def update_tags(all_tags = [])
+    # all_tags = all_tags.collect { |id| id.to_i }
+    # removed_asm_tags = []
+    # existing_tags = []
+    # self.asm_tags.each do |asm_tag|
+    #   if !all_tags.include?(asm_tag.tag_id)
+    #     removed_asm_tags << asm_tag.id
+    #   else
+    #     existing_tags << asm_tag.tag_id
+    #   end
+    # end
+    # AsmTag.delete(removed_asm_tags)
+    # self.add_tags(all_tags - existing_tags)
   end
 
   def after_save_asm

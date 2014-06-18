@@ -1,6 +1,14 @@
 class Assessment::Submission < ActiveRecord::Base
   acts_as_paranoid
 
+  scope :mission_submissions,
+         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
+         where("assessments.as_assessment_type = 'Assessment::Mission'")
+
+  scope :training_submissions,
+        joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
+            where("assessments.as_assessment_type = 'Assessment::Training'")
+
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
   has_many :answers, class_name: Assessment::Answer, dependent: :destroy
