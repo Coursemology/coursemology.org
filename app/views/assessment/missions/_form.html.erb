@@ -1,4 +1,4 @@
-<%- display_name = @course.customized_title_by_model(Mission).singularize -%>
+<%- display_name = @course.customized_title("Missions").singularize -%>
 <%= form_for [@course, @mission], :html => { :class => 'form-horizontal' } do |f| %>
     <div class="control-group">
       <%= f.label :title, :class => 'control-label' %>
@@ -49,22 +49,21 @@
       </div>
     </div>
     <div class="control-group">
-      <%= f.label :publish, 'Publish?', class: 'control-label' %>
+      <%= f.label :published, 'Publish?', class: 'control-label' %>
       <div class="controls checkbox-text">
-        <%= f.check_box :publish %> Check to publish <%= display_name.downcase %>
+        <%= f.check_box :published %> Check to publish <%= display_name.downcase %>
       </div>
     </div>
     <div class="control-group">
       <%= f.label "Comment Mode", Class: 'control-label' %>
       <div class="controls checkbox-text">
         <%= f.check_box :comment_per_qn %> Check to have comment box per question (Otherwise per mission)
-        <%= f.check_box :publish %>
       </div>
     </div>
     <div class="control-group">
-      <%= f.label :file_submission, 'Allow file submissions?', class: 'control-label' %>
+      <%= f.label :file_submission, 'Submission Type', class: 'control-label' %>
       <div class="controls checkbox-text">
-        <%= f.check_box :is_file_submission %> Allow File Submission
+        <%= f.check_box :file_submission %> Allow File Submission
       </div>
     </div>
     <div class="control-group">
@@ -105,14 +104,13 @@
             </div>
           </div>
         </div>
-        <%= f.check_box :file_submission %>
       </div>
     </div>
 
     <div class="control-group">
       <%= f.label "Display Mode", class: 'control-label' %>
       <div class="controls">
-        <select id="select-display-mode" name="mission[display_mode]">
+        <select id="select-display-mode" name="mission[display_mode_id]">
           <% AssignmentDisplayMode.all.each do |mode| %>
             <option value="<%= mode.id %>" <%= 'selected' if @mission.display_mode == mode.id %> > <%= mode.title %></option>
           <% end %>
@@ -121,7 +119,6 @@
     </div>
 
     <div class="control-group">
-      <%= f.label "Dependency", class: 'control-label' %>
       <%= f.label :dependent_id, 'Dependency', class: 'control-label' %>
       <div class="controls">
         <%- missions = @missions - [@mission]
@@ -142,9 +139,6 @@
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
       <%= f.submit "#{@mission.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  course_path(@course), :class => 'btn' %>
-      <%= f.submit nil, :class => 'btn btn-primary', id: 'mission-update', data: {disable_with: 'Submitting...'} %>
       <%= link_to t('.cancel', :default => t('helpers.links.cancel')),
                   @mission.persisted? ? course_assessment_mission_path(@course, @mission) :
                                         course_assessment_missions_path(@course),

@@ -1,7 +1,0 @@
-<div class="alert alert-error hidden"></div>
-<%- model_class = Assessment::Mission -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => t('helpers.titles.new', :model => @course.customized_title_by_model(model_class).singularize,
-                                 :default => "New #{@course.customized_title_by_model(model_class).singularize}") %></h1>
-</div>
-<%= render :partial => 'form' %>

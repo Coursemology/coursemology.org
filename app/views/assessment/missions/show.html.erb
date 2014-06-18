@@ -1,9 +1,10 @@
 <div class="missions">
+<%- model_name = "Missions" -%>
 <%- model_class = Assessment::Mission -%>
 <div class="page-header">
   <h1><%= @mission.title %></h1>
 </div>
-<h2 class="assignments-description-title"><%= @course.customized_title_by_model(model_class).singularize %> Description</h2>
+<h2 class="assignments-description-title"><%= @course.customized_title(model_name).singularize %> Description</h2>
 <table class="table-top-align">
   <tr>
     <td class="span10">
@@ -43,10 +44,10 @@
   </tr>
 </table>
 
-<% if @mission.dependent.count > 0 %>
+<% if @mission.dependent_by.count > 0 %>
   <h3>Finish to unlock:</h3>
   <ul>
-    <% @mission.dependent.each do |mission| %>
+    <% @mission.dependent_by.each do |mission| %>
       <h4><li><%= mission.title %></li></h4>
     <% end %>
   </ul>
@@ -64,12 +65,12 @@
     <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
       Add Question
     </button>
-    <a href="<%= new_course_assessment_mission_assessment_coding_question_path(@course, @mission) %>" class="btn btn-primary">Add Coding Question</a>
+    <a href="<%= new_course_assessment_mission_coding_question_path(@course, @mission) %>" class="btn btn-primary">Add Coding Question</a>
   <% end %>
 
   <div id="new_wquestion_form" class="collapse out">
     <div class="well">
-      <%= render 'text_questions/form' %>
+      <%= render 'general_questions/form' %>
     </div>
   </div>
 

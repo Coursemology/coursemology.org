@@ -1,7 +1,7 @@
 <div class="missions">
-<%- model_class = Assessment::Mission -%>
+<%- model_name = "Missions" -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => @course.customized_title_by_model(model_class).pluralize %></h1>
+  <h1><%=t '.title', :default => @course.customized_title(model_name).pluralize %></h1>
 </div>
 
 
@@ -23,14 +23,14 @@
 
 <% if can? :manage, Assessment::Mission %>
     <p>
-      <%= link_to "New #{@course.customized_title_by_model(model_class).singularize}",
+      <%= link_to "New #{@course.customized_title(model_name).singularize}",
                   new_course_assessment_mission_path(@course),
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>
 <% to_display = @display_columns.keys %>
 <% if to_display.include? 'tag' %>
-    <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title_by_model(Mission).pluralize.downcase %> and <%= @course.customized_title_by_model(Training).pluralize.downcase %> in that tag.</em></p>
+    <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title(model_name).pluralize.downcase %> and <%= @course.customized_title_by_model(Training).pluralize.downcase %> in that tag.</em></p>
 <% end %>
 
 <table class="table assignments missions-list-table">
