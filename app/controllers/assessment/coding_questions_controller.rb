@@ -1,12 +1,13 @@
-class CodingQuestionsController < ApplicationController
+class Assessment::CodingQuestionsController < ApplicationController
   load_and_authorize_resource :course
+  # load_and_authorize_resource :question, class: "Assessment::CodingQuestion"
   before_filter :load_resources
-  load_and_authorize_resource :question
 
-  before_filter :load_general_course_data, only: [:new, :edit]
+  # before_filter :load_general_course_data, only: [:new, :edit]
 
   def new
     @question.max_grade = @mission ? 10 : 1
+    # puts @question.to_json
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @question }
@@ -71,7 +72,7 @@ class CodingQuestionsController < ApplicationController
 
 private
   def load_resources
-    if params[:assessment_mission_id] then
+    if params[:assessment_mission_id]
       @mission = Assessment::Mission.find(params[:assessment_mission_id])
     elsif params[:assessment_training_id]
       @training = Assessment::Training.find(params[:assessment_training_id])
@@ -89,5 +90,10 @@ private
                   else
                     Assessment::CodingQuestion.find_by_id!(params[:id] || params[:assessment_coding_question_id])
                 end
+    # @question = Assessment::CodingQuestion.new
+    # puts ::Assessment::CodingQuestion
+    # puts Assessment::Training
+    # puts CodingQuestion
+    puts "I AM HERE"
   end
 end
