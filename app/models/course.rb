@@ -5,13 +5,25 @@ class Course < ActiveRecord::Base
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish,
                   :is_active, :is_open, :start_at, :end_at, :course_navbar_preferences_attributes
+
   before_create :populate_preference
   after_create :create_materials_root
 
   belongs_to :creator, class_name: "User"
 
+  has_many  :user_courses,  dependent: :destroy
+  has_many  :users, through: :user_courses
+
+  has_many  :assessments, dependent: :destroy
+  has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
+            source: :as_assessment, source_type: "Assessment::Mission"
+
+  has_many  :trainings, through: :assessments, class_name: "Assessment::Training",
+            source: :as_assessment, source_type: Assessment::Training
+
+  has_many :submissions,          through: :user_courses
+
   has_many :announcements,     dependent: :destroy
-  has_many :user_courses ,     dependent: :destroy
   has_many :lesson_plan_entries, dependent: :destroy
   has_many :lesson_plan_milestones, dependent: :destroy
   has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
@@ -19,31 +31,14 @@ class Course < ActiveRecord::Base
 
   has_many :comics,            dependent: :destroy
 
-  has_many :assessments,        dependent: :destroy,    class_name: Assessment::Assessment
-  has_many :missions,           through: :assessments,  class_name: Assessment::Mission,
-                                source: :as_assessment_assessment, source_type: Assessment::Mission
-  has_many :trainings,          through: :assessments,  class_name: Assessment::Training,
-                                source: :as_assessment_assessment, source_type: Assessment::Training
-  has_many :mcqs,               through: :trainings,    class_name: Assessment::Training
-  has_many :coding_questions,   through: :trainings,    class_name: Assessment::CodingQuestion
-  has_many :std_answers,        through: :user_courses, class_name: Assessment::TextAnswer
-  has_many :std_coding_answers, through: :user_courses, class_name: Assessment::CodingAnswer
-  has_many :submissions,        through: :user_courses, class_name: Assessment::Submission do
-    def missions
-      joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').
-        where('aa.as_assessment_assessment_type = \'Assessment::Mission\'')
-    end
+  #TODO
+  # has_many :mcqs,             through: :trainings
+  # has_many :coding_questions, through: :trainings
+  # has_many :std_answers,        through: :user_courses
+  # has_many :std_coding_answers, through: :user_courses
+  # has_many :training_submissions, through: :user_courses
 
-    def trainings
-      joins('INNER JOIN assessment_assessments aa ON aa.id=assessment_submissions.assessment_id').
-          where('aa.as_assessment_assessment_type = \'Assessment::Training\'')
-    end
-  end
 
-  has_many :training_submissions, through: :user_courses, class_name: Assessment::Submission,
-                                  conditions: { assessment_assessments: { as_assessment_assessment_type: Assessment::Training } }
-
-  has_many :users, through: :user_courses
 
   has_many :activities, dependent: :destroy
 
@@ -69,10 +64,9 @@ class Course < ActiveRecord::Base
   has_many :tabs,                   dependent: :destroy
   has_many :pending_actions
 
-  # @deprecated
-  #def asms
-  #  missions + trainings
-  #end
+  def asms
+    missions + trainings
+  end
 
   # def commented_topics
   #  # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq

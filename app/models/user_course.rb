@@ -1,5 +1,3 @@
-require 'tutorial_group'
-
 class UserCourse < ActiveRecord::Base
   acts_as_paranoid
 
@@ -14,7 +12,7 @@ class UserCourse < ActiveRecord::Base
   scope :tutor, where(:role_id => Role.tutor.first)
   scope :student, where(:role_id => Role.student.first)
   scope :real_students, where(:role_id => Role.student.first, is_phantom: false)
-  scope :active_last_week, where("last_active_time > ?", (Time.now - 7.days))
+  scope :active_last_week, lambda {where("last_active_time > ?", (Time.now - 7.days))}
 
   scope :shared, where(:role_id => Role.shared.first)
   scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).
@@ -42,17 +40,23 @@ class UserCourse < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :comment_topics, through: :comment_subscriptions
 
-  has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
-  has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
+  #TODO
+  # has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
+  # has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
+  # has_many :submission_gradings, foreign_key: "grader_course_id"
 
-  has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
-  has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
+  has_many :submissions, class_name: Assessment::Submission,
+           foreign_key: "std_course_id", dependent: :destroy
+
+
 
   has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: Assessment::Mission
   has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: Assessment::Training
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
-  has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
-  has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
   has_many :seen_comics, through: :seen_stuff, source: :obj, source_type: "Comic"
@@ -62,7 +66,6 @@ class UserCourse < ActiveRecord::Base
   has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_group_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
   has_many :tut_group_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
-  has_many :submission_gradings, foreign_key: "grader_course_id"
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
   has_many :activities, foreign_key: "actor_course_id", dependent: :destroy
@@ -282,7 +285,7 @@ class UserCourse < ActiveRecord::Base
     self.user_achievements.order('created_at desc').first(6)
   end
 
-private
+  private
   # @param [Array] An array of objects which will be marked as seen
   def mark_as_seen_array(objs)
     return if objs.empty?

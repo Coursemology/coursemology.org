@@ -45,4 +45,8 @@ class CoursemologyFormatter
     }
     Sanitize.clean(text, whitelist)
   end
+
+  def self.clean_code_block(text)
+    text.gsub(/\[mc\](.+?)\[\/mc\]/m){"[mc]" << $1.gsub(/<div><\/div>/,'') << "[/mc]"}
+  end
 end

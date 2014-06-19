@@ -15,7 +15,6 @@ class SubmissionGrading < ActiveRecord::Base
   end
 
   def update_exp_transaction
-    puts 'update_exp'
     asm = self.sbm.get_asm
 
     unless self.exp_transaction

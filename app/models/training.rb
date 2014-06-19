@@ -6,7 +6,7 @@ class Training < ActiveRecord::Base
   # Not implemented yet.
   include HasRequirement
   include ActivityObject
-  include Assignment
+  include AssignmentModule
 
   default_scope { order("trainings.open_at") }
 
