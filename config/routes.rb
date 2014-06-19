@@ -62,9 +62,9 @@ JfdiAcademy::Application.routes.draw do
       resources :user_achievements
     end
 
-    resources :assessment_missions, path: 'missions', controller: :missions do
+    resources :assessment_missions, path: 'missions', controller: :missions, module: :assessment do
       resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
-      resources :assessment_text_questions, path: :text_questions, controller: :text_questions
+      resources :assessment_general_questions, path: :general_questions, controller: :general_questions
 
       resources :assessment_submissions, path: 'submissions', controller: :mission_submissions, except: [:create] do
         post 'unsubmit' => 'mission_submissions#unsubmit'
