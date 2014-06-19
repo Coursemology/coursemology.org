@@ -62,7 +62,7 @@ class SurveySubmissionsController < ApplicationController
             essay.text = answers[qn]
             essay.save
           else
-            essay.destory
+            essay.destroy
           end
         else
           #TODO: improve

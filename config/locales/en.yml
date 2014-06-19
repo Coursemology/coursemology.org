@@ -39,4 +39,7 @@ en:
   activerecord:
     models:
       forum_forum: Forum
+  Assessment:
+    Mission:  Mission
+    Training: Training
 
