@@ -9,24 +9,18 @@ class AchievementsController < ApplicationController
     @achievements_with_info = []
     @achievements.each do |ach|
       req_check = {}
-      if curr_user_course && ach.published
+      if curr_user_course
         uach = UserAchievement.find_by_user_course_id_and_achievement_id(
           curr_user_course.id, ach.id)
         ach.requirements.each do |req|
           req_check[req.id] = req.satisfied?(curr_user_course)
         end
-        @achievements_with_info << {
+      end
+      @achievements_with_info << {
         ach: ach,
         won: uach ? true : false,
         req_check: req_check
-        }
-      elsif can? :manage, Achievement
-        @achievements_with_info << {
-          ach: ach,
-          won: false,
-          req_check: {}
-        }
-      end
+      }
     end
 
     @ach_paging = @course.achievements_paging_pref
@@ -44,7 +38,6 @@ class AchievementsController < ApplicationController
   def new
     fetch_data_for_form
     @achievement.auto_assign = true
-    @achievement.published = true
   end
 
   def edit
