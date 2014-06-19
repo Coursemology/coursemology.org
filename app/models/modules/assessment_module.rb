@@ -1,4 +1,4 @@
-module Assessment
+module AssessmentModule
 
   def self.included(base)
     base.class_eval do
