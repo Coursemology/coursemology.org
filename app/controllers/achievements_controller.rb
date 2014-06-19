@@ -15,17 +15,9 @@ class AchievementsController < ApplicationController
         ach.requirements.each do |req|
           req_check[req.id] = req.satisfied?(curr_user_course)
         end
-        @achievements_with_info << {
-        ach: ach,
-        won: uach ? true : false,
-        req_check: req_check
-        }
+        get_achievements_with_info ach, uach, req_check
       elsif can? :manage, Achievement
-        @achievements_with_info << {
-          ach: ach,
-          won: false,
-          req_check: {}
-        }
+        get_achievements_with_info ach, false, req_check
       end
     end
 
@@ -35,6 +27,14 @@ class AchievementsController < ApplicationController
     end
   end
 
+  def get_achievements_with_info(ach, uach, req_check)
+    @achievements_with_info << {
+        ach: ach,
+        won: uach ? true : false,
+        req_check: req_check
+        }
+  end
+  
   def fetch_data_for_form
     @all_ach = @course.achievements
     @all_asm = @course.asms
@@ -44,7 +44,6 @@ class AchievementsController < ApplicationController
   def new
     fetch_data_for_form
     @achievement.auto_assign = true
-    @achievement.published = true
   end
 
   def edit
