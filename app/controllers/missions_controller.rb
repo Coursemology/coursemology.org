@@ -47,7 +47,7 @@ class MissionsController < ApplicationController
                             url: edit_course_mission_submission_path(@course, m, sub_map[m.id]) }
       elsif  m.dependent_id == 0 or
           can?(:manage, m) or
-          (sub_ids.include? m.dependent_id and sub_map[m.dependent_id].submitted?)
+          (sub_ids.include? m.dependent_id and !sub_map[m.dependent_id].attempting?)
         action_map[m.id] = {action: "Attempt",
                             url: new_course_mission_submission_path(@course, m)}
       else
