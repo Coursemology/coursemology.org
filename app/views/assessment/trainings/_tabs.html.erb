@@ -20,18 +20,18 @@
 <ul class="nav nav-tabs">
   <% if @tabs.length == 0 %>
       <li class="<%= "active" if @tab_id == 'Trainings' %>">
-        <a href="<%=  course_trainings_path(@course) %>?_tab=Trainings"><h4><%= @course.customized_title_by_model(Training).pluralize %></h4></a>
+        <a href="<%=  course_assessment_trainings_path(@course) %>?_tab=Trainings"><h4><%= @course.customized_title_by_model(Training).pluralize %></h4></a>
       </li>
   <% else %>
       <% @tabs.each do |tab| %>
           <li class="<%= "active" if @tab_id == tab.id.to_s %>">
-            <a href="<%=  course_trainings_path(@course) %>?_tab=<%= tab.id %>"><h4><%= tab.title %></h4></a>
+            <a href="<%=  course_assessment_trainings_path(@course) %>?_tab=<%= tab.id %>"><h4><%= tab.title %></h4></a>
           </li>
       <% end %>
   <% end %>
   <% if can? :manage, :bulk_update %>
       <li class="<%= "active" if @tab_id == 'overview' %>">
-        <a href="<%= course_trainings_overview_path %>" ><h4>Overview</h4></a>
+        <a href="<%= course_assessment_trainings_overview_path %>" ><h4>Overview</h4></a>
       </li>
   <% end %>
 </ul>

@@ -61,7 +61,7 @@ class Training < ActiveRecord::Base
     entry.entry_real_type = "Training"
     entry.start_at = self.open_at
     entry.end_at = nil
-    entry.url = course_training_path(self.course, self)
+    entry.url = course_assessment_training_path(self.course, self)
     entry.is_published = self.publish
     entry
   end
@@ -71,7 +71,7 @@ class Training < ActiveRecord::Base
   end
 
   def get_path
-    course_training_path(self.course, self)
+    course_assessment_training_path(self.course, self)
   end
 
   def current_exp

@@ -31,7 +31,7 @@
         <% if to_display.include? 'title' %>
             <td>
               <% if can? :manage, Training %>
-                  <%= link_to course_training_stats_path(@course, training) do %>
+                  <%= link_to course_assessment_training_stats_path(@course, training) do %>
                       <h4>
                         <% if @is_new[training.id] %>
                             <input type="hidden" class="new_<%= model_class.model_name.human.pluralize %>">
@@ -90,7 +90,7 @@
             <td><%= training.bonus_exp %></td>
         <% end %>
         <% if to_display.include? 'bonus-cutoff' %>
-            <% cutoff_time  = training.bonus_cutoff || training.open_at %>
+            <% cutoff_time  = training.bonus_cutoff_at || training.open_at %>
             <td>
               <% if @time_format.prefer_value == 'ago' %>
                   <%= if cutoff_time > Time.now then time_ago_in_words(cutoff_time) else '----' end%>
@@ -110,11 +110,11 @@
 
         <% if can? :view_detail, Training %>
             <td>
-              <%= link_to course_training_path(@course, training), class: 'btn' do %>
+              <%= link_to course_assessment_training_path(@course, training), class: 'btn' do %>
                   <i class="icon-external-link"></i>
               <% end %>
               <% if can? :manage, Training %>
-                  <%= link_to course_training_path(@course, training),
+                  <%= link_to course_assessment_training_path(@course, training),
                               method: :delete,
                               data: { confirm: t('.confirm', :default => t("helpers.links.confirm",
                                                                            :default => 'Are you sure?')) },

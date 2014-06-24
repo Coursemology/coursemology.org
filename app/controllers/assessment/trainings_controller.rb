@@ -1,6 +1,6 @@
-class TrainingsController < ApplicationController
+class Assessment::TrainingsController < Assessment::AssessmentsController
   load_and_authorize_resource :course
-  load_and_authorize_resource :training, through: :course
+  load_and_authorize_resource :training, class: "Assessment::Training", through: :course
 
   before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied, :stats, :overview]
 
@@ -31,7 +31,6 @@ class TrainingsController < ApplicationController
 
     if params['_tab'] and (@tab = @course.tabs.where(id:@tab_id).first)
       @trainings = @tab.trainings
-      #@trainings = @trainings.where(t_type: AssignmentType.extra)
     elsif @tabs.length > 0
       @tab_id = @tabs.first.id.to_s
       @trainings = @tabs.first.trainings
@@ -42,7 +41,7 @@ class TrainingsController < ApplicationController
     @trainings = @trainings.accessible_by(current_ability)
 
     if @paging.display?
-      @trainings = @trainings.order(:open_at).page(params[:page]).per(@paging.prefer_value.to_i)
+      @trainings = @trainings.page(params[:page]).per(@paging.prefer_value.to_i)
     end
 
     if curr_user_course.id
@@ -70,7 +69,7 @@ class TrainingsController < ApplicationController
 
   def show
     if curr_user_course.is_student?
-      redirect_to course_trainings_path
+      redirect_to course_assessment_trainings_path
       return
     end
 
@@ -85,14 +84,15 @@ class TrainingsController < ApplicationController
     @training.exp = 200
     @training.open_at = DateTime.now.beginning_of_day
     @training.bonus_exp = 0
-    @training.bonus_cutoff = DateTime.now.beginning_of_day + 1
+    @training.bonus_cutoff_at = DateTime.now.beginning_of_day + 1
     @tags = @course.tags
     @asm_tags = {}
   end
 
   def create
-    @training.pos = @course.trainings.count - 1
+    @training.position = @course.trainings.count + 1
     @training.creator = current_user
+    @training.course_id = @course.id
     @training.update_tags(params[:tags])
     if params[:files]
       @training.attach_files(params[:files].values)
@@ -101,8 +101,8 @@ class TrainingsController < ApplicationController
     respond_to do |format|
       if @training.save
         @training.create_local_file
-        @training.schedule_tasks(course_training_url(@course, @training))
-        format.html { redirect_to course_training_path(@course, @training),
+        @training.schedule_tasks(course_assessment_training_url(@course, @training))
+        format.html { redirect_to course_assessment_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }
       else
         format.html { render action: "new" }
@@ -113,15 +113,15 @@ class TrainingsController < ApplicationController
   def edit
     @tags = @course.tags
     @asm_tags = {}
-    @training.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
+    # @training.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def update
     @training.update_tags(params[:tags])
     respond_to do |format|
-      if @training.update_attributes(params[:training])
-        @training.schedule_tasks(course_training_url(@course, @training))
-        format.html { redirect_to course_training_url(@course, @training),
+      if @training.update_attributes(params[:assessment_training])
+        @training.schedule_tasks(course_assessment_training_url(@course, @training))
+        format.html { redirect_to course_assessment_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else
         format.html { render action: "edit" }
@@ -133,7 +133,7 @@ class TrainingsController < ApplicationController
     @training.destroy
 
     respond_to do |format|
-      format.html { redirect_to course_trainings_url,
+      format.html { redirect_to course_assessment_trainings_url,
                                 notice: "The training '#{@training.title}' has been removed." }
     end
   end
@@ -148,7 +148,8 @@ class TrainingsController < ApplicationController
     authorize! :manage, :bulk_update
     @tabs = @course.training_tabs
     @tab_id = 'overview'
-    @trainings = @course.trainings.order(:t_type, :open_at)
+    @trainings = @course.trainings
+    # @trainings = @course.trainings.order(:tab_id, :open_at)
     @display_columns = {}
     @course.training_columns_display.each do |cp|
       @display_columns[cp.preferable_item.name] = cp.prefer_value
@@ -176,7 +177,7 @@ class TrainingsController < ApplicationController
     if fail > 0
       flash[:error] = "#{fail} training(s) failed to update."
     end
-    redirect_to course_trainings_overview_path
+    redirect_to course_assessment_trainings_overview_path
   end
 
   def duplicate_qn

@@ -4,7 +4,7 @@
 
 <%= render  partial: "tabs" %>
 
-<%= form_tag course_trainings_bulk_update_path(@course), :method => 'POST' do %>
+<%= form_tag course_assessment_trainings_bulk_update_path(@course), :method => 'POST' do %>
     <table class="table">
       <thead>
       <tr>
@@ -40,7 +40,7 @@
             </td>
             <td>
               <div class="datetimepicker future-only input-append date">
-                <input name="trainings[<%= training.id %>][bonus_cutoff]" type="text" value="<%= datetime_format(training.bonus_cutoff) %>" class="input-medium" required="true">
+                <input name="trainings[<%= training.id %>][bonus_cutoff_at]" type="text" value="<%= datetime_format(training.bonus_cutoff_at) %>" class="input-medium" required="true">
         <span class="add-on">
           <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
         </span>
@@ -55,7 +55,7 @@
             </td>
             <td style="text-align: center">
               <input type="hidden" name="trainings[<%= training.id %>][publish]" value="0">
-              <input name="trainings[<%= training.id %>][publish]" type="checkbox" <%= 'checked' if training.publish? %>>
+              <input name="trainings[<%= training.id %>][publish]" type="checkbox" <%= 'checked' if training.published? %>>
             </td>
           </tr>
       <% end%>

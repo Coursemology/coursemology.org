@@ -27,7 +27,7 @@
             <td><%= @training.bonus_exp %></td>
           </tr>
           <tr><td><strong><%= model_class.human_attribute_name(:bonus_cutoff) %></strong></td>
-            <td><%= datetime_format(@training.bonus_cutoff || @training.open_at) %></td>
+            <td><%= datetime_format(@training.bonus_cutoff_at || @training.open_at) %></td>
           </tr>
 
         </table>
@@ -44,10 +44,10 @@
 
     <% if can? :manage, Training %>
         <td>
-          <%= link_to edit_course_training_path(@course, @training), class: "btn" do %>
+          <%= link_to edit_course_assessment_training_path(@course, @training), class: "btn" do %>
               <i class="icon-edit"></i>
           <% end %>
-          <%= link_to course_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
+          <%= link_to course_assessment_training_path(@course, @training), class: "btn btn-danger", method: "DELETE" do %>
               <i class="icon-trash"></i>
           <% end %>
         </td>
@@ -60,10 +60,10 @@
     <hr/>
     <% if can? :manage, @training %>
         <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
-                    new_course_training_mcq_path(@course, @training),
+                    new_course_assessment_training_mcq_path(@course, @training),
                     :class => 'btn btn-primary' %>
         <%= link_to t('.new', :default => t("helpers.links.new_cq")),
-                    new_course_training_coding_question_path(@course, @training),
+                    new_course_assessment_training_coding_question_path(@course, @training),
                     :class => 'btn btn-primary' %>
     <% end %>
 
@@ -74,7 +74,7 @@
         <th><%= model_class.human_attribute_name(:description) %></th>
       </tr>
       </thead> -->
-      <tbody class="asm-qns" url="<%= reorder_course_training_asm_qns_path(@course, @training) %>">
+      <tbody class="asm-qns" url="<%= reorder_course_assessment_training_asm_qns_path(@course, @training) %>">
       <% @steps.each_with_index do |q, index| %>
           <tr class="asm-qn" id="asm-qn_<%= q.asm_qns.first.id %>" >
             <td>
@@ -104,20 +104,20 @@
                       <i class="icon-copy"></i>
                     </a>
                     <% if q.class == Mcq %>
-                        <%= link_to edit_course_training_mcq_path(@course, @training, q), class: 'btn' do %>
+                        <%= link_to edit_course_assessment_training_mcq_path(@course, @training, q), class: 'btn' do %>
                             <i class="icon-edit"></i>
                         <% end %>
-                        <%= link_to course_training_mcq_path(@course, @training, q),
+                        <%= link_to course_assessment_training_mcq_path(@course, @training, q),
                                     method: :delete,
                                     data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                                     class: 'btn btn-danger' do %>
                             <i class="icon-trash"></i>
                         <% end %>
                     <% elsif q.class == CodingQuestion %>
-                        <%= link_to edit_course_training_coding_question_path(@course, @training, q), class: 'btn' do %>
+                        <%= link_to edit_course_assessment_training_coding_question_path(@course, @training, q), class: 'btn' do %>
                             <i class="icon-edit"></i>
                         <% end %>
-                        <%= link_to course_training_coding_question_path(@course, @training, q),
+                        <%= link_to course_assessment_training_coding_question_path(@course, @training, q),
                                     method: :delete,
                                     data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                                     class: 'btn btn-danger' do %>
@@ -154,7 +154,7 @@
       <label>Delete current one</label>
     </span>
     <span style="padding-left: 15px; display: block; text-align: center; padding-top: 10px">
-      <input type="button" value="Copy" class="btn btn-primary" id="do-copy-btn" url="<%= course_trainings_duplicate_qn_path(@course) %>">
+      <input type="button" value="Copy" class="btn btn-primary" id="do-copy-btn" url="<%= course_assessment_trainings_duplicate_qn_path(@course) %>">
     </span>
       <input type="hidden" id="qn-type">
       <input type="hidden" id="qn-id">

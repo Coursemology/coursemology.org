@@ -88,7 +88,7 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_path
-    course_training_training_submission_path(training.course, training, self)
+    course_assessment_training_training_submission_path(training.course, training, self)
   end
 
   def get_new_grading_path

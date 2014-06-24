@@ -6,7 +6,7 @@
 
 <div>
   <h3><a href="#" data-toggle="collapse" data-target="#tag-checklist">&raquo; Filter</a> <small>(click to reveal)</small></h3>
-  <%= form_tag(course_trainings_path(@course), method: :get) do %>
+  <%= form_tag(course_assessment_trainings_path(@course), method: :get) do %>
       <div class="collapse <%= @selected_tags ? "in" : "out" %>" id="tag-checklist">
         <div class="well">
           <%= render partial: "tags/form_checkboxes",
@@ -20,7 +20,7 @@
 <% if can? :create, Training %>
     <p>
       <%= link_to "New #{@course.customized_title_by_model(Training).singularize}",
-                  new_course_training_path(@course, tab: @tab_id),
+                  new_course_assessment_training_path(@course, tab: @tab_id),
                   :class => 'btn btn-primary' %>
     </p>
 <% end %>

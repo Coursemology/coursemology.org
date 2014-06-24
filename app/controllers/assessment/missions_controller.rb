@@ -1,4 +1,4 @@
-class Assessment::MissionsController < ApplicationController
+class Assessment::MissionsController < Assessment::AssessmentsController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, class: "Assessment::Mission", through: :course
 
@@ -98,7 +98,6 @@ class Assessment::MissionsController < ApplicationController
     @mission.open_at = DateTime.now.beginning_of_day
     @mission.close_at = DateTime.now.end_of_day + 7  # 1 week from now
     @mission.course_id = @course.id
-    puts @mission.assessment.to_json
 
     @tags = @course.tags
     @asm_tags = {}
@@ -146,7 +145,7 @@ class Assessment::MissionsController < ApplicationController
     @mission.update_tags(params[:tags])
 
     respond_to do |format|
-      if @mission.update_attributes(params[:mission])
+      if @mission.update_attributes(params[:assessment_mission])
 
         if @mission.single_question? && @mission.get_all_questions.count > 1
           flash[:error] = "Mission already have several questions, can't change the format."

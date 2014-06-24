@@ -50,10 +50,7 @@ JfdiAcademy::Application.routes.draw do
     match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
-    match "missions/overview" => "missions#overview", as: :missions_overview
     post  "missions/bulk_update" => "missions#bulk_update", as: :missions_bulk_update
-    match "trainings/overview" => "trainings#overview", as: :trainings_overview
-    post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :trainings_duplicate_qn
     post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
 
 
@@ -86,7 +83,12 @@ JfdiAcademy::Application.routes.draw do
       end
     end
 
-    resources :trainings do
+    scope module: 'assessment' do
+      match "trainings/overview" => "trainings#overview", as: :assessment_trainings_overview
+      post  "trainings/bulk_update" => "trainings#bulk_update", as: :assessment_trainings_bulk_update
+      post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
+    end
+    resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
       resources :mcqs
       resources :coding_questions
       resources :training_submissions
@@ -98,10 +100,10 @@ JfdiAcademy::Application.routes.draw do
         end
       end
 
-      match "trainings/overview" => "trainings#overview", as: :trainings_overview
-      post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
+      get 'stats' => 'trainings#stats'
     end
-    match "trainings/:id/stats" => "trainings#stats", as: :training_stats
+
+
     get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
 
     resources :mcq_answers
@@ -278,7 +280,7 @@ JfdiAcademy::Application.routes.draw do
 
   match "file_uploads/:id/toggle_access" => "file_uploads#toggle_access", as: :file_uploads_toggle_access
 
-  resources :trainings do
+  resources :assessment_trainings do
     resources :file_uploads
   end
 

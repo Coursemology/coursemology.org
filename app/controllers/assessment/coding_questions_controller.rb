@@ -24,7 +24,7 @@ class Assessment::CodingQuestionsController < ApplicationController
     respond_to do |format|
       if @question.save
         if @training
-          format.html { redirect_to course_training_url(@course, @training),
+          format.html { redirect_to course_assessment_training_url(@course, @training),
                                     notice: 'New question added.' }
         elsif @mission
           format.html { redirect_to course_assessment_mission_path(@course, @mission),
@@ -48,7 +48,7 @@ class Assessment::CodingQuestionsController < ApplicationController
     respond_to do |format|
       if @question.save
         if @training
-          format.html { redirect_to course_training_url(@course, @training),
+          format.html { redirect_to course_assessment_training_url(@course, @training),
                                     notice: 'Question has been updated.' }
           format.json { head :no_content }
         elsif @mission

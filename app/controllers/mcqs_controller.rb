@@ -60,7 +60,7 @@ class McqsController < ApplicationController
         @mcq.save
         @asm.update_grade
         if @asm.is_a?(Training)
-          format.html { redirect_to course_training_url(@course, @training),
+          format.html { redirect_to course_assessment_training_url(@course, @training),
                         notice: 'New question added.' }
         end
       else
@@ -79,7 +79,7 @@ class McqsController < ApplicationController
       if updated
         @asm.update_grade
         if @asm.is_a?(Training)
-          format.html { redirect_to course_training_url(@course, @training),
+          format.html { redirect_to course_assessment_training_url(@course, @training),
                         notice: 'Question updated.' }
         end
 

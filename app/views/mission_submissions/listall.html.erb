@@ -15,13 +15,13 @@
     <a href="<%= course_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Mission).singularize} #{submission_display_name }" %></a>
   </li>
   <li class="<%= "active" if @tab == Training %>">
-    <a href="<%= course_training_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Training).singularize} #{submission_display_name }" %></a>
+    <a href="<%= course_assessment_training_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Training).singularize} #{submission_display_name }" %></a>
   </li>
 </ul>
 
 <<<<<<< HEAD:app/views/submissions/listall.html.erb
 <% if can? :see_all, Submission %>
-    <form class="form-horizontal" action="<%= @tab == Mission ? course_submissions_path : course_training_submissions_path%>" method="GET">
+    <form class="form-horizontal" action="<%= @tab == Mission ? course_submissions_path : course_assessment_training_submissions_path%>" method="GET">
       <h3>Show only <%= submission_display_name %>:</h3>
 =======
 <% if can? :see_all, Assessment::Submission %>

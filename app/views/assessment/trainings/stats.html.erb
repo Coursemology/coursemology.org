@@ -21,7 +21,7 @@
           <% sub = @submissions.where(std_course_id: std.id).first %>
           <tr>
             <% if sub %>
-                <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
+                <td><a href="<%= course_assessment_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
             <% else %>
                 <td><%= std.name %></td>
             <% end %>
@@ -47,7 +47,7 @@
       <% sub = @submissions.where(std_course_id: std.id).first %>
       <tr>
         <% if sub %>
-            <td><a href="<%= course_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
+            <td><a href="<%= course_assessment_training_training_submission_path(@course, @training, sub) %>"><%= std.name %></a> </td>
         <% else %>
             <td><%= std.name %></td>
         <% end %>

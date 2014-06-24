@@ -28,7 +28,7 @@
 <% if !@current_question %>
     <h2>Congratulations, you're done!</h2>
     <p>
-      <a href="<%= course_training_training_submission_path(@course, @training, @training_submission)%>">
+      <a href="<%= course_assessment_training_training_submission_path(@course, @training, @training_submission)%>">
         Click here
       </a> to review your answers.
     </p>
@@ -36,7 +36,7 @@
     <form id="training-step-form">
       <input type="hidden" name="current_step" value="<%= @step %>">
       <input type="hidden" name="update_url"
-             value="<%= course_training_training_submission_submit_path(@course,
+             value="<%= course_assessment_training_training_submission_submit_path(@course,
                                                                         @training, @training_submission) %>" />
       <input type="hidden" name="qid" value="<%= @current_question.id %>" />
 
@@ -55,7 +55,7 @@
         <% end %>
 
         <%= link_to "Continue",
-                    edit_course_training_training_submission_path(@course, @training,
+                    edit_course_assessment_training_training_submission_path(@course, @training,
                                                                   @training_submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
                     :id => 'continue-btn' %>
       </div>

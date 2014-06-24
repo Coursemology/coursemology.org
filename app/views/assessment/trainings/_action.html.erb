@@ -4,24 +4,24 @@
     <% if submission.graded? %>
         <% if @reattempt && @reattempt.display %>
             <%= link_to "Revise",
-                        new_course_training_training_submission_path(@course, training),
+                        new_course_assessment_training_training_submission_path(@course, training),
                         class: 'btn' %>
         <% else %>
             <%= link_to "Revise",
-                        edit_course_training_training_submission_path(@course, training, submission,
+                        edit_course_assessment_training_training_submission_path(@course, training, submission,
                                                                       anchor: 'training-stop-pos', step: 1),
                         class: 'btn' %>
         <% end %>
     <% else %>
         <%= link_to 'Continue',
-                    edit_course_training_training_submission_path(@course, training, submission,
+                    edit_course_assessment_training_training_submission_path(@course, training, submission,
                                                                   anchor: 'training-stop-pos'),
                     onclick: "event_log('#{event_label}', 'training', 'clicked'#{ ', true' if event_label})",
                     class: 'btn btn-primary' %>
     <% end %>
 <% else %>
     <%= link_to 'Start',
-                new_course_training_training_submission_path(@course, training),
+                new_course_assessment_training_training_submission_path(@course, training),
                 onclick: "event_log('#{event_label}', 'training', 'clicked'#{ ', true' if event_label})",
                 class: 'btn btn-success' %>
 <% end %>

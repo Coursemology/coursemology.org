@@ -231,7 +231,7 @@ class ApplicationController < ActionController::Base
         url = main_app.course_assessment_missions_url(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = main_app.course_trainings_path(@course)
+        url = main_app.course_assessment_trainings_url(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
         url = main_app.course_submissions_path(@course)

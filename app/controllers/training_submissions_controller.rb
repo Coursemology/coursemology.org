@@ -120,7 +120,7 @@ class TrainingSubmissionsController < ApplicationController
     sbm = @training.training_submissions.where(std_course_id: curr_user_course).last
     if sbm && (!@reattempt || !@reattempt.display)
       sbm = @training.training_submissions.where(std_course_id: curr_user_course).last
-      redirect_to edit_course_training_training_submission_path(@course, @training, sbm)
+      redirect_to edit_course_assessment_training_training_submission_path(@course, @training, sbm)
       return
     end
 
@@ -140,7 +140,7 @@ class TrainingSubmissionsController < ApplicationController
     #@course.lect_courses.each do |uc|
     #  UserMailer.delay.new_submission(
     #      uc.user,
-    #      course_training_training_submission_url(@course, @training, @training_submission)
+    #      course_assessment_training_training_submission_url(@course, @training, @training_submission)
     #  )
     #end
     if curr_user_course.is_student? && sbm_count == 0
@@ -154,7 +154,7 @@ class TrainingSubmissionsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to edit_course_training_training_submission_path(
+        redirect_to edit_course_assessment_training_training_submission_path(
                         @course, @training, @training_submission)
       end
     end
@@ -376,7 +376,7 @@ class TrainingSubmissionsController < ApplicationController
     end
 
     if @training.open_at > Time.now
-      redirect_to course_training_access_denied_path(@course, @training)
+      redirect_to course_assessment_training_access_denied_path(@course, @training)
     end
   end
 end

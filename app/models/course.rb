@@ -18,8 +18,8 @@ class Course < ActiveRecord::Base
   has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Mission"
 
-  has_many  :trainings, through: :assessments, class_name: "Assessment::Training",
-            source: :as_assessment, source_type: Assessment::Training
+  has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
+            source: :as_assessment, source_type: "Assessment::Training"
 
   has_many :submissions,          through: :user_courses
 
@@ -478,7 +478,7 @@ class Course < ActiveRecord::Base
   end
 
   def training_tabs
-    tabs.where(owner_type: Training.to_s)
+    tabs.training
   end
 
   def mission_tabs
