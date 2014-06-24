@@ -42,4 +42,18 @@ en:
   Assessment:
     Mission:  Mission
     Training: Training
+  simple_form:
+    form_submit:
+      default:
+        new:
+          submit: "Create %{model}"
+          retry: "Try creating once again"
+          disable_with: "Creating&#133;"
+        edit:
+          submit: "Update %{model}"
+          retry: "Try update once again"
+          disable_with: "Updating&#133;"
+      cancel:
+        format: "%{submit_button} %{cancel_link}"
+        cancel: "Cancel"
 
