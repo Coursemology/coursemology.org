@@ -52,7 +52,7 @@ puma_high_memo() {
   fi
 }
 
-rvm use rbx-2.2.6
+rvm use rbx
 
 if [ $# -gt 0 ]; then
   #clean memory
