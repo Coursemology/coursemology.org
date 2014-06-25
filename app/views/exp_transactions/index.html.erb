@@ -33,7 +33,7 @@
       <tbody>
       <% @exp_transactions.each do |et| %>
           <tr>
-            <td>
+              <td>
               <input type="hidden" class="et-update-path" value="<%= course_user_course_exp_transaction_path(@course, @user_course, et) %>">
               <% if et.giver %>
                   <%= et.giver.name %>
@@ -45,7 +45,14 @@
               <% if can?(:manage, et) and et.is_manual_reward? %>
                   <input type="text" value="<%= et.reason %>" class="exp-input-reason" required="true">
               <% else %>
-                  <%= et.reason %>
+              	<!--Linking to submission-->
+              	<% link = et.get_submission_path %>
+              	<%if !link.nil? %>
+                	<%= link_to et.reason, link %>
+                <% else %>
+                	<%= et.reason %>
+                <% end %>
+                <!---->
               <% end %>
             </td>
             <td>
