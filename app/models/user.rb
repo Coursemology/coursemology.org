@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   after_update :update_user_course, :if => :name_changed?
 
   has_many :user_courses, dependent: :destroy
-  has_many :courses, through: :user_courses, dependent: :destroy
+  has_many :courses, through: :user_courses
 
   belongs_to :system_role, class_name: "Role"
 
