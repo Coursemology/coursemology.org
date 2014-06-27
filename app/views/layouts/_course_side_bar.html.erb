@@ -5,14 +5,19 @@
 <% if curr_user_course.id %>
     <div class="user-sidebar-container">
       <div class="user-sidebar-profile">
-        <a class="user-thumb-profile" href="<%= get_social_media_url( curr_user_course)%>">
+        <a class="user-thumb-profile" href="<%= get_social_media_url(curr_user_course)%>">
           <img class="user-profile-pic" src="<%= current_user.get_profile_photo_url %>" />
         </a>
-        <div id="user-profile-name"> <a href="<%= main_app.course_user_course_path(@course, curr_user_course)%>">
-          <%= current_user.name %></a></div>
+        <div id="user-profile-name">
+          <a href="<%= main_app.course_user_course_path(@course, curr_user_course)%>">
+          <%= current_user.name %></a>
+        </div>
         <div class="clearfix"></div>
       </div>
-      <%cache ("sidebar/#{@course.id}/uc/#{curr_user_course.id}") do %>
+
+
+
+      <% cache ("sidebar/#{@course.id}/uc/#{curr_user_course.id}") do %>
           <% if curr_user_course.is_student? and @course.show_ranking? %>
               <hr>
               <table class="table user-short-stat" style="text-align:center">
@@ -44,6 +49,8 @@
       <% end %>
     </div>
 <% end %>
+
+
 
 <% cache("sidebar/#{@course.id}/role/#{curr_user_course.role_id}") do %>
     <div class="navbar">
