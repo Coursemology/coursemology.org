@@ -1,64 +1,49 @@
 
 <% if flash[:success] %>
-  <div class="alert alert-success">
-    <%= flash[:success] %>
-  </div>
+    <div class="alert alert-success">
+      <%= flash[:success] %>
+    </div>
 <% end %>
 
 <% if flash[:error] %>
-  <div class="alert alert-error">
-    <%= flash[:error] %>
-  </div>
+    <div class="alert alert-error">
+      <%= flash[:error] %>
+    </div>
 <% end %>
 
 <div class="page-header">
   <h3>Account settings</h3>
 </div>
 
-<%= form_for(current_user, url: users_update_path,
-             html: { method: :put, class: "form-horizontal" } ) do |f| %>
-  <div class="control-group">
-    <%= f.label :name, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_field :name %>
+<%= simple_form_for current_user, url: users_update_path, html: {class: "form-horizontal"} do |f| %>
+    <%= f.input :name %>
+    <%= f.input :use_uploaded_picture, as: :boolean %>
+
+    <div class="control-group">
+      <label class="control-label">Facebook Account</label>
+      <div class="controls">
+        <% if current_user.provider == 'facebook' && !current_user.uid.nil? %>
+            <%= link_to "http://facebook.com/profile.php?id=#{current_user.uid}" %>
+        <% else %>
+            <%= link_to "Click here to link with your Facebook Account", user_omniauth_authorize_path(:facebook) %>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-    <!--<div class="control-group">-->
-      <!--<%= f.label :email, class: "control-label" %>-->
-      <!--<div class="controls">-->
-        <!--<input type="email" name="user[email]" value="<%= current_user.email %>">-->
-      <!--</div>-->
-    <!--</div>-->
-
-  <% # The section is potentially misleading because linking facebook accounts doesn't belong to the form %>
-  <div class="control-group">
-    <label class="control-label">Facebook Account</label>
-    <div class="controls">
-      <% if current_user.provider == 'facebook' && !current_user.uid.nil? %>
-        <%= link_to "http://facebook.com/profile.php?id=#{current_user.uid}" %>
-      <% else %>
-        <%= link_to "Click here to link with your Facebook Account", user_omniauth_authorize_path(:facebook) %>
-      <% end %>
+    <div class="control-group">
+      <%= f.label "Profile picture", class: 'control-label' %>
+      <div class="controls">
+        <img src="<%= current_user.get_profile_photo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Photo Preview" />
+        <%= f.hidden_field :profile_photo_url, class: "image-uploader-input-url" %>
+        <br/>
+        <a href="#image-uploader-modal" data-toggle="modal">Upload new photo</a>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group">
-    <%= f.label "Profile picture", class: 'control-label' %>
-    <div class="controls">
-      <img src="<%= current_user.get_profile_photo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Photo Preview" />
-      <%= f.hidden_field :profile_photo_url, class: "image-uploader-input-url" %>
-      <br/>
-      <a href="#image-uploader-modal" data-toggle="modal">Upload new photo</a>
-    </div>
-  </div>
-
-  <div class="form-actions">
-    <div><%= f.submit "Update", class: "btn btn-primary" %></div>
-  </div>
+    <%= f.button :submit, value: "Update", class: "btn-primary" %>
 <% end %>
 
 <%= render partial: "layouts/image_uploader",
-      locals: { upload_to: file_uploads_path,
-                container_class: '',
-                image_url_class: '' } %>
+           locals: { upload_to: file_uploads_path,
+                     container_class: '',
+                     image_url_class: '' } %>
