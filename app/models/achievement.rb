@@ -20,7 +20,7 @@ class Achievement < ActiveRecord::Base
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case
     # it can only be assigned manually, since there is no condition to check
-    if !requirements || requirements.count == 0 || !auto_assign
+    if !published || !requirements || requirements.count == 0 || !auto_assign
       return false
     end
 
