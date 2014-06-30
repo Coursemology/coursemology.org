@@ -163,7 +163,7 @@ class UserCourse < ActiveRecord::Base
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
     fulfilled = false
-    if not uach
+    unless uach
       # not earned yet, check this achievement
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
