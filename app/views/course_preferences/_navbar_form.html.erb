@@ -12,7 +12,7 @@
         Display?(Hide for students)
       </th>
       <th>
-        Enabled?
+        Action
       </th>
 
       </thead>
@@ -22,6 +22,10 @@
       <% end %>
       </tbody>
     </table>
+    <div class="div-add-item-sidebar">
+    <%= collection_select(:course_navbar_preference,:course_id,@course.course_navbar_preferences.where(is_enabled: false),:id,:name,prompt: true)%>
+    <input type="button" value="Add" id="btn_add_item_sidebar" class="btn"/>
+    </div>
     <h3>Levels and Achievement:</h3>
     <p><%= @ranking.preferable_item.description %></p>
     <div class="info-block checkbox-text">
@@ -35,3 +39,26 @@
         <%= f.button :submit, "Update", class: " btn-large btn-primary"%>
     </div>
 <% end %>
+
+<script>
+	$(document).ready(function() {
+    $("#btn_add_item_sidebar").click(function(event) {
+        var select_option = $('#<%= "#{:course_navbar_preference}_#{:course_id}" %>').find(":selected");
+		var tr_to_show = $('#btn_remove_'+ $(select_option).val()).parent().parent();
+		$(tr_to_show).removeClass("hidden_navbar_tr");
+		$(tr_to_show).find("input[id*='is_enabled']").prop('checked', true);
+		$(select_option).remove();
+    	});
+  	});
+	
+	function hide_tr(e)
+	{
+		var tr_to_hide = $(e).parent().parent();
+		$(tr_to_hide).addClass("hidden_navbar_tr");
+		$(tr_to_hide).find("input[id*='is_enabled']").prop('checked', false);
+		$('#<%= "#{:course_navbar_preference}_#{:course_id}" %>').append($('<option>', {
+		    value: $(e).attr('id').split('_')[$(e).attr('id').split('_').length-1],
+		    text: $(tr_to_hide).children(":first").children(":first").val()
+		}));
+	}
+</script>
