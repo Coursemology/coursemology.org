@@ -5,15 +5,32 @@ class CoursePreference < ActiveRecord::Base
   belongs_to  :preferable_item
 
   scope :training_reattempt,    where(preferable_item_id: PreferableItem.training_reattempt.first)
-  scope :assessment_columns, -> { joins(:preferable_item).
-      where("preferable_items.item_type = ?", 'Column')} do
+
+  scope :join_items, -> { joins(:preferable_item) } do
+    def item(item_name)
+      where("preferable_items.item = ?", item_name)
+    end
+
+    def item_type(type)
+      where("preferable_items.item_type = ?", type)
+    end
+
     def mission
-      where("preferable_items.item = ?", 'Mission')
+      item('Mission')
     end
 
     def training
-      where("preferable_items.item = ?", 'Training')
+      item('Training')
     end
+
+    def column
+      item_type('Column')
+    end
+
+    def time_format
+      item_type('Time')
+    end
+
   end
 
   scope :enabled, -> { where(display: true) }

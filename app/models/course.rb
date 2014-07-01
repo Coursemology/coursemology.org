@@ -102,7 +102,8 @@ class Course < ActiveRecord::Base
   end
 
   def assessment_columns(type, enabled = false)
-    columns = self.course_preferences.assessment_columns
+    columns = self.course_preferences.join_items.column
+
     if columns.respond_to? type
       columns = columns.send type
     else
@@ -110,6 +111,17 @@ class Course < ActiveRecord::Base
     end
 
     enabled ? columns.send(:enabled) : columns
+  end
+
+  def time_format(type)
+    time_formats = self.course_preferences.join_items.time_format
+
+    if time_formats.respond_to? type
+      time_formats = time_formats.send type
+    else
+      raise type + " not found in assessment time format perferences"
+    end
+    time_formats.first
   end
 
   def mcq_auto_grader
@@ -129,16 +141,6 @@ class Course < ActiveRecord::Base
   end
   def show_ranking?
     student_sidebar_ranking.display?
-  end
-
-  def mission_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
-        pref.preferable_item.item_type == "Time" }.first
-  end
-
-  def training_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
-        pref.preferable_item.item_type == "Time" }.first
   end
 
   def trainings_paging_pref
