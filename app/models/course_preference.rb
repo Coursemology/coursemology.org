@@ -6,7 +6,9 @@ class CoursePreference < ActiveRecord::Base
 
   scope :training_reattempt,    where(preferable_item_id: PreferableItem.training_reattempt.first)
   scope :mission_columns,       where(preferable_item_id: PreferableItem.mission_columns)
+  scope :mission_columns_enabled, where(preferable_item_id: PreferableItem.mission_columns, display: true)
   scope :training_columns,      where(preferable_item_id: PreferableItem.training_columns)
+  scope :training_columns_enabled, where(preferable_item_id: PreferableItem.training_columns, display: true)
   scope :student_sidebar_items, where(preferable_item_id: PreferableItem.student_sidebar_items)
   scope :other_sidebar_items,   where(preferable_item_id: PreferableItem.other_sidebar_items)
   scope :email_notifications,   where(preferable_item_id: PreferableItem.email_notifications)

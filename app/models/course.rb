@@ -101,12 +101,8 @@ class Course < ActiveRecord::Base
     self.comment_topics.where(pending: true).count
   end
 
-  def mission_columns
-    self.course_preferences.mission_columns
-  end
-
-  def training_columns
-    self.course_preferences.training_columns
+  def assessment_columns(type, enabled = false)
+    eval("self.course_preferences.#{type}_columns" + (enabled ? "_enabled" : "" ))
   end
 
   def mcq_auto_grader
@@ -121,19 +117,11 @@ class Course < ActiveRecord::Base
     student_sidebar_items.where(display: true)
   end
 
-  def mission_columns_display
-    mission_columns.select {|pref| pref.display }
-  end
-
   def student_sidebar_ranking
     self.course_preferences.other_sidebar_items.where("preferable_items.name = 'ranking'").first
   end
   def show_ranking?
     student_sidebar_ranking.display?
-  end
-
-  def training_columns_display
-    training_columns.select {|pref| pref.display }
   end
 
   def mission_time_format
