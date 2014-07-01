@@ -102,7 +102,14 @@ class Course < ActiveRecord::Base
   end
 
   def assessment_columns(type, enabled = false)
-    eval("self.course_preferences.#{type}_columns" + (enabled ? "_enabled" : "" ))
+    columns = self.course_preferences.assessment_columns
+    if columns.respond_to? type
+      columns = columns.send type
+    else
+      raise type + " not found in assessment column preferences"
+    end
+
+    enabled ? columns.send(:enabled) : columns
   end
 
   def mcq_auto_grader
