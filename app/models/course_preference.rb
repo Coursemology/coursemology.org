@@ -31,6 +31,9 @@ class CoursePreference < ActiveRecord::Base
       item_type('Time')
     end
 
+    def paging
+      item('Paging')
+    end
   end
 
   scope :enabled, -> { where(display: true) }

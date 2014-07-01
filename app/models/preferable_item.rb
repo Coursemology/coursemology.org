@@ -8,7 +8,6 @@ class PreferableItem < ActiveRecord::Base
   scope :email_notifications,     where(item: "Email", item_type: "Course")
   scope :course_home_sections,    where(item: "CourseHome", item_type: "Section")
   scope :home_sections_events_no, where(item: "CourseHome", item_type: "SectionShow")
-  scope :paging_prefs,            where(item: "Paging")
 
   def self.new_comment
     'new_comment'

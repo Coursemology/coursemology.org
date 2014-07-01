@@ -119,9 +119,14 @@ class Course < ActiveRecord::Base
     if time_formats.respond_to? type
       time_formats = time_formats.send type
     else
-      raise type + " not found in assessment time format perferences"
+      raise type + " not found in assessment time format preferences"
     end
     time_formats.first
+  end
+
+  def paging_pref(page)
+    self.course_preferences.join_items.paging.item_type(page.pluralize).
+        first || (raise page + " has no paging preference")
   end
 
   def mcq_auto_grader
@@ -141,62 +146,6 @@ class Course < ActiveRecord::Base
   end
   def show_ranking?
     student_sidebar_ranking.display?
-  end
-
-  def trainings_paging_pref
-    paging_pref('Trainings')
-  end
-
-  def missions_paging_pref
-    paging_pref('Missions')
-  end
-
-  def announcements_paging_pref
-    paging_pref('Announcements')
-  end
-
-  def missions_stats_paging_pref
-    paging_pref('MissionStats')
-  end
-
-  def mission_sbm_paging_pref
-    paging_pref('MissionSubmissions')
-  end
-
-  def training_stats_paging_pref
-    paging_pref('TrainingStats')
-  end
-
-  def training_sbm_paging_pref
-    paging_pref('TrainingSubmissions')
-  end
-
-  def comments_paging_pref
-    paging_pref('Comments')
-  end
-
-  def achievements_paging_pref
-    paging_pref('Achievements')
-  end
-
-  def students_paging_pref
-    paging_pref('Students')
-  end
-
-  def forum_paging_pref
-    paging_pref('Forums')
-  end
-
-  def mgmt_std_paging_pref
-    paging_pref('ManageStudents')
-  end
-
-  def std_summary_paging_pref
-    paging_pref('StudentSummary')
-  end
-
-  def paging_pref(page)
-    self.course_preferences.course_paging_prefs.select { |pref| pref.preferable_item.item_type == page}.first
   end
 
   def achievements_locked_display
