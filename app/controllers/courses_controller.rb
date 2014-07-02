@@ -27,6 +27,7 @@ class CoursesController < ApplicationController
   end
 
   respond_to :html, :json
+
   def update
     message = nil
     if params[:user_course_id]
@@ -75,26 +76,6 @@ class CoursesController < ApplicationController
   def new
     respond_to do |format|
       format.html
-    end
-  end
-
-  def edit
-    # prepare the customizable attributes
-    atts = []
-    atts << ThemeAttribute.find_by_name('Background Color')
-    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Custom CSS')
-    # atts << ThemeAttribute.find_by_name('Announcements Icon')
-    # atts << ThemeAttribute.find_by_name('Missions Icon')
-    # atts << ThemeAttribute.find_by_name('Trainings Icon')
-    # atts << ThemeAttribute.find_by_name('Submissions Icon')
-    # atts << ThemeAttribute.find_by_name('Leaderboard Icon')
-    # atts << ThemeAttribute.find_by_name('Background Image')
-
-    @course_atts = []
-    atts.each do |att|
-      @course_atts <<
-          CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
     end
   end
 

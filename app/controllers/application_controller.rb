@@ -143,11 +143,7 @@ class ApplicationController < ActionController::Base
                             url: main_app.course_duplicate_url(@course),
                             icon: "icon-bolt"
                         }, {
-                            text: "Course Settings",
-                            url: main_app.edit_course_url(@course),
-                            icon: "icon-cog"
-                        }, {
-                            text: "Preference Settings",
+                            text: "Settings",
                             url: main_app.course_preferences_path(@course),
                             icon: "icon-cog"
                         }]
