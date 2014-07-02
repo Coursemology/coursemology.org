@@ -24,13 +24,13 @@ class UsersController < ApplicationController
       authorize! :manage, current_user
       respond_to do |format|
         if current_user.update_attributes(params[:user])
-          flash[:success] = 'Updated successfully.'
-          format.html { redirect_to edit_user_path(current_user) }
+          #notice = email_updated ? 'A confirmation email has been sent to yur new email address.' : 'Updated successfully.'
+          format.html { redirect_to edit_user_path(current_user), notice: 'Updated successfully.' }
         else
-          format.html { redirect_to edit_user_path(current_user) }
+          format.html { redirect_to edit_user_path(current_user)}
         end
       end
-    #admin update user role
+    #update user role
     elsif params[:user].to_s.size > 0 and !params[:user][:system_role_id].nil?
       authorize! :update_role, @user
       @user.update_user_role(params[:user][:system_role_id])
