@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
   attr_accessible :display_name, :name, :profile_photo_url
   attr_accessible :provider, :uid
+  attr_accessible :use_uploaded_picture
 
   protected_attributes :system_role_id
 
@@ -67,9 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_facebook_oauth(auth, signed_in_resource = nil)
-    puts auth.to_json
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
-    puts user.to_json
     unless user
       user = User.find_by_email(auth.info.email)
       if user
@@ -121,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
   def get_profile_photo_url
-    if self.uid && self.provider == "facebook"
+    if !use_uploaded_picture? && self.uid && self.provider == "facebook"
       'http://graph.facebook.com/'+self.uid+'/picture'
     else
       self.profile_photo_url
