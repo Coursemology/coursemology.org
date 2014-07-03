@@ -16,7 +16,7 @@
         }
       });
     } else {
-      // Wrap in <code class="jfdiCode">...</code>
+      // Wrap in <code class="coursemology-code">...</code>
       var range = composer.selection.getRange();
       if (!range) {
         return false;
@@ -26,7 +26,7 @@
           code = composer.doc.createElement("code");
 
       code.appendChild(selectedNodes);
-      code.className = 'jfdiCode';
+      code.className = 'coursemology-code';
       range.insertNode(code);
       composer.selection.selectNode(code);
     }
@@ -55,7 +55,7 @@ $(document).ready(function() {
             '</div>' +
           '</li>'
   };
-  options.parserRules.classes['jfdiCode'] = 1;
+  options.parserRules.classes['coursemology-code'] = 1;
 
   options.customTemplates = {};
 

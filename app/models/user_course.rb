@@ -212,7 +212,6 @@ class UserCourse < ActiveRecord::Base
 
   def manual_exp_award(user_course_id, exp, reason)
     user_course = self.course.user_courses.find(user_course_id)
-    puts user_course, exp, reason
     exp_transaction = ExpTransaction.new
     exp_transaction.exp = exp
     exp_transaction.giver = self.user
@@ -220,7 +219,7 @@ class UserCourse < ActiveRecord::Base
     exp_transaction.reason = reason
     exp_transaction.is_valid = true
     exp_transaction.save
-    user_course.update_exp_and_level_async
+    # user_course.update_exp_and_level_async
   end
 
   def get_staff_incharge
@@ -232,8 +231,8 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_my_tutors
-    # self.tut_courses
-    Rails.cache.fetch("my_tutor_#{id}") { self.tut_courses }
+    self.tut_courses
+    # Rails.cache.fetch("my_tutor_#{id}") { self.tut_courses }
   end
 
   def get_my_tutor_name
