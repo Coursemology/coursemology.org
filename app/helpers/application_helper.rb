@@ -69,8 +69,9 @@ module ApplicationHelper
       end
       str = str.gsub(/\n/,"<br/>")
       str = str.gsub(/\[b\](.+?)\[\/b\]/m,'<strong>\1</strong>')
-      str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
-      str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,"\n") <<'</div></pre></div>'}
+      str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<div class="cos_code"><span class="coursemology-code cm-s-molokai ' << lang << 'Code">\1</span></div>')
+      str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="coursemology-code cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,"\n") <<'</div></pre></div>'}
+
       return str.html_safe
     end
     ""

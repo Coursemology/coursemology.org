@@ -737,21 +737,21 @@ small {
   color: white;
 }
 
-/** used in jfdiFormat multi-line code blocks **/
-span.jfdiCode, code.jfdiCode {
+/** used in coursemologyFormat multi-line code blocks **/
+span.coursemology-code, code.coursemology-code {
   padding: 2px 4px;
   border-radius: 3px;
 }
 
-div.jfdiCode{
+div.coursemology-code{
   padding:8px 7px;
 }
 
-pre.jfdiCode{
+pre.coursemology-code{
   padding: 0px;
 }
 
-code.jfdiCode.multiline {
+code.coursemology-code.multiline {
   display: block;
 }
 /* debug style */

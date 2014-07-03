@@ -1,4 +1,4 @@
-JfdiAcademy::Application.routes.draw do
+Coursemology::Application.routes.draw do
 
   authenticated :user do
     root :to => "home#index"
