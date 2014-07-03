@@ -135,10 +135,6 @@ class ApplicationController < ActionController::Base
                             url: main_app.course_enroll_requests_url(@course),
                             icon: "icon-bolt"
                         }, {
-                            text: "Mass Enrollment",
-                            url: main_app.course_mass_enrollment_emails_path(@course),
-                            icon: "icon-bolt"
-                        }, {
                             text: "Duplicate Data",
                             url: main_app.course_duplicate_url(@course),
                             icon: "icon-bolt"
