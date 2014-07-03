@@ -47,7 +47,6 @@ JfdiAcademy::Application.routes.draw do
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
     match "/staff"            => "user_courses#staff", as: :staff
     post "/remove_staff/:id"            => "user_courses#remove_staff", as: :remove_staff
-    match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
     match "missions/overview" => "missions#overview", as: :missions_overview
@@ -189,8 +188,9 @@ JfdiAcademy::Application.routes.draw do
 
     #resources :student_summary
 
-    get "student_summary" => "student_summary#index"
+    get "student_summary" => "student_summary#index", as: :student_summary
     get "/student_summary/export" => "student_summary#export", as: :student_summary_export
+    
 
     resources :staff_leaderboard
 

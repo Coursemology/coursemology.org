@@ -89,10 +89,6 @@ class ApplicationController < ActionController::Base
     admin_nav_items = []
     if curr_user_course.is_staff?
       admin_nav_items += [{
-                              text: "My Students",
-                              url: main_app.course_manage_group_url(@course),
-                              icon: "icon-group"
-                          },{
                               text: "Forum Participation",
                               url:  main_app.course_forum_participation_url(@course),
                               icon: "icon-group"
