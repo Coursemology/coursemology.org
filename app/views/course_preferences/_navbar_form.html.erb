@@ -12,7 +12,7 @@
         Display?(Hide for students)
       </th>
       <th>
-        Enabled?
+        Action
       </th>
 
       </thead>
@@ -22,6 +22,10 @@
       <% end %>
       </tbody>
     </table>
+    <div class="div-add-item-sidebar">
+	    <%= collection_select(:course_navbar_preference,:course_id,@course.course_navbar_preferences.where(is_enabled: false),:id,:name,prompt: true)%>
+	    <input type="button" value="Add" id="btn_add_item_sidebar" class="btn"/>
+    </div>
     <h3>Levels and Achievement:</h3>
     <p><%= @ranking.preferable_item.description %></p>
     <div class="info-block checkbox-text">
@@ -35,3 +39,4 @@
         <%= f.button :submit, "Update", class: " btn-large btn-primary"%>
     </div>
 <% end %>
+
