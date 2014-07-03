@@ -1,6 +1,15 @@
 <div class="alert alert-success hidden"></div>
 <h1>Manage Staff</h1>
 
+<ul class="nav nav-tabs">
+  <li>
+    <a href='<%= course_manage_students_path(@course) %>'>Manage Students</a>
+  </li>
+  <li class="active">
+    <a href='<%= course_staff_path(@course) %>'>Manage Staff</a>
+  </li>
+</ul>
+
 <% if (current_user.is_admin? or curr_user_course.is_lecturer?) and @students_courses.size > 0 %>
     <%= form_for [@course], :html => { :class => 'form-horizontal' } do |f| %>
         <table class="table">
