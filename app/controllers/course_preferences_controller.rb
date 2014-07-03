@@ -31,9 +31,26 @@ class CoursePreferencesController < ApplicationController
       when 'paging'
         @tab = 'PagingPreference'
         @preferences = @course.course_paging_prefs
-      else
+      when 'sidebar'
         @tab = 'Sidebar'
         @ranking = @course.student_sidebar_ranking
+      else
+        @tab = 'CoursePreference'
+        atts = []
+        atts << ThemeAttribute.find_by_name('Background Color')
+        atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+        atts << ThemeAttribute.find_by_name('Custom CSS')
+        # atts << ThemeAttribute.find_by_name('Announcements Icon')
+        # atts << ThemeAttribute.find_by_name('Missions Icon')
+        # atts << ThemeAttribute.find_by_name('Trainings Icon')
+        # atts << ThemeAttribute.find_by_name('Submissions Icon')
+        # atts << ThemeAttribute.find_by_name('Leaderboard Icon')
+        # atts << ThemeAttribute.find_by_name('Background Image')
+        @course_atts = []
+        atts.each do |att|
+          @course_atts <<
+              CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+        end
     end
   end
 
