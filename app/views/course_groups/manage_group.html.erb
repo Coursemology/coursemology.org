@@ -2,6 +2,17 @@
   <h1>My Students</h1>
 </div>
 
+
+<ul class="nav nav-tabs">
+  <li>
+    <a href='<%= course_student_summary_path(@course) %>'>Student Summary</a>
+  </li>
+  <li class="active">
+    <a href='<%= course_manage_group_path(@course) %>'>My Students</a>
+  </li>
+</ul>
+
+
 <%= render "add_student" %>
 
 <%= form_for(@course, url: course_manage_update_exp_path,

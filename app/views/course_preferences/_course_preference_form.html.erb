@@ -1,0 +1,143 @@
+<%= form_for @course, html: { class: 'form-horizontal' } do |f| %>
+    <input type="hidden" id="page_name" value="course_edit">
+    <div class="control-group">
+      <%= f.label "Give it an awesome name", class: 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, class: 'text_field span6',
+                         placeholder: "eg: Maths Universe, Geovengers" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label "Give it an awesome backstory", :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, class: 'text_area span6', rows: '10',
+                        placeholder: "eg: Darth Vader is taking over the universe. We need you to save the day!" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :start_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :start_at,
+                           :value => datetime_format(@course.start_at),
+                           :class => 'input-medium',
+                           id: "start_at",
+                           required: true%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :end_at, :class => 'control-label' %>
+      <div class="controls">
+        <div class="datetimepicker input-append date">
+          <%= f.text_field :end_at,
+                           :value => datetime_format(@course.end_at),
+                           :class => 'input-medium',
+                           id: "end_at",
+                           required: true%>
+          <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <% if can? :manage, :course_admin %>
+        <div class="control-group">
+          <%= f.label "Publish Course", :class => 'control-label' %>
+          <div class="controls checkbox-text">
+            <%= f.check_box :is_publish %> Check to publish course, published course is visible to everyone
+          </div>
+        </div>
+
+        <div class="control-group">
+          <%= f.label "Allow Enrollment", :class => 'control-label' %>
+          <div class="controls checkbox-text">
+            <%= f.check_box :is_open %> Check to allow enrollment request
+          </div>
+        </div>
+    <% end %>
+
+    <div class="control-group">
+      <%= f.label "Course Logo", class: 'control-label' %>
+      <div class="controls">
+        <img src="<%= @course.logo_url %>" class="course-logo-preview image-uploader-preview-img" alt="Logo Preview" />
+        <%= f.hidden_field :logo_url, class: "image-uploader-input-url" %>
+        <br/>
+        <a href="#image-uploader-modal"
+           class="image-uploader-trigger"
+           data-target=".course-logo-target"
+           data-toggle="modal">Upload new logo</a>
+      </div>
+    </div>
+
+    <hr/>
+    <h3>Upload New Theme</h3>
+    <div class="control-group">
+      <label>Theme</label>
+      <div class="controls">
+        <div class="theme-zip-target-done" style="display:none">Uploaded!</div>
+        <input type="hidden" name="theme_folder_url"
+               class="theme-zip-target-input"
+               value="" />
+        <a href="#file-uploader-modal"
+           class="file-uploader-trigger"
+           data-accepts-filetypes="(\.|\/)(zip)$"
+           data-target=".theme-zip-target"
+           data-toggle="modal">Upload Zip File</a>
+      </div>
+    </div>
+
+    <hr/>
+    <h3>Customize Theme</h3>
+    <% @course_atts.each do |ca| %>
+        <div class="control-group">
+          <label><%= ca.theme_attribute.name %></label>
+          <div class="controls">
+            <% case ca.theme_attribute.value_type
+                 when "color" %>
+                <div class="input-append color colorpicker" data-color="<%= ca.value%>" data-color-format="hex" id="cp3">
+                  <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>" />
+                  <span class="add-on"><i style="background-color: <%= ca.value %>;"></i></span>
+                </div>
+            <% when "image" %>
+                <img src="<%= ca.value %>" alt="Preview"
+                     class="theme-attribute-<%= ca.theme_attribute.id %>-target-preview" />
+                <input type="hidden" name="course_atts[<%= ca.id %>]"
+                       class="theme-attribute-<%= ca.theme_attribute.id %>-target-input"
+                       value="<%= ca.value %>" />
+                <br/>
+                <a href="#image-uploader-modal"
+                   class="image-uploader-trigger"
+                   data-target=".theme-attribute-<%= ca.theme_attribute.id %>-target"
+                   data-toggle="modal">Upload image</a>
+            <% when "text" %>
+                <textarea class="span6" rows="7" name="course_atts[<%= ca.id %>]"><%= ca.value %></textarea>
+            <% else %>
+                <input type="text" class="span2" name="course_atts[<%= ca.id %>]" value="<%= ca.value %>">
+            <% end %>
+          </div>
+        </div>
+    <% end %>
+
+    <div class="form-actions">
+      <%= f.submit nil, class: 'btn btn-primary' %>
+      <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+                  courses_path, class: 'btn' %>
+    </div>
+
+<% end %>
+
+<%= render partial: "layouts/file_uploader",
+           locals: { upload_to: course_file_uploads_path(@course) } %>
+
+<%= render partial: "layouts/image_uploader",
+           locals: { upload_to: course_file_uploads_path(@course),
+                     container_class: '',
+                     image_url_class: '' } %>
