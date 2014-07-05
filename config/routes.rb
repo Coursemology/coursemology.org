@@ -180,6 +180,8 @@ JfdiAcademy::Application.routes.draw do
     get "preferences" => "course_preferences#edit", as: :preferences
 
     post "preferences" => "course_preferences#update", as: :preferences
+    
+    post "preferences/sidebar_update_values" => "course_preferences#sidebar_update_values", as: :sidebar_update_values
 
     resources :mass_enrollment_emails
 

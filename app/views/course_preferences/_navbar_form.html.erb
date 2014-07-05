@@ -23,20 +23,19 @@
       </tbody>
     </table>
     <div class="div-add-item-sidebar">
-	    <%= collection_select(:course_navbar_preference,:course_id,@course.course_navbar_preferences.where(is_enabled: false),:id,:name,prompt: true)%>
-	    <input type="button" value="Add" id="btn_add_item_sidebar" class="btn"/>
+	    <%= collection_select(:course_navbar_preference,:course_id,@course.course_navbar_preferences.where(is_enabled: false),:id,:name,:include_blank => 'Browse more sidebar features')%>
+	    <input type="button" value="Add" class=" btn btn-primary" id="btn_add_sidebar_item"/>
+	    <input type="hidden" class="sidebar-course-id" value="<%= @course.id %>"/>   
     </div>
     <h3>Levels and Achievement:</h3>
     <p><%= @ranking.preferable_item.description %></p>
-    <div class="info-block checkbox-text">
+    <div class="info-block checkbox-text">    	
       <input type="checkbox"
-             name="preferences[<%= @ranking.id %>][display]"
-             <%= "checked" if @ranking.display %>>
+      		id="ip_display_st_level_ach_<%= @ranking.id %>"
+      		name="preferences[<%= @ranking.id %>][display]"
+      		<%= "checked" if @ranking.display %>>
       </input>Display
       <input type="hidden" name="preferences[<%= @ranking.id %>][prefer_value]" value="<%= @ranking.prefer_value %>" >
-    </div>
-    <div class="center">
-        <%= f.button :submit, "Update", class: " btn-large btn-primary"%>
-    </div>
+    </div>            
 <% end %>
 

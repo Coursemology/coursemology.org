@@ -34,6 +34,7 @@ class CoursePreferencesController < ApplicationController
       else
         @tab = 'Sidebar'
         @ranking = @course.student_sidebar_ranking
+        
     end
   end
 
@@ -56,7 +57,67 @@ class CoursePreferencesController < ApplicationController
       end
     end
     redirect_to params[:origin], :notice => "Updated successfully"
+  end 
+  
+  def sidebar_update_values
+    #dalli don't support regualr expression
+    Role.all.each do |role|
+      expire_fragment("sidebar/#{@course.id}/role/#{role.id}")
+    end    
+    if params[:func] == 'update_display_st_level_ach'
+      curr_pref = @course.course_preferences.find(params[:id])
+      curr_pref.display = params[:checked]=='true' ? 1 : 0
+    else
+      cnp = CourseNavbarPreference.find(params[:id])
+      case params[:func]
+        when 'add'
+          cnp.is_enabled = true    
+        when 'remove'
+          cnp.is_enabled = false
+        when 'update_name'
+          cnp.name = params[:name]
+        when 'update_pos'
+          cnp.pos = params[:pos]
+        when 'update_is_displayed'
+          cnp.is_displayed = params[:checked]=='true' ? 1 : 0         
+      end
+    end
+    
+    respond_to do |format|
+      if(params[:func] == 'update_display_st_level_ach')
+        if curr_pref.save
+          format.json { render json: { status: 'OK' }}
+        end      
+      else
+        if cnp.save         
+          if params[:func] == 'add' || params[:func] == 'update_pos'
+            tags = @course.course_navbar_preferences.where(is_enabled: true).order(:pos)
+            new_index = tags.find_index{ |item| item.id.to_s == params[:id] }
+            if params[:func] == 'add'
+              url_and_icon = get_url_and_icon(cnp.item);
+              format.json { render json: { index: new_index,
+                                           count: tags.count,
+                                           name: cnp.name,
+                                           id: cnp.id,
+                                           item: cnp.item,
+                                           url: url_and_icon.first,
+                                           icon: url_and_icon.last
+                                         }
+              } 
+            else
+              format.json { render json: { index: new_index, count: tags.count }}
+            end           
+          else          
+            format.json { render json: { status: 'OK' }}    
+          end    
+        else
+          format.json { render json: {errors: 'Fail'}}
+          flash[:error] ='Update failed. You may entered invalid name or email.'        
+        end
+      end
+    end
   end
+  
   private
   def authorize_preference_setting
     authorize! :manage, :course_preference
