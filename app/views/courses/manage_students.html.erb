@@ -2,6 +2,15 @@
   <h1>Manage Students</h1>
 </div>
 
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href='<%= course_manage_students_path(@course) %>'>Manage Students</a>
+  </li>
+  <li>
+    <a href='<%= course_staff_path(@course) %>'>Manage Staff</a>
+  </li>
+</ul>
+
 <div style="width:93%">
     <span  class="pull-right" style="font-size: 1.3em">
       Student Count:  <strong style="font-size: 1.6em"><%= @student_count  %></strong>
