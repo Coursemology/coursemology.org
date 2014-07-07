@@ -2,15 +2,15 @@
     <% submission = mission.get_final_sbm_by_std(curr_user_course) %>
     <% if submission %>
         <% if submission.attempting? %>
-            <%= link_to 'Edit', edit_course_assessment_mission_assessment_submission_path(@course, mission, submission),
+            <%= link_to 'Edit', edit_course_assessment_assessment_submission_path(@course, mission.assessment, submission),
                         class: 'btn btn-info' %>
         <% else %>
-            <%= link_to 'Review', course_assessment_mission_assessment_submission_path(@course, mission, submission),
+            <%= link_to 'Review', course_assessment_assessment_submission_path(@course, mission.assessment, submission),
                         class: 'btn btn-info' %>
         <% end %>
     <% else %>
         <%= link_to 'Attempt',
-                    new_course_assessment_mission_assessment_submission_path(@course, mission),
+                    new_course_assessment_assessment_submission_path(@course, mission.assessment),
                     class: 'btn btn-success' %>
     <% end %>
 <% end %>

@@ -1,0 +1,149 @@
+<div class="missions">
+  <%- model_name = @summary[:module] -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => @course.customized_title(model_name).pluralize %></h1>
+  </div>
+
+  <% if model_name == 'Training' %>
+      <%= render  partial: "assessment/trainings/tabs" %>
+      <%- new_url = new_course_assessment_training_path(@course) %>
+  <% else %>
+      <%= render partial: "assessment/missions/navigation" %>
+      <%- new_url = new_course_assessment_mission_path(@course) %>
+  <% end %>
+                 `
+
+  <% if can? :create, Assessment %>
+      <p>
+        <%= link_to "New #{@course.customized_title(model_name).singularize}",
+                    new_url,
+                    :class => 'btn btn-primary' %>
+      </p>
+  <% end %>
+  <% to_display = @summary[:columns].keys %>
+  <% if to_display.include? 'tag' %>
+      <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title(model_name).pluralize.downcase %> and <%= @course.customized_title_by_model(Training).pluralize.downcase %> in that tag.</em></p>
+  <% end %>
+
+  <table class="table assignments missions-list-table">
+    <thead>
+    <tr>
+      <%  @summary[:columns].each do |key, val| %>
+          <th width="<% if key == 'tag'  %>
+          15%
+          <% elsif key == 'title' %>
+          25%
+          <% end %>
+          "><%= val %></th>
+      <% end %>
+
+      <% if curr_user_course.id && can?(:manage, Assessment::Submission) %>
+          <th width="10%"></th>
+      <% end %>
+      <% if can?(:view_detail, Assessment) %>
+          <th width="10%"></th>
+      <% end %>
+    </tr>
+    </thead>
+
+    <tbody class="table-hover">
+    <% @assessments.each do |ast| %>
+        <tr id="row-<%= ast.id %>">
+          <% if to_display.include? 'title' %>
+              <td>
+                <%= link_to "", id: "link-#{ast.id}" do %>
+                    <h4 id="title-<%= ast.id %>">
+                      <%= ast.title %>
+                    </h4>
+                <% end %>
+              </td>
+          <% end %>
+          <% if to_display.include? 'tag' %>
+              <td>
+                <% ast.tags.each do |tag| %>
+                    <%= link_to course_tag_path(@course, tag) do %>
+                        <span class="label label-info"><%= tag.name %></span>
+                    <% end %>
+                <% end %>
+              </td>
+          <% end %>
+          <% if to_display.include? 'exp' %>
+              <td><%= ast.exp %></td>
+          <% end %>
+          <% if to_display.include? 'award' %>
+              <td>
+                <% ast.as_requirements.each do |req| %>
+                    <a href='#' title="<%= req.obj.title %>">
+                      <img class="asm-ach-icon" src="<%= req.obj.icon_url %>" >
+                    </a>
+                <% end %>
+              </td>
+          <% end %>
+          <% if to_display.include? 'start' %>
+              <td>
+                <% if  @summary[:time_format].prefer_value == 'ago' %>
+                    <%= if ast.open_at > Time.now then time_ago_in_words(ast.open_at) else '----' end%>
+                <% else %>
+                    <%= ast.open_at.strftime(@summary[:time_format].prefer_value)  %>
+                <% end %>
+              </td>
+          <% end %>
+
+          <% if to_display.include?  'end'%>
+              <td>
+                <% if @summary[:time_format].prefer_value == 'ago' %>
+                    <%= if ast.close_at > Time.now then time_ago_in_words(ast.close_at) else '----' end%>
+                <% else %>
+                    <%= ast.close_at.strftime(@summary[:time_format].prefer_value) %>
+                <% end %>
+              </td>
+          <% end %>
+
+          <% if to_display.include? 'bonus-exp' %>
+              <td><%= ast.bonus_exp %></td>
+          <% end %>
+
+          <% if to_display.include? 'bonus-cutoff' %>
+              <% cutoff_time  = ast.bonus_cutoff_at || ast.open_at %>
+              <td>
+                <% if @summary[:time_format].prefer_value == 'ago' %>
+                    <%= if cutoff_time > Time.now then time_ago_in_words(cutoff_time) else '----' end%>
+                <% else %>
+                    <%= cutoff_time.strftime(@summary[:time_format].prefer_value)  %>
+                <% end %>
+              </td>
+          <% end %>
+
+          <% if curr_user_course.id%>
+              <td>
+                <div id="<%= ast.id %>"></div>
+              </td>
+          <% end %>
+          <% if can? :view_detail, ast %>
+              <td>
+                <%= link_to course_assessment_mission_path(@course, ast.as_assessment), class: 'btn' do %>
+                    <i class="icon-external-link"></i>
+                <% end %>
+                <% if can? :manage, ast %>
+                    <%= link_to course_assessment_mission_path(@course, ast.as_assessment),
+
+                                method: :delete,
+                                data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete: #{ast.title}?")) },
+                                class: 'btn btn-danger' do %>
+                        <i class="icon-trash"></i>
+                    <% end %>
+                <% end %>
+              </td>
+          <% end %>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <% if @summary[:paging].display? %>
+      <%= paginate @assessments %>
+  <% end %>
+
+</div>
+<input type="hidden" class="json-data" value='<%= @summary.to_json %>'>
+
