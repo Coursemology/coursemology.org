@@ -2,6 +2,8 @@
   <h1>Enroll Requests</h1>
 </div>
 
+<%= render partial: "enroll_requests/enroll_tab", locals: { mass_requests: false } %>
+
 <% if @staff_requests.size > 0 %>
   <h3>Staff Requests:</h3>
   <%= render partial: "enroll_requests/list", locals: { requests: @staff_requests, type: "staff" } %>

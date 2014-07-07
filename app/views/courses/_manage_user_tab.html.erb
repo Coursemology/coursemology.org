@@ -1,0 +1,16 @@
+<ul class="nav nav-tabs">
+	<% if manage_students %>
+		<li class="active">
+	<% else %>
+		<li>
+	<% end %>
+		<a href='<%= course_manage_students_path(@course) %>'>Manage Students</a>
+	</li>
+	<% if !manage_students %>
+		<li class="active">
+	<% else %>
+ 		<li>
+	<% end %>
+		<a href='<%= course_staff_path(@course) %>'>Manage Staff</a>
+	</li>
+</ul>
