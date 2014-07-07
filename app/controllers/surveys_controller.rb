@@ -91,7 +91,14 @@ class SurveysController < ApplicationController
 
   def summary_csv(include_phantom = true)
     CSV.generate({}) do |csv|
-      questions = @survey.questions
+      questions = []
+      if @survey.has_section?
+        @survey.sections.each do |s|
+          questions += s.questions
+        end
+      else
+        questions = @survey.questions
+      end
       csv << ["Name"] + questions.map {|qn| qn.description }
       (include_phantom ? @survey.submissions : @survey.submissions.exclude_phantom).order(:submitted_at).each do |submission|
         row = []
