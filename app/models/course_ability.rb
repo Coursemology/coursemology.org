@@ -19,7 +19,7 @@ class CourseAbility
     can :read, Course
     can :new, EnrollRequest
 
-    if !user.persisted?
+    unless user.persisted?
       # not logged in user
       cannot :read, [Assessment::Mission, Assessment::Training]
     end
@@ -46,10 +46,13 @@ class CourseAbility
     if user.is_admin?  || user_course.is_staff?
       # this is enough since all resources are loaded related to
       # the current course
-      can :manage, :all
+      # can :manage, :all
       can :see_all, [Assessment::Submission, Level]
-      can :view_stat, [Assessment::Mission, Assessment::Training]
-      can :view_detail, [Assessment::Mission, Assessment::Training]
+      # can :view_stat, [Assessment::Mission, Assessment::Training]
+      # can :view_detail, [Assessment::Mission, Assessment::Training]
+      # can :create, Assessment
+      # can :bulk_update, Assessment
+      can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
@@ -58,6 +61,7 @@ class CourseAbility
       can :unsubmit, Assessment::Submission
       can :view, :staff_leaderboard
       can :manage, :forum_participation
+      can :manage, Tab
 
       cannot :modify, TrainingSubmission
     end
@@ -147,9 +151,11 @@ class CourseAbility
       can :read, [LessonPlanEntry]
       can :read, [LessonPlanMilestone], is_publish: true
 
-      can :read, [Mission, Training, Survey], publish: true
+      can :read, [Assessment::Mission, Assessment::Training], assessment: {published: true}
+      can :read, Assessment, published: true
+      can :read, Survey, publish: true
 
-      can :read, [Mcq, Question, CodingQuestion]
+      # can :read, [Mcq, Question, CodingQuestion]
 
       can :read, Tag
       can :read, [Achievement, Title, Reward]
