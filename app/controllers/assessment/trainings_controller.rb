@@ -1,69 +1,11 @@
 class Assessment::TrainingsController < Assessment::AssessmentsController
-  load_and_authorize_resource :course
   load_and_authorize_resource :training, class: "Assessment::Training", through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :edit, :new, :access_denied, :stats, :overview]
 
   def index
-    @is_new = {}
-    @tags_map = {}
-    @selected_tags = params[:tags]
-    @display_columns = {}
-    @course.training_columns_display.each do |cp|
-      @display_columns[cp.preferable_item.name] = cp.prefer_value
-    end
-    @time_format =  @course.training_time_format
-    @reattempt = @course.course_preferences.training_reattempt.first
-
-    @trainings = @course.trainings.accessible_by(current_ability)
-    @paging = @course.trainings_paging_pref
-
-    if @selected_tags
-      tags = Tag.find(@selected_tags)
-      training_ids = tags.map{ |tag| tag.trainings.map { |t| t.id } }.reduce(:&)
-      @trainings = @trainings.where(id: training_ids)
-
-      tags.each { |tag| @tags_map[tag.id] = true }
-    end
-
-    @tabs = @course.training_tabs
-    @tab_id = params['_tab']
-
-    if params['_tab'] and (@tab = @course.tabs.where(id:@tab_id).first)
-      @trainings = @tab.trainings
-    elsif @tabs.length > 0
-      @tab_id = @tabs.first.id.to_s
-      @trainings = @tabs.first.trainings
-    else
-      @tab_id='Trainings'
-    end
-
-    @trainings = @trainings.accessible_by(current_ability)
-
-    if @paging.display?
-      @trainings = @trainings.page(params[:page]).per(@paging.prefer_value.to_i)
-    end
-
-    if curr_user_course.id
-      unseen = @trainings - curr_user_course.seen_trainings
-      unseen.each do |tn|
-        @is_new[tn.id] = true
-        curr_user_course.mark_as_seen(tn)
-      end
-    end
-
-    @trainings_with_sbm = []
-    @trainings.each do |training|
-      if curr_user_course.id
-        std_sbm = TrainingSubmission.where(
-            std_course_id: curr_user_course.id,
-            training_id: training.id
-        ).last
-      end
-      @trainings_with_sbm << {
-          training: training,
-          submission: std_sbm
-      }
+    super
+    respond_to do |format|
+      format.html {render "assessment/index"}
     end
   end
 
@@ -145,7 +87,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def overview
-    authorize! :manage, :bulk_update
+    authorize! :bulk_update, Assessment
     @tabs = @course.training_tabs
     @tab_id = 'overview'
     @trainings = @course.trainings
@@ -157,7 +99,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def bulk_update
-    authorize! :manage, :bulk_update
+    authorize! :bulk_update, Assessment
     trainings = params[:trainings]
     success = 0
     fail = 0

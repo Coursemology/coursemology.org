@@ -1,78 +1,12 @@
 class Assessment::MissionsController < Assessment::AssessmentsController
-  load_and_authorize_resource :course
   load_and_authorize_resource :mission, class: "Assessment::Mission", through: :course
-
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
   require 'zip/zipfilesystem'
 
   def index
-    @tab = 'missions'
-    @is_new = {}
-    selected_tags = params[:tags]
-    @display_columns = {}
-    @course.mission_columns_display.each do |cp|
-      @display_columns[cp.preferable_item.name] = cp.prefer_value
-    end
-    @time_format =  @course.mission_time_format
-
-    @missions = @course.missions
-    @paging = @course.missions_paging_pref
-
-
-    if selected_tags
-      tags = Tag.find(selected_tags)
-      mission_ids = tags.map { |tag| tag.missions.map{ |t| t.id } }.reduce(:&)
-      @missions = @missions.where(id: mission_ids)
-    end
-
-    if @paging.display?
-      @missions = @missions.accessible_by(current_ability).page(params[:page]).per(@paging.prefer_value.to_i)
-    end
-
-    @submissions = @course.submissions.where(assessment_id: @missions.map {|m| m.assessment.id},
-                                             std_course_id: curr_user_course.id)
-
-    sub_ids = @submissions.map {|s| s.mission_id }
-    sub_map = {}
-    @submissions.each do |sub|
-      sub_map[sub.mission_id] = sub
-    end
-
-    action_map = {}
-    @missions.each do |m|
-      if sub_ids.include? m.id
-        attempting = sub_map[m.id].attempting?
-        action_map[m.id] = {action: attempting ? "Edit" : "Review",
-                            url: edit_course_assessment_mission_assessment_submission_path(@course, m, sub_map[m.id]) }
-      elsif  m.dependent_id == 0 or
-          can?(:manage, m) or
-          (sub_ids.include? m.dependent_id and sub_map[m.dependent_id].submitted?)
-        action_map[m.id] = {action: "Attempt",
-                            url: new_course_assessment_mission_assessment_submission_path(@course, m)}
-      else
-        action_map[m.id] = {action: nil}
-      end
-      action_map[m.id][:new] = false
-      action_map[m.id][:opened] = m.open_at <= Time.now
-      action_map[m.id][:published] = m.published
-      action_map[m.id][:title_link] =
-          can?(:manage, m) ?
-          course_assessment_mission_stats_path(@course, m) :
-          course_assessment_mission_path(@course, m)
-    end
-
-    if curr_user_course.id
-      unseen = @missions - curr_user_course.seen_missions
-      unseen.each do |um|
-        action_map[um.id][:new] = true
-        curr_user_course.mark_as_seen(um)
-      end
-    end
-    @summary = {selected_tags: selected_tags, actions: action_map}
-
+    super
     respond_to do |format|
-      format.html # index.html.erb
+      format.html {render "assessment/index"}
     end
   end
 
@@ -82,7 +16,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       return
     end
 
-    @questions = @mission.get_all_questions
+    @questions = @mission.questions
     @question = Assessment::GeneralQuestion.new
     @question.max_grade = 10
     @coding_question = Assessment::CodingQuestion.new
@@ -111,7 +45,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     @missions = @course.missions
     @tags = @course.tags
     @asm_tags = {}
-    @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
+    # @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def create
@@ -213,7 +147,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
   end
 
   def overview
-    authorize! :manage, :bulk_update
+    authorize! :bulk_update, Assessment
     @tab = 'overview'
     @display_columns = {}
     @course.mission_columns_display.each do |cp|
@@ -224,7 +158,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
   end
 
   def bulk_update
-    authorize! :manage, :bulk_update
+    authorize! :bulk_update, Assessment
     missions = params[:missions]
     success = 0
     fail = 0
