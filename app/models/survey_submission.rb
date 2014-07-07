@@ -11,6 +11,7 @@ class SurveySubmission < ActiveRecord::Base
   default_scope includes(:user_course)
 
   scope :exclude_phantom, where("user_courses.is_phantom = 0")
+  scope :students, -> { where("user_courses.role_id = ?", Role.find_by_name('student').id) }
 
 
   def set_started
