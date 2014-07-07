@@ -1,15 +1,15 @@
 <ul class="nav nav-tabs">
-	<% if mass_requests %>
-		<li>
-	<% else %>
-  	<li class="active">
+  <% if mass_requests %>
+    <li>
+  <% else %>
+    <li class="active"> 
   <% end %>
     <a href='<%= course_enroll_requests_path(@course) %>'>Enroll Requests</a>
   </li>
   <% if !mass_requests %>
-		<li>
-	<% else %>
-  	<li class="active">
+    <li>
+  <% else %>
+    <li class="active">
   <% end %>
     <a href='<%= course_mass_enrollment_emails_path(@course) %>'>Mass Enrolments</a>
   </li>
