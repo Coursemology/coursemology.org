@@ -40,7 +40,11 @@ class CourseNotificationsController < ApplicationController
       if can? :see, :pending_comments
         counts[:comments] = @course.count_pending_comments
       end
-      counts[:pending_enrol] = @course.enroll_requests.count
+
+      if can? :approve, EnrollRequest
+        counts[:Enrollment] = @course.enroll_requests.count
+      end
+
       # TODO students see the number of new gradings
 
       counts[:forums] = ForumTopic.unread(curr_user_course).
