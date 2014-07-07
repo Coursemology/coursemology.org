@@ -4,6 +4,8 @@ class Assessment::Question < ActiveRecord::Base
 
   default_scope { order("assessment_questions.position") }
 
+  attr_accessible :title, :description, :max_grade
+
   belongs_to :creator, class_name: "User"
 
   #TODO, dependent: :destroy here
@@ -26,5 +28,10 @@ class Assessment::Question < ActiveRecord::Base
   #clean up messed html tags
   def clean_up_description
     self.description = CoursemologyFormatter.clean_code_block(description)
+  end
+
+  def self.assessments
+    Assessment.joins("LEFT JOIN  question_assessments ON question_assessments.assessment_id = assessments.id")
+    .where("question_assessments.question_id IN (?)", self.all)
   end
 end

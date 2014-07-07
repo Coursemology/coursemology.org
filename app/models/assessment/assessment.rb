@@ -6,17 +6,21 @@ class Assessment < ActiveRecord::Base
   default_scope { order("assessments.open_at") }
 
   attr_accessible   :open_at,:close_at, :exp
-  attr_accessible   :title, :description
+  attr_accessible   :title, :description, :tab_id
   attr_accessible   :published
+
+  delegate :dependent_id, :close_at, :bonus_exp, :bonus_cutoff_at, to: :as_assessment
 
   include HasRequirement
   include ActivityObject
 
-  scope :closed, lambda { where("close_at < ?", Time.now) }
-  scope :still_open, lambda { where("close_at >= ? ", Time.now) }
-  scope :opened, lambda { where("open_at <= ? ", Time.now) }
-  scope :future, lambda { where("open_at > ? ", Time.now) }
-  scope :published, where(publish: true)
+  scope :closed, -> { where("close_at < ?", Time.now) }
+  scope :still_open, -> { where("close_at >= ? ", Time.now) }
+  scope :opened, -> { where("open_at <= ? ", Time.now) }
+  scope :future, -> { where("open_at > ? ", Time.now) }
+  scope :published, -> { where(published: true) }
+  scope :mission, -> {where(as_assessment_type: "Assessment::Mission")}
+  scope :training, -> {where(as_assessment_type: "Assessment::Training")}
 
   belongs_to  :tab
   belongs_to  :course
@@ -35,6 +39,9 @@ class Assessment < ActiveRecord::Base
       where(pos: ['< ?', question.pos])
     end
   end
+
+  has_many  :general_questions, class_name: "Assessment::GeneralQuestion", through: :questions,
+            source: :as_question, source_type: "Assessment::GeneralQuestion"
 
   #tags through question tags
   has_many :taggable_tags, as: :taggable, dependent: :destroy
@@ -62,6 +69,10 @@ class Assessment < ActiveRecord::Base
 
   def get_all_questions
     self.questions
+  end
+
+  def opened?
+    open_at <= Time.now
   end
 
   def get_path

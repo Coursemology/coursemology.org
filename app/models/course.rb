@@ -16,7 +16,11 @@ class Course < ActiveRecord::Base
 
   has_many  :assessments, dependent: :destroy
   has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
-            source: :as_assessment, source_type: "Assessment::Mission"
+            source: :as_assessment, source_type: "Assessment::Mission" do
+    def published
+      where("assessments.published = ?", true)
+    end
+  end
 
   has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Training"
@@ -99,6 +103,15 @@ class Course < ActiveRecord::Base
 
   def count_pending_comments
     self.comment_topics.where(pending: true).count
+  end
+
+  def assessments_by_type(type)
+    type = type.pluralize
+    if self.respond_to? type
+      self.send type
+    else
+      raise  "#{self.class.name} has no association named #{type}"
+    end
   end
 
   def assessment_columns(type, enabled = false)
@@ -259,7 +272,7 @@ class Course < ActiveRecord::Base
   end
 
   def customized_title(tab)
-    self.course_navbar_preferences.find_by_item(tab).name
+    self.course_navbar_preferences.find_by_item(tab.pluralize).name
   end
 
   def customized_title_by_model(model_class)

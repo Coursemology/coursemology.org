@@ -35,16 +35,16 @@ class Assessment::Mission < ActiveRecord::Base
 
   #TODO
   def can_start?(curr_user_course)
-    # if open_at > Time.now
-    #   return  false, "Mission hasn't open yet :)"
-    # end
-    # if dependent_on
-    #   sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
-    #   if !sbm || sbm.attempting?
-    #     return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
-    #   end
-    # end
-    # return true, ""
+    if open_at > Time.now
+      return  false
+    end
+    if dependent_on
+      sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
+      if !sbm || sbm.attempting?
+        return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
+      end
+    end
+    return true, ""
   end
 
   # Converts this mission into a format that can be used by the lesson plan component
@@ -90,5 +90,6 @@ class Assessment::Mission < ActiveRecord::Base
   #TODO
 
   #TODO
+
   alias_method :sbms, :submissions
 end
