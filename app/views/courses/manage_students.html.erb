@@ -2,6 +2,8 @@
   <h1>Manage Students</h1>
 </div>
 
+<%= render partial: "courses/manage_user_tab", locals: { manage_students: true } %>
+
 <div style="width:93%">
     <span  class="pull-right" style="font-size: 1.3em">
       Student Count:  <strong style="font-size: 1.6em"><%= @student_count  %></strong>
