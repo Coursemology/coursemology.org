@@ -10,11 +10,21 @@ class Tag < ActiveRecord::Base
 
   has_many :asm_tags, dependent: :destroy
   has_many :std_tags, dependent: :destroy
+  has_many :taggable_tags, dependent: :destroy
 
+  has_many :questions, through: :taggable_tags, source: :taggable, source_type: "Assessment::Question"
   has_many :trainings, through: :asm_tags, source: :asm, source_type: "Training"
   has_many :missions, through: :asm_tags, source: :asm, source_type: "Mission"
 
   before_create :init
+
+  def self.questions
+    Assessment::Question.
+        joins("LEFT JOIN taggable_tags ON
+                                taggable_tags.taggable_id = assessment_questions.id AND
+                                taggable_tags.taggable_type = 'Assessment::Question'").
+        where("taggable_tags.tag_id IN (?)", self.all)
+  end
 
   def update_max_exp
     self.max_exp = self.asm_tags.sum { |asm_tag| asm_tag.asm.total_exp }
