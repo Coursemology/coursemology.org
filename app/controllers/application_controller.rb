@@ -3,10 +3,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
-  skip_before_filter  :verify_authenticity_token
+  # skip_before_filter  :verify_authenticity_token
 
   rescue_from CanCan::AccessDenied do |exception|
-
     unless current_user
       session[:request_url] = request.url
     end
