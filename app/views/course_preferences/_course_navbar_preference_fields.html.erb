@@ -1,6 +1,6 @@
 <tr class='<%= "hidden_navbar_tr" if !f.object.is_enabled? %>'>
   <td><%= f.input_field :name %></td>
-  <td><%= f.input_field :pos %></td>
+  <td class="hidden_navbar_td"><%= f.input_field :pos %></td>
   <td><%= f.input_field :is_displayed, as: :boolean %></td>
   <td class="hidden_navbar_td"><%= f.input_field :is_enabled, as: :boolean %></td>
   <td>

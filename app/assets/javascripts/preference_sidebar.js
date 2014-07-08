@@ -15,7 +15,21 @@ $(document).ready(function() {
         update_display_student_level_achievement(data, this);         
     });
     
-	set_events();       
+	$('.btn-remove-sidebar-item').click(function(e) {
+        set_event_remove(e,this);                	   
+    });
+    
+	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').change(function(e) {
+		set_event_update_name(e,this);
+	});
+
+	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').each(function(e) {
+            $(this).data("old_value", $(this).val());
+	});	
+	    
+    $('input[id*="course_course_navbar_preferences_attributes"][id*="is_displayed"]').change(function(e) {
+		set_event_update_displayed(e,this);		         
+    });       
     
 	$("#tb_course_navbar_preferences tbody").sortable({
     	cursor: 'move',
@@ -36,6 +50,7 @@ $(document).ready(function() {
 		stop: function(event, ui) {
 			var $temp_tr = ui.item;
 			var old_pos = ui.item.data('old_pos');
+			//arrange if getting wrong position
 			if(ui.item.next('input').length){
 				$next_hd_input = ui.item.next('input');
 				$temp_tr = ui.item.clone();				
@@ -44,8 +59,22 @@ $(document).ready(function() {
 				ui.item.remove();
 			}else{
 				ui.item.after(ui.item.data('hd_input'));
-			}					
-			set_events();	    
+			}
+			//set event again			
+			$temp_tr.find('.btn-remove-sidebar-item').click(function(e) {
+		        set_event_remove(e,this);                	   
+		    });		    
+			$temp_tr.find('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').change(function(e) {
+				set_event_update_name(e,this);
+			});		
+			$temp_tr.find('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').each(function(e) {
+		            $(this).data("old_value", $(this).val());
+			});				    
+		    $temp_tr.find('input[id*="course_course_navbar_preferences_attributes"][id*="is_displayed"]').change(function(e) {
+				set_event_update_displayed(e,this);		         
+		    });	    
+		    
+		    //update database
 		    var index = $('#tb_course_navbar_preferences tr').index($temp_tr);			
 			var data = { func : 'update_pos', id : $temp_tr.next('input').val(), pos : index, old_pos : old_pos };    			
 	        sidebar_update_values(data, $temp_tr);	    
@@ -57,35 +86,27 @@ $(document).ready(function() {
 
 });
 
-function set_events(){
-	$('.btn-remove-sidebar-item').click(function(e) {
-        e.preventDefault();        
-		var data = { func : 'remove', id : '0' };  
-		sidebar_update_values(data, this);                	   
-    });
-    
-	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').change(function(e) {
-		e.preventDefault();
-	    if($(this).val() === ''){
-			$(this).val($(this).data("old_value"));
-	    }else{            
-		    var data = { func : 'update_name', id : '0', name : $(this).val() };    
-		    sidebar_update_values(data, this);	       
-		}
-	});
-
-	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]'	
-	).each(function(e) {
-            $(this).data("old_value", $(this).val());
-	});	
-	    
-    $('input[id*="course_course_navbar_preferences_attributes"][id*="is_displayed"]').change(function(e) {
-		e.preventDefault();         	
-        var data = { func : 'update_is_displayed', id : '0', checked : $(this).is(":checked") };          	
-        sidebar_update_values(data, $(this).parent());         
-    });	
+function set_event_remove(e, handler){
+	e.preventDefault();        
+	var data = { func : 'remove', id : '0' };  
+	sidebar_update_values(data, handler);		
 }
 
+function set_event_update_name(e, handler){
+	e.preventDefault();
+	   if($(handler).val() === ''){
+		$(handler).val($(handler).data("old_value"));
+    }else{            
+	    var data = { func : 'update_name', id : '0', name : $(handler).val() };    
+	    sidebar_update_values(data, handler);	       
+	}
+}
+
+function set_event_update_displayed(e, handler){
+	e.preventDefault();         	
+	var data = { func : 'update_is_displayed', id : '0', checked : $(handler).is(":checked") };          	
+    sidebar_update_values(data, $(handler).parent());
+}
 function update_layout_pos(handler, index, count){	
 	var item = handler.find('input.sidebar-item-name').val();       
 	var $litag = $('ul#navbar_tabs span#badge_' + item).parent().parent().clone();	
