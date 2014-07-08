@@ -182,6 +182,7 @@ JfdiAcademy::Application.routes.draw do
     post "preferences" => "course_preferences#update", as: :preferences
     
     post "preferences/sidebar_update_values" => "course_preferences#sidebar_update_values", as: :sidebar_update_values
+    post "preferences/update_display_student_level_achievement" => "course_preferences#update_display_student_level_achievement", as: :update_display_student_level_achievement
 
     resources :mass_enrollment_emails
 

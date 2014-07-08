@@ -8,6 +8,56 @@ $(document).ready(function() {
 		}		
 	});
 	
+	$('input[id*="ip_display_st_level_ach"]').change(function(e) {    	
+    	e.preventDefault();
+    	var id = $(this).attr('id').split('_')[$(this).attr('id').split('_').length - 1];	
+        var data = { func : 'update_display_st_level_ach',id : id, checked : $(this).is(":checked") };         	
+        update_display_student_level_achievement(data, this);         
+    });
+    
+	set_events();       
+    
+	$("#tb_course_navbar_preferences tbody").sortable({
+    	cursor: 'move',
+		helper: function(e, tr){
+		    var $originals = tr.children();
+		    var $helper = tr.clone();
+		    $helper.children().each(function(index){		      
+		      $(this).width($originals.eq(index).width());
+		    });
+		    return $helper;
+		},
+		start: function(event, ui) {		
+			$hd_input = ui.item.next('tr').next('input').clone();
+			ui.item.next('tr').next('input').remove();			
+	        ui.item.data('hd_input',$hd_input);
+	        ui.item.data('old_pos',$('#tb_course_navbar_preferences tr').index(ui.item));	        
+	    },
+		stop: function(event, ui) {
+			var $temp_tr = ui.item;
+			var old_pos = ui.item.data('old_pos');
+			if(ui.item.next('input').length){
+				$next_hd_input = ui.item.next('input');
+				$temp_tr = ui.item.clone();				
+				$next_hd_input.after($temp_tr);
+				$temp_tr.after(ui.item.data('hd_input'));
+				ui.item.remove();
+			}else{
+				ui.item.after(ui.item.data('hd_input'));
+			}					
+			set_events();	    
+		    var index = $('#tb_course_navbar_preferences tr').index($temp_tr);			
+			var data = { func : 'update_pos', id : $temp_tr.next('input').val(), pos : index, old_pos : old_pos };    			
+	        sidebar_update_values(data, $temp_tr);	    
+	    }	
+	});    
+	$("#tb_course_navbar_preferences tbody").mousedown(function(){
+	  document.activeElement.blur();
+	});
+
+});
+
+function set_events(){
 	$('.btn-remove-sidebar-item').click(function(e) {
         e.preventDefault();        
 		var data = { func : 'remove', id : '0' };  
@@ -15,43 +65,29 @@ $(document).ready(function() {
     });
     
 	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]').change(function(e) {
-    	e.preventDefault();            
-        var data = { func : 'update_name', id : '0', name : $(this).val() };    
-        sidebar_update_values(data, this);        
-              
-    });
-
-	$('input[id*="course_course_navbar_preferences_attributes"][id*="pos"]').each(function(e) {
-            $(this).data("old_value", $(this).val());
-	});
-	
-    $('input[id*="course_course_navbar_preferences_attributes"][id*="pos"]').change(function(e) {
-    	e.preventDefault();
-    	if(isNaN($(this).val())){
+		e.preventDefault();
+	    if($(this).val() === ''){
 			$(this).val($(this).data("old_value"));
-    	}else{
-	        var data = { func : 'update_pos', id : '0', pos : $(this).val() };    
-	        sidebar_update_values(data, this);	        
-       }
-    });
-    
+	    }else{            
+		    var data = { func : 'update_name', id : '0', name : $(this).val() };    
+		    sidebar_update_values(data, this);	       
+		}
+	});
+
+	$('input[id*="course_course_navbar_preferences_attributes"][id*="name"]'	
+	).each(function(e) {
+            $(this).data("old_value", $(this).val());
+	});	
+	    
     $('input[id*="course_course_navbar_preferences_attributes"][id*="is_displayed"]').change(function(e) {
 		e.preventDefault();         	
         var data = { func : 'update_is_displayed', id : '0', checked : $(this).is(":checked") };          	
         sidebar_update_values(data, $(this).parent());         
-    });    
-    
-    $('input[id*="ip_display_st_level_ach"]').change(function(e) {    	
-    	e.preventDefault();
-    	var id = $(this).attr('id').split('_')[$(this).attr('id').split('_').length - 1];	
-        var data = { func : 'update_display_st_level_ach',id : id, checked : $(this).is(":checked") };         	
-        sidebar_update_values(data, this);         
-    });    
-});
+    });	
+}
 
-function update_layout_pos(handler, index, count){
-	var $tr_to_change = $(handler).parent().parent();
-	var item = $tr_to_change.find('input.sidebar-item-name').val();       
+function update_layout_pos(handler, index, count){	
+	var item = handler.find('input.sidebar-item-name').val();       
 	var $litag = $('ul#navbar_tabs span#badge_' + item).parent().parent().clone();	
 	$('ul#navbar_tabs span#badge_' + item).parent().parent().remove();
 	if(parseInt(index) <= parseInt(count - 2)){
@@ -70,7 +106,8 @@ function update_layout_name(handler){
 	$atag.empty();	
 	$atag.append($children.eq(0));	
 	$atag.append($(handler).val());
-	$atag.append($children.eq(1)); 
+	$atag.append($children.eq(1));
+	$(handler).data("old_value", $(handler).val());
 }
 
 function update_layout_remove(handler){
@@ -112,7 +149,7 @@ function update_layout_add(handler ,result){
 function sidebar_update_values(data, handler){		
 	var course_id = $('div.div-add-item-sidebar input.sidebar-course-id').val();        
 	var url = '/courses/' + course_id + '/preferences/sidebar_update_values';		
-	if(data.func != 'add' && data.func != 'update_display_st_level_ach'){
+	if(data.func != 'add' && data.func != 'update_pos'){
 		data.id = $(handler).parent().parent().next().val();	
 	}		
 	$.ajax({
@@ -130,6 +167,19 @@ function sidebar_update_values(data, handler){
 			}else if (data.func == 'update_pos' && !isNaN(result.index)){				
 				update_layout_pos(handler,result.index, result.count);
 			}			
+		}
+	}); 	
+}
+
+function update_display_student_level_achievement(data, handler){		
+	var course_id = $('div.div-add-item-sidebar input.sidebar-course-id').val();        
+	var url = '/courses/' + course_id + '/preferences/update_display_student_level_achievement';	
+	$.ajax({
+		url : url,
+		type : 'POST',
+		dataType : 'json',
+		data : data,
+		success : function(result) {					
 		}
 	}); 	
 }

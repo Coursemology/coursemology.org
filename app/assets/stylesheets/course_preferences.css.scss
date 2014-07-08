@@ -14,7 +14,7 @@
 }
 
 tr.hidden_navbar_tr, td.hidden_navbar_td {
-  display: none;
+  display: none !important;
 }
 div.div-add-item-sidebar input{
   margin-bottom: 9px;
