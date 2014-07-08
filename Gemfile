@@ -11,6 +11,7 @@ group :development do
   gem 'meta_request'
   gem 'figaro'
   gem "better_errors"
+  gem 'spring'
 end
 
 
