@@ -4,16 +4,16 @@ class CourseNotificationsController < ApplicationController
   def get
     counts = {}
     if curr_user_course.id
-      all_trainings = @course.trainings.accessible_by(current_ability)
-      unseen_trainings = all_trainings - curr_user_course.seen_trainings
+      all_trainings = @course.assessments.training.accessible_by(current_ability)
+      unseen_trainings = all_trainings - curr_user_course.seen_assessments
       counts[:trainings] = unseen_trainings.count
 
       all_announcements = @course.announcements.accessible_by(current_ability)
       unseen_anns = all_announcements - curr_user_course.seen_announcements
       counts[:announcements] = unseen_anns.count
 
-      all_missions = @course.missions.accessible_by(current_ability)
-      unseen_missions = all_missions - curr_user_course.seen_missions
+      all_missions = @course.assessments.mission.accessible_by(current_ability)
+      unseen_missions = all_missions - curr_user_course.seen_assessments
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
 
