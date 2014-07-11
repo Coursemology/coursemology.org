@@ -87,7 +87,8 @@
     <h2 class="asm-qns-title"><%= display_name %> Questions</h2>
     <table class="table asm-qns-table sort">
       <tbody class="asm-qns" url="<%= reorder_course_assessment_training_asm_qns_path(@course, @training) %>">
-      <% @summary[:questions].each_with_index do |q, index| %>
+      <% @summary[:questions].each_with_index do |qn, index| %>
+         <% q = qn.as_question %>
           <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
             <td>
               <div id="<%= q.class.to_s %>-description-<%= q.id %>">
@@ -102,9 +103,9 @@
                   </h3>
                 </div>
 
-                <% if q.as_question.class == Assessment::Mcq %>
+                <% if q.class == Assessment::McqQuestion %>
                     <%= render partial: "assessment/mcqs/one", locals: { q: q } %>
-                <% elsif q.as_question.class == Assessment::CodingQuestion %>
+                <% elsif q.class == Assessment::CodingQuestion %>
                     <%= render partial: "assessment/coding_questions/one", locals: { q: q } %>
                 <% end %>
               </div>
@@ -115,21 +116,21 @@
                     <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s %>" qn-id="<%= q.id %>">
                       <i class="icon-copy"></i>
                     </a>
-                    <% if q.as_question.class == Assessment::McqQuestion %>
-                        <%= link_to edit_course_assessment_assessment_mcq_question_path(@course, @assessment, q.as_question), class: 'btn' do %>
+                    <% if q.class == Assessment::McqQuestion %>
+                        <%= link_to edit_course_assessment_assessment_mcq_question_path(@course, @assessment, q), class: 'btn' do %>
                             <i class="icon-edit"></i>
                         <% end %>
-                        <%= link_to course_assessment_assessment_mcq_question_path(@course, @assessment, q.as_question),
+                        <%= link_to course_assessment_assessment_mcq_question_path(@course, @assessment, q),
                                     method: :delete,
                                     data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                                     class: 'btn btn-danger' do %>
                             <i class="icon-trash"></i>
                         <% end %>
-                    <% elsif q.as_question.class == Assessment::CodingQuestion %>
-                        <%= link_to edit_course_assessment_assessment_coding_question_path(@course, @assessment, q.as_question), class: 'btn' do %>
+                    <% elsif q.class == Assessment::CodingQuestion %>
+                        <%= link_to edit_course_assessment_assessment_coding_question_path(@course, @assessment, q), class: 'btn' do %>
                             <i class="icon-edit"></i>
                         <% end %>
-                        <%= link_to course_assessment_assessment_coding_question_path(@course, @training, q),
+                        <%= link_to course_assessment_assessment_coding_question_path(@course, @assessment, q),
                                     method: :delete,
                                     data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                                     class: 'btn btn-danger' do %>

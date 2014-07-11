@@ -1,12 +1,11 @@
-<!--<span><%= q.description.html_safe %></span>-->
 <span><%= style_format(q.description) %></span>
 <br/>
 <br/>
 <ul>
-  <% q.mcq_answers.each do |ans| %>
+  <% q.options.each do |opt| %>
     <li class="checkbox-text">
-    <input type="checkbox" disabled <%= "checked" if ans.is_correct %> />
-    <span><%= style_format ans.text %></span>
+    <input type="checkbox" disabled <%= "checked" if opt.correct? %> />
+    <span><%= style_format opt.text %></span>
   </li>
 <% end %>
 </ul>
