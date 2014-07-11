@@ -3,9 +3,9 @@
 
     <%= f.input :title %>
     <%= f.association :language, label_method: :name, value_method: :id, include_blank: false %>
-    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}  %>
+    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
     <%= f.association :dependent_on,
-                      collection: @assessment.questions.coding.before_pos(@question.position || @assessment.questions.count),
+                      collection: @assessment.questions.coding.before(@question.question, @assessment.questions.count),
                       label_method: :title, value_method: :id,
                       include_blank: true, hint: "Include student solution from this question" %>
 

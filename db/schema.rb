@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140608144533) do
+ActiveRecord::Schema.define(:version => 20140627064143) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -19,11 +19,12 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.time     "deleted_at"
     t.boolean  "auto_assign"
     t.text     "requirement_text"
+    t.boolean  "published",        :default => true
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
@@ -274,7 +275,6 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.string   "title"
     t.text     "description"
     t.decimal  "max_grade",         :precision => 10, :scale => 0
-    t.integer  "position"
     t.datetime "last_commented_at"
     t.datetime "deleted_at"
     t.datetime "created_at",                                       :null => false
@@ -999,6 +999,7 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
   create_table "question_assessments", :force => true do |t|
     t.integer  "question_id"
     t.integer  "assessment_id"
+    t.integer  "position"
     t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
@@ -1569,6 +1570,7 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.datetime "confirmation_sent_at"
     t.boolean  "is_logged_in",           :default => true
     t.boolean  "is_pending_deletion",    :default => false
+    t.boolean  "use_uploaded_picture",   :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

@@ -2,14 +2,12 @@ class Assessment::Question < ActiveRecord::Base
   acts_as_paranoid
   acts_as_superclass as: :as_question
 
-  default_scope { order("assessment_questions.position") }
-
   attr_accessible :title, :description, :max_grade
 
   belongs_to :creator, class_name: "User"
 
   #TODO, dependent: :destroy here
-  has_many  :question_assessments
+  has_many  :question_assessments, dependent: :destroy
   #was std_answers
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
   #These two are just for mcq question, but the foreign key is question_id

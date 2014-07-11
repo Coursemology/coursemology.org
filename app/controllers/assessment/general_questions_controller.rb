@@ -15,15 +15,10 @@ class Assessment::GeneralQuestionsController < ApplicationController
 #   end
 #
   def create
-    @question.creator = current_user
-    qa = @mission.assessment.question_assessments.new
-    qa.question = @question.question
-    @question.position = @mission.questions.last ?
-                      @mission.questions.last.pos.to_i + 1 : 0
-
+    saved = super
     respond_to do |format|
-      if @question.save  && qa.save
-        format.html { redirect_to course_assessment_mission_url(@course, @mission),
+      if saved
+        format.html { redirect_to url_for([@course, @assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else

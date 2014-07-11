@@ -45,8 +45,13 @@ class Assessment < ActiveRecord::Base
       where(as_question_type: Assessment::McqQuestion)
     end
 
-    def before(question)
-      before_pos(question.position)
+    #TODO
+    def before(question, pos = 0)
+      if question.persisted?
+        before_pos(proxy_association.owner.question_assessments.where(question_id: question.id).first.position)
+      else
+        before_pos(pos)
+      end
     end
 
     def before_pos(position)

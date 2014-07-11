@@ -7,7 +7,7 @@ class Assessment::QuestionsController < ApplicationController
     @question.creator = current_user
     qa = @assessment.question_assessments.new
     qa.question = @question.question
-    @question.question.position = @assessment.questions.count
+    qa.position = @assessment.questions.count
     @question.save && qa.save
   end
 

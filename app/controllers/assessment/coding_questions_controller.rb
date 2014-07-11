@@ -43,8 +43,11 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
 
   def destroy
     @question.destroy
+    @assessment.update_grade
+    @assessment.update_qns_pos
+
     respond_to do |format|
-      format.html { redirect_to url_for([@course, @assessment]) }
+      format.html { redirect_to url_for([@course, @assessment.as_assessment]) }
     end
   end
 end

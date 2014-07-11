@@ -52,7 +52,6 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.string      :title
       t.text        :description
       t.decimal     :max_grade
-      t.integer     :position
 
       t.datetime  :last_commented_at
       t.datetime  :deleted_at
@@ -88,6 +87,7 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :question_assessments do |t|
       t.references :question,   index: true
       t.references :assessment, index: true
+      t.integer     :position
 
       t.datetime  :deleted_at
       t.timestamps
