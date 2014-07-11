@@ -53,6 +53,7 @@ class CourseAbility
       # can :create, Assessment
       # can :bulk_update, Assessment
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission]
+      can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
