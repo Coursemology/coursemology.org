@@ -48,7 +48,6 @@ class Assessment::McqsController < Assessment::QuestionsController
     updated = update_answers(@question) && @question.update_attributes(params["assessment_mcq_question"])
     respond_to do |format|
       if updated && @question.save
-        @assessment.update_grade
         if @assessment.as_assessment.is_a?(Assessment::Training)
           format.html { redirect_to course_assessment_training_url(@course, @assessment.as_assessment),
                                     notice: 'Question updated.' }

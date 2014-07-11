@@ -17,6 +17,7 @@ class Assessment::Question < ActiveRecord::Base
   has_one :comment_topic, as: :topic
 
   before_update :clean_up_description, :if => :description_changed?
+  after_update  :update_assessment_grade, if: :max_grade_changed?
 
   #TOFIX
   def get_title
@@ -31,5 +32,12 @@ class Assessment::Question < ActiveRecord::Base
   def self.assessments
     Assessment.joins("LEFT JOIN  question_assessments ON question_assessments.assessment_id = assessments.id")
     .where("question_assessments.question_id IN (?)", self.all)
+  end
+
+  def update_assessment_grade
+    puts "update grade", self.question_assessments.count
+    self.question_assessments.each do |qa|
+      qa.assessment.update_grade
+    end
   end
 end

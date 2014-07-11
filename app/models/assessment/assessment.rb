@@ -127,9 +127,9 @@ class Assessment < ActiveRecord::Base
   end
 
   def update_qns_pos
-    self.questions.each_with_index do |qn, i|
-      qn.pos = i
-      qn.save
+    question_assessments.each_with_index do |qa, i|
+      qa.position = i
+      qa.save
     end
   end
 
