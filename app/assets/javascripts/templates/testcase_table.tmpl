@@ -1,0 +1,22 @@
+${ title } Tests: <input type="button" id="add-${ type }-test" class="btn btn-info pull-right" value="Add New Test"/>
+<table id="${ type }_test" class="table table-bordered test_table">
+  <thead>
+  <tr>
+    <th>
+      Code to Run
+    </th>
+    <th>
+      Expected Output
+    </th>
+    {{if has_hint  }}
+    <th>
+      Hint
+    </th>
+    {{/if}}
+    <th class="test-delete-col">
+    </th>
+  </tr>
+  </thead>
+  <tbody id="${ type }_test_tbody">
+  </tbody>
+</table>

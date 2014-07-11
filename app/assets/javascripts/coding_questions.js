@@ -43,6 +43,8 @@ var path = function(){
             $("#saveCQ").click(path.saveQuestion);
             cStep = path.data;
             $dataInput = $("#coding_question_data");
+            var tcType = JSON.parse($("#tc-type-data").val());
+            path.loadTestTypes(tcType);
             if( $dataInput.val() != "") {
                 path.data =  JSON.parse($dataInput.val());
                 path.loadStep();
@@ -64,7 +66,8 @@ var path = function(){
             cStep.included = val;
         },
         /** tests **/
-        addTest: function(testType){
+        addTest: function(event){
+            var testType = event.data.param1;
             var ci = cStep;
             var tNo = ci[testType].length;
             ci[testType].push(_newTest());
@@ -103,6 +106,13 @@ var path = function(){
                 $(e).attr("data-test-no", index);
             });
         } ,
+        loadTestTypes: function(tcType) {
+            var $tcDiv = $("#path_testcases");
+            for (var type in tcType) {
+                $tcDiv.append($.tmpl("testcase_table", {type: type, title: tcType[type], has_hint: type == tPrivate}));
+                $("#add-{0}-test".format(type)).click({param1: type}, path.addTest);
+            }
+        },
         loadStep:function(){
             cStep = path.data;
 

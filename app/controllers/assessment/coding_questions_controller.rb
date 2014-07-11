@@ -1,5 +1,11 @@
 class Assessment::CodingQuestionsController < Assessment::QuestionsController
   before_filter {|c| c.build_resource Assessment::CodingQuestion }
+  before_filter :set_avaialbe_test_types, only: [:new, :edit]
+
+  def new
+    @question.auto_graded = !@assessment.is_mission?
+    super
+  end
 
   def create
     saved = super
@@ -29,4 +35,14 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
       end
     end
   end
+
+  private
+
+  def set_avaialbe_test_types
+    @test_types = {public: 'Public', private: 'Private'}
+    if @assessment.is_mission?
+      @test_types[:eval] = 'Evaluation'
+    end
+  end
+
 end

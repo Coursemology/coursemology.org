@@ -8,11 +8,10 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
       return
     end
     @assessment = @training.assessment
-    @summary = {}
     super
 
     @summary[:allowed_questions] = [Assessment::McqQuestion, Assessment::CodingQuestion]
-    @summary[:questions] = @assessment.questions
+    @summary[:type] = 'training'
 
     respond_to do |format|
       format.html { render "assessment/assessments/show" }

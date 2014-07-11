@@ -3,7 +3,7 @@ class Assessment::CodingQuestion < ActiveRecord::Base
   is_a :question, as: :as_question, class_name: "Assessment::Question"
 
   attr_accessible :language_id, :dependent_id
-  attr_accessible :memory_limit, :time_limit, :test_limit, :data
+  attr_accessible :memory_limit, :time_limit, :test_limit, :data, :auto_graded
 
   belongs_to  :dependent_on, class_name: "Assessment::Question", foreign_key: "dependent_id"
   belongs_to  :language, class_name: "ProgrammingLanguage"
@@ -36,7 +36,7 @@ class Assessment::CodingQuestion < ActiveRecord::Base
   end
 
   def update_test_limit
-    old_tl = changed_attributes[:test_limit]
+    old_tl = changed_attributes[:test_limit] || 0
     diff = test_limit - old_tl
     if diff != 0
       Thread.start {

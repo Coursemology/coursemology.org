@@ -1,5 +1,5 @@
 <!--Move to controller-->
-<% if @assessment_type == 'training' %>
+<% if @summary[:type] == 'training' %>
     <% ast_edit_path = lambda {|a| edit_course_assessment_training_path(@course, a)} %>
     <% ast_path = lambda {|a| course_assessment_training_path(@course, a) } %>
 <% else %>
@@ -7,7 +7,7 @@
     <% ast_path = lambda {|a| course_assessment_mission_path(@course, a) } %>
 <% end %>
 
-<%- display_name = @course.customized_title(@assessment_type).singularize -%>
+<%- display_name = @course.customized_title(@summary[:type]).singularize -%>
 <div class="page-header">
   <h1> <%= @assessment.title %></h1>
 </div>
@@ -22,7 +22,7 @@
                   method: "DELETE",
                   data: { confirm: t('.confirm',
                                      default: t("helpers.links.confirm",
-                                                default: "Are you sure to delete #{@assessment_type} '#{@assessment.title}'?")) } do %>
+                                                default: "Are you sure to delete #{@summary[:type]} '#{@assessment.title}'?")) } do %>
           <i class="icon-trash"></i>
       <% end %>
     </div>
@@ -35,13 +35,13 @@
     <td>
       <div class="pull-left">
         <p><%= style_format(@assessment.description) %></p>
-        <%= render partial: "assessment/#{@assessment_type.pluralize}/details", locals: {ast: @assessment } %>
+        <%= render partial: "assessment/#{@summary[:type].pluralize}/details", locals: {ast: @assessment } %>
       </div>
     </td>
 
     <% if can? :manage, Assessment::Submission %>
         <td>
-          <%= render partial: "assessment/#{@assessment_type.pluralize}/action", locals: {ast: @assessment} %>
+          <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
         </td>
     <% end %>
 
@@ -109,7 +109,7 @@
             <% if can? :manage, Assessment::Training %>
                 <td class="action-there-icons">
                   <div class="btn-group">
-                    <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s %>" qn-id="<%= q.id %>">
+                    <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s.underscore.gsub('/', '_') %>" qn-id="<%= q.id %>">
                       <i class="icon-copy"></i>
                     </a>
 
@@ -131,6 +131,8 @@
       </tbody>
     </table>
 <% end %>
+
+<!--TODO: question duplication -->
 
 <div class="modal hide fade" id="copy_question"  tabindex='-1'>
   <div class="modal-header">

@@ -98,8 +98,8 @@ class Assessment::AssessmentsController < ApplicationController
 
 
   def show
-    @assessment_type = extract_type
-
+    @summary = {}
+    @summary[:questions] = @assessment.questions
   end
 
   def reorder
