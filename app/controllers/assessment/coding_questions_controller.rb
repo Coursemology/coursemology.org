@@ -1,9 +1,5 @@
-class Assessment::CodingQuestionsController < ApplicationController
-  load_and_authorize_resource :course
-  # load_and_authorize_resource :question, class: "Assessment::CodingQuestion"
-  before_filter :load_resources
-
-  # before_filter :load_general_course_data, only: [:new, :edit]
+class Assessment::CodingQuestionsController < Assessment::QuestionsController
+  before_filter {|c| c.build_resource Assessment::CodingQuestion}
 
   def new
     @question.max_grade = @mission ? 10 : 1
@@ -68,32 +64,5 @@ class Assessment::CodingQuestionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to url_for([@course, @assessment]) }
     end
-  end
-
-private
-  def load_resources
-    if params[:assessment_mission_id]
-      @mission = Assessment::Mission.find(params[:assessment_mission_id])
-    elsif params[:assessment_training_id]
-      @training = Assessment::Training.find(params[:assessment_training_id])
-    end
-    @assessment = @mission || @training
-    authorize! params[:action].to_sym, @assessment
-
-    @question = case params[:action]
-                  when 'new'
-                    Assessment::CodingQuestion.new
-                  when 'create'
-                    q = Assessment::CodingQuestion.new
-                    q.attributes = params[:assessment_coding_question]
-                    q
-                  else
-                    Assessment::CodingQuestion.find_by_id!(params[:id] || params[:assessment_coding_question_id])
-                end
-    # @question = Assessment::CodingQuestion.new
-    # puts ::Assessment::CodingQuestion
-    # puts Assessment::Training
-    # puts CodingQuestion
-    puts "I AM HERE"
   end
 end
