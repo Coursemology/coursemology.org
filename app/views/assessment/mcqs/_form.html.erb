@@ -1,0 +1,56 @@
+<%= simple_form_for [@course, @assessment, @question],
+                    html: { class: 'form-horizontal'},
+                    defaults: { input_html: { class: 'span7' } } do |f| %>
+
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"} %>
+    <%= f.input :select_all, as: :boolean,
+                input_html: {class: ""},
+                inline_label:"Student must pick all correct answers" %>
+
+    <div class="control-group">
+      <%= f.label "Options", :class => 'control-label' %>
+      <div class="controls" id="mcq-options">
+        <table class="span7 table form-mcq-answer">
+          <thead>
+          <tr>
+            <th style="width: 8%"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% i = 0 %>
+          <% @question.options.each do |opt| %>
+              <% i += 1 %>
+              <tr>
+                <input type="hidden" name="options[<%= i %>][id]" value="<%= opt.id %>" />
+                <td><input type="checkbox" name="options[<%= i %>][correct]" value="true"
+                           <%= 'checked' if opt.correct %> />
+                </td>
+                <td>
+                  <textarea name="options[<%= i %>][text]" placeholder="Answer..." /><%= opt.text %></textarea>
+                  <textarea name="options[<%= i %>][explanation]" placeholder="Explanation..." /><%= opt.explanation %></textarea>
+                </td>
+              </tr>
+          <% end %>
+          <% if @question.options.size < 4 %>
+              <% (4 - @question.options.size).times.each do %>
+                  <% i += 1 %>
+                  <tr>
+                    <td><input name="options[<%= i %>][correct]" type="checkbox" /></td>
+                    <td>
+                      <textarea name="options[<%= i %>][text]" placeholder="Answer..." /></textarea>
+                      <textarea name="options[<%= i %>][explanation]" placeholder="Explanation..." /></textarea>
+                    </td>
+                  </tr>
+              <% end %>
+          <% end %>
+          <tr><td></td><td><a href='#' class="add-mcq-option">Add more choices</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <%= f.button :form_submit, cancel: :back %>
+    <%= render :partial => "layouts/html_editor" %>
+<% end %>
