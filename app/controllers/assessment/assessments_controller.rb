@@ -1,5 +1,6 @@
 class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :course
+  load_and_authorize_resource :assessment, only: [:reorder]
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
   def index
@@ -99,6 +100,13 @@ class Assessment::AssessmentsController < ApplicationController
   def show
     @assessment_type = extract_type
 
+  end
+
+  def reorder
+    @assessment.question_assessments.reordering(params['sortable-item'])
+    #TODO; we need to clean up dependency after reordering
+
+    render nothing: true
   end
 
   private

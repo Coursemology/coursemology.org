@@ -86,15 +86,15 @@
 <% if can? :view_detail, @assessment %>
     <h2 class="asm-qns-title"><%= display_name %> Questions</h2>
     <table class="table asm-qns-table sort">
-      <tbody class="asm-qns" url="<%= reorder_course_assessment_training_asm_qns_path(@course, @training) %>">
+      <tbody class="asm-qns sortable-table" url="<%= reorder_course_assessment_path(@course, @assessment) %>">
       <% @summary[:questions].each_with_index do |qn, index| %>
          <% q = qn.as_question %>
-          <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
+          <tr class="asm-qn" id="sortable-item_<%= qn.id %>" >
             <td>
               <div id="<%= q.class.to_s %>-description-<%= q.id %>">
                 <div class="asm-qn-handler">
                   <i class="icon-move handler-icon"></i>
-                  <h3 class="handler-text">Question <%= index + 1 %>
+                  <h3 class="handler-text">Question <span class="asm-qn-index"><%= index + 1 %></span>
                     <% if q.class == Assessment::CodingQuestion %>
                         <% unless q.title.to_s.strip.empty? %>
                             : <%=q.title %>

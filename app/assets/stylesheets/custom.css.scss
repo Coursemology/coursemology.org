@@ -1150,13 +1150,6 @@ body.loading .modal_loading {
   margin: 0;
 }
 
-td.action-two-icons {
-  min-width: 70px
-}
-
-td.action-there-icons {
-  min-width: 110px
-}
 .dropdown-menu li {
   display: block;
 }
@@ -1168,6 +1161,16 @@ td.action-there-icons {
 
 .table td {
   vertical-align: middle;
+}
+
+td.action-two-icons {
+  width: 70px;
+  vertical-align: top;
+}
+
+td.action-there-icons {
+  width: 110px;
+  vertical-align: top;
 }
 
 .float-alert {

@@ -65,7 +65,9 @@ JfdiAcademy::Application.routes.draw do
       member do
         get 'show', to: 'assessments#show'
         get 'stats'
+        post 'reorder'
       end
+
       resources :assessment_mcq_questions,
                 path:       :mcqs,
                 controller: :mcqs
