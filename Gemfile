@@ -56,6 +56,7 @@ end
 gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
+gem 'jquery-tmpl-rails'
 gem 'devise', '3.0'
 gem 'cancan'
 gem 'paperclip', '~>3.0'
