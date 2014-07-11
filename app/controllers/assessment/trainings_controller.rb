@@ -2,20 +2,21 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   load_and_authorize_resource :training, class: "Assessment::Training", through: :course
 
 
-  def index
-    super
-    respond_to do |format|
-      format.html {render "assessment/index"}
-    end
-  end
-
   def show
     if curr_user_course.is_student?
       redirect_to course_assessment_trainings_path
       return
     end
+    @assessment = @training.assessment
+    @summary = {}
+    super
 
-    @steps = @training.questions
+    @summary[:allowed_questions] = [Assessment::McqQuestion, Assessment::CodingQuestion]
+    @summary[:questions] = @assessment.questions
+
+    respond_to do |format|
+      format.html { render "assessment/assessments/show" }
+    end
   end
 
   def new

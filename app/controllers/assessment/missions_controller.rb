@@ -3,26 +3,24 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   require 'zip/zipfilesystem'
 
-  def index
-    super
-    respond_to do |format|
-      format.html {render "assessment/index"}
-    end
-  end
-
   def show
-    if curr_user_course.is_student? and !@mission.can_start?(curr_user_course).first
+    if curr_user_course.is_student? and !@mission.can_start?(curr_user_course)
       redirect_to course_assessment_missions_path
       return
     end
+    @assessment = @mission.assessment
+    @summary = {}
+    super
+
+    @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion]
 
     @questions = @mission.questions
     @question = Assessment::GeneralQuestion.new
     @question.max_grade = 10
     @coding_question = Assessment::CodingQuestion.new
     @coding_question.max_grade = 10
-    respond_to   do |format|
-      format.html # show.html.erb
+    respond_to do |format|
+      format.html { render "assessment/assessments/show" }
     end
   end
 
