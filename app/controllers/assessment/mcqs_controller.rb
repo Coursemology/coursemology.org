@@ -34,14 +34,10 @@ class Assessment::McqsController < Assessment::QuestionsController
   end
 
   def create
-    @question.creator = current_user
-    qa = @assessment.question_assessments.new
-    qa.question = @question.question
-    @question.question.position = @assessment.questions.count
-
     # update max grade of the asm it belongs to
+    saved = super
     respond_to do |format|
-      if @question.save && qa.save
+      if saved
         update_answers(@question)
         @assessment.update_grade
         if @assessment.as_assessment.is_a?(Assessment::Training)

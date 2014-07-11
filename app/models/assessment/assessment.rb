@@ -31,6 +31,7 @@ class Assessment < ActiveRecord::Base
   belongs_to  :creator, class_name: "User"
 
   has_many  :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
+
   has_many :as_asm_reqs, class_name: RequirableRequirement, as: :requirable, dependent: :destroy
   has_many :as_requirements, through: :as_asm_reqs
 
@@ -45,7 +46,11 @@ class Assessment < ActiveRecord::Base
     end
 
     def before(question)
-      where(pos: ['< ?', question.pos])
+      before_pos(question.position)
+    end
+
+    def before_pos(position)
+      where('position < ?', position)
     end
   end
 
@@ -89,6 +94,10 @@ class Assessment < ActiveRecord::Base
 
   def opened?
     open_at <= Time.now
+  end
+
+  def is_mission?
+    as_assessment_type == "Assessment::Mission"
   end
 
   def get_path
@@ -212,6 +221,10 @@ class Assessment < ActiveRecord::Base
       end
     end
     clone
+  end
+
+  def mark_refresh_autograding
+    #TODO
   end
 
 end

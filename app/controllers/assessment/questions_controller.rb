@@ -3,6 +3,14 @@ class Assessment::QuestionsController < ApplicationController
   load_resource :assessment, through: :course
   before_filter :load_general_course_data, only: [:show, :new, :edit]
 
+  def create
+    @question.creator = current_user
+    qa = @assessment.question_assessments.new
+    qa.question = @question.question
+    @question.question.position = @assessment.questions.count
+    @question.save && qa.save
+  end
+
   protected
 
   def build_resource(resource)

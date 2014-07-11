@@ -1,16 +1,18 @@
 var path = function(){
     var saving = false;
     var cStep = null;
+    var tPubic = 'public';
+    var tPrivate = 'private';
+    var tEval = 'eval';
+    var $dataInput = null;
 
     function addslashes(str){
         return (str + '').replace(/[\"]/g, '&quot;');
     }
-    function _appendTest(testType, test_count, expression, expected, hint){
-        $("#"+testType+"_test_tbody").append('<tr testNo="'+test_count+'">' +
-            '<td><input type="text" value="'+addslashes(expression)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expression\', this.value)" /></td>'+
-            '<td style="border-left: 0"><input type="text" value="'+addslashes(expected)+'" onchange="path.updateTest(\''+testType+'\', this.parentNode.parentNode.getAttribute(\'testNo\'), \'expected\', this.value)" /></td>'+
-            '<td><a  title="Delete this test" class = "btn btn-danger" onclick="path.deleteTest(this.parentNode.parentNode, \''+testType+'\')"><i class="icon-trash"></i></a></td></tr>' +
-            (testType == 'private' ? '<tr><td colspan="2" style="border-top: 0">Hint: <textarea style="width: 98%;" rows="2" onchange="path.updateTest(\''+testType+'\',' + test_count + ', \'hint\', this.value)">' + addslashes(hint) + '</textarea></td><td style="border-top: 0"></td></tr>' : ''));
+    function _appendTest(tcDetails){
+        $("#{0}_test_tbody".format(tcDetails.tType)).append($.tmpl("testcase_row",tcDetails));
+        $(".eval_expression, .expected_output, .fail_hint").unbind().change(function() {path.updateTest($(this))});
+        $(".delete_test").unbind().click(function() {path.deleteTest(($(this)))});
     }
 
     /** data types **/
@@ -26,26 +28,23 @@ var path = function(){
     return {
         data: {
             type: "do",
-            language: "python",
-            timeLimitInSec: "1",
-            memoryLimitInMB: "2",
-            testLimit: "3",
-            included: "",
             prefill: "",
-            privateTests: new Array(),
-            publicTests: new Array(),
-            evalTests: new Array()
+            included: "",
+            private: [],
+            public: [],
+            eval: []
         },
 
-        savePath: function(){
+        saveQuestion: function(){
             saving = true;
-            $("#coding_question_data").val(JSON.stringify(path.data));
+            $dataInput.val(JSON.stringify(path.data));
         },
         initialize: function() {
-            $("#savePath").click(path.savePath);
+            $("#saveCQ").click(path.saveQuestion);
             cStep = path.data;
-            if( $("#coding_question_data").val() != "") {
-                path.data =  JSON.parse($("#coding_question_data").val());
+            $dataInput = $("#coding_question_data");
+            if( $dataInput.val() != "") {
+                path.data =  JSON.parse($dataInput.val());
                 path.loadStep();
             }
         },
@@ -64,75 +63,68 @@ var path = function(){
         changeIncluded: function(val){
             cStep.included = val;
         },
-        changeMemoryLimit:function(val){
-            cStep.memoryLimitInMB = val;
-        },
-        changeTimeLimit: function(val){
-            cStep.timeLimitInSec = val;
-        },
-
-        changeTestLimit: function(val){
-            cStep.testLimit = val;
-        },
-
         /** tests **/
         addTest: function(testType){
-            var test_count = null;
             var ci = cStep;
-            if(testType=="public"){
-                ci.publicTests.push(_newTest());
-                test_count = ci.publicTests.length;
-            }else if (testType == 'private'){
-                ci.privateTests.push(_newTest());
-                test_count = ci.privateTests.length;
-            } else {
-                ci.evalTests.push(_newTest());
-                test_count = ci.evalTests.length;
-            }
+            var tNo = ci[testType].length;
+            ci[testType].push(_newTest());
 
-            _appendTest(testType, test_count, "", "","");
+            _appendTest({
+                tNo:tNo,
+                tType: testType,
+                expression: "",
+                expected: "",
+                fail_hint: "",
+                has_hint: testType == tPrivate
+            });
         },
-        updateTest: function(testType, testCount, expr, value){
-            testCount--;
-            eval('cStep.'+testType+'Tests['+testCount+'].'+expr+' = value');
+
+        updateTest: function($ele){
+            var $tr = $ele.parents(".test_case");
+            var c = $tr.attr("data-test-no") - 0;
+            var $eo = $tr.find(".expected_output");
+            var $ep = $tr.find(".eval_expression");
+            var $hint = $tr.find(".fail_hint");
+
+            cStep[$tr.attr("data-test-type")][c] = {
+                expression: $ep.val(),
+                expected: $eo.val(),
+                hint: $hint.val()
+            };
         },
-        deleteTest: function(testDiv, testType){
-            var i = $(testDiv).attr("testNo");
-            if (testType == 'private')
-                $(testDiv).next().remove();
-            $(testDiv).remove();
-            eval('cStep.'+testType+'Tests.splice(i-1,1)');
+
+        deleteTest: function($del){
+            var $tr = $del.parents(".test_case");
+            var c = $tr.attr("data-test-no") - 0;
+            var testType = $tr.attr("data-test-type");
+            cStep[testType].splice(c, 1);
+            $tr.remove();
             $("#"+testType+"_test_tbody").children().each(function(index, e){
-                $(e).attr("testNo", index+1);
+                $(e).attr("data-test-no", index);
             });
         } ,
         loadStep:function(){
             cStep = path.data;
-//            path.changeLang(cStep.language);
 
-            $("#timeLimit").attr("value", cStep.timeLimitInSec);
-            $("#memoryLimit").attr("value", cStep.memoryLimitInMB);
-            $("#testLimit").val(cStep.testLimit);
             $("#public_test_tbody").html("");
             $("#private_test_tbody").html("");
             $("#eval_test_tbody").html("");
-            if(cStep.privateTests) {
-                for(var i = 0 ; i < cStep.privateTests.length; i++){
-                    _appendTest("private" +
-                        "",i+1, cStep.privateTests[i].expression, cStep.privateTests[i].expected, cStep.privateTests[i].hint || "" );
+            var i = 0;
+            var testTypes = [tPubic, tPrivate, tEval];
+
+            for (var tt in testTypes) {
+                var tType = testTypes[tt];
+                if(cStep[tType]) {
+                    for(i = 0 ; i < cStep[tType].length; i++){
+                        var tcDetail = cStep[tType][i];
+                        tcDetail["tNo"] = i;
+                        tcDetail["tType"] = tType;
+                        tcDetail["has_hint"] = tType == tPrivate;
+                        _appendTest(tcDetail);
+                    }
                 }
             }
 
-            if(cStep.publicTests) {
-                for(var i = 0 ; i < cStep.publicTests.length; i++){
-                    _appendTest("public",i+1, cStep.publicTests[i].expression, cStep.publicTests[i].expected, cStep.publicTests[i].hint || "" );
-                }
-            }
-            if(cStep.evalTests) {
-                for(var i = 0 ; i < (cStep.evalTests ? cStep.evalTests.length : 0); i++){
-                    _appendTest('eval', i + 1, cStep.evalTests[i].expression, cStep.evalTests[i].expected, cStep.evalTests[i].hint || "" );
-                }
-            }
             cmPrefill.setValue(cStep.prefill);
             if(cStep.included == null) cStep.included = "";
             cmIncluded.setValue(cStep.included);

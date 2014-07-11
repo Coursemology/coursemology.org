@@ -21,6 +21,7 @@
 //= require angular-ui-sortable-rails
 //= require jquery.validate
 //= require jquery.validate.additional-methods
+//= require jquery-tmpl
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -49,6 +50,7 @@
 //= require cocoon
 //
 //= require_self
+//= require_tree ./templates
 //= require_tree .
 
 $(document).ready(function() {
@@ -404,4 +406,16 @@ function event_log(category, label, action, push){
     if(typeof push != 'undefined' && push) {
         _gaq.push(['_trackEvent',category, action, label]);
     }
+}
+
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
 }

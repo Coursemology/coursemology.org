@@ -1,92 +1,46 @@
-<%= form_for [@course, @assessment, @question], html: { class: 'form-horizontal coding-question-form' } do |f| %>
+<%= simple_form_for [@course, @assessment, @question],
+                    html: { class: 'form-horizontal'}  do |f| %>
+
+    <%= f.input :title %>
+    <%= f.association :language, label_method: :name, value_method: :id, include_blank: false %>
+    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}  %>
+    <%= f.association :dependent_on,
+                      collection: @assessment.questions.coding.before_pos(@question.position || @assessment.questions.count),
+                      label_method: :title, value_method: :id,
+                      include_blank: true, hint: "Include student solution from this question" %>
+
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <% if @question.persisted? %>
+        <div class="control-group">
+          <h3>Comments (staff only)</h3>
+          <% require 'digest/md5' %>
+          <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
+          <div>
+            <%= render partial: "comments/list",
+                       locals: { comments:  CommentTopic.comments_to_json(@question.question.comment_topic, curr_user_course),
+                                 target:    @question,
+                                 header:    'Comments',
+                                 ecid:      ecid
+                       } %>
+          </div>
+        </div>
+    <% end %>
+
+    <% if @assessment.is_mission? %>
+        <%= f.input :auto_graded, as: :boolean, inline_label: "Check to enable auto-grading" %>
+    <% end %>
+
+    <h3>Options</h3>
+
+    <%= f.input :memory_limit,label: "Memory Limit (MB)", as: :integer, input_html: {class: "number_field input-mini"}  %>
+    <%= f.input :time_limit,label: "Time Limit (secs)", as: :integer, input_html: {class: "number_field input-mini"}  %>
+
+    <% if @assessment.is_mission? %>
+        <%= f.input :test_limit,label: "Test Limit (times)", as: :integer, input_html: {class: "number_field input-mini"}  %>
+    <% end %>
+
     <div id="pathstep_content">
-      <div class="control-group">
-        <%= f.label :title, class: 'control-label' %>
-        <div class="controls">
-          <%= f.text_field :title, class: 'text_field' %>
-        </div>
-      </div>
-      <div class="control-group">
-        <%= f.label :language, class: 'control-label' %>
-        <div class="controls">
-          <%= f.select :language_id, ProgrammingLanguage.all.map {|l| [l.name, l.id]} , class: 'lang' %>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <%= f.label :max_grade, class: 'control-label' %>
-        <div class="controls">
-          <%= f.number_field :max_grade, class: 'number_field' %>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <%= f.label :dependent_id, class: 'control-label' %>
-        <div class="controls">
-          <%- questions = if @question.new_record?
-                            @assessment.questions.coding - [@question]
-                          else
-                            @assessment.questions.coding.before(@question) - [@question]
-                          end
-              questions = questions.map { |q| [q.specific.title, q.id] }
-          %>
-          <%= f.select :dependent_id, questions, class: 'select', include_blank: true %>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <%= f.label :description, class: 'control-label' %>
-        <div class="controls">
-          <%= f.text_area :description, class:'text_area span7 html-editor',:rows => 10 %>
-        </div>
-      </div>
-
-      <% if @question.persisted? %>
-          <div class="control-group">
-            <h3>Comments (staff only)</h3>
-            <% require 'digest/md5' %>
-            <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
-            <input type="hidden" id="question_url_<%= ecid %>" value="<%= url_for([@course, @assessment, @submission]) %>">
-            <div>
-              <%= render partial: "comments/list",
-                         locals: { comments:  CommentTopic.comments_to_json(@question.comment_topic, curr_user_course),
-                                   target:    @question,
-                                   header:    'Comments',
-                                   ecid:      ecid
-                         } %>
-            </div>
-          </div>
-      <% end %>
-
       <div class="cos_code path-code" id="path_dooptions">
-        <h3>Options</h3>
-        <div class="control-group">
-          <%= f.label :title,"Step Name", :class => 'control-label' %>
-          <div class="controls">
-            <%= f.text_field :title, :class => 'text_field' %>
-          </div>
-        </div>
-        <div class="control-group">
-          <%= f.label :auto_graded, class: 'control-label' %>
-          <div class="controls">
-            <%= f.check_box :auto_graded, class: 'checkbox' %>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :memory_limit, 'Memory Limit (MB)', class: 'control-label' %>
-          <div class="controls">
-            <%= f.number_field :memory_limit, class: 'number_field' %>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <%= f.label :test_limit, 'Test Limit (times)', class: 'control-label' %>
-          <div class="controls">
-            <%= f.number_field :test_limit, class: 'number_field' %>
-          </div>
-        </div>
-
         <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
         <div>Included code (optional, hidden):</div><textarea  rows="2" id="included"></textarea> <br />
       </div>
@@ -95,7 +49,7 @@
         <h3>Test Cases</h3>
         <p><strong>NOTE:</strong> The expression in the <strong>'CODE TO RUN'</strong> column will be compared with the expression in the <strong>'EXPECTED OUTOUT'</strong> column using the equality operator. The return value of <code>print()</code> is <code>None</code> and the printed output should not be confused with the return value. </p>
         <div id="public_tests">
-          Public Tests: <input type="button" id="add-public-test"  class="btn btn-info pull-right" value="Add New Test"  />
+          Public Tests: <input type="button" id="add-public-test"  class="btn btn-info pull-right" value="Add New Test"  onclick="path.addTest('public');"  />
           <table id="public_test" class="table table-bordered test_table">
             <thead>
             <tr>
@@ -114,7 +68,7 @@
           </table>
         </div>
         <div id="private_tests">
-          Private Tests: <input type="button" id="add-private-test" class="btn btn-info pull-right" value="Add New Test" />
+          Private Tests: <input type="button" id="add-private-test" class="btn btn-info pull-right" value="Add New Test" onclick="path.addTest('private');" />
           <table id="private_test" class="table table-bordered test_table">
             <thead>
             <tr>
@@ -123,6 +77,9 @@
               </th>
               <th>
                 Expected Output
+              </th>
+              <th>
+                Hint
               </th>
               <th class="test-delete-col">
               </th>
@@ -135,26 +92,8 @@
       </div>
     </div>
 
-    <%= f.hidden_field :data %>
-    <div class="form-actions">
-      <%= f.submit nil, :class => 'btn btn-primary', id: 'savePath' %>
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  url_for([@course, @assessment]), :class => 'btn' %>
-    </div>
-    </div>
+    <%= f.hidden_field :data, id: "coding_question_data" %>
+    <%= f.button :form_submit, id:"saveCQ", cancel: :back %>
+    <%= render :partial => "layouts/html_editor" %>
 <% end %>
-<%= render :partial => "layouts/html_editor" %>
 
-<script type="text/x-tmpl" id="coding-question-form-test-case">
-<tr class="test_case" data-test-no="{%= o.test_count %}">
-  <td>
-    <input type="text" class="code_to_run" value="{%= o.expression %}" data-test-type="{%= o.testType %}" />
-  </td>
-  <td>
-    <input type="text" class="expected_output" value="{%= o.expected %}" data-test-type="{%= o.testType %}" />
-  </td>
-  <td>
-    <a title="Delete this test" class="btn btn-danger delete_test" data-test-type="{%= o.testType %}"><i class="icon-trash"></i></a>
-  </td>
-</tr>
-</script>
