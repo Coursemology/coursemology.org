@@ -66,7 +66,22 @@ JfdiAcademy::Application.routes.draw do
         get 'show', to: 'assessments#show'
         get 'stats'
       end
-      resources :assessment_submissions, path: 'submissions', controller: :submissions, except: [:create] do
+      resources :assessment_mcq_questions,
+                path:       :mcqs,
+                controller: :mcqs
+
+      resources :assessment_coding_questions,
+                path:       :coding_questions,
+                controller: :coding_questions
+
+      resources :assessment_general_questions,
+                path:       :general_questions,
+                controller: :general_questions
+
+      resources :assessment_submissions,
+                path:       :submissions,
+                controller: :submissions,
+                except: [:create] do
         # post 'unsubmit' => 'mission_submissions#unsubmit'
         # post 'test' => 'mission_submissions#test_answer'
         #
@@ -76,8 +91,9 @@ JfdiAcademy::Application.routes.draw do
     end
 
     resources :assessment_missions, path: 'missions', controller: :missions, module: :assessment do
-      resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
-      resources :assessment_general_questions, path: :general_questions, controller: :general_questions
+      collection do
+        get :index, to: 'assessments#index', type: 'mission'
+      end
 
       get 'overview' => 'missions#overview', on: :collection
       post 'bulk_update' => 'missions#bulk_update'
@@ -97,9 +113,9 @@ JfdiAcademy::Application.routes.draw do
       post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
     end
     resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
-      resources :mcqs
-      resources :coding_questions
-      resources :training_submissions
+      collection do
+        get :index, to: 'assessments#index', type: 'training'
+      end
       post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
 
       resources :asm_qns do
