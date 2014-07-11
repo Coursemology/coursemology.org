@@ -27,26 +27,4 @@ class Assessment::GeneralQuestionsController < Assessment::QuestionsController
       end
     end
   end
-
-private
-  def load_resources
-    if params[:assessment_mission_id]
-      @mission = Assessment::Mission.find(params[:assessment_mission_id])
-    elsif params[:assessment_training_id]
-      @training = Assessment::Training.find(params[:assessment_training_id])
-    end
-    @assessment = @mission || @training
-    authorize! params[:action].to_sym, @assessment
-
-    @question = case params[:action]
-                  when 'new'
-                    Assessment::GeneralQuestion.new
-                  when 'create'
-                    q = Assessment::GeneralQuestion.new
-                    q.attributes = params[:assessment_general_question]
-                    q
-                  else
-                    Assessment::GeneralQuestion.find_by_id!(params[:id]  || params[:assessment_text_question_id])
-                end
-  end
 end
