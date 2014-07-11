@@ -1,0 +1,235 @@
+<!--Move to controller-->
+<% if @assessment_type == 'training' %>
+    <% ast_edit_path = lambda {|a| edit_course_assessment_training_path(@course, a)} %>
+    <% ast_path = lambda {|a| course_assessment_training_path(@course, a) } %>
+<% else %>
+    <% ast_edit_path = lambda {|a| edit_course_assessment_mission_path(@course, a)} %>
+    <% ast_path = lambda {|a| course_assessment_mission_path(@course, a) } %>
+<% end %>
+
+<%- display_name = @course.customized_title(@assessment_type).singularize -%>
+<div class="page-header">
+  <h1> <%= @assessment.title %></h1>
+</div>
+
+<% if can? :manage, Assessment %>
+    <div style="float: right">
+      <%= link_to ast_edit_path.call(@assessment.as_assessment), class: "btn btn-large-icon" do %>
+          <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to ast_path.call(@assessment.as_assessment),
+                  class: "btn btn-danger btn-large-icon",
+                  method: "DELETE",
+                  data: { confirm: t('.confirm',
+                                     default: t("helpers.links.confirm",
+                                                default: "Are you sure to delete #{@assessment_type} '#{@assessment.title}'?")) } do %>
+          <i class="icon-trash"></i>
+      <% end %>
+    </div>
+<% end %>
+
+<h2 class="assignments-description-title"><%= display_name %> Description</h2>
+
+<table class="table-top-align">
+  <tr>
+    <td>
+      <div class="pull-left">
+        <p><%= style_format(@assessment.description) %></p>
+        <%= render partial: "assessment/#{@assessment_type.pluralize}/details", locals: {ast: @assessment } %>
+      </div>
+    </td>
+
+    <% if can? :manage, Assessment::Submission %>
+        <td>
+          <%= render partial: "assessment/#{@assessment_type.pluralize}/action", locals: {ast: @assessment} %>
+        </td>
+    <% end %>
+
+  </tr>
+</table>
+
+<% if @assessment.dependent_by.count > 0 %>
+    <h3>Finish to unlock:</h3>
+    <ul>
+      <% @assessment.dependent_by.each do |ast| %>
+          <h4><li><%= ast.title %></li></h4>
+      <% end %>
+    </ul>
+<% end %>
+
+<%= render partial: "file_uploads/download_files",
+           locals: { owner: @assessment }%>
+
+
+<hr/>
+
+<% if can? :manage, @assessment %>
+    <% if @summary[:allowed_questions].include? Assessment::McqQuestion %>
+        <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
+                    new_course_assessment_assessment_mcq_question_path(@course, @assessment),
+                    :class => 'btn btn-primary' %>
+    <% end %>
+
+    <% if @summary[:allowed_questions].include? Assessment::GeneralQuestion %>
+        <%= link_to t('.new', :default => t("helpers.links.new_qn")),
+                    new_course_assessment_assessment_general_question_path(@course, @assessment),
+                    :class => 'btn btn-primary' %>
+    <% end %>
+
+    <% if @summary[:allowed_questions].include? Assessment::CodingQuestion %>
+        <%= link_to t('.new', :default => t("helpers.links.new_cq")),
+                    new_course_assessment_assessment_coding_question_path(@course, @assessment),
+                    :class => 'btn btn-primary' %>
+    <% end %>
+<% end %>
+
+<% if can? :view_detail, @assessment %>
+    <h2 class="asm-qns-title"><%= display_name %> Questions</h2>
+    <table class="table asm-qns-table sort">
+      <tbody class="asm-qns" url="<%= reorder_course_assessment_training_asm_qns_path(@course, @training) %>">
+      <% @summary[:questions].each_with_index do |q, index| %>
+          <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
+            <td>
+              <div id="<%= q.class.to_s %>-description-<%= q.id %>">
+                <div class="asm-qn-handler">
+                  <i class="icon-move handler-icon"></i>
+                  <h3 class="handler-text">Question <%= index + 1 %>
+                    <% if q.class == CodingQuestion %>
+                        <% unless q.title.to_s.strip.empty? %>
+                            : <%=q.title %>
+                        <% end %>
+                    <% end %>
+                  </h3>
+                </div>
+
+                <% if q.class == Mcq %>
+                    <%= render partial: "mcqs/one", locals: { q: q } %>
+                <% elsif q.class == CodingQuestion %>
+                    <%= render partial: "coding_questions/one", locals: { q: q } %>
+                <% end %>
+              </div>
+            </td>
+            <% if can? :manage, Assessment::Training %>
+                <td class="action-there-icons">
+                  <div class="btn-group">
+                    <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s %>" qn-id="<%= q.id %>">
+                      <i class="icon-copy"></i>
+                    </a>
+                    <% if q.as_question.class == Assessment::McqQuestion %>
+                        <%= link_to edit_course_assessment_assessment_mcq_question_path(@course, @assessment, q.as_question), class: 'btn' do %>
+                            <i class="icon-edit"></i>
+                        <% end %>
+                        <%= link_to course_assessment_assessment_mcq_question_path(@course, @assessment, q.as_question),
+                                    method: :delete,
+                                    data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                                    class: 'btn btn-danger' do %>
+                            <i class="icon-trash"></i>
+                        <% end %>
+                    <% elsif q.class == CodingQuestion %>
+                        <%= link_to edit_course_assessment_training_coding_question_path(@course, @training, q.as_question), class: 'btn' do %>
+                            <i class="icon-edit"></i>
+                        <% end %>
+                        <%= link_to course_assessment_training_coding_question_path(@course, @training, q),
+                                    method: :delete,
+                                    data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                                    class: 'btn btn-danger' do %>
+                            <i class="icon-trash"></i>
+                        <% end %>
+                    <% end %>
+                  </div>
+                </td>
+            <% end %>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
+
+<div class="modal hide fade" id="copy_question"  tabindex='-1'>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Question Duplication</h3>
+  </div>
+  <div class="modal-body form-horizontal">
+    <div class="alert alert-success success-message hidden">
+      Duplicated Successfully!
+    </div>
+    <div class="qn-dup-action-div">
+      Duplicate To:
+      <select id="select-training">
+        <%= @course.trainings.each do |asm| %>
+            <option value="<%= asm.id %>"><%= asm.title %></option>
+        <% end %>
+      </select>
+    <span class="checkbox-text" style="padding-left: 15px;">
+      <input type="checkbox" id="move-checkbox">
+      <label>Delete current one</label>
+    </span>
+    <span style="padding-left: 15px; display: block; text-align: center; padding-top: 10px">
+      <input type="button" value="Copy" class="btn btn-primary" id="do-copy-btn" url="<%= course_assessment_trainings_duplicate_qn_path(@course) %>">
+    </span>
+      <input type="hidden" id="qn-type">
+      <input type="hidden" id="qn-id">
+    </div>
+
+    <div id="qn-details" class="qn-detail-div">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+
+        $("#move-checkbox").change(function(){
+            $("#do-copy-btn").val( $(this).is(':checked') ? 'Move' : 'Copy');
+        });
+
+        $(".copy-btn").click(function(e){
+            $("#move-checkbox").attr('checked', false);
+            $("#do-copy-btn").val('Copy');
+            $("#qn-type").val($(this).attr('qn-type'));
+            $("#qn-id").val($(this).attr('qn-id'));
+            $("#qn-details").html($("#" + $(this).attr('qn-type') + "-description-" + $(this).attr('qn-id')).html());
+            $("#copy_question").modal('show');
+        });
+
+        $("#do-copy-btn").click(function(){
+            var self = this;
+            $(self).attr("disabled",true);
+            $(self).val('Processing...');
+            var is_move = $("#move-checkbox").is(':checked');
+            var qn_type = $("#qn-type").val();
+            var qn_id = $("#qn-id").val();
+            var url = $(this).attr('url');
+            var notice = $('.success-message');
+
+            $.post(url, {
+                        qtype: qn_type,
+                        qid: qn_id,
+                        move: is_move,
+                        to: $("#select-training").val()
+                    },
+                    function(s){
+                        notice.slideDown();
+                        notice._removeClass('hidden');
+
+                        notice.slideDown(function(){
+                            $(self).val('Done');
+                            setTimeout(function(){
+                                notice.slideUp();
+                                $(self).attr("disabled",false);
+                                notice.addClass('hidden');
+                                $("#copy_question").modal('hide');
+                            },1000);
+                        });
+                        if (is_move) {
+                            location.reload();
+                        }
+                    })
+        });
+    });
+</script>
