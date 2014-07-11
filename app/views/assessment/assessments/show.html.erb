@@ -91,22 +91,18 @@
          <% q = qn.as_question %>
           <tr class="asm-qn" id="sortable-item_<%= qn.id %>" >
             <td>
-              <div id="<%= q.class.to_s %>-description-<%= q.id %>">
+              <div>
                 <div class="asm-qn-handler">
                   <i class="icon-move handler-icon"></i>
                   <h3 class="handler-text">Question <span class="asm-qn-index"><%= index + 1 %></span>
-                    <% if q.class == Assessment::CodingQuestion %>
-                        <% unless q.title.to_s.strip.empty? %>
-                            : <%=q.title %>
-                        <% end %>
-                    <% end %>
+                    <%= ": #{q.title}" if !q.title.nil? and !q.title.empty? %>
                   </h3>
                 </div>
 
                 <% if q.class == Assessment::McqQuestion %>
                     <%= render partial: "assessment/mcqs/one", locals: { q: q } %>
-                <% elsif q.class == Assessment::CodingQuestion %>
-                    <%= render partial: "assessment/coding_questions/one", locals: { q: q } %>
+                <% else %>
+                    <%= style_format(q.description) %>
                 <% end %>
               </div>
             </td>
@@ -116,27 +112,17 @@
                     <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s %>" qn-id="<%= q.id %>">
                       <i class="icon-copy"></i>
                     </a>
-                    <% if q.class == Assessment::McqQuestion %>
-                        <%= link_to edit_course_assessment_assessment_mcq_question_path(@course, @assessment, q), class: 'btn' do %>
-                            <i class="icon-edit"></i>
-                        <% end %>
-                        <%= link_to course_assessment_assessment_mcq_question_path(@course, @assessment, q),
-                                    method: :delete,
-                                    data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                                    class: 'btn btn-danger' do %>
-                            <i class="icon-trash"></i>
-                        <% end %>
-                    <% elsif q.class == Assessment::CodingQuestion %>
-                        <%= link_to edit_course_assessment_assessment_coding_question_path(@course, @assessment, q), class: 'btn' do %>
-                            <i class="icon-edit"></i>
-                        <% end %>
-                        <%= link_to course_assessment_assessment_coding_question_path(@course, @assessment, q),
-                                    method: :delete,
-                                    data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                                    class: 'btn btn-danger' do %>
-                            <i class="icon-trash"></i>
-                        <% end %>
+
+                    <%= link_to polymorphic_path([@course, @assessment, q], action: :edit), class: 'btn' do %>
+                        <i class="icon-edit"></i>
                     <% end %>
+                    <%= link_to url_for([@course, @assessment, q]),
+                                method: :delete,
+                                data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete 'Question #{q.title}'?")) },
+                                class: 'btn btn-danger' do %>
+                        <i class="icon-trash"></i>
+                    <% end %>
+
                   </div>
                 </td>
             <% end %>
