@@ -1,7 +1,5 @@
-<%- model_class = Question -%>
 <%- title = 'Question' -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
-                                 :default => "New #{title}") %></h1>
+  <h1><%=t '.title', :default => t('helpers.titles.new', :default => "New #{title}") %></h1>
 </div>
 <%= render :partial => 'form' %>

@@ -1,7 +1,5 @@
-<%- model_class = Assessment::TextQuestion -%>
 <%- title = 'Question' -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
-                                 :default => "Edit #{title}") %></h1>
+  <h1><%=t '.title', :default => t('helpers.titles.edit', :default => "Edit #{title}") %></h1>
 </div>
 <%= render :partial => 'form' %>

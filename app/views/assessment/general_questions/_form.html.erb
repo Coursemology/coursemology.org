@@ -1,28 +1,9 @@
-<%= form_for [@course, @mission, @question], :html => { :class => 'form-horizontal' } do |f| %>
-    <div class="control-group">
-      <%= f.label :title, class: "control-label" %>
-      <div class="controls">
-        <%= f.text_field :title, class: "text_field span7" %>
-      </div>
-    </div>
+<%= simple_form_for [@course, @assessment, @question],
+                    html: { :class => 'form-horizontal' } do |f| %>
+    <%= f.input :title %>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
 
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, :class => 'text_area span7 html-editor', :rows => 10 %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :max_grade, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.number_field :max_grade, :class => 'number_field' %>
-    </div>
-  </div>
-  <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                course_assessment_mission_path(@course, @mission), :class => 'btn' %>
-  </div>
-
+    <%= f.button :form_submit, cancel: :back %>
   <%= render :partial => "layouts/html_editor" %>
 <% end %>
