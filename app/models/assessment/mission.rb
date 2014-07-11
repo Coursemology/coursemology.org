@@ -12,9 +12,9 @@ class Assessment::Mission < ActiveRecord::Base
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
-  belongs_to  :dependent_on, class_name: "Assessment::Mission", foreign_key: "dependent_id"
-  has_many    :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
   belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
+
+  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
 
   # has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
   # has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
@@ -39,12 +39,12 @@ class Assessment::Mission < ActiveRecord::Base
       return  false
     end
     if dependent_on
-      sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
+      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
       if !sbm || sbm.attempting?
-        return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
+        return false
       end
     end
-    return true, ""
+    true
   end
 
   # Converts this mission into a format that can be used by the lesson plan component

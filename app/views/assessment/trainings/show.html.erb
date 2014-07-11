@@ -36,14 +36,14 @@
       </div>
     </td>
 
-    <% if can? :manage, TrainingSubmission %>
+    <% if can? :manage, Assessment::Submission %>
         <td>
           <%= render partial: "action", locals: {training: @training} %>
         </td>
     <% end %>
 
-    <% if can? :manage, Training %>
-        <td>
+    <% if can? :manage, Assessment::Training %>
+        <td>                                                  Í
           <%= link_to edit_course_assessment_training_path(@course, @training), class: "btn" do %>
               <i class="icon-edit"></i>
           <% end %>

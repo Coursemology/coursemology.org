@@ -1,0 +1,19 @@
+<%- model_class = Assessment::Mission %>
+<table class="table table-bordered assignments-details-table">
+  <tr>
+    <td><%= model_class.human_attribute_name(:exp) %>:</td>
+    <td><%= ast.exp %></td>
+  </tr>
+  <tr>
+    <td><%= model_class.human_attribute_name(:max_grade) %>:</td>
+    <td><%= ast.max_grade %></td>
+  </tr>
+  <tr>
+    <td><%= model_class.human_attribute_name(:open_at) %>:</td>
+    <td><%= datetime_format(ast.open_at) %></td>
+  </tr>
+  <tr>
+    <td><%= model_class.human_attribute_name(:close_at) %>:</td>
+    <td><%= datetime_format(ast.close_at) %></td>
+  </tr>
+</table>

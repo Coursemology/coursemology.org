@@ -1,0 +1,24 @@
+<%- model_class = Assessment::Training -%>
+<table class="table table-bordered assignments-details-table">
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= ast.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:max_grade) %>:</strong></td>
+    <td><%= ast.max_grade %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= datetime_format(ast.open_at) %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:bonus_exp)%>:</strong></td>
+    <td><%= ast.bonus_exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:bonus_cutoff) %></strong></td>
+    <td><%= datetime_format(ast.bonus_cutoff_at || ast.open_at) %></td>
+  </tr>
+
+</table>

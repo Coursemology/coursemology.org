@@ -9,7 +9,11 @@ class Assessment < ActiveRecord::Base
   attr_accessible   :title, :description, :tab_id
   attr_accessible   :published
 
-  delegate :dependent_id, :close_at, :bonus_exp, :bonus_cutoff_at, to: :as_assessment
+  #mission
+  delegate :dependent_id, :close_at, :can_start?, to: :as_assessment
+
+  #training
+  delegate :bonus_exp, :bonus_cutoff_at, to: :as_assessment
 
   include HasRequirement
   include ActivityObject
@@ -26,6 +30,7 @@ class Assessment < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
 
+  has_many  :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
   has_many :as_asm_reqs, class_name: RequirableRequirement, as: :requirable, dependent: :destroy
   has_many :as_requirements, through: :as_asm_reqs
 
@@ -35,13 +40,24 @@ class Assessment < ActiveRecord::Base
       where(as_question_type: Assessment::CodingQuestion)
     end
 
+    def mcq
+      where(as_question_type: Assessment::McqQuestion)
+    end
+
     def before(question)
       where(pos: ['< ?', question.pos])
     end
   end
 
-  has_many  :general_questions, class_name: "Assessment::GeneralQuestion", through: :questions,
+  has_many  :general_questions, class_name: "Assessment::GeneralQuestion",
+            through: :questions,
             source: :as_question, source_type: "Assessment::GeneralQuestion"
+
+  has_many  :mcqs, class_name: "Assessment::Question",
+            through: :question_assessments,
+            source: :question,
+            conditions: {as_question_type: "Assessment::McqQuestion"}
+
 
   #tags through question tags
   has_many :taggable_tags, as: :taggable, dependent: :destroy
@@ -79,6 +95,10 @@ class Assessment < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  def last_submission(user_course_id)
+    self.submissions.where(std_course_id: user_course_id).order(created_at: :desc).first
+  end
+
   def get_final_sbm_by_std(std_course_id)
     self.submissions.find_by_std_course_id(std_course_id)
   end
@@ -93,9 +113,9 @@ class Assessment < ActiveRecord::Base
   end
 
   def update_qns_pos
-    self.asm_qns.each_with_index do |asm_qn, i|
-      asm_qn.pos = i
-      asm_qn.save
+    self.questions.each_with_index do |qn, i|
+      qn.pos = i
+      qn.save
     end
   end
 

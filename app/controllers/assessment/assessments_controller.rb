@@ -3,8 +3,7 @@ class Assessment::AssessmentsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
   def index
-    controller = request.filtered_parameters["controller"].split('/').last
-    assessment_type = controller.singularize
+    assessment_type = params[:type]
     selected_tags = params[:tags]
 
     display_columns = {}
@@ -14,7 +13,7 @@ class Assessment::AssessmentsController < ApplicationController
       display_columns[cp.preferable_item.name] = cp.prefer_value
     end
 
-    @assessments = @course.assessments.send(assessment_type)
+    @assessments = @course.assessments.send(assessment_type).includes(:as_assessment)
 
     if selected_tags
       tags = Tag.find(selected_tags)
@@ -94,6 +93,19 @@ class Assessment::AssessmentsController < ApplicationController
         curr_user_course.mark_as_seen(um)
       end
     end
+  end
+
+
+  def show
+    @assessment_type = extract_type
+
+  end
+
+  private
+
+  def extract_type
+    controller = request.filtered_parameters["controller"].split('/').last
+    controller.singularize
   end
 
 end
