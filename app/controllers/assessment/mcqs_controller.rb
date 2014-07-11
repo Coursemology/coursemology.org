@@ -41,9 +41,6 @@ class Assessment::McqsController < Assessment::QuestionsController
     end
   end
 
-  def edit
-  end
-
   def update
     updated = update_answers(@question) && @question.update_attributes(params["assessment_mcq_question"])
     respond_to do |format|

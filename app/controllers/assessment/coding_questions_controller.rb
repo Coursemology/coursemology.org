@@ -16,9 +16,6 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
     end
   end
 
-  def edit
-  end
-
   def update
     @question.update_attributes(params[:assessment_coding_question])
 
