@@ -1,24 +1,11 @@
-class Assessment::GeneralQuestionsController < ApplicationController
-  load_and_authorize_resource :course
-  before_filter :load_resources
-#   load_and_authorize_resource :mission, class: "Assessment::Mission", through: :course
-#   load_and_authorize_resource :question, class: "Assessment::GeneralQuestion",  through: :mission
-#
-#   # before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
-#
-#   def new
-#     @question.max_grade = 10
-#     respond_to do |format|
-#       format.html # new.html.erb
-#       format.json { render json: @question }
-#     end
-#   end
-#
+class Assessment::GeneralQuestionsController < Assessment::QuestionsController
+  before_filter {|c| c.build_resource Assessment::GeneralQuestion}
+
   def create
     saved = super
     respond_to do |format|
       if saved
-        format.html { redirect_to url_for([@course, @assessment]),
+        format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
@@ -27,27 +14,20 @@ class Assessment::GeneralQuestionsController < ApplicationController
       end
     end
   end
-#
-#   def update
-#     respond_to do |format|
-#       if @question.update_attributes(params[:assessment_text_question]) && @question.save
-#         format.html { redirect_to course_assessment_mission_path(@course, @mission),
-#                       notice: 'Question has been updated.' }
-#         format.json { head :no_content }
-#       else
-#         format.html { render action: 'edit' }
-#         format.json { render json: @question.errors, status: :unprocessable_entity }
-#       end
-#     end
-#   end
-#
-#   def destroy
-#     @question.destroy
-#     respond_to do |format|
-#       format.html { redirect_to url_for([@course, @assessment]) }
-#     end
-#   end
-#
+
+  def update
+    respond_to do |format|
+      if @question.update_attributes(params[:assessment_general_question])
+        format.html { redirect_to url_for([@course, @assessment.as_assessment]),
+                                  notice: 'Question has been updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
 private
   def load_resources
     if params[:assessment_mission_id]

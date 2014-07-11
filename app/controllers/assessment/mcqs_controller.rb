@@ -2,14 +2,6 @@ class Assessment::McqsController < Assessment::QuestionsController
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
   before_filter {|c| c.build_resource Assessment::McqQuestion}
 
-  def new
-    @question.max_grade = 2
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @question }
-    end
-  end
-
   def update_answers(mcq)
     updated = true
     if params[:options]
@@ -39,7 +31,6 @@ class Assessment::McqsController < Assessment::QuestionsController
     respond_to do |format|
       if saved
         update_answers(@question)
-        @assessment.update_grade
         if @assessment.as_assessment.is_a?(Assessment::Training)
           format.html { redirect_to course_assessment_training_url(@course, @assessment.as_assessment),
                         notice: 'New question added.' }
@@ -66,15 +57,6 @@ class Assessment::McqsController < Assessment::QuestionsController
       else
         format.html { render action: "edit" }
       end
-    end
-  end
-
-  def destroy
-    @question.destroy
-    @assessment.update_grade
-    @assessment.update_qns_pos
-    respond_to do |format|
-      format.html { redirect_to @asm.get_path }
     end
   end
 end

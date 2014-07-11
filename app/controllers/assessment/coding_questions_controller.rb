@@ -1,13 +1,5 @@
 class Assessment::CodingQuestionsController < Assessment::QuestionsController
-  before_filter {|c| c.build_resource Assessment::CodingQuestion}
-
-  def new
-    @question.max_grade = @assessment.is_mission? ? 10 : 2
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @question }
-    end
-  end
+  before_filter {|c| c.build_resource Assessment::CodingQuestion }
 
   def create
     saved = super
@@ -38,16 +30,6 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
         format.html { render action: 'edit' }
         format.json { render json: @question.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  def destroy
-    @question.destroy
-    @assessment.update_grade
-    @assessment.update_qns_pos
-
-    respond_to do |format|
-      format.html { redirect_to url_for([@course, @assessment.as_assessment]) }
     end
   end
 end
