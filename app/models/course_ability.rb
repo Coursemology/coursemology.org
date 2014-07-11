@@ -1,4 +1,4 @@
-class CourseAbility
+class CourseAbility < Ability
   include CanCan::Ability
 
   # checkout:
@@ -13,6 +13,7 @@ class CourseAbility
         Then authorize admin(manage all)
 =end
   def initialize(user, user_course)
+    super(user)
     user ||= User.new
     user_course ||= UserCourse.new
 
@@ -54,6 +55,7 @@ class CourseAbility
       # can :bulk_update, Assessment
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      can :manage, Course
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse

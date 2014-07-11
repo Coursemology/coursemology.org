@@ -158,7 +158,7 @@ class ApplicationController < ActionController::Base
     # home
     @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course ? curr_user_course.role_id : 0}") { sidebar_general_items }
 
-    if can? :manage, Course
+    if can? :manage, @course
       @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
     end
   end
