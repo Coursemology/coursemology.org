@@ -142,6 +142,10 @@ class Course < ActiveRecord::Base
         first || (raise page + " has no paging preference")
   end
 
+  def training_reattempt
+    self.course_preferences.join_items.training.reattempt.first
+  end
+
   def mcq_auto_grader
     self.course_preferences.select { |pref| pref.preferable_item.item == "Mcq" && pref.preferable_item.item_type == "AutoGrader"}.first
   end

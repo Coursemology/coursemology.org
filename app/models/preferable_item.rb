@@ -2,7 +2,6 @@ class PreferableItem < ActiveRecord::Base
   attr_accessible :item, :item_type, :name, :default_value, :description, :default_display
 
 
-  scope :training_reattempt,      where(item: 'Training', item_type: 'Re-attempt')
   scope :student_sidebar_items,   where(item: "Sidebar", item_type: "Student")
   scope :other_sidebar_items,     where(item: "Sidebar", item_type: "Other")
   scope :email_notifications,     where(item: "Email", item_type: "Course")

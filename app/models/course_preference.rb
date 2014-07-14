@@ -4,8 +4,6 @@ class CoursePreference < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :preferable_item
 
-  scope :training_reattempt,    where(preferable_item_id: PreferableItem.training_reattempt.first)
-
   scope :join_items, -> { joins(:preferable_item) } do
     def item(item_name)
       where("preferable_items.item = ?", item_name)
@@ -33,6 +31,10 @@ class CoursePreference < ActiveRecord::Base
 
     def paging
       item('Paging')
+    end
+
+    def reattempt
+      training.item_type('Re-attempt')
     end
   end
 
