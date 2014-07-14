@@ -59,8 +59,6 @@ JfdiAcademy::Application.routes.draw do
       resources :user_achievements
     end
 
-
-
     resources :assessments, module: :assessment, only: [:show] do
       member do
         get 'show', to: 'assessments#show'
@@ -85,10 +83,11 @@ JfdiAcademy::Application.routes.draw do
                 controller: :mission_submissions,
                 except: [:create],
                 constraints: MissionConstraint do
+
         post 'unsubmit' => 'mission_submissions#unsubmit'
         post 'test' => 'mission_submissions#test_answer'
-        get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
-        post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
+
+        resources :assessment_submission_gradings, path: :gradings, controller: :submission_gradings
       end
     end
 
