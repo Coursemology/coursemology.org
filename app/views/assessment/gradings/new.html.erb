@@ -1,4 +1,5 @@
 <div class="page-header">
   <h1>Grading: <%= @assessment.title %></h1>
 </div>
-<%= render :partial => 'form' %>
+<%= render :partial => 'summary'%>
+<%= render :partial => 'form', locals: {mode: "edit"} %>
