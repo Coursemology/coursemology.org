@@ -1,14 +1,14 @@
 <% @qadata.each do |qid, qa| %>
     <hr/>
-    <% unless @mission.single_question? %>
-        <h3><%=  qa[:q].get_title(qa[:i])%></h3>
+    <% unless @assessment.single_question? %>
+        <h3><%=  qa[:q].get_title %></h3>
         <div class="row-fluid">
           <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
         </div>
     <% end %>
     <h3>Answer:</h3>
     <% if qa[:a] %>
-        <% if @mission.file_submission_only? %>
+        <% if @assessment.file_submission_only? %>
             <p style="font-style: italic">Answer is contained in the submission file(s).</p>
         <% elsif qa[:q].class == CodingQuestion %>
             <%= render partial: "submissions/do_coding",
@@ -19,13 +19,13 @@
         <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">
-                <%= qa[:a].text.html_safe %>
+                <%= qa[:a].answer.html_safe %>
               </div>
             </div>
         <% end %>
         <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
         <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_type]" value="<%= qa[:a].class.name %>">
-        <% if @mission.comment_per_qn? %>
+        <% if @assessment.comment_per_qn? %>
             <div class="row-fluid">
               <div class="span10">
                 <% require 'digest/md5' %>
@@ -41,12 +41,12 @@
             </div>
         <% end %>
         <!--show condition: new grading, review grading, update grading -->
-        <% if  !@mission.single_question? and (@submission_grading || @grading)%>
+        <% if  !@assessment.single_question? and @grading%>
             <div class="row-fluid">
               <div class="span10">
                 <div class="grading-block">
                   <% max_grade = qa[:q].max_grade  %>
-                  <% exp = (@mission.exp * (qa[:q].max_grade.to_f / @mission.max_grade.to_f)).to_i %>
+                  <% exp = (@assessment.exp * (qa[:q].max_grade.to_f / @assessment.max_grade.to_f)).to_i %>
                   <h4>Grade awarded</h4>
                   <% if mode == 'view' %>
                       <strong><%= qa[:g].grade if qa[:g] %></strong>
@@ -66,40 +66,16 @@
               </div>
             </div>
         <% end %>
-=======
-<% @submission.answers.each_with_index do |a, i| %>
-  <%- q = a.question %>
-  <%- question = q.specific %>
-  <%- answer = a.specific %>
-  <hr />
-  <% unless @mission.single_question? %>
-    <h3>Question <%= i + 1 %>:</h3>
-    <div class="row-fluid">
-      <div class="submission-question-block span10"><%= style_format(q.description) %></div>
-    </div>
-  <% end %>
-
-  <h3>Answer:</h3>
-  <% if answer %>
-    <% if question.class == Assessment::CodingQuestion %>
-      <%= render partial: 'mission_submissions/do_coding',
-                 locals: { answer:   answer,
-                           question: question,
-                           mode:     'view' } %>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
     <% else %>
-      <div class="row-fluid">
-        <div class="submission-question-block span10">
-          <%= answer.text.html_safe %>
-        </div>
-      </div>
+        <h4>No answer</h4>
     <% end %>
-
+<% end %>
+<% if @grading %>
+    <hr>
     <div class="row-fluid">
       <div class="span10">
-<<<<<<< HEAD
         <div class="grade-summary">
-          <% unless @mission.single_question? %>
+          <% unless @assessment.single_question? %>
               <table class="table table-striped">
                 <thead>
                 <tr>
@@ -123,14 +99,14 @@
           <% else %>
               <input type="number"
                      value="<%= @submission_grading.total_grade if @submission_grading %>"
-                     max="<%= @mission.max_grade %>"
+                     max="<%= @assessment.max_grade %>"
                      class="input-small"
                      name="grade_sum"
                      id="grade-sum"
-                     onchange="suggestEXP(<%= @mission.max_grade %>, <%= @mission.exp %>, true )"
-                     <%= 'disabled' unless @mission.single_question? %>>
+                     onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>, true )"
+                     <%= 'disabled' unless @assessment.single_question? %>>
           <% end %>
-          <strong> / <%= @mission.max_grade %></strong>
+          <strong> / <%= @assessment.max_grade %></strong>
           <br><br>
           <h4>EXP awarded</h4>
           <% if mode == 'view' %>
@@ -139,12 +115,12 @@
               <input type="number"
                      name="exp_sum"
                      value="<%= @submission_grading.total_exp if @submission_grading %>"
-                     max="<%= @mission.exp %>"
+                     max="<%= @assessment.exp %>"
                      class="input-small exp-input"
                      id="exp-sum"
                      required/>
           <% end %>
-          <strong> / <%= @mission.exp %></strong>
+          <strong> / <%= @assessment.exp %></strong>
           <% if mode != 'view' %>
               <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
               <input type="number"
@@ -153,54 +129,14 @@
                      class="input-mini"
                      value="1"
                      step="0.1"
-                     onchange="suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %>, true)"
+                     onchange="suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %>, true)"
               >
           <% end %>
-=======
-        <%- require 'digest/md5' %>
-        <%- ecid = Digest::MD5.hexdigest(a.class.to_s << a.id.to_s) %>
-        <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_mission_assessment_submission_url(@course, @mission, @submission) %>" />
-        <%= render partial: 'comments/list',
-                   locals: { comments:  CommentTopic.comments_to_json(a.comment_topic, curr_user_course),
-                             target:    a,
-                             header:    'Comments',
-                             ecid:      ecid } %>
-      </div>
-    </div>
-
-    <!--show condition: new grading, review grading, update grading -->
-    <% unless @mission.single_question? %>
-      <div class="row-fluid">
-        <div class="span10">
-          <div class="grading-block">
-            <%- exp = (@mission.exp * (q.max_grade.to_f / @mission.max_grade.to_f)).to_i %>
-            <%- grade = a.grading %>
-            <h4>Grade awarded</h4>
-            <% if mode == 'view' %>
-              <strong><%= grade.grade %></strong>
-            <% else %>
-              <input type="number"
-                     name="grades[<%= grade.id %>][grade]"
-                     value="<%= (params[:grades][grade.id.to_s][:grade] if params[:grades]) || grade.grade %>"
-                     class="input-small grade-input"
-                     max="<%= q.max_grade %>"
-                     id="grade-awarded-<%= grade.id %>"
-                     onchange="suggestEXP(<%= @mission.max_grade %>, <%= @mission.exp %>)"
-                     required
-              />
-            <% end %>
-            / <strong><%= q.max_grade %></strong>
-          </div>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4
         </div>
       </div>
-    <% end %>
-  <% else %>
-      <h4>No answer</h4>
-  <% end %>
+    </div>
 <% end %>
-<<<<<<< HEAD
-<% unless @mission.comment_per_qn? %>
+<% unless @assessment.comment_per_qn? %>
     <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
     <div class="row">
       <div class="span8">
@@ -213,55 +149,6 @@
       </div>
     </div>
 <% end %>
-=======
-
-<hr />
-<div class="row-fluid">
-  <div class="span10">
-    <div class="grade-summary">
-      <h4>Total Grade:</h4>
-      <% if mode == 'view' %>
-          <strong><%= @grading.total_grade %></strong>
-      <% else %>
-          <input type="number"
-                 value="<%= params[:grade_sum] || @submission.grade %>"
-                 max="<%= @mission.max_grade %>"
-                 class="input-small"
-                 name="grade_sum"
-                 id="grade-sum"
-                 onchange="suggestEXP(<%= @mission.max_grade %>, <%= @mission.exp %>, true )"
-                 <%= 'disabled' unless @mission.single_question? %>>
-      <% end %>
-      <strong> / <%= @mission.max_grade %></strong>
-      <br><br>
-      <h4>EXP awarded</h4>
-      <% if mode == 'view' %>
-          <strong><%= @grading.total_exp %></strong>
-      <% else %>
-          <input type="number"
-                 name="exp_sum"
-                 value="<%= params[:exp_sum] || @submission.exp %>"
-                 max="<%= @mission.exp %>"
-                 class="input-small exp-input"
-                 id="exp-sum"
-                 required />
-      <% end %>
-      <strong> / <%= @mission.exp %></strong>
-      <% if mode != 'view' %>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
-          <input type="number"
-                 max="1"
-                 id="exp-multiplier"
-                 class="input-mini"
-                 value="1"
-                 step="0.1"
-                 onchange="suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> )"
-          >
-      <% end %>
-    </div>
-  </div>
-</div>
-
 <script>
     function suggestEXP(max, exp, sum) {
 
