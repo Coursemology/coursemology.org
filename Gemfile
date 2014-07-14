@@ -58,7 +58,7 @@ gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
 gem 'jquery-tmpl-rails'
 gem 'devise', '3.0'
-gem 'cancan'
+gem 'cancancan', '~> 1.8'
 gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
@@ -89,7 +89,7 @@ gem 'clockwork'
 gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
-gem 'simple_form'
+gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
 gem "cocoon"
 
 # To use ActiveModel has_secure_password
