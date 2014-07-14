@@ -48,7 +48,7 @@
   </tr>
 </table>
 
-<% if @assessment.dependent_by.count > 0 %>
+<% if @assessment.required_for.count > 0 %>
     <h3>Finish to unlock:</h3>
     <ul>
       <% @assessment.dependent_by.each do |ast| %>
@@ -61,25 +61,26 @@
            locals: { owner: @assessment }%>
 
 
-<hr/>
+<% unless @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
+    <hr/>
+    <% if can? :manage, @assessment %>
+        <% if @summary[:allowed_questions].include? Assessment::McqQuestion %>
+            <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
+                        new_course_assessment_assessment_mcq_question_path(@course, @assessment),
+                        :class => 'btn btn-primary' %>
+        <% end %>
 
-<% if can? :manage, @assessment %>
-    <% if @summary[:allowed_questions].include? Assessment::McqQuestion %>
-        <%= link_to t('.new', :default => t("helpers.links.new_mcq")),
-                    new_course_assessment_assessment_mcq_question_path(@course, @assessment),
-                    :class => 'btn btn-primary' %>
-    <% end %>
+        <% if @summary[:allowed_questions].include? Assessment::GeneralQuestion %>
+            <%= link_to t('.new', :default => t("helpers.links.new_qn")),
+                        new_course_assessment_assessment_general_question_path(@course, @assessment),
+                        :class => 'btn btn-primary' %>
+        <% end %>
 
-    <% if @summary[:allowed_questions].include? Assessment::GeneralQuestion %>
-        <%= link_to t('.new', :default => t("helpers.links.new_qn")),
-                    new_course_assessment_assessment_general_question_path(@course, @assessment),
-                    :class => 'btn btn-primary' %>
-    <% end %>
-
-    <% if @summary[:allowed_questions].include? Assessment::CodingQuestion %>
-        <%= link_to t('.new', :default => t("helpers.links.new_cq")),
-                    new_course_assessment_assessment_coding_question_path(@course, @assessment),
-                    :class => 'btn btn-primary' %>
+        <% if @summary[:allowed_questions].include? Assessment::CodingQuestion %>
+            <%= link_to t('.new', :default => t("helpers.links.new_cq")),
+                        new_course_assessment_assessment_coding_question_path(@course, @assessment),
+                        :class => 'btn btn-primary' %>
+        <% end %>
     <% end %>
 <% end %>
 
@@ -88,7 +89,7 @@
     <table class="table asm-qns-table sort">
       <tbody class="asm-qns sortable-table" url="<%= reorder_course_assessment_path(@course, @assessment) %>">
       <% @summary[:questions].each_with_index do |qn, index| %>
-         <% q = qn.as_question %>
+          <% q = qn.as_question %>
           <tr class="asm-qn" id="sortable-item_<%= qn.id %>" >
             <td>
               <div>
