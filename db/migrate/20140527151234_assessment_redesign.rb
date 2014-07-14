@@ -155,6 +155,7 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.references  :submission
       t.references  :grader_course
       t.decimal     :grade
+      t.integer     :exp
       t.references  :exp_transaction
       t.boolean     :autograding_refresh, default: false
 
@@ -176,6 +177,7 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.references  :grading, index: true
       t.references  :grader_course
       t.decimal     :grade
+      t.integer     :exp
 
       t.datetime  :deleted_at
       t.timestamps
