@@ -1,4 +1,4 @@
-class SubmissionGradingsController < ApplicationController
+class Assessment::SubmissionGradingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :mission, through: :course
   load_and_authorize_resource :submission, through: :mission
