@@ -34,7 +34,7 @@
 
 <%= render partial: 'file_uploads/download_files',
            locals: { owner: @mission } %>
-<% if @mission.dependent.count > 0 %>
+<% if @mission.required_for.count > 0 %>
   <h3>Finish to unlock:</h3>
   <ul>
     <% @mission.required_for.each do |mission| %>
