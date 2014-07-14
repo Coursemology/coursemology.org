@@ -1,4 +1,4 @@
-class CourseAbility < Ability
+class CourseAbility  < Ability
   include CanCan::Ability
 
   # checkout:
@@ -93,9 +93,7 @@ class CourseAbility < Ability
     if user_course.is_student?
       can :participate, Course
       can :read, UserCourse
-      can :read, Announcement, Announcement.published do |ann|
-        ann.publish_at <= Time.now
-      end
+      can :read, Announcement, Announcement.published
 
       # Materials: The file is accessible to students if the student uploaded
       # the file, or course staff uploaded the file.
@@ -154,8 +152,8 @@ class CourseAbility < Ability
       can :read, [LessonPlanEntry]
       can :read, [LessonPlanMilestone], is_publish: true
 
-      can :read, [Assessment::Mission, Assessment::Training], assessment: {published: true}
       can :read, Assessment, published: true
+      can :read, [Assessment::Mission, Assessment::Training], assessment: {published: true}
       can :read, Survey, publish: true
 
       # can :read, [Mcq, Question, CodingQuestion]
@@ -170,7 +168,7 @@ class CourseAbility < Ability
       can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
-      can :manage, [Assessment::Answer, Assessment::CodingAnswer], student_id: user_course.user.id
+      can :manage, Assessment::Answer, std_course_id: user_course.id
       can :read, ExpTransaction, user_course_id: user_course.id
 
       can :ignore, PendingAction, user_course: user_course
