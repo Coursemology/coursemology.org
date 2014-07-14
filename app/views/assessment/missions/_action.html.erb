@@ -2,15 +2,15 @@
     <% submission = ast.last_submission(curr_user_course) %>
     <% if submission %>
         <% if submission.attempting? %>
-            <%= link_to 'Edit', edit_course_assessment_assessment_submission_path(@course, ast.as_assessment, submission),
+            <%= link_to 'Edit', edit_course_assessment_submission_path(@course, ast.as_assessment, submission),
                         class: 'btn btn-info' %>
         <% else %>
-            <%= link_to 'Review', course_assessment_assessment_submission_path(@course, ast.as_assessment, submission),
+            <%= link_to 'Review', course_assessment_submission_path(@course, ast.as_assessment, submission),
                         class: 'btn btn-info' %>
         <% end %>
     <% else %>
         <%= link_to 'Attempt',
-                    new_course_assessment_assessment_submission_path(@course, ast.as_assessment),
+                    new_course_assessment_submission_path(@course, ast.as_assessment),
                     class: 'btn btn-success' %>
     <% end %>
 <% end %>
