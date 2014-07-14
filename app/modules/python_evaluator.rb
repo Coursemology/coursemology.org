@@ -37,9 +37,9 @@ class PythonEvaluator
   def self.eval_python(dir, code, data, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
 
-    tests = {publicTests: data["publicTests"],
-             privateTests:data["privateTests"],
-             evalTests:   data["evalTests"]}
+    tests = {public: data["public"],
+             private:data["private"],
+             eval:   data["eval"]}
 
     time_limit = data["timeLimitInSec"]
     memory_limit = data["memoryLimitInMB"] * 1024
@@ -52,7 +52,7 @@ class PythonEvaluator
 
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
-    summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
+    summary ={publics: [],private: [], eval: [],errors:[]}
     range = eval ? 2 : 1
     times = eval ? 1 : 0
 
@@ -71,13 +71,13 @@ class PythonEvaluator
         need_std_answer = time == 1
         case i
           when 0
-            test_type = :publicTests
+            test_type = :public
             result_type = :publicResults
           when 1
-            test_type = :privateTests
+            test_type = :private
             result_type = :privateResults
           else
-            test_type = :evalTests
+            test_type = :eval
             result_type = :evalResults
         end
 
