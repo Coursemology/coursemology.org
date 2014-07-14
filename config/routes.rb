@@ -82,13 +82,13 @@ JfdiAcademy::Application.routes.draw do
 
       resources :assessment_submissions,
                 path:       :submissions,
-                controller: :submissions,
-                except: [:create] do
-        # post 'unsubmit' => 'mission_submissions#unsubmit'
-        # post 'test' => 'mission_submissions#test_answer'
-        #
-        # get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
-        # post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
+                controller: :mission_submissions,
+                except: [:create],
+                constraints: MissionConstraint do
+        post 'unsubmit' => 'mission_submissions#unsubmit'
+        post 'test' => 'mission_submissions#test_answer'
+        get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
+        post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
       end
     end
 
