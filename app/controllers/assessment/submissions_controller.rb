@@ -1,8 +1,11 @@
 class Assessment::SubmissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :assessment, through: :course, class_name: "Assessment"
+  load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission", id_param: "id"
 
-  before_filter :build_resource
+  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
+
+  # before_filter :build_resource
 
   def new
     sbm = @assessment.submissions.where(std_course_id: curr_user_course).last
@@ -22,11 +25,16 @@ class Assessment::SubmissionsController < ApplicationController
         @submission.multiplier = @reattempt.prefer_value.to_f / 100
       end
     end
-    @submission.std_course = curr_user_course
+
+    if sbm
+      @submission = sbm
+    else
+      @submission.std_course = curr_user_course
+    end
 
     if @submission.save
       respond_to do |format|
-        format.html { redirect_to edit_course_assessment_assessment_submission_path(@course, @assessment, @submission)}
+        format.html { redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)}
       end
     end
   end

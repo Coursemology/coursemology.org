@@ -329,7 +329,7 @@ class Assessment::TrainingSubmissionsController < ApplicationController
 
     #evaluate
     code_to_write = get_code_to_write(@current_question.data_hash["included"],code)
-    eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@training), code_to_write, @current_question.data_hash)
+    eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@training), code_to_write, @current_question)
     public_tests = if eval_summary[:public].length == 0 then true else eval_summary[:public].inject{|sum,a| sum and a} end
     private_tests = if eval_summary[:private].length == 0 then true else eval_summary[:private].inject{|sum,a| sum and a} end
 

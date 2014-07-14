@@ -20,7 +20,7 @@
               </tr>
               </thead>
               <tbody>
-              <% qn.data_hash["public"].each do |test| %>
+              <% question.data_hash["public"].each do |test| %>
                   <tr>
                     <td><%= test["expression"] %></td>
                     <td><%= test["expected"] %></td>
@@ -39,7 +39,7 @@
                 type="button"
                 id="run-qn-test"
                 <%= 'disabled' unless answer.can_run_test?(curr_user_course) %>
-                onclick="codeEvaluator.testRun('<%= answer.id %>','<%= course_mission_submission_test_path(@course, @mission, @submission) %>', this);" >
+                onclick="codeEvaluator.testRun('<%= answer.id %>','<%= test_course_assessment_submission_url(@course, @assessment, @submission) %>', this);" >
           RUN
           <% unless curr_user_course.is_staff? %>
               ( <span id="run-count-down-<%= answer.id %>"><%= answer.test_left %></span> times left )

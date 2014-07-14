@@ -1,5 +1,6 @@
 class PythonEvaluator
   require 'fileutils'
+  require 'open3'
 
   def self.get_asm_file_path(assign)
     "#{Rails.root}/#{assign.class.to_s}/#{assign.id}/files/"
@@ -34,15 +35,16 @@ class PythonEvaluator
     c1 + "\n" + c2
   end
 
-  def self.eval_python(dir, code, data, eval = false)
+  def self.eval_python(dir, code, qn, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
 
+    data = qn.data_hash
     tests = {public: data["public"],
              private:data["private"],
              eval:   data["eval"]}
 
-    time_limit = data["timeLimitInSec"]
-    memory_limit = data["memoryLimitInMB"] * 1024
+    time_limit = qn.time_limit
+    memory_limit = qn.memory_limit * 1024
     sandbox = File.open(get_sandbox_file, 'r')
     code = combine_code(sandbox.read, code)
 

@@ -1,13 +1,11 @@
 class Assessment::MissionSubmissionsController < Assessment::SubmissionsController
   # load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission"
-
   # skip_load_and_authorize_resource :submission, only: :listall
   # skip_load_and_authorize_resource :mission, only: :listall
 
   # before_filter :authorize, only: [:new, :create, :edit, :update]
   # before_filter :allow_only_one_submission, only: [:new, :create]
   # before_filter :no_update_after_submission, only: [:edit, :update]
-  # before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
 
 
   def listall
@@ -160,17 +158,16 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
   def test_answer
     code = params[:code]
-    std_answer = @submission.std_coding_answers.where(id: params[:answer_id]).first
-    if std_answer.test_left <= 0 and !curr_user_course.is_staff?
+    std_answer = @submission.answers.where(id: params[:answer_id]).first
+    if std_answer.attempt_left <= 0 and !curr_user_course.is_staff?
       result = {access_error: true, msg: "exceeds maximum testing times"}
     else
-      std_answer.test_left -= 1
-      std_answer.code = code
+      # std_answer.attempt_left -= 1
+      # std_answer.answer = code
       std_answer.save
-      qn = std_answer.qn
-      combined_code = PythonEvaluator.combine_code(code, qn.test_code)
-      #TOFIX, change to false
-      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, false)
+      qn = std_answer.question
+      combined_code = PythonEvaluator.combine_code(code, qn.specific.test_code)
+      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn.specific, false)
     end
     result[:can_test] = std_answer.can_run_test? curr_user_course
     respond_to do |format|
