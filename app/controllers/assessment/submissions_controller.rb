@@ -1,11 +1,10 @@
 class Assessment::SubmissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :assessment, through: :course, class_name: "Assessment"
-  load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission", id_param: "id"
-
+  load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission", id_param: "id", except: :new
   before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
 
-  # before_filter :build_resource
+  before_filter :build_resource, only: :new
 
   def new
     sbm = @assessment.submissions.where(std_course_id: curr_user_course).last
