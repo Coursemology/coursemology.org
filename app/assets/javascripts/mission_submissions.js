@@ -48,13 +48,13 @@ var codeEvaluator = function(){
                     $("#public-test-table-" + ans_id + " tbody tr").each(function(index, e){
 //                    console.log("change table")
                         var temp = $("td:last",e);
-                        if(resp.publicTests[index]){
+                        if(resp.public[index]){
                             if(temp.hasClass("pathTestFail")){
                                 temp.switchClass("pathTestFail","pathTestPass").animate(passColor,animateOpt);
                             }else if(!temp.hasClass("pathTestPass")){
                                 temp.addClass("pathTestPass").animate(passColor,animateOpt);
                             }
-                        } else if (resp.publicTests.length < index + 1) {
+                        } else if (resp.public.length < index + 1) {
                             temp.removeAttr('style')
                             if(temp.hasClass("pathTestPass")){
                                 temp.removeClass("pathTestPass");
@@ -72,11 +72,11 @@ var codeEvaluator = function(){
                             }
                         }
                     });
-                    var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
+                    var privateTestFlag = resp.private.length == 0 ? true : resp.private.reduce(function(a,b){return a && b});
                     var errorFlag = resp.errors.length > 0;
 
                     if(publicTestFlag && !errorFlag){
-                        if(resp.privateTests == null || !privateTestFlag){
+                        if(resp.private == null || !privateTestFlag){
                             $er.html("Your answer failed to pass one or more of the private test cases.").animate(failColor, animateOpt);
                         }else{
                             $er.html("You have successfully passed all public and private test cases!").animate(passColor, animateOpt);

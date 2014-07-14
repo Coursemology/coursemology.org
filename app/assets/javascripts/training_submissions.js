@@ -105,7 +105,7 @@ $(document).ready(function(){
                 var publicTestFlag = true;
                 $("#publicTestTable tbody tr").each(function(index, e){
 //                    console.log("change table")
-                    if(resp.publicTests[index]){
+                    if(resp.public[index]){
                         var temp = $("td:last",e);
                         if(temp.hasClass("pathTestFail")){
                             temp.switchClass("pathTestFail","pathTestPass").animate(passcolor,animateOpt);
@@ -123,9 +123,9 @@ $(document).ready(function(){
                         }
                     }
                 });
-                var privateTestFlag = resp.privateTests.length == 0 ? true : resp.privateTests.reduce(function(a,b){return a && b});
+                var privateTestFlag = resp.private.length == 0 ? true : resp.private.reduce(function(a,b){return a && b});
                 if(publicTestFlag){
-                    if(resp.privateTests == null || !privateTestFlag){
+                    if(resp.private == null || !privateTestFlag){
                         $er.html("Your answer failed to pass one or more of the private test cases."  + (resp.hint ? " <br>Hint: " + resp.hint : "")).animate(failcolor, animateOpt);
                     }else{
                         $er.html("You have successfully completed this step!").animate(passcolor, animateOpt);
