@@ -39,10 +39,14 @@ class Assessment::AssessmentsController < ApplicationController
 
     if paging.display?
       @assessments = @assessments.accessible_by(current_ability).page(params[:page]).per(paging.prefer_value.to_i)
+    else
+      @assessments = @assessments.accessible_by(current_ability)
     end
 
+
+
     submissions = @course.submissions.where(assessment_id: @assessments.map {|m| m.id},
-                                             std_course_id: curr_user_course.id)
+                                            std_course_id: curr_user_course.id)
 
     sub_ids = submissions.map {|s| s.assessment_id}
     sub_map = {}
@@ -56,17 +60,17 @@ class Assessment::AssessmentsController < ApplicationController
       if sub_ids.include? ast.id
         attempting = sub_map[ast.id].attempting?
         action_map[ast.id] = { action: attempting ? "Edit" : "Review",
-                               url: edit_course_assessment_assessment_submission_path(@course, ast, sub_map[ast.id]) }
+                               url: edit_course_assessment_submission_path(@course, ast, sub_map[ast.id]) }
 
-      #potential bug
-      #1, can mange, 2, opened and fulfil the dependency requirements
+        #potential bug
+        #1, can mange, 2, opened and fulfil the dependency requirements
       elsif (ast.opened? and (ast.as_assessment.class == Assessment::Training or
           ast.dependent_id.nil? or
           (sub_ids.include? ast.dependent_id and sub_map[ast.dependent_id].submitted?))) or
           can?(:manage, ast)
 
         action_map[ast.id] = {action: "Attempt",
-                            url: new_course_assessment_assessment_submission_path(@course, ast)}
+                              url: new_course_assessment_submission_path(@course, ast)}
       else
         action_map[ast.id] = {action: nil}
       end
@@ -77,7 +81,7 @@ class Assessment::AssessmentsController < ApplicationController
       action_map[ast.id][:title_link] =
           can?(:manage, ast) ?
               stats_course_assessment_path(@course, ast) :
-              course_assessment_path(@course, ast)
+              ast.get_path
     end
 
     @summary = {selected_tags: selected_tags,
