@@ -10,10 +10,10 @@ class Assessment < ActiveRecord::Base
   attr_accessible   :published
 
   #mission
-  delegate :dependent_id, :close_at, :can_start?, to: :as_assessment
+  delegate :dependent_id, :close_at, :can_start?, :single_question?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
 
   #training
-  delegate :bonus_exp, :bonus_cutoff_at, to: :as_assessment
+  delegate :bonus_exp, :bonus_cutoff_at, :get_path, to: :as_assessment
 
   include HasRequirement
   include ActivityObject
@@ -107,10 +107,6 @@ class Assessment < ActiveRecord::Base
 
   def is_training?
     as_assessment_type == "Assessment::Training"
-  end
-
-  def get_path
-    raise NotImplementedError
   end
 
   def last_submission(user_course_id)
@@ -230,6 +226,10 @@ class Assessment < ActiveRecord::Base
       end
     end
     clone
+  end
+
+  def specific
+    as_assessment
   end
 
   def mark_refresh_autograding
