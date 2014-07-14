@@ -130,6 +130,7 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.references  :question,   index: true
       t.references  :std_course, index: true
       t.text        :answer, limit: 64.kilobytes + 1
+      t.text        :result
       t.integer     :attempt_left, default: 0
       t.boolean     :finalised, default: false
       t.boolean     :correct,   default: false
