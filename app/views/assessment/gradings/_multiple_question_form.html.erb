@@ -1,0 +1,170 @@
+<%= simple_form_for @grading, url: course_assessment_submission_gradings_path(@course, @assessment, @submission),
+                    html: { class: "form-horizontal" } do |f| %>
+    <input type="hidden" name="submission_id" value="<% @submission.id %>" />
+
+    <% @summary[:qn_ans].each do |qid, qn_dic| %>
+        <hr/>
+        <% unless @assessment.specific.single_question? %>
+            <h3><%=  qn_dic[:qn].get_title %></h3>
+            <div class="row-fluid">
+              <div class="submission-question-block span10"><%= style_format(qn_dic[:qn].description) %></div>
+            </div>
+        <% end %>
+        <h3>Answer:</h3>
+        <% if qn_dic[:ans] %>
+            <% if @assessment.specific.file_submission_only? %>
+                <p style="font-style: italic">Answer is contained in the submission file(s).</p>
+            <% elsif qn_dic[:qn].class == Assessment::CodingQuestion %>
+                <%= render partial: "assessment/mission_submissions/do_coding",
+                           locals: {answer: qn_dic[:ans],
+                                    question:     qn_dic[:qn],
+                                    submission: @submission,
+                                    mode:   "view"}%>
+            <% else %>
+                <div class="row-fluid">
+                  <div class="submission-question-block span10">
+                    <%= qn_dic[:ans].answer.html_safe %>
+                  </div>
+                </div>
+            <% end %>
+            <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][student_answer_id]" value="<%= qn_dic[:ans].id %>">
+            <% if @assessment.specific.comment_per_qn? %>
+                <div class="row-fluid">
+                  <div class="span10">
+                    <% require 'digest/md5' %>
+                    <% ecid =  Digest::MD5.hexdigest(qn_dic[:ans].to_s) %>
+                    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
+                    <%= render partial: "comments/list",
+                               locals: { comments:  CommentTopic.comments_to_json(qn_dic[:ans].comment_topic, curr_user_course),
+                                         target:    qn_dic[:ans],
+                                         header:    "Comments",
+                                         ecid:      ecid,
+                                         margin_left: "0px"} %>
+                  </div>
+                </div>
+            <% end %>
+            <!--show condition: new grading, review grading, update grading -->
+            <% if  !@assessment.specific.single_question? and @grading%>
+                <div class="row-fluid">
+                  <div class="span10">
+                    <div class="grading-block">
+                      <% max_grade = qn_dic[:qn].max_grade  %>
+                      <% exp = (@assessment.exp * (qn_dic[:qn].max_grade / @assessment.max_grade)).to_i %>
+                      <% grade = qn_dic[:grade] %>
+                      <h4>Grade awarded</h4>
+                      <% if mode == 'view' %>
+                          <strong><%= grade.grade if grade %></strong>
+                      <% else %>
+                          <input type="number"
+                                 name="ags[<%= grade.id if grade %>][grade]"
+                                 value="<%= grade.grade if grade %>"
+                                 class="input-small grade-input"
+                                 step="any"
+                                 max="<%= max_grade %>"
+                                 id="grade-awarded-<%= qid %>"
+                                 onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>)"
+                                 required
+                          />
+                      <% end %>
+                      <strong> / <%= max_grade %> </strong>
+                    </div>
+                  </div>
+                </div>
+            <% end %>
+        <% else %>
+            <h4>No answer</h4>
+        <% end %>
+    <% end %>
+    <% if @grading %>
+        <hr>
+        <div class="row-fluid">
+          <div class="span10">
+            <div class="grade-summary">
+              <% unless @assessment.single_question? %>
+                  <table class="table table-striped">
+                    <thead>
+                    <tr>
+                      <th>Question</th>
+                      <th>Grade</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @summary[:qn_ans].each do |qid, qa| %>
+                        <tr>
+                          <td><%= qa[:qn].get_title %></td>
+                          <td><%= qa[:grade].grade if qa[:grade]  %>
+                            <strong> / <%= qa[:qn].max_grade %> </strong></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+              <% end %>
+              <h4>Total Grade:</h4>
+              <% if mode == 'view' %>
+                  <strong><%= @grading.grade %></strong>
+              <% else %>
+                  <%= f.input_field :grade, as: :float,
+                                    id: "grade-sum",
+                                    max: @assessment.max_grade,
+                                    required: true,
+                                    onchange: "suggestEXP(#{@assessment.max_grade}, #{@assessment.exp}, true)",
+                                    readonly: !@assessment.single_question?,
+                                    class: "number_field input-small" %>
+
+              <% end %>
+              <strong> / <%= @assessment.max_grade %></strong>
+              <br><br>
+              <h4>EXP awarded</h4>
+              <% if mode == 'view' %>
+                  <strong><%= @grading.exp %></strong>
+              <% else %>
+                  <%= f.input_field :exp, as: :integer,
+                                    id: "exp-sum",
+                                    required: true,
+                                    max: @assessment.exp,
+                                    class: "number_field input-small" %>
+
+              <% end %>
+              <strong> / <%= @assessment.exp %></strong>
+              <% if mode != 'view' %>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
+                  <input type="number"
+                         max="1"
+                         id="exp-multiplier"
+                         class="input-mini"
+                         value="1"
+                         step="0.1"
+                         onchange="suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %>, true)"
+                  >
+              <% end %>
+            </div>
+          </div>
+        </div>
+    <% end %>
+    <% unless @assessment.comment_per_qn? %>
+        <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+        <div class="row">
+          <div class="span8">
+            <%= render partial: "comments/list",
+                       locals: { comments:  CommentTopic.comments_to_json(@submission.comment_topic, curr_user_course),
+                                 target:    @submission,
+                                 header:    "Comments",
+                                 ecid:      @submission.id,
+                                 margin_left: "0px"} %>
+          </div>
+        </div>
+    <% end %>
+
+    <div class="form-actions">
+      <%= f.submit "Save Grading", :class => 'btn btn-primary', id: "save_grading" %>
+      <%= link_to unsubmit_course_assessment_submission_path(@course, @assessment, @submission),
+                  method: :POST,
+                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default =>
+                          "This will permit the student to change his submission. \n\n NOTE THAT YOU CANNOT UNDO THIS!! \n\n Only the student can decide when to submit his/her work once it is unsubmitted. Are you sure you want to proceed?")) },
+                  class: 'btn btn-danger' do %>
+          Unsubmit This Submission
+      <% end %>
+    </div>
+<% end %>
+
+

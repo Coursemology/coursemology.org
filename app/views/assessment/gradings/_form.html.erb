@@ -1,63 +1,37 @@
-<table width="100%">
-  <col width="15%" />
-  <tr><td>Student: </td><td><%= render partial: "layouts/user_name_link", locals: {user_course: @submission.std_course} %></td></tr>
-  <% if @submission.std_course.get_my_tutors.first %>
-    <tr><td>Tutor: </td> <td> <%= @submission.std_course.get_my_tutor_name %></td></tr>
-  <% end %>
-  <% if @submission_grading.id %>
-      <tr>
-        <td>Total grade: </td>
-        <td>
-          <%= @submission_grading.total_grade %> / <%= @mission.max_grade %>
-        </td>
-      </tr>
-      <% if @submission_grading.grader %>
-          <tr><td>Grader: </td><td><%= @submission_grading.grader.name %></td></tr>
-      <% else %>
-          <tr><td>Grader: </td><td>Auto graded!</td></tr>
-      <% end %>
-      <tr>
-        <td>First graded at:</td><td><%=  datetime_format(@submission_grading.created_at) %></td>
-      </tr>
-      <% if @submission_grading.last_grade_updated  %>
-      <tr>
-       <td>Last updated at:</td> <td> <%= datetime_format(@submission_grading.last_grade_updated) %></td>
-      </tr>
-      <% end %>
-  <% end %>
-  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
-  <tr><td>Due on:</td><td><%= datetime_format @assessment.close_at %></td></tr>
-</table>
-<%= render partial: "file_uploads/download_files",
-           locals: {owner: @submission}%>
-<hr/>
-
-<p class="well"><%= @assessment.description.html_safe %></p>
-
-<% if (@submission.submitted_at || @submission.created_at) > @assessment.close_at %>
-    <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
+<% if @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
+    <%= render :partial => 'single_question_form', locals: {mode: "edit"} %>
+<% else %>
+    <%= render :partial => 'multiple_question_form', locals: {mode: "edit"} %>
 <% end %>
 
+<script>
+    function suggestEXP(max, exp, sum) {
 
-<%= form_tag new_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading),
-             html: { class: "form-horizontal" } do |f| %>
-    <input type="hidden" name="submission_id" value="<% @submission.id %>" />
-    <%= render partial: "layouts/submission_form", locals: { mode: 'edit', submission: @submission }%>
+        var sum_grade = 0;
+        if (typeof(sum) == 'undefined') {
+            grade_input = $(".grade-input");
 
-    <div class="form-actions">
-      <%= f.submit "Save Grading", :class => 'btn btn-primary', id: "save_grading" %>
-      <%= link_to course_mission_submissions_unsubmit_path(@course, @mission, @submission),
-                  method: :POST,
-                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default =>
-                          'This will permit the student to change his submission by uploading/reuploading his files.
+            grade_input.each(function(){
+                sum_grade += $(this).val() - 0;
+            });
 
-         NOTE THAT YOU CANNOT UNDO THIS!!
+        } else {
+            sum_grade = $('#grade-sum').val() - 0;
+        }
 
-Only the student can decide when to submit his/her work once it is unsubmitted."Are you sure you want to proceed?')) },
-                  class: 'btn btn-danger' do %>
-          Unsubmit This Submission
-      <% end %>
-    </div>
-<% end %>
+        multiplier = $("#exp-multiplier").val() - 0;
+        multiplier = multiplier > 1 ? 1 : multiplier;
+
+        total_grade = $("#grade-sum");
 
 
+        var result = Math.round(Math.round(multiplier * (exp * sum_grade / max) / 5) * 5);
+        $("#exp-sum").val(result);
+        total_grade.val(Math.round(sum_grade * 100) / 100);
+    }
+
+    $(document).ready(function() {
+        if ($("#exp-sum").val() == "")
+            suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %> );
+    });
+</script>
