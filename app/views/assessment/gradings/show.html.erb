@@ -1,0 +1,51 @@
+<%- submission_display_name = @course.customized_title_by_model(Submission).singularize -%>
+<div class="page-header">
+  <h1><%= submission_display_name %>:  <%= @mission.title %></h1>
+</div>
+<% require 'digest/md5' %>
+<table class="table table-bordered" style="width: 300px">
+  <tbody class="table-hover">
+  <tr><td style="width: 100px">Student: </td><td><%= render partial: 'layouts/user_name_link', locals: {user_course: @submission.std_course}%></td></tr>
+  <tr><td>Status:</td><td><strong><%= @submission.status  %></strong></td></tr>
+  <% if @grading %>
+      <tr>
+        <td>Total grade: </td>
+        <td>
+          <%= @grading.total_grade %> / <%= @mission.max_grade %>
+          <% if curr_user_course.is_staff? %>
+              <%= link_to 'Update',
+                          edit_course_assessment_mission_assessment_submission_grading_path(@course, @mission, @submission, @grading)
+              %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Total EXP: </td>
+        <td>
+          <%= @grading.total_exp %> / <%= @mission.exp %>
+        </td>
+      </tr>
+      <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+      <tr>
+        <td>Graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
+      </tr>
+  <% end %>
+  <% if @submission.submitted? || @submission.graded? %>
+      <tr><td>Submitted at:</td><td><%= datetime_format(@submission.submit_at || @submission.updated_at) %> </td></tr>
+  <% end %>
+  <tr><td>Due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
+  </tbody>
+</table>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @mission}%>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @submission}%>
+<hr/>
+
+<div class="well"><%= @mission.description.html_safe %></div>
+
+<%= render partial: "submission", locals: {mode: "view", submission: @submission} %>
+
+
