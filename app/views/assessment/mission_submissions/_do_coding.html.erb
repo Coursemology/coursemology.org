@@ -32,7 +32,7 @@
         <h3>Testing</h3>
         <% unless curr_user_course.is_staff? %>
             <div style="font-size: 14px;padding-left: 10px">
-              Click Run to test your answer. You can maximally run <%= qn.test_limit %> times.
+              Click Run to test your answer. You can maximally run <%= question.test_limit %> times.
             </div>
         <% end %>
         <button class="btn btn-large btn-block btn-danger"
@@ -42,7 +42,7 @@
                 onclick="codeEvaluator.testRun('<%= answer.id %>','<%= test_course_assessment_submission_url(@course, @assessment, @submission) %>', this);" >
           RUN
           <% unless curr_user_course.is_staff? %>
-              ( <span id="run-count-down-<%= answer.id %>"><%= answer.test_left %></span> times left )
+              ( <span id="run-count-down-<%= answer.id %>"><%= answer.attempt_left %></span> times left )
           <% end %>
         </button>
         <br>
@@ -51,19 +51,20 @@
   <% elsif question.auto_graded? and curr_user_course.is_staff? %>
         <h3>Auto Grading Summary</h3>
         <% if question.data_hash["public"].length > 0 %>
-            <%= render partial: "test_result_table", locals:{title: "Public Tests",
-                                                             tests: qn.data_hash["public"],
-                                                             results: answer.result_hash["public"]} %>
+            <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Public Tests",
+                                                             tests: question.data_hash["public"],
+                                                             results: answer.result_hash["public"],
+                                                             actual: answer.result_hash["publicResults"] } %>
         <% end %>
         <% if question.data_hash["private"].length > 0 %>
-            <%= render partial: "test_result_table", locals:{title: "Private Tests",
-                                                                         tests: qn.data_hash["private"],
+            <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Private Tests",
+                                                                         tests: question.data_hash["private"],
                                                                          results: answer.result_hash["private"],
                                                                          actual: answer.result_hash["privateResults"] } %>
         <% end %>
         <% if question.data_hash["eval"].length > 0 %>
-            <%= render partial: "test_result_table", locals:{title: "Evaluation Tests",
-                                                                         tests: qn.data_hash["eval"],
+            <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Evaluation Tests",
+                                                                         tests: question.data_hash["eval"],
                                                                          results: answer.result_hash["eval"],
                                                                          actual: answer.result_hash["evalResults"] } %>
         <% end %>
@@ -105,7 +106,7 @@
     }
 </style>
 <script>
-    var source_code = <%= answer ? raw(answer.answer.to_json) : raw(JSON.parse(qn.data)["prefill"].to_json) %>;
+    var source_code = <%= answer ? raw(answer.answer.to_json) : raw(JSON.parse(question.data)["prefill"].to_json) %>;
     $('#code_<%= answer.id  %>').val(source_code);
 
 
