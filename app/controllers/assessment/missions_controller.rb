@@ -137,18 +137,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     @mission.save
   end
 
-  def stats
-    @stats_paging = @course.missions_stats_paging_pref
-    @submissions = @mission.submissions.all
-    @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
-    @my_std_courses = curr_user_course.std_courses.student.order(:name).where(is_phantom: false)
-
-    if @stats_paging.display?
-      @std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
-    end
-    @std_courses_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
-  end
-
   def overview
     authorize! :bulk_update, Assessment
     @tab = 'overview'

@@ -1,6 +1,6 @@
 class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :assessment, only: [:reorder]
+  load_and_authorize_resource :assessment, only: [:reorder, :stats]
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
 
   def index
@@ -105,6 +105,22 @@ class Assessment::AssessmentsController < ApplicationController
   def show
     @summary = {}
     @summary[:questions] = @assessment.questions
+  end
+
+  def stats
+    @summary = {}
+    @summary[:type] = @assessment.is_mission? ? 'mission' : 'training'
+    @stats_paging = @course.paging_pref(@assessment.is_mission? ? "MissionStats" : "TrainingStats")
+    @submissions = @assessment.submissions.includes(:gradings)
+    std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
+    my_std = curr_user_course.std_courses.student.order(:name).where(is_phantom: false)
+
+    if @stats_paging.display?
+      std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
+    end
+    std_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
+
+    @summary[:stats] = {'My Students' => my_std, "All Students" => std_courses, "Phantom Students" => std_phantom}
   end
 
   def reorder
