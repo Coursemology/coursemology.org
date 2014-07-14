@@ -2,6 +2,8 @@ class Assessment::Mission < ActiveRecord::Base
   acts_as_paranoid
   is_a :assessment, as: :as_assessment, auto_join: false, class_name: "Assessment"
 
+  include Rails.application.routes.url_helpers
+
   attr_accessible :close_at
   attr_accessible  :single_question,
                    :file_submission,
@@ -65,7 +67,7 @@ class Assessment::Mission < ActiveRecord::Base
   end
 
   def get_path
-    course_mission_path(self.course, self)
+    course_assessment_mission_path(self.course, self)
   end
 
   def missions_dep_on_published

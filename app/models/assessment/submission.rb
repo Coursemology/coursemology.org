@@ -13,6 +13,7 @@ class Assessment::Submission < ActiveRecord::Base
   belongs_to :std_course, class_name: "UserCourse"
   has_many :answers, class_name: Assessment::Answer, dependent: :destroy
 
+  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
 
   after_create :set_attempting

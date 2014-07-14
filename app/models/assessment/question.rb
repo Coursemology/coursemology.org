@@ -2,7 +2,7 @@ class Assessment::Question < ActiveRecord::Base
   acts_as_paranoid
   acts_as_superclass as: :as_question
 
-  attr_accessible :title, :description, :max_grade
+  attr_accessible :title, :description, :max_grade, :creator_id
 
   belongs_to :creator, class_name: "User"
 
