@@ -4,11 +4,13 @@ class Assessment::MissionsController < Assessment::AssessmentsController
   require 'zip/zipfilesystem'
 
   def show
+    @assessment = @mission.assessment
+
     if curr_user_course.is_student? and !@assessment.can_start?(curr_user_course)
       redirect_to course_assessment_missions_path
       return
     end
-    @assessment = @mission.assessment
+
     super
 
     @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion]
@@ -50,15 +52,24 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       @mission.attach_files(params[:files].values)
     end
     @mission.update_tags(params[:tags])
+
     if @mission.single_question?
-      qn = params[:answer_type] == 'code' ? @mission.coding_questions.build : @mission.questions.build
+      if params[:answer_type] == 'code'
+        specific = Assessment::CodingQuestion.new
+      else
+        specific = Assessment::GeneralQuestion.new
+      end
+      qn = @mission.questions.build
+      qn.creator = current_user
       qn.max_grade = params[:max_grade]
+      specific.question = qn
+      specific.save
     end
 
     respond_to do |format|
       if @mission.save
         @mission.create_local_file
-        @mission.update_grade
+        # @mission.update_grade
         @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
@@ -74,19 +85,18 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
 
-        if @mission.single_question? && @mission.get_all_questions.count > 1
+        if @mission.single_question? && @mission.questions.count > 1
           flash[:error] = "Mission already have several questions, can't change the format."
           @mission.single_question = false
           @mission.save
         end
         update_single_question_type
-        update_mission_max_grade
 
-        @mission.schedule_tasks(course_mission_url(@course, @mission))
-        format.html { redirect_to course_mission_url(@course, @mission),
+        @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
+        format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
       else
-        format.html {redirect_to edit_course_mission_path(@course, @mission) }
+        format.html {redirect_to edit_course_assessment_mission_path(@course, @mission) }
       end
     end
   end
@@ -99,32 +109,32 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     end
   end
 
-  def update_mission_max_grade
-    if @mission.single_question? && @mission.max_grade != params[:max_grade].to_i
-      qn = @mission.get_all_questions.first
-      qn.max_grade = params[:max_grade]
-      qn.save
-      @mission.update_grade
-    end
-  end
 
   def update_single_question_type
-    puts "update single question"
     unless @mission.single_question?
       return
     end
-    puts "get single question type"
-    type = params[:answer_type] == 'code' ? CodingQuestion : Question
-    previous_qn = @mission.get_all_questions.first
-    if type != previous_qn.class
-      if previous_qn
-        previous_qn.destroy
+
+    type = params[:answer_type] == 'code' ? Assessment::CodingQuestion : Assessment::GeneralQuestion
+    curr_qn = @mission.questions.first
+    if type != curr_qn.specific.class
+      if curr_qn
+        curr_qn.destroy
       end
-      qn = type == CodingQuestion ? @mission.coding_questions.build : @mission.questions.build
-      qn.max_grade = params[:max_grade]
-      @mission.save
-      @mission.update_grade
+      if params[:answer_type] == 'code'
+        specific = Assessment::CodingQuestion.new
+      else
+        specific = Assessment::GeneralQuestion.new
+      end
+      qn = @mission.questions.create({creator_id: current_user.id, max_grade: params[:max_grade]})
+      specific.question = qn
+      specific.save
+    else
+      curr_qn.max_grade = params[:max_grade]
+      curr_qn.save
     end
+
+    @mission.save
   end
 
   def stats
