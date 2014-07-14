@@ -52,6 +52,7 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.string      :title
       t.text        :description
       t.decimal     :max_grade
+      t.integer     :test_limit
 
       t.datetime  :last_commented_at
       t.datetime  :deleted_at
@@ -61,9 +62,8 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :assessment_coding_questions do |t|
       t.references  :dependent
       t.references  :language
-      t.integer     :time_limit
       t.integer     :memory_limit
-      t.integer     :test_limit
+      t.integer     :time_limit
       t.boolean     :auto_graded
       t.text        :data
 
@@ -119,33 +119,24 @@ class AssessmentRedesign < ActiveRecord::Migration
 
       t.datetime    :opened_at
       t.datetime    :submitted_at
-      t.datetime  :deleted_at
+      t.datetime    :deleted_at
       t.timestamps
     end
 
     create_table  :assessment_answers do |t|
-      t.integer   :as_answer_id
-      t.string    :as_answer_type
 
       t.references  :assessment, index: true
       t.references  :submission, index: true
       t.references  :question,   index: true
       t.references  :std_course, index: true
       t.text        :answer, limit: 64.kilobytes + 1
-      t.boolean     :finalised, default: false
-
-      t.datetime  :deleted_at
-      t.timestamps
-    end
-
-    create_table :assessment_coding_answers do |t|
       t.integer     :attempt_left, default: 0
+      t.boolean     :finalised, default: false
       t.boolean     :correct,   default: false
 
       t.datetime  :deleted_at
       t.timestamps
     end
-
 
     change_table  :assessment_answers do |t|
       t.index [:assessment_id, :std_course_id]
@@ -238,7 +229,6 @@ class AssessmentRedesign < ActiveRecord::Migration
     drop_table  :assessment_mcq_options
     drop_table  :assessment_submissions
     drop_table  :assessment_answers
-    drop_table  :assessment_coding_answers
     drop_table  :assessment_answer_options
     drop_table  :assessment_answer_gradings
     drop_table  :assessment_gradings

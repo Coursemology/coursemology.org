@@ -175,35 +175,26 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   end
 
   create_table "assessment_answers", :force => true do |t|
-    t.integer  "as_answer_id"
-    t.string   "as_answer_type"
     t.integer  "assessment_id"
     t.integer  "submission_id"
     t.integer  "question_id"
     t.integer  "std_course_id"
-    t.text     "answer",         :limit => 16777215
-    t.boolean  "finalised",                          :default => false
+    t.text     "answer",        :limit => 16777215
+    t.integer  "attempt_left",                      :default => 0
+    t.boolean  "finalised",                         :default => false
+    t.boolean  "correct",                           :default => false
     t.datetime "deleted_at"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
   end
 
   add_index "assessment_answers", ["assessment_id", "std_course_id"], :name => "index_assessment_answers_on_assessment_id_and_std_course_id"
 
-  create_table "assessment_coding_answers", :force => true do |t|
-    t.integer  "attempt_left", :default => 0
-    t.boolean  "correct",      :default => false
-    t.datetime "deleted_at"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
   create_table "assessment_coding_questions", :force => true do |t|
     t.integer  "dependent_id"
     t.integer  "language_id"
-    t.integer  "time_limit"
     t.integer  "memory_limit"
-    t.integer  "test_limit"
+    t.integer  "time_limit"
     t.boolean  "auto_graded"
     t.text     "data"
     t.datetime "deleted_at"
@@ -275,6 +266,7 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
     t.string   "title"
     t.text     "description"
     t.decimal  "max_grade",         :precision => 10, :scale => 0
+    t.integer  "test_limit"
     t.datetime "last_commented_at"
     t.datetime "deleted_at"
     t.datetime "created_at",                                       :null => false
