@@ -16,14 +16,14 @@
     <!--TODO: comments not loaded -->
     <% if @question.persisted? %>
         <div class="control-group">
-          <h3>Comments (staff only)</h3>
-          <% require 'digest/md5' %>
-          <% ecid =  Digest::MD5.hexdigest(@question.class.to_s << @question.id.to_s) %>
-          <div>
+          <label class="control-label">Comments (staff only)</label>
+          <div class="controls span7">
+            <% require 'digest/md5' %>
+            <% ecid =  Digest::MD5.hexdigest(@question.id.to_s) %>
             <%= render partial: "comments/list",
                        locals: { comments:  CommentTopic.comments_to_json(@question.question.comment_topic, curr_user_course),
-                                 target:    @question,
-                                 header:    'Comments',
+                                 target:    @question.question,
+                                 header:    '',
                                  ecid:      ecid
                        } %>
           </div>
