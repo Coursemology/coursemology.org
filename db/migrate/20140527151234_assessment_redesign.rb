@@ -154,6 +154,7 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :assessment_gradings  do |t|
       t.references  :submission
       t.references  :grader_course
+      t.references  :std_course, index: true
       t.decimal     :grade
       t.integer     :exp
       t.references  :exp_transaction
