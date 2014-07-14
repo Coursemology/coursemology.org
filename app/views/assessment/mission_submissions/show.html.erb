@@ -18,7 +18,7 @@
     <% if question.class == Assessment::GeneralQuestion %>
         <div class="row-fluid">
           <div class="submission-question-block span10">
-            <%= qn_dic[:ans].answer.html_safe %>
+            <%= answer.answer.html_safe %>
           </div>
         </div>
     <% else %>

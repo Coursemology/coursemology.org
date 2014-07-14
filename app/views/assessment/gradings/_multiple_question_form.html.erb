@@ -4,12 +4,10 @@
 
     <% @summary[:qn_ans].each do |qid, qn_dic| %>
         <hr/>
-        <% unless @assessment.specific.single_question? %>
-            <h3><%=  qn_dic[:qn].get_title %></h3>
-            <div class="row-fluid">
-              <div class="submission-question-block span10"><%= style_format(qn_dic[:qn].description) %></div>
-            </div>
-        <% end %>
+        <h3><%=  qn_dic[:qn].get_title %></h3>
+        <div class="row-fluid">
+          <div class="submission-question-block span10"><%= style_format(qn_dic[:qn].description) %></div>
+        </div>
         <h3>Answer:</h3>
         <% if qn_dic[:ans] %>
             <% if @assessment.specific.file_submission_only? %>
@@ -27,7 +25,7 @@
                   </div>
                 </div>
             <% end %>
-            <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][student_answer_id]" value="<%= qn_dic[:ans].id %>">
+            <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][answer_id]" value="<%= qn_dic[:ans].id %>">
             <% if @assessment.specific.comment_per_qn? %>
                 <div class="row-fluid">
                   <div class="span10">
@@ -44,103 +42,96 @@
                 </div>
             <% end %>
             <!--show condition: new grading, review grading, update grading -->
-            <% if  !@assessment.specific.single_question? and @grading%>
-                <div class="row-fluid">
-                  <div class="span10">
-                    <div class="grading-block">
-                      <% max_grade = qn_dic[:qn].max_grade  %>
-                      <% exp = (@assessment.exp * (qn_dic[:qn].max_grade / @assessment.max_grade)).to_i %>
-                      <% grade = qn_dic[:grade] %>
-                      <h4>Grade awarded</h4>
-                      <% if mode == 'view' %>
-                          <strong><%= grade.grade if grade %></strong>
-                      <% else %>
-                          <input type="number"
-                                 name="ags[<%= grade.id if grade %>][grade]"
-                                 value="<%= grade.grade if grade %>"
-                                 class="input-small grade-input"
-                                 step="any"
-                                 max="<%= max_grade %>"
-                                 id="grade-awarded-<%= qid %>"
-                                 onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>)"
-                                 required
-                          />
-                      <% end %>
-                      <strong> / <%= max_grade %> </strong>
-                    </div>
-                  </div>
+            <div class="row-fluid">
+              <div class="span10">
+                <div class="grading-block">
+                  <% max_grade = qn_dic[:qn].max_grade  %>
+                  <% grade = qn_dic[:grade] %>
+                  <h4>Grade awarded</h4>
+                  <% if mode == 'view' %>
+                      <strong><%= grade.grade if grade %></strong>
+                  <% else %>
+                      <input type="number"
+                             name="ags[<%= grade.id if grade %>][grade]"
+                             value="<%= grade.grade if grade %>"
+                             class="input-small grade-input"
+                             step="any"
+                             max="<%= max_grade %>"
+                             id="grade-awarded-<%= qid %>"
+                             onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>)"
+                             required
+                      />
+                  <% end %>
+                  <strong> / <%= max_grade %> </strong>
                 </div>
-            <% end %>
+              </div>
+            </div>
         <% else %>
             <h4>No answer</h4>
         <% end %>
     <% end %>
-    <% if @grading %>
-        <hr>
-        <div class="row-fluid">
-          <div class="span10">
-            <div class="grade-summary">
-              <% unless @assessment.single_question? %>
-                  <table class="table table-striped">
-                    <thead>
-                    <tr>
-                      <th>Question</th>
-                      <th>Grade</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% @summary[:qn_ans].each do |qid, qa| %>
-                        <tr>
-                          <td><%= qa[:qn].get_title %></td>
-                          <td><%= qa[:grade].grade if qa[:grade]  %>
-                            <strong> / <%= qa[:qn].max_grade %> </strong></td>
-                        </tr>
-                    <% end %>
-                    </tbody>
-                  </table>
-              <% end %>
-              <h4>Total Grade:</h4>
-              <% if mode == 'view' %>
-                  <strong><%= @grading.grade %></strong>
-              <% else %>
-                  <%= f.input_field :grade, as: :float,
-                                    id: "grade-sum",
-                                    max: @assessment.max_grade,
-                                    required: true,
-                                    onchange: "suggestEXP(#{@assessment.max_grade}, #{@assessment.exp}, true)",
-                                    readonly: !@assessment.single_question?,
-                                    class: "number_field input-small" %>
+    <hr>
+    <div class="row-fluid">
+      <div class="span10">
+        <div class="grade-summary">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Question</th>
+              <th>Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @summary[:qn_ans].each do |qid, qa| %>
+                <tr>
+                  <td><%= qa[:qn].get_title %></td>
+                  <td><%= qa[:grade].grade if qa[:grade]  %>
+                    <strong> / <%= qa[:qn].max_grade %> </strong></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+          <h4>Total Grade:</h4>
+          <% if mode == 'view' %>
+              <strong><%= @grading.grade %></strong>
+          <% else %>
+              <%= f.input_field :grade, as: :float,
+                                id: "grade-sum",
+                                max: @assessment.max_grade,
+                                required: true,
+                                onchange: "suggestEXP(#{@assessment.max_grade}, #{@assessment.exp}, true)",
+                                readonly: !@assessment.single_question?,
+                                class: "number_field input-small" %>
 
-              <% end %>
-              <strong> / <%= @assessment.max_grade %></strong>
-              <br><br>
-              <h4>EXP awarded</h4>
-              <% if mode == 'view' %>
-                  <strong><%= @grading.exp %></strong>
-              <% else %>
-                  <%= f.input_field :exp, as: :integer,
-                                    id: "exp-sum",
-                                    required: true,
-                                    max: @assessment.exp,
-                                    class: "number_field input-small" %>
+          <% end %>
+          <strong> / <%= @assessment.max_grade %></strong>
+          <br><br>
+          <h4>EXP awarded</h4>
+          <% if mode == 'view' %>
+              <strong><%= @grading.exp %></strong>
+          <% else %>
+              <%= f.input_field :exp, as: :integer,
+                                id: "exp-sum",
+                                required: true,
+                                max: @assessment.exp,
+                                class: "number_field input-small" %>
 
-              <% end %>
-              <strong> / <%= @assessment.exp %></strong>
-              <% if mode != 'view' %>
-                  <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
-                  <input type="number"
-                         max="1"
-                         id="exp-multiplier"
-                         class="input-mini"
-                         value="1"
-                         step="0.1"
-                         onchange="suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %>, true)"
-                  >
-              <% end %>
-            </div>
-          </div>
+          <% end %>
+          <strong> / <%= @assessment.exp %></strong>
+          <% if mode != 'view' %>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;Multiplier:</span>
+              <input type="number"
+                     max="1"
+                     id="exp-multiplier"
+                     class="input-mini"
+                     value="1"
+                     step="0.1"
+                     onchange="suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %>, true)"
+              >
+          <% end %>
         </div>
-    <% end %>
+      </div>
+    </div>
     <% unless @assessment.comment_per_qn? %>
         <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
         <div class="row">
