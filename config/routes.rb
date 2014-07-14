@@ -80,6 +80,7 @@ JfdiAcademy::Application.routes.draw do
 
       resources :assessment_submissions,
                 path:       :submissions,
+                as:         :submissions,
                 controller: :mission_submissions,
                 except: [:create],
                 constraints: MissionConstraint do
@@ -87,7 +88,10 @@ JfdiAcademy::Application.routes.draw do
         post 'unsubmit' => 'mission_submissions#unsubmit'
         post 'test' => 'mission_submissions#test_answer'
 
-        resources :assessment_submission_gradings, path: :gradings, controller: :submission_gradings
+        resources :assessment_submission_gradings,
+                  path: :gradings,
+                  as:   :gradings,
+                  controller: :gradings
       end
     end
 

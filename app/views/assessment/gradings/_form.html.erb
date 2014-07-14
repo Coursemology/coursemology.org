@@ -25,21 +25,21 @@
       </tr>
       <% end %>
   <% end %>
-  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submit_at || @submission.created_at) %></td></tr>
-  <tr><td>Due on:</td><td><%= datetime_format @mission.close_at %></td></tr>
+  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
+  <tr><td>Due on:</td><td><%= datetime_format @assessment.close_at %></td></tr>
 </table>
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @submission}%>
 <hr/>
 
-<p class="well"><%= @mission.description.html_safe %></p>
+<p class="well"><%= @assessment.description.html_safe %></p>
 
-<% if (@submission.submit_at || @submission.created_at) > @mission.close_at %>
+<% if (@submission.submitted_at || @submission.created_at) > @assessment.close_at %>
     <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
 <% end %>
 
 
-<%= form_for [@course, @mission, @submission, @submission_grading],
+<%= form_tag new_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading),
              html: { class: "form-horizontal" } do |f| %>
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
     <%= render partial: "layouts/submission_form", locals: { mode: 'edit', submission: @submission }%>

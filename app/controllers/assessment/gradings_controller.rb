@@ -1,8 +1,9 @@
-class Assessment::SubmissionGradingsController < ApplicationController
+class Assessment::GradingsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :mission, through: :course
-  load_and_authorize_resource :submission, through: :mission
-  load_and_authorize_resource :submission_grading, through: :submission
+  load_and_authorize_resource :assessment, through: :course
+  load_and_authorize_resource :submission, class: "Assessment::Submission", through: :assessment
+  load_and_authorize_resource
+  # load_and_authorize_resource :grading, through: :submission, class: "Assessment::Grading"
 
   before_filter :load_general_course_data, only: [:new, :edit]
 
@@ -10,32 +11,32 @@ class Assessment::SubmissionGradingsController < ApplicationController
 
   def new
 
-    if @submission.submission_gradings.count > 0
+    if @submission.gradings.count > 0
       redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
       return
     end
 
     @qadata = {}
 
-    @mission.get_all_questions.each_with_index do |q,i|
-      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
+    @assessment.questions.each_with_index do |q,i|
+      @qadata[q.id] = { q: q, i: i + 1 }
     end
 
     eval_answer
-    @submission.get_all_answers.each do |sa|
+    @submission.answers.each do |sa|
       qn = sa.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
+      @qadata[qn.id][:a] = sa
       #suggest grading for auto grading question
 
-      if sa.class == StdCodingAnswer and qn.is_auto_grading?
+      if qn.specific.class == Assessment::CodingQuestion and qn.specific.auto_graded?
         results = sa.result_hash["evalTests"]
         evals = results ? results.select {|r| r}.length : 0
         tests = qn.data_hash["evalTests"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
-        ag = AnswerGrading.new
+        ag = Assessment::AnswerGrading.new
         ag.grade = grade
-        @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
+        @qadata[qn.id][:g] = ag
       end
     end
 
@@ -218,9 +219,9 @@ class Assessment::SubmissionGradingsController < ApplicationController
   def eval_answer
     # Thread.start {
     puts "Eval Coding Answer"
-    @submission.std_coding_answers.each do |answer|
-      qn = answer.qn
-      unless qn.is_auto_grading?
+    @submission.answers.coding.each do |answer|
+      qn = answer.qn.specific
+      unless qn.auto_graded?
         next
       end
       combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
