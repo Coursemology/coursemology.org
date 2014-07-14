@@ -1,8 +1,10 @@
 class Assessment::Answer < ActiveRecord::Base
   acts_as_paranoid
 
-  scope :coding, joins("INNER JOIN assessment_questions on assessment_answers.question_id =
+  scope :coding,
+        joins("INNER JOIN assessment_questions on assessment_answers.question_id =
             assessment_questions.id and assessment_questions.as_question_type = 'Assessment::CodingQuestion'")
+        .readonly(false)
 
   belongs_to  :question, class_name: Assessment::Question
   belongs_to  :std_course, class_name: "UserCourse"
