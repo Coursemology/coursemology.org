@@ -1,10 +1,5 @@
-<<<<<<< HEAD:app/views/submissions/listall.html.erb
-<%- model_class = Submission -%>
-<%- submission_display_name = @course.customized_title_by_model(Submission).pluralize -%>
-<%- assign_display_name = @course.customized_title_by_model(@tab).singularize -%>
-=======
+
 <%- model_class = Assessment::Submission -%>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4:app/views/mission_submissions/listall.html.erb
 <div class="page-header">
   <h1><%=t '.title', :default => submission_display_name %></h1>
 </div>
@@ -19,15 +14,9 @@
   </li>
 </ul>
 
-<<<<<<< HEAD:app/views/submissions/listall.html.erb
-<% if can? :see_all, Submission %>
-    <form class="form-horizontal" action="<%= @tab == Mission ? course_submissions_path : course_assessment_training_submissions_path%>" method="GET">
-      <h3>Show only <%= submission_display_name %>:</h3>
-=======
 <% if can? :see_all, Assessment::Submission %>
     <form class="form-horizontal" action="<%= nil %>" method="GET">
       <h3>Show only Submissions:</h3>
->>>>>>> f59f8d84ea61799c4f0d6844b0391782f06501d4:app/views/mission_submissions/listall.html.erb
       <div class="control-group">
         <label class="control-label">Assignments</label>
         <div class="controls">
@@ -139,7 +128,7 @@
             <td>
               <% grade = sub.submission_gradings.last %>
               <% if grade %>
-                  <%= grade.total_grade %> / <%= sub.get_asm.max_grade %>
+                  <%= grade.grade %> / <%= sub.get_asm.max_grade %>
               <% end %>
             </td>
             <td>
@@ -156,4 +145,3 @@
 <% if @sbms_paging.display? %>
     <%= paginate @sbms %>
 <% end %>
-

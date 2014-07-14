@@ -29,7 +29,7 @@
             <td><%= std.name %></td>
           <% end %>
           <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
-          <td><%= (sub and sub.final_grading) ? sub.final_grading.total_grade : 0 %>/ <%= @mission.max_grade %></td>
+          <td><%= (sub and sub.final_grading) ? sub.final_grading.grade : 0 %>/ <%= @mission.max_grade %></td>
         </tr>
       <% end %>
     </tbody>

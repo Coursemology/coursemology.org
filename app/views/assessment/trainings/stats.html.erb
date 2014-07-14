@@ -26,7 +26,7 @@
                 <td><%= std.name %></td>
             <% end %>
             <td><%= sub.nil? ?  '<span class="not-started">Not Started</span>'.html_safe : (sub.graded? ? "Finished!" : "#{sub.current_step} / #{question_count}") %></td>
-            <td><%= sub.nil? ? 0 : sub.get_final_grading.total_grade %> / <%= @training.max_grade %></td>
+            <td><%= sub.nil? ? 0 : sub.get_final_grading.grade %> / <%= @training.max_grade %></td>
           </tr>
       <% end %>
       </tbody>
