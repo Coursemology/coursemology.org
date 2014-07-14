@@ -69,7 +69,6 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   end
 
   def show
-    @qadata = {}
     # if student is still attempting a mission, redirect to edit page
     if @submission.attempting? and @submission.std_course == curr_user_course
       redirect_to edit_course_mission_submission_path
@@ -78,34 +77,14 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
     #if staff is accessing the submitted mission, redirect to grading page
     if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
-      redirect_to new_course_assessment_assessment_submission_assessment_submission_grading_path(@course, @assessment, @submission)
+      redirect_to new_course_assessment_submission_grading_path(@course, @assessment, @submission)
       return
     end
 
     if params[:grading_id]
       @grading = SubmissionGrading.find(grading_id)
     else
-      @grading = @submission.final_grading
-    end
-
-    @mission.get_all_questions.each_with_index do |q,i|
-      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
-    end
-
-    @submission.get_all_answers.each do |sa|
-      qn = sa.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
-    end
-
-    if @grading
-      @grading.answer_gradings.each do |ag|
-        qn = ag.student_answer.qn
-        @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
-      end
-    end
-
-    respond_to do |format|
-      format.html { render "submissions/show_question" }
+      @grading = @submission.gradings.last
     end
   end
 
@@ -137,11 +116,11 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       if @submission.save
         if params[:commit] == 'Save'
           @submission.set_attempting
-          format.html { redirect_to edit_course_assessment_assessment_submission_path(@course, @assessment, @submission),
+          format.html { redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been saved." }
         else
-          @submission.set_submitted(course_assessment_assessment_submission_url(@course, @assessment, @submission))
-          format.html { redirect_to course_assessment_assessment_submission_path(@course, @assessment, @submission),
+          @submission.set_submitted(course_assessment_submission_url(@course, @assessment, @submission))
+          format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been updated." }
         end
       else

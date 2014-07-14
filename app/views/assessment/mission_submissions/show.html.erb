@@ -1,0 +1,61 @@
+<%= render partial: 'summary' %>
+
+
+<% @assessment.questions.includes(:answers).each_with_index do |q, i| %>
+    <% unless @assessment.single_question? %>
+        <h3> <%= q.title || "Question  #{i + 1}" %></h3>
+        <div class="row">
+          <div class="span8">
+            <span><%= style_format(q.description) %></span>
+          </div>
+        </div>
+
+        <h3>Your answer:</h3>
+    <% end %>
+
+    <%- answer = @submission.answers.where(question_id: q.id).first %>
+    <%- question = q.specific %>
+    <% if question.class == Assessment::GeneralQuestion %>
+        <div class="row-fluid">
+          <div class="submission-question-block span10">
+            <%= qn_dic[:ans].answer.html_safe %>
+          </div>
+        </div>
+    <% else %>
+        <%=render partial: 'do_coding',
+                  locals: { answer: answer,
+                            question: question,
+                            submission: @submission,
+                            mode: "view" } %>
+    <% end %>
+
+    <hr />
+
+    <% require 'digest/md5' %>
+    <% ecid =  Digest::MD5.hexdigest(answer.id.to_s) %>
+    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
+
+    <div class="row-fluid">
+      <div class="span10">
+        <%= render partial: "comments/list",
+                   locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
+                             target:    answer,
+                             header:    'Comments',
+                             ecid:      ecid } %>
+      </div>
+    </div>
+<% end %>
+
+<br />
+
+<% if @assessment.file_submission?  %>
+    <span class="btn" data-toggle="collapse" data-target="#submission-files">
+    <i class="icon-upload icon-white"></i>
+    <span>Add files for submission</span>
+  </span>
+    <br/><br/>
+    <div id="submission-files" class="collapse out">
+      <%= render partial: 'layouts/file_uploader_complicated',
+                 locals: { owner: @submission } %>
+    </div>
+<% end %>
