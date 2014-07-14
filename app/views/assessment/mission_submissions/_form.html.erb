@@ -1,4 +1,4 @@
-<%= form_for [@course, @assessment, @submission], html: { class: 'form-horizontal' } do |f| %>
+<%= form_for @submission, url: course_assessment_submission_path(@course, @assessment, @submission), html: { class: 'form-horizontal' } do |f| %>
     <% @questions.each_with_index do |q, i| %>
         <% unless @mission.single_question? %>
             <h3> <%= q.title || "Question  #{i + 1}" %></h3>
@@ -15,9 +15,9 @@
         <%- question = q.specific %>
         <% if question.class == Assessment::GeneralQuestion %>
             <textarea name="answers[<%= q.id %>]" class="span8 html-editor" rows="8">
-            <% if answer %>
-                <%= answer.answer %>
-            <% end %>
+              <% if answer %>
+                  <%= answer.answer %>
+              <% end %>
             </textarea>
         <% else %>
             <%=render partial: 'do_coding',
@@ -31,14 +31,16 @@
 
         <% require 'digest/md5' %>
         <% ecid =  Digest::MD5.hexdigest(answer.id.to_s) %>
-        <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_assessment_submission_url(@course, @assessment, @submission) %>">
+        <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
 
-        <div class="row">
-          <%= render partial: "comments/list",
-                     locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
-                               target:    answer,
-                               header:    'Comments',
-                               ecid:      ecid } %>
+        <div class="row-fluid">
+          <div class="span10">
+            <%= render partial: "comments/list",
+                       locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
+                                 target:    answer,
+                                 header:    'Comments',
+                                 ecid:      ecid } %>
+          </div>
         </div>
     <% end %>
 
