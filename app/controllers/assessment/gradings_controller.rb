@@ -2,94 +2,89 @@ class Assessment::GradingsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :assessment, through: :course
   load_and_authorize_resource :submission, class: "Assessment::Submission", through: :assessment
-  load_and_authorize_resource
-  # load_and_authorize_resource :grading, through: :submission, class: "Assessment::Grading"
+  load_and_authorize_resource :grading, through: :submission, class: "Assessment::Grading"
 
   before_filter :load_general_course_data, only: [:new, :edit]
 
   # note: it only handles view & grading of missions
 
   def new
-
     if @submission.gradings.count > 0
-      redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission,@submission, @submission.submission_gradings.first)
+      redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @submission.gradings.first)
       return
     end
 
-    @qadata = {}
+    @summary = {qn_ans: {}}
 
     @assessment.questions.each_with_index do |q,i|
-      @qadata[q.id] = { q: q, i: i + 1 }
+      @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
     end
 
     eval_answer
-    @submission.answers.each do |sa|
-      qn = sa.qn
-      @qadata[qn.id][:a] = sa
-      #suggest grading for auto grading question
 
-      if qn.specific.class == Assessment::CodingQuestion and qn.specific.auto_graded?
-        results = sa.result_hash["evalTests"]
+    @submission.answers.each do |ans|
+      qn = ans.question.specific
+      @summary[:qn_ans][qn.question.id][:ans] = ans
+
+      #suggest grading for auto grading question
+      if qn.class == Assessment::CodingQuestion && qn.auto_graded?
+        results = ans.result_hash["eval"]
         evals = results ? results.select {|r| r}.length : 0
-        tests = qn.data_hash["evalTests"].length
+        tests = qn.data_hash["eval"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
         ag = Assessment::AnswerGrading.new
         ag.grade = grade
-        @qadata[qn.id][:g] = ag
+        @summary[:qn_ans][qn.question.id][:grade] = ag
       end
     end
-
-    @do_grading = true
   end
 
   def create
     if @submission.graded?
-      flash[:error] = "Submission has already been graded by " + @submission.final_grading.grader.name
-      redirect_to course_mission_submission_path(@course, @mission, @submission)
+      flash[:error] = "Submission has already been graded by " + @submission.gradings.last.grader.name
+      redirect_to course_mission_submission_path(@course, @assessment, @submission)
       return
     end
-    @submission_grading.total_grade = 0
-    @submission_grading.total_exp = 0
+
+
     invalid_assign = false
+    @grading.grade = 0
 
-    if @mission.single_question?
-      @submission_grading.total_grade = params[:grade_sum].to_i
-    else
-      params[:ags].each do |ag|
-        @ag = @submission_grading.answer_gradings.build(ag)
-        unless validate_gradings(@ag, ag)
-          invalid_assign = true
-          break
-        end
-
-        @ag.grader = current_user
-        @submission_grading.total_grade += @ag.grade
-        #@submission_grading.total_exp += @ag.exp
+    params[:ags].each do |ag|
+      @ag = @grading.answer_gradings.build(ag)
+      unless validate_gradings(@ag, ag)
+        invalid_assign = true
+        break
       end
+
+      @ag.grader = curr_user_course
+      @grading.grade += @ag.grade
     end
-    @submission_grading.total_exp = params[:exp_sum].to_i
-    @submission_grading.grader = current_user
-    @submission_grading.grader_course_id = curr_user_course.id
-    if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
+
+    if @grading.grade > @assessment.max_grade || @grading.exp > @assessment.exp
       invalid_assign = true
     end
+
+    @grading.grader = curr_user_course
+    g_log = @grading.grading_logs.build
+    g_log.grader = curr_user_course
+    g_log.grade = @grading.grade
+    g_log.exp = @grading.exp
+
     if invalid_assign
       grade_error_response
-    elsif @submission_grading.save
+    elsif @grading.save
       @submission.set_graded
-      @submission.final_grading = @submission_grading
-      @submission_grading.update_exp_transaction
-      @submission.save
 
-      if @course.email_notify_enabled? PreferableItem.new_grading and @mission.published?
+      if @course.email_notify_enabled? PreferableItem.new_grading and @assessment.published?
         UserMailer.delay.new_grading(
             @submission.std_course.user,
-            course_mission_submission_url(@course, @mission, @submission)
+            course_assessment_submission_url(@course, @assessment, @submission)
         )
       end
       respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+        format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                   notice: "Grading has been recorded." }
       end
     else
@@ -100,32 +95,36 @@ class Assessment::GradingsController < ApplicationController
   end
 
   def edit
-    @qadata = {}
-    if @submission_grading.autograding_refresh
+    @summary = {qn_ans: {}}
+
+    if @grading.autograding_refresh
       eval_answer
-      @submission_grading.update_attribute :autograding_refresh, false
-    end
-    @mission.get_all_questions.each_with_index do |q,i|
-      @qadata[q.id.to_s+q.class.to_s] = { q: q, i: i + 1 }
+      @grading.update_attribute :autograding_refresh, false
     end
 
-    @submission.get_all_answers.each do |sa|
+    @assessment.questions.each_with_index do |q,i|
+      @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
+    end
+
+    @submission.answers.each do |sa|
       qn = sa.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:a] = sa
+      @summary[:qn_ans][qn.id][:ans] = sa
+      # @qadata[:aws][sa.id] = sa
     end
 
-    @submission_grading.answer_gradings.each do |ag|
-      qn = ag.student_answer.qn
-      @qadata[qn.id.to_s + qn.class.to_s][:g] = ag
+    #TODO, potential read row by row
+    @grading.answer_gradings.each do |ag|
+      qn = ag.answer.question
+      @summary[:qn_ans][qn.id][:grade] = ag
     end
   end
 
   def update
-    @submission_grading.total_grade = 0
-    @submission_grading.total_exp = 0
+    @grading.grade = 0
+    @grading.exp = 0
     invalid_assign = false
-    if @mission.single_question?
-      @submission_grading.total_grade = params[:grade_sum].to_i
+    if @assessment.single_question?
+      @grading.grade = params[:grade_sum].to_i
     else
       params[:ags].each do |agid, ag|
         @ag = AnswerGrading.find(agid)
@@ -135,26 +134,25 @@ class Assessment::GradingsController < ApplicationController
         end
         @ag.update_attributes(ag)
         #@ag.grader = current_user
-        @submission_grading.total_grade += ag[:grade].to_i
-        #@submission_grading.total_exp += ag[:exp].to_i
+        @grading.grade += ag[:grade].to_i
+        #@grading.exp += ag[:exp].to_i
       end
     end
-    @submission_grading.last_grade_updated = Time.now
+    @grading.last_grade_updated = Time.now
     @submission.set_graded
-    #@submission_grading.grader = current_user
-    @submission_grading.total_exp = params[:exp_sum].to_i
-    if @submission_grading.total_grade > @mission.max_grade || @submission_grading.total_exp > @mission.exp
+    @grading.exp = params[:exp_sum].to_i
+    if @grading.grade > @assessment.max_grade || @grading.exp > @assessment.exp
       invalid_assign = true
     end
-    unless @submission_grading.grader_course_id
-      @submission_grading.grader_course_id = curr_user_course.id
+    unless @grading.grader_course_id
+      @grading.grader_course_id = curr_user_course.id
     end
     if invalid_assign
       grade_error_response(true)
-    elsif @submission_grading.save
-      @submission_grading.update_exp_transaction
+    elsif @grading.save
+
       respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+        format.html { redirect_to course_mission_submission_path(@course, @assessment, @submission),
                                   notice: "Grading has been recorded." }
       end
     else
@@ -172,7 +170,7 @@ class Assessment::GradingsController < ApplicationController
     end
     @submission ||= not_found
     if @submission.std_course == curr_user_course
-      redirect_to course_mission_submission_path(@course, @mission, @submission)
+      redirect_to course_mission_submission_path(@course, @assessment, @submission)
     else
       flash[:error] = "You are not authorized to access the page :("
       redirect_to @course
@@ -183,12 +181,12 @@ class Assessment::GradingsController < ApplicationController
 
   def validate_gradings(ag_record, ag)
     grade = ag[:grade].strip
-    max_grade = @mission.max_grade
+    max_grade = @assessment.max_grade
     unless ag[:exp]
       return validate_grade(grade, max_grade)
     end
 
-    max_exp = @mission.exp
+    max_exp = @assessment.exp
     qn_grade = ag_record.student_answer.qn.max_grade
     qn_exp = max_exp * (qn_grade.to_f / max_grade.to_f)
     exp = ag[:exp].strip
@@ -209,26 +207,24 @@ class Assessment::GradingsController < ApplicationController
     respond_to do |format|
       flash[:error] = "Grading appears to have failed. Did you, for example, try to give grade/exp > max? ;)"
       if edit
-        format.html { redirect_to edit_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
+        format.html { redirect_to edit_course_mission_submission_submission_grading_path(@course, @assessment, @submission)}
       else
-        format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @mission, @submission)}
+        format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @assessment, @submission)}
       end
     end
   end
 
   def eval_answer
     # Thread.start {
-    puts "Eval Coding Answer"
-    @submission.answers.coding.each do |answer|
-      qn = answer.qn.specific
+    @submission.answers.coding.each do |ans|
+      qn = ans.qn.specific
       unless qn.auto_graded?
         next
       end
-      combined_code = PythonEvaluator.combine_code(answer.code, qn.test_code)
-      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@mission), combined_code, qn.data_hash, true)
-      answer.result = result.to_json
-      puts result
-      answer.save
+      combined_code = PythonEvaluator.combine_code(ans.answer, qn.test_code)
+      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn, true)
+      ans.result = result.to_json
+      ans.save
     end
     # }
   end
