@@ -1,15 +1,13 @@
-class SubmissionsController < ApplicationController
-  load_and_authorize_resource :course
-  load_and_authorize_resource :mission, through: :course
-  load_and_authorize_resource :submission, through: :mission
+class Assessment::MissionSubmissionsController < Assessment::SubmissionsController
+  # load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission"
 
-  skip_load_and_authorize_resource :submission, only: :listall
-  skip_load_and_authorize_resource :mission, only: :listall
+  # skip_load_and_authorize_resource :submission, only: :listall
+  # skip_load_and_authorize_resource :mission, only: :listall
 
-  before_filter :authorize, only: [:new, :create, :edit, :update]
-  before_filter :allow_only_one_submission, only: [:new, :create]
-  before_filter :no_update_after_submission, only: [:edit, :update]
-  before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
+  # before_filter :authorize, only: [:new, :create, :edit, :update]
+  # before_filter :allow_only_one_submission, only: [:new, :create]
+  # before_filter :no_update_after_submission, only: [:edit, :update]
+  # before_filter :load_general_course_data, only: [:index, :listall, :show, :new, :create, :edit]
 
 
   def listall
@@ -113,35 +111,26 @@ class SubmissionsController < ApplicationController
     end
   end
 
-  def new
-    if @submission.save
-      if @submission.attempt == 1 && curr_user_course.is_student?
-        Activity.attempted_asm(curr_user_course, @mission)
-      end
-      respond_to do |format|
-        format.html { redirect_to edit_course_mission_submission_path(@course,@mission,@submission)}
-      end
-    end
-  end
 
   def create
     update
   end
 
   def edit
-    @questions = @mission.get_all_questions
-    @submission.build_initial_answers(current_user)
-    @std_answers = {}
-    @std_coding_answers = {}
-    @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
-    @submission.std_coding_answers.each { |answer| @std_coding_answers[answer.qn_id] = answer}
+    @mission = @assessment.as_assessment
+    @questions = @assessment.questions
+    @submission.build_initial_answers
+    # @std_answers = {}
+    # @std_coding_answers = {}
+    # @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
+    # @submission.std_coding_answers.each { |answer| @std_coding_answers[answer.qn_id] = answer}
     respond_to do |format|
       format.html
     end
   end
 
   def update
-    @submission.fetch_params_answers(params,current_user)
+    @submission.fetch_params_answers(params)
     if params[:files]
       @submission.attach_files(params[:files].values)
     end
@@ -150,11 +139,11 @@ class SubmissionsController < ApplicationController
       if @submission.save
         if params[:commit] == 'Save'
           @submission.set_attempting
-          format.html { redirect_to edit_course_mission_submission_path(@course, @mission, @submission),
+          format.html { redirect_to edit_course_assessment_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been saved." }
         else
-          @submission.set_submitted(course_mission_submission_url(@course, @mission, @submission))
-          format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+          @submission.set_submitted(course_assessment_assessment_submission_url(@course, @assessment, @submission))
+          format.html { redirect_to course_assessment_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been updated." }
         end
       else

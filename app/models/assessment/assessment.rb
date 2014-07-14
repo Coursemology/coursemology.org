@@ -30,7 +30,7 @@ class Assessment < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
 
-  has_many  :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
+  has_many  :required_for, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
 
   has_many :as_asm_reqs, class_name: RequirableRequirement, as: :requirable, dependent: :destroy
   has_many :as_requirements, through: :as_asm_reqs
@@ -103,6 +103,10 @@ class Assessment < ActiveRecord::Base
 
   def is_mission?
     as_assessment_type == "Assessment::Mission"
+  end
+
+  def is_training?
+    as_assessment_type == "Assessment::Training"
   end
 
   def get_path

@@ -40,4 +40,8 @@ class Assessment::Question < ActiveRecord::Base
       qa.assessment.update_grade
     end
   end
+
+  def specific
+    as_question
+  end
 end

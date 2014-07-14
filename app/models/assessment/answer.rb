@@ -1,6 +1,6 @@
 class Assessment::Answer < ActiveRecord::Base
   acts_as_paranoid
-  acts_as_superclass as: :as_answer
+
 
   belongs_to  :question, class_name: Assessment::Question
   belongs_to  :std_course, class_name: "UserCourse"
@@ -9,6 +9,7 @@ class Assessment::Answer < ActiveRecord::Base
   has_one   :answer_grading, class_name: Assessment::AnswerGrading
 
   has_one :comment_topic, as: :topic
+
 
   alias_method :qn, :question
 

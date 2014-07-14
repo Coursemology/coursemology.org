@@ -2,8 +2,8 @@ class Assessment::Submission < ActiveRecord::Base
   acts_as_paranoid
 
   scope :mission_submissions,
-         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
-         where("assessments.as_assessment_type = 'Assessment::Mission'")
+        joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
+            where("assessments.as_assessment_type = 'Assessment::Mission'")
 
   scope :training_submissions,
         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
@@ -12,7 +12,10 @@ class Assessment::Submission < ActiveRecord::Base
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
   has_many :answers, class_name: Assessment::Answer, dependent: :destroy
+
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
+
+  after_create :set_attempting
 
   def get_final_grading
     if self.gradings.length > 0
@@ -57,13 +60,26 @@ class Assessment::Submission < ActiveRecord::Base
   #TODO
   def set_submitted(redirect_url = "", notify = true)
     self.update_attribute(:status,'submitted')
-    self.update_attribute(:submit_at, updated_at)
+    self.update_attribute(:submitted_at, updated_at)
 
-    if self.class == Submission
-      pending_action = std_course.pending_actions.where(item_type: Mission.to_s, item_id: self.mission.id).first
-      pending_action.set_done if pending_action
+    pending_action = std_course.pending_actions.where(item_type: Assessment.to_s, item_id: self.assessment.id).first
+    pending_action.set_done if pending_action
 
-      notify_submission(redirect_url) if notify
+    notify_submission(redirect_url) if notify
+  end
+
+  def notify_submission(redirect_url)
+    unless std_course.course.email_notify_enabled?(PreferableItem.new_submission)
+      return
+    end
+    std_course.get_staff_incharge.each do |uc|
+      #TODO: logging
+      UserMailer.delay.new_submission(
+          uc.user,
+          std_course.user,
+          assessment,
+          redirect_url
+      )
     end
   end
 
@@ -128,6 +144,39 @@ class Assessment::Submission < ActiveRecord::Base
     exp = subm_grading.update_exp_transaction
     subm_grading.save
     exp
+  end
+
+  def build_initial_answers
+    self.assessment.questions.includes(:as_question).each do |qn|
+      unless self.answers.find_by_question_id(qn.id)
+        ans = self.answers.build({std_course_id: std_course_id,
+                                  question_id: qn.id,
+                                  answer: "",
+                                  attempt_left: qn.as_question.test_limit})
+        ans.save
+      end
+    end
+  end
+
+  def fetch_params_answers(params)
+    answers =  params[:answers] || []
+
+    answers.each do |qid, ans|
+      sa = self.answers.where(question_id: qid).first || self.answers.build({question_id: qid, std_course_id: std_course_id})
+      sa.answer = ans
+      sa.save
+    end
+
+    sub_files = params[:files] ? params[:files].values : []
+    self.attach_files(sub_files)
+  end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find(id)
+      file.owner = self
+      file.save
+    end
   end
 
   #TODO

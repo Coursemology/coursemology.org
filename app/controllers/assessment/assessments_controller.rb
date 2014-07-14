@@ -50,6 +50,7 @@ class Assessment::AssessmentsController < ApplicationController
       sub_map[sub.assessment_id] = sub
     end
 
+    #TODO:bug fix for training action, it's rather complicated
     action_map = {}
     @assessments.each do |ast|
       if sub_ids.include? ast.id
