@@ -3,9 +3,9 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   # skip_load_and_authorize_resource :submission, only: :listall
   # skip_load_and_authorize_resource :mission, only: :listall
 
-  # before_filter :authorize, only: [:new, :create, :edit, :update]
+  before_filter :authorize, only: [:new, :create, :edit, :update]
   # before_filter :allow_only_one_submission, only: [:new, :create]
-  # before_filter :no_update_after_submission, only: [:edit, :update]
+  before_filter :no_update_after_submission, only: [:edit, :update]
 
 
   def listall
@@ -76,15 +76,14 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     end
 
     #if staff is accessing the submitted mission, redirect to grading page
-    if (@submission.submitted? or @submission.graded?) and curr_user_course.is_staff?
-      redirect_to new_course_assessment_submission_grading_path(@course, @assessment, @submission)
+    if curr_user_course.is_staff? and (@submission.submitted? or @submission.graded?)
+        redirect_to new_course_assessment_submission_grading_path(@course, @assessment, @submission)
       return
     end
 
-    if params[:grading_id]
-      @grading = SubmissionGrading.find(grading_id)
-    else
-      @grading = @submission.gradings.last
+    if @submission.graded?
+      grading = @submission.gradings.first
+      redirect_to course_assessment_submission_grading_path(@course, @assessment, @submission,grading)
     end
   end
 
@@ -141,8 +140,8 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     if std_answer.attempt_left <= 0 and !curr_user_course.is_staff?
       result = {access_error: true, msg: "exceeds maximum testing times"}
     else
-      # std_answer.attempt_left -= 1
-      # std_answer.answer = code
+      std_answer.attempt_left -= 1
+      std_answer.answer = code
       std_answer.save
       qn = std_answer.question
       combined_code = PythonEvaluator.combine_code(code, qn.specific.test_code)
@@ -169,7 +168,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   def no_update_after_submission
     unless @submission.attempting?
       respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @mission, @submission),
+        format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                   notice: "Your have already submitted this mission." }
       end
     end
@@ -180,7 +179,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       return true
     end
 
-    can_start = @mission.can_start?(curr_user_course)
+    can_start = @assessment.can_start?(curr_user_course)
     unless can_start
       redirect_to course_mission_access_denied_path(@course, @mission)
     end
