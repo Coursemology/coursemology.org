@@ -4,7 +4,7 @@ class Assessment::GradingsController < ApplicationController
   load_and_authorize_resource :submission, class: "Assessment::Submission", through: :assessment
   load_and_authorize_resource :grading, through: :submission, class: "Assessment::Grading"
 
-  before_filter :load_general_course_data, only: [:new, :edit]
+  before_filter :load_general_course_data, only: [:new, :edit, :show]
 
   # note: it only handles view & grading of missions
 
@@ -67,6 +67,7 @@ class Assessment::GradingsController < ApplicationController
     end
 
     @grading.grader = curr_user_course
+    @grading.student = @submission.std_course
     g_log = @grading.grading_logs.build
     g_log.grader = curr_user_course
     g_log.grade = @grading.grade
@@ -95,28 +96,7 @@ class Assessment::GradingsController < ApplicationController
   end
 
   def edit
-    @summary = {qn_ans: {}}
-
-    if @grading.autograding_refresh
-      eval_answer
-      @grading.update_attribute :autograding_refresh, false
-    end
-
-    @assessment.questions.each_with_index do |q,i|
-      @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
-    end
-
-    @submission.answers.each do |sa|
-      qn = sa.qn
-      @summary[:qn_ans][qn.id][:ans] = sa
-      # @qadata[:aws][sa.id] = sa
-    end
-
-    #TODO, potential read row by row
-    @grading.answer_gradings.each do |ag|
-      qn = ag.answer.question
-      @summary[:qn_ans][qn.id][:grade] = ag
-    end
+    build_summary
   end
 
   def update
@@ -152,7 +132,7 @@ class Assessment::GradingsController < ApplicationController
     elsif @grading.save
 
       respond_to do |format|
-        format.html { redirect_to course_mission_submission_path(@course, @assessment, @submission),
+        format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                   notice: "Grading has been recorded." }
       end
     else
@@ -163,6 +143,11 @@ class Assessment::GradingsController < ApplicationController
 
   end
 
+  def show
+    build_summary
+  end
+
+
   rescue_from CanCan::AccessDenied do |exception|
     unless current_user
       redirect_to new_user_session_path
@@ -170,7 +155,7 @@ class Assessment::GradingsController < ApplicationController
     end
     @submission ||= not_found
     if @submission.std_course == curr_user_course
-      redirect_to course_mission_submission_path(@course, @assessment, @submission)
+      redirect_to course_assessment_submission_path(@course, @assessment, @submission)
     else
       flash[:error] = "You are not authorized to access the page :("
       redirect_to @course
@@ -227,5 +212,30 @@ class Assessment::GradingsController < ApplicationController
       ans.save
     end
     # }
+  end
+
+  def build_summary
+    @summary = {qn_ans: {}}
+
+    if @grading.autograding_refresh
+      eval_answer
+      @grading.update_attribute :autograding_refresh, false
+    end
+
+    @assessment.questions.each_with_index do |q,i|
+      @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
+    end
+
+    @submission.answers.each do |sa|
+      qn = sa.qn
+      @summary[:qn_ans][qn.id][:ans] = sa
+      # @qadata[:aws][sa.id] = sa
+    end
+
+    #TODO, potential read row by row
+    @grading.answer_gradings.each do |ag|
+      qn = ag.answer.question
+      @summary[:qn_ans][qn.id][:grade] = ag
+    end
   end
 end
