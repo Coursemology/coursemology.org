@@ -3,10 +3,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
-  skip_before_filter  :verify_authenticity_token
+  # skip_before_filter  :verify_authenticity_token
 
   rescue_from CanCan::AccessDenied do |exception|
-
     unless current_user
       session[:request_url] = request.url
     end
@@ -159,7 +158,7 @@ class ApplicationController < ActionController::Base
     # home
     @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course ? curr_user_course.role_id : 0}") { sidebar_general_items }
 
-    if can? :manage, Course
+    if can? :manage, @course
       @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
     end
   end

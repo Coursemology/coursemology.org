@@ -17,4 +17,9 @@ class Assessment::Training < ActiveRecord::Base
   def column_for_attribute(name)
     super || self.assessment.column_for_attribute(name)
   end
+
+  def get_path
+    course_assessment_training_path(self.course, self)
+  end
+
 end

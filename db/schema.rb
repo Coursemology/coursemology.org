@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140608144533) do
+ActiveRecord::Schema.define(:version => 20140627064143) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -19,11 +19,12 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.time     "deleted_at"
     t.boolean  "auto_assign"
     t.text     "requirement_text"
+    t.boolean  "published",        :default => true
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
@@ -174,35 +175,26 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
   end
 
   create_table "assessment_answers", :force => true do |t|
-    t.integer  "as_answer_id"
-    t.string   "as_answer_type"
     t.integer  "assessment_id"
     t.integer  "submission_id"
     t.integer  "question_id"
     t.integer  "std_course_id"
-    t.text     "answer",         :limit => 16777215
-    t.boolean  "finalised",                          :default => false
+    t.text     "answer",        :limit => 16777215
+    t.integer  "attempt_left",                      :default => 0
+    t.boolean  "finalised",                         :default => false
+    t.boolean  "correct",                           :default => false
     t.datetime "deleted_at"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
   end
 
   add_index "assessment_answers", ["assessment_id", "std_course_id"], :name => "index_assessment_answers_on_assessment_id_and_std_course_id"
 
-  create_table "assessment_coding_answers", :force => true do |t|
-    t.integer  "attempt_left", :default => 0
-    t.boolean  "correct",      :default => false
-    t.datetime "deleted_at"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
   create_table "assessment_coding_questions", :force => true do |t|
     t.integer  "dependent_id"
     t.integer  "language_id"
-    t.integer  "time_limit"
     t.integer  "memory_limit"
-    t.integer  "test_limit"
+    t.integer  "time_limit"
     t.boolean  "auto_graded"
     t.text     "data"
     t.datetime "deleted_at"
@@ -274,7 +266,7 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.string   "title"
     t.text     "description"
     t.decimal  "max_grade",         :precision => 10, :scale => 0
-    t.integer  "position"
+    t.integer  "test_limit"
     t.datetime "last_commented_at"
     t.datetime "deleted_at"
     t.datetime "created_at",                                       :null => false
@@ -999,6 +991,7 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
   create_table "question_assessments", :force => true do |t|
     t.integer  "question_id"
     t.integer  "assessment_id"
+    t.integer  "position"
     t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
@@ -1569,6 +1562,7 @@ ActiveRecord::Schema.define(:version => 20140608144533) do
     t.datetime "confirmation_sent_at"
     t.boolean  "is_logged_in",           :default => true
     t.boolean  "is_pending_deletion",    :default => false
+    t.boolean  "use_uploaded_picture",   :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

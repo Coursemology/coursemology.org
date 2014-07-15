@@ -2,6 +2,8 @@ class Assessment::Mission < ActiveRecord::Base
   acts_as_paranoid
   is_a :assessment, as: :as_assessment, auto_join: false, class_name: "Assessment"
 
+  include Rails.application.routes.url_helpers
+
   attr_accessible :close_at
   attr_accessible  :single_question,
                    :file_submission,
@@ -12,9 +14,9 @@ class Assessment::Mission < ActiveRecord::Base
 
   validates_with DateValidator, fields: [:open_at, :close_at]
 
-  belongs_to  :dependent_on, class_name: "Assessment::Mission", foreign_key: "dependent_id"
-  has_many    :dependent_by, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
   belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
+
+  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
 
   # has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
   # has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
@@ -35,16 +37,16 @@ class Assessment::Mission < ActiveRecord::Base
 
   #TODO
   def can_start?(curr_user_course)
-    # if open_at > Time.now
-    #   return  false, "Mission hasn't open yet :)"
-    # end
-    # if dependent_on
-    #   sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
-    #   if !sbm || sbm.attempting?
-    #     return false, "You need to complete #{dependent_mission.title} to unlock this mission :|"
-    #   end
-    # end
-    # return true, ""
+    if open_at > Time.now
+      return  false
+    end
+    if dependent_on
+      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
+      if !sbm || sbm.attempting?
+        return false
+      end
+    end
+    true
   end
 
   # Converts this mission into a format that can be used by the lesson plan component
@@ -65,7 +67,7 @@ class Assessment::Mission < ActiveRecord::Base
   end
 
   def get_path
-    course_mission_path(self.course, self)
+    course_assessment_mission_path(self.course, self)
   end
 
   def missions_dep_on_published
@@ -90,5 +92,6 @@ class Assessment::Mission < ActiveRecord::Base
   #TODO
 
   #TODO
+
   alias_method :sbms, :submissions
 end

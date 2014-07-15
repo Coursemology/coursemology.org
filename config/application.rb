@@ -90,5 +90,7 @@ module JfdiAcademy
       end
       html
     }
+
+    config.jquery_templates.prefix = "templates"
   end
 end

@@ -1,0 +1,37 @@
+<% if @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
+    <%= render :partial => 'single_question_form', locals: {mode: "edit"} %>
+<% else %>
+    <%= render :partial => 'multiple_question_form', locals: {mode: "edit"} %>
+<% end %>
+
+<script>
+    function suggestEXP(max, exp, sum) {
+
+        var sum_grade = 0;
+        if (typeof(sum) == 'undefined') {
+            grade_input = $(".grade-input");
+
+            grade_input.each(function(){
+                sum_grade += $(this).val() - 0;
+            });
+
+        } else {
+            sum_grade = $('#grade-sum').val() - 0;
+        }
+
+        multiplier = $("#exp-multiplier").val() - 0;
+        multiplier = multiplier > 1 ? 1 : multiplier;
+
+        total_grade = $("#grade-sum");
+
+
+        var result = Math.round(Math.round(multiplier * (exp * sum_grade / max) / 5) * 5);
+        $("#exp-sum").val(result);
+        total_grade.val(Math.round(sum_grade * 100) / 100);
+    }
+
+    $(document).ready(function() {
+        if ($("#exp-sum").val() == "")
+            suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %> );
+    });
+</script>

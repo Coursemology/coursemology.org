@@ -1,0 +1,44 @@
+<div class="page-header">
+  <h1><%= @course.customized_title(@summary[:type]).singularize %> Grading: <%= @assessment.title %></h1>
+</div>
+
+<% @summary[:stats].each do |key, stds| %>
+    <% if stds.size > 0 or key != 'My Students'%>
+        <h3><%= key %></h3>
+
+
+        <br>
+        <table class="table">
+          <thead>
+          <th>Student</th>
+          <% if key != 'My Students' %>
+              <th>Tutor</th>
+          <% end %>
+          <th>Status</th>
+          <th>Grade</th>
+          </thead>
+          <tbody>
+          <% stds.each do |std| %>
+              <% sub = @submissions.where(std_course_id: std).first %>
+              <% grade = nil %>
+              <tr>
+                <% if sub %>
+                    <% grade = sub.gradings.first %>
+                    <td><a href="<%= course_assessment_submission_path(@course, @assessment, sub) %>"><%= std.name %></a> </td>
+                <% else %>
+                    <td><%= std.name %></td>
+                <% end %>
+                <% if key != 'My Students' %>
+                    <td><%= std.get_my_tutor_name %></td>
+                <% end %>
+                <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
+                <td><%= grade ? grade.grade : 0 %> / <%= @assessment.max_grade %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <% if @stats_paging.display? %>
+            <%= paginate stds %>
+        <% end %>
+    <% end %>
+<% end %>

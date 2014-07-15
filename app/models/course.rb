@@ -16,7 +16,11 @@ class Course < ActiveRecord::Base
 
   has_many  :assessments, dependent: :destroy
   has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
-            source: :as_assessment, source_type: "Assessment::Mission"
+            source: :as_assessment, source_type: "Assessment::Mission" do
+    def published
+      where("assessments.published = ?", true)
+    end
+  end
 
   has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Training"
@@ -101,12 +105,45 @@ class Course < ActiveRecord::Base
     self.comment_topics.where(pending: true).count
   end
 
-  def mission_columns
-    self.course_preferences.mission_columns
+  def assessments_by_type(type)
+    type = type.pluralize
+    if self.respond_to? type
+      self.send type
+    else
+      raise  "#{self.class.name} has no association named #{type}"
+    end
   end
 
-  def training_columns
-    self.course_preferences.training_columns
+  def assessment_columns(type, enabled = false)
+    columns = self.course_preferences.join_items.column
+
+    if columns.respond_to? type
+      columns = columns.send type
+    else
+      raise type + " not found in assessment column preferences"
+    end
+
+    enabled ? columns.send(:enabled) : columns
+  end
+
+  def time_format(type)
+    time_formats = self.course_preferences.join_items.time_format
+
+    if time_formats.respond_to? type
+      time_formats = time_formats.send type
+    else
+      raise type + " not found in assessment time format preferences"
+    end
+    time_formats.first
+  end
+
+  def paging_pref(page)
+    self.course_preferences.join_items.paging.item_type(page.pluralize).
+        first || (raise page + " has no paging preference")
+  end
+
+  def training_reattempt
+    self.course_preferences.join_items.training.reattempt.first
   end
 
   def mcq_auto_grader
@@ -121,85 +158,11 @@ class Course < ActiveRecord::Base
     student_sidebar_items.where(display: true)
   end
 
-  def mission_columns_display
-    mission_columns.select {|pref| pref.display }
-  end
-
   def student_sidebar_ranking
     self.course_preferences.other_sidebar_items.where("preferable_items.name = 'ranking'").first
   end
   def show_ranking?
     student_sidebar_ranking.display?
-  end
-
-  def training_columns_display
-    training_columns.select {|pref| pref.display }
-  end
-
-  def mission_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
-        pref.preferable_item.item_type == "Time" }.first
-  end
-
-  def training_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
-        pref.preferable_item.item_type == "Time" }.first
-  end
-
-  def trainings_paging_pref
-    paging_pref('Trainings')
-  end
-
-  def missions_paging_pref
-    paging_pref('Missions')
-  end
-
-  def announcements_paging_pref
-    paging_pref('Announcements')
-  end
-
-  def missions_stats_paging_pref
-    paging_pref('MissionStats')
-  end
-
-  def mission_sbm_paging_pref
-    paging_pref('MissionSubmissions')
-  end
-
-  def training_stats_paging_pref
-    paging_pref('TrainingStats')
-  end
-
-  def training_sbm_paging_pref
-    paging_pref('TrainingSubmissions')
-  end
-
-  def comments_paging_pref
-    paging_pref('Comments')
-  end
-
-  def achievements_paging_pref
-    paging_pref('Achievements')
-  end
-
-  def students_paging_pref
-    paging_pref('Students')
-  end
-
-  def forum_paging_pref
-    paging_pref('Forums')
-  end
-
-  def mgmt_std_paging_pref
-    paging_pref('ManageStudents')
-  end
-
-  def std_summary_paging_pref
-    paging_pref('StudentSummary')
-  end
-
-  def paging_pref(page)
-    self.course_preferences.course_paging_prefs.select { |pref| pref.preferable_item.item_type == page}.first
   end
 
   def achievements_locked_display
@@ -313,7 +276,7 @@ class Course < ActiveRecord::Base
   end
 
   def customized_title(tab)
-    self.course_navbar_preferences.find_by_item(tab).name
+    self.course_navbar_preferences.find_by_item(tab.pluralize).name
   end
 
   def customized_title_by_model(model_class)

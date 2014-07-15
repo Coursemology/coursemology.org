@@ -1,0 +1,35 @@
+<table width="100%">
+  <col width="15%" />
+  <tr><td>Student: </td><td><%= render partial: "layouts/user_name_link", locals: {user_course: @submission.std_course} %></td></tr>
+  <% if @submission.std_course.get_my_tutors.first %>
+      <tr><td>Tutor: </td> <td> <%= @submission.std_course.get_my_tutor_name %></td></tr>
+  <% end %>
+  <% if @grading.persisted? %>
+      <tr>
+        <td>Total grade: </td>
+        <td>
+          <%= @grading.grade %> / <%= @assessment.max_grade %>
+        </td>
+      </tr>
+      <% if @grading.grader %>
+          <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+      <% else %>
+          <tr><td>Grader: </td><td>Auto graded!</td></tr>
+      <% end %>
+      <tr>
+        <td>Graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
+      </tr>
+      <!--TODO: display grading logs-->
+  <% end %>
+  <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
+  <tr><td>Due on:</td><td><%= datetime_format @assessment.close_at %></td></tr>
+</table>
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @submission}%>
+<hr/>
+
+<p class="well"><%= @assessment.description.html_safe %></p>
+
+<% if (@submission.submitted_at || @submission.created_at) > @assessment.close_at %>
+    <p class="late-submission">This submission is LATE! You may want to penalize the student for late submission.</p>
+<% end %>

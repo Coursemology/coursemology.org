@@ -1,4 +1,4 @@
-<% if can? :manage, :bulk_update, Assessment::Mission %>
+<% if can? :bulk_update, Assessment %>
 <ul class="nav nav-tabs">
   <li class="<%= 'active' if current_page?(:course_assessment_missions) %>">
     <a href="<%=  course_assessment_missions_path %>" data-toggle="tab"><h4>Missions</h4></a>

@@ -29,7 +29,7 @@
           </li>
       <% end %>
   <% end %>
-  <% if can? :manage, :bulk_update %>
+  <% if can? :bulk_update, Assessment %>
       <li class="<%= "active" if @tab_id == 'overview' %>">
         <a href="<%= course_assessment_trainings_overview_path %>" ><h4>Overview</h4></a>
       </li>

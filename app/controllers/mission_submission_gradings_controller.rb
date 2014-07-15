@@ -24,8 +24,8 @@ class MissionSubmissionGradingsController < ApplicationController
 
       #suggest grading for auto grading question
       if answer.class == Assessment::CodingAnswer and question.auto_graded?
-        evals = sa.result_hash['evalTests'].select {|r| r}.length
-        tests = qn.data_hash["evalTests"].length
+        evals = sa.result_hash['eval'].select {|r| r}.length
+        tests = qn.data_hash["eval"].length
         grade = (qn.max_grade * evals / tests).to_i
         ag = AnswerGrading.new
         ag.grade = grade

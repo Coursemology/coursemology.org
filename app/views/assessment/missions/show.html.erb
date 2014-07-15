@@ -79,7 +79,7 @@
   <table class="table assignments-questions-table">
     <tbody class="asm-qns" url="<%= reorder_course_assessment_mission_asm_qns_path(@course, @mission) %>">
       <% @questions.each_with_index do |q, i| %>
-        <tr class="asm-qn" id="asm-qn_<%= q.question.id %>">
+        <tr class="asm-qn" id="asm-qn_<%= q.id %>">
           <td class="span12">
             <div class="asm-qn-handler">
               <i class="icon-move handler-icon"></i>
@@ -90,12 +90,12 @@
           <% if can? :manage, @mission %>
             <td class="actions-col">
               <% case %>
-              <% when q.class == Assessment::TextQuestion %>
-                <%= link_to edit_course_assessment_mission_assessment_text_question_path(@course, @mission, q), class: 'btn' do %>
+              <% when q.as_question.class == Assessment::GeneralQuestion %>
+                <%= link_to edit_course_assessment_mission_assessment_general_question_path(@course, @mission, q), class: 'btn' do %>
                   <i class="icon-edit"></i>
                 <% end %>
-                <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_assessment_text_question_path(@course, @mission, q) } %>
-              <% when q.class == Assessment::CodingQuestion %>
+                <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_assessment_general_question_path(@course, @mission, q) } %>
+              <% when q.as_question.class == Assessment::CodingQuestion %>
                 <%= link_to edit_course_assessment_mission_assessment_coding_question_path(@course, @mission, q), class: 'btn' do %>
                   <i class="icon-edit"></i>
                 <% end %>

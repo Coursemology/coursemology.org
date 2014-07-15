@@ -15,6 +15,5 @@ class Ability
         can :manage, Course, creator_id: user.id
       end
     end
-    can :read, :all
   end
 end

@@ -6,21 +6,31 @@ class Assessment < ActiveRecord::Base
   default_scope { order("assessments.open_at") }
 
   attr_accessible   :open_at,:close_at, :exp
-  attr_accessible   :title, :description
+  attr_accessible   :title, :description, :tab_id
   attr_accessible   :published
+
+  #mission
+  delegate :dependent_id, :close_at, :can_start?, :single_question?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
+
+  #training
+  delegate :bonus_exp, :bonus_cutoff_at, :get_path, to: :as_assessment
 
   include HasRequirement
   include ActivityObject
 
-  scope :closed, lambda { where("close_at < ?", Time.now) }
-  scope :still_open, lambda { where("close_at >= ? ", Time.now) }
-  scope :opened, lambda { where("open_at <= ? ", Time.now) }
-  scope :future, lambda { where("open_at > ? ", Time.now) }
-  scope :published, where(publish: true)
+  scope :closed, -> { where("close_at < ?", Time.now) }
+  scope :still_open, -> { where("close_at >= ? ", Time.now) }
+  scope :opened, -> { where("open_at <= ? ", Time.now) }
+  scope :future, -> { where("open_at > ? ", Time.now) }
+  scope :published, -> { where(published: true) }
+  scope :mission, -> {where(as_assessment_type: "Assessment::Mission")}
+  scope :training, -> {where(as_assessment_type: "Assessment::Training")}
 
   belongs_to  :tab
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
+
+  has_many  :required_for, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
 
   has_many :as_asm_reqs, class_name: RequirableRequirement, as: :requirable, dependent: :destroy
   has_many :as_requirements, through: :as_asm_reqs
@@ -31,10 +41,33 @@ class Assessment < ActiveRecord::Base
       where(as_question_type: Assessment::CodingQuestion)
     end
 
-    def before(question)
-      where(pos: ['< ?', question.pos])
+    def mcq
+      where(as_question_type: Assessment::McqQuestion)
+    end
+
+    #TODO
+    def before(question, pos = 0)
+      if question.persisted?
+        before_pos(proxy_association.owner.question_assessments.where(question_id: question.id).first.position)
+      else
+        before_pos(pos)
+      end
+    end
+
+    def before_pos(position)
+      where('position < ?', position)
     end
   end
+
+  has_many  :general_questions, class_name: "Assessment::GeneralQuestion",
+            through: :questions,
+            source: :as_question, source_type: "Assessment::GeneralQuestion"
+
+  has_many  :mcqs, class_name: "Assessment::Question",
+            through: :question_assessments,
+            source: :question,
+            conditions: {as_question_type: "Assessment::McqQuestion"}
+
 
   #tags through question tags
   has_many :taggable_tags, as: :taggable, dependent: :destroy
@@ -64,8 +97,20 @@ class Assessment < ActiveRecord::Base
     self.questions
   end
 
-  def get_path
-    raise NotImplementedError
+  def opened?
+    open_at <= Time.now
+  end
+
+  def is_mission?
+    as_assessment_type == "Assessment::Mission"
+  end
+
+  def is_training?
+    as_assessment_type == "Assessment::Training"
+  end
+
+  def last_submission(user_course_id)
+    self.submissions.where(std_course_id: user_course_id).order(created_at: :desc).first
   end
 
   def get_final_sbm_by_std(std_course_id)
@@ -82,9 +127,9 @@ class Assessment < ActiveRecord::Base
   end
 
   def update_qns_pos
-    self.asm_qns.each_with_index do |asm_qn, i|
-      asm_qn.pos = i
-      asm_qn.save
+    question_assessments.each_with_index do |qa, i|
+      qa.position = i
+      qa.save
     end
   end
 
@@ -181,6 +226,14 @@ class Assessment < ActiveRecord::Base
       end
     end
     clone
+  end
+
+  def specific
+    as_assessment
+  end
+
+  def mark_refresh_autograding
+    #TODO
   end
 
 end

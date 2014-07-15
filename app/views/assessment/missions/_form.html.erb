@@ -128,14 +128,6 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <%= f.label 'Topics', class: 'control-label' %>
-      <div class="controls">
-
-        <%= render partial: "tags/form_checkboxes",
-                   locals: { course: @course } %>
-      </div>
-    </div>
     <div id="uploaded_files_div"></div>
     <div class="form-actions">
       <%= f.submit "#{@mission.new_record? ? 'Create' : 'Update'} #{display_name}", :class => 'btn btn-primary', id: "mission-update",data: {disable_with: "Submitting..."} %>

@@ -1,0 +1,33 @@
+<%- model_class = Assessment::Mission -%>
+<div class="page-header">
+  <h1><%= @assessment.title %></h1>
+</div>
+
+<p><%= @assessment.description.html_safe %></p>
+
+<table class="table table-bordered" style="width: 250px">
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:exp) %>:</strong></td>
+    <td><%= @assessment.exp %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:open_at) %>:</strong></td>
+    <td><%= datetime_format(@assessment.open_at) %></td>
+  </tr>
+  <tr>
+    <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
+    <td><%= datetime_format(@assessment.close_at) %></td>
+  </tr>
+</table>
+
+<%= render partial: 'file_uploads/download_files',
+           locals: { owner: @assessment } %>
+<% if @assessment.required_for.count > 0 %>
+    <h3>Finish to unlock:</h3>
+    <ul>
+      <% @assessment.required_for.each do |mission| %>
+          <h4><li><%= mission.title %></li></h4>
+      <% end %>
+    </ul>
+<% end %>
+<hr />

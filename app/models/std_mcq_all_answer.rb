@@ -1,5 +1,5 @@
 class StdMcqAllAnswer < ActiveRecord::Base
-  attr_accessible :choices, :mcq_id, :selected_choices, :std_course_id, :student_id
+  attr_accessible :choices, :mcq_id, :selected_choices, :std_course_id, :student_id, :is_correct
 
   belongs_to :student, class_name: "User"
   belongs_to :std_course, class_name: "UserCourse"

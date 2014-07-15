@@ -1,0 +1,15 @@
+<tr class="test_case" data-test-no="${ tNo }" data-test-type="${ tType }">
+  <td>
+    <input type="text" class="eval_expression" value="${ expression }"/>
+  </td>
+  <td>
+    <input type="text" class="expected_output" value="${ expected }"/>
+  </td>
+
+  {{if has_hint  }}
+  <td colspan="2" width="25%"><textarea style="width: 100%" rows="4" class="fail_hint">${ hint }</textarea></td>
+  {{/if}}
+  <td>
+    <a title="Delete this test" class="btn btn-danger delete_test"><i class="icon-trash"></i></a>
+  </td>
+</tr>

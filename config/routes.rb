@@ -59,16 +59,48 @@ JfdiAcademy::Application.routes.draw do
       resources :user_achievements
     end
 
+    resources :assessments, module: :assessment, only: [:show] do
+      member do
+        get 'show', to: 'assessments#show'
+        get 'stats'
+        post 'reorder'
+      end
+
+      resources :assessment_mcq_questions,
+                path:       :mcqs,
+                controller: :mcqs
+
+      resources :assessment_coding_questions,
+                path:       :coding_questions,
+                controller: :coding_questions
+
+      resources :assessment_general_questions,
+                path:       :general_questions,
+                controller: :general_questions
+
+      resources :assessment_submissions,
+                path:       :submissions,
+                as:         :submissions,
+                controller: :mission_submissions,
+                except: [:create],
+                constraints: MissionConstraint do
+
+
+        member do
+          get 'test', to: 'mission_submissions#test_answer'
+          get 'unsubmit' => 'mission_submissions#unsubmit'
+        end
+
+        resources :assessment_submission_gradings,
+                  path: :gradings,
+                  as:   :gradings,
+                  controller: :gradings
+      end
+    end
+
     resources :assessment_missions, path: 'missions', controller: :missions, module: :assessment do
-      resources :assessment_coding_questions, path: :coding_questions, controller: :coding_questions
-      resources :assessment_general_questions, path: :general_questions, controller: :general_questions
-
-      resources :assessment_submissions, path: 'submissions', controller: :mission_submissions, except: [:create] do
-        post 'unsubmit' => 'mission_submissions#unsubmit'
-        post 'test' => 'mission_submissions#test_answer'
-
-        get 'gradings' => 'mission_submission_gradings#edit', as: :assessment_gradings
-        post 'gradings' => 'mission_submission_gradings#update', as: :assessment_gradings
+      collection do
+        get :index, to: 'assessments#index', type: 'mission'
       end
 
       get 'overview' => 'missions#overview', on: :collection
@@ -89,9 +121,9 @@ JfdiAcademy::Application.routes.draw do
       post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
     end
     resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
-      resources :mcqs
-      resources :coding_questions
-      resources :training_submissions
+      collection do
+        get :index, to: 'assessments#index', type: 'training'
+      end
       post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
 
       resources :asm_qns do

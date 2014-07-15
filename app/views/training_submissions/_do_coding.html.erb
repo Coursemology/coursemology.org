@@ -8,7 +8,7 @@
 
 </div>
 
-<% if @current_question.data_hash["publicTests"].length > 0 %>
+<% if @current_question.data_hash["public"].length > 0 %>
     <h3>Public Tests</h3>
     <p>The following expressions will be executed.</p>
     <table class="table table-striped table-bordered" id="publicTestTable">
@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody>
-      <% @current_question.data_hash["publicTests"].each do |test| %>
+      <% @current_question.data_hash["public"].each do |test| %>
       <tr>
         <td><%= test["expression"] %></td>
         <td><%= test["expected"] %></td>

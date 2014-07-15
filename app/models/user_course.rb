@@ -54,8 +54,9 @@ class UserCourse < ActiveRecord::Base
 
 
 
-  has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: Assessment::Mission
-  has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: Assessment::Training
+  has_many :seen_assessments, through: :seen_stuff, source: :obj, source_type: "Assessment"
+  # has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: Assessment::Mission
+  # has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: Assessment::Training
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"

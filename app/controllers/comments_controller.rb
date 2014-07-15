@@ -173,18 +173,17 @@ class CommentsController < ApplicationController
     @current_question = @question
   end
 
-private
+  private
+
   def get_comment_permalink(commentable)
     case commentable
-      when Assessment::Question, Assessment::CodingQuestion, Assessment::McqQuestion, Assessment::TextQuestion
+      when Assessment::Question, Assessment::CodingQuestion, Assessment::McqQuestion, Assessment::GeneralQuestion
         return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
       when Assessment::Answer, Assessment::CodingAnswer, Assessment::McqAnswer, Assessment::TextAnswer
         submission = commentable.submission
         assessment = submission.assessment
 
-        if assessment.specific.class == Assessment::Mission then
-          return course_assessment_mission_assessment_submission_url(assessment.course, assessment.specific, submission)
-        end
+        return course_assessment_submission_url(assessment.course, assessment, submission)
     end
     course_comments_url(@course)
   end
