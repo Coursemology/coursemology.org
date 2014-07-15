@@ -15,6 +15,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
     @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion]
     @summary[:type] = 'mission'
+    @summary[:specific] = @mission
 
     respond_to do |format|
       format.html { render "assessment/assessments/show" }

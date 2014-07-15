@@ -12,6 +12,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
     @summary[:allowed_questions] = [Assessment::McqQuestion, Assessment::CodingQuestion]
     @summary[:type] = 'training'
+    @summary[:specific] = @training
 
     respond_to do |format|
       format.html { render "assessment/assessments/show" }

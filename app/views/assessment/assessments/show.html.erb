@@ -9,20 +9,20 @@
 
 <%- display_name = @course.customized_title(@summary[:type]).singularize -%>
 <div class="page-header">
-  <h1> <%= @assessment.title %></h1>
+  <h1> <%= @summary[:specific].title %></h1>
 </div>
 
 <% if can? :manage, Assessment %>
     <div style="float: right">
-      <%= link_to ast_edit_path.call(@assessment.as_assessment), class: "btn btn-large-icon" do %>
+      <%= link_to ast_edit_path.call(@summary[:specific]), class: "btn btn-large-icon" do %>
           <i class="icon-edit"></i>
       <% end %>
-      <%= link_to ast_path.call(@assessment.as_assessment),
+      <%= link_to ast_path.call(@summary[:specific]),
                   class: "btn btn-danger btn-large-icon",
                   method: "DELETE",
                   data: { confirm: t('.confirm',
                                      default: t("helpers.links.confirm",
-                                                default: "Are you sure to delete #{@summary[:type]} '#{@assessment.title}'?")) } do %>
+                                                default: "Are you sure to delete #{@summary[:type]} '#{@summary[:specific].title}'?")) } do %>
           <i class="icon-trash"></i>
       <% end %>
     </div>
@@ -34,24 +34,24 @@
   <tr>
     <td>
       <div class="pull-left">
-        <p><%= style_format(@assessment.description) %></p>
-        <%= render partial: "assessment/#{@summary[:type].pluralize}/details", locals: {ast: @assessment } %>
+        <p><%= style_format(@summary[:specific].description) %></p>
+        <%= render partial: "assessment/#{@summary[:type].pluralize}/details", locals: {ast: @summary[:specific] } %>
       </div>
     </td>
 
     <% if can? :manage, Assessment::Submission %>
         <td>
-          <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
+          <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @summary[:specific]} %>
         </td>
     <% end %>
 
   </tr>
 </table>
 
-<% if @assessment.required_for.count > 0 %>
+<% if @summary[:specific].required_for.count > 0 %>
     <h3>Finish to unlock:</h3>
     <ul>
-      <% @assessment.dependent_by.each do |ast| %>
+      <% @summary[:specific].dependent_by.each do |ast| %>
           <h4><li><%= ast.title %></li></h4>
       <% end %>
     </ul>
@@ -61,7 +61,7 @@
            locals: { owner: @assessment }%>
 
 
-<% unless @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
+<% unless @summary[:specific].respond_to? :single_question? and @summary[:specific].single_question? %>
     <hr/>
     <% if can? :manage, @assessment %>
         <% if @summary[:allowed_questions].include? Assessment::McqQuestion %>
