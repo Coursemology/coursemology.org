@@ -7,5 +7,7 @@ class Assessment::AnswerGrading < ActiveRecord::Base
   belongs_to :answer, class_name: Assessment::Answer, foreign_key: :answer_id
   belongs_to :grading, class_name: Assessment::Grading, foreign_key: :grading_id
 
-
+  def self.for_question(qn)
+    self.joins(:answer).where("assessment_answers.question_id = ?", qn).readonly(false)
+  end
 end
