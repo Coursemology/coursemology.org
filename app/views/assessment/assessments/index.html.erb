@@ -1,7 +1,8 @@
 <div class="missions">
   <%- model_name = @summary[:module] -%>
+  <%- title =  @course.customized_title(model_name).pluralize %>
   <div class="page-header">
-    <h1><%=t '.title', :default => @course.customized_title(model_name).pluralize %></h1>
+    <h1><%=t '.title', :default => title %></h1>
   </div>
 
   <% if model_name == 'Training' %>
@@ -9,7 +10,7 @@
       <%- new_url = new_course_assessment_training_path(@course) %>
       <%- ast_path = lambda { |c, a| course_assessment_training_path(c, a) } %>
   <% else %>
-      <%= render partial: "assessment/missions/navigation" %>
+      <%= render partial: "assessment/missions/navigation", locals: {title: title} %>
       <%- new_url = new_course_assessment_mission_path(@course) %>
       <%- ast_path = lambda { |c, a| course_assessment_mission_path(c, a) } %>
   <% end %>
