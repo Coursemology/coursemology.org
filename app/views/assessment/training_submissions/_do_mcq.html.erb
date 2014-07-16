@@ -1,16 +1,16 @@
-<p><%= style_format(@current_question.description) %></p>
-<% if @current_question.select_all %>
-  <p>Select all correct answers</p>
+<p><%= style_format(mcq.description) %></p>
+<% if mcq.select_all %>
+  <p style="margin-left: 15px">* Select all correct answers</p>
 <% end %>
 <ul>
-  <% @current_question.mcq_answers.each do |ans| %>
+  <% mcq.options.each do |opt| %>
       <li class="checkbox-text">
-        <% if @current_question.select_all %>
-          <input class="choices" type="checkbox" name="answers[]" value="<%= ans.id %>" id="value=<%= ans.id %>"/>
+        <% if mcq.select_all %>
+          <input class="choices" type="checkbox" name="answers[]" value="<%= opt.id %>" id="value=<%= opt.id %>"/>
         <% else %>
-          <input class="choices" type="radio" name="answers" value="<%= ans.id %>" id="value=<%= ans.id %>"/>
+          <input class="choices" type="radio" name="answers" value="<%= opt.id %>" id="value=<%= opt.id %>"/>
         <% end %>
-        <label for="value=<%= ans.id %>"> <%= style_format ans.text %></label>
+        <label for="value=<%= opt.id %>"> <%= style_format opt.text %></label>
       </li>
   <% end %>
 </ul>
