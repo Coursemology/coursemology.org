@@ -4,7 +4,11 @@ class Course < ActiveRecord::Base
   # default_scope where(:is_pending_deletion => false)
 
   attr_accessible :creator_id, :description, :logo_url, :title, :is_publish,
-                  :is_active, :is_open, :start_at, :end_at, :course_navbar_preferences_attributes
+                  :is_active, :is_open, :start_at, :end_at
+
+  attr_accessible :course_navbar_preferences_attributes,
+                  :missions_attributes,
+                  :trainings_attributes
 
   before_create :populate_preference
   after_create :create_materials_root
@@ -21,9 +25,12 @@ class Course < ActiveRecord::Base
       where("assessments.published = ?", true)
     end
   end
+  accepts_nested_attributes_for :missions
 
   has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Training"
+
+  accepts_nested_attributes_for :trainings
 
   has_many :submissions,          through: :user_courses
 
