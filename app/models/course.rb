@@ -147,7 +147,7 @@ class Course < ActiveRecord::Base
   end
 
   def mcq_auto_grader
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mcq" && pref.preferable_item.item_type == "AutoGrader"}.first
+    self.course_preferences.join_items.item("Mcq").item_type('AutoGrader').first
   end
 
   def student_sidebar_items
@@ -346,7 +346,7 @@ class Course < ActiveRecord::Base
 
   def pending_surveys(user_course)
     if user_course.is_student?
-      self.surveys.where("open_at < ? and expire_at > ? and publish = true", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
+      self.surveys.where("open_at < ? and expire_at > ? and publish = 1", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
     else
       []
     end
