@@ -232,10 +232,6 @@ class Assessment < ActiveRecord::Base
     clone
   end
 
-  def specific
-    as_assessment
-  end
-
   def mark_refresh_autograding
     #TODO
   end

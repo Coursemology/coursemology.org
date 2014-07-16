@@ -41,7 +41,7 @@
 
     <% if can? :manage, Assessment::Submission %>
         <td>
-          <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @summary[:specific]} %>
+          <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
         </td>
     <% end %>
 
@@ -101,7 +101,7 @@
                 </div>
 
                 <% if q.class == Assessment::McqQuestion %>
-                    <%= render partial: "assessment/mcqs/one", locals: { q: q } %>
+                    <%= render partial: "assessment/mcqs/one", locals: { q: q, show_answer: true } %>
                 <% else %>
                     <%= style_format(q.description) %>
                 <% end %>

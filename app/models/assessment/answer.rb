@@ -14,6 +14,7 @@ class Assessment::Answer < ActiveRecord::Base
   has_many  :annotations, as: :annotable, dependent: :destroy
   has_one   :answer_grading, class_name: Assessment::AnswerGrading, dependent: :destroy
   has_many  :answer_options, class_name: Assessment::AnswerOption
+  has_many  :options, class_name: Assessment::McqOption, through: :answer_options
 
   has_one :comment_topic, as: :topic
 
@@ -37,6 +38,13 @@ class Assessment::Answer < ActiveRecord::Base
     else
       options.where("assessment_mcq_options.correct = ?", correct)
     end
+  end
+
+  def self.group_by_options
+    self.joins("INNER JOIN (SELECT *,  GROUP_CONCAT(option_id SEPARATOR ' ') AS options FROM assessment_answer_options GROUP BY answer_id) aao ON assessment_answers.id = aao.answer_id").
+        select("assessment_answers.*,  COUNT(options) AS count").
+        group("aao.options").
+        order("assessment_answers.created_at")
   end
 
   def result_hash

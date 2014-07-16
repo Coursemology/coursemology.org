@@ -141,7 +141,6 @@ class PythonEvaluator
         end
       end
     end
-    puts summary
     summary
   end
 

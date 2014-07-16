@@ -12,6 +12,7 @@ class Assessment::Question < ActiveRecord::Base
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
   #These two are just for mcq question, but the foreign key is question_id
   has_many  :options, class_name: Assessment::McqOption, dependent: :destroy
+  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
 
 
   has_one :comment_topic, as: :topic
