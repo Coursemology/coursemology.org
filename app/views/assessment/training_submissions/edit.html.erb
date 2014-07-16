@@ -11,7 +11,7 @@
 <hr/>
 <div class="step-list">
   <% questions = @training.questions %>
-  <% questions_done = @training_submission.answered_questions %>
+  <% questions_done = @training.questions.finalised(@submission) %>
   <% (1..@max_step).each do |i| %>
       <% if i == @step %>
           <%= link_to i, "?step=#{i}#training-stop-pos", class: "step step-current" %>
@@ -28,7 +28,7 @@
 <% if !@current_question %>
     <h2>Congratulations, you're done!</h2>
     <p>
-      <a href="<%= course_assessment_training_training_submission_path(@course, @training, @training_submission)%>">
+      <a href="<%= course_assessment_submission_path(@course, @assessment, @submission)%>">
         Click here
       </a> to review your answers.
     </p>
@@ -36,27 +36,25 @@
     <form id="training-step-form">
       <input type="hidden" name="current_step" value="<%= @step %>">
       <input type="hidden" name="update_url"
-             value="<%= course_assessment_training_training_submission_submit_path(@course,
-                                                                        @training, @training_submission) %>" />
+             value="<%= submit_course_assessment_submission_path(@course, @assessment, @submission) %>" />
       <input type="hidden" name="qid" value="<%= @current_question.id %>" />
 
-      <% if @current_question.class == Mcq %>
+      <% if @current_question.class == Assessment::McqQuestion %>
           <%= render "do_mcq" %>
-      <% elsif @current_question.class == CodingQuestion %>
+      <% elsif @current_question.class == Assessment::CodingQuestion %>
           <%= render "do_coding" %>
       <% end %>
 
       <div class="form-actions">
-        <% if @current_question.class == Mcq %>
+        <% if @current_question.class == Assessment::McqQuestion %>
             <%= link_to "Submit", '#', :class => 'btn btn-primary', :id => 'submit-btn' %>
-        <% elsif @current_question.class == CodingQuestion %>
+        <% elsif @current_question.class == Assessment::CodingQuestion %>
             <%= link_to "Run (ALT+R)", '#', class:'btn btn-danger', id:"pathrun" %>
             <!--<input id="pathrun" class="path_button" type="button" value="Run (ALT+R)" />-->
         <% end %>
 
         <%= link_to "Continue",
-                    edit_course_assessment_training_training_submission_path(@course, @training,
-                                                                  @training_submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
+                    edit_course_assessment_submission_path(@course, @assessment, @submission, anchor: 'training-stop-pos', step: @step + 1), :class => 'btn disabled',
                     :id => 'continue-btn' %>
       </div>
     </form>
