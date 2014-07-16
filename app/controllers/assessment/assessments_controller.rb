@@ -130,6 +130,23 @@ class Assessment::AssessmentsController < ApplicationController
     render nothing: true
   end
 
+  def overview
+    authorize! :bulk_update, Assessment
+    @display_columns = {}
+    @course.assessment_columns(extract_type, true).each do |cp|
+      @display_columns[cp.preferable_item.name] = cp.prefer_value
+    end
+  end
+
+  def bulk_update
+    authorize! :bulk_update, Assessment
+    if @course.update_attributes(params[:course])
+      flash[:notice] = "Assessment(s) updated successfully."
+    else
+      flash[:error] = "Assessment(s) failed to update. You may have put an open time that is after #{extract_type == 'missions' ? 'end time' : 'bonus cutoff time'}"
+    end
+  end
+
   private
 
   def extract_type

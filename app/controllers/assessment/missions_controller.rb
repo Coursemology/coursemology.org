@@ -5,14 +5,11 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   def show
     @assessment = @mission.assessment
-
     if curr_user_course.is_student? and !@assessment.can_start?(curr_user_course)
       redirect_to course_assessment_missions_path
       return
     end
-
     super
-
     @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion]
     @summary[:type] = 'mission'
     @summary[:specific] = @mission
@@ -138,40 +135,9 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     @mission.save
   end
 
-  def overview
-    authorize! :bulk_update, Assessment
-    @tab = 'overview'
-    @display_columns = {}
-    @course.mission_columns_display.each do |cp|
-      @display_columns[cp.preferable_item.name] = cp.prefer_value
-    end
-
-    @missions = @course.missions.accessible_by(current_ability).order(:open_at)
-  end
-
   def bulk_update
-    authorize! :bulk_update, Assessment
-    missions = params[:missions]
-    success = 0
-    fail = 0
-    missions.each do |key, val|
-      mission = @course.missions.where(id:key).first
-      mission.assign_attributes(val)
-      unless mission.changed?
-        next
-      end
-      if mission.save
-        puts mission.to_json
-        success += 1
-      else
-        fail += 1
-      end
-    end
-    flash[:notice] = "#{success} mission(s) updated successfully."
-    if fail > 0
-      flash[:error] = "#{fail} mission(s) failed to update. You may have put an open time that is after end time."
-    end
-    redirect_to course_assessment_missions_overview_path
+    super
+    redirect_to overview_course_assessment_missions_path
   end
 
   def access_denied
