@@ -83,7 +83,7 @@ JfdiAcademy::Application.routes.draw do
                 as:         :submissions,
                 controller: :mission_submissions,
                 except: [:create],
-                constraints: MissionConstraint do
+                constraints: MissionConstraint.new do
 
 
         member do
@@ -95,6 +95,17 @@ JfdiAcademy::Application.routes.draw do
                   path: :gradings,
                   as:   :gradings,
                   controller: :gradings
+      end
+
+      resources :assessment_submissions,
+                path:       :submissions,
+                as:         :submissions,
+                controller: :training_submissions,
+                except: [:create],
+                constraints: TrainingConstraint.new do
+        member do
+          get 'submit' => 'training_submissions#submit'
+        end
       end
     end
 
