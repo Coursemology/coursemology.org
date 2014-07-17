@@ -3,6 +3,8 @@ class Assessment < ActiveRecord::Base
   #as is for belong_to association
   acts_as_superclass as: :as_assessment
 
+  include Rails.application.routes.url_helpers
+
   default_scope { order("assessments.open_at") }
 
   attr_accessible   :open_at,:close_at, :exp
@@ -10,7 +12,7 @@ class Assessment < ActiveRecord::Base
   attr_accessible   :published
 
   #mission
-  delegate :dependent_id, :close_at, :can_start?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
+  delegate :dependent_id, :can_start?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
 
   #training
   delegate :bonus_exp, :bonus_cutoff_at, :get_path, to: :as_assessment
@@ -82,6 +84,10 @@ class Assessment < ActiveRecord::Base
   before_update :clean_up_description, :if => :description_changed?
 
   #was get title
+
+  def self.submissions
+    Assessment::Submission.where(assessment_id: self.all)
+  end
   def title_with_type
     to_translate = self.as_assessment.class == Assessment::Mission ?
         'Assessment.Mission' : 'Assessment.Training'
@@ -135,6 +141,20 @@ class Assessment < ActiveRecord::Base
       qa.position = i
       qa.save
     end
+  end
+
+  def as_lesson_plan_entry
+    entry = LessonPlanEntry.create_virtual
+    entry.title = self.title
+    entry.description = self.description
+    entry.entry_real_type = is_mission? ? "Mission" : "Training"
+    entry.start_at = self.open_at
+    entry.end_at = self.close_at  if self.respond_to? :close_at
+    entry.url = is_mission? ?
+        course_assessment_mission_path(self.course, self.specific) :
+        course_assessment_training_path(self.course, self.specific)
+    entry.is_published = self.published
+    entry
   end
 
   def add_tags(tags)

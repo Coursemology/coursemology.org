@@ -367,21 +367,11 @@ class Course < ActiveRecord::Base
   # of from and to: i.e. entries starting at both from and to
   # are included. [from, to]
   def lesson_plan_virtual_entries(from = nil, to = nil)
-    missions = self.missions.where("TRUE " +
-                                       (if from then "AND assessments.open_at >= :from " else "" end) +
-                                       (if to then "AND assessments.open_at <= :to" else "" end),
-                                   :from => from, :to => to
-    )
-
-    entries = missions.map { |m| m.as_lesson_plan_entry }
-
-    trainings = self.trainings.where("TRUE " +
-                                         (if from then "AND assessments.open_at >= :from " else "" end) +
-                                         (if to then "AND assessments.open_at <= :to" else "" end),
-                                     :from => from, :to => to
-    )
-
-    entries += trainings.map { |t| t.as_lesson_plan_entry }
+    self.assessments.where("TRUE " +
+                               (if from then "AND assessments.open_at >= :from " else "" end) +
+                               (if to then "AND assessments.open_at <= :to" else "" end),
+                           :from => from, :to => to
+    ).map { |m| m.as_lesson_plan_entry }
   end
 
   def materials_virtual_entries

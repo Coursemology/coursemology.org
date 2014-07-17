@@ -1,14 +1,14 @@
 class Assessment::Mission < ActiveRecord::Base
   acts_as_paranoid
-  is_a :assessment, as: :as_assessment, auto_join: false, class_name: "Assessment"
+  is_a :assessment, as: :as_assessment, class_name: "Assessment"
 
   include Rails.application.routes.url_helpers
 
   attr_accessible :close_at
-  attr_accessible  :single_question,
-                   :file_submission,
-                   :file_submission_only,
-                   :comment_per_qn
+  attr_accessible :single_question,
+                  :file_submission,
+                  :file_submission_only,
+                  :comment_per_qn
   attr_accessible :display_mode_id,
                   :dependent_id
 
@@ -47,23 +47,6 @@ class Assessment::Mission < ActiveRecord::Base
       end
     end
     true
-  end
-
-  # Converts this mission into a format that can be used by the lesson plan component
-  def as_lesson_plan_entry
-    entry = LessonPlanEntry.create_virtual
-    entry.title = self.title
-    entry.description = self.description
-    entry.entry_real_type = "Mission"
-    entry.start_at = self.open_at
-    entry.end_at = self.close_at
-    entry.url = course_mission_path(self.course, self)
-    entry.is_published = self.publish
-    entry
-  end
-
-  def published?
-    publish?
   end
 
   def get_path
