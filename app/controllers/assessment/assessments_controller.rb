@@ -168,7 +168,7 @@ class Assessment::AssessmentsController < ApplicationController
     end
 
     if curr_user_course.is_student?
-      sbms = sbms.where("assessments.published =  1")
+      sbms = sbms.joins(:assessment).where("assessments.published =  1")
     end
 
     #@unseen = []
