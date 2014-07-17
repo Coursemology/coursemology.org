@@ -20,7 +20,7 @@ class StatsController < ApplicationController
       grade_table.add_row(row)
     end
     opts   = { width: 600, height: 240, title: graph_title, hAxis: { title: key_label } }
-     GoogleVisualr::Interactive::ColumnChart.new(grade_table, opts)
+    GoogleVisualr::Interactive::ColumnChart.new(grade_table, opts)
   end
 
   def mission
@@ -50,7 +50,7 @@ class StatsController < ApplicationController
   end
 
   def training
-    @training = Training.find(params[:training_id])
+    @training = Assessment::Training.find(params[:training_id])
     authorize! :view_stat, @training
 
     @summary = {}
@@ -62,7 +62,7 @@ class StatsController < ApplicationController
     std_courses = is_all ? @course.student_courses : curr_user_course.std_courses
     @summary[:student_courses] = std_courses
 
-    submissions =  @training.sbms.where(std_course_id: std_courses)
+    submissions =  @training.submissions.where(std_course_id: std_courses)
     submitted = submissions.map { |sbm| sbm.std_course }
 
     @not_started = std_courses - submitted
@@ -74,11 +74,7 @@ class StatsController < ApplicationController
     sbms_by_date = submissions.group_by { |sbm| sbm.created_at.strftime("%m-%d") }
     @summary[:date_chart] = produce_submission_graph(sbms_by_date, 'Date', 'Start date distribution')
 
-    if @training.can_skip?
-      @summary[:progress] = submissions.group_by{ |sbm| sbm.answered_questions.size + 1 }
-    else
-      @summary[:progress] = submissions.group_by(&:current_step).sort.reverse
-    end
+    @summary[:progress] = submissions.group_by{ |sbm| sbm.assessment.questions.finalised(sbm).count + 1 }
 
     @summary[:progress_chart] = produce_submission_graph(@summary[:progress], 'Step', 'Current step of students')
 
