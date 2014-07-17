@@ -93,10 +93,11 @@
 
           <% if to_display.include?  'end'%>
               <td>
+                <% close = ast.specific.close_at %>
                 <% if @summary[:time_format].prefer_value == 'ago' %>
-                    <%= if ast.close_at > Time.now then time_ago_in_words(ast.close_at) else '----' end%>
+                    <%= if close > Time.now then time_ago_in_words(close) else '----' end%>
                 <% else %>
-                    <%= ast.close_at.strftime(@summary[:time_format].prefer_value) %>
+                    <%= close.strftime(@summary[:time_format].prefer_value) %>
                 <% end %>
               </td>
           <% end %>

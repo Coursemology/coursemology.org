@@ -2,7 +2,7 @@
 
 
 <% @assessment.questions.includes(:answers).each_with_index do |q, i| %>
-    <% unless @assessment.single_question? %>
+    <% unless @assessment.specific.single_question? %>
         <h3> <%= q.title || "Question  #{i + 1}" %></h3>
         <div class="row">
           <div class="span8">

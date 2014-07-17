@@ -16,7 +16,7 @@
   </tr>
   <tr>
     <td><strong><%= model_class.human_attribute_name(:close_at) %>:</strong></td>
-    <td><%= datetime_format(@assessment.close_at) %></td>
+    <td><%= datetime_format(@assessment.specific.close_at) %></td>
   </tr>
 </table>
 

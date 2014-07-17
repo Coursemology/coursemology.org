@@ -1,4 +1,3 @@
-
 <%- model_class = Assessment::Submission -%>
 <%- assign_display_name = @summary[:type].humanize -%>
 <%- submission_display_name = @course.customized_title('submission') -%>
@@ -128,15 +127,14 @@
             <td>
               <% grade = sub.gradings.last %>
               <% if grade %>
-                  <%= grade.grade %> / <%= sub.get_asm.max_grade %>
+                  <%= grade.grade %> / <%= sub.assessment.max_grade %>
               <% end %>
             </td>
             <td>
-              <%= link_to "Review", sub.get_path,
+              <%= link_to "Review", course_assessment_submission_path(@course, sub.assessment, sub),
                           class: sub.graded? ? "btn btn-primary" : "btn" %>
             </td>
         <% end %>
-
       </tr>
   <% end %>
   </tbody>
