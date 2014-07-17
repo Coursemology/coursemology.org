@@ -1,30 +1,24 @@
 
 <%- model_class = Assessment::Submission -%>
+<%- assign_display_name = @summary[:type].humanize -%>
+<%- submission_display_name = @course.customized_title('submission') -%>
 <div class="page-header">
   <h1><%=t '.title', :default => submission_display_name %></h1>
 </div>
 
-
-<ul class="nav nav-tabs">
-  <li class="<%= "active" if @tab == Mission %>">
-    <a href="<%= course_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Mission).singularize} #{submission_display_name }" %></a>
-  </li>
-  <li class="<%= "active" if @tab == Training %>">
-    <a href="<%= course_assessment_training_submissions_path(@course) %>"><%= "#{@course.customized_title_by_model(Training).singularize} #{submission_display_name }" %></a>
-  </li>
-</ul>
+<%= render partial:"s_nav", locals: {title: submission_display_name} %>
 
 <% if can? :see_all, Assessment::Submission %>
-    <form class="form-horizontal" action="<%= nil %>" method="GET">
-      <h3>Show only Submissions:</h3>
+    <form class="form-horizontal" action="<%= request.original_url %>" method="GET">
+      <h3>Submissions Filter:</h3>
       <div class="control-group">
-        <label class="control-label">Assignments</label>
+        <label class="control-label">Assessments</label>
         <div class="controls">
-          <select name="asm_id">
+          <select name="asm">
             <option value="0">Any</option>
-            <% @all_asm.each do |asm| %>
+            <% @summary[:asms].each do |asm| %>
                 <option value="<%= asm.id %>"
-                        <%= "selected" if @selected[:asm] && asm == @selected[:asm] %>>
+                        <%= "selected" if asm == @summary[:selected_asm] %>>
                   <%= asm.title %>
                 </option>
             <% end %>
@@ -34,9 +28,15 @@
       <div class="control-group">
         <label class="control-label">Tutors</label>
         <div class="controls">
-          <% tas = @staff_courses.map {|tac| [tac.name, tac.id] }.unshift(["Any", 0]) %>
-          <% tutor_id = @selected[:tutor] ? @selected[:tutor].id : 0 %>
-          <%= select "tutor","", tas, {:selected => "#{tutor_id}" } %>
+          <select name="tutor">
+            <option value="0">Any</option>
+            <% @summary[:staff].each do |stuff| %>
+                <option value="<%= stuff.id %>"
+                        <%= "selected" if stuff == @summary[:selected_stuff] %>>
+                  <%= stuff.name %>
+                </option>
+            <% end %>
+          </select>
         </div>
       </div>
       <div class="control-group">
@@ -44,9 +44,9 @@
         <div class="controls">
           <select name="student">
             <option value="0">Any</option>
-            <% @student_courses.each do |sc| %>
+            <% @summary[:stds].each do |sc| %>
                 <option name="student" value="<%= sc.id %>"
-                        <%= "selected" if @selected[:student] && sc.id == @selected[:student].id %>>
+                        <%= "selected" if sc == @summary[:selected_std] %>>
                   <%= sc.name %>
                 </option>
             <% end %>
@@ -84,7 +84,7 @@
   </tr>
   </thead>
   <tbody>
-  <% @sbms.each do |sub| %>
+  <% @summary[:sbms].each do |sub| %>
       <tr>
         <% if can? :see_all, Assessment::Submission %>
             <td>
@@ -95,38 +95,38 @@
         <td><%= datetime_format(sub.submitted_at || sub.created_at) %> </td>
         <!--TODO: refactoring-->
         <% if can? :manage, Assessment::Grading %>
-          <td>
-            <% if sub.graded? %>
-              <%= sub.graders.empty? ? 'Auto graded' : sub.graders.join(', ') %>
+            <td>
+              <% if sub.graded? %>
+                  <%= sub.graders.empty? ? 'Auto graded' : sub.graders.join(', ') %>
+              <% else %>
+                  Not graded
+              <% end %>
+            </td>
+            <td>
+              <% grade = sub.gradings.last.grade %>
+              <% if grade %>
+                  <%= grade %> / <%= sub.assessment.max_grade %>
+              <% end %>
+            </td>
+            <% if sub.gradings.empty? %>
+                <td>
+                  <%= link_to 'Evaluate',
+                              new_course_assessment_submission_grading_path(@course, sub.assessment, sub),
+                              class: 'btn btn-primary' %>
+                </td>
             <% else %>
-              Not graded
+                <td>
+                  <%= link_to 'View',
+                              course_assessment_submission_path(@course, sub.assessment, sub),
+                              class: 'btn'%>
+                </td>
             <% end %>
-          </td>
-          <td>
-             <% grade = sub.grade %>
-            <% if grade %>
-                <%= grade %> / <%= sub.assessment.max_grade %>
-            <% end %>
-          </td>
-          <% if sub.gradings.empty? == 0 %>
-            <td>
-              <%= link_to 'Evaluate',
-                          course_assessment_mission_assessment_submission_assessment_gradings_path(@course, sub.assessment.specific, sub),
-                          class: 'btn btn-primary' %>
-            </td>
-          <% else %>
-            <td>
-              <%= link_to 'View',
-                          course_assessment_mission_assessment_submission_assessment_gradings_path(@course, sub.assessment.specific, sub),
-                          class: 'btn'%>
-            </td>
-          <% end %>
         <% else %>
             <td>
               <%= sub.status %>
             </td>
             <td>
-              <% grade = sub.submission_gradings.last %>
+              <% grade = sub.gradings.last %>
               <% if grade %>
                   <%= grade.grade %> / <%= sub.get_asm.max_grade %>
               <% end %>
@@ -142,6 +142,6 @@
   </tbody>
 </table>
 
-<% if @sbms_paging.display? %>
-    <%= paginate @sbms %>
+<% if @summary[:paging].display? %>
+    <%= paginate @summary[:sbms] %>
 <% end %>
