@@ -30,7 +30,7 @@ class Assessment::SubmissionsController < ApplicationController
         @submission.multiplier = @reattempt.prefer_value.to_f / 100
       end
       @submission.save
-      @submission.gradings.create({grade: 0, std_course_id: curr_user_course})
+      @submission.gradings.create({grade: 0, std_course_id: curr_user_course.id})
     end
 
     if @submission.save

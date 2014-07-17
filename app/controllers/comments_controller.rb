@@ -81,7 +81,7 @@ class CommentsController < ApplicationController
       @topics = curr_user_course.comment_topics.where(id: topic_ids)
     end
 
-    @comments_paging = @course.comments_paging_pref
+    @comments_paging = @course.paging_pref(Comment.to_s)
     if @comments_paging.display?
       @topics = @topics.page(params[:page]).per(@comments_paging.prefer_value.to_i)
     end

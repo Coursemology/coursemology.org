@@ -163,7 +163,7 @@ class CoursesController < ApplicationController
     @student_courses = @course.user_courses.student.where(is_phantom: false)
     @ta_courses = @course.user_courses.tutor
 
-    @std_paging = @course.students_paging_pref
+    @std_paging = @course.paging_pref('students')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -189,7 +189,7 @@ class CoursesController < ApplicationController
     @staff_courses = @course.user_courses.staff
     @student_count = @student_courses.length
 
-    @std_paging = @course.mgmt_std_paging_pref
+    @std_paging = @course.paging_pref('ManageStudents')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -198,7 +198,7 @@ class CoursesController < ApplicationController
 
   def pending_gradings
     authorize! :see, :pending_gradings
-    @pending_gradings = @course.get_pending_gradings(curr_user_course)
+    @pending_gradings = @course.pending_gradings(curr_user_course)
   end
 
 end

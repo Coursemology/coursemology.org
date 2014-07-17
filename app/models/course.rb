@@ -92,11 +92,11 @@ class Course < ActiveRecord::Base
     self.user_courses.student
   end
 
-  def get_pending_gradings(curr_user_course)
+  def pending_gradings(curr_user_course)
     if curr_user_course.is_lecturer?
-      @pending_gradings = submissions.where(status:"submitted").order(:submit_at)
+      @pending_gradings = submissions.where(status:"submitted").order(:submitted_at)
     else
-      @pending_gradings = submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submit_at)
+      @pending_gradings = submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submitted_at)
     end
   end
 
@@ -145,8 +145,8 @@ class Course < ActiveRecord::Base
   end
 
   def paging_pref(page)
-    self.course_preferences.join_items.paging.item_type(page.pluralize).
-        first || (raise page + " has no paging preference")
+    paging = self.course_preferences.join_items.paging
+    paging.item_type(page.pluralize).first || paging.item_type(page).first ||(raise page + " has no paging preference")
   end
 
   def training_reattempt
@@ -234,53 +234,53 @@ class Course < ActiveRecord::Base
         pref.preferable_item.name == 'auto' }.first
   end
 
-  def customized_missions_title
-    customized_title('missions')
-  end
-
-  def customized_trainings_title
-    customized_title('trainings')
-  end
-
-  def customized_announcements_title
-    customized_title('announcements')
-  end
-
-  def customized_submissions_title
-    customized_title('submissions')
-  end
-
-  def customized_achievements_title
-    customized_title('achievements')
-  end
-
+  # def customized_missions_title
+  #   customized_title('missions')
+  # end
+  #
+  # def customized_trainings_title
+  #   customized_title('trainings')
+  # end
+  #
+  # def customized_announcements_title
+  #   customized_title('announcements')
+  # end
+  #
+  # def customized_submissions_title
+  #   customized_title('submissions')
+  # end
+  #
+  # def customized_achievements_title
+  #   customized_title('achievements')
+  # end
+  #
   def customized_leaderboard_title
-    customized_title('leaderboard')
+    self.course_navbar_preferences.find_by_item('leaderboard').name
   end
-
-  def customized_students_title
-    customized_title('students')
-  end
-
-  def customized_surveys_title
-    customized_title('surveys')
-  end
-
-  def customized_materials_title
-    customized_title('materials')
-  end
+  #
+  # def customized_students_title
+  #   customized_title('students')
+  # end
+  #
+  # def customized_surveys_title
+  #   customized_title('surveys')
+  # end
+  #
+  # def customized_materials_title
+  #   customized_title('materials')
+  # end
 
   def customized_lesson_plan_title
-    customized_title('lesson_plan')
+    self.course_navbar_preferences.find_by_item('lesson_plan').name
   end
 
-  def customized_forums_title
-    customized_title('forums')
-  end
-
-  def customized_comments_title
-    customized_title('comments')
-  end
+  # def customized_forums_title
+  #   customized_title('forums')
+  # end
+  #
+  # def customized_comments_title
+  #   customized_title('comments')
+  # end
 
   def customized_title(tab)
     self.course_navbar_preferences.find_by_item(tab.pluralize).name
@@ -368,16 +368,16 @@ class Course < ActiveRecord::Base
   # are included. [from, to]
   def lesson_plan_virtual_entries(from = nil, to = nil)
     missions = self.missions.where("TRUE " +
-                                       (if from then "AND open_at >= :from " else "" end) +
-                                       (if to then "AND open_at <= :to" else "" end),
+                                       (if from then "AND assessments.open_at >= :from " else "" end) +
+                                       (if to then "AND assessments.open_at <= :to" else "" end),
                                    :from => from, :to => to
     )
 
     entries = missions.map { |m| m.as_lesson_plan_entry }
 
     trainings = self.trainings.where("TRUE " +
-                                         (if from then "AND open_at >= :from " else "" end) +
-                                         (if to then "AND open_at <= :to" else "" end),
+                                         (if from then "AND assessments.open_at >= :from " else "" end) +
+                                         (if to then "AND assessments.open_at <= :to" else "" end),
                                      :from => from, :to => to
     )
 

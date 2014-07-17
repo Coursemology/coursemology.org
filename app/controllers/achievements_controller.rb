@@ -23,7 +23,7 @@ class AchievementsController < ApplicationController
       }
     end
 
-    @ach_paging = @course.achievements_paging_pref
+    @ach_paging = @course.paging_pref(Achievement.to_s)
     if @ach_paging.display?
       @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
     end
