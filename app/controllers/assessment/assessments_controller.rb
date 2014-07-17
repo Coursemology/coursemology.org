@@ -1,7 +1,7 @@
 class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :assessment, only: [:reorder, :stats]
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview]
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview, :listall]
 
   def index
     assessment_type = params[:type]
@@ -42,8 +42,6 @@ class Assessment::AssessmentsController < ApplicationController
     else
       @assessments = @assessments.accessible_by(current_ability)
     end
-
-
 
     submissions = @course.submissions.where(assessment_id: @assessments.map {|m| m.id},
                                             std_course_id: curr_user_course.id)
@@ -145,6 +143,51 @@ class Assessment::AssessmentsController < ApplicationController
     else
       flash[:error] = "Assessment(s) failed to update. You may have put an open time that is after #{extract_type == 'missions' ? 'end time' : 'bonus cutoff time'}"
     end
+  end
+
+  def listall
+    assessment_type = params[:type]
+
+    @summary = {type: assessment_type}
+    @summary[:selected_asm] = @course.assessments.find(params[:asm]) if params[:asm] && params[:asm] != "0"
+    @summary[:selected_std] = @course.user_courses.find(params[:student]) if params[:student] && params[:student] != "0"
+    @summary[:selected_staff] = @course.user_courses.find(params[:tutor]) if params[:tutor] && params[:tutor] != "0"
+
+
+    assessments = @course.assessments.send(assessment_type)
+    @summary[:stds] = @course.student_courses.order(:name)
+    @summary[:staff] = @course.user_courses.staff
+
+    sbms = @summary[:selected_asm] ? @summary[:selected_asm].submissions : assessments.submissions
+    sbms = sbms.accessible_by(current_ability).where('status != ?','attempting').order(:submitted_at).reverse_order
+
+    if @summary[:selected_std]
+      sbms = sbms.where(std_course_id: @summary[:selected_std])
+    elsif @summary[:selected_staff]
+      sbms = sbms.where(std_course_id: @summary[:selected_staff].get_my_stds)
+    end
+
+    if curr_user_course.is_student?
+      sbms = sbms.where("assessments.published =  1")
+    end
+
+    #@unseen = []
+    #if curr_user_course.id
+    #  @unseen = sbms - curr_user_course.get_seen_sbms
+    #  @unseen.each do |sbm|
+    #    curr_user_course.mark_as_seen(sbm)
+    #  end
+    #end
+
+
+    sbms_paging = @course.paging_pref('MissionSubmissions')
+    if sbms_paging.display?
+      sbms = sbms.page(params[:page]).per(sbms_paging.prefer_value.to_i)
+    end
+
+    @summary[:asms] = assessments
+    @summary[:sbms] = sbms
+    @summary[:paging] = sbms_paging
   end
 
   private

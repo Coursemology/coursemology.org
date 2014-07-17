@@ -1,72 +1,7 @@
 class Assessment::MissionSubmissionsController < Assessment::SubmissionsController
-  # load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission"
-  # skip_load_and_authorize_resource :submission, only: :listall
-  # skip_load_and_authorize_resource :mission, only: :listall
-
   before_filter :authorize, only: [:new, :create, :edit, :update]
   # before_filter :allow_only_one_submission, only: [:new, :create]
   before_filter :no_update_after_submission, only: [:edit, :update]
-
-
-  def listall
-    @tab = Mission
-
-    @selected = {}
-    # find selected assignment
-    if params[:asm_id] && params[:asm_id] != "0"
-      asm_id = params[:asm_id].to_i
-      #selected_asm = @course.missions.find(asm_id)
-      @selected[:asm] = @course.missions.find(asm_id)
-    end
-
-    # find selected students
-    if params[:student] && params[:student] != "0"
-      sc = params[:student].to_i
-      @selected[:student] = @course.user_courses.find(sc)
-    end
-
-    if params[:tutor] && params[:tutor][0] != "0"
-      tutor_id = params[:tutor][0].to_i
-      @selected[:tutor] = @course.user_courses.find(tutor_id)
-    end
-
-    @all_asm = @course.missions
-    @student_courses = @course.student_courses.order(:name)
-    @staff_courses = @course.user_courses.staff
-
-    if @selected[:asm]
-      @sbms = @selected[:asm].sbms
-    else
-      @sbms = @course.submissions.includes(:mission).accessible_by(current_ability).order(:submit_at).reverse_order
-    end
-
-    if @selected[:student]
-      @sbms = @sbms.where('std_course_id = ?', @selected[:student])
-    elsif @selected[:tutor]
-
-      students = @selected[:tutor].get_my_stds
-      @sbms = @sbms.where(std_course_id:students)
-    end
-
-    @sbms = @sbms.where('status != ?','attempting')
-
-    if curr_user_course.is_student?
-      @sbms = @sbms.where("missions.publish =  1")
-    end
-
-    #@unseen = []
-    #if curr_user_course.id
-    #  @unseen = @sbms - curr_user_course.get_seen_sbms
-    #  @unseen.each do |sbm|
-    #    curr_user_course.mark_as_seen(sbm)
-    #  end
-    #end
-
-    @sbms_paging = @course.mission_sbm_paging_pref
-    if @sbms_paging.display?
-      @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
-    end
-  end
 
   def show
     # if student is still attempting a mission, redirect to edit page

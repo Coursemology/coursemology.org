@@ -1,69 +1,10 @@
 class Assessment::TrainingSubmissionsController < Assessment::SubmissionsController
 
-  skip_load_and_authorize_resource :training_submission, only: :listall
+  skip_load_and_authorize_resource :training_submission
   skip_load_and_authorize_resource :training, only: :listall
 
   before_filter :authorize, only: [:new, :edit]
-  before_filter :load_general_course_data, only: [:show, :edit, :listall]
-
-  def listall
-    @tab = Training
-
-
-    @selected = {}
-    # find selected assignment
-    if params[:asm_id] && params[:asm_id] != "0"
-      asm_id = params[:asm_id].to_i
-      @selected[:asm] = @course.trainings.find(asm_id)
-    end
-
-    # find selected students
-    if params[:student] && params[:student] != "0"
-      sc = params[:student].to_i
-      @selected[:student] = @course.user_courses.find(sc)
-    end
-
-    if params[:tutor] && params[:tutor][0] != "0"
-      tutor_id = params[:tutor][0].to_i
-      @selected[:tutor] = @course.user_courses.find(tutor_id)
-    end
-
-    @all_asm = @course.trainings
-    @student_courses = @course.student_courses.order(:name)
-    @staff_courses = @course.user_courses.staff
-
-    if @selected[:asm]
-      @sbms = @selected[:asm].sbms
-    else
-      @sbms = @course.training_submissions.accessible_by(current_ability).order(:created_at).reverse_order
-    end
-
-    if @selected[:student]
-      @sbms = @sbms.where('std_course_id = ?', @selected[:student])
-    elsif @selected[:tutor]
-
-      students = @selected[:tutor].get_my_stds
-      @sbms = @sbms.where(std_course_id:students)
-    end
-
-    #@unseen = []
-    #if curr_user_course.id
-    #  @unseen = @sbms - curr_user_course.get_seen_sbms
-    #  @unseen.each do |sbm|
-    #    curr_user_course.mark_as_seen(sbm)
-    #  end
-    #end
-
-    @sbms_paging = @course.training_sbm_paging_pref
-    if @sbms_paging.display?
-      @sbms = @sbms.page(params[:page]).per(@sbms_paging.prefer_value.to_i)
-    end
-
-
-    respond_to do |format|
-      format.html { render "mission_submissions/listall" }
-    end
-  end
+  before_filter :load_general_course_data, only: [:show, :edit]
 
 
   def show
