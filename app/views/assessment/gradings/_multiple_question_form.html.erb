@@ -1,4 +1,6 @@
-<%= simple_form_for @grading, url: course_assessment_submission_gradings_path(@course, @assessment, @submission),
+<%= simple_form_for @grading, url: (@grading.persisted? ?
+        course_assessment_submission_grading_path(@course, @assessment, @submission, @grading) :
+        course_assessment_submission_gradings_path(@course, @assessment, @submission)),
                     html: { class: "form-horizontal" } do |f| %>
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
 
@@ -100,7 +102,7 @@
                                 max: @assessment.max_grade,
                                 required: true,
                                 onchange: "suggestEXP(#{@assessment.max_grade}, #{@assessment.exp}, true)",
-                                readonly: !@assessment.single_question?,
+                                readonly: !@assessment.specific.single_question?,
                                 class: "number_field input-small" %>
 
           <% end %>
