@@ -47,18 +47,17 @@ class Assessment::GradingsController < ApplicationController
       return
     end
 
-
     invalid_assign = false
     @grading.grade = 0
 
     params[:ags].each do |ag|
       @ag = @grading.answer_gradings.build(ag)
+      @ag.grader = curr_user_course
       unless validate_gradings(@ag, ag)
         invalid_assign = true
         break
       end
 
-      @ag.grader = curr_user_course
       @grading.grade += @ag.grade
     end
 
@@ -68,10 +67,6 @@ class Assessment::GradingsController < ApplicationController
 
     @grading.grader = curr_user_course
     @grading.student = @submission.std_course
-    g_log = @grading.grading_logs.build
-    g_log.grader = curr_user_course
-    g_log.grade = @grading.grade
-    g_log.exp = @grading.exp
 
     if invalid_assign
       grade_error_response
@@ -100,27 +95,27 @@ class Assessment::GradingsController < ApplicationController
   end
 
   def update
-    @grading.grade = 0
-    @grading.exp = 0
     invalid_assign = false
-    if @assessment.single_question?
-      @grading.grade = params[:grade_sum].to_i
-    else
-      params[:ags].each do |agid, ag|
-        @ag = AnswerGrading.find(agid)
-        unless validate_gradings(@ag, ag)
-          invalid_assign = true
-          break
-        end
-        @ag.update_attributes(ag)
-        #@ag.grader = current_user
-        @grading.grade += ag[:grade].to_i
-        #@grading.exp += ag[:exp].to_i
+    @grading.grade = 0
+    @grading.exp = params[:assessment_grading][:exp].to_i
+
+    params[:ags].each do |id, ag|
+      @ag = @grading.answer_gradings.find(id)
+      puts 'ag', ag, @ag
+      unless validate_gradings(@ag, ag)
+        invalid_assign = true
+        break
       end
+      if @ag.grade != ag[:grade].to_f
+        @ag.grade = ag[:grade].to_f
+        @ag.grader = curr_user_course
+        @ag.save
+      end
+
+      @grading.grade += @ag.grade
     end
-    @grading.last_grade_updated = Time.now
+
     @submission.set_graded
-    @grading.exp = params[:exp_sum].to_i
     if @grading.grade > @assessment.max_grade || @grading.exp > @assessment.exp
       invalid_assign = true
     end
@@ -130,9 +125,8 @@ class Assessment::GradingsController < ApplicationController
     if invalid_assign
       grade_error_response(true)
     elsif @grading.save
-
       respond_to do |format|
-        format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
+        format.html { redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading),
                                   notice: "Grading has been recorded." }
       end
     else
@@ -182,7 +176,7 @@ class Assessment::GradingsController < ApplicationController
   end
 
   def validate_grade(grade, max_grade)
-    if grade.match(/^[\-|\+|\d]\d*$/) and (grade.to_i <= max_grade)
+    if grade.match(/^[\-|\+|\d|\.]\d*(\.*)\d*$/) and (grade.to_f <= max_grade)
       return true
     end
     false
@@ -192,9 +186,9 @@ class Assessment::GradingsController < ApplicationController
     respond_to do |format|
       flash[:error] = "Grading appears to have failed. Did you, for example, try to give grade/exp > max? ;)"
       if edit
-        format.html { redirect_to edit_course_mission_submission_submission_grading_path(@course, @assessment, @submission)}
+        format.html { redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)}
       else
-        format.html { redirect_to new_course_mission_submission_submission_grading_path(@course, @assessment, @submission)}
+        format.html { redirect_to new_course_assessment_submission_grading_path(@course, @assessment, @submission)}
       end
     end
   end
