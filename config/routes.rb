@@ -40,8 +40,6 @@ JfdiAcademy::Application.routes.draw do
   resources :role_requests
 
   resources :courses do
-    match "/submissions" => "mission_submissions#listall", as: :submissions
-    match "/training_submissions" => "training_submissions#listall", as: :training_submissions
     get "/notifications" => "course_notifications#get"
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
@@ -113,6 +111,7 @@ JfdiAcademy::Application.routes.draw do
         post 'bulk_update' => 'missions#bulk_update'
         get 'overview' => 'missions#overview'
         get 'stats' => 'missions#stats'
+        get 'submissions' => 'assessments#listall', type: 'mission'
       end
       get 'dump_code' => 'missions#dump_code'
     end
@@ -122,12 +121,14 @@ JfdiAcademy::Application.routes.draw do
       post  "trainings/bulk_update" => "trainings#bulk_update", as: :assessment_trainings_bulk_update
       post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
     end
+
     resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
       collection do
         get :index, to: 'assessments#index', type: 'training'
         post 'bulk_update' => 'missions#bulk_update'
         get 'overview' => 'missions#overview'
         get 'stats' => 'trainings#stats'
+        get 'submissions' => 'assessments#listall', type: 'training'
       end
     end
 
