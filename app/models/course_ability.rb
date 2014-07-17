@@ -33,7 +33,7 @@ class CourseAbility  < Ability
       end
     end
 
-    if user_course.role == Role.shared.first || user.is_admin?
+    if user_course.is_shared? || user.is_admin?
       can :share, Course
       can :participate, Course
       can :duplicate, Course

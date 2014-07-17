@@ -2,6 +2,7 @@ class UserCourse < ActiveRecord::Base
   acts_as_paranoid
 
   include Rails.application.routes.url_helpers
+  default_scope includes(:role)
 
   attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom, :last_active_time
 
@@ -75,15 +76,15 @@ class UserCourse < ActiveRecord::Base
   default_scope includes(:course)
 
   def is_student?
-    self.role == Role.find_by_name('student')
+    self.role.name == 'student'
   end
 
   def is_lecturer?
-    self.role == Role.find_by_name('lecturer')
+    self.role.name == 'lecturer'
   end
 
   def is_ta?
-    self.role == Role.find_by_name('ta')
+    self.role.name == 'ta'
   end
 
   def is_staff?
@@ -92,6 +93,10 @@ class UserCourse < ActiveRecord::Base
 
   def is_creator?
     self.user and self.user == self.course.creator
+  end
+
+  def is_shared?
+    self.role.name == 'shared'
   end
 
   def level_percentage
