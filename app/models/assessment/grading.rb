@@ -10,10 +10,15 @@ class Assessment::Grading < ActiveRecord::Base
   has_many  :grading_logs, class_name: Assessment::GradingLog, dependent: :destroy
 
   after_save :update_exp_transaction, if: :grade_or_exp_changed?
+  after_save :create_log, if: :grade_or_exp_changed?
 
 
   def grade_or_exp_changed?
     exp_changed? or grade_changed?
+  end
+
+  def create_log
+    grading_logs.create({grade: grade, exp: exp, grader_course_id: grader_course_id})
   end
 
   def update_grade
