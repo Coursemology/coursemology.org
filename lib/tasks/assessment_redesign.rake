@@ -395,10 +395,10 @@ namespace :db do
       Assessment::Submission
 
       Submission.all.each do |s|
-        migrate_mission_submissions(s, :mission)
+        migrate_submission(s, :mission)
       end
       TrainingSubmission.all.each do |s|
-        migrate_training_submissions(s, :training)
+        migrate_submission(s, :training)
       end
     end
 
