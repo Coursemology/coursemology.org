@@ -390,7 +390,7 @@ namespace :db do
       end
     end
 
-    def migrate_submissions
+    def migrate_submission
       # no op
       Assessment::Submission
 
