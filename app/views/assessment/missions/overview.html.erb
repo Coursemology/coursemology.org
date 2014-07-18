@@ -1,64 +1,46 @@
+<%- title =  @course.customized_title('Mission').pluralize %>
 <div class="missions missions-overview">
-<div class="page-header">
-  <h1>Update Missions</h1>
-</div>
-<%= render partial: 'navigation' %>
+  <div class="page-header">
+    <h1>Update <%= title %></h1>
+  </div>
+  <%= render partial: 'navigation', locals: {title: title} %>
 
-<%= form_tag course_assessment_missions_bulk_update_path(@course), :method => 'POST' do %>
-<table class="table">
-  <thead>
-  <tr>
-    <th><%= @display_columns['title'] %></th>
-    <th><%= @display_columns['exp'] %></th>
-    <th><%= @display_columns['start'] %></th>
-    <th><%= @display_columns['end'] %></th>
-    <th>Dependency</th>
-    <th>Publish?</th>
-  </tr>
-  </thead>
-  <tbody>
-    <% @missions.each do |mission| %>
-      <tr>
-        <td>
-          <input name="missions[<%= mission.id %>][title]" class="input-medium" type="text"  value="<%= mission.title %>" required>
-        </td>
-        <td>
-          <input name="missions[<%= mission.id %>][exp]" type="number" value="<%= mission.exp %>" min="0" class="input-mini" required>
-        </td>
-        <td>
-          <div class="datetimepicker future-only input-append date">
-            <input name="missions[<%= mission.id %>][open_at]" type="text" value="<%= datetime_format(mission.open_at) %>" class="input-medium" required="true">
-        <span class="add-on">
-          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-        </span>
-          </div>
-        </td>
-        <td>
-          <div class="datetimepicker future-only input-append date">
-            <input name="missions[<%= mission.id %>][close_at]" type="text" value="<%= datetime_format(mission.close_at) %>" class="input-medium" required="true">
-        <span class="add-on">
-          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-        </span>
-          </div>
-        </td>
-        <td>
-          <select id="select-mission" name="missions[<%= mission.id %>][dependent_id]" class="input-medium">
-            <option value="0" >No Dependency</option>
-            <%= (@missions - [mission]).each do |asm| %>
-                <option value="<%= asm.id %>" <%= 'selected' if asm == mission.dependent %>><%= asm.title %></option>
-            <% end %>
-          </select>
-        </td>
-        <td class="publish">
-          <input type="hidden" name="missions[<%= mission.id %>][publish]" value="0">
-          <input name="missions[<%= mission.id %>][publish]" type="checkbox" <%= 'checked' if mission.publish? %>>
-        </td>
-      </tr>
-  <% end%>
-  </tbody>
-</table>
-<div class="center">
-  <button class="btn btn-large" id="submit-button">Update</button>
-</div>
-<% end %>
+  <%= simple_form_for @course, url: bulk_update_course_assessment_missions_path(@course), :method => 'POST' do |f| %>
+      <table class="table">
+        <thead>
+        <tr>
+          <th><%= @display_columns['title'] %></th>
+          <th><%= @display_columns['exp'] %></th>
+          <th><%= @display_columns['start'] %></th>
+          <th><%= @display_columns['end'] %></th>
+          <th>Dependency</th>
+          <th>Publish?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%= f.simple_fields_for :missions do |mf| %>
+            <tr>
+              <td><%= mf.input_field :title, class: "input-medium" %></td>
+              <td><%= mf.input_field :exp, as: :integer, class: "input-mini" %></td>
+              <td><%= mf.input_field :open_at, as: :datetime_picker, class: "input-medium" %></td>
+              <td><%= mf.input_field :close_at, as: :datetime_picker, class: "input-medium" %></td>
+              <td>
+                <%= mf.association :dependent_on,
+                                  collection: @course.missions - [mf.object],
+                                  label_method: :title, value_method: :id,
+                                  include_blank: "No Dependency",
+                                  label: false,
+                                  wrapper: false,
+                                  input_html: {class: "input-medium"} %>
+              </td>
+              <td class="publish"><%= mf.input_field :published, as: :boolean %></td>
+
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <div class="center">
+        <button class="btn btn-large" id="submit-button">Update</button>
+      </div>
+  <% end %>
 </div>

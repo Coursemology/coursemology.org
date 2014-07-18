@@ -24,7 +24,7 @@ class StatsController < ApplicationController
   end
 
   def mission
-    @mission = Mission.find(params[:mission_id])
+    @mission = Assessment::Mission.find(params[:mission_id])
     authorize! :view_stat, @mission
 
     @sbms = @mission.sbms
@@ -39,7 +39,7 @@ class StatsController < ApplicationController
     @unsubmitted = all_std -  @attempting -  @submitted - @graded
 
     sbms_graded = @sbms.graded
-    sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_grading.total_grade }
+    sbms_by_grade = sbms_graded.group_by { |sbm| sbm.get_final_grading.grade }
     @grade_chart = produce_submission_graph(sbms_by_grade, 'Grade', 'Grade distribution')
 
     sbms_by_date = sbms_graded.group_by { |sbm| sbm.created_at.to_date.to_s }
@@ -68,7 +68,7 @@ class StatsController < ApplicationController
     @not_started = std_courses - submitted
     @summary[:not_started] = @not_started
 
-    sbms_by_grade = submissions.group_by { |sbm| sbm.get_final_grading.total_grade }
+    sbms_by_grade = submissions.group_by { |sbm| sbm.get_final_grading.grade }
     @summary[:grade_chart] = produce_submission_graph(sbms_by_grade, 'Grade', 'Grade distribution')
 
     sbms_by_date = submissions.group_by { |sbm| sbm.created_at.strftime("%m-%d") }

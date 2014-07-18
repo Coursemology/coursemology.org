@@ -1,39 +1,38 @@
-<% @qadata.each do |qid, qa| %>
+<% @summary[:qn_ans].each do |qid, qn_dic| %>
     <hr/>
-    <% unless @assessment.single_question? %>
-        <h3><%=  qa[:q].get_title %></h3>
+    <% unless @assessment.specific.single_question? %>
+        <h3><%=  qn_dic[:qn].get_title %></h3>
         <div class="row-fluid">
-          <div class="submission-question-block span10"><%= style_format(qa[:q].description) %></div>
+          <div class="submission-question-block span10"><%= style_format(qn_dic[:qn].description) %></div>
         </div>
     <% end %>
     <h3>Answer:</h3>
-    <% if qa[:a] %>
-        <% if @assessment.file_submission_only? %>
+    <% if qn_dic[:ans] %>
+        <% if @assessment.specific.file_submission_only? %>
             <p style="font-style: italic">Answer is contained in the submission file(s).</p>
-        <% elsif qa[:q].class == CodingQuestion %>
-            <%= render partial: "submissions/do_coding",
-                       locals: {answer: qa[:a],
-                                qn:     qa[:q],
+        <% elsif qn_dic[:qn].class == Assessment::CodingQuestion %>
+            <%= render partial: "assessment/mission_submissions/do_coding",
+                       locals: {answer: qn_dic[:ans],
+                                question:     qn_dic[:qn],
                                 submission: submission,
                                 mode:   "view"}%>
         <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">
-                <%= qa[:a].answer.html_safe %>
+                <%= qn_dic[:ans].answer.html_safe %>
               </div>
             </div>
         <% end %>
-        <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_id]" value="<%= qa[:a].id %>">
-        <input type="hidden" name="ags[<%= qa[:g].id if qa[:g] %>][student_answer_type]" value="<%= qa[:a].class.name %>">
-        <% if @assessment.comment_per_qn? %>
+        <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][student_answer_id]" value="<%= qn_dic[:ans].id %>">
+        <% if @assessment.specific.comment_per_qn? %>
             <div class="row-fluid">
               <div class="span10">
                 <% require 'digest/md5' %>
-                <% ecid =  Digest::MD5.hexdigest(qa[:a].class.to_s << qa[:a].id.to_s) %>
-                <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+                <% ecid =  Digest::MD5.hexdigest(qn_dic[:ans].to_s) %>
+                <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
                 <%= render partial: "comments/list",
-                           locals: { comments:  CommentTopic.comments_to_json(qa[:a].comment_topic, curr_user_course),
-                                     target:    qa[:a],
+                           locals: { comments:  CommentTopic.comments_to_json(qn_dic[:ans].comment_topic, curr_user_course),
+                                     target:    qn_dic[:ans],
                                      header:    "Comments",
                                      ecid:      ecid,
                                      margin_left: "0px"} %>
@@ -41,23 +40,25 @@
             </div>
         <% end %>
         <!--show condition: new grading, review grading, update grading -->
-        <% if  !@assessment.single_question? and @grading%>
+        <% if  !@assessment.specific.single_question? and @grading%>
             <div class="row-fluid">
               <div class="span10">
                 <div class="grading-block">
-                  <% max_grade = qa[:q].max_grade  %>
-                  <% exp = (@assessment.exp * (qa[:q].max_grade.to_f / @assessment.max_grade.to_f)).to_i %>
+                  <% max_grade = qn_dic[:qn].max_grade  %>
+                  <% exp = (@assessment.exp * (qn_dic[:qn].max_grade / @assessment.max_grade)).to_i %>
+                  <% grade = qn_dic[:grade] %>
                   <h4>Grade awarded</h4>
                   <% if mode == 'view' %>
-                      <strong><%= qa[:g].grade if qa[:g] %></strong>
+                      <strong><%= grade.grade if grade %></strong>
                   <% else %>
                       <input type="number"
-                             name="ags[<%= qa[:g].id if qa[:g] %>][grade]"
-                             value="<%= qa[:g].grade if qa[:g] %>"
+                             name="ags[<%= grade.id if grade %>][grade]"
+                             value="<%= grade.grade if grade %>"
                              class="input-small grade-input"
+                             step="any"
                              max="<%= max_grade %>"
                              id="grade-awarded-<%= qid %>"
-                             onchange="suggestEXP(<%= @mission.max_grade %>, <%= @mission.exp %>)"
+                             onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>)"
                              required
                       />
                   <% end %>
@@ -84,10 +85,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% @qadata.each do |qid, qa| %>
+                <% @summary[:qn_ans].each do |qid, qa| %>
                     <tr>
-                      <td><%=  qa[:q].get_title(qa[:i])%></td>
-                      <td><%= qa[:g].grade if qa[:g]  %>  <strong> / <%= qa[:q].max_grade %> </strong></td>
+                      <td><%= qa[:qn].get_title %></td>
+                      <td><%= qa[:grade].grade if qa[:grade]  %>  <strong> / <%= qa[:qn].max_grade %> </strong></td>
                     </tr>
                 <% end %>
                 </tbody>
@@ -95,14 +96,20 @@
           <% end %>
           <h4>Total Grade:</h4>
           <% if mode == 'view' %>
-              <strong><%= @grading.total_grade %></strong>
+              <strong><%= @grading.grade %></strong>
           <% else %>
+              <%= f.input :grade, as: :number,
+                          id: "grade-sum",
+                          onchange: "suggestEXP(#{@assessment.max_grade}, #{@assessment.exp}, true)",
+                          disabled: !@assessment.single_question?,
+                          input_html: {class: "number_field input-small"}  %>
               <input type="number"
-                     value="<%= @submission_grading.total_grade if @submission_grading %>"
+                     value="<%= @grade.grade if @grade %>"
                      max="<%= @assessment.max_grade %>"
                      class="input-small"
-                     name="grade_sum"
+                     name="grade"
                      id="grade-sum"
+                     step="0.1"
                      onchange="suggestEXP(<%= @assessment.max_grade %>, <%= @assessment.exp %>, true )"
                      <%= 'disabled' unless @assessment.single_question? %>>
           <% end %>
@@ -110,14 +117,15 @@
           <br><br>
           <h4>EXP awarded</h4>
           <% if mode == 'view' %>
-              <strong><%= @grading.total_exp %></strong>
+              <strong><%= @grading.exp %></strong>
           <% else %>
               <input type="number"
-                     name="exp_sum"
-                     value="<%= @submission_grading.total_exp if @submission_grading %>"
+                     name="exp"
+                     value="<%= @grade.exp if @grade %>"
                      max="<%= @assessment.exp %>"
                      class="input-small exp-input"
                      id="exp-sum"
+                     step="0.01"
                      required/>
           <% end %>
           <strong> / <%= @assessment.exp %></strong>
@@ -172,11 +180,11 @@
 
         var result = Math.round(Math.round(multiplier * (exp * sum_grade / max) / 5) * 5);
         $("#exp-sum").val(result);
-        total_grade.val(sum_grade);
+        total_grade.val(Math.round(sum_grade * 100) / 100);
     }
 
     $(document).ready(function() {
         if ($("#exp-sum").val() == "")
-            suggestEXP( <%= @mission.max_grade %>, <%= @mission.exp %> );
+            suggestEXP( <%= @assessment.max_grade %>, <%= @assessment.exp %> );
     });
 </script>

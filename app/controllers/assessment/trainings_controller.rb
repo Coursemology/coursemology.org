@@ -12,6 +12,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
     @summary[:allowed_questions] = [Assessment::McqQuestion, Assessment::CodingQuestion]
     @summary[:type] = 'training'
+    @summary[:specific] = @training
 
     respond_to do |format|
       format.html { render "assessment/assessments/show" }
@@ -87,39 +88,14 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def overview
-    authorize! :bulk_update, Assessment
+    super
     @tabs = @course.training_tabs
     @tab_id = 'overview'
-    @trainings = @course.trainings
-    # @trainings = @course.trainings.order(:tab_id, :open_at)
-    @display_columns = {}
-    @course.training_columns_display.each do |cp|
-      @display_columns[cp.preferable_item.name] = cp.prefer_value
-    end
   end
 
   def bulk_update
-    authorize! :bulk_update, Assessment
-    trainings = params[:trainings]
-    success = 0
-    fail = 0
-    trainings.each do |key, val|
-      training = @course.trainings.find(key)
-      training.assign_attributes(val)
-      unless training.changed?
-        next
-      end
-      if training.save
-        success += 1
-      else
-        fail += 1
-      end
-    end
-    flash[:notice] = "#{success} training(s) updated successfully."
-    if fail > 0
-      flash[:error] = "#{fail} training(s) failed to update."
-    end
-    redirect_to course_assessment_trainings_overview_path
+    super
+    redirect_to overview_course_assessment_trainings_path
   end
 
   def duplicate_qn

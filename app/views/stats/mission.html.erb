@@ -3,10 +3,10 @@
 </div>
 <h3>Mission: <%= @mission.title %></h3>
 <%= link_to "Click here",
-  course_submissions_path(@course, asm: {id: @mission.id,
-                                         type: @mission.class.name}.to_json),
+            submissions_course_assessment_missions_path(@course,
+                                                        asm: @mission.assessment.id),
   method: "GET" %>
-to review all submission for this training.
+to review all submission for this mission.
 <br/>
 <br/>
 <table class="table">

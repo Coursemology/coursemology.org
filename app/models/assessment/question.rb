@@ -12,6 +12,7 @@ class Assessment::Question < ActiveRecord::Base
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
   #These two are just for mcq question, but the foreign key is question_id
   has_many  :options, class_name: Assessment::McqOption, dependent: :destroy
+  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
 
 
   has_one :comment_topic, as: :topic
@@ -34,14 +35,19 @@ class Assessment::Question < ActiveRecord::Base
     .where("question_assessments.question_id IN (?)", self.all)
   end
 
+  #TODO: i hope mysql is smart enough to optimize this
+  def self.finalised(sbm)
+    grouped_answers = "SELECT *, MIN(created_at)
+                      FROM assessment_answers
+                      WHERE assessment_answers.finalised = 1 and assessment_answers.submission_id = #{sbm.id}
+                      GROUP BY  assessment_answers.question_id"
+    self.joins("INNER JOIN (#{grouped_answers}) uaaq ON assessment_questions.id = uaaq.question_id")
+  end
+
   def update_assessment_grade
     puts "update grade", self.question_assessments.count
     self.question_assessments.each do |qa|
       qa.assessment.update_grade
     end
-  end
-
-  def specific
-    as_question
   end
 end

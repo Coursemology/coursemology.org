@@ -12,6 +12,12 @@ class Assessment::SubmissionsController < ApplicationController
       Activity.attempted_asm(curr_user_course, @assessment)
     end
 
+    if sbm
+      @submission = sbm
+    else
+      @submission.std_course = curr_user_course
+    end
+
     if @assessment.is_training?
       @reattempt = @course.training_reattempt
       #continue unfinished training, or go to finished training of can't reattempt
@@ -23,12 +29,8 @@ class Assessment::SubmissionsController < ApplicationController
       if sbm_count > 0
         @submission.multiplier = @reattempt.prefer_value.to_f / 100
       end
-    end
-
-    if sbm
-      @submission = sbm
-    else
-      @submission.std_course = curr_user_course
+      @submission.save
+      @submission.gradings.create({grade: 0, std_course_id: curr_user_course.id})
     end
 
     if @submission.save

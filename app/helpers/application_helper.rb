@@ -68,9 +68,9 @@ module ApplicationHelper
         str = HTMLEntities.new.encode(str)
       end
       str = str.gsub(/\n/,"<br/>")
-      str = str.gsub(/\[b\](.+?)\[\/b\]/m,'<strong>\1</strong>')
-      str = str.gsub(/\[c\](.+?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
-      str = str.gsub(/\[mc\](.+?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
+      str = str.gsub(/\[b\](.*?)\[\/b\]/m,'<strong>\1</strong>')
+      str = str.gsub(/\[c\](.*?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
+      str = str.gsub(/\[mc\](.*?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
 ') <<'</div></pre></div>'}
       return str.html_safe
     end
@@ -78,7 +78,7 @@ module ApplicationHelper
   end
 
   def style_format(str, html_safe = true, lang='python')
-    ApplicationHelper.style_format(str,html_safe,lang)
+    ApplicationHelper.style_format(str, html_safe, lang)
   end
 
 

@@ -30,9 +30,9 @@ class ApplicationController < ActionController::Base
 
   def load_theme_setting
     atts = []
-    atts << ThemeAttribute.find_by_name('Background Color')
-    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Custom CSS')
+    # atts << ThemeAttribute.find_by_name('Background Color')
+    # atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+    # atts << ThemeAttribute.find_by_name('Cust om CSS')
     # atts << ThemeAttribute.find_by_name('Announcements Icon')
     # atts << ThemeAttribute.find_by_name('Missions Icon')
     # atts << ThemeAttribute.find_by_name('Trainings Icon')
@@ -233,7 +233,7 @@ class ApplicationController < ActionController::Base
         url = main_app.course_assessment_trainings_url(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
-        url = main_app.course_submissions_path(@course)
+        url = main_app.submissions_course_assessment_missions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
         url = main_app.course_achievements_url(@course)

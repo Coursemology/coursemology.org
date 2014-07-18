@@ -10,7 +10,7 @@ class Assessment < ActiveRecord::Base
   attr_accessible   :published
 
   #mission
-  delegate :dependent_id, :close_at, :can_start?, :single_question?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
+  delegate :dependent_id, :close_at, :can_start?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
 
   #training
   delegate :bonus_exp, :bonus_cutoff_at, :get_path, to: :as_assessment
@@ -86,6 +86,10 @@ class Assessment < ActiveRecord::Base
     to_translate = self.as_assessment.class == Assessment::Mission ?
         'Assessment.Mission' : 'Assessment.Training'
     "#{I18n.t(to_translate)} : #{self.title}"
+  end
+
+  def get_title
+    title_with_type
   end
 
   def update_grade
@@ -226,10 +230,6 @@ class Assessment < ActiveRecord::Base
       end
     end
     clone
-  end
-
-  def specific
-    as_assessment
   end
 
   def mark_refresh_autograding

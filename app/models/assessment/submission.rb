@@ -1,13 +1,13 @@
 class Assessment::Submission < ActiveRecord::Base
   acts_as_paranoid
 
-  scope :mission_submissions,
+  scope :mission_submissions, -> {
         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
-            where("assessments.as_assessment_type = 'Assessment::Mission'")
+            where("assessments.as_assessment_type = 'Assessment::Mission'") }
 
-  scope :training_submissions,
+  scope :training_submissions, -> {
         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
-            where("assessments.as_assessment_type = 'Assessment::Training'")
+            where("assessments.as_assessment_type = 'Assessment::Training'") }
 
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
@@ -18,12 +18,8 @@ class Assessment::Submission < ActiveRecord::Base
 
   after_create :set_attempting
 
-  def get_final_grading
-    if self.gradings.length > 0
-      self.gradings.last
-    else
-      nil
-    end
+  def get_final_grading(build_params = {})
+    self.gradings.last || gradings.create(build_params)
   end
 
   def get_all_answers
@@ -46,9 +42,10 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_bonus
-    if self.assessment.respond_to? :bonus_cutoff
-      if  self.assessment.bonus_cutoff && self.assessment.bonus_cutoff > Time.now
-        return self.assessment.bonus_exp
+    specific = assessment.specific
+    if specific.respond_to? :bonus_cutoff
+      if specific.bonus_cutoff && specific.bonus_cutoff > Time.now
+        return specific.bonus_exp
       end
     end
     0
@@ -113,38 +110,20 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def done?
-    #if a training chanage between can skip and cannot, we will have problem
-    #if we check done by position
-    #if training.can_skip?
-    questions_left == []
-    #else
-    #  current_step > self.training.asm_qns.count
-    #end
-  end
-
-  def questions_left
-    assessment.questions - answered_questions
-  end
-
-  #TODO
-  def answered_questions
-    answers = sbm_answers.map {|sba| sba.answer }
-    answers.select {|a| a.answer_grading }.map {|a| a.qn}.uniq
+    self.assessment.questions.finalised(self).count == self.assessment.questions.count
   end
 
   def update_grade
-    self.submit_at = DateTime.now
-    self.current_step = training.asm_qns.count + 1
+    self.submitted_at = DateTime.now
     self.set_graded
 
-    pending_action = std_course.pending_actions.where(item_type: Training.to_s, item_id: self.training).first
+    pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.id).first
     pending_action.set_done if pending_action
 
-    subm_grading = self.get_final_grading
-    subm_grading.update_grade
-    exp = subm_grading.update_exp_transaction
-    subm_grading.save
-    exp
+    grading = self.get_final_grading
+    grading.update_grade
+    grading.save
+    grading.exp
   end
 
   def build_initial_answers

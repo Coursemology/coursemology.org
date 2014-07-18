@@ -11,7 +11,7 @@ class Forums::ForumsController < ApplicationController
 
   def show
     @topics = @forum.topics.accessible_by(current_ability).order('created_at DESC')
-    @topics = @topics.page(params[:page]).per(@course.forum_paging_pref.prefer_value.to_i)
+    @topics = @topics.page(params[:page]).per(@course.paging_pref('Forum').prefer_value.to_i)
   end
 
   def new
