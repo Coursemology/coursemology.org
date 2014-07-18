@@ -18,6 +18,8 @@ namespace :db do
     @coding_answers_map = {}
     @coding_questions_map = {}
     @languages_map = {}
+    @training_submissions_map = {}
+    @mission_submissions_map = {}
 
     def migrate_mcq_question(qn_id, asm)
       mcq = Mcq.find qn_id
@@ -261,7 +263,7 @@ namespace :db do
       end
     end
 
-    def migrate_submissions(s, type)
+    def migrate_submission(s, type)
 
       if type == :mission then
         assessment_id = s['mission_id']
@@ -339,9 +341,10 @@ namespace :db do
           }, :without_protection => true)
         when :StdMcqAllAnswer
           answer = StdMcqAllAnswer.find sbm_answer['answer_id']
+          answer_attrs = answer.attributes
 
-          if @mcq_questions_map[answer['mcq_id']] == nil then
-            puts "Cannot find corresponding MCQ for MCQ All Answer #{answer['id']}"
+          if @mcq_questions_map[answer_attrs['mcq_id']] == nil then
+            puts "Cannot find corresponding MCQ for MCQ All Answer #{answer_attrs['id']}"
           end
 
           ans = Assessment::Answer.create!({
@@ -366,6 +369,7 @@ namespace :db do
           end
         when :StdCodingAnswer
           answer = StdCodingAnswer.find sbm_answer['answer_id']
+          answer_attrs = answer.attributes
 
           ans = Assessment::Answer.create!({
             assessment_id: assessments_map[assessment_id],
@@ -390,7 +394,7 @@ namespace :db do
       end
     end
 
-    def migrate_submission
+    def migrate_submissions
       # no op
       Assessment::Submission
 
@@ -487,7 +491,7 @@ namespace :db do
         when :Training
           training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
           if training then
-            training.tags << Tag.find_by_id(tag['tag_id']) if training
+            training.tags << Tag.find_by_id(tag['tag_id'])
             training.save
           end
 
@@ -505,6 +509,30 @@ namespace :db do
     end
 
     def migrate_requirements
+      AsmReq.all.each do |asm_req|
+        case asm_req['asm_type'].to_sym
+        when :Training
+          training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
+          if training then
+            r = Requirement.find_by_id(asm_req['req_id'])
+            if r then
+              training << r
+              training.save
+            end
+          end
+        when :Mission
+          mission = Assessment::Mission.find_by_id(@missions_map.fetch(tag['asm_id']))
+          if mission then
+            r = Requirement.find_by_id(asm_req['req_id'])
+            if r then
+              mission << r
+              mission.save
+            end
+          end
+        else
+          raise StandardError, "Unknown asm_type: #{asm_req['asm_type']}"
+        end
+      end
     end
 
     migrate_missions
