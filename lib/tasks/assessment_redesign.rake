@@ -410,9 +410,9 @@ namespace :db do
       SubmissionGrading.all.each do |sbm_g|
         case sbm_g['sbm_type'].to_sym
         when :TrainingSubmission
-          submission = @training_submissions_map[sbm_g['sbm_id']]
+          submission_id = @training_submissions_map[sbm_g['sbm_id']]
         when :Submission
-          submission = @mission_submissions_map[sbm_g['sbm_id']]
+          submission_id = @mission_submissions_map[sbm_g['sbm_id']]
         else
           puts "Cannot find corresponding sbm for grading ##{sbm_g['id']}"
           next
@@ -433,6 +433,7 @@ namespace :db do
             raise StandardError
           end
 
+          submission = Assessment::Submission.find submission_id
           answer_g_attrs = answer_g.attributes
           Assessment::Grading.create!({
             submission_id: submission.id,
