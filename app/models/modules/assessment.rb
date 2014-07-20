@@ -14,6 +14,6 @@ module Assessment
   def clean_up_description
     self.description = description.
         gsub(/\[mc\](.+?)\[\/mc\]/m){"[mc]" << $1.gsub(/<div><\/div>/,'') << "[/mc]"}.
-        gsub(/<div>(.+?)<\/div>/m) { "<br>" + $1 + "<br>"}.gsub(/<br>\s*\<br>/m, "<br>")
+        gsub(/<div>(.+?)<\/div>/m) { "<br>" + $1 + "<br>"}.gsub(/<br>\s*\<br>/m, "<br><br>")
   end
 end
