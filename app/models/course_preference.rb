@@ -13,6 +13,10 @@ class CoursePreference < ActiveRecord::Base
       where("preferable_items.item_type = ?", type)
     end
 
+    def name(n)
+      where("preferable_items.name = ?", n)
+    end
+
     def mission
       item('Mission')
     end

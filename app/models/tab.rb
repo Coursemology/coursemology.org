@@ -4,6 +4,7 @@ class Tab < ActiveRecord::Base
   attr_accessible :course_id, :owner_type, :title, :description, :pos
 
   scope :training, where(owner_type: "Assessment::Training")
+  scope :mission, where(owner_type: "Assessment::Mission")
 
   belongs_to :course
   has_many  :assessments, dependent: :destroy

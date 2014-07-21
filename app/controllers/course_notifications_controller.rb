@@ -38,7 +38,7 @@ class CourseNotificationsController < ApplicationController
         counts[:pending_gradings] = @course.pending_gradings(curr_user_course).count
       end
       if can? :see, :pending_comments
-        counts[:comments] = @course.count_pending_comments
+        counts[:comments] = @course.pending_comments.count
       end
       counts[:pending_enrol] = @course.enroll_requests.count
       # TODO students see the number of new gradings

@@ -73,7 +73,7 @@ class Assessment::GradingsController < ApplicationController
     elsif @grading.save
       @submission.set_graded
 
-      if @course.email_notify_enabled? PreferableItem.new_grading and @assessment.published?
+      if @course.email_notify_enabled?(PreferableItem.new_grading) and @assessment.published?
         UserMailer.delay.new_grading(
             @submission.std_course.user,
             course_assessment_submission_url(@course, @assessment, @submission)

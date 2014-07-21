@@ -33,7 +33,7 @@ class CommentsController < ApplicationController
 
     CommentSubscription.populate_subscription(@comment)
 
-    if @course.email_notify_enabled? PreferableItem.new_comment and comment_topic.can_access?
+    if @course.email_notify_enabled?(PreferableItem.new_comment) and comment_topic.can_access?
       comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
     end
 
@@ -48,7 +48,7 @@ class CommentsController < ApplicationController
       @tab = params[:_tab]
 
       @all_topics = @course.comment_topics
-      @pending_comments = @course.get_pending_comments
+      @pending_comments = @course.pending_comments
       @my_topics = curr_user_course.comment_topics
       @mine_pending_comments = @my_topics.where(pending: true)
 
