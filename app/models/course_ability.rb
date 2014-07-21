@@ -164,7 +164,7 @@ class CourseAbility  < Ability
       can :access_denied, Mission
       can :access_denied, Training
 
-      can :manage, [Assessment::Submission, TrainingSubmission], std_course_id: user_course.id
+      can :manage, [Assessment::Submission], std_course_id: user_course.id
       can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
@@ -176,9 +176,9 @@ class CourseAbility  < Ability
 
       can :read, Comic
       can :info, Comic
-      cannot :modify, TrainingSubmission
 
-      cannot :see_all, [Submission, TrainingSubmission]
+      cannot :modify, Assessment::Submission
+      cannot :see_all, Assessment::Submission
     end
   end
 end

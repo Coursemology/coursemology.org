@@ -35,7 +35,7 @@ class CourseNotificationsController < ApplicationController
       #  counts[:submissions] = unseen_sbms.count
       #end
       if can? :see, :pending_grading
-        counts[:pending_gradings] = @course.get_pending_gradings(curr_user_course).count
+        counts[:pending_gradings] = @course.pending_gradings(curr_user_course).count
       end
       if can? :see, :pending_comments
         counts[:comments] = @course.count_pending_comments

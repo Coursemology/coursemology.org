@@ -9,6 +9,8 @@ class Assessment::Submission < ActiveRecord::Base
         joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
             where("assessments.as_assessment_type = 'Assessment::Training'") }
 
+  scope :graded, -> { where(status: 'graded') }
+
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
   has_many :answers, class_name: Assessment::Answer, dependent: :destroy
@@ -17,6 +19,10 @@ class Assessment::Submission < ActiveRecord::Base
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
 
   after_create :set_attempting
+
+  def graders
+    self.gradings.map(&:grader).select{|g| g}.map(&:name)
+  end
 
   def get_final_grading(build_params = {})
     self.gradings.last || gradings.create(build_params)
@@ -102,7 +108,7 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_path
-    course_assessment_training_training_submission_path(training.course, training, self)
+    course_assessment_submission_path(course, assessment, self)
   end
 
   def get_new_grading_path

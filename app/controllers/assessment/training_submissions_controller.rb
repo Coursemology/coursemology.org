@@ -10,32 +10,6 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
   def show
     @training = @assessment.specific
     @grading = @submission.get_final_grading
-
-    # @qadata = {}
-
-    # @training.questions.each_with_index do |qn, index|
-    #   break if @submission.current_step <= index && !@training.can_skip?
-    #   @qadata[qn.id.to_s+qn.class.to_s] = {q: qn}
-    # end
-    #
-    # @std_answers_for_questions =  Hash.new{ |h, k| h[k] = [] }
-    # @submission.get_all_answers.each do |sma|
-    #   @std_answers_for_questions[sma.qn_id.to_s + sma.qn.class.to_s] << sma
-    # end
-    #
-    # @qadata.each do |qid, qa|
-    #   if @std_answers_for_questions.has_key?(qid)
-    #     @qadata[qid][:a] = @std_answers_for_questions[qid].sort_by(&:created_at)
-    #   end
-    # end
-    #
-    # if @grading
-    #   @grading.answer_gradings.each do |ag|
-    #     if (sta = ag.student_answer) and sta.qn
-    #       @qadata[sta.qn_id.to_s + sta.qn.class.to_s][:g] = ag
-    #     end
-    #   end
-    # end
   end
 
   def edit
@@ -182,8 +156,8 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       return true
     end
 
-    if @training.open_at > Time.now
-      redirect_to course_assessment_training_access_denied_path(@course, @training)
+    if @assessment.specific.open_at > Time.now
+      redirect_to course_assessment_training_access_denied_path(@course, @assessment.specific)
     end
   end
 end

@@ -4,7 +4,7 @@ class DuplicateController < ApplicationController
 
 
   def manage
-    authorize! :can, :duplicate, @course
+    authorize! :duplicate, @course
     @missions = @course.missions
     @trainings = @course.trainings
     staff_courses = current_user.user_courses.staff

@@ -116,12 +116,6 @@ JfdiAcademy::Application.routes.draw do
       get 'dump_code' => 'missions#dump_code'
     end
 
-    scope module: 'assessment' do
-      match "trainings/overview" => "trainings#overview", as: :assessment_trainings_overview
-      post  "trainings/bulk_update" => "trainings#bulk_update", as: :assessment_trainings_bulk_update
-      post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
-    end
-
     resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
       collection do
         get :index, to: 'assessments#index', type: 'training'
@@ -131,6 +125,11 @@ JfdiAcademy::Application.routes.draw do
         get 'submissions' => 'assessments#listall', type: 'training'
       end
     end
+
+    scope module: 'assessment' do
+      post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
+    end
+
 
 
     get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
