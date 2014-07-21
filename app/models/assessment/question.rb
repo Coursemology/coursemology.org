@@ -14,6 +14,8 @@ class Assessment::Question < ActiveRecord::Base
   has_many  :options, class_name: Assessment::McqOption, dependent: :destroy
   has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
 
+  has_many :taggable_tags, as: :taggable, dependent: :destroy
+  has_many :tags, through: :taggable_tags
 
   has_one :comment_topic, as: :topic
 
