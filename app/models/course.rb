@@ -449,8 +449,8 @@ class Course < ActiveRecord::Base
   end
 
   def logo_url
-  	url = read_attribute(:logo_url)
-	url ||= '/images/coursemology_logo_square.png'
+    url = read_attribute(:logo_url)
+    url ||= '/images/coursemology_logo_square.png'
   end
  
 end
