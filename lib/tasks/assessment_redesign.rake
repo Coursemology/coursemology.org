@@ -29,7 +29,6 @@ namespace :db do
                                                 description: mcq_attrs['description'],
                                                 max_grade: mcq_attrs['max_grade'],
 
-                                                last_commented_at: mcq_attrs['last_commented_at'],
                                                 deleted_at: mcq_attrs['deleted_at'],
                                                 created_at: mcq_attrs['created_at'],
                                                 updated_at: mcq_attrs['updated_at'],

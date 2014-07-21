@@ -54,7 +54,6 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.float       :max_grade
       t.integer     :test_limit
 
-      t.datetime  :last_commented_at
       t.datetime  :deleted_at
       t.timestamps
     end
