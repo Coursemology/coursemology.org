@@ -1,7 +1,7 @@
 namespace :db do
   desc 'Migrates assessments from the old format to the new structure'
 
-  task migrate_assessments: :environment do
+  task migrate_assessments_old: :environment do
     connection = Assessment::Assessment.connection
     @missions_map = {}
     @trainings_map = {}
