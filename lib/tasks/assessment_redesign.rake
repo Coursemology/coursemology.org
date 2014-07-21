@@ -68,7 +68,6 @@ namespace :db do
                                                          description: text_qns_attrs['description'],
                                                          max_grade: text_qns_attrs['max_grade'],
 
-                                                         last_commented_at: text_qns_attrs['last_commented_at'],
                                                          deleted_at: text_qns_attrs['deleted_at'],
                                                          created_at: text_qns_attrs['created_at'],
                                                          updated_at: text_qns_attrs['updated_at'],
@@ -122,7 +121,6 @@ namespace :db do
                                                           memory_limit: memory_limit,
                                                           time_limit: time_limit,
                                                           auto_graded: coding_qns_attrs['is_auto_grading'],
-                                                          last_commented_at: coding_qns_attrs['last_commented_at'],
                                                           deleted_at: coding_qns_attrs['deleted_at'],
                                                           created_at: coding_qns_attrs['created_at'],
                                                           updated_at: coding_qns_attrs['updated_at']
