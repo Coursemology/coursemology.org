@@ -89,8 +89,8 @@ namespace :db do
       coding_qns = CodingQuestion.find qn_id
       coding_qns_attrs = coding_qns.attributes
 
-      if coding_qns_attrs['include_sol_qn_id'] != nil && coding_qns_attrs['include_sol_qn_id'] != 0 
-        if @coding_questions_map[coding_qns_attrs['include_sol_qn_id']] == nil 
+      if coding_qns_attrs['include_sol_qn_id'] != nil && coding_qns_attrs['include_sol_qn_id'] != 0
+        if @coding_questions_map[coding_qns_attrs['include_sol_qn_id']] == nil
           puts "Coding Question #{coding_qns_attrs['id']} depends on #{coding_qns_attrs['include_sol_qn_id']} but it is not migrated yet."
           puts "Migrating #{coding_qns_attrs['include_sol_qn_id']}..."
           migrate_coding_question(coding_qns_attrs['include_sol_qn_id'], asm)
@@ -137,7 +137,7 @@ namespace :db do
 
       @coding_questions_map[qn_id] = new_coding_qns.question.id
 
-      if coding_qns_attrs['staff_comments'] && coding_qns_attrs['staff_comments'] != '' 
+      if coding_qns_attrs['staff_comments'] && coding_qns_attrs['staff_comments'] != ''
         topic = CommentTopic.where(course_id: asm['course_id'], topic_id: qn_id, topic_type: 'CodingQuestion').first
         topic = CommentTopic.create({
                                         course_id: asm['course_id'],
@@ -218,7 +218,7 @@ namespace :db do
         # silence bonus_cutoff < open_at validation
         # That's because some rows in the db have the open_at value set
         # with a time in the future.
-        bonus_cutoff = if !attrs['bonus_cutoff'] || attrs['open_at'] > attrs['bonus_cutoff'] 
+        bonus_cutoff = if !attrs['bonus_cutoff'] || attrs['open_at'] > attrs['bonus_cutoff']
                          attrs['open_at']
                        else
                          attrs['bonus_cutoff']
@@ -258,7 +258,7 @@ namespace :db do
         assessment_id = s['mission_id']
         assessments_map = @missions_map
         submissions_map = @mission_submissions_map
-      elsif type == :training 
+      elsif type == :training
         assessment_id = s['training_id']
         assessments_map = @trainings_map
         submissions_map = @training_submissions_map
@@ -477,51 +477,22 @@ namespace :db do
 
     def migrate_tags
       AsmTag.all.each do |tag|
-        case tag['asm_type'].to_sym
-          when :Training
-            training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
-            if training 
-              training.tags << Tag.find_by_id(tag['tag_id'])
-              training.save
-            end
-
-          when :Mission
-            mission = Assessment::Mission.find_by_id(@missions_map.fetch(tag['asm_id']))
-            if mission 
-              mission.tags << Tag.find_by_id(tag['tag_id'])
-              mission.save
-            end
-
-          else
-            raise StandardError
+        asm_map = asm_req['asm_type'].to_sym == :Training ? @trainings_map : @missions_map
+        asm = Assessment.find_by_id(asm_map.fetch(tag['asm_id']))
+        asm.questions.each do |qn|
+          qn.tags << Tag.find_by_id(tag['tag_id'])
+          qn.save
         end
       end
     end
 
     def migrate_requirements
       AsmReq.all.each do |asm_req|
-        case asm_req['asm_type'].to_sym
-          when :Training
-            training = Assessment::Training.find_by_id(@trainings_map.fetch(tag['asm_id']))
-            if training 
-              r = Requirement.find_by_id(asm_req['req_id'])
-              if r 
-                training.requirements << r
-                training.save
-              end
-            end
-          when :Mission
-            mission = Assessment::Mission.find_by_id(@missions_map.fetch(tag['asm_id']))
-            if mission 
-              r = Requirement.find_by_id(asm_req['req_id'])
-              if r 
-                mission.requirements << r
-                mission.save
-              end
-            end
-          else
-            raise StandardError, "Unknown asm_type: #{asm_req['asm_type']}"
-        end
+        asm_map = asm_req['asm_type'].to_sym == :Training ? @trainings_map : @missions_map
+        asm = Assessment.find_by_id(asm_map.fetch(tag['asm_id']))
+        r = Requirement.find_by_id(asm_req['req_id'])
+        asm.requirements << r
+        asm.save
       end
     end
 
