@@ -19,6 +19,8 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_coding_answers, through: :sbm_answers,
            :source => :answer, :source_type => "StdCodingAnswer"
 
+  has_many :answers, as: :sbm, class_name: "SbmAnswer"
+
   default_scope includes(:std_course)
 
   def get_asm
