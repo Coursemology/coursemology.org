@@ -19,7 +19,6 @@ module Assessment
       code = $1
       html = Nokogiri::HTML(code)
       stripped_children = html.search('body').children.map do |e|
-        puts e
         if e.inner_html == "<br>" || e.inner_html == "</br>"
           e.inner_html
         else
