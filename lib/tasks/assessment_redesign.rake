@@ -127,16 +127,8 @@ namespace :db do
                                                       }, :without_protection => true)
 
       @languages_map[language] ||= {}
-      if @languages_map[language][version] 
-        lang = @languages_map[language][version]
-      else
-        lang = ProgrammingLanguage.create!({
-                                               language: language,
-                                               version: version
-                                           }, :without_protection => true)
-        @languages_map[language][version] = lang
-      end
-      new_coding_qns.language = lang
+
+      new_coding_qns.language = ProgrammingLanguage.first
 
       qa = asm.question_assessments.new
       qa.question = new_coding_qns.question
@@ -300,6 +292,11 @@ namespace :db do
             answer = sbm_answer.answer
             answer_attrs = answer.attributes
 
+            unless @text_questions_map[answer_attrs['question_id']]
+              puts "Cannot find corresponding question with id #{answer_attrs['question_id']} for std answer #{answer.id}"
+              next
+            end
+
             ans = Assessment::Answer.create!({
                                                  assessment_id: assessments_map[assessment_id],
                                                  submission_id: sbm.id,
@@ -317,6 +314,11 @@ namespace :db do
           when :StdMcqAnswer
             answer = StdMcqAnswer.find sbm_answer['answer_id']
             answer_attrs = answer.attributes
+
+            unless @mcq_questions_map[answer['mcq_id']]
+              puts "Cannot find corresponding mcq question with id #{answer['mcq_id']} for std answer #{answer.id}"
+              next
+            end
 
             ans = Assessment::Answer.create!({
                                                  assessment_id: assessments_map[assessment_id],
@@ -339,6 +341,11 @@ namespace :db do
           when :StdMcqAllAnswer
             answer = StdMcqAllAnswer.find sbm_answer['answer_id']
             answer_attrs = answer.attributes
+
+            unless @mcq_questions_map[answer['mcq_id']]
+              puts "Cannot find corresponding mcq question with id #{answer['mcq_id']} for std answer #{answer.id}"
+              next
+            end
 
             puts "Cannot find corresponding MCQ for MCQ All Answer #{answer_attrs['id']}" if
                 @mcq_questions_map[answer_attrs['mcq_id']].nil?
@@ -366,6 +373,11 @@ namespace :db do
           when :StdCodingAnswer
             answer = StdCodingAnswer.find sbm_answer['answer_id']
             answer_attrs = answer.attributes
+
+            unless @coding_questions_map[answer['qn_id']]
+              puts "Cannot find corresponding coding question with id #{answer['qn_id']} for std answer #{answer.id}"
+              next
+            end
 
             ans = Assessment::Answer.create!({
                                                  assessment_id: assessments_map[assessment_id],
@@ -494,7 +506,7 @@ namespace :db do
             if training 
               r = Requirement.find_by_id(asm_req['req_id'])
               if r 
-                training << r
+                training.requirements << r
                 training.save
               end
             end
@@ -503,7 +515,7 @@ namespace :db do
             if mission 
               r = Requirement.find_by_id(asm_req['req_id'])
               if r 
-                mission << r
+                mission.requirements << r
                 mission.save
               end
             end
