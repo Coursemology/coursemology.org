@@ -131,9 +131,25 @@ module Assignment
     end
   end
 
-  #clean up messed html tags
+  # Clean up messed html tags
+  # Copying code from TextEditor or Sublime into the wysihtml5 editor in Chrome
+  # causes the editor to insert divs around every line. This function removes
+  # the divs and uses br to break the lines.
   def clean_up_description
-    self.description = description.gsub(/\[mc\](.+?)\[\/mc\]/m){"[mc]" << $1.gsub(/<div><\/div>/,'') << "[/mc]"}
+    result = description.gsub(/\[mc\](.+?)\[\/mc\]/m) do
+      code = $1
+      html = Nokogiri::HTML(code)
+      stripped_children = html.search('body').children.map do |e|
+        puts e
+        if e.inner_html == "<br>" || e.inner_html == "</br>"
+          e.inner_html
+        else
+          e.inner_html + "<br>"
+        end
+      end
+      "[mc]" + stripped_children.join + "[/mc]"
+    end
+    self.description = result
   end
 
   def dup_options(dup_files = true)
