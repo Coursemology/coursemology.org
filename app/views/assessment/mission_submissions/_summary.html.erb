@@ -3,7 +3,7 @@
   <h1><%= @assessment.title %></h1>
 </div>
 
-<p><%= @assessment.description.html_safe %></p>
+<%= style_format(@assessment.description) %>
 
 <table class="table table-bordered" style="width: 250px">
   <tr>

@@ -102,9 +102,9 @@
               <% end %>
             </td>
             <td>
-              <% grade = sub.gradings.last.grade %>
+              <% grade = sub.gradings.last %>
               <% if grade %>
-                  <%= grade %> / <%= sub.assessment.max_grade %>
+                  <%= grade.grade %> / <%= sub.assessment.max_grade %>
               <% end %>
             </td>
             <% if sub.gradings.empty? %>
