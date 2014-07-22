@@ -450,7 +450,11 @@ class Course < ActiveRecord::Base
 
   def logo_url
     url = read_attribute(:logo_url)
-    url ||= '/images/coursemology_logo_square.png'
+    # check for nil and 0 length string. Return path to the default logo
+    if url.blank?
+      url = '/images/coursemology_logo_square.png'
+    end
+    url
   end
  
 end
