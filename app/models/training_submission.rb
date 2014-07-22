@@ -73,6 +73,10 @@ class TrainingSubmission < ActiveRecord::Base
     training
   end
 
+  def asm_id
+    training_id
+  end
+
   #def status
   #  if self.submission_gradings.count > 0
   #    "Auto graded"

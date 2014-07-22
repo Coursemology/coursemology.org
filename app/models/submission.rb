@@ -137,6 +137,10 @@ class Submission < ActiveRecord::Base
     mission
   end
 
+  def asm_id
+    mission_id
+  end
+
   def mark_autograding_need_refresh
     if submitted? and self.submission_gradings
       self.submission_gradings.each do |sg|
