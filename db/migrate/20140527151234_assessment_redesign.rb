@@ -123,7 +123,6 @@ class AssessmentRedesign < ActiveRecord::Migration
     end
 
     create_table  :assessment_answers do |t|
-
       t.references  :assessment, index: true
       t.references  :submission, index: true
       t.references  :question,   index: true
@@ -152,9 +151,10 @@ class AssessmentRedesign < ActiveRecord::Migration
 
     create_table  :assessment_gradings  do |t|
       t.references  :submission
+      t.references  :grader
       t.references  :grader_course
       t.references  :std_course, index: true
-      t.float     :grade
+      t.float       :grade
       t.integer     :exp
       t.references  :exp_transaction
       t.boolean     :autograding_refresh, default: false
@@ -166,8 +166,9 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :assessment_answer_gradings do |t|
       t.references  :answer
       t.references  :grading, index: true
+      t.references  :grader
       t.references  :grader_course, index: true
-      t.float     :grade
+      t.float       :grade
 
       t.datetime  :deleted_at
       t.timestamps
@@ -176,7 +177,8 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table :assessment_grading_logs do |t|
       t.references  :grading, index: true
       t.references  :grader_course
-      t.float     :grade
+      t.references  :grader
+      t.float       :grade
       t.integer     :exp
 
       t.datetime  :deleted_at
@@ -186,6 +188,7 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :assessment_answer_grading_logs do |t|
       t.references  :answer_grading, index: true
       t.references  :grader_course
+      t.references  :grader
       t.float     :grade
 
       t.datetime  :deleted_at
