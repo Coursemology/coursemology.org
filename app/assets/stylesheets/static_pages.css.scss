@@ -616,3 +616,121 @@ label.error a.emailWarning,label.error a.numberWarning {
   color: red;
   font-weight: bold;
 }
+
+.about_quote {
+  background-color: #f2f2f2;
+}
+
+.about_quote h1 {
+  font-size: 43px;
+  font-weight: lighter;
+  padding-bottom: 10px;
+}
+
+.about_quote p {
+  font-size: 20px;
+  font-weight: lighter;
+}
+
+.about_wrapper {
+  border-radius: 20px;
+  //border: thin solid #bababa;
+  //box-shadow: 0px 0px 10px #999999;
+}
+
+.about_us {
+  margin:0 auto;
+  float:none;
+  text-align: center;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.about_us h2 {
+  font-size: 30px;
+  font-family: 'lato';
+  font-weight: bold;
+  padding-top: 30px;
+  padding-bottom: 5px;
+  margin: 15px 0px;
+  text-transform: uppercase;
+}
+
+.about_us h2:hover {
+  text-decoration: underline;
+}
+
+.about_us p {
+  font-size: 16px;
+  font-family: 'lato';
+  font-weight: normal;
+  letter-spacing: 0.4px;
+  padding: 5px 0px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.about_signup_button {
+  height: 40px;
+  font-size :120%;
+  padding-top: 5px;
+  vertical-align: middle;
+}
+
+.about_img {
+  box-shadow: 0px 0px 5px #999999;
+}
+
+.features_mid {
+  width: 200px;
+  height: 200px;
+}
+
+.features h4 {
+  font-size: 16px;
+  font-weight: normal;
+  font-style: oblique;
+  color: #575757;
+  padding-bottom: 5%;
+}
+
+.about_profile_pic {
+  border-radius: 50px;
+  border: 2px solid #777777;
+}
+
+.team_tooltip {
+  display: inline-block;
+  padding-bottom: 15%;
+}
+
+.icon-github {
+  color: #404040;
+}
+
+.popover {
+  border-radius: 10px;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2)
+}
+
+.popover-title {
+  text-align: center;
+  font-weight: bolder;
+  font-size: large;
+  background-color: #3D3D3D;
+  color: #FFFFFF;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.popover-content {
+  border-radius: 10px;
+  text-align: center;
+}
+
+p.about_license {
+  font-size: small;
+}
+
+.about_link {
+  color: initial;
+}
