@@ -480,4 +480,14 @@ class Course < ActiveRecord::Base
   def accessible_comics(user_course)
     comics.select {|comic| comic.can_view?(user_course)}
   end
+
+  def logo_url
+    url = read_attribute(:logo_url)
+    # check for nil and 0 length string. Return path to the default logo
+    if url.blank?
+      url = '/images/coursemology_logo_square.png'
+    end
+    url
+  end
+ 
 end

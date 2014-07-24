@@ -98,9 +98,16 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    columnize (0.8.9)
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
+    debugger (1.6.8)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.3.5)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.3.5)
     delayed_job (4.0.1)
       activesupport (>= 3.0, < 4.2)
     delayed_job_active_record (4.0.1)
@@ -373,6 +380,7 @@ DEPENDENCIES
   connection_pool
   daemons
   dalli
+  debugger
   delayed_job_active_record
   devise (= 3.0)
   exception_notification
@@ -396,6 +404,7 @@ DEPENDENCIES
   mysql2
   natcmp
   newrelic_rpm
+  nokogiri
   omniauth
   omniauth-facebook
   paperclip (~> 3.0)

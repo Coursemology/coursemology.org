@@ -59,8 +59,9 @@ $(document).ready(function() {
 
   options.customTemplates = {};
 
+  options.html = true;
+
   if (imgUploadHtml) {
-    options.html = true;
     options.customTemplates = {
       image: function(locale) {
         return imgUploadHtml;
@@ -70,8 +71,7 @@ $(document).ready(function() {
 
   // FontAwesome's semantics are wrong >_<. This fix removes the default
   // indent/outdent tools and insert our modified indent and outdent buttons.
-  // See https://github.com/jhollingworth/bootstrap-wysihtml5/pull/253
-  options.lists = false;
+  options.lists = true;
   var modifiedListHtml = function(locale) {
       return "<li>" +
              "<div class='btn-group'>" +
@@ -82,7 +82,7 @@ $(document).ready(function() {
              "</div>" +
              "</li>";
   };
-  options.customTemplates.html = modifiedListHtml;
+  options.customTemplates.lists = modifiedListHtml;
 
   var handler = function() {
     var $this = $(this);
