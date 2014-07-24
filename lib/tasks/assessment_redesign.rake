@@ -3,164 +3,130 @@ namespace :db do
 
   task migrate_assessments: :environment do
 
-    # noops such as Assessment::Submission are used to tell ruby which model
-    # we are referencing when the namespaced model has the same name as the
-    # non-namespaced model.
+    def migrate_mcq_options
+      sql = "SELECT ma.id as old_id, creator_id, dm.new_data_id as question_id, text,
+              explanation, is_correct as correct, created_at, updated_at
+              FROM mcq_answers ma
+              INNER JOIN data_maps dm ON dm.data_type = 'McqQuestion' and dm.old_data_id = ma.mcq_id"
 
-    @ans_type_to_qn = {"StdAnswer" => 'Question',
-                       "StdMcqAnswer" => 'Mcq',
-                       "StdMcqAllAnswer"=> 'Mcq',
-                       "StdCodingAnswer"=> 'CodingQuestion'}
+      result = ActiveRecord::Base.connection.exec_query(sql)
 
-    @sbm_asm_type = { "TrainingSubmission" => 'Training', "Submission" => 'Mission'}
-
-    # (qn, new_asm_id)
-    def migrate_mcq_question(qn, new_asm_id, pos)
-      new_qn = Assessment::McqQuestion.create!({ creator_id: qn.creator_id,
-                                                 description: qn.description,
-                                                 max_grade: qn.max_grade,
-
-                                                 created_at: qn.created_at,
-                                                 updated_at: qn.updated_at,
-
-                                                 select_all: qn.select_all,
-                                               }, :without_protection => true)
-
-      QuestionAssessment.create!({ assessment_id: new_asm_id,
-                                   question_id: new_qn.question.id,
-                                   position: pos
-                                 }, :without_protection => true)
-
-
-      DataMap.create({data_type: qn.class.to_s, old_data_id: qn.id, new_data_id: new_qn.question.id },
-                     :without_protection => true)
-
-      qn.mcq_answers.each do |opt|
-        new_opt = Assessment::McqOption.create!({
-                                                    creator_id: opt.creator_id,
-                                                    question_id: new_qn.question.id,
-                                                    text: opt.text,
-                                                    explanation: opt.explanation,
-                                                    correct: opt.is_correct,
-                                                    created_at: opt.created_at,
-                                                    updated_at: opt.updated_at
-                                                }, :without_protection => true)
-        DataMap.create({data_type: 'mcq_option', old_data_id: opt.id, new_data_id: new_opt.id },
+      result.each do |r|
+        old_id = r.delete("old_id")
+        new_opt = Assessment::McqOption.create!(r, :without_protection => true)
+        DataMap.create({data_type: 'mcq_option', old_data_id: old_id, new_data_id: new_opt.id },
                        :without_protection => true)
       end
-    end
-
-    def migrate_text_question(qn, new_asm_id, pos)
-      new_qn = Assessment::GeneralQuestion.create!({ creator_id: qn.creator_id,
-                                                     title: qn.title,
-                                                     description: qn.description,
-                                                     max_grade: qn.max_grade,
-
-                                                     created_at: qn.created_at,
-                                                     updated_at: qn.updated_at
-                                                   }, :without_protection => true)
-
-      QuestionAssessment.create!({ assessment_id: new_asm_id,
-                                   question_id: new_qn.question.id,
-                                   position: pos
-                                 }, :without_protection => true)
-
-
-      DataMap.create({data_type: qn.class.to_s, old_data_id: qn.id, new_data_id: new_qn.question.id },
-                     :without_protection => true)
 
     end
+    # (qn, new_asm_id)
+    def migrate_mcq_question
+      sql = "SELECT mcqs.id as old_qn_id, dm.new_data_id as new_asm_id, mcqs.creator_id,
+              description, max_grade, mcqs.created_at,
+              mcqs.updated_at, select_all, pos FROM asm_qns aq
+            INNER JOIN data_maps dm ON aq.asm_id = dm.old_data_id and dm.data_type = aq.asm_type
+            INNER JOIN mcqs ON aq.qn_id = mcqs.id and aq.qn_type = 'Mcq'"
 
-    def migrate_coding_question(qn, new_asm_id, pos)
+      result = ActiveRecord::Base.connection.exec_query(sql)
+      result.each do |r|
+        old_qn_id = r.delete("old_qn_id")
+        pos = r.delete("pos")
+        new_asm_id = r.delete("new_asm_id")
+
+        new_qn = Assessment::McqQuestion.create!(r, :without_protection => true)
+
+        QuestionAssessment.create!({ assessment_id: new_asm_id,
+                                     question_id: new_qn.question.id,
+                                     position: pos
+                                   }, :without_protection => true)
+
+
+        DataMap.create({data_type: 'Mcq', old_data_id: old_qn_id, new_data_id: new_qn.question.id },
+                       :without_protection => true)
+        #save child id for option
+        DataMap.create({data_type: 'McqQuestion', old_data_id: old_qn_id, new_data_id: new_qn.id },
+                       :without_protection => true)
+
+      end
+    end
+
+    def migrate_text_question
+      sql = "SELECT q.id as old_qn_id, title, dm.new_data_id as new_asm_id,
+              q.creator_id, description, max_grade, q.created_at,
+              q.updated_at, pos FROM asm_qns aq
+              INNER JOIN data_maps dm ON aq.asm_id = dm.old_data_id and dm.data_type = aq.asm_type
+              INNER JOIN questions q ON aq.qn_id = q.id and aq.qn_type = 'Question'"
+
+      result = ActiveRecord::Base.connection.exec_query(sql)
+      result.each do |r|
+        old_qn_id = r.delete("old_qn_id")
+        pos = r.delete("pos")
+        new_asm_id = r.delete("new_asm_id")
+
+        new_qn = Assessment::GeneralQuestion.create!(r, :without_protection => true)
+
+        QuestionAssessment.create!({ assessment_id: new_asm_id,
+                                     question_id: new_qn.question.id,
+                                     position: pos
+                                   }, :without_protection => true)
+
+
+        DataMap.create({data_type: 'Question', old_data_id: old_qn_id, new_data_id: new_qn.question.id },
+                       :without_protection => true)
+
+      end
+    end
+
+    def migrate_coding_question
       # noop
       require '/Users/Raymond/Documents/NUS_Study/FYP/coursemology/app/models/assessment/coding_question'
-      coding_qns_attrs = qn.attributes
-      dependent_id = 0
 
-      if coding_qns_attrs['include_sol_qn_id'] != nil && coding_qns_attrs['include_sol_qn_id'] != 0
-        dm = DataMap.find_by_data_type_and_old_data_id(qn.class.to_s, coding_qns_attrs['include_sol_qn_id'])
-        unless dm
-          puts "Coding Question #{coding_qns_attrs['id']} depends on #{coding_qns_attrs['include_sol_qn_id']} but it is not migrated yet."
-          puts "Migrating #{coding_qns_attrs['include_sol_qn_id']}..."
-          asm_qn = AsmQn.where(qn_type: qn.class.to_s, qn_id: coding_qns_attrs['include_sol_qn_id']).first
-          migrate_coding_question(asm_qn.qn, new_asm_id, asm_qn.pos)
-          dm = DataMap.find_by_data_type_and_old_data_id(qn.class.to_s, coding_qns_attrs['include_sol_qn_id'])
-        end
-        dependent_id = dm.new_data_id
+      sql = "SELECT q.id as old_qn_id, dm.new_data_id as new_asm_id,
+              q.creator_id, title, data, include_sol_qn_id as dependent_id, description, max_grade,
+              q.created_at, q.updated_at, pos, is_auto_grading as auto_graded, staff_comments
+            FROM asm_qns aq
+            INNER JOIN data_maps dm ON aq.asm_id = dm.old_data_id and dm.data_type = aq.asm_type
+            INNER JOIN coding_questions q ON aq.qn_id = q.id and aq.qn_type = 'CodingQuestion'"
+
+      result = ActiveRecord::Base.connection.exec_query(sql)
+      result.each do |r|
+        old_qn_id = r.delete("old_qn_id")
+        pos = r.delete("pos")
+        new_asm_id = r.delete("new_asm_id")
+        data = JSON.parse!(r["data"])
+        r["memory_limit"] = data.delete("memoryLimitInMB")
+        r["time_limit"] = data.delete("timeLimitInSec")
+        r["attempt_limit"] = data.delete("testLimit")
+        r["template"] = data.delete("prefill")
+        r["pre_include"] = data.delete("included")
+        data.delete("type")
+        data.delete("language")
+        r["language_id"] = ProgrammingLanguage.first.id
+        r["data"] = JSON.generate(data)
+
+        new_qn = Assessment::CodingQuestion.create!(r, :without_protection => true)
+        QuestionAssessment.create!({ assessment_id: new_asm_id,
+                                     question_id: new_qn.question.id,
+                                     position: pos
+                                   }, :without_protection => true)
+
+
+        DataMap.create({data_type: "CodingQuestion", old_data_id: old_qn_id, new_data_id: new_qn.question.id },
+                       :without_protection => true)
       end
 
-      data = JSON.parse!(coding_qns_attrs['data'])
-      memory_limit = data['memoryLimitInMB']
-      time_limit = data['timeLimitInSec']
-      test_limit = data['testLimit']
-      data.delete('language')
-      data.delete('memoryLimitInMB')
-      data.delete('timeLimitInSec')
-      data.delete('testLimit')
-
-      new_qn = Assessment::CodingQuestion.create!({
-                                                      creator_id: coding_qns_attrs['creator_id'],
-                                                      title: coding_qns_attrs['title'],
-                                                      description: coding_qns_attrs['description'],
-                                                      max_grade: coding_qns_attrs['max_grade'],
-                                                      dependent_id:dependent_id,
-                                                      language_id: ProgrammingLanguage.first.id,
-                                                      test_limit: test_limit,
-                                                      memory_limit: memory_limit,
-                                                      time_limit: time_limit,
-                                                      auto_graded: coding_qns_attrs['is_auto_grading'],
-                                                      created_at: coding_qns_attrs['created_at'],
-                                                      updated_at: coding_qns_attrs['updated_at']
-                                                  }, :without_protection => true)
-
-
-      qa = QuestionAssessment.create!({ assessment_id: new_asm_id,
-                                        question_id: new_qn.question.id,
-                                        position: pos
-                                      }, :without_protection => true)
-
-
-      DataMap.create({data_type: qn.class.to_s, old_data_id: qn.id, new_data_id: new_qn.question.id },
-                     :without_protection => true)
-
-      if coding_qns_attrs['staff_comments'] && coding_qns_attrs['staff_comments'] != ''
-        topic = CommentTopic.create!({
-                                         course_id: qa.assessment.course_id,
-                                         topic_id: new_qn.question.id,
-                                         topic_type: new_qn.question.class.to_s
-                                     }, :without_protection => true)
-        Comment.create({
-                           text: coding_qns_attrs['staff_comments'],
-                           commentable_id: new_qn.question.id,
-                           commentable_type: new_qn.question.class.to_s,
-                           comment_topic_id: topic.id
-                       })
-      end
+      #fix dependency
+      sql = "UPDATE assessment_questions AS aq
+              INNER JOIN data_maps dm ON aq.dependent_id = dm.old_data_id and dm.data_type = 'CodingQuestion'
+              SET aq.dependent_id = dm.new_data_id"
+      ActiveRecord::Base.connection.execute(sql)
     end
 
     def migrate_questions
-      AsmQn.includes(:qn).all.each do |asm_qn|
-        qn = asm_qn.qn
-        #check if question is migrated
-        if DataMap.find_by_data_type_and_old_data_id(asm_qn.qn_type, asm_qn.qn_id)
-          next
-        end
-        new_asm = DataMap.find_by_data_type_and_old_data_id(asm_qn.asm_type, asm_qn.asm_id)
-        unless new_asm
-          next
-        end
-        new_asm_id = new_asm.new_data_id
-        case asm_qn['qn_type'].to_sym
-          when :Mcq
-            migrate_mcq_question(qn, new_asm_id, asm_qn.pos)
-          when :Question
-            migrate_text_question(qn, new_asm_id, asm_qn.pos)
-          when :CodingQuestion
-            migrate_coding_question(qn, new_asm_id, asm_qn.pos)
-          else
-            raise StandardError, "Unknown qn_type: #{q['qn_type']}"
-        end
-      end
+      migrate_mcq_question
+      migrate_mcq_options
+      migrate_text_question
+      migrate_coding_question
     end
 
     def migrate_missions
@@ -189,7 +155,6 @@ namespace :db do
 
                                                       file_submission: attrs['is_file_submission'],
                                                       file_submission_only: attrs['file_submission_only'],
-                                                      single_question: attrs['single_question'],
                                                       comment_per_qn: attrs['comment_per_qn'],
 
                                                       dependent_id: attrs['dependent_id'],
@@ -245,152 +210,70 @@ namespace :db do
       end
     end
 
-    def migrate_answers
-      (Submission.all + TrainingSubmission.all).each do |s|
-        class_s = s.class.to_s
-        new_sbm_id = DataMap.find_by_data_type_and_old_data_id(class_s, s.id).new_data_id
-        new_asm_id = DataMap.find_by_data_type_and_old_data_id(@sbm_asm_type[class_s], s.asm_id).new_data_id
+    def migrate_mission_sbms
+      Assessment::Submission
+      sql = "SELECT s.id as old_sbm_id,
+              dm.new_data_id as assessment_id, std_course_id,
+              status, open_at as opened_at, submit_at as submitted_at, deleted_at,
+              created_at, updated_at  FROM submissions s INNER JOIN data_maps dm ON
+              s.mission_id = dm.old_data_id and dm.data_type = 'Mission'"
 
-        s.sbm_answers.includes(:answer).each do |sbm_answer|
-          a_type = sbm_answer['answer_type']
-          ans = sbm_answer.answer
-          #if answer is already migrated
-          if DataMap.find_by_data_type_and_old_data_id(a_type, ans.id)
-            next
-          end
-          qn_dm = DataMap.find_by_data_type_and_old_data_id(@ans_type_to_qn[a_type], ans.qn_id)
-
-          unless qn_dm
-            puts "Cannot find corresponding question with id #{ans.qn_id} for std answer #{ans.id}"
-            next
-          end
-          new_qn_id = qn_dm.new_data_id
-          answer_value = ans.respond_to?(:text) ? ans.text : nil
-          answer_value = ans.respond_to?(:code) ? ans.code : answer_value
-
-          new_ans = Assessment::Answer.create!({ assessment_id: new_asm_id,
-                                                 submission_id: new_sbm_id,
-                                                 question_id: new_qn_id,
-                                                 std_course_id: ans.std_course_id,
-                                                 answer: answer_value,
-                                                 result: ans.respond_to?(:result) ? ans.result : nil,
-                                                 attempt_left: ans.respond_to?(:test_left) ? ans.test_left : 0,
-                                                 finalised: sbm_answer.is_final,
-                                                 correct: ans.respond_to?(:is_correct) ? ans.is_correct : false,
-                                                 created_at: ans.created_at,
-                                                 updated_at: ans.updated_at},
-                                               :without_protection => true)
-
-          DataMap.create({data_type: a_type,
-                          old_data_id: ans.id,
-                          new_data_id: new_ans.id},
-                         :without_protection => true)
-
-          options = []
-
-          if a_type == "StdMcqAnswer"
-            options << ans.mcq_answer_id
-          elsif a_type == "StdMcqAllAnswer"
-            options = JSON.parse(ans.selected_choices)
-          end
-
-          options.each do |opt|
-            dm = DataMap.find_by_data_type_and_old_data_id('mcq_option', opt)
-            if dm
-              Assessment::AnswerOption.create!({
-                                                   answer_id: new_ans.id,
-                                                   option_id: dm.new_data_id,
-                                               }, :without_protection => true)
-            end
-          end
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      columns = "(assessment_id, std_course_id, status, opened_at, submitted_at, deleted_at, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        values = []
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          values << "(#{r[1..-1].map{|x| x.is_a?(Time) ? x.strftime("%Y-%m-%d %H:%M:%S") : x }.map(&:inspect).map{|x| x == "nil" ? 'NULL' : x }.join(",")})"
         end
+        sql = "INSERT INTO assessment_submissions #{columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('Submission', #{o}, #{no + first_id})"
+        end
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
       end
     end
 
-    def migrate_submission(sbm, new_asm_id)
-      s_attrs = sbm.attributes
-      new_sbm = Assessment::Submission.create!({
-                                                   assessment_id: new_asm_id,
-                                                   std_course_id: s_attrs['std_course_id'],
-                                                   status: s_attrs['status'],
-                                                   multiplier: s_attrs['multiplier'],
+    def migrate_training_sbms
+      sql = "SELECT s.id as old_sbm_id, dm.new_data_id as assessment_id,
+              std_course_id, status, multiplier, open_at as opened_at,
+              submit_at as submitted_at, deleted_at, created_at, updated_at
+            FROM training_submissions s INNER JOIN data_maps dm
+            ON s.training_id = dm.old_data_id and dm.data_type = 'Training'"
 
-                                                   opened_at: s_attrs['open_at'],
-                                                   submitted_at: s_attrs['submit_at'],
-                                                   deleted_at: s_attrs['deleted_at'],
-                                                   created_at: s_attrs['created_at'],
-                                                   updated_at: s_attrs['updated_at'],
-                                               }, :without_protection => true)
 
-      DataMap.create!({data_type: sbm.class.to_s, old_data_id: sbm.id, new_data_id: new_sbm.id },
-                      :without_protection => true)
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      columns = "(assessment_id, std_course_id, status, multiplier, opened_at, submitted_at, deleted_at, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        values = []
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          values << "(#{r[1..-1].map{|x| x.is_a?(Time) ? x.strftime("%Y-%m-%d %H:%M:%S") : x }.map(&:inspect).map{|x| x == "nil" ? 'NULL' : x }.join(",")})"
+        end
+        sql = "INSERT INTO assessment_submissions #{columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('TrainingSubmission', #{o}, #{no + first_id})"
+        end
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
     end
 
     def migrate_submissions
       Assessment::Submission
-
-      mission_sbm_left = Submission.all -
-          Submission.joins("INNER JOIN data_maps dm ON dm.old_data_id = submissions.id and dm.data_type = 'Submission'")
-      training_sbm_left = TrainingSubmission.all -
-          TrainingSubmission.joins("INNER JOIN data_maps dm ON dm.old_data_id = training_submissions.id and dm.data_type = 'TrainingSubmission'")
-
-      (mission_sbm_left + training_sbm_left).each do |s|
-        dm = DataMap.find_by_data_type_and_old_data_id(@sbm_asm_type[s.class.to_s], s.asm_id)
-        unless dm
-          next
-        end
-        migrate_submission(s, dm.new_data_id)
-      end
-    end
-
-    def migrate_gradings
-      SubmissionGrading.all.each do |sbm_g|
-        sbm_type = sbm_g.sbm_type
-        sbm_dm = DataMap.find_by_data_type_and_old_data_id(sbm_type, sbm_g.sbm_id)
-        unless sbm_dm
-          next
-        end
-
-        submission = Assessment::Submission.find(sbm_dm.new_data_id)
-        grading_attrs = sbm_g.attributes
-        grader_id = grading_attrs['grader_id']
-        grader_course_id = grading_attrs['grader_course_id']
-
-        g = Assessment::Grading.create!({
-                                            submission_id: submission.id,
-                                            grader_id: grader_id,
-                                            grader_course_id: grader_course_id,
-                                            std_course_id: submission.std_course_id,
-                                            grade: grading_attrs['total_grade'],
-                                            exp: grading_attrs['total_exp'],
-                                            exp_transaction_id: sbm_g['exp_transaction_id'],
-                                            autograding_refresh: grading_attrs['autograding_refresh'],
-                                            created_at: grading_attrs['created_at'],
-                                            updated_at: grading_attrs['updated_at']
-                                        }, :without_protection => true)
-
-
-        AnswerGrading.where(:submission_grading_id => sbm_g['id']).each do |answer_g|
-          dm = DataMap.find_by_data_type_and_old_data_id(answer_g.student_answer_type, answer_g.student_answer_id)
-
-          unless dm
-            next
-          end
-
-          answer_g_attrs = answer_g.attributes
-
-          Assessment::AnswerGrading.create!({
-                                                answer_id: dm.new_data_id,
-                                                grading_id: g.id,
-                                                grader_id: grader_id,
-                                                grader_course_id: grader_course_id,
-                                                grade: answer_g.grade,
-
-                                                created_at: answer_g_attrs['created_at'],
-                                                updated_at: answer_g_attrs['updated_at']
-                                            },  :without_protection => true)
-        end
-      end
+      migrate_mission_sbms
+      migrate_training_sbms
     end
 
     def migrate_tags
@@ -421,16 +304,372 @@ namespace :db do
       end
     end
 
-    m = Thread.new { migrate_missions }
-    t = Thread.new { migrate_trainings }
-    [m, t].each(&:join)
-    q = Thread.new { migrate_questions }
-    s = Thread.new { migrate_submissions }
-    [q, s].each(&:join)
+    def prepare_values_for_db(a)
+      a.map{|x| x.is_a?(Time) ? x.strftime("%Y-%m-%d %H:%M:%S") : x }.map(&:inspect).map{|x| x == "nil" ? 'NULL' : x }
+    end
 
+    def migrate_text_answers
+      mysql = "SELECT sqa.id as old_answer_id, new_sbm_id as submission_id, new_qn_id as question_id,
+                sqa.std_course_id as std_course_id, sqa.text as content,
+                is_final as finalised, sqa.created_at as created_at, sqa.updated_at as updated_at
+              FROM sbm_answers sba
+                INNER JOIN (SELECT sa.*, dm.new_data_id as new_qn_id FROM std_answers sa
+                  INNER JOIN data_maps dm ON dm.old_data_id = sa.question_id and dm.data_type = 'Question') sqa
+                ON sba.answer_id = sqa.id and sba.answer_type = 'StdAnswer'
+                INNER JOIN(SELECT s.*, dms.new_data_id as new_sbm_id from submissions s
+                  INNER JOIN data_maps dms ON dms.old_data_id = s.id and dms.data_type = 'Submission') ss
+                ON ss.id = sba.sbm_id and sba.sbm_type = 'Submission'"
+      result = ActiveRecord::Base.connection.execute(mysql).to_a
+      ga_columns = "(created_at, updated_at)"
+      a_columns = "(submission_id, question_id, std_course_id, content, finalised, created_at, updated_at, as_answer_id, as_answer_type)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        values = []
+        #child table
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          values << "(#{prepare_values_for_db(r[-2..-1]).join(",")})"
+        end
+        sql = "INSERT INTO assessment_general_answers #{ga_columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        parent_values = []
+
+        result[i*1000..e].each_with_index do |r, pind|
+          parent_values << "(#{prepare_values_for_db(r[1..-1]).join(",")},#{first_id + pind}, 'Assessment::GeneralAnswer')"
+        end
+
+        sql = "INSERT INTO assessment_answers #{a_columns} VALUES #{parent_values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('StdAnswer', #{o}, #{no + first_id})"
+        end
+
+
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
+    end
+
+    def migrate_mcq_answers
+      sql = "SELECT sqa.id as old_answer_id, ddm.new_data_id as new_opt_id, new_sbm_id as submission_id, new_qn_id as question_id,
+             sqa.std_course_id as std_course_id, is_final as finalised, amo.correct, sqa.created_at as created_at, sqa.updated_at as updated_at
+            FROM sbm_answers sba
+            INNER JOIN
+            (SELECT sa.*, dm.new_data_id as new_qn_id FROM std_mcq_answers sa
+              INNER JOIN data_maps dm
+              ON dm.old_data_id = sa.mcq_id and dm.data_type = 'Mcq') sqa
+            ON sba.answer_id = sqa.id and sba.answer_type = 'StdMcqAnswer'
+            INNER JOIN
+            (SELECT s.*, dms.new_data_id as new_sbm_id from training_submissions s INNER JOIN data_maps dms ON dms.old_data_id = s.id and dms.data_type = 'TrainingSubmission') ss
+            ON ss.id = sba.sbm_id and sba.sbm_type = 'TrainingSubmission'
+            INNER JOIN data_maps ddm ON ddm.old_data_id = sqa.mcq_answer_id and ddm.data_type = 'mcq_option'
+            INNER JOIN assessment_mcq_options amo ON amo.id = ddm.new_data_id"
+
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      ma_columns = "(created_at, updated_at)"
+      a_columns = "(submission_id, question_id, std_course_id, finalised, correct, created_at, updated_at, as_answer_id, as_answer_type)"
+      ao_columns = "(answer_id, option_id, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        opt_ids = []
+        values = []
+        dates = []
+
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          opt_ids << r.second
+          dates << prepare_values_for_db(r[-2..-1])
+          values << "(#{dates.last.join(",")})"
+        end
+
+        sql = "INSERT INTO assessment_mcq_answers #{ma_columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        ao_values = []
+        opt_ids.each_with_index do |o, ind|
+          ao_values << "(#{first_id + ind}, #{o}, #{dates[ind].join(",")})"
+        end
+
+        sql = "INSERT INTO assessment_answer_options #{ao_columns} VALUES #{ao_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(sql)
+
+        parent_values = []
+
+        result[i*1000..e].each_with_index do |r, ind|
+          parent_values << "(#{prepare_values_for_db(r[2..-1]).join(",")},#{first_id + ind}, 'Assessment::McqAnswer')"
+        end
+
+        sql = "INSERT INTO assessment_answers #{a_columns} VALUES #{parent_values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('StdMcqAnswer', #{o}, #{no + first_id})"
+        end
+
+
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
+    end
+
+    def migrate_mcq_all_answers
+      sql = "SELECT sqa.id as old_answer_id, selected_choices, new_sbm_id as submission_id, new_qn_id as question_id,
+             sqa.std_course_id as std_course_id, is_final as finalised, sqa.created_at as created_at, sqa.updated_at as updated_at
+            FROM sbm_answers sba
+            INNER JOIN
+            (SELECT sa.*, dm.new_data_id as new_qn_id FROM std_mcq_all_answers sa
+              INNER JOIN data_maps dm
+              ON dm.old_data_id = sa.mcq_id and dm.data_type = 'Mcq') sqa
+            ON sba.answer_id = sqa.id and sba.answer_type = 'StdMcqAnswer'
+            INNER JOIN
+            (SELECT s.*, dms.new_data_id as new_sbm_id from training_submissions s INNER JOIN data_maps dms ON dms.old_data_id = s.id and dms.data_type = 'TrainingSubmission') ss
+            ON ss.id = sba.sbm_id and sba.sbm_type = 'TrainingSubmission'"
+
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      ma_columns = "(created_at, updated_at)"
+      a_columns = "(submission_id, question_id, std_course_id, finalised, created_at, updated_at, as_answer_id, as_answer_type)"
+      ao_columns = "(answer_id, option_id, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        opt_ids = []
+        values = []
+        dates = []
+
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          opt_ids << eval(r.second)
+          dates << prepare_values_for_db(r[-2..-1])
+          values << "(#{dates.last.join(",")})"
+        end
+
+        sql = "INSERT INTO assessment_mcq_answers #{ma_columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        ao_values = []
+        opt_ids.each_with_index do |o, ind|
+          o.each do |opt|
+            ao_values << "(#{first_id + ind}, #{opt}, #{dates[ind].join(",")})"
+          end
+        end
+
+        sql = "INSERT INTO assessment_answer_options #{ao_columns} VALUES #{ao_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(sql)
+
+        parent_values = []
+
+        result[i*1000..e].each_with_index do |r, ind|
+          parent_values << "(#{prepare_values_for_db(r[2..-1]).join(",")},#{first_id + ind}, 'Assessment::McqAnswer')"
+        end
+
+        sql = "INSERT INTO assessment_answers #{a_columns} VALUES #{parent_values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('StdMcqAllAnswer', #{o}, #{no + first_id})"
+        end
+
+
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
+
+      sql = "UPDATE assessment_answer_options AS aao
+              INNER JOIN data_maps dm ON aao.option_id = dm.old_data_id and dm.data_type = 'mcq_option'
+              SET aao.option_id = dm.new_data_id"
+      ActiveRecord::Base.connection.execute(sql)
+
+    end
+
+    def migrate_coding_answers
+      mysql = "SELECT sqa.id as old_answer_id, dmm.new_data_id as submission_id, new_qn_id as question_id,
+              sqa.std_course_id as std_course_id, sqa.code as content, is_final as finalised,
+              is_correct as correct, test_left as attempt_left,
+              sqa.created_at as created_at, sqa.updated_at as updated_at, result
+              FROM sbm_answers sba
+              INNER JOIN (SELECT sa.*, dm.new_data_id as new_qn_id FROM std_coding_answers sa
+                INNER JOIN data_maps dm ON dm.old_data_id = sa.qn_id and dm.data_type = 'CodingQuestion') sqa
+              ON sba.answer_id = sqa.id and sba.answer_type = 'StdCodingAnswer'
+              INNER JOIN data_maps dmm ON dmm.old_data_id = sba.sbm_id and sba.sbm_type = dmm.data_type"
+      result = ActiveRecord::Base.connection.execute(mysql).to_a
+      ga_columns = "(created_at, updated_at, result)"
+      a_columns = "(submission_id, question_id, std_course_id, content, finalised, correct, attempt_left, created_at, updated_at, as_answer_id, as_answer_type)"
+      bulk_size = 100.0
+      t = (result.count / bulk_size).ceil
+      t.times do |i|
+        e = (i + 1) * bulk_size - 1
+        old_ids = []
+        values = []
+        #child table
+        result[i*bulk_size..e].each do |r|
+          old_ids << r.first
+          values << "(#{prepare_values_for_db(r[-3..-1]).join(",")})"
+        end
+        sql = "INSERT INTO assessment_coding_answers #{ga_columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        parent_values = []
+
+        result[i*bulk_size..e].each_with_index do |r, pind|
+          parent_values << "(#{prepare_values_for_db(r[1..-2]).join(",")},#{first_id + pind}, 'Assessment::CodingAnswer')"
+        end
+
+        sql = "INSERT INTO assessment_answers #{a_columns} VALUES #{parent_values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('StdCodingAnswer', #{o}, #{no + first_id})"
+        end
+
+
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
+    end
+
+    def migrate_answers
+      migrate_text_answers
+      migrate_mcq_all_answers
+      migrate_mcq_answers
+      migrate_coding_answers
+    end
+
+    def migrate_sbm_gradings
+      sql = "SELECT sg.id as old_grade_id, dm.new_data_id as submission_id, grader_id,
+                grader_course_id, ass.std_course_id, total_grade as grade, total_exp as exp,
+                exp_transaction_id, autograding_refresh, sg.created_at, sg.updated_at
+              FROM submission_gradings sg
+              INNER JOIN data_maps dm ON dm.data_type = sg.sbm_type and dm.old_data_id = sg.sbm_id
+              INNER JOIN assessment_submissions ass ON ass.id = dm.new_data_id"
+
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      columns = "(submission_id, grader_id, grader_course_id, std_course_id, grade, exp, exp_transaction_id, autograding_refresh, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        old_ids = []
+        values = []
+        result[i*1000..e].each do |r|
+          old_ids << r.first
+          values << "(#{prepare_values_for_db(r[1..-1]).join(",")})"
+        end
+        sql = "INSERT INTO assessment_gradings #{columns} VALUES #{values.join(", ")}"
+        first_id = ActiveRecord::Base.connection.insert(sql)
+        dm_values = []
+        old_ids.each_with_index do |o, no|
+          dm_values << "('Grading', #{o}, #{no + first_id})"
+        end
+        dm_sql = "INSERT INTO data_maps (data_type, old_data_id, new_data_id) VALUES #{dm_values.join(", ")}"
+        ActiveRecord::Base.connection.insert(dm_sql)
+      end
+    end
+
+    def migrate_answer_gradings
+      sql = "SELECT dm.new_data_id as answer_id, dmm.new_data_id as grading_id, agg.grader_id, agg.grader_course_id, ag.grade, ag.created_at, ag.updated_at
+            FROM answer_gradings ag
+            INNER JOIN data_maps dm ON ag.student_answer_id = dm.old_data_id AND ag.student_answer_type = dm.data_type
+            INNER JOIN data_maps dmm ON dmm.old_data_id = ag.submission_grading_id AND dmm.data_type = 'Grading'
+            INNER JOIN assessment_gradings agg ON agg.id = dmm.new_data_id"
+
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      columns = "(answer_id, grading_id, grader_id, grader_course_id, grade, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        values = []
+        result[i*1000..e].each do |r|
+          values << "(#{prepare_values_for_db(r[0..-1]).join(",")})"
+        end
+        sql = "INSERT INTO assessment_answer_gradings #{columns} VALUES #{values.join(", ")}"
+        ActiveRecord::Base.connection.insert(sql)
+      end
+    end
+
+    def migrate_missing_ag
+      sql = "SELECT assessment_answers.id as answer_id, grading_id, grader_id, grader_course_id, grade, created_at, updated_at
+              FROM assessment_answers
+              INNER JOIN
+              (SELECT ag.id as grading_id, ag.grade as grade, grader_id, grader_course_id, ag.submission_id FROM assessments a
+                INNER JOIN assessment_submissions aas ON a.id = aas.assessment_id
+                INNER JOIN assessment_gradings ag ON aas.id = ag.submission_id
+                WHERE a.as_assessment_type = 'Assessment::Mission') asf
+              ON asf.submission_id = assessment_answers.submission_id
+              WHERE assessment_answers.id NOT IN (
+              SELECT aax.id
+              FROM assessment_answer_gradings aag
+              INNER JOIN assessment_answers aax ON aag.answer_id = aax.id)"
+
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      columns = "(answer_id, grading_id, grader_id, grader_course_id, grade, created_at, updated_at)"
+      t = (result.count / 1000.0).ceil
+      t.times do |i|
+        e = (i + 1) * 1000 - 1
+        values = []
+        result[i*1000..e].each do |r|
+          values << "(#{prepare_values_for_db(r[0..-1]).join(",")})"
+        end
+        sql = "INSERT INTO assessment_answer_gradings #{columns} VALUES #{values.join(", ")}"
+        ActiveRecord::Base.connection.insert(sql)
+      end
+    end
+
+    def fix_mcq_all_answer
+      sql = "SELECT answer_id, c, correct_count, select_count FROM
+              (SELECT amq.id as mcq_id, SUM(amo.correct) as c FROM assessment_mcq_questions amq
+              INNER JOIN assessment_questions aq ON amq.id = aq.as_question_id AND aq.as_question_type = 'Assessment::McqQuestion'
+              INNER JOIN assessment_mcq_options amo ON amo.question_id = amq.id
+              WHERE select_all = 1
+              GROUP BY amo.question_id) xxx INNER JOIN
+              (SELECT amaa.id as answer_id, mcq_a_id, amaa.question_id, SUM(amo.correct) as correct_count, COUNT(aao.option_id) as select_count
+              FROM (SELECT aa.*, ama.id as mcq_a_id FROM assessment_mcq_answers ama INNER JOIN assessment_answers aa ON aa.as_answer_id = ama.id AND aa.as_answer_type = 'Assessment::McqAnswer') amaa
+              INNER JOIN assessment_answer_options aao ON amaa.mcq_a_id = aao.answer_id
+              INNER JOIN assessment_mcq_options amo ON aao.option_id = amo.id
+              GROUP BY aao.answer_id) yyy
+              ON xxx.mcq_id = yyy.question_id"
+      result = ActiveRecord::Base.connection.execute(sql).to_a
+      result.each do |r|
+        sql = "UPDATE assessment_answers SET correct = #{(r[1] == r[2] and r[2] == r[3]) ? 1 : 0} WHERE id = #{r[0]}"
+        ActiveRecord::Base.connection.execute(sql)
+      end
+    end
+
+    def migrate_gradings
+      migrate_sbm_gradings
+      migrate_answer_gradings
+      migrate_missing_ag
+    end
+
+    t_1 = Time.now
+    t = Time.now
+    migrate_missions
+    puts "Finished Mission, took: ", (Time.now - t)
+    t = Time.now
+    migrate_trainings
+    puts "Finished Training, took: ", (Time.now - t)
+    t = Time.now
+    migrate_questions
+    puts "Finished Questions, took: ", (Time.now - t)
+    t = Time.now
+    migrate_submissions
+    puts "Finished Submissions, took: ", (Time.now - t)
+    t = Time.now
     migrate_answers
+    puts "Finished Answers, took: ", (Time.now - t)
+    t = Time.now
     migrate_gradings
+    puts "Finished gradings, took: ", (Time.now - t)
+    t = Time.now
+    fix_mcq_all_answer
+    puts "Finished fix mcq answer, took: ", (Time.now - t)
     migrate_tags
     migrate_requirements
+    puts "Total Time: ", (Time.now - t_1)
   end
 end
