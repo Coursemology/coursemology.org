@@ -735,3 +735,20 @@ p.about_license {
   color: initial;
   text-decoration: underline;
 }
+
+.terms_of_service {
+  font-size: 110%;
+  font-family: lato;
+}
+
+.terms_of_service > b {
+  text-transform: uppercase;
+}
+
+.terms_of_service > p {
+  padding-top: 1%;
+}
+
+.terms_of_service > h3 {
+    padding-top: 2%;
+}
