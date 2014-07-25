@@ -90,10 +90,12 @@ class AdminsController < ApplicationController
     @system_wide_announcement = SystemWideAnnouncement.new(params[:system_wide_announcement])
 
     if @system_wide_announcement.save
-      User.all.each do |user|
-        UserMailer.delay.system_wide_announcement(user.name, user.email,
-                                                  @system_wide_announcement.subject,
-                                                  @system_wide_announcement.body)
+      Thread.new do
+        User.all.each do |user|
+          UserMailer.delay.system_wide_announcement(user.name, user.email,
+                                                    @system_wide_announcement.subject,
+                                                    @system_wide_announcement.body)
+        end
       end
       redirect_to admins_url, notice: 'System wide announcement successfully sent.'
     else
