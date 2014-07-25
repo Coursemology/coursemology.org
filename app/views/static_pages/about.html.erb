@@ -4,22 +4,17 @@
 	<div class="row-fluid">
 		<div class="span3"></div>
 		<div class="span8">
-			<h1>"Learning should be all about having fun."</h1>
+			<h1>"Learning should be easy and fun."</h1>
 			<p>We are working hard to realise this dream.</p>
 		</div>
 		<div class="span1"></div>
 	</div>
 </div>
 
-<div class="navbar">
-
-</div>
-
-
-<div class="row-fluid">
+<div class="row-fluid" data-spy="scroll" data-target=".nabvar1">
 	<div class="span2"></div>
 	<div class="span8 about_wrapper">
-		<div class="row-fluid">
+		<div class="row-fluid" id="story">
 			<div class="about_us">
 				<h2>Our Story</h2>
 				<div class="row-fluid">
@@ -34,7 +29,7 @@
 			</div>
 		</div>
 
-		<div class="row-fluid">
+		<div class="row-fluid" id="instructors">
 			<div class="about_us">
 				<h2>Instructors</h2>
 				<div class="span2"></div>
@@ -89,7 +84,7 @@
 			<div class="span2"></div>
 		</div>
 
-		<div class="row-fluid">
+		<div class="row-fluid" id="team">
 			<div class="about_us">
 				<h2>
 					Meet the Team
@@ -98,6 +93,17 @@
 					<div class="span2"></div>
 					<div class="span8">
 						<div class="row-fluid">
+							<div class="span2 about_us">
+								<a class="team_tooltip" 
+									data-content="Raymoond is a passionate Web and Mobile platform developer, and is skilled in Rails and iOS development. He has great interests in teaching, and using technology to transform education." 
+									data-title="Raymoond Tang">
+									<img src="http://www.gravatar.com/avatar/cf646db90dfe75565fcf38e7c42cc4b5?s=100" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/raymondtangsc" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
 							<div class="span2 about_us">
 								<a class="team_tooltip" 
 									data-content="Joel is a third-year undergraduate student at the National University of Singapore. He has worked on a large variety of projects, spanning system security, developer tools, utilities, line-of-business applications and even the Linux kernel." 
@@ -154,18 +160,9 @@
 									<i class="icon-github icon-2x"></i>
 								</a>
 							</div>
-							<div class="span2 about_us">
-								<a class="team_tooltip" 
-									data-content="" 
-									data-title="Tay Yang Shun">
-									<img src="http://www.gravatar.com/avatar/66eca275a85a6a0c06b0a0f7039b074b?s=100" class="about_profile_pic">
-								</a>
-								<br>
-								<a href="/#" target="_blank">
-									<i class="icon-github icon-2x"></i>
-								</a>
-							</div>
-
+							<!-- 
+								Add in new developers within this section.
+							-->
 						</div>
 					</div>
 					<div class="span2"></div>
@@ -173,7 +170,7 @@
 			</div>
 		</div>
 
-		<div class="row-fluid">
+		<div class="row-fluid" id="contribution">
 			<div class="about_us">
 				<h2>Contributions</h2>
 				<div class="row-fluid">
