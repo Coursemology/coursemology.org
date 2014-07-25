@@ -1,7 +1,7 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
 
-  default_scope -> { where("courses.is_pending_deletion = 0 ") }
+  # default_scope -> { where("courses.is_pending_deletion = 0 ") }
 
   attr_accessible :creator_id, :description, :logo_url, :title, :start_at, :end_at
   attr_accessible :is_publish, :is_active, :is_open
@@ -43,6 +43,12 @@ class Course < ActiveRecord::Base
   has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Training"
 
+  amoeba do
+    include_field [:levels, :achievements, :trainings, :missions, :lesson_plan_milestones,
+                   :lesson_plan_entries, :material_folders, :comics, :tag_groups,
+                   :surveys, :forums, :tabs, :course_preferences, :course_navbar_preferences]
+  end
+
   #user related
   has_many  :user_courses,  dependent: :destroy
   has_many  :users, through: :user_courses
@@ -73,9 +79,9 @@ class Course < ActiveRecord::Base
 
   def pending_gradings(curr_user_course)
     if curr_user_course.is_lecturer?
-      @pending_gradings = submissions.where(status:"submitted").order(:submitted_at)
+      submissions.mission_submissions.where(status:"submitted").order(:submitted_at)
     else
-      @pending_gradings = submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submitted_at)
+      submissions.mission_submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submitted_at)
     end
   end
 
@@ -134,6 +140,7 @@ class Course < ActiveRecord::Base
       mission_files = []
     end
 
+    #TODO: fix name
     missions = MaterialFolder.create_virtual("missions", root_folder.id)
     missions.name = customized_title_by_model(Mission).pluralize
     missions.description = missions.name.singularize + " descriptions and other files"
@@ -320,7 +327,8 @@ class Course < ActiveRecord::Base
   end
 
   def customized_title_by_model(model_class)
-    self.course_navbar_preferences.find_by_item(model_class.model_name.downcase.pluralize).name
+    r =  self.course_navbar_preferences.find_by_item(model_class.model_name.downcase.pluralize)
+    r.name if r
   end
 
   def navbar_tabs(is_staff = false)
