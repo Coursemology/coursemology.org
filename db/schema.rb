@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140617053542) do
+ActiveRecord::Schema.define(:version => 20140723210136) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1159,6 +1159,14 @@ ActiveRecord::Schema.define(:version => 20140617053542) do
   add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"
   add_index "surveys", ["creator_id"], :name => "index_surveys_on_creator_id"
 
+  create_table "system_wide_announcements", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "subject"
+    t.string   "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "tabs", :force => true do |t|
     t.integer  "course_id",   :null => false
     t.string   "title",       :null => false
@@ -1359,6 +1367,7 @@ ActiveRecord::Schema.define(:version => 20140617053542) do
     t.datetime "confirmation_sent_at"
     t.boolean  "is_logged_in",           :default => true
     t.boolean  "is_pending_deletion",    :default => false
+    t.boolean  "use_uploaded_picture",   :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

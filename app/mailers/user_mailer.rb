@@ -155,4 +155,10 @@ class UserMailer < ActionMailer::Base
     @name = name
     mail(to:email, subject: "Your account has been deleted")
   end
+
+  def system_wide_announcement(name, email, subject, body)
+    @name = name
+    @body = body
+    mail(to: email, subject: "[Coursemology] #{subject}")
+  end
 end
