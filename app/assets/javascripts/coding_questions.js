@@ -27,9 +27,6 @@ var path = function(){
 
     return {
         data: {
-            type: "do",
-            prefill: "",
-            included: "",
             private: [],
             public: [],
             eval: []
@@ -51,20 +48,6 @@ var path = function(){
             }
         },
 
-        /** metadata **/
-        changeLang: function(val){
-
-            cStep.language = val;
-
-            cmPrefill.setOption("mode",val);
-            cmIncluded.setOption("mode",val);
-        },
-        changePrefill: function(val){
-            cStep.prefill = val;
-        },
-        changeIncluded: function(val){
-            cStep.included = val;
-        },
         /** tests **/
         addTest: function(event){
             var testType = event.data.param1;
@@ -132,66 +115,43 @@ var path = function(){
                         tcDetail["has_hint"] = tType == tPrivate;
                         _appendTest(tcDetail);
                     }
+                } else {
+                    cStep[tType] = [];
                 }
             }
-
-            cmPrefill.setValue(cStep.prefill);
-            if(cStep.included == null) cStep.included = "";
-            cmIncluded.setValue(cStep.included);
         }
     };
 }();
 
 
-var cmPrefill;
-var cmIncluded;
-
 $(document).ready(function() {
+    //TODO: handle change of language
+    var code_blocks = $("[render='code']");
+    if (code_blocks.length > 0) {
+        code_blocks.each(function(){
+            $block = $(this);
+            var language = $block.attr("language"), version = $block.attr("version");
+            var cmBlock;
+            var options = {
+                mode: {name: language, version: version, singleLineStringErrors: false},
+                lineNumbers: true,
+                tabMode: "shift",
+                matchBrackets: true,
+//                TODO: refactor theme
+                theme:'molokai',
+                extraKeys: {
+                    "Tab": function(){
+                        cmBlock.replaceSelection("    " , "end");
+                    }
+                }
+            };
+            cmBlock = CodeMirror.fromTextArea(this, options);
+            cmBlock.on("change",function(){
+                $block.val(cmBlock.getValue());
+            });
+        })
+    }
     if(document.getElementById("pathstep_content")) {
-        //TODO: refactoring
-        var options1 = {
-            mode: {name: "python",
-                version: 3,
-                singleLineStringErrors: false},
-            lineNumbers: true,
-            indentUnit: 4,
-            tabMode: "shift",
-            matchBrackets: true,
-            theme:'molokai',
-            extraKeys: {
-                "Tab": function(){
-                    cmPrefill.replaceSelection("    " , "end");
-                }
-            }
-        };
-
-        var options2 = {
-            mode: {name: "python",
-                version: 3,
-                singleLineStringErrors: false},
-            lineNumbers: true,
-            indentUnit: 4,
-            tabMode: "shift",
-            matchBrackets: true,
-            theme:'molokai',
-            extraKeys: {
-                "Tab": function(){
-                    cmIncluded.replaceSelection("    " , "end");
-                }
-            }
-        };
-
-
-
-        cmPrefill = CodeMirror.fromTextArea(document.getElementById("prefilled"), options1);
-        cmIncluded = CodeMirror.fromTextArea(document.getElementById("included"), options2);
-
-        cmPrefill.on("change",function(){
-            path.changePrefill(cmPrefill.getValue());
-        });
-        cmIncluded.on("change",function(){
-            path.changeIncluded(cmIncluded.getValue());
-        });
         path.initialize();
     }
 });
