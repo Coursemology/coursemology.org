@@ -25,11 +25,17 @@
 <% @training.questions.includes(:as_question).each_with_index do |qn, index| %>
     <h4>Question: <%= index + 1 %> </h4>
     <% if qn.specific.class == Assessment::McqQuestion %>
-        <%=render partial: "assessment/mcqs/one", locals: {q: qn, show_answer: @submission.graded?} %>
-        <%=render partial: "mcq_review", locals: {qn: qn, sbm: @submission} %>
+        <% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options) %>
+        <% if answers.length > 0 %>
+            <%=render partial: "assessment/mcqs/one", locals: {q: qn} %>
+            <%=render partial: "mcq_review", locals: {answers: answers} %>
+        <% end %>
     <% elsif qn.specific.class == Assessment::CodingQuestion %>
-        <span><%= style_format(qn.description) %></span>
-        <%= render partial: "coding_review", locals: {qn: qn, sbm: @submission} %>
+        <% answers = qn.answers.where(std_course_id: @submission.std_course, submission_id: @submission.id) %>
+        <% if answers.length > 0 %>
+            <span><%= style_format(qn.description) %></span>
+            <%= render partial: "coding_review", locals: {answers: answers} %>
+        <% end %>
     <% end %>
 
     <% grade = qn.answer_gradings.
