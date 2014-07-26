@@ -108,7 +108,7 @@ class CoursesController < ApplicationController
 
       #TODO
       @pending_actions = curr_user_course.pending_actions.includes(:item).to_show.
-          select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
+          select { |pa| pa.item.published? && pa.item.open_at < Time.now }.
           sort_by {|pa| pa.item.close_at || Time.now }.first(3)
 
       respond_to do |format|

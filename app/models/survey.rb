@@ -91,4 +91,8 @@ class Survey < ActiveRecord::Base
   def current_exp
     exp
   end
+
+  def published?
+    publish
+  end
 end
