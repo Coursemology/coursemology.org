@@ -25,14 +25,15 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     next_undone = (questions.index(current) || questions.length) + 1
     request_step = (params[:step] || next_undone).to_i
     step = (curr_user_course.is_staff? || @training.skippable?) ? request_step : [next_undone , request_step].min
+    step = step > questions.length ? next_undone : step
     current = step > questions.length ? current : questions[step - 1]
 
     current = current.specific if current
     if current && current.class == Assessment::CodingQuestion
-      @prefilled_code = current.data_hash["prefill"]
+      @prefilled_code = current.template
       if current.dependent_on
         std_answer = current.dependent_on.answers.where("correct is 1 AND std_course_id = ?", curr_user_course.id).last
-        code = std_answer ? std_answer.answer : ""
+        code = std_answer ? std_answer.content : ""
         @prefilled_code = "#Answer from your previous question \n" + code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
       end
     end
@@ -70,19 +71,19 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       incomplete = !correct
     end
 
-    ans = @submission.answers.create(
-        {std_course_id: curr_user_course.id,
-         question_id: question.question.id,
-         correct: correct,
-         finalised: correct
-        })
+    ans = Assessment::McqAnswer.create({std_course_id: curr_user_course.id,
+                                        question_id: question.question.id,
+                                        submission_id: @submission.id,
+                                        correct: correct,
+                                        finalised: correct
+                                       })
     ans.answer_options.create(selected_options.map {|so| {option_id: so.id}})
 
     grade  = 0
     pref_grader = @course.mcq_auto_grader.prefer_value
 
     if correct && !@submission.graded?
-      grade = AutoGrader.mcq_grader(@submission, ans, question, pref_grader)
+      grade = AutoGrader.mcq_grader(@submission, ans.answer, question, pref_grader)
       if @submission.done?
         @submission.update_grade
       end
@@ -117,13 +118,13 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     require_dependency 'auto_grader'
 
     code = params[:code]
-    sma = @submission.answers.create({std_course_id: curr_user_course.id,
-                                      question_id: question.question.id,
-                                      answer: code,
-                                      correct: false})
+    sma = Assessment::CodingAnswer.create({ std_course_id: curr_user_course.id,
+                                            question_id: question.question.id,
+                                            submission_id: @submission.id,
+                                            content: code}).answer
 
     #evaluate
-    code_to_write = PythonEvaluator.combine_code(question.data_hash["included"], code)
+    code_to_write = PythonEvaluator.combine_code([question.pre_include, code, question.append_code])
     eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), code_to_write, question)
     public_tests = eval_summary[:public].length == 0 ? true : eval_summary[:public].inject{|sum,a| sum and a}
     private_tests = eval_summary[:private].length == 0 ? true : eval_summary[:private].inject{|sum,a| sum and a}
