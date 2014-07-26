@@ -66,7 +66,6 @@ gem 'cancancan', '~> 1.8'
 gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
-gem 'acts_as_relation', '~>0.1'
 gem 'yaml_db'
 gem 'rubyzip', '~> 0.9.9'
 gem 'delayed_job_active_record'
@@ -93,8 +92,10 @@ gem 'clockwork'
 gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
-gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
 gem "cocoon"
+gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
+gem 'acts_as_relation', git: 'git@github.com:raymondtangsc/acts_as_relation.git', branch: 'V1.0'
+gem 'amoeba', git: 'git@github.com:raymondtangsc/amoeba.git'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

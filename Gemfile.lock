@@ -7,6 +7,21 @@ GIT
       actionpack (~> 3.0)
       activemodel (~> 3.0)
 
+GIT
+  remote: git@github.com:raymondtangsc/acts_as_relation.git
+  revision: a206b1c0094708207d3e6a00d211ba44f5de05e5
+  branch: V1.0
+  specs:
+    acts_as_relation (1.0.0)
+      activerecord
+
+GIT
+  remote: git@github.com:raymondtangsc/amoeba.git
+  revision: c34132f3f38ef4678f61248f80039bb69c9c4454
+  specs:
+    amoeba (2.0.0)
+      activerecord (>= 3.2.6, < 5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -38,8 +53,6 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     acts_as_paranoid (0.4.2)
-      activerecord (~> 3.2)
-    acts_as_relation (0.1.3)
       activerecord (~> 3.2)
     acts_as_votable (0.7.1)
     addressable (2.3.6)
@@ -390,8 +403,9 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid (~> 0.4.0)
-  acts_as_relation (~> 0.1)
+  acts_as_relation!
   acts_as_votable (~> 0.7.1)
+  amoeba!
   angular-ui-sortable-rails
   angularjs-rails
   aws-sdk (= 1.28.0)
