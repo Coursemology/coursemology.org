@@ -8,7 +8,8 @@ class SurveysController < ApplicationController
 
   def index
     @surveys = @course.surveys.accessible_by(current_ability)
-    @time_format =  @course.mission_time_format
+    #TODO
+    @time_format =  @course.time_format('mission')
 
     if can? :manage, Survey
       @stats = {}

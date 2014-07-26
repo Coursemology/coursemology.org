@@ -19,6 +19,8 @@ class TrainingSubmission < ActiveRecord::Base
   has_many :std_coding_answers, through: :sbm_answers,
            :source => :answer, :source_type => "StdCodingAnswer"
 
+  has_many :answers, as: :sbm, class_name: "SbmAnswer"
+
   default_scope includes(:std_course)
 
   def get_asm
@@ -26,7 +28,7 @@ class TrainingSubmission < ActiveRecord::Base
   end
 
   def get_path
-    course_training_training_submission_path(training.course, training, self)
+    course_assessment_training_training_submission_path(training.course, training, self)
   end
 
   def get_new_grading_path
@@ -69,6 +71,10 @@ class TrainingSubmission < ActiveRecord::Base
 
   def assignment
     training
+  end
+
+  def asm_id
+    training_id
   end
 
   #def status

@@ -7,6 +7,10 @@ class SurveySection < ActiveRecord::Base
   belongs_to :survey
   has_many :survey_questions
 
+  amoeba do
+    include_field :survey_questions
+  end
+
   def questions
     survey_questions
   end

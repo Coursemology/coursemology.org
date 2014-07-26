@@ -1,0 +1,113 @@
+<div class="missions">
+<%- model_name = "Missions" -%>
+<%- model_class = Assessment::Mission -%>
+<div class="page-header">
+  <h1><%= @mission.title %></h1>
+</div>
+<h2 class="assignments-description-title"><%= @course.customized_title(model_name).singularize %> Description</h2>
+<table class="table-top-align">
+  <tr>
+    <td class="span10">
+      <p><%= @mission.description.html_safe %></p>
+      <table class="table table-bordered assignments-details-table">
+        <tr>
+          <td><%= model_class.human_attribute_name(:exp) %>:</td>
+          <td><%= @mission.exp %></td>
+        </tr>
+        <tr>
+          <td><%= model_class.human_attribute_name(:max_grade) %>:</td>
+          <td><%= @mission.max_grade %></td>
+        </tr>
+        <tr>
+          <td><%= model_class.human_attribute_name(:open_at) %>:</td>
+          <td><%= datetime_format(@mission.open_at) %></td>
+        </tr>
+        <tr>
+          <td><%= model_class.human_attribute_name(:close_at) %>:</td>
+          <td><%= datetime_format(@mission.close_at) %></td>
+        </tr>
+      </table>
+    </td>
+
+    <td>
+      <%= render partial: "action", locals: {mission: @mission} %>
+    </td>
+
+    <% if can? :manage, @mission %>
+      <td class="actions-col">
+        <%= link_to edit_course_assessment_mission_path(@course, @mission), class: 'btn' do %>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_path(@course, @mission) } %>
+      </td>
+    <% end %>
+  </tr>
+</table>
+
+<% if @mission.dependent_by.count > 0 %>
+  <h3>Finish to unlock:</h3>
+  <ul>
+    <% @mission.dependent_by.each do |mission| %>
+      <h4><li><%= mission.title %></li></h4>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= render partial: 'file_uploads/download_files',
+           locals: { owner: @mission } %>
+
+<div class="clearfix"></div>
+
+
+<% if can? :view_detail, @mission %>
+  <hr />
+  <% if can? :manage, @mission %>
+    <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_wquestion_form">
+      Add Question
+    </button>
+
+  <% end %>
+
+  <div id="new_wquestion_form" class="collapse out">
+    <div class="well">
+      <%= render 'general_questions/form' %>
+    </div>
+  </div>
+
+
+  <h2 class="assignments-questions-title">Mission Questions</h2>
+  <table class="table assignments-questions-table">
+    <tbody class="asm-qns" url="<%= reorder_course_assessment_mission_asm_qns_path(@course, @mission) %>">
+      <% @questions.each_with_index do |q, i| %>
+        <tr class="asm-qn" id="asm-qn_<%= q.id %>">
+          <td class="span12">
+            <div class="asm-qn-handler">
+              <i class="icon-move handler-icon"></i>
+              <h3 class="handler-text">Question <%= i + 1 %></h3>
+            </div>
+            <%= style_format(q.description) %>
+          </td>
+          <% if can? :manage, @mission %>
+            <td class="actions-col">
+              <% case %>
+              <% when q.as_question.class == Assessment::GeneralQuestion %>
+                <%= link_to edit_course_assessment_mission_assessment_general_question_path(@course, @mission, q), class: 'btn' do %>
+                  <i class="icon-edit"></i>
+                <% end %>
+                <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_assessment_general_question_path(@course, @mission, q) } %>
+              <% when q.as_question.class == Assessment::CodingQuestion %>
+                <%= link_to edit_course_assessment_mission_assessment_coding_question_path(@course, @mission, q), class: 'btn' do %>
+                  <i class="icon-edit"></i>
+                <% end %>
+                <%= render partial: 'layouts/delete_confirm', locals: { path_to_item: course_assessment_mission_assessment_coding_question_path(@course, @mission, q) } %>
+              <% else %>
+                Unsupported question type: <%= q.class %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+</div>

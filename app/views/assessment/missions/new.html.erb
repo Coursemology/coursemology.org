@@ -1,0 +1,7 @@
+<div class="alert alert-error hidden"></div>
+<%- model_name = "Missions" -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => t('helpers.titles.new', :model => @course.customized_title(model_name).singularize,
+                                 :default => "New #{@course.customized_title(model_name).singularize}") %></h1>
+</div>
+<%= render :partial => 'form' %>

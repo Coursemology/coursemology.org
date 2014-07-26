@@ -9,14 +9,14 @@ class CoursePreferencesController < ApplicationController
     case @tab
       when 'mission'
         @tab = "MissionPreference"
-        @preferences = @course.mission_columns
-        @time_format =  @course.mission_time_format
+        @preferences = @course.assessment_columns('mission', true)
+        @time_format =  @course.time_format('mission')
         @auto_submit = @course.auto_create_sbm_pref
       when 'training'
         @tab = "TrainingPreference"
-        @preferences = @course.training_columns
-        @time_format =  @course.training_time_format
-        @reattempt = @course.course_preferences.training_reattempt.first
+        @preferences = @course.assessment_columns('training', true)
+        @time_format =  @course.time_format('training')
+        @reattempt = @course.training_reattempt
       when 'mcq'
         @tab = "McqPreference"
         @mcq_auto_grader = @course.mcq_auto_grader
@@ -30,7 +30,7 @@ class CoursePreferencesController < ApplicationController
         @achievement_pref = @course.achievements_locked_display
       when 'paging'
         @tab = 'PagingPreference'
-        @preferences = @course.course_paging_prefs
+        @preferences = @course.paging_prefs
       when 'sidebar'
         @tab = 'Sidebar'
         @ranking = @course.student_sidebar_ranking

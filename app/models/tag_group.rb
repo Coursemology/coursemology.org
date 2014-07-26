@@ -7,6 +7,9 @@ class TagGroup < ActiveRecord::Base
 
   has_many :tags, dependent: :destroy
 
+  amoeba do
+    include_field :tags
+  end
 
   def title
     name

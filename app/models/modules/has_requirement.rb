@@ -3,6 +3,9 @@ module HasRequirement
   def self.included(base)
     base.class_eval do
       has_many :requirements, as: :obj, dependent: :destroy
+      amoeba do
+        include_field :requirements
+      end
     end
   end
 

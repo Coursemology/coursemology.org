@@ -1,0 +1,24 @@
+<% submission = ast.last_submission(curr_user_course) %>
+<% if submission %>
+    <% if submission.graded? %>
+        <% if @reattempt && @reattempt.display %>
+            <%= link_to "Revise",
+                        new_course_assessment_submission_path(@course, ast),
+                        class: 'btn' %>
+        <% else %>
+            <%= link_to "Revise",
+                        edit_course_assessment_submission_path(@course, ast, submission,
+                                                                                 anchor: 'training-stop-pos', step: 1),
+                        class: 'btn' %>
+        <% end %>
+    <% else %>
+        <%= link_to 'Continue',
+                    edit_course_assessment_submission_path(@course, ast, submission,
+                                                                             anchor: 'training-stop-pos'),
+                    class: 'btn btn-primary' %>
+    <% end %>
+<% else %>
+    <%= link_to 'Start',
+                new_course_assessment_submission_path(@course, ast),
+                class: 'btn btn-success' %>
+<% end %>

@@ -2,7 +2,9 @@ class User < ActiveRecord::Base
   acts_as_paranoid
   acts_as_voter
 
-  default_scope where(:is_pending_deletion => false)
+  #TODO
+  # default_scope where(:is_pending_deletion => false)
+  default_scope includes(:system_role)
 
   before_create :set_default_role
   before_create :set_default_profile_pic
@@ -33,11 +35,11 @@ class User < ActiveRecord::Base
   belongs_to :system_role, class_name: "Role"
 
   def is_admin?
-    self.system_role == Role.find_by_name('superuser')
+    self.system_role && self.system_role.name == 'superuser'
   end
 
   def is_lecturer?
-    self.is_admin? || self.system_role == Role.find_by_name('lecturer')
+    self.is_admin? || (self.system_role && self.system_role.name == 'lecturer')
   end
 
   def self.admins

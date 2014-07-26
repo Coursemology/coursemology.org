@@ -1,0 +1,42 @@
+<div id="ruler">&nbsp;</div>
+<div class="page_subtitles"><%= question.title %></div>
+<div class="page_subtitle_line"></div>
+<h3>Description</h3>
+<!--<div class="step_description">-->
+  <div>
+  <%= style_format(question.description) %>
+
+</div>
+
+<% if question.data_hash["public"].length > 0 %>
+    <h3>Public Tests</h3>
+    <p>The following expressions will be executed.</p>
+    <table class="table table-striped table-bordered" id="publicTestTable">
+      <thead>
+      <tr>
+        <td>Expression</td>
+        <td>Expected Output</td>
+      </tr>
+      </thead>
+      <tbody>
+      <% question.data_hash["public"].each do |test| %>
+      <tr>
+        <td><%= test["expression"] %></td>
+        <td><%= test["expected"] %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
+<h3>Your Answer</h3>
+<div class="path_cm_txtbox cos_code">
+  <textarea name="ans" id="ans" render="code"
+            language="<%= question.language.codemirror_mode %>"
+            version="<%= question.language.version %>"><%= prefilled %></textarea>
+</div>
+<br/>
+
+<h3>Evaluation Result</h3>
+<div id="eval_result" style="font-size: 14px;padding-left: 10px">
+  Click Run to see your evaluation result.
+</div>

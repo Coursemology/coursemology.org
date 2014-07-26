@@ -1,0 +1,10 @@
+<% if can? :bulk_update, Assessment %>
+<ul class="nav nav-tabs">
+  <li class="<%= 'active' if current_page?(:course_assessment_missions) %>">
+    <a href="<%=  course_assessment_missions_path %>"><h4><%= title %></h4></a>
+  </li>
+  <li class="<%= 'active' if current_page?(:overview_course_assessment_missions) %>">
+    <a href="<%= overview_course_assessment_missions_path %>" ><h4>Overview</h4></a>
+  </li>
+</ul>
+<% end %>

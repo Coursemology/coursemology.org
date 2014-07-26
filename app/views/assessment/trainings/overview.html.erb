@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>Update <%= @course.customized_title('training').pluralize -%></h1>
+</div>
+
+<%= render  partial: "tabs" %>
+
+<%= simple_form_for @course, url: bulk_update_course_assessment_trainings_path(@course), :method => 'POST' do |f| %>
+    <table class="table">
+      <thead>
+      <tr>
+        <th><%= @display_columns['title'] %></th>
+        <th><%= @display_columns['exp'] %></th>
+        <th><%= @display_columns['start'] %></th>
+        <th><%= @display_columns['bonus-exp'] %></th>
+        <th><%= @display_columns['bonus-cutoff'] %></th>
+        <th>Tab</th>
+        <th>Publish?</th>
+      </tr>
+      </thead>
+      <tbody>
+      <%= f.simple_fields_for :trainings do |mf| %>
+          <tr>
+            <td><%= mf.input_field :title, class: "input-medium" %></td>
+            <td><%= mf.input_field :exp, as: :integer, class: "input-mini" %></td>
+            <td><%= mf.input_field :open_at, as: :datetime_picker, class: "input-medium" %></td>
+            <td><%= mf.input_field :bonus_exp, as: :integer, class: "input-mini" %></td>
+            <td><%= mf.input_field :bonus_cutoff_at, as: :datetime_picker, class: "input-medium" %></td>
+            <td>
+              <%= mf.association :tab,
+                                 collection: @course.training_tabs,
+                                 label_method: :title, value_method: :id,
+                                 include_blank: false,
+                                 label: false,
+                                 wrapper: false,
+                                 input_html: {class: "input-mini"} %>
+            </td>
+            <td class="publish"><%= mf.input_field :published, as: :boolean %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <div class="center">
+      <button class="btn btn-large" style="width: 50%; font-weight: bold">Update</button>
+    </div>
+<% end %>

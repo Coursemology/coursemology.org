@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
+  before_filter :load_general_course_data, only: [:show, :students, :pending_gradings, :manage_students]
 
   def index
     @courses = Course.online_course
@@ -106,6 +106,7 @@ class CoursesController < ApplicationController
         @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
       end
 
+      #TODO
       @pending_actions = curr_user_course.pending_actions.includes(:item).to_show.
           select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
           sort_by {|pa| pa.item.close_at || Time.now }.first(3)
@@ -143,7 +144,7 @@ class CoursesController < ApplicationController
     @student_courses = @course.user_courses.student.where(is_phantom: false)
     @ta_courses = @course.user_courses.tutor
 
-    @std_paging = @course.students_paging_pref
+    @std_paging = @course.paging_pref('students')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -169,7 +170,7 @@ class CoursesController < ApplicationController
     @staff_courses = @course.user_courses.staff
     @student_count = @student_courses.length
 
-    @std_paging = @course.mgmt_std_paging_pref
+    @std_paging = @course.paging_pref('ManageStudents')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -178,7 +179,7 @@ class CoursesController < ApplicationController
 
   def pending_gradings
     authorize! :see, :pending_gradings
-    @pending_gradings = @course.get_pending_gradings(curr_user_course)
+    @pending_gradings = @course.pending_gradings(curr_user_course)
   end
 
 end

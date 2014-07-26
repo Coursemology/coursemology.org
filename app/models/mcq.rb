@@ -1,6 +1,6 @@
 class Mcq < ActiveRecord::Base
 
-  include Assessment
+  include AssessmentModule
 
   attr_accessible :correct_answers, :correct_answer_id, :creator_id, :description, :max_grade, :order, :select_all
 

@@ -9,9 +9,13 @@ group :development do
   gem 'debugger'
   gem 'sqlite3'
   gem 'pry'
+  gem 'pry-debugger'
+  gem 'pry-rescue'
+  gem 'pry-stack_explorer'
   gem 'meta_request'
   gem 'figaro'
   gem "better_errors"
+  gem 'spring'
 end
 
 
@@ -25,10 +29,14 @@ end
 
 
 gem "rspec-rails", :group => [:test, :development]
+gem "guard-rspec", :group => [:test, :development]
+gem 'spork-rails', :group => [:test, :development]
+gem "guard-spork", :group => [:test, :development]
+
+
 group :test do
   gem "factory_girl_rails"
   gem "capybara"
-  gem "guard-rspec"
 end
 
 # Gems used only for assets and not required
@@ -53,8 +61,9 @@ end
 gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
+gem 'jquery-tmpl-rails'
 gem 'devise', '3.0'
-gem 'cancan'
+gem 'cancancan', '~> 1.8'
 gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
@@ -84,8 +93,10 @@ gem 'clockwork'
 gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
-gem 'simple_form'
 gem "cocoon"
+gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
+gem 'acts_as_relation', git: 'git@github.com:raymondtangsc/acts_as_relation.git', branch: 'V1.0'
+gem 'amoeba', git: 'git@github.com:raymondtangsc/amoeba.git'
 gem "haml"
 gem "axlsx"
 gem "nokogiri"

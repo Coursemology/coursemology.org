@@ -42,12 +42,12 @@
                   <a href="#" class="btn disabled">Done</a>
             <% else %>
                   <%= link_to 'Continue',
-                              edit_course_training_training_submission_path(@course, training, submission),
+                              edit_course_assessment_training_training_submission_path(@course, training, submission),
                               class: 'btn btn-primary' %>
             <% end %>
           <% else %>
             <%= link_to 'Start',
-                    new_course_training_training_submission_path(@course, training),
+                    new_course_assessment_training_training_submission_path(@course, training),
                     class: 'btn btn-success' %>
           <% end %>
         </td>

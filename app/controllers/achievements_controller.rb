@@ -5,13 +5,20 @@ class AchievementsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def index
+    #TODO: improve speed
     @achievements = @achievements.includes(:requirements, :as_requirements)
+    @ach_paging = @course.paging_pref(Achievement.to_s)
+    if @ach_paging.display?
+      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
+    end
     @achievements_with_info = []
+    # uca = curr_user_course.user_achievements.includes(:achievement)
+    # earned = uca.map(&:achievement)
     @achievements.each do |ach|
       req_check = {}
       if curr_user_course && ach.published
         uach = UserAchievement.find_by_user_course_id_and_achievement_id(
-          curr_user_course.id, ach.id)
+            curr_user_course.id, ach.id)
         ach.requirements.each do |req|
           req_check[req.id] = req.satisfied?(curr_user_course)
         end
@@ -20,11 +27,6 @@ class AchievementsController < ApplicationController
         get_achievements_with_info ach, false, req_check
       end
     end
-
-    @ach_paging = @course.achievements_paging_pref
-    if @ach_paging.display?
-      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
-    end
   end
 
   def get_achievements_with_info(ach, uach, req_check)
@@ -32,9 +34,9 @@ class AchievementsController < ApplicationController
         ach: ach,
         won: uach ? true : false,
         req_check: req_check
-        }
+    }
   end
-  
+
   def fetch_data_for_form
     @all_ach = @course.achievements
     @all_asm = @course.asms
@@ -61,7 +63,7 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.save
         format.html { redirect_to course_achievements_url(@course),
-                      notice: "The achievement '#{@achievement.title}' has been created." }
+                                  notice: "The achievement '#{@achievement.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -73,7 +75,7 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
         format.html { redirect_to course_achievements_url(@course),
-                      notice: "The achievement '#{@achievement.title}' has been updated." }
+                                  notice: "The achievement '#{@achievement.title}' has been updated." }
       else
         format.html { render action: "edit" }
       end
@@ -84,7 +86,7 @@ class AchievementsController < ApplicationController
     @achievement.destroy
     respond_to do |format|
       format.html { redirect_to course_achievements_url(@course),
-                    notice: "The achievement '#{@achievement.title}' has been removed." }
+                                notice: "The achievement '#{@achievement.title}' has been removed." }
     end
   end
 end

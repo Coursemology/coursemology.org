@@ -1,0 +1,30 @@
+<%- display_name = @course.customized_title("Trainings").singularize -%>
+<%= simple_form_for [@course, @training],
+                    :html => { :class => 'form-horizontal' },
+                    defaults: { input_html: { class: 'span7' } } do |f| %>
+    <%= f.input :title %>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :exp, as: :integer, input_html: {class: "number_field input-medium"}  %>
+    <%= f.input :open_at, as: :datetime, input_html: {class: "input-mini"} %>
+    <% if @course.tabs.training.count > 0 %>
+        <%= f.association :tab, collection: @course.tabs.training, input_html: {class: "input-medium"}, include_blank: false%>
+    <% end %>
+    <%= f.input :bonus_exp, as: :integer, input_html: {class: "number_field input-medium"} %>
+    <%= f.input :bonus_cutoff_at, as: :datetime, input_html: {class: "input-mini"} %>
+    <%= f.input :skippable, as: :boolean, label: "Allow skip?",
+                input_html: {class: ""},
+                inline_label:"Check to allow students to skip steps"%>
+    <%= f.input :published, as: :boolean,
+                input_html: {class: ""},
+                inline_label:"Check to publish #{display_name.downcase}" %>
+
+    <div id="uploaded_files_div"></div>
+    <%= f.button :form_submit, cancel: course_assessment_trainings_path %>
+    <%= render :partial => "layouts/html_editor" %>
+<% end %>
+
+<h3>Upload lesson materials</h3>
+<br/>
+
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: @training, access_control: true } %>

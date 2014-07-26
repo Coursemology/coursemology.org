@@ -1,8 +1,17 @@
+<%
+# Make our locals all CSS properties.
+css = []
+local_assigns.each_pair do |key, value|
+  next if [:ecid, :comments, :target, :header, :list].include?(key)
+  css <<= key.to_s.dasherize + ': ' + value
+end
+css = css.length > 0 ? css.join(';') : nil
+%>
 <% if header.size > 0 %>
     <h3><%= header %></h3>
 <% end %>
 <% ecid = Digest::MD5.hexdigest(target.class.to_s << target.id.to_s) %>
-<ul ecid="<%= ecid %>" class="code-comment-box" style="margin-left: <%= margin_left %>;">
+<ul ecid="<%= ecid %>" class="code-comment-box" <%- if css then %>style="<%= css %>;<%- end %>">
 </ul>
 
 <input type="hidden" id="<%= ecid %>_post_path" value="<%= course_comments_path(@course) %>">

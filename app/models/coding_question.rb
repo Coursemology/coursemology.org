@@ -1,7 +1,7 @@
 class CodingQuestion < ActiveRecord::Base
   attr_accessible :creator_id, :description,:max_grade, :staff_comments, :data, :include_sol_qn_id, :is_auto_grading, :title
 
-  include Assessment
+  include AssessmentModule
 
   belongs_to :creator, class_name: "User"
 

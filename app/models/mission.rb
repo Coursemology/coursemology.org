@@ -5,7 +5,7 @@ class Mission < ActiveRecord::Base
   # Not implemented yet.
   include HasRequirement
   include ActivityObject
-  include Assignment
+  include AssignmentModule
 
   default_scope { order("missions.open_at") }
 

@@ -6,7 +6,7 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
-    @paging_pref = @course.announcements_paging_pref
+    @paging_pref = @course.paging_pref(Announcement.to_s)
     @announcements = @course.announcements.accessible_by(current_ability)
                         .order("publish_at DESC")
     if @paging_pref.display

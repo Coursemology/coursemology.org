@@ -1,4 +1,4 @@
-class CourseAbility
+class CourseAbility  < Ability
   include CanCan::Ability
 
   # checkout:
@@ -13,15 +13,16 @@ class CourseAbility
         Then authorize admin(manage all)
 =end
   def initialize(user, user_course)
+    super(user)
     user ||= User.new
     user_course ||= UserCourse.new
 
     can :read, Course
     can :new, EnrollRequest
 
-    if !user.persisted?
+    unless user.persisted?
       # not logged in user
-      cannot :read, [Mission, Training]
+      cannot :read, [Assessment::Mission, Assessment::Training]
     end
 
     if user.is_lecturer? || user.is_admin?
@@ -32,12 +33,12 @@ class CourseAbility
       end
     end
 
-    if user_course.role == Role.shared.first || user.is_admin?
+    if user_course.is_shared? || user.is_admin?
       can :share, Course
       can :participate, Course
       can :duplicate, Course
-      can :read, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :read, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
       can :read, [Level, Achievement, Title, Reward]
       can :students, Course
@@ -46,20 +47,26 @@ class CourseAbility
     if user.is_admin?  || user_course.is_staff?
       # this is enough since all resources are loaded related to
       # the current course
-      can :manage, :all
-      can :see_all, [Submission, TrainingSubmission, Level]
-      can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training, Survey]
+      # can :manage, :all
+      can :see_all, [Assessment::Submission, Level]
+      # can :view_stat, [Assessment::Mission, Assessment::Training]
+      # can :view_detail, [Assessment::Mission, Assessment::Training]
+      # can :create, Assessment
+      # can :bulk_update, Assessment
+      can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
+      can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      can :manage, Course
       can :participate, Course
       can :duplicate, Course
       can :award_points, UserCourse
       can :see, :pending_grading
       can :see, :pending_comments
-      can :unsubmit, Submission
+      can :unsubmit, Assessment::Submission
       can :view, :staff_leaderboard
       can :manage, :forum_participation
+      can :manage, Tab
 
-      cannot :modify, TrainingSubmission
+      cannot :modify, Assessment::Submission
     end
 
     if user.is_admin? || user_course.is_creator?
@@ -86,9 +93,7 @@ class CourseAbility
     if user_course.is_student?
       can :participate, Course
       can :read, UserCourse
-      can :read, Announcement, Announcement.published do |ann|
-        ann.publish_at <= Time.now
-      end
+      can :read, Announcement, Announcement.published
 
       # Materials: The file is accessible to students if the student uploaded
       # the file, or course staff uploaded the file.
@@ -147,9 +152,11 @@ class CourseAbility
       can :read, [LessonPlanEntry]
       can :read, [LessonPlanMilestone], is_publish: true
 
-      can :read, [Mission, Training, Survey], publish: true
+      can :read, Assessment, published: true
+      can :read, [Assessment::Mission, Assessment::Training], assessment: {published: true}
+      can :read, Survey, publish: true
 
-      can :read, [Mcq, Question, CodingQuestion]
+      # can :read, [Mcq, Question, CodingQuestion]
 
       can :read, Tag
       can :read, [Achievement, Title, Reward]
@@ -157,20 +164,21 @@ class CourseAbility
       can :access_denied, Mission
       can :access_denied, Training
 
-      can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
+      can :manage, [Assessment::Submission], std_course_id: user_course.id
       can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
-      can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
+      can :manage, Assessment::Answer, std_course_id: user_course.id
+      can :read, Assessment::Grading, std_course_id: user_course.id
       can :read, ExpTransaction, user_course_id: user_course.id
 
       can :ignore, PendingAction, user_course: user_course
 
       can :read, Comic
       can :info, Comic
-      cannot :modify, TrainingSubmission
 
-      cannot :see_all, [Submission, TrainingSubmission]
+      cannot :modify, Assessment::Submission
+      cannot :see_all, Assessment::Submission
     end
   end
 end

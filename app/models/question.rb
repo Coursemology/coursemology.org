@@ -1,7 +1,7 @@
 class Question < ActiveRecord::Base
   attr_accessible :creator_id, :description, :max_grade, :title
 
-  include Assessment
+  include AssessmentModule
 
   belongs_to :creator, class_name: "User"
 

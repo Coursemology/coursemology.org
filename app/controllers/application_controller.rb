@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   skip_before_filter  :verify_authenticity_token
 
   rescue_from CanCan::AccessDenied do |exception|
-
     unless current_user
       session[:request_url] = request.url
     end
@@ -31,9 +30,9 @@ class ApplicationController < ActionController::Base
 
   def load_theme_setting
     atts = []
-    atts << ThemeAttribute.find_by_name('Background Color')
-    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Custom CSS')
+    # atts << ThemeAttribute.find_by_name('Background Color')
+    # atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+    # atts << ThemeAttribute.find_by_name('Cust om CSS')
     # atts << ThemeAttribute.find_by_name('Announcements Icon')
     # atts << ThemeAttribute.find_by_name('Missions Icon')
     # atts << ThemeAttribute.find_by_name('Trainings Icon')
@@ -143,7 +142,7 @@ class ApplicationController < ActionController::Base
     # home
     @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course ? curr_user_course.role_id : 0}") { sidebar_general_items }
 
-    if can? :manage, Course
+    if can? :manage, @course
       @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
     end
   end
@@ -212,13 +211,13 @@ class ApplicationController < ActionController::Base
         url = main_app.course_announcements_path(@course)
         icon = 'icon-bullhorn'
       when 'missions'
-        url = main_app.course_missions_url(@course)
+        url = main_app.course_assessment_missions_url(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = main_app.course_trainings_path(@course)
+        url = main_app.course_assessment_trainings_url(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
-        url = main_app.course_submissions_path(@course)
+        url = main_app.submissions_course_assessment_missions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
         url = main_app.course_achievements_url(@course)

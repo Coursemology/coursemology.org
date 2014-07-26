@@ -70,7 +70,7 @@
 <h2>Duplicate individual data</h2>
 <br/>
 <p class="well">Duplicating the data, the links are not preserved. For example: achievements will not have requirement.
-  Assignments will not be tagged, etc.</p>
+  Assessments will not be tagged, etc.</p>
 
 <form action="<%= course_duplicate_assignments_path(@course) %>" method="POST">
   <h3>Select target course:</h3><span>Data will be copied to the course: </span>
@@ -86,42 +86,42 @@
   <div class="duplicate row">
     <div class="span2" id="duplicate_nav">
       <ul class="nav nav-list float_sidenav" data-spy="affix" data-offset-top="200">
-        <% @duplicable_items.each_pair do |model, v| %>
+        <% @duplicable_items.each_pair do |key, v| %>
             <li>
-              <a href="#<%= model.model_name %>">
+              <a href="#<%= key %>">
                 <i class="icon-chevron-right"></i>
-                <%= model.model_name.human.pluralize %>
+                <%= key.to_s.pluralize.underscore.titleize %>
               </a>
             </li>
         <% end %>
       </ul>
     </div>
     <div class="span7">
-      <% @duplicable_items.each_pair do |model, v| %>
-          <section id="<%= model.model_name %>">
+      <% @duplicable_items.each_pair do |key, v| %>
+          <section id="<%= key %>">
             <div class="page-header">
-              <h2><%= model.model_name.human.pluralize %></h2>
+              <h2><%= key.to_s.pluralize.underscore.titleize %></h2>
             </div>
 
-            <% if model == Level %>
+            <% if key == :Level %>
                 <p class="well">Note: if target course already configued levels, levels won't be copied over.</p>
                 <% v = v[1..-1] %>
             <% end %>
-            <% if model == TagGroup or model == LessonPlanMilestone %>
+            <% if key == :TagGroup or key == :LessonPlanMilestone %>
                 <div class="checkbox-text" style="margin-bottom: 10px">
-                  <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+                  <input type="checkbox"  name="select-all" class="<%= key %>">
                   <span style="font-weight: bold; font-size: 15px">Select All</span>
                 </div>
                 <ul>
                   <% v.each_with_index do |item, i| %>
                       <li>
                         <div  class="checkbox-text">
-                          <input type="checkbox" class="<%= model.model_name %> with-sub-items" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                          <input type="checkbox" class="<%= key %> with-sub-items" name="<%= key %>[]" value="<%= item.id %>" />
                           <span><%= item.title %></span>
                         </div>
                       </li>
                       <!--<div class="duplicate_mul_entry">-->
-                      <% if model == TagGroup  %>
+                      <% if key == :TagGroup  %>
                           <% sub_items = item.tags  %>
                       <% else %>
                           <% sub_items = item.entries(false) %>
@@ -130,7 +130,7 @@
                       <ul>
                         <% sub_items.each_with_index do |tag, i| %>
                             <li class="checkbox-text">
-                              <input type="checkbox" class="<%= model.model_name %><%= item.id %>" name="<%= tag.class.model_name %>[]" value="<%= tag.id %>" />
+                              <input type="checkbox" class="<%= key %><%= item.id %>" name="<%= tag.class.model_name %>[]" value="<%= tag.id %>" />
                               <span><%= tag.title %></span>
                             </li>
                         <% end %>
@@ -141,19 +141,19 @@
                 </section>
                 <% next %>
             <% end %>
-            <% if model == MaterialFolder %>
+            <% if key == :MaterialFolder %>
                 <% v = v.subfolders %>
 
             <% end %>
             <div class="duplicate_mul_entry">
               <div class="checkbox-text" style="margin-bottom: 10px">
-                <input type="checkbox"  name="select-all" class="<%= model.model_name %>">
+                <input type="checkbox"  name="select-all" class="<%= key %>">
                 <span style="font-weight: bold; font-size: 15px">Select All</span>
               </div>
               <ul>
                 <% v.each_with_index do |item, i| %>
                     <li class="checkbox-text">
-                      <input type="checkbox" name="<%= model.model_name %>[]" value="<%= item.id %>" />
+                      <input type="checkbox" name="<%= key %>[]" value="<%= item.id %>" />
                       <span><%= item.title %></span>
                     </li>
                 <% end %>

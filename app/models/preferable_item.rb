@@ -2,15 +2,11 @@ class PreferableItem < ActiveRecord::Base
   attr_accessible :item, :item_type, :name, :default_value, :description, :default_display
 
 
-  scope :training_reattempt,      where(item: 'Training', item_type: 'Re-attempt')
-  scope :mission_columns,         where(item: "Mission", item_type: "Column")
-  scope :training_columns,        where(item: "Training", item_type: "Column")
   scope :student_sidebar_items,   where(item: "Sidebar", item_type: "Student")
   scope :other_sidebar_items,     where(item: "Sidebar", item_type: "Other")
   scope :email_notifications,     where(item: "Email", item_type: "Course")
   scope :course_home_sections,    where(item: "CourseHome", item_type: "Section")
   scope :home_sections_events_no, where(item: "CourseHome", item_type: "SectionShow")
-  scope :paging_prefs,            where(item: "Paging")
 
   def self.new_comment
     'new_comment'

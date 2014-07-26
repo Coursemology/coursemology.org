@@ -1,3 +1,27 @@
+GIT
+  remote: git@github.com:plataformatec/simple_form.git
+  revision: a43bd2722f95102a60ea1bf50c866857d7949bb8
+  branch: v2.2
+  specs:
+    simple_form (2.1.1)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
+
+GIT
+  remote: git@github.com:raymondtangsc/acts_as_relation.git
+  revision: a206b1c0094708207d3e6a00d211ba44f5de05e5
+  branch: V1.0
+  specs:
+    acts_as_relation (1.0.0)
+      activerecord
+
+GIT
+  remote: git@github.com:raymondtangsc/amoeba.git
+  revision: c34132f3f38ef4678f61248f80039bb69c9c4454
+  specs:
+    amoeba (2.0.0)
+      activerecord (>= 3.2.6, < 5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -55,6 +79,8 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     bootstrap-colorpicker-rails (0.3.1)
       railties (>= 3.0)
     bootstrap-datetimepicker-rails (0.0.11)
@@ -64,7 +90,7 @@ GEM
       railties (>= 3.0)
     builder (3.0.4)
     callsite (0.0.11)
-    cancan (1.6.10)
+    cancancan (1.8.4)
     capistrano (3.1.0)
       i18n
       rake (>= 10.0.0)
@@ -80,6 +106,8 @@ GEM
     celluloid-io (0.15.0)
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
+    childprocess (0.5.3)
+      ffi (~> 1.0, >= 1.0.11)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     clockwork (0.7.4)
@@ -102,6 +130,7 @@ GEM
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
+    debug_inspector (0.0.2)
     debugger (1.6.8)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -155,12 +184,17 @@ GEM
     guard-rspec (4.2.8)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
+    guard-spork (1.5.1)
+      childprocess (>= 0.2.3)
+      guard (>= 1.1)
+      spork (>= 0.8.4)
     haml (4.0.5)
       tilt
     hashie (2.1.1)
     hike (1.2.3)
     htmlentities (4.3.1)
-    i18n (0.6.9)
+    i18n (0.6.11)
+    interception (0.5)
     journey (1.0.4)
     jqtree-rails (0.1.8.1)
       railties (>= 3.2.0, < 5.0)
@@ -171,6 +205,8 @@ GEM
     jquery-rails (2.1.3)
       railties (>= 3.1.0, < 5.0)
       thor (~> 0.14)
+    jquery-tmpl-rails (1.1.0)
+      rails (>= 3.1.0)
     jquery-validation-rails (1.11.1.1)
       railties (>= 3.2, < 5.0)
       thor (~> 0.14)
@@ -204,7 +240,7 @@ GEM
     mini_portile (0.5.3)
     momentjs-rails (2.5.1)
       railties (>= 3.1)
-    multi_json (1.9.2)
+    multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     mysql2 (0.3.15)
@@ -250,6 +286,15 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
       win32console (~> 1.3)
+    pry-debugger (0.2.3)
+      debugger (~> 1.3)
+      pry (>= 0.9.10, < 0.11.0)
+    pry-rescue (1.4.1)
+      interception (>= 0.5)
+      pry
+    pry-stack_explorer (0.4.9.1)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     puma (2.6.0)
       rack (>= 1.1, < 2.0)
     rack (1.4.5)
@@ -308,14 +353,18 @@ GEM
       tilt (~> 1.3)
     scrollToFixed_rails (1.0.1)
       railties (>= 3.1)
-    simple_form (2.1.0)
-      actionpack (~> 3.0)
-      activemodel (~> 3.0)
     slop (3.5.0)
     slugged (2.0.0)
       activerecord (>= 3.0)
       activesupport (>= 3.0)
       uuid
+    spork (1.0.0rc4)
+    spork (1.0.0rc4-x86-mingw32)
+      win32-process
+    spork-rails (4.0.0)
+      rails (>= 3.0.0, < 5)
+      spork (>= 1.0rc0)
+    spring (1.1.3)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -347,6 +396,8 @@ GEM
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
+    win32-process (0.7.4)
+      ffi (>= 1.0.0)
     win32console (1.3.2-x86-mingw32)
     xpath (2.0.0)
       nokogiri (~> 1.3)
@@ -358,7 +409,9 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid (~> 0.4.0)
+  acts_as_relation!
   acts_as_votable (~> 0.7.1)
+  amoeba!
   angular-ui-sortable-rails
   angularjs-rails
   aws-sdk (= 1.28.0)
@@ -370,7 +423,7 @@ DEPENDENCIES
   bootstrap-sass (= 2.1.0.0)
   bootstrap-select-rails
   bootstrap-wysihtml5-rails
-  cancan
+  cancancan (~> 1.8)
   capistrano
   capybara
   clockwork
@@ -391,11 +444,13 @@ DEPENDENCIES
   gon
   google_visualr (>= 2.1)
   guard-rspec
+  guard-spork
   haml
   htmlentities
   jqtree-rails
   jquery-fileupload-rails
   jquery-rails (= 2.1.3)
+  jquery-tmpl-rails
   jquery-validation-rails
   kaminari
   koala
@@ -409,6 +464,9 @@ DEPENDENCIES
   omniauth-facebook
   paperclip (~> 3.0)
   pry
+  pry-debugger
+  pry-rescue
+  pry-stack_explorer
   puma (~> 2.6.0)
   rails (= 3.2.14)
   rspec-rails
@@ -416,8 +474,10 @@ DEPENDENCIES
   sanitize
   sass-rails (~> 3.2.3)
   scrollToFixed_rails (~> 1.0.0)
-  simple_form
+  simple_form!
   slugged (~> 2.0)
+  spork-rails
+  spring
   sqlite3
   truncate_html
   uglifier (>= 1.0.3)
