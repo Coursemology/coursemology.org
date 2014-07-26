@@ -3,6 +3,9 @@ class SurveysController < ApplicationController
   load_and_authorize_resource :survey, through: :course
 
   before_filter :load_general_course_data, only: [:index, :new, :show, :edit, :stats, :summary]
+
+  require 'axlsx'
+
   def index
     @surveys = @course.surveys.accessible_by(current_ability)
     #TODO
@@ -86,26 +89,48 @@ class SurveysController < ApplicationController
 
   def summary_with_format
     respond_to do |format|
-      format.csv { send_data summary_csv(params[:_tab] == "summary_phantom"), :disposition => "attachment; filename=#{@survey.title}.csv" }
+      format.csv { send_data summary_csv(params[:_tab] == "summary_phantom"), type: "text/csv", :disposition => "attachment; filename=#{@survey.title}.csv" }
+      if params[:format] == 'xlsx'
+        filename = summary_xlsx(params[:_tab] == "summary_phantom")
+        format.xlsx {send_file filename, :disposition => "attachment; filename=#{@survey.title}.xlsx"}
+      end
     end
+  end
+
+  def summary_xlsx(include_phantom = true)
+    # Axlsx::Package.new do |p|
+    #   p.workbook.add_worksheet(:name => "Pie Chart") do |sheet|
+    #     sheet.add_row ["Simple Pie Chart"]
+    #     %w(first second third).each { |label| sheet.add_row [label, rand(24)+1] }
+    #     sheet.add_chart(Axlsx::Pie3DChart, :start_at => [0,5], :end_at => [10, 20], :title => "example 3: Pie Chart") do |chart|
+    #       chart.add_series :data => sheet["B2:B4"], :labels => sheet["A2:A4"],  :colors => ['FF0000', '00FF00', '0000FF']
+    #     end
+    #   end
+    #   p.serialize('simple.xlsx')
+    # end
+    export_dir = "#{Rails.root}/tmp/export/#{curr_user_course.id}"
+    Dir.exist?(export_dir) ||  FileUtils.mkdir_p(export_dir)
+
+    Axlsx::Package.new do |p|
+      p.workbook.add_worksheet(name: "Summary") do |sheet|
+        summary_rows(include_phantom).each do |row|
+          sheet.add_row row
+        end
+      end
+      p.serialize  "#{export_dir}/#{@survey.title}.xlsx"
+    end
+    "#{export_dir}/#{@survey.title}.xlsx"
   end
 
   def summary_csv(include_phantom = true)
     CSV.generate({}) do |csv|
-      questions = @survey.questions
-      csv << ["Name"] + questions.map {|qn| qn.description }
-      (include_phantom ? @survey.submissions : @survey.submissions.exclude_phantom).order(:submitted_at).each do |submission|
-        row = []
-        row << (submission.user_course.nil? ? "" :  submission.user_course.name)
-        questions.each do |qn|
-          ans = submission.get_answer(qn)
-          ans = qn.is_essay? ? ans.map {|a| a.text }.join(",") : ans.map {|q| q.option.description }.join(",")
-          row << ans
-        end
+      summary_rows(include_phantom).each do |row|
         csv << row
       end
     end
   end
+
+
 
   def question_summary(question, include_phantom = true)
     summary = {}
@@ -157,4 +182,30 @@ class SurveysController < ApplicationController
     end
   end
 
+  private
+
+  def summary_rows(include_phantom = true)
+    questions = []
+    if @survey.has_section?
+      @survey.sections.each do |s|
+        questions += s.questions
+      end
+    else
+      questions = @survey.questions
+    end
+
+    rows = []
+    rows << ["Name"] + questions.map {|qn| qn.description }
+    (include_phantom ? @survey.submissions.students : @survey.submissions.students.exclude_phantom).order(:submitted_at).each do |submission|
+      row = []
+      row << (submission.user_course.nil? ? "" :  submission.user_course.name)
+      questions.each do |qn|
+        ans = submission.get_answer(qn)
+        ans = qn.is_essay? ? ans.map {|a| a.text }.join(",") : ans.map {|q| q.option.description }.join(",")
+        row << ans
+      end
+      rows << row
+    end
+    rows
+  end
 end

@@ -16,6 +16,7 @@
     <th width="40%">Description</th>
     <th>Requirements</th>
     <% if can? :manage, Achievement %>
+    	<th>Published</th>
         <th width="10%"><!-- Actions --></th>
     <% end %>
   </tr>
@@ -75,6 +76,11 @@
           <% end %>
         </td>
         <% if can? :manage, Achievement %>
+        	<td>
+        		<% if ach.published? %>	Yes
+        		<% else %> No
+        		<% end %>
+        	</td>
             <td>
               <%= link_to edit_course_achievement_path(@course, ach), class: 'btn' do %>
                   <i class="icon-edit"></i>

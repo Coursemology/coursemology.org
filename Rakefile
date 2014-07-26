@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-JfdiAcademy::Application.load_tasks
+Coursemology::Application.load_tasks

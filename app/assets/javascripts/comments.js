@@ -218,7 +218,7 @@ var Comment = (function(){
                 $li.appendTo($obj);
             }
             if ($li.find('.comment').size()){
-                jfdiFormat($li.find('.comment').get(0));
+                coursemologyFormat($li.find('.comment').get(0));
             }
         }
     }

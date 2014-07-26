@@ -6,6 +6,7 @@
 
 <div style="margin-bottom: 20px">
   <a class="btn" href="<%= course_survey_summary_with_format_path(format:"csv") %>?_tab=<%= @tab %>">Export Summary as .csv</a>
+  <a class="btn" href="<%= course_survey_summary_with_format_path(format:"xlsx") %>?_tab=<%= @tab %>">Export Summary as .xlsx</a>
 </div>
 
 <% if @survey.has_section? %>

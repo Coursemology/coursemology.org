@@ -12,23 +12,29 @@ class AchievementsController < ApplicationController
       @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
     end
     @achievements_with_info = []
-    uca = curr_user_course.user_achievements.includes(:achievement)
-    earned = uca.map(&:achievement)
+    # uca = curr_user_course.user_achievements.includes(:achievement)
+    # earned = uca.map(&:achievement)
     @achievements.each do |ach|
       req_check = {}
-      e = earned.index(ach)
-      if curr_user_course and e
-        uach = earned[e]
-        ach.requirements.includes(:obj, :req).each do |req|
+      if curr_user_course && ach.published
+        uach = UserAchievement.find_by_user_course_id_and_achievement_id(
+            curr_user_course.id, ach.id)
+        ach.requirements.each do |req|
           req_check[req.id] = req.satisfied?(curr_user_course)
         end
+        get_achievements_with_info ach, uach, req_check
+      elsif can? :manage, Achievement
+        get_achievements_with_info ach, false, req_check
       end
-      @achievements_with_info << {
+    end
+  end
+
+  def get_achievements_with_info(ach, uach, req_check)
+    @achievements_with_info << {
         ach: ach,
         won: uach ? true : false,
         req_check: req_check
-      }
-    end
+    }
   end
 
   def fetch_data_for_form
@@ -57,7 +63,7 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.save
         format.html { redirect_to course_achievements_url(@course),
-                      notice: "The achievement '#{@achievement.title}' has been created." }
+                                  notice: "The achievement '#{@achievement.title}' has been created." }
       else
         format.html { render action: "new" }
       end
@@ -69,7 +75,7 @@ class AchievementsController < ApplicationController
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
         format.html { redirect_to course_achievements_url(@course),
-                      notice: "The achievement '#{@achievement.title}' has been updated." }
+                                  notice: "The achievement '#{@achievement.title}' has been updated." }
       else
         format.html { render action: "edit" }
       end
@@ -80,7 +86,7 @@ class AchievementsController < ApplicationController
     @achievement.destroy
     respond_to do |format|
       format.html { redirect_to course_achievements_url(@course),
-                    notice: "The achievement '#{@achievement.title}' has been removed." }
+                                notice: "The achievement '#{@achievement.title}' has been removed." }
     end
   end
 end

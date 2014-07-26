@@ -1,5 +1,4 @@
-JfdiAcademy::Application.routes.draw do
-
+Coursemology::Application.routes.draw do
   authenticated :user do
     root :to => "home#index"
   end
@@ -21,11 +20,12 @@ JfdiAcademy::Application.routes.draw do
 
   post "user/auto_login" => "auto_login#auto_login_from_facebook"
 
-
   match "admins" => "admins#access_control"
   match "admins/search" => "admins#search"
   match "admins/masquerades" => 'admins#masquerades', as: :admin_masquerades
   match "admins/courses" => "admins#courses", as: :admin_courses
+  get 'admins/system_wide_announcement' => 'admins#new_system_wide_announcement'
+  post 'admins/system_wide_announcement' => 'admins#send_system_wide_announcement'
   #match "admin/access_control" => "admins#access_control"
 
   delete "admins/stop_masquerades" => "masquerades#destroy", as: :destroy_masquerades

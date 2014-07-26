@@ -191,7 +191,7 @@ $(document).ready(function() {
     );
 
     $(function(){
-        $(".jfdiCode").each(_jfdiFormatFunc);
+        $(".coursemology-code").each(_coursemologyFormatFunc);
     });
 
     $(function(){
@@ -338,14 +338,14 @@ jQuery.fn.extend({
 
 });
 
-function _jfdiFormatFunc(i, elem) {
+function _coursemologyFormatFunc(i, elem) {
     var $elem = $(elem);
 
     // Make sure we process every code block exactly once.
-    if ($elem.data('jfdiFormatted')) {
+    if ($elem.data('formatted')) {
         return;
     }
-    $elem.data('jfdiFormatted', true);
+    $elem.data('formatted', true);
 
     // Replace all <br /> with \n for CodeMirror.
     var $br = $('br', $elem);
@@ -375,8 +375,9 @@ function _jfdiFormatFunc(i, elem) {
         CodeMirror.runMode(code, 'python', elem);
     }
 }
-function jfdiFormat(element){
-    $(element).find(".jfdiCode").each(_jfdiFormatFunc);
+
+function coursemologyFormat(element){
+    $(element).find(".coursemology-code").each(_coursemologyFormatFunc);
 }
 
 String.prototype.nl2br = function(){
@@ -418,4 +419,4 @@ if (!String.prototype.format) {
                 ;
         });
     };
-}
+};

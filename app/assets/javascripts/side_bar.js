@@ -18,42 +18,4 @@ $(document).ready(function() {
             }
         });
     }
-    //Missions
-    //badge_Missions
-
-    //Trainings
-    //badge_Trainings
-
-    //Submissions
-    //badge_Submissions
-
-    //lesson plan
-    //badge_LessonPlan
-
-    //workbin
-    //badge_Workbin
-
-    //comics
-    //badge_Comics
-
-    //comments
-    //badge_Comments
-
-    //pending grading
-    //badge_PendingGradings
-
-    //achievements
-    //badge_Achievements
-
-    //leaderboard
-    //badge_Leaderboard
-
-    //students
-    //badge_Students
-
-    //Surveys
-    //badge_Surveys
-
-    //Forums
-    //badge_Forums
 });

@@ -101,11 +101,6 @@ class Course < ActiveRecord::Base
     MaterialFolder.create(:course => self, :name => "Root")
   end
 
-  def enrol_user(user, role)
-    return if UserCourse.where(course_id: self, user_id: user).first
-    self.user_courses.create(user_id: user.id, role_id: role.id)
-  end
-
   #TODO: scope in survey model
   def pending_surveys(user_course)
     if user_course.is_student?
@@ -393,4 +388,22 @@ class Course < ActiveRecord::Base
       end
     end
   end
+
+
+  def enrol_user(user, role)
+    if UserCourse.where(course_id: self, user_id: user).first
+      return
+    end
+    self.user_courses.create(user_id: user.id, role_id: role.id)
+  end
+
+  def logo_url
+    url = read_attribute(:logo_url)
+    # check for nil and 0 length string. Return path to the default logo
+    if url.blank?
+      url = '/images/coursemology_logo_square.png'
+    end
+    url
+  end
+ 
 end

@@ -46,7 +46,19 @@ class CoursemologyFormatter
     Sanitize.clean(text, whitelist)
   end
 
-  def self.clean_code_block(text)
-    text.gsub(/\[mc\](.+?)\[\/mc\]/m){"[mc]" << $1.gsub(/<div><\/div>/,'') << "[/mc]"}
+  def self.clean_code_block(description)
+    result = description.gsub(/\[mc\](.+?)\[\/mc\]/m) do
+      code = $1
+      html = Nokogiri::HTML(code)
+      stripped_children = html.search('body').children.map do |e|
+        if e.inner_html == "<br>" || e.inner_html == "</br>"
+          e.inner_html
+        else
+          e.inner_html + "<br>"
+        end
+      end
+      "[mc]" + stripped_children.join + "[/mc]"
+    end
+    result
   end
 end

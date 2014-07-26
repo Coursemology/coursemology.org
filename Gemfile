@@ -6,6 +6,7 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
+  gem 'debugger'
   gem 'sqlite3'
   gem 'pry'
   gem 'pry-debugger'
@@ -96,6 +97,9 @@ gem "cocoon"
 gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
 gem 'acts_as_relation', git: 'git@github.com:raymondtangsc/acts_as_relation.git', branch: 'V1.0'
 gem 'amoeba', git: 'git@github.com:raymondtangsc/amoeba.git'
+gem "haml"
+gem "axlsx"
+gem "nokogiri"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

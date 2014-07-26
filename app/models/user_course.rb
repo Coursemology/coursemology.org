@@ -172,7 +172,7 @@ class UserCourse < ActiveRecord::Base
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
     fulfilled = false
-    if not uach
+    unless uach
       # not earned yet, check this achievement
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
@@ -221,7 +221,6 @@ class UserCourse < ActiveRecord::Base
 
   def manual_exp_award(user_course_id, exp, reason)
     user_course = self.course.user_courses.find(user_course_id)
-    puts user_course, exp, reason
     exp_transaction = ExpTransaction.new
     exp_transaction.exp = exp
     exp_transaction.giver = self.user
@@ -229,7 +228,7 @@ class UserCourse < ActiveRecord::Base
     exp_transaction.reason = reason
     exp_transaction.is_valid = true
     exp_transaction.save
-    user_course.update_exp_and_level_async
+    # user_course.update_exp_and_level_async
   end
 
   def get_staff_incharge

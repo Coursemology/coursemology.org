@@ -24,7 +24,6 @@ class SubmissionGrading < ActiveRecord::Base
       self.exp_transaction.reason = "Exp for #{asm.get_title}"
       self.exp_transaction.is_valid = true
       self.exp_transaction.rewardable = asm
-      self.save
     end
     if asm.max_grade == 0
       self.exp_transaction.exp = 0
@@ -37,8 +36,9 @@ class SubmissionGrading < ActiveRecord::Base
       end
     end
     self.exp_transaction.save
+    self.save
     asm.tags.each { |tag| tag.update_exp_for_std(sbm.std_course_id) }
-    self.exp_transaction.update_user_data
+    # self.exp_transaction.update_user_data
     self.exp_transaction.exp
   end
 

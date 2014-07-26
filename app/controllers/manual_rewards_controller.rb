@@ -52,7 +52,7 @@ class ManualRewardsController < ApplicationController
         achs.each do |ach|
           std_course.give_achievement(ach)
         end
-        std_course.update_achievements
+        std_course.update_exp_and_level_async
       end
 
       flash[:notice] = "#{achs.size} achievements have been awarded to #{std_courses.size} students!"

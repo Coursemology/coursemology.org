@@ -447,7 +447,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
             .append('<a href="' + annotation.f + '"><img class="small-profile-pic" src="'+annotation.p+'" width="32" height="32" /></a>')
             .append($div)
             .appendTo(parent.find('.annotate-area'));
-        jfdiFormat($li.find('.comment').get(0));
+        coursemologyFormat($li.find('.comment').get(0));
     }
 
     function refreshComments(){
