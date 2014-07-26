@@ -23,18 +23,19 @@ class Assessment::GradingsController < ApplicationController
     eval_answer
 
     @submission.answers.each do |ans|
-      qn = ans.question.specific
-      @summary[:qn_ans][qn.question.id][:ans] = ans
+      qn = ans.question
+      @summary[:qn_ans][qn.id][:ans] = ans
 
       #suggest grading for auto grading question
-      if qn.class == Assessment::CodingQuestion && qn.auto_graded?
+      if qn.is_a?(Assessment::CodingQuestion) && qn.auto_graded?
         results = ans.result_hash["eval"]
         evals = results ? results.select {|r| r}.length : 0
         tests = qn.data_hash["eval"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
-        ag = Assessment::AnswerGrading.new
+        ag = ans.answer_grading.new
         ag.grade = grade
+
         @summary[:qn_ans][qn.question.id][:grade] = ag
       end
     end
@@ -52,7 +53,8 @@ class Assessment::GradingsController < ApplicationController
 
     params[:ags].each do |ag|
       @ag = @grading.answer_gradings.build(ag)
-      @ag.grader = curr_user_course
+      @ag.grader = current_user
+      @ag.grader_course = curr_user_course
       unless validate_gradings(@ag, ag)
         invalid_assign = true
         break
@@ -65,7 +67,8 @@ class Assessment::GradingsController < ApplicationController
       invalid_assign = true
     end
 
-    @grading.grader = curr_user_course
+    @grading.grader = current_user
+    @grading.grader_course = curr_user_course
     @grading.student = @submission.std_course
 
     if invalid_assign
@@ -101,7 +104,6 @@ class Assessment::GradingsController < ApplicationController
 
     params[:ags].each do |id, ag|
       @ag = @grading.answer_gradings.find(id)
-      puts 'ag', ag, @ag
       unless validate_gradings(@ag, ag)
         invalid_assign = true
         break
@@ -196,11 +198,11 @@ class Assessment::GradingsController < ApplicationController
   def eval_answer
     # Thread.start {
     @submission.answers.coding.each do |ans|
-      qn = ans.qn.specific
+      qn = ans.question.specific
       unless qn.auto_graded?
         next
       end
-      combined_code = PythonEvaluator.combine_code(ans.answer, qn.test_code)
+      combined_code = PythonEvaluator.combine_code([qn.pre_include, ans.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn, true)
       ans.result = result.to_json
       ans.save
@@ -221,7 +223,7 @@ class Assessment::GradingsController < ApplicationController
     end
 
     @submission.answers.each do |sa|
-      qn = sa.qn
+      qn = sa.question
       @summary[:qn_ans][qn.id][:ans] = sa
       # @qadata[:aws][sa.id] = sa
     end
