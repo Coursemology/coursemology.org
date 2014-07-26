@@ -31,8 +31,8 @@ class PythonEvaluator
     full_path
   end
 
-  def self.combine_code(c1, c2)
-    c1 + "\n" + c2
+  def self.combine_code(a)
+    a.join("\n")
   end
 
   def self.eval_python(dir, code, qn, eval = false)
@@ -44,9 +44,9 @@ class PythonEvaluator
              eval:   data["eval"]}
 
     time_limit = qn.time_limit
-    memory_limit = qn.memory_limit * 1024
+    # memory_limit = qn.memory_limit * 1024
     sandbox = File.open(get_sandbox_file, 'r')
-    code = combine_code(sandbox.read, code)
+    code = combine_code([sandbox.read, code])
 
     #if resource_limit
     #  code = combine_code(resource_limit(memory_limit, time_limit), code)
@@ -112,7 +112,7 @@ class PythonEvaluator
         else
           results = print_outs.map{|r| r == "True" ? true : false }
         end
-        File.delete(file_path)
+        # File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)
 
