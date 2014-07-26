@@ -248,9 +248,8 @@ $(document).ready(function() {
         helper: fixHelper
     }).disableSelection();
 
-    $('.team_tooltip').popover({ 
-        trigger: "hover",
-        html: true
+    $('.team_popover').popover({ 
+        trigger: "hover"
     });
 });
 
