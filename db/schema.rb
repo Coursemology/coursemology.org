@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140627064143) do
+ActiveRecord::Schema.define(:version => 20140725034641) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -150,21 +150,25 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   create_table "assessment_answer_grading_logs", :force => true do |t|
     t.integer  "answer_grading_id"
     t.integer  "grader_course_id"
-    t.decimal  "grade",             :precision => 10, :scale => 0
+    t.integer  "grader_id"
+    t.float    "grade"
     t.datetime "deleted_at"
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "assessment_answer_gradings", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "grading_id"
+    t.integer  "grader_id"
     t.integer  "grader_course_id"
-    t.decimal  "grade",            :precision => 10, :scale => 0
+    t.float    "grade"
     t.datetime "deleted_at"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
+
+  add_index "assessment_answer_gradings", ["answer_id", "grading_id"], :name => "index_assessment_answer_gradings_on_answer_id_and_grading_id"
 
   create_table "assessment_answer_options", :force => true do |t|
     t.integer  "answer_id"
@@ -175,31 +179,49 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   end
 
   create_table "assessment_answers", :force => true do |t|
-    t.integer  "assessment_id"
+    t.integer  "as_answer_id"
+    t.string   "as_answer_type"
     t.integer  "submission_id"
     t.integer  "question_id"
     t.integer  "std_course_id"
-    t.text     "answer",        :limit => 16777215
-    t.integer  "attempt_left",                      :default => 0
-    t.boolean  "finalised",                         :default => false
-    t.boolean  "correct",                           :default => false
+    t.text     "content",        :limit => 16777215
+    t.integer  "attempt_left",                       :default => 0
+    t.boolean  "finalised",                          :default => false
+    t.boolean  "correct",                            :default => false
     t.datetime "deleted_at"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
   end
 
-  add_index "assessment_answers", ["assessment_id", "std_course_id"], :name => "index_assessment_answers_on_assessment_id_and_std_course_id"
+  add_index "assessment_answers", ["as_answer_id", "as_answer_type"], :name => "index_on_as_answer", :unique => true
+  add_index "assessment_answers", ["question_id"], :name => "index_assessment_answers_on_question_id"
+  add_index "assessment_answers", ["submission_id", "question_id"], :name => "index_on_answer_submission_question"
+
+  create_table "assessment_coding_answers", :force => true do |t|
+    t.text     "result"
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "assessment_coding_questions", :force => true do |t|
-    t.integer  "dependent_id"
     t.integer  "language_id"
+    t.boolean  "auto_graded"
+    t.text     "tests"
     t.integer  "memory_limit"
     t.integer  "time_limit"
-    t.boolean  "auto_graded"
-    t.text     "data"
+    t.text     "template"
+    t.text     "pre_include"
+    t.text     "append_code"
     t.datetime "deleted_at"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "assessment_general_answers", :force => true do |t|
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "assessment_general_questions", :force => true do |t|
@@ -211,21 +233,32 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   create_table "assessment_grading_logs", :force => true do |t|
     t.integer  "grading_id"
     t.integer  "grader_course_id"
-    t.decimal  "grade",            :precision => 10, :scale => 0
+    t.integer  "grader_id"
+    t.float    "grade"
+    t.integer  "exp"
     t.datetime "deleted_at"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "assessment_gradings", :force => true do |t|
     t.integer  "submission_id"
+    t.integer  "grader_id"
     t.integer  "grader_course_id"
-    t.decimal  "grade",               :precision => 10, :scale => 0
+    t.integer  "std_course_id"
+    t.float    "grade"
+    t.integer  "exp"
     t.integer  "exp_transaction_id"
-    t.boolean  "autograding_refresh",                                :default => false
+    t.boolean  "autograding_refresh", :default => false
     t.datetime "deleted_at"
-    t.datetime "created_at",                                                            :null => false
-    t.datetime "updated_at",                                                            :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+  end
+
+  create_table "assessment_mcq_answers", :force => true do |t|
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "assessment_mcq_options", :force => true do |t|
@@ -248,12 +281,7 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
 
   create_table "assessment_missions", :force => true do |t|
     t.boolean  "file_submission",      :default => false
-    t.boolean  "single_question",      :default => false
     t.boolean  "file_submission_only", :default => false
-    t.boolean  "comment_per_qn",       :default => true
-    t.integer  "dependent_id"
-    t.integer  "display_mode_id"
-    t.datetime "close_at"
     t.datetime "deleted_at"
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
@@ -263,15 +291,19 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
     t.integer  "as_question_id"
     t.string   "as_question_type"
     t.integer  "creator_id"
+    t.integer  "dependent_id"
     t.string   "title"
     t.text     "description"
-    t.decimal  "max_grade",         :precision => 10, :scale => 0
-    t.integer  "test_limit"
-    t.datetime "last_commented_at"
+    t.float    "max_grade"
+    t.integer  "attempt_limit"
+    t.boolean  "file_submission",  :default => false
+    t.text     "staff_comments"
     t.datetime "deleted_at"
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
+
+  add_index "assessment_questions", ["as_question_id", "as_question_type"], :name => "index_on_as_question", :unique => true
 
   create_table "assessment_submissions", :force => true do |t|
     t.integer  "assessment_id"
@@ -286,12 +318,10 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   end
 
   create_table "assessment_trainings", :force => true do |t|
-    t.integer  "bonus_exp"
     t.boolean  "skippable"
-    t.datetime "bonus_cutoff_at"
     t.datetime "deleted_at"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "assessments", :force => true do |t|
@@ -304,13 +334,21 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
     t.text     "description"
     t.integer  "position"
     t.integer  "exp"
-    t.decimal  "max_grade",          :precision => 10, :scale => 0
+    t.float    "max_grade"
     t.boolean  "published"
+    t.boolean  "comment_per_qn",     :default => true
+    t.integer  "dependent_id"
+    t.integer  "display_mode_id"
+    t.integer  "bonus_exp"
+    t.datetime "bonus_cutoff_at"
     t.datetime "open_at"
+    t.datetime "close_at"
     t.datetime "deleted_at"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
+
+  add_index "assessments", ["as_assessment_id", "as_assessment_type"], :name => "index_on_as_assessment", :unique => true
 
   create_table "assignment_display_modes", :force => true do |t|
     t.string "title"
@@ -484,6 +522,12 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   end
 
   add_index "courses", ["creator_id"], :name => "index_courses_on_creator_id"
+
+  create_table "data_maps", :force => true do |t|
+    t.string  "data_type"
+    t.integer "old_data_id"
+    t.integer "new_data_id"
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -982,10 +1026,11 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   end
 
   create_table "programming_languages", :force => true do |t|
-    t.string   "language"
+    t.string   "name"
+    t.string   "codemirror_mode"
     t.string   "version"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "question_assessments", :force => true do |t|
@@ -996,6 +1041,8 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
+
+  add_index "question_assessments", ["question_id", "assessment_id"], :name => "index_on_question_assessment"
 
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
@@ -1116,6 +1163,7 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
   add_index "seen_by_users", ["obj_id", "obj_type"], :name => "index_seen_by_users_on_obj_id_and_obj_type"
   add_index "seen_by_users", ["obj_id"], :name => "index_seen_by_users_on_obj_id"
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
+  add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "user_course_id", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
 
@@ -1350,6 +1398,14 @@ ActiveRecord::Schema.define(:version => 20140627064143) do
 
   add_index "surveys", ["course_id"], :name => "index_surveys_on_course_id"
   add_index "surveys", ["creator_id"], :name => "index_surveys_on_creator_id"
+
+  create_table "system_wide_announcements", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "subject"
+    t.string   "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "tabs", :force => true do |t|
     t.integer  "course_id",   :null => false
