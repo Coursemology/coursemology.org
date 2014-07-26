@@ -56,8 +56,6 @@ class UserCourse < ActiveRecord::Base
 
 
   has_many :seen_assessments, through: :seen_stuff, source: :obj, source_type: "Assessment"
-  # has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: Assessment::Mission
-  # has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: Assessment::Training
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
@@ -76,15 +74,15 @@ class UserCourse < ActiveRecord::Base
   default_scope includes(:course)
 
   def is_student?
-    self.role.name == 'student'
+    self.role && self.role.name == 'student'
   end
 
   def is_lecturer?
-    self.role.name == 'lecturer'
+    self.role && self.role.name == 'lecturer'
   end
 
   def is_ta?
-    self.role.name == 'ta'
+    self.role && self.role.name == 'ta'
   end
 
   def is_staff?
@@ -96,7 +94,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def is_shared?
-    self.role.name == 'shared'
+    self.role && self.role.name == 'shared'
   end
 
   def level_percentage

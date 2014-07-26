@@ -72,16 +72,18 @@
         <%= f.check_box :file_submission_only %> Check to <strong style="color: red">only</strong>  allow file submission
       </div>
     </div>
+
     <div class="control-group">
       <%= f.label "Format", class: 'control-label' %>
       <div class="controls" >
         <div class="checkbox-text">
+          <input name="single_question" type="hidden" value="0">
+          <input name="single_question" type="checkbox" value="<%= @mission.single_question? ? 1 : 0  %>"
+                 data-toggle="collapse"
+                 data-target="#question-types"
+                 id="mission-format-checkbox"
+                 <%= 'checked' if @mission.single_question? %>>
           <label>
-            <%= f.check_box :single_question,
-                            'data-toggle' => "collapse",
-                            'data-target' => '#question-types',
-                            id: "mission-format-checkbox"
-            %>
             Questions are contained in <%= display_name.downcase %> files
           </label>
         </div>

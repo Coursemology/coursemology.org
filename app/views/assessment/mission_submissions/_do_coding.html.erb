@@ -106,7 +106,7 @@
     }
 </style>
 <script>
-    var source_code = <%= answer ? raw(answer.answer.to_json) : raw(JSON.parse(question.data)["prefill"].to_json) %>;
+    var source_code = <%= answer ? raw(answer.content.to_json) : raw(question.template.to_json) %>;
     $('#code_<%= answer.id  %>').val(source_code);
 
 

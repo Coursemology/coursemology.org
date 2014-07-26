@@ -53,7 +53,7 @@ class CourseAbility  < Ability
       # can :view_detail, [Assessment::Mission, Assessment::Training]
       # can :create, Assessment
       # can :bulk_update, Assessment
-      can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission]
+      can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
       can :manage, Course
       can :participate, Course
@@ -66,7 +66,7 @@ class CourseAbility  < Ability
       can :manage, :forum_participation
       can :manage, Tab
 
-      cannot :modify, TrainingSubmission
+      cannot :modify, Assessment::Submission
     end
 
     if user.is_admin? || user_course.is_creator?

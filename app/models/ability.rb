@@ -13,6 +13,7 @@ class Ability
         can :update_role, User
       elsif user.is_lecturer?
         can :manage, Course, creator_id: user.id
+        can :create, Course
       end
     end
   end
