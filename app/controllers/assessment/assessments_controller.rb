@@ -14,7 +14,7 @@ class Assessment::AssessmentsController < ApplicationController
       display_columns[cp.preferable_item.name] = cp.prefer_value
     end
 
-    @assessments = @course.assessments.send(assessment_type).includes(:as_assessment)
+    @assessments = @course.assessments.send(assessment_type)
 
     if selected_tags
       tags = Tag.find(selected_tags)
@@ -36,6 +36,7 @@ class Assessment::AssessmentsController < ApplicationController
         @tab_id='Trainings'
       end
     end
+    @assessments = @assessments.includes(:as_assessment)
 
     if paging.display?
       @assessments = @assessments.accessible_by(current_ability).page(params[:page]).per(paging.prefer_value.to_i)
@@ -112,11 +113,12 @@ class Assessment::AssessmentsController < ApplicationController
     @submissions = @assessment.submissions.includes(:gradings)
     std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
     my_std = curr_user_course.std_courses.student.order(:name).where(is_phantom: false)
+    std_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
 
     if @stats_paging.display?
-      std_courses = @std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
+      std_courses = std_courses.page(params[:page]).per(@stats_paging.prefer_value.to_i)
     end
-    std_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
+
 
     @summary[:stats] = {'My Students' => my_std, "All Students" => std_courses, "Phantom Students" => std_phantom}
   end

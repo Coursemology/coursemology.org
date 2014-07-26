@@ -5,8 +5,6 @@
 <% @summary[:stats].each do |key, stds| %>
     <% if stds.size > 0 or key != 'My Students'%>
         <h3><%= key %></h3>
-
-
         <br>
         <table class="table">
           <thead>
@@ -19,7 +17,7 @@
           </thead>
           <tbody>
           <% stds.each do |std| %>
-              <% sub = @submissions.where(std_course_id: std).first %>
+              <% sub = @submissions.select {|s| s.std_course_id == std.id }.first %>
               <% grade = nil %>
               <tr>
                 <% if sub %>
@@ -31,13 +29,13 @@
                 <% if key != 'My Students' %>
                     <td><%= std.get_my_tutor_name %></td>
                 <% end %>
-                <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
+                <td><%= (sub and sub.status) ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
                 <td><%= grade ? grade.grade : 0 %> / <%= @assessment.max_grade %></td>
               </tr>
           <% end %>
           </tbody>
         </table>
-        <% if @stats_paging.display? %>
+        <% if key == "All Students" and @stats_paging.display? %>
             <%= paginate stds %>
         <% end %>
     <% end %>
