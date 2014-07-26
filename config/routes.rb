@@ -119,8 +119,8 @@ JfdiAcademy::Application.routes.draw do
     resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
       collection do
         get :index, to: 'assessments#index', type: 'training'
-        post 'bulk_update' => 'missions#bulk_update'
-        get 'overview' => 'missions#overview'
+        post 'bulk_update' => 'trainings#bulk_update'
+        get 'overview' => 'trainings#overview'
         get 'stats' => 'trainings#stats'
         get 'submissions' => 'assessments#listall', type: 'training'
       end
