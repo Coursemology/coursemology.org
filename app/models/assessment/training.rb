@@ -2,13 +2,24 @@ class Assessment::Training < ActiveRecord::Base
   acts_as_paranoid
   is_a :assessment, as: :as_assessment, class_name: "Assessment"
 
-  attr_accessible :bonus_cutoff_at, :bonus_exp, :skippable
+  attr_accessible :skippable
+
+  #TODO, fix
+  attr_accessible :exp, :bonus_exp
+  attr_accessible :title, :description
+  attr_accessible :published, :comment_per_qn
+  attr_accessible :open_at, :close_at, :bonus_cutoff_at
+  attr_accessible :tab_id, :display_mode_id, :dependent_id
 
   validates_with DateValidator, fields: [:open_at, :bonus_cutoff_at]
 
-  # def self.reflect_on_association(association)
-  #   super || self.parent.reflect_on_association(association)
-  # end
+  def full_title
+    "#{I18n.t('Assessment.Training')} : #{self.title}"
+  end
+
+  def self.reflect_on_association(association)
+    super || self.parent.reflect_on_association(association)
+  end
   #
   # def self.reflect_on_aggregation(name)
   #   super || self.parent.reflect_on_aggregation(name)
@@ -21,5 +32,4 @@ class Assessment::Training < ActiveRecord::Base
   def get_path
     course_assessment_training_path(self.course, self)
   end
-
 end

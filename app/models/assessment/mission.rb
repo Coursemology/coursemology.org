@@ -4,22 +4,18 @@ class Assessment::Mission < ActiveRecord::Base
 
   include Rails.application.routes.url_helpers
 
-  attr_accessible :close_at
-  attr_accessible :single_question,
-                  :file_submission,
-                  :file_submission_only,
-                  :comment_per_qn
-  attr_accessible :display_mode_id,
-                  :dependent_id
+  attr_accessible :file_submission,
+                  :file_submission_only
 
+  attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn, :dependent_id
+
+
+  #TODO
   validates_with DateValidator, fields: [:open_at, :close_at]
 
-  belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
-
-  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
-
-  # has_many :questions, through: :asm_qns, source: :qn, source_type: "Question", dependent: :destroy
-  # has_many :coding_questions, through: :asm_qns, source: :qn, source_type: "CodingQuestion", dependent: :destroy
+  def full_title
+    "#{I18n.t('Assessment.Mission')} : #{self.title}"
+  end
 
   def attach_files(files)
     files.each do |id|
@@ -35,22 +31,12 @@ class Assessment::Mission < ActiveRecord::Base
     exp
   end
 
-  #TODO
-  def can_start?(curr_user_course)
-    if open_at > Time.now
-      return  false
-    end
-    if dependent_on
-      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
-      if !sbm || sbm.attempting?
-        return false
-      end
-    end
-    true
-  end
-
   def get_path
     course_assessment_mission_path(self.course, self)
+  end
+
+  def single_question?
+    questions.count == 1
   end
 
   def missions_dep_on_published
@@ -72,9 +58,9 @@ class Assessment::Mission < ActiveRecord::Base
     # }
   end
 
-  #TODO
+  #TODO: refactor
+  def self.reflect_on_association(association)
+    super || self.parent.reflect_on_association(association)
+  end
 
-  #TODO
-
-  alias_method :sbms, :submissions
 end
