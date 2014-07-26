@@ -1,7 +1,8 @@
 class Assessment::Grading < ActiveRecord::Base
   acts_as_paranoid
 
-  belongs_to :grader, class_name: UserCourse, foreign_key: :grader_course_id
+  belongs_to :grader, class_name: User
+  belongs_to :grader_course, class_name: UserCourse
   belongs_to :student, class_name: UserCourse, foreign_key: :std_course_id
   belongs_to :exp_transaction
   belongs_to :submission, class_name: Assessment::Submission
@@ -18,7 +19,7 @@ class Assessment::Grading < ActiveRecord::Base
   end
 
   def create_log
-    grading_logs.create({grade: grade, exp: exp, grader_course_id: grader_course_id})
+    grading_logs.create({grade: grade, exp: exp, grader_course_id: grader_course_id, grader_id: grader_id}, :without_protection => true)
   end
 
   def update_grade
@@ -30,7 +31,7 @@ class Assessment::Grading < ActiveRecord::Base
 
     unless self.exp_transaction
       self.exp_transaction = ExpTransaction.new
-      self.exp_transaction.giver = self.grader.user if self.grader
+      self.exp_transaction.giver = self.grader
       self.exp_transaction.user_course = submission.std_course
       self.exp_transaction.reason = "Exp for #{asm.title}"
       self.exp_transaction.is_valid = true
