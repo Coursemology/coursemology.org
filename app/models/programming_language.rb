@@ -1,7 +1,7 @@
 class ProgrammingLanguage < ActiveRecord::Base
-  attr_accessible :language, :version
+  attr_accessible :name, :version, :codemirror_mode
 
-  def name
-    "#{language} #{version}"
+  def title
+    "#{name} #{version}"
   end
 end
