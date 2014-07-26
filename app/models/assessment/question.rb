@@ -2,36 +2,57 @@ class Assessment::Question < ActiveRecord::Base
   acts_as_paranoid
   acts_as_superclass as: :as_question
 
-  attr_accessible :title, :description, :max_grade, :creator_id
+  attr_accessible :creator_id, :dependent_id
+  attr_accessible :title, :description, :max_grade, :attempt_limit, :staff_comments
 
-  belongs_to :creator, class_name: "User"
+  belongs_to  :creator, class_name: "User"
+  belongs_to  :dependent_on, class_name: "Assessment::Question", foreign_key: "dependent_id"
 
   #TODO, dependent: :destroy here
   has_many  :question_assessments, dependent: :destroy
+  has_many  :taggable_tags, as: :taggable, dependent: :destroy
+  has_many  :tags, through: :taggable_tags
   #was std_answers
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
-  #These two are just for mcq question, but the foreign key is question_id
-  has_many  :options, class_name: Assessment::McqOption, dependent: :destroy
   has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
-
-  has_many :taggable_tags, as: :taggable, dependent: :destroy
-  has_many :tags, through: :taggable_tags
-
-  has_one :comment_topic, as: :topic
+  has_one   :comment_topic, as: :topic
 
   before_update :clean_up_description, :if => :description_changed?
   after_update  :update_assessment_grade, if: :max_grade_changed?
+  after_update  :update_attempt_limit, if: :attempt_limit_changed?
 
   #TOFIX
   def get_title
     title && !title.empty? ? title : "Question #{position}"
   end
 
-  #clean up messed html tags
+  #callback methods
+
   def clean_up_description
     self.description = CoursemologyFormatter.clean_code_block(description)
   end
 
+  def update_assessment_grade
+    puts "update grade", self.question_assessments.count
+    self.question_assessments.each do |qa|
+      qa.assessment.update_grade
+    end
+  end
+
+  def update_attempt_limit
+    old_tl = changed_attributes[:attempt_limit] || 0
+    diff = attempt_limit - old_tl
+    if diff != 0
+      Thread.start {
+        answers.each do |sa|
+          sa.attempt_left = [0, sa.attempt_left + diff].max
+          sa.save
+        end
+      }
+    end
+  end
+
+  #proxy methods
   def self.assessments
     Assessment.joins("LEFT JOIN  question_assessments ON question_assessments.assessment_id = assessments.id")
     .where("question_assessments.question_id IN (?)", self.all)
@@ -44,12 +65,5 @@ class Assessment::Question < ActiveRecord::Base
                       WHERE assessment_answers.finalised = 1 and assessment_answers.submission_id = #{sbm.id}
                       GROUP BY  assessment_answers.question_id"
     self.joins("INNER JOIN (#{grouped_answers}) uaaq ON assessment_questions.id = uaaq.question_id")
-  end
-
-  def update_assessment_grade
-    puts "update grade", self.question_assessments.count
-    self.question_assessments.each do |qa|
-      qa.assessment.update_grade
-    end
   end
 end
