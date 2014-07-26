@@ -1,6 +1,5 @@
 class Assessment::MissionSubmissionsController < Assessment::SubmissionsController
   before_filter :authorize, only: [:new, :create, :edit, :update]
-  # before_filter :allow_only_one_submission, only: [:new, :create]
   before_filter :no_update_after_submission, only: [:edit, :update]
 
   def show
@@ -31,13 +30,6 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     @mission = @assessment.as_assessment
     @questions = @assessment.questions
     @submission.build_initial_answers
-    # @std_answers = {}
-    # @std_coding_answers = {}
-    # @submission.std_answers.each { |answer| @std_answers[answer.question_id] = answer }
-    # @submission.std_coding_answers.each { |answer| @std_coding_answers[answer.qn_id] = answer}
-    respond_to do |format|
-      format.html
-    end
   end
 
   def update
@@ -66,7 +58,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   def unsubmit
     @submission.set_attempting
     flash[:notice] = "Successfully unsubmited submission."
-    redirect_to course_mission_submission_path(@course, @mission, @submission)
+    redirect_to course_assessment_submission_path(@course, @mission.assessment, @submission)
   end
 
   def test_answer
@@ -76,10 +68,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       result = {access_error: true, msg: "exceeds maximum testing times"}
     else
       std_answer.attempt_left -= 1
-      std_answer.answer = code
+      std_answer.content = code
       std_answer.save
       qn = std_answer.question
-      combined_code = PythonEvaluator.combine_code(code, qn.specific.test_code)
+      combined_code = PythonEvaluator.combine_code([qn.pre_include, std_answer.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn.specific, false)
     end
     result[:can_test] = std_answer.can_run_test? curr_user_course

@@ -2,7 +2,7 @@ class Assessment::SubmissionsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :assessment, through: :course, class_name: "Assessment"
   load_and_authorize_resource :submission, through: :assessment, class_name: "Assessment::Submission", id_param: "id", except: :new
-  before_filter :load_general_course_data, only: [:index, :show, :new, :create, :edit]
+  before_filter :load_general_course_data, only: [:show, :new, :create, :edit]
 
   before_filter :build_resource, only: :new
 
@@ -18,7 +18,7 @@ class Assessment::SubmissionsController < ApplicationController
       @submission.std_course = curr_user_course
     end
 
-    if @assessment.is_training?
+    if @assessment.is_a?(Assessment::Training)
       @reattempt = @course.training_reattempt
       #continue unfinished training, or go to finished training of can't reattempt
       if sbm && (!sbm.graded? ||  !@reattempt || !@reattempt.display)
