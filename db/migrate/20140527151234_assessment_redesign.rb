@@ -14,30 +14,29 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.integer     :exp
       t.float       :max_grade
       t.boolean     :published
+      t.boolean     :comment_per_qn, default: true
+      t.references  :dependent, index: true
+      t.references  :display_mode
+      t.integer     :bonus_exp
 
+      t.datetime    :bonus_cutoff_at
       t.datetime    :open_at
+      t.datetime    :close_at
       t.datetime    :deleted_at
       t.timestamps
     end
 
     create_table  :assessment_missions do |t|
       t.boolean     :file_submission, default: false
-      t.boolean     :single_question, default: false
       t.boolean     :file_submission_only, default: false
-      t.boolean     :comment_per_qn, default: true
-      t.references  :dependent, index: true
-      t.references  :display_mode
 
-      t.datetime    :close_at
       t.datetime    :deleted_at
       t.timestamps
     end
 
     create_table  :assessment_trainings do |t|
-      t.integer     :bonus_exp
       t.boolean     :skippable
 
-      t.datetime    :bonus_cutoff_at
       t.datetime    :deleted_at
       t.timestamps
     end
@@ -49,29 +48,35 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.string      :as_question_type
 
       t.references  :creator
+      t.references  :dependent, index: true
       t.string      :title
       t.text        :description
       t.float       :max_grade
-      t.integer     :test_limit
+      t.integer     :attempt_limit
+      t.boolean     :file_submission, default: false
+      t.text        :staff_comments
 
       t.datetime  :deleted_at
       t.timestamps
     end
 
     create_table  :assessment_coding_questions do |t|
-      t.references  :dependent
       t.references  :language
+      t.boolean     :auto_graded
+      t.text        :tests
       t.integer     :memory_limit
       t.integer     :time_limit
-      t.boolean     :auto_graded
-      t.text        :data
+      t.text        :template
+      t.text        :pre_include
+      t.text        :append_code
 
       t.datetime  :deleted_at
       t.timestamps
     end
 
     create_table  :programming_languages do |t|
-      t.string  :language
+      t.string  :name
+      t.string  :codemirror_mode
       t.string  :version
 
       t.timestamps
@@ -86,7 +91,7 @@ class AssessmentRedesign < ActiveRecord::Migration
     create_table  :question_assessments do |t|
       t.references :question,   index: true
       t.references :assessment, index: true
-      t.integer     :position
+      t.integer    :position
 
       t.datetime  :deleted_at
       t.timestamps
@@ -123,12 +128,13 @@ class AssessmentRedesign < ActiveRecord::Migration
     end
 
     create_table  :assessment_answers do |t|
-      t.references  :assessment, index: true
+      t.integer     :as_answer_id
+      t.string      :as_answer_type
+
       t.references  :submission, index: true
       t.references  :question,   index: true
       t.references  :std_course, index: true
-      t.text        :answer, limit: 64.kilobytes + 1
-      t.text        :result
+      t.text        :content, limit: 64.kilobytes + 1
       t.integer     :attempt_left, default: 0
       t.boolean     :finalised, default: false
       t.boolean     :correct,   default: false
@@ -137,9 +143,25 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    change_table  :assessment_answers do |t|
-      t.index [:assessment_id, :std_course_id]
+    create_table :assessment_general_answers do |t|
+
+      t.datetime  :deleted_at
+      t.timestamps
     end
+
+    create_table :assessment_mcq_answers do |t|
+
+      t.datetime  :deleted_at
+      t.timestamps
+    end
+
+    create_table :assessment_coding_answers do |t|
+      t.text      :result
+
+      t.datetime  :deleted_at
+      t.timestamps
+    end
+
 
     create_table  :assessment_answer_options do |t|
       t.references  :answer, index: true
@@ -150,7 +172,7 @@ class AssessmentRedesign < ActiveRecord::Migration
     end
 
     create_table  :assessment_gradings  do |t|
-      t.references  :submission
+      t.references  :submission, index: true
       t.references  :grader
       t.references  :grader_course
       t.references  :std_course, index: true
@@ -205,10 +227,6 @@ class AssessmentRedesign < ActiveRecord::Migration
       t.timestamps
     end
 
-    change_table  :taggable_tags do |t|
-      t.index [:taggable_id, :taggable_type]
-    end
-
    create_table :requirable_requirements do |t|
      t.integer  :requirable_id
      t.string   :requirable_type
@@ -218,9 +236,6 @@ class AssessmentRedesign < ActiveRecord::Migration
      t.timestamps
    end
 
-    change_table :requirable_requirements do |t|
-      t.index [:requirable_id, :requirable_type], name: :index_on_requirables
-    end
   end
 
   def down
@@ -244,6 +259,9 @@ class AssessmentRedesign < ActiveRecord::Migration
     drop_table  :programming_languages
     drop_table  :taggable_tags
     drop_table  :requirable_requirements
+    drop_table  :assessment_general_answers
+    drop_table  :assessment_mcq_answers
+    drop_table  :assessment_coding_answers
 
   end
 end
