@@ -8,7 +8,7 @@
           <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
         </div>
         <div style="margin-left: 10px">
-          <%= style_format('[mc]' + ans.answer + '[/mc]', false) %>
+          <%= style_format('[mc]' + ans.content + '[/mc]', false) %>
         </div>
     <% end %>
 <% end %>

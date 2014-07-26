@@ -1,4 +1,5 @@
-<% answers = qn.answers.where(std_course_id: sbm.std_course, submission_id: sbm.id).group_by_options.includes(:options) %>
+<!--TODO:TOFIX-->
+<% answers = qn.specific.mcq_answers(std_course_id: sbm.std_course, submission_id: sbm.id).group_by_options.includes(:options) %>
 
 <strong>Answer attempts</strong>
 <table class="table">
@@ -24,7 +25,6 @@
                 <% end %>
               </ul>
           <% end %>
-
         </td>
         <td><%= ans.count %></td>
         <td><%= time_ago_in_words(ans.created_at) + " ago"  %></td>
