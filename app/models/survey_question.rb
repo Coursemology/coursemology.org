@@ -13,6 +13,10 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :survey_essay_answers, :foreign_key => "question_id"
   has_many :files, through: :options
 
+  amoeba do
+    include_field :options
+  end
+
   def user_answered?(user_course)
     answers = answer_for_user(user_course)
     result = answers

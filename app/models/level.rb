@@ -1,4 +1,5 @@
 class Level < ActiveRecord::Base
+  acts_as_duplicable
   default_scope { order("level ASC") }
 
   include Rails.application.routes.url_helpers

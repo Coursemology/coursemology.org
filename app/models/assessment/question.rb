@@ -1,5 +1,6 @@
 class Assessment::Question < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
   acts_as_superclass as: :as_question
 
   attr_accessible :creator_id, :dependent_id
@@ -65,5 +66,15 @@ class Assessment::Question < ActiveRecord::Base
                       WHERE assessment_answers.finalised = 1 and assessment_answers.submission_id = #{sbm.id}
                       GROUP BY  assessment_answers.question_id"
     self.joins("INNER JOIN (#{grouped_answers}) uaaq ON assessment_questions.id = uaaq.question_id")
+  end
+
+  #overrides
+  def dup
+    s = self.specific
+    d = s.amoeba_dup
+    qn = super
+    d.question = qn
+    qn.as_question = d
+    qn
   end
 end

@@ -1,5 +1,6 @@
 class Assessment::McqQuestion < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
   is_a :question, as: :as_question, class_name: "Assessment::Question"
 
   attr_accessible :creator_id, :dependent_id
@@ -7,6 +8,10 @@ class Assessment::McqQuestion < ActiveRecord::Base
 
   has_many  :options, class_name: Assessment::McqOption, dependent: :destroy, foreign_key: "question_id"
   attr_accessible :select_all
+
+  amoeba do
+    include_field :options
+  end
 
   def mcq_answers(filters)
 

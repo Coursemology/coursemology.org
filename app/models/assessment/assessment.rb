@@ -1,5 +1,6 @@
 class Assessment < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
   #as is for belong_to association
   acts_as_superclass as: :as_assessment
 
@@ -37,7 +38,6 @@ class Assessment < ActiveRecord::Base
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
   has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
-
   has_many  :question_assessments
   has_many  :questions, through: :question_assessments do
     def coding
@@ -62,6 +62,8 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  has_many :tags, through: :questions
+
   has_many  :general_questions, class_name: "Assessment::GeneralQuestion",
             through: :questions,
             source: :as_question, source_type: "Assessment::GeneralQuestion"
@@ -77,8 +79,9 @@ class Assessment < ActiveRecord::Base
   has_many  :submissions, class_name: "Assessment::Submission",dependent: :destroy, foreign_key: "assessment_id"
 
   amoeba do
-    clone [:questions, :as_requirements]
-    include_field [:questions, :as_requirements]
+    clone [:questions]
+    include_field [:questions, :as_asm_reqs]
+    # as_requirements
   end
 
   after_save  :after_save_asm

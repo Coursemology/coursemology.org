@@ -1,5 +1,6 @@
 class Tag < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
 
   attr_accessible :course_id, :description, :icon_url, :max_exp, :name, :tag_group_id
 
@@ -13,8 +14,10 @@ class Tag < ActiveRecord::Base
   has_many :taggable_tags, dependent: :destroy
 
   has_many :questions, through: :taggable_tags, source: :taggable, source_type: "Assessment::Question"
-  has_many :trainings, through: :asm_tags, source: :asm, source_type: "Training"
-  has_many :missions, through: :asm_tags, source: :asm, source_type: "Mission"
+
+  amoeba do
+    include_field :taggable_tags
+  end
 
   before_create :init
 

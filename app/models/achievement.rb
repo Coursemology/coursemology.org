@@ -1,5 +1,6 @@
 class Achievement < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
 
   include Rails.application.routes.url_helpers
   include ActivityObject

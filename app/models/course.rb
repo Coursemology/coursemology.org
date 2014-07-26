@@ -1,5 +1,6 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
 
   # default_scope -> { where("courses.is_pending_deletion = 0 ") }
 
@@ -18,6 +19,7 @@ class Course < ActiveRecord::Base
   has_many  :levels, dependent: :destroy
   has_many  :achievements, dependent: :destroy
   has_many  :assessments, dependent: :destroy
+  has_many  :questions, through: :assessments
   has_many  :lesson_plan_milestones, dependent: :destroy
   has_many  :lesson_plan_entries, dependent: :destroy
   has_one   :root_folder, dependent: :destroy, conditions: { parent_folder_id: nil }, class_name: "MaterialFolder"
@@ -25,6 +27,7 @@ class Course < ActiveRecord::Base
   has_many  :comics, dependent: :destroy
   has_many  :tag_groups, dependent: :destroy
   has_many  :tags, dependent: :destroy
+  has_many  :taggable_tags, through: :tags
   has_many  :surveys, dependent: :destroy
   has_many  :forums, dependent: :destroy, class_name: 'ForumForum'
   has_many  :tabs, dependent: :destroy
@@ -44,9 +47,14 @@ class Course < ActiveRecord::Base
             source: :as_assessment, source_type: "Assessment::Training"
 
   amoeba do
-    include_field [:levels, :achievements, :trainings, :missions, :lesson_plan_milestones,
-                   :lesson_plan_entries, :material_folders, :comics, :tag_groups,
+    include_field [:levels, :assessments, :achievements, :lesson_plan_milestones,
+                   :lesson_plan_entries, :root_folder, :comics, :tag_groups,
                    :surveys, :forums, :tabs, :course_preferences, :course_navbar_preferences]
+    prepend :title => "Clone: "
+    set :is_publish => false
+
+    #course_navbar_preferences
+    # course_preferences
   end
 
   #user related
@@ -226,8 +234,12 @@ class Course < ActiveRecord::Base
   end
 
   def paging_pref(page)
-    paging = self.course_preferences.join_items.paging
+    paging = paging_prefs
     paging.item_type(page.pluralize).first || paging.item_type(page).first ||(raise page + " has no paging preference")
+  end
+
+  def paging_prefs
+    self.course_preferences.join_items.paging
   end
 
   def training_reattempt
@@ -337,6 +349,7 @@ class Course < ActiveRecord::Base
   end
 
   def populate_preference
+    puts "populate_preference populate_preference"
     course_preferences.each do |pref|
       item = PreferableItem.find_by_id(pref.preferable_item_id)
       unless item

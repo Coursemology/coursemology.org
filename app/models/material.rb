@@ -7,7 +7,8 @@ class Material < ActiveRecord::Base
   attr_accessible :folder, :description, :filename
   after_save :save_file
 
-  validate :material_filename_unique
+  #TODO, TOFIX
+  # validate :material_filename_unique
 
   def save_file
     if self.file then
