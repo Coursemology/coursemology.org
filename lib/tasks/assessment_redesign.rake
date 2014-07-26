@@ -98,11 +98,16 @@ namespace :db do
         r["time_limit"] = data.delete("timeLimitInSec")
         r["attempt_limit"] = data.delete("testLimit")
         r["template"] = data.delete("prefill")
-        r["pre_include"] = data.delete("included")
+        r["append_code"] = data.delete("included")
         data.delete("type")
         data.delete("language")
+        data["private"] = data.delete("privateTests") || []
+        data["public"] = data.delete("publicTests") || []
+        data["eval"] = data.delete("evalTests") || []
         r["language_id"] = ProgrammingLanguage.first.id
-        r["data"] = JSON.generate(data)
+        r["tests"] = JSON.generate(data)
+        r.delete("data")
+
 
         new_qn = Assessment::CodingQuestion.create!(r, :without_protection => true)
         QuestionAssessment.create!({ assessment_id: new_asm_id,
@@ -119,6 +124,14 @@ namespace :db do
       sql = "UPDATE assessment_questions AS aq
               INNER JOIN data_maps dm ON aq.dependent_id = dm.old_data_id and dm.data_type = 'CodingQuestion'
               SET aq.dependent_id = dm.new_data_id"
+      ActiveRecord::Base.connection.execute(sql)
+      #update training coding questions to be auto graded
+      sql = "UPDATE assessment_coding_questions acq
+            INNER JOIN assessment_questions aq
+            ON acq.id = aq.as_question_id and aq.as_question_type = 'Assessment::CodingQuestion'
+            INNER JOIN question_assessments qa ON qa.question_id = aq.id
+            INNER JOIN assessments a ON a.id = qa.assessment_id and a.as_assessment_type = 'Assessment::Training'
+            SET acq.auto_graded = 1"
       ActiveRecord::Base.connection.execute(sql)
     end
 
@@ -163,8 +176,19 @@ namespace :db do
 
         DataMap.create({data_type: 'Mission', old_data_id: attrs['id'], new_data_id: new_mission.assessment.id},
                        :without_protection => true)
+        # dir = "#{Rails.root}/Mission/#{attrs['id']}/files/"
+        # if Dir.exist?(dir)
+        #   Dir.foreach(dir) do |item|
+        #     next if item == '.' or item == '..'
+        #
+        #
+        #   end
+        # end
       end
 
+      # def self.get_asm_file_path(assign)
+      #   "#{Rails.root}/#{assign.class.to_s}/#{assign.id}/files/"
+      # end
     end
 
     def migrate_trainings
@@ -208,6 +232,16 @@ namespace :db do
         DataMap.create({data_type: 'Training', old_data_id: attrs['id'], new_data_id: new_training.assessment.id },
                        :without_protection => true)
       end
+
+      #fix dependency
+      sql = "UPDATE assessments AS aq
+              INNER JOIN data_maps dm ON aq.dependent_id = dm.old_data_id and dm.data_type = 'Mission'
+              SET aq.dependent_id = dm.new_data_id"
+      ActiveRecord::Base.connection.execute(sql)
+
+      #fix tabs
+      sql = "UPDATE tabs set owner_type = 'Assessment::Training' where owner_type = 'Training'"
+      ActiveRecord::Base.connection.execute(sql)
     end
 
     def migrate_mission_sbms
@@ -426,7 +460,7 @@ namespace :db do
             (SELECT sa.*, dm.new_data_id as new_qn_id FROM std_mcq_all_answers sa
               INNER JOIN data_maps dm
               ON dm.old_data_id = sa.mcq_id and dm.data_type = 'Mcq') sqa
-            ON sba.answer_id = sqa.id and sba.answer_type = 'StdMcqAnswer'
+            ON sba.answer_id = sqa.id and sba.answer_type = 'StdMcqAllAnswer'
             INNER JOIN
             (SELECT s.*, dms.new_data_id as new_sbm_id from training_submissions s INNER JOIN data_maps dms ON dms.old_data_id = s.id and dms.data_type = 'TrainingSubmission') ss
             ON ss.id = sba.sbm_id and sba.sbm_type = 'TrainingSubmission'"
@@ -646,6 +680,91 @@ namespace :db do
       migrate_missing_ag
     end
 
+    def migrate_seen_by_user
+      #assessments
+      sql = "UPDATE seen_by_users AS sbu INNER JOIN data_maps dm ON
+              dm.old_data_id = sbu.obj_id AND dm.data_type = sbu.obj_type
+              SET sbu.obj_id = dm.new_data_id, sbu.obj_type = 'Assessment'
+              WHERE dm.data_type = 'Mission' OR dm.data_type = 'Training'"
+      ActiveRecord::Base.connection.execute(sql)
+
+      #submissions
+      sql = "UPDATE seen_by_users AS sbu INNER JOIN data_maps dm ON
+              dm.old_data_id = sbu.obj_id AND dm.data_type = sbu.obj_type
+              SET sbu.obj_id = dm.new_data_id, sbu.obj_type = 'Assessment::Submission'
+              WHERE dm.data_type = 'Submission' OR dm.data_type = 'TrainingSubmission'"
+      ActiveRecord::Base.connection.execute(sql)
+
+    end
+
+    def migrate_files_ownership
+      sql ="UPDATE file_uploads as fu INNER JOIN data_maps dm ON
+            dm.old_data_id = fu.owner_id AND dm.data_type = fu.owner_type
+            SET owner_id = new_data_id, owner_type = 'Assessment'
+            WHERE owner_type IN ('Mission', 'Training')"
+      ActiveRecord::Base.connection.execute(sql)
+
+      sql = "UPDATE file_uploads as fu INNER JOIN data_maps dm ON
+            dm.old_data_id = fu.owner_id AND dm.data_type = fu.owner_type
+            SET owner_id = new_data_id, owner_type = 'Assessment::Submission'
+            WHERE data_type = 'Submission'"
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
+    def migrate_other_affected_components
+      #questions
+      sql = comment_query('comment_topics',{id: "topic_id", type: "topic_type"} ,'Assessment::Question', ['CodingQuestion', 'Mcq'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comment_subscriptions',{id: "topic_id", type: "topic_type"}, 'Assessment::Question', ['CodingQuestion', 'Mcq'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comments',{id: "commentable_id", type: "commentable_type"}, 'Assessment::Question', ['CodingQuestion', 'Mcq'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('pending_comments',{id: "answer_id", type: "answer_type"}, 'Assessment::Question', ['CodingQuestion', 'Mcq'])
+      ActiveRecord::Base.connection.execute(sql)
+      #answers
+
+      old_types = ['StdAnswer', 'StdCodingAnswer']
+      new_type = 'Assessment::Answer'
+      sql = comment_query('comment_topics',{id: "topic_id", type: "topic_type"} ,new_type, old_types)
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comment_subscriptions',{id: "topic_id", type: "topic_type"} ,new_type, old_types)
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comments',{id: "commentable_id", type: "commentable_type"}, new_type, old_types)
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('annotations',{id: "annotable_id", type: "annotable_type	"}, new_type, old_types)
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('pending_comments',{id: "answer_id", type: "answer_type"}, new_type, old_types)
+      ActiveRecord::Base.connection.execute(sql)
+
+      #assessments
+      sql = comment_query('comment_topics', {id: "topic_id", type: "topic_type"},'Assessment::Submission', ['Submission'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comment_subscriptions', {id: "topic_id", type: "topic_type"},'Assessment::Submission', ['Submission'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('comments', {id: "commentable_id", type: "commentable_type"},'Assessment::Submission', ['Submission'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('pending_actions', {id: "item_id", type: "item_type"},'Assessment', ['Training', 'Mission'])
+      ActiveRecord::Base.connection.execute(sql)
+      sql = comment_query('activities', {id: "obj_id", type: "obj_type"},'Assessment', ['Training', 'Mission'])
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
+    def comment_query(table, key, new_type, old_types)
+      "UPDATE #{table} as ct INNER JOIN data_maps dm ON
+              dm.old_data_id = ct.#{key[:id]} AND dm.data_type = ct.#{key[:type]}
+              SET #{key[:id]} = new_data_id, #{key[:type]} = '#{new_type}'
+              WHERE #{key[:type]} IN (#{old_types.map(&:inspect).join(",")})"
+    end
+
+    def update_activity_link
+      Activity.all.each do |a|
+        if a.obj_type == 'Assessment'
+          a.obj_url = a.obj.get_path
+          a.save
+        end
+      end
+    end
+
     t_1 = Time.now
     t = Time.now
     migrate_missions
@@ -670,6 +789,10 @@ namespace :db do
     puts "Finished fix mcq answer, took: ", (Time.now - t)
     migrate_tags
     migrate_requirements
+    migrate_seen_by_user
+    migrate_files_ownership
+    migrate_other_affected_components
+    update_activity_link
     puts "Total Time: ", (Time.now - t_1)
   end
 end
