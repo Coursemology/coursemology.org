@@ -65,7 +65,7 @@ class CoursesController < ApplicationController
       elsif params[:course_owner]
         format.json {render json:  {course:@course, owner: @course.creator.name } }
       elsif @course.update_attributes(params[:course])
-        format.html { redirect_to edit_course_path(@course),
+        format.html { redirect_to course_preferences_path(@course),
                                   notice: 'Course setting has been updated.' }
       else
         format.html { render action: "edit" }
