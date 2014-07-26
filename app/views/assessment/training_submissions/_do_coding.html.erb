@@ -1,7 +1,7 @@
 <div id="ruler">&nbsp;</div>
 <div class="page_subtitles"><%= question.title %></div>
 <div class="page_subtitle_line"></div>
-<h3>Step Task Description</h3>
+<h3>Description</h3>
 <!--<div class="step_description">-->
   <div>
   <%= style_format(question.description) %>
@@ -30,7 +30,10 @@
 <% end %>
 <h3>Your Answer</h3>
 <div class="path_cm_txtbox cos_code">
-  <textarea name="ans" id="ans"><%= @prefilled_code %></textarea>
+  <textarea name="ans" id="ans" render="code"
+            language="<%= question.language.codemirror_mode %>"
+            version="<%= question.language.version %>">
+    <%= prefilled %></textarea>
 </div>
 <br/>
 

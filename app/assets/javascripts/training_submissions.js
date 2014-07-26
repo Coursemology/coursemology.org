@@ -55,30 +55,11 @@ $(document).ready(function(){
         }
     });
     $("#pathrun").bind("click",submitCode);
-    if(document.getElementById("ans")) {
-        var pathcm;
-        pathcm = CodeMirror.fromTextArea(document.getElementById("ans"), {
-            mode: {name: "python",
-                version: 3,
-                singleLineStringErrors: false},
-            lineNumbers: true,
-            indentUnit: 4,
-            tabMode: "shift",
-            matchBrackets: true,
-            theme:"molokai",
-            extraKeys: {
-                "Tab": function(){
-                    pathcm.replaceSelection("    " , "end");
-                }
-            }
-        });
-        $(document).keydown(function(evt){
-            if(evt.altKey && evt.which == 82){
-                submitCode();
-            }
-        });
-    };
-
+    $(document).keydown(function(evt){
+        if(evt.altKey && evt.which == 82){
+            submitCode();
+        }
+    });
 
     var running = false;
     function submitCode(){
@@ -95,7 +76,7 @@ $(document).ready(function(){
         var passcolor = {backgroundColor: "#008000"};
         $.get(update_url,
             {
-                code: pathcm.getValue(),
+                code: $("#ans").val(),
                 step: step,
                 qid: qid
             },
