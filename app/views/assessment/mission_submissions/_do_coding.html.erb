@@ -48,7 +48,7 @@
         <br>
         <div id="eval-result-<%= answer.id %>" style="font-size: 14px;padding-left: 10px">
         </div>
-    <% elsif qn.is_auto_grading?  %>
+    <% elsif question.auto_graded?  %>
         <h3>Auto Grading Summary</h3>
         <% if question.data_hash["public"].length > 0 %>
             <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Public Tests",
