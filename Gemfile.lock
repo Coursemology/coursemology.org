@@ -130,10 +130,7 @@ GEM
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
-<<<<<<< HEAD
     debug_inspector (0.0.2)
-=======
->>>>>>> 4a5ad54eb7b17bd853dccc0cc70ffe81be0dce68
     debugger (1.6.8)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -191,6 +188,8 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    haml (4.0.5)
+      tilt
     hashie (2.1.1)
     hike (1.2.3)
     htmlentities (4.3.1)
@@ -446,6 +445,7 @@ DEPENDENCIES
   google_visualr (>= 2.1)
   guard-rspec
   guard-spork
+  haml
   htmlentities
   jqtree-rails
   jquery-fileupload-rails

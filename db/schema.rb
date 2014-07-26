@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140725034641) do
+ActiveRecord::Schema.define(:version => 20140723210136) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -168,8 +168,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "updated_at",       :null => false
   end
 
-  add_index "assessment_answer_gradings", ["answer_id", "grading_id"], :name => "index_assessment_answer_gradings_on_answer_id_and_grading_id"
-
   create_table "assessment_answer_options", :force => true do |t|
     t.integer  "answer_id"
     t.integer  "option_id"
@@ -192,10 +190,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
   end
-
-  add_index "assessment_answers", ["as_answer_id", "as_answer_type"], :name => "index_on_as_answer", :unique => true
-  add_index "assessment_answers", ["question_id"], :name => "index_assessment_answers_on_question_id"
-  add_index "assessment_answers", ["submission_id", "question_id"], :name => "index_on_answer_submission_question"
 
   create_table "assessment_coding_answers", :force => true do |t|
     t.text     "result"
@@ -303,8 +297,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "updated_at",                          :null => false
   end
 
-  add_index "assessment_questions", ["as_question_id", "as_question_type"], :name => "index_on_as_question", :unique => true
-
   create_table "assessment_submissions", :force => true do |t|
     t.integer  "assessment_id"
     t.integer  "std_course_id"
@@ -347,8 +339,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
   end
-
-  add_index "assessments", ["as_assessment_id", "as_assessment_type"], :name => "index_on_as_assessment", :unique => true
 
   create_table "assignment_display_modes", :force => true do |t|
     t.string "title"
@@ -1042,8 +1032,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "question_assessments", ["question_id", "assessment_id"], :name => "index_on_question_assessment"
-
   create_table "questions", :force => true do |t|
     t.integer  "creator_id"
     t.text     "description"
@@ -1084,8 +1072,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end
-
-  add_index "requirable_requirements", ["requirable_id", "requirable_type"], :name => "index_on_requirables"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"
@@ -1163,7 +1149,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
   add_index "seen_by_users", ["obj_id", "obj_type"], :name => "index_seen_by_users_on_obj_id_and_obj_type"
   add_index "seen_by_users", ["obj_id"], :name => "index_seen_by_users_on_obj_id"
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
-  add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "user_course_id", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
 
@@ -1438,8 +1423,6 @@ ActiveRecord::Schema.define(:version => 20140725034641) do
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
-
-  add_index "taggable_tags", ["taggable_id", "taggable_type"], :name => "index_taggable_tags_on_taggable_id_and_taggable_type"
 
   create_table "tags", :force => true do |t|
     t.string   "name"
