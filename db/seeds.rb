@@ -730,7 +730,8 @@ end
 
 
 if ProgrammingLanguage.count == 0
-  ProgrammingLanguage.create! language: "Python",
+  ProgrammingLanguage.create! name: "Python",
+                              codemirror_mode: "python",
                               version:  "3.3"
 
 end
