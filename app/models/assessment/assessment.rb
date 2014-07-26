@@ -3,19 +3,18 @@ class Assessment < ActiveRecord::Base
   #as is for belong_to association
   acts_as_superclass as: :as_assessment
 
+  delegate :full_title, to: :as_assessment
+
   include Rails.application.routes.url_helpers
 
   default_scope { order("assessments.open_at") }
 
-  attr_accessible   :open_at,:close_at, :exp
-  attr_accessible   :title, :description, :tab_id
-  attr_accessible   :published
+  attr_accessible :exp, :bonus_exp
+  attr_accessible :title, :description
+  attr_accessible :published, :comment_per_qn
+  attr_accessible :open_at, :close_at, :bonus_cutoff_at
+  attr_accessible :tab_id, :display_mode_id, :dependent_id
 
-  #mission
-  delegate :dependent_id, :can_start?, :file_submission?, :file_submission_only?, :comment_per_qn?, to: :as_assessment
-
-  #training
-  delegate :bonus_exp, :bonus_cutoff_at, :get_path, to: :as_assessment
 
   include HasRequirement
   include ActivityObject
@@ -25,17 +24,19 @@ class Assessment < ActiveRecord::Base
   scope :opened, -> { where("open_at <= ? ", Time.now) }
   scope :future, -> { where("open_at > ? ", Time.now) }
   scope :published, -> { where(published: true) }
-  scope :mission, -> {where(as_assessment_type: "Assessment::Mission")}
-  scope :training, -> {where(as_assessment_type: "Assessment::Training")}
+  scope :mission, -> { where(as_assessment_type: "Assessment::Mission") }
+  scope :training, -> { where(as_assessment_type: "Assessment::Training") }
 
   belongs_to  :tab
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
+  belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
+  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
 
-  has_many  :required_for, class_name: "Assessment::Mission", foreign_key: 'dependent_id'
+  has_many  :required_for, class_name: "Assessment", foreign_key: 'dependent_id'
+  has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
+  has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
-  has_many :as_asm_reqs, class_name: RequirableRequirement, as: :requirable, dependent: :destroy
-  has_many :as_requirements, through: :as_asm_reqs
 
   has_many  :question_assessments
   has_many  :questions, through: :question_assessments do
@@ -69,18 +70,18 @@ class Assessment < ActiveRecord::Base
             through: :question_assessments,
             source: :question,
             conditions: {as_question_type: "Assessment::McqQuestion"}
+  has_many  :files, as: :owner, class_name: "FileUpload", dependent: :destroy
 
+  has_many  :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
+  has_many  :pending_actions, as: :item, dependent: :destroy
+  has_many  :submissions, class_name: "Assessment::Submission",dependent: :destroy, foreign_key: "assessment_id"
 
-  #tags through question tags
-  has_many :taggable_tags, as: :taggable, dependent: :destroy
-  has_many :tags, through: :taggable_tags
+  amoeba do
+    clone [:questions, :as_requirements]
+    include_field [:questions, :as_requirements]
+  end
 
-  has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
-  has_many :pending_actions, as: :item, dependent: :destroy
-  has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
-  has_many :submissions, class_name: "Assessment::Submission",dependent: :destroy, foreign_key: "assessment_id"
-
-  after_save :after_save_asm
+  after_save  :after_save_asm
   before_update :clean_up_description, :if => :description_changed?
 
   #was get title
@@ -88,19 +89,13 @@ class Assessment < ActiveRecord::Base
   def self.submissions
     Assessment::Submission.where(assessment_id: self.all)
   end
-  def title_with_type
-    to_translate = self.as_assessment.class == Assessment::Mission ?
-        'Assessment.Mission' : 'Assessment.Training'
-    "#{I18n.t(to_translate)} : #{self.title}"
-  end
 
   def get_title
-    title_with_type
+    full_title
   end
 
   def update_grade
-    self.max_grade = self.questions.sum(&:max_grade)
-    self.save
+    self.update_attribute(:max_grade, self.questions.sum(&:max_grade))
   end
 
   def get_all_questions
@@ -117,6 +112,10 @@ class Assessment < ActiveRecord::Base
 
   def is_training?
     as_assessment_type == "Assessment::Training"
+  end
+
+  def single_question?
+    questions.count == 1
   end
 
   def last_submission(user_course_id)
@@ -143,16 +142,20 @@ class Assessment < ActiveRecord::Base
     end
   end
 
+  def get_path
+    is_mission? ?
+        course_assessment_mission_path(self.course, self.specific) :
+        course_assessment_training_path(self.course, self.specific)
+  end
+
   def as_lesson_plan_entry
     entry = LessonPlanEntry.create_virtual
     entry.title = self.title
     entry.description = self.description
-    entry.entry_real_type = is_mission? ? "Mission" : "Training"
+    entry.entry_real_type = course.customized_title(is_mission? ? "Mission" : "Training")
     entry.start_at = self.open_at
     entry.end_at = self.close_at  if self.respond_to? :close_at
-    entry.url = is_mission? ?
-        course_assessment_mission_path(self.course, self.specific) :
-        course_assessment_training_path(self.course, self.specific)
+    entry.url = get_path
     entry.is_published = self.published
     entry
   end
@@ -167,6 +170,21 @@ class Assessment < ActiveRecord::Base
     end
     self.save
   end
+
+  #TODO
+  def can_start?(curr_user_course)
+    if open_at > Time.now
+      return  false
+    end
+    if dependent_on
+      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
+      if !sbm || sbm.attempting?
+        return false
+      end
+    end
+    true
+  end
+
 
   #TODO
   def update_tags(all_tags = [])
@@ -256,4 +274,12 @@ class Assessment < ActiveRecord::Base
     #TODO
   end
 
+  def dup
+    s = self.specific
+    d = s.dup
+    asm = super
+    d.assessment = asm
+    asm.as_assessment = d
+    asm
+  end
 end
