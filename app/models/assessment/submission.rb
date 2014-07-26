@@ -2,18 +2,31 @@ class Assessment::Submission < ActiveRecord::Base
   acts_as_paranoid
 
   scope :mission_submissions, -> {
-        joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
-            where("assessments.as_assessment_type = 'Assessment::Mission'") }
+    joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
+        where("assessments.as_assessment_type = 'Assessment::Mission'") }
 
   scope :training_submissions, -> {
-        joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
-            where("assessments.as_assessment_type = 'Assessment::Training'") }
+    joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
+        where("assessments.as_assessment_type = 'Assessment::Training'") }
 
   scope :graded, -> { where(status: 'graded') }
 
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
   has_many :answers, class_name: Assessment::Answer, dependent: :destroy
+
+  has_many :general_answers, class_name: "Assessment::GeneralAnswer",
+           through: :answers,
+           source: :as_answer, source_type: "Assessment::GeneralAnswer"
+
+  has_many :coding_answers, class_name: "Assessment::CodingAnswer",
+           through: :answers,
+           source: :as_answer, source_type: "Assessment::CodingAnswer"
+
+  has_many :mcq_answers, class_name: "Assessment::McqAnswer",
+           through: :answers,
+           source: :as_answer, source_type: "Assessment::McqAnswer"
+
 
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
@@ -103,10 +116,6 @@ class Assessment::Submission < ActiveRecord::Base
     self.status == 'graded'
   end
 
-  def get_asm
-    self.training
-  end
-
   def get_path
     course_assessment_submission_path(course, assessment, self)
   end
@@ -135,11 +144,23 @@ class Assessment::Submission < ActiveRecord::Base
   def build_initial_answers
     self.assessment.questions.includes(:as_question).each do |qn|
       unless self.answers.find_by_question_id(qn.id)
-        ans = self.answers.build({std_course_id: std_course_id,
-                                  question_id: qn.id,
-                                  answer: "",
-                                  attempt_left: qn.as_question.test_limit})
-        ans.save
+        case
+          when qn.is_a?(Assessment::GeneralQuestion)
+            ans_class = Assessment::GeneralAnswer
+          when qn.is_a?(Assessment::CodingQuestion)
+            ans_class = Assessment::CodingAnswer
+          when qn.is_a?(Assessment::McqQuestion)
+            ans_class = Assessment::McqQuestion
+          else
+            ans_class = Assessment::GeneralAnswer
+        end
+
+        ans_class.create!({std_course_id: std_course_id,
+                           question_id: qn.id,
+                           #TODO, a acts_as_relation bug, parent can access children attributes, but respond_to return false
+                           content: qn.specific.respond_to?(:template) ? qn.template : nil,
+                           submission_id: self.id,
+                           attempt_left: qn.attempt_limit})
       end
     end
   end
@@ -148,8 +169,8 @@ class Assessment::Submission < ActiveRecord::Base
     answers =  params[:answers] || []
 
     answers.each do |qid, ans|
-      sa = self.answers.where(question_id: qid).first || self.answers.build({question_id: qid, std_course_id: std_course_id})
-      sa.answer = ans
+      sa = self.answers.find_by_question_id(qid)
+      sa.content = ans
       sa.save
     end
 
