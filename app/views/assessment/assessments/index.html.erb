@@ -62,7 +62,7 @@
           <% end %>
           <% if to_display.include? 'tag' %>
               <td>
-                <% ast.tags.each do |tag| %>
+                <% ast.tags.uniq.each do |tag| %>
                     <%= link_to course_tag_path(@course, tag) do %>
                         <span class="label label-info"><%= tag.name %></span>
                     <% end %>
