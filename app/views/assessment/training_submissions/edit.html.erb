@@ -40,7 +40,7 @@
       <% if @summary[:current].class == Assessment::McqQuestion %>
           <%= render partial:"do_mcq", locals: {mcq: @summary[:current]} %>
       <% elsif @summary[:current].class == Assessment::CodingQuestion %>
-          <%= render partial:"do_coding", locals: {question: @summary[:current]} %>
+          <%= render partial:"do_coding", locals: {question: @summary[:current], prefilled: @summary[:prefilled]} %>
       <% end %>
 
       <div class="form-actions">
