@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
+  before_filter :load_general_course_data, only: [:show, :students, :pending_gradings, :manage_students]
 
   def index
     @courses = Course.online_course

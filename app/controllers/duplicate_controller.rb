@@ -113,7 +113,7 @@ class DuplicateController < ApplicationController
       flash[:notice] = "The course '#{@course.title}' has been duplicated."
       format.html { redirect_to edit_course_path(clone) }
 
-      format.json {render json: {url: edit_course_path(clone)} }
+      format.json {render json: {url: course_preferences_path(clone)} }
     end
   end
 
