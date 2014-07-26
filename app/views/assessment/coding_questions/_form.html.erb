@@ -2,7 +2,7 @@
                     html: { class: 'form-horizontal'}  do |f| %>
 
     <%= f.input :title %>
-    <%= f.association :language, label_method: :name, value_method: :id, include_blank: false %>
+    <%= f.association :language, label_method: :title, value_method: :id, include_blank: false %>
     <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
     <%= f.association :dependent_on,
                       collection: @assessment.questions.coding.before(@question.question, @assessment.questions.count),
@@ -13,23 +13,16 @@
     <%= f.input :auto_graded, as: :boolean, inline_label: "Check to enable auto-grading",
                 wrapper_html: {class: "#{'hidden' unless @assessment.is_mission?}"},
                 input_html: {"data-toggle" => "collapse", "data-target" => "#auto-grading-setting"}  %>
-    <!--TODO: comments not loaded -->
-    <% if @question.persisted? %>
-        <div class="control-group">
-          <label class="control-label">Comments (staff only)</label>
-          <div class="controls span7">
-            <% require 'digest/md5' %>
-            <% ecid =  Digest::MD5.hexdigest(@question.id.to_s) %>
-            <%= render partial: "comments/list",
-                       locals: { comments:  CommentTopic.comments_to_json(@question.question.comment_topic, curr_user_course),
-                                 target:    @question.question,
-                                 header:    '',
-                                 ecid:      ecid
-                       } %>
-          </div>
-        </div>
-    <% end %>
 
+    <%= f.input :staff_comments, as: :text, input_html:{class: "span7 text-area", rows:5}  %>
+
+    <div class="cos_code path-code">
+      <%= f.input :template, as: :text, input_html: { class: "span7",
+                                                      rows: "4",
+                                                      render: 'code',
+                                                      language: @question.language.codemirror_mode,
+                                                      version: @question.language.version} %>
+    </div>
     <div id="auto-grading-setting" class="collapse <%= @question.auto_graded? ? "in" : "out" %>">
       <h3>Options</h3>
 
@@ -37,13 +30,23 @@
       <%= f.input :time_limit,label: "Time Limit (secs)", as: :integer, input_html: {class: "number_field input-mini"}  %>
 
       <% if @assessment.is_mission? %>
-          <%= f.input :test_limit,label: "Test Limit (times)", as: :integer, input_html: {class: "number_field input-mini"}  %>
+          <%= f.input :attempt_limit, label: "Test Limit (times)", as: :integer, input_html: {class: "number_field input-mini"}  %>
       <% end %>
+
 
       <div id="pathstep_content">
         <div class="cos_code path-code" id="path_dooptions">
-          <div>Pre-filled code:</div><textarea  rows="4" id="prefilled"></textarea>
-          <div>Included code (optional, hidden):</div><textarea  rows="2" id="included"></textarea> <br />
+          <div>Pre-include (optional, hidden, inserted before student's code): </div>
+          <%= f.input_field :pre_include, as: :text, rows: "4",
+                            render: 'code',
+                            language: @question.language.codemirror_mode,
+                            version: @question.language.version %>
+          <div>Appended code (optional, hidden, appened after student's code):</div>
+          <%= f.input_field :append_code, as: :text, rows: "4",
+                            render: 'code',
+                            language: @question.language.codemirror_mode,
+                            version: @question.language.version %>
+          <br />
         </div>
 
         <div id="path_testcases">
@@ -53,7 +56,7 @@
         </div>
       </div>
     </div>
-    <%= f.hidden_field :data, id: "coding_question_data" %>
+    <%= f.hidden_field :tests, id: "coding_question_data" %>
     <%= f.button :form_submit, id:"saveCQ", cancel: :back %>
     <%= render :partial => "layouts/html_editor" %>
 <% end %>
