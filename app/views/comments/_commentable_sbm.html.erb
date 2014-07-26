@@ -1,5 +1,5 @@
 <% submission = sbm %>
-<% mission = submission.mission %>
+<% mission = submission.assessment %>
 <% std_course = sbm.std_course %>
 
 <input type="hidden" id="submission_url_<%=sbm.id%>" value="<%= course_assessment_submission_url(@course, mission, submission) %>">
