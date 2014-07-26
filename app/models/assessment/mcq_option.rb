@@ -3,7 +3,7 @@ class Assessment::McqOption < ActiveRecord::Base
 
   attr_accessible :correct, :text, :explanation
 
-  belongs_to :question, class_name: Assessment::Question
+  belongs_to :question, class_name: Assessment::McqQuestion
   has_many   :answer_options, class_name: Assessment::AnswerOption
 
   def uniq_std(course)
