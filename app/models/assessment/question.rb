@@ -5,6 +5,7 @@ class Assessment::Question < ActiveRecord::Base
 
   attr_accessible :creator_id, :dependent_id
   attr_accessible :title, :description, :max_grade, :attempt_limit, :staff_comments
+  attr_accessible :auto_graded
 
   belongs_to  :creator, class_name: "User"
   belongs_to  :dependent_on, class_name: "Assessment::Question", foreign_key: "dependent_id"
