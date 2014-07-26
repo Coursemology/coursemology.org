@@ -5,14 +5,21 @@ class AchievementsController < ApplicationController
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
 
   def index
+    #TODO: improve speed
     @achievements = @achievements.includes(:requirements, :as_requirements)
+    @ach_paging = @course.paging_pref(Achievement.to_s)
+    if @ach_paging.display?
+      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
+    end
     @achievements_with_info = []
+    uca = curr_user_course.user_achievements.includes(:achievement)
+    earned = uca.map(&:achievement)
     @achievements.each do |ach|
       req_check = {}
-      if curr_user_course
-        uach = UserAchievement.find_by_user_course_id_and_achievement_id(
-          curr_user_course.id, ach.id)
-        ach.requirements.each do |req|
+      e = earned.index(ach)
+      if curr_user_course and e
+        uach = earned[e]
+        ach.requirements.includes(:obj, :req).each do |req|
           req_check[req.id] = req.satisfied?(curr_user_course)
         end
       end
@@ -21,11 +28,6 @@ class AchievementsController < ApplicationController
         won: uach ? true : false,
         req_check: req_check
       }
-    end
-
-    @ach_paging = @course.paging_pref(Achievement.to_s)
-    if @ach_paging.display?
-      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
     end
   end
 
