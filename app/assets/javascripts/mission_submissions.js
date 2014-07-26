@@ -6,25 +6,26 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var codeEvaluator = function(){
+var codeEvaluator;
+codeEvaluator = function () {
     this.ans_ids = null;
     this.cvs = null;
     var self = this;
     this.running = false;
 
-    var failColor = {backgroundColor: "#e1c1b1"}
+    var failColor = {backgroundColor: "#e1c1b1"};
     var animateOpt = {duration: 1000, queue: false};
     var passColor = {backgroundColor: "#008000"};
 
     return {
-        testRun: function(ans_id, url, btn) {
+        testRun: function (ans_id, url, btn) {
             if (self.running) return;
 
             self.running = true;
             var index = self.ans_ids.indexOf(ans_id);
             var code = self.cvs[index].editor.getValue();
-            $(btn).attr("disabled",true);
-            var count_down = $("#run-count-down-"+ans_id);
+            $(btn).attr("disabled", true);
+            var count_down = $("#run-count-down-" + ans_id);
             count_down.text(count_down.text() - 0 - 1);
 
             $.ajax({
@@ -34,71 +35,74 @@ var codeEvaluator = function(){
                     answer_id: ans_id,
                     code: code
                 },
-                dataType:"json",
-                success: function(resp){
-                    var $er = $("#eval-result-" + ans_id );
+                dataType: "json",
+                success: function (resp) {
+                    var $er = $("#eval-result-" + ans_id);
                     console.log(resp);
-                    if(resp.access_error) {
+                    if (resp.access_error) {
                         $er.html(escapeHtml(resp.msg)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
                         self.running = false;
                         return
                     }
 
                     var publicTestFlag = true;
-                    $("#public-test-table-" + ans_id + " tbody tr").each(function(index, e){
+                    $("#public-test-table-" + ans_id + " tbody tr").each(function (index, e) {
 //                    console.log("change table")
-                        var temp = $("td:last",e);
-                        if(resp.public[index]){
-                            if(temp.hasClass("pathTestFail")){
-                                temp.switchClass("pathTestFail","pathTestPass").animate(passColor,animateOpt);
-                            }else if(!temp.hasClass("pathTestPass")){
-                                temp.addClass("pathTestPass").animate(passColor,animateOpt);
+                        var temp = $("td:last", e);
+                        if (resp.public[index]) {
+                            if (temp.hasClass("pathTestFail")) {
+                                temp.switchClass("pathTestFail", "pathTestPass").animate(passColor, animateOpt);
+                            } else if (!temp.hasClass("pathTestPass")) {
+                                temp.addClass("pathTestPass").animate(passColor, animateOpt);
                             }
                         } else if (resp.public.length < index + 1) {
-                            temp.removeAttr('style')
-                            if(temp.hasClass("pathTestPass")){
+                            temp.removeAttr('style');
+                            if (temp.hasClass("pathTestPass")) {
                                 temp.removeClass("pathTestPass");
-                            }else if(temp.hasClass("pathTestFail")){
+                            } else if (temp.hasClass("pathTestFail")) {
                                 temp.removeClass("pathTestFail");
                             }
                             publicTestFlag = false;
 
                         } else {
                             publicTestFlag = false;
-                            if(temp.hasClass("pathTestPass")){
+                            if (temp.hasClass("pathTestPass")) {
                                 temp.switchClass("pathTestPass", "pathTestFail").animate(failColor, animateOpt);
-                            }else if(!temp.hasClass("pathTestFail")){
-                                temp.addClass("pathTestFail", 1000).animate(failColor,animateOpt);
+                            } else if (!temp.hasClass("pathTestFail")) {
+                                temp.addClass("pathTestFail", 1000).animate(failColor, animateOpt);
                             }
                         }
                     });
-                    var privateTestFlag = resp.private.length == 0 ? true : resp.private.reduce(function(a,b){return a && b});
+                    var privateTestFlag = resp.private.length == 0 ? true : resp.private.reduce(function (a, b) {
+                        return a && b
+                    });
                     var errorFlag = resp.errors.length > 0;
 
-                    if(publicTestFlag && !errorFlag){
-                        if(resp.private == null || !privateTestFlag){
+                    if (publicTestFlag && !errorFlag) {
+                        if (resp.private == null || !privateTestFlag) {
                             $er.html("Your answer failed to pass one or more of the private test cases.").animate(failColor, animateOpt);
-                        }else{
+                        } else {
                             $er.html("You have successfully passed all public and private test cases!").animate(passColor, animateOpt);
-                            $(btn).attr("disabled",true);
+                            $(btn).attr("disabled", true);
                             self.running = false;
                             return; // we do not undisable the run
                         }
-                    }else{
-                        $er.html("Your answer failed to pass one or more of the public test cases.").animate(failColor,animateOpt);
+                    } else {
+                        $er.html("Your answer failed to pass one or more of the public test cases.").animate(failColor, animateOpt);
                     }
 
-                    if(resp.errors.length > 0){
+                    if (resp.errors.length <= 0) {
+                        if (resp.can_test) {
+                            $(btn).attr("disabled", false);
+                        }
+                    } else {
                         $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
-                    }
-                    if (resp.can_test) {
-                        $(btn).attr("disabled", false);
                     }
                     self.running = false;
                 }
             });
         },
-        init: function(ans_ids, cvs) {
+        init: function (ans_ids, cvs) {
             self.ans_ids = ans_ids;
             self.cvs = cvs;
         }
@@ -107,7 +111,7 @@ var codeEvaluator = function(){
 
 $(document).ready(function() {
 
-    $.map($("#eval-error-message"), function(c, i){
+    $.map($("#eval-error-message"), function(c){
         $(c).html(escapeHtml($(c).html()))
     });
 
@@ -122,7 +126,7 @@ $(document).ready(function() {
     var ans_ids;
     var cvs = [];
 
-    $('#mission-save').click(function(e){
+    $('#mission-save').click(function(){
         saveCode();
     });
 
@@ -132,7 +136,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#assign-qn-tabs a').click(function (e) {
+    $("#assign-qn-tabs a").click(function (e) {
         e.preventDefault();
         $(this).tab('show');
         cvs.map(function(c, i){
@@ -142,7 +146,7 @@ $(document).ready(function() {
 
     if(ans.size() > 0) {
 
-        ans_ids = $.map(ans, function(value, key){return $(value).val();});
+        ans_ids = $.map(ans, function(value){return $(value).val();});
         $.map(ans_ids, function(id, i){
             var _source_code = $("#code_" + id).val();
             var _vt = $("#mode_" + id).val();
@@ -188,7 +192,7 @@ $(document).ready(function() {
                 cv.selectAll();
                 return false;
             });
-        })
+        });
         codeEvaluator.init(ans_ids, cvs);
     }
 });
