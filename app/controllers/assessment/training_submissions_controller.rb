@@ -30,15 +30,15 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
 
     current = current.specific if current
     if current && current.class == Assessment::CodingQuestion
-      @prefilled_code = current.template
+      prefilled_code = current.template
       if current.dependent_on
         std_answer = current.dependent_on.answers.where("correct is 1 AND std_course_id = ?", curr_user_course.id).last
         code = std_answer ? std_answer.content : ""
-        @prefilled_code = "#Answer from your previous question \n" + code + (@prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + @prefilled_code))
+        prefilled_code = "#Answer from your previous question \n" + code + (prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + prefilled_code))
       end
     end
-
-    @summary = {questions: questions, finalised: finalised, step: step, current: current, next_undone: next_undone}
+    @summary = {questions: questions, finalised: finalised, step: step,
+                current: current, next_undone: next_undone, prefilled: prefilled_code}
   end
 
   def submit
