@@ -1,5 +1,6 @@
 class Assessment::Answer < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_superclass as: :as_answer
 
   scope :coding,
         -> { joins("INNER JOIN assessment_questions on assessment_answers.question_id =
@@ -13,13 +14,8 @@ class Assessment::Answer < ActiveRecord::Base
   belongs_to  :submission, class_name: Assessment::Submission
   has_many  :annotations, as: :annotable, dependent: :destroy
   has_one   :answer_grading, class_name: Assessment::AnswerGrading, dependent: :destroy
-  has_many  :answer_options, class_name: Assessment::AnswerOption
-  has_many  :options, class_name: Assessment::McqOption, through: :answer_options
 
   has_one :comment_topic, as: :topic
-
-
-  alias_method :qn, :question
 
   #TODO
   # def get_url
@@ -38,17 +34,6 @@ class Assessment::Answer < ActiveRecord::Base
     else
       options.where("assessment_mcq_options.correct = ?", correct)
     end
-  end
-
-  def self.group_by_options
-    self.joins("INNER JOIN (SELECT *,  GROUP_CONCAT(option_id SEPARATOR ' ') AS options FROM assessment_answer_options GROUP BY answer_id) aao ON assessment_answers.id = aao.answer_id").
-        select("assessment_answers.*,  COUNT(options) AS count").
-        group("aao.options").
-        order("assessment_answers.created_at")
-  end
-
-  def result_hash
-    self.answer ? JSON.parse(self.result) : {}
   end
 
   def can_run_test?(uc)
