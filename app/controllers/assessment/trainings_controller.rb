@@ -62,6 +62,8 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   def update
     @training.update_tags(params[:tags])
     respond_to do |format|
+      multi_params_to_single_time_param!(:assessment_training, :open_at)
+      multi_params_to_single_time_param!(:assessment_training, :bonus_cutoff_at)
       if @training.update_attributes(params[:assessment_training])
         @training.schedule_tasks(course_assessment_training_url(@course, @training))
         format.html { redirect_to course_assessment_training_url(@course, @training),
@@ -126,4 +128,16 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   def access_denied
   end
 
+  private
+  # Hack to avoid MultiparameterAssignmentErrors
+  def multi_params_to_single_time_param!(model, attr)
+    return if params[model]["#{attr.to_s}(1i)"].nil?
+    time_param = Time.new(params[model]["#{attr.to_s}(1i)"],
+                          params[model]["#{attr.to_s}(2i)"],
+                          params[model]["#{attr.to_s}(3i)"],
+                          params[model]["#{attr.to_s}(4i)"],
+                          params[model]["#{attr.to_s}(5i)"])
+    (1..5).each { |n| params[model].delete("#{attr.to_s}(#{n}i)") }
+    params[model][attr] = time_param
+  end
 end
