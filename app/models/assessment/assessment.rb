@@ -277,6 +277,10 @@ class Assessment < ActiveRecord::Base
     #TODO
   end
 
+  def current_exp
+    exp
+  end
+
   def dup
     s = self.specific
     d = s.dup
