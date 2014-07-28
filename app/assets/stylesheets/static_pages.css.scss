@@ -619,55 +619,51 @@ label.error a.emailWarning,label.error a.numberWarning {
 
 .about_quote {
   background-color: #f2f2f2;
+  margin-bottom: 0;
+
+  h1 {
+    font-size: 49px;
+    font-weight: 300;
+    padding-bottom: 10px;
+  }
+
+  p {
+    font-size: 20px;
+    font-weight: 300;
+  }
 }
 
-.about_quote h1 {
-  font-size: 49px;
-  font-weight: lighter;
-  padding-bottom: 10px;
-}
-
-.about_quote p {
-  font-size: 20px;
-  font-weight: lighter;
-}
 
 .about_wrapper {
   border-radius: 20px;
-  //border: thin solid #bababa;
-  //box-shadow: 0px 0px 10px #999999;
 }
 
 .about_us {
   margin:0 auto;
   float:none;
   text-align: center;
-  padding-left: 2%;
-  padding-right: 2%;
-}
 
-.about_us h2 {
-  font-size: 30px;
-  font-family: 'lato';
-  font-weight: bold;
-  padding-top: 30px;
-  padding-bottom: 5px;
-  margin: 15px 0px;
-  text-transform: uppercase;
-}
+  h2 {
+    font-size: 30px;
+    font-family: 'lato', 'sans-serif';
+    font-weight: bold;
+    padding-top: 30px;
+    padding-bottom: 5px;
+    margin: 15px 0;
+    text-transform: uppercase;
+    &:hover {
+      text-decoration: underline;  
+    }
+  }
 
-.about_us h2:hover {
-  text-decoration: underline;
-}
-
-.about_us p {
-  font-size: 16px;
-  font-family: 'lato';
-  font-weight: normal;
-  letter-spacing: 0.4px;
-  padding: 5px 0px;
-  text-align: center;
-  line-height: 1.8;
+  p {
+    font-size: 16px;
+    font-family: 'lato', 'sans-serif';
+    letter-spacing: 0.4px;
+    padding: 5px 0;
+    text-align: center;
+    line-height: 1.8;
+  }
 }
 
 .about_signup_button {
@@ -678,20 +674,17 @@ label.error a.emailWarning,label.error a.numberWarning {
 }
 
 .about_img {
-  box-shadow: 0px 0px 5px #999999;
-}
-
-.features_mid {
-  width: 200px;
-  height: 200px;
+  box-shadow: 0 0 5px #999999;
 }
 
 .features h4 {
-  font-size: 16px;
-  font-weight: normal;
-  font-style: oblique;
+  font: {
+    size: 16px;
+    weight: normal;
+    style: oblique;
+  }
   color: #575757;
-  padding-bottom: 5%;
+  padding-bottom: 5px;
 }
 
 .about_profile_pic {
@@ -704,25 +697,26 @@ label.error a.emailWarning,label.error a.numberWarning {
 
 .team_popover {
   display: inline-block;
-  padding-bottom: 15%;
+  padding-bottom: 5px;
 }
 
 .icon-github {
   color: #404040;
+  padding-bottom: 10px;
 }
 
 .popover {
   border-radius: 10px;
-  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2)
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2)
 }
 
 .popover-title {
   text-align: center;
   font-weight: bolder;
   font-size: large;
-  background-color: #3D3D3D;
-  color: #FFFFFF;
-  border-radius: 10px 10px 0px 0px;
+  background-color: #3d3d3d;
+  color: #ffffff;
+  border-radius: 10px 10px 0 0;
 }
 
 .popover-content {
@@ -741,17 +735,17 @@ p.about_license {
 
 .terms_of_service {
   font-size: 110%;
-  font-family: lato;
-}
+  font-family: 'lato', 'sans-serif';
 
-.terms_of_service > b {
-  text-transform: uppercase;
-}
+  strong {
+    text-transform: uppercase;  
+  }
 
-.terms_of_service > p {
-  padding-top: 1%;
-}
+  p {
+    padding-top: 1px;
+  }
 
-.terms_of_service > h3 {
-    padding-top: 2%;
+  h3 {
+    padding-top: 1em;
+  }
 }
