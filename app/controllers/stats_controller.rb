@@ -27,7 +27,7 @@ class StatsController < ApplicationController
     @mission = Assessment::Mission.find(params[:mission_id])
     authorize! :view_stat, @mission
 
-    @sbms = @mission.sbms
+    @sbms = @mission.submissions
     @graded = @sbms.where(status: 'graded').map { |sbm| sbm.std_course }
     @submitted = @sbms.where(status: 'submitted').map { |sbm| sbm.std_course }
     @attempting = @sbms.where(status: 'attempting').map { |sbm| sbm.std_course }
