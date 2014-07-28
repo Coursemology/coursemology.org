@@ -19,7 +19,7 @@ class CourseAbility  < Ability
 
     can :read, Course
     can :new, EnrollRequest
-
+    can :read, UserCourse
     unless user.persisted?
       # not logged in user
       cannot :read, [Assessment::Mission, Assessment::Training]
@@ -40,7 +40,6 @@ class CourseAbility  < Ability
       can :read, [Assessment::Mission, Assessment::Training]
       can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
-      can :read, [Level, Achievement, Title, Reward]
       can :students, Course
     end
 
@@ -55,6 +54,7 @@ class CourseAbility  < Ability
       # can :bulk_update, Assessment
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      can :manage, [Level, Achievement, Title, Reward]
       can :manage, Course
       can :participate, Course
       can :duplicate, Course
