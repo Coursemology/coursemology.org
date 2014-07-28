@@ -48,7 +48,7 @@ class UserCourse < ActiveRecord::Base
   # has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
   # has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
   # has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
-  # has_many :submission_gradings, foreign_key: "grader_course_id"
+  has_many :gradings, class_name: "Assessment::Grading", foreign_key: "grader_course_id"
 
   has_many :submissions, class_name: Assessment::Submission,
            foreign_key: "std_course_id", dependent: :destroy

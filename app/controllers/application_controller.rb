@@ -94,46 +94,49 @@ class ApplicationController < ActionController::Base
                           }]
     end
     admin_nav_items + [{
-                            text: "Manage Users",
-                            url:  main_app.course_manage_students_url(@course),
-                            icon: "icon-user"
-                        },{
-                            text: "Student Summary",
-                            url:  main_app.course_student_summary_url(@course),
-                            icon: "icon-user"
-                        },{
-                            text: "Staff Summary",
-                            url: main_app.course_staff_monitoring_path(@course),
-                            icon: "icon-trophy"
-                        },{
-                            text:   "Levels",
-                            url:    main_app.course_levels_url(@course),
-                            icon:   "icon-star-empty"
-                        },{
-                            text: "Tags",
-                            url: main_app.course_tags_url(@course),
-                            icon: "icon-tags"
-                        },{
-                            text: "Award Give-away",
-                            url: main_app.course_manual_exp_url(@course),
-                            icon: "icon-star"
-                        }, {
-                            text: "Statistics",
-                            url: main_app.course_stats_url(@course),
-                            icon: "icon-bar-chart"
-                        },{
-                            text: "Enrollment",
-                            url: main_app.course_enroll_requests_url(@course),
-                            icon: "icon-bolt"
-                        }, {
-                            text: "Duplicate Data",
-                            url: main_app.course_duplicate_url(@course),
-                            icon: "icon-bolt"
-                        }, {
-                            text: "Settings",
-                            url: main_app.course_preferences_path(@course),
-                            icon: "icon-cog"
-                        }]
+                           text: "Manage Users",
+                           url:  main_app.course_manage_students_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Student Summary",
+                           url:  main_app.course_student_summary_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Staff Summary",
+                           url: main_app.course_staff_monitoring_path(@course),
+                           icon: "icon-trophy"
+                       },{
+                           text:   "Levels",
+                           url:    main_app.course_levels_url(@course),
+                           icon:   "icon-star-empty"
+                       },{
+                           text: "Tags",
+                           url: main_app.course_tags_url(@course),
+                           icon: "icon-tags"
+                       },{
+                           text: "Award Give-away",
+                           url: main_app.course_manual_exp_url(@course),
+                           icon: "icon-star"
+                       }, {
+                           text: "Statistics",
+                           url: main_app.course_stats_url(@course),
+                           icon: "icon-bar-chart"
+                       },{
+                           text: "Enrollment",
+                           url: main_app.course_enroll_requests_url(@course),
+                           icon: "icon-bolt"
+                       }, {
+                           text: "Duplicate Data",
+                           url: main_app.course_duplicate_url(@course),
+                           icon: "icon-bolt"
+                       }]
+    if curr_user_course.is_lecturer?
+      admin_nav_items << {
+          text: "Settings",
+          url: main_app.course_preferences_path(@course),
+          icon: "icon-cog"
+      }
+    end
   end
 
 
