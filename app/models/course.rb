@@ -50,16 +50,13 @@ class Course < ActiveRecord::Base
     include_field [:levels, :assessments, :achievements, :lesson_plan_milestones,
                    :lesson_plan_entries, :root_folder, :comics, :tag_groups,
                    :surveys, :forums, :tabs, :course_preferences, :course_navbar_preferences]
-    prepend :title => "Clone: "
+    prepend :title => "Clone of: "
     set :is_publish => false
-
-    #course_navbar_preferences
-    # course_preferences
   end
 
   #user related
   has_many  :user_courses,  dependent: :destroy
-  has_many  :users, through: :user_courses
+  has_many  :users, through: :usccer_courses
   has_many  :submissions, through: :user_courses
   has_many  :activities, dependent: :destroy
   has_many  :tutorial_groups,        dependent: :destroy

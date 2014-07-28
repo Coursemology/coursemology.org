@@ -16,10 +16,11 @@ class CourseAbility  < Ability
     super(user)
     user ||= User.new
     user_course ||= UserCourse.new
+    course = user_course.course
 
-    can :read, Course
+    can :read, course
     can :new, EnrollRequest
-
+    can :read, UserCourse
     unless user.persisted?
       # not logged in user
       cannot :read, [Assessment::Mission, Assessment::Training]
@@ -40,7 +41,6 @@ class CourseAbility  < Ability
       can :read, [Assessment::Mission, Assessment::Training]
       can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
-      can :read, [Level, Achievement, Title, Reward]
       can :students, Course
     end
 
@@ -49,22 +49,21 @@ class CourseAbility  < Ability
       # the current course
       # can :manage, :all
       can :see_all, [Assessment::Submission, Level]
-      # can :view_stat, [Assessment::Mission, Assessment::Training]
-      # can :view_detail, [Assessment::Mission, Assessment::Training]
-      # can :create, Assessment
-      # can :bulk_update, Assessment
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
-      can :manage, Course
+      can :manage, [Level, Achievement, Title, Reward, Tag, Tab]
+      can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
+      can :manage, [Survey, ForumForum, ForumTopic]
+      can :manage, [Course, UserCourse]
       can :participate, Course
       can :duplicate, Course
-      can :award_points, UserCourse
-      can :see, :pending_grading
+      # can :award_points, UserCourse
+      can :see, :pending_gradings
       can :see, :pending_comments
       can :unsubmit, Assessment::Submission
       can :view, :staff_leaderboard
       can :manage, :forum_participation
-      can :manage, Tab
+      can :manage, [EnrollRequest, MassEnrollmentEmail]
 
       cannot :modify, Assessment::Submission
     end
@@ -81,7 +80,6 @@ class CourseAbility  < Ability
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff
-      cannot :approve, EnrollRequest
       cannot :destroy, Course
       cannot :manage, :course_admin
     end

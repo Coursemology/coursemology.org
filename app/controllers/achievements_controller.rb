@@ -39,7 +39,7 @@ class AchievementsController < ApplicationController
 
   def fetch_data_for_form
     @all_ach = @course.achievements
-    @all_asm = @course.asms
+    @all_asm = @course.assessments
     @all_level = @course.levels
   end
 

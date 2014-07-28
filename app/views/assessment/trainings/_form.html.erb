@@ -5,12 +5,12 @@
     <%= f.input :title %>
     <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
     <%= f.input :exp, as: :integer, input_html: {class: "number_field input-medium"}  %>
-    <%= f.input :open_at, as: :datetime, input_html: {class: "input-mini"} %>
+    <%= f.input :open_at, as: :datetime_picker, input_html: {class: "input-medium"} %>
     <% if @course.tabs.training.count > 0 %>
         <%= f.association :tab, collection: @course.tabs.training, input_html: {class: "input-medium"}, include_blank: false%>
     <% end %>
     <%= f.input :bonus_exp, as: :integer, input_html: {class: "number_field input-medium"} %>
-    <%= f.input :bonus_cutoff_at, as: :datetime, input_html: {class: "input-mini"} %>
+    <%= f.input :bonus_cutoff_at, as: :datetime_picker, input_html: {class: "input-medium"} %>
     <%= f.input :skippable, as: :boolean, label: "Allow skip?",
                 input_html: {class: ""},
                 inline_label:"Check to allow students to skip steps"%>
