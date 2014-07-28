@@ -51,7 +51,7 @@ class CourseAbility  < Ability
       can :see_all, [Assessment::Submission, Level]
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
-      can :manage, [Level, Achievement, Title, Reward, Tag, Tab]
+      can :manage, [Level, Achievement, Title, Reward, Tag, Tab, Announcement]
       can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
       can :manage, [Survey, ForumForum, ForumTopic]
       can :manage, [Course, UserCourse]
