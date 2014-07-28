@@ -18,7 +18,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save  && user_course.save
-        format.html { redirect_to edit_course_path(@course),
+        format.html { redirect_to course_preference_path(@course),
                                   notice: "The course '#{@course.title}' has been created." }
       else
         format.html { render action: "new" }
