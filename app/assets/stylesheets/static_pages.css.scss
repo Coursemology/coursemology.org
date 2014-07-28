@@ -675,16 +675,21 @@ label.error a.emailWarning,label.error a.numberWarning {
 
 .about_img {
   box-shadow: 0 0 5px #999999;
+  margin-bottom: 5px;
 }
 
-.features h4 {
-  font: {
-    size: 16px;
-    weight: normal;
-    style: oblique;
+.features {
+  margin-top: 5px;
+  
+  h4 {
+    font: {
+      size: 16px;
+      weight: normal;
+      style: oblique;
+    }
+    color: #575757;
+    padding-bottom: 5px;
   }
-  color: #575757;
-  padding-bottom: 5px;
 }
 
 .about_profile_pic {
