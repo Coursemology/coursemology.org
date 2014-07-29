@@ -54,7 +54,7 @@ class CourseAbility  < Ability
       can :manage, [Level, Achievement, Title, Reward, Tag, Tab, Announcement]
       can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
       can :manage, [Survey, ForumForum, ForumTopic]
-      can :manage, [Course, UserCourse]
+      can :manage, [Course, UserCourse, ExpTransaction]
       can :participate, Course
       can :duplicate, Course
       # can :award_points, UserCourse
