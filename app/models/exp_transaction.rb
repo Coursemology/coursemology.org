@@ -33,8 +33,8 @@ class ExpTransaction < ActiveRecord::Base
   
   #Linking transaction to submission 
   def get_submission_path
-    s = SubmissionGrading.where(exp_transaction_id: self.id).first
-    s.nil? ? nil : s.sbm.get_path
+    s = Assessment::Grading.where(exp_transaction_id: self.id).first
+    s.nil? ? nil : s.submission.get_path
   end
 
 end
