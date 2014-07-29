@@ -51,7 +51,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     end
     @mission.update_tags(params[:tags])
 
-    if @mission.single_question?
+    if params[:single_question].to_i == 1
       if params[:answer_type] == 'code'
         specific = Assessment::CodingQuestion.new
       else
@@ -67,7 +67,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     respond_to do |format|
       if @mission.save
         @mission.create_local_file
-        # @mission.update_grade
         @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
@@ -78,18 +77,9 @@ class Assessment::MissionsController < Assessment::AssessmentsController
   end
 
   def update
-    @mission.update_tags(params[:tags])
-
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
-
-        if @mission.single_question? && @mission.questions.count > 1
-          flash[:error] = "Mission already have several questions, can't change the format."
-          @mission.single_question = false
-          @mission.save
-        end
         update_single_question_type
-
         @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
