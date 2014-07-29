@@ -10,7 +10,13 @@ class Assessment::CodingQuestion < ActiveRecord::Base
 
   belongs_to  :language, class_name: "ProgrammingLanguage"
 
-  after_save :refresh_asm_autograding, :if => :tests_changed?
+  after_save :refresh_asm_autograding, :if => :eval_attributes_changed?
+
+  def eval_attributes_changed?
+    memory_limit_changed? || time_limit_changed? ||
+        pre_include_changed? || append_code_changed? ||
+        tests_changed?
+  end
 
   def coding_answers
     Assessment::CodingAnswer.

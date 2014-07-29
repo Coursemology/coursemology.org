@@ -274,7 +274,13 @@ class Assessment < ActiveRecord::Base
   end
 
   def mark_refresh_autograding
-    #TODO
+    Thread.new {
+      submissions.each do |s|
+        s.gradings.each do |sg|
+          sg.update_attribute(:autograding_refresh, true)
+        end
+      end
+    }
   end
 
   def current_exp
