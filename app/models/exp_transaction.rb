@@ -24,7 +24,7 @@ class ExpTransaction < ActiveRecord::Base
   
   #Only training exp transaction is not editable, since it's auto-graded
   def can_edit_exp?
-    rewardable_type != Training.to_s
+    rewardable_type != Assessment::Training.to_s
   end
 
   def is_manual_reward?

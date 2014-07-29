@@ -100,7 +100,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
   def duplicate_qn
     asm_qn = AsmQn.where(qn_type:params[:qtype], qn_id: params[:qid]).first
-    to_asm = Training.find(params[:to])
+    to_asm = Assessment::Training.find(params[:to])
     is_move = params[:move] == 'true'
 
     clone = Duplication.duplicate_qn_no_log(asm_qn.qn)

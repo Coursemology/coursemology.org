@@ -25,7 +25,7 @@ class CommentTopic < ActiveRecord::Base
     if topic.respond_to?(:sbm_answers)
       sbm_answer = topic.sbm_answers.first
       submission = sbm_answer ? sbm_answer.sbm : nil
-    elsif topic.class == Submission
+    elsif topic.class == Assessment::Submission
       submission = comment_topic.topic
     end
     submission.nil? || (submission && submission.assignment.published?)

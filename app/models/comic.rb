@@ -32,7 +32,7 @@ class Comic < ActiveRecord::Base
 
   def can_view?(curr_user_course)
     if dependent_mission
-      sbm = Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
+      sbm = Assessment::Submission.where(mission_id: dependent_mission, std_course_id: curr_user_course).first
       dependency = (sbm && !sbm.attempting?)
     else
       dependency = true
