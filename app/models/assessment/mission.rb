@@ -7,7 +7,8 @@ class Assessment::Mission < ActiveRecord::Base
   attr_accessible :file_submission,
                   :file_submission_only
 
-  attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn, :dependent_id
+  attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn,
+                   :dependent_id, :display_mode_id
 
 
   #TODO

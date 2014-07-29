@@ -7,33 +7,33 @@
  */
 $(document).ready(function(){
 
-    $("#mission-update").click(function(e) {
-        start = date_from_string($("#open_at").val());
-        end = date_from_string($("#close_at").val());
-
-        error_msg = [];
-        if((typeof start != 'undefined') && (typeof end != 'undefined')) {
-            if(start >= end) {
-                error_msg.push('Close time should be after open time.');
-            }
-        }
-        grade = $("#mission-max-grade");
-        checked = $("#mission-format-checkbox").is(':checked');
-        if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
-            error_msg.push('Please specify a proper grade.');
-        }
-
-        mission_exp = $("#mission-exp").val();
-        if(!IsPositive(mission_exp)) {
-            error_msg.push('Please specify a proper value for EXP.');
-        }
-
-        if (error_msg.length > 0) {
-            $('html,body').scrollTop(0);
-            e.preventDefault();
-            showErrorNotice(error_msg)
-        }
-    });
+//    $("#mission-update").click(function(e) {
+//        start = date_from_string($("#open_at").val());
+//        end = date_from_string($("#close_at").val());
+//
+//        error_msg = [];
+//        if((typeof start != 'undefined') && (typeof end != 'undefined')) {
+//            if(start >= end) {
+//                error_msg.push('Close time should be after open time.');
+//            }
+//        }
+//        grade = $("#mission-max-grade");
+//        checked = $("#mission-format-checkbox").is(':checked');
+//        if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
+//            error_msg.push('Please specify a proper grade.');
+//        }
+//
+//        mission_exp = $("#mission-exp").val();
+//        if(!IsPositive(mission_exp)) {
+//            error_msg.push('Please specify a proper value for EXP.');
+//        }
+//
+//        if (error_msg.length > 0) {
+//            $('html,body').scrollTop(0);
+//            e.preventDefault();
+//            showErrorNotice(error_msg)
+//        }
+//    });
 
     $("#training-update").click(function(e){
         start = date_from_string($("#open_at").val());
