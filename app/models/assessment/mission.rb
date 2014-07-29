@@ -17,16 +17,6 @@ class Assessment::Mission < ActiveRecord::Base
     "#{I18n.t('Assessment.Mission')} : #{self.title}"
   end
 
-  def attach_files(files)
-    files.each do |id|
-      file = FileUpload.where(id: id).first
-      if file
-        file.owner = self
-        file.save
-      end
-    end
-  end
-
   def total_exp
     exp
   end

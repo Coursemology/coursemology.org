@@ -289,4 +289,14 @@ class Assessment < ActiveRecord::Base
     asm.as_assessment = d
     asm
   end
+
+  def attach_files(files)
+    files.each do |id|
+      file = FileUpload.find id
+      if file
+        file.owner = self
+        file.save
+      end
+    end
+  end
 end
