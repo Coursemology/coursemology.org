@@ -23,8 +23,8 @@
               </div>
             </div>
 
+            <%- answer = @submission.answers.where(question_id: q.id).first %>
             <% if @mission.file_submission_only? %>
-                <% answer = q.class == Question ? @std_answers[q.id] : @std_coding_answers[q.id] %>
                 <p style="font-style: italic"> Please include you answer in file(s).</p>
             <% else %>
                 <h3>Your answer:</h3>
