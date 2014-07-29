@@ -29,7 +29,7 @@ class CourseAbility  < Ability
     if user.is_lecturer? || user.is_admin?
       can :ask_for_share, Course
       can :create, Course
-      user.user_courses.lecturer.each do |uc|
+      user.user_courses.lecturer.includes(:course).each do |uc|
         can :manage, uc.course
       end
     end
@@ -51,7 +51,7 @@ class CourseAbility  < Ability
       can :see_all, [Assessment::Submission, Level]
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
-      can :manage, [Level, Achievement, Title, Reward, Tag, Tab, Announcement]
+      can :manage, [Level, Achievement, Tag, Tab, Announcement]
       can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
       can :manage, [Survey, ForumForum, ForumTopic]
       can :manage, [Course, UserCourse, ExpTransaction]
@@ -157,10 +157,8 @@ class CourseAbility  < Ability
       # can :read, [Mcq, Question, CodingQuestion]
 
       can :read, Tag
-      can :read, [Achievement, Title, Reward]
+      can :read, Achievement
       can :students, Course
-      can :access_denied, Mission
-      can :access_denied, Training
 
       can :manage, [Assessment::Submission], std_course_id: user_course.id
       can :manage, [Annotation, Comment], user_course_id: user_course.id

@@ -3,7 +3,7 @@
 <% end %>
 
 <% entries = milestone.entries.sort { |a, b| a.start_at <=> b.start_at } %>
-<% if cannot? :manage, Mission %>
+<% if cannot? :manage, Assessment %>
     <% entries = entries.select { |entry| entry.is_published } %>
 <% end %>
 
