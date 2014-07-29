@@ -4,6 +4,7 @@ Coursemology::Application.routes.draw do
   end
 
   root :to => "static_pages#welcome"
+  get "terms_of_service" => "static_pages#terms_of_service"
   get "welcome" => "static_pages#welcome"
   get "about" => "static_pages#about"
   get "privacy_policy" => "static_pages#privacy_policy"

@@ -1,6 +1,7 @@
 class Assessment::Submission < ActiveRecord::Base
   acts_as_paranoid
 
+  include Rails.application.routes.url_helpers
   scope :mission_submissions, -> {
     joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
         where("assessments.as_assessment_type = 'Assessment::Mission'") }
@@ -117,7 +118,7 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_path
-    course_assessment_submission_path(course, assessment, self)
+    course_assessment_submission_path(std_course.course, assessment, self)
   end
 
   def get_new_grading_path
