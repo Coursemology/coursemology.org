@@ -32,7 +32,7 @@
         <h3>Testing</h3>
         <% unless curr_user_course.is_staff? %>
             <div style="font-size: 14px;padding-left: 10px">
-              Click Run to test your answer. You can maximally run <%= question.test_limit %> times.
+              Click Run to test your answer. You can maximally run <%= question.attempt_limit %> times.
             </div>
         <% end %>
         <button class="btn btn-large btn-block btn-danger"
