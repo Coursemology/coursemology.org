@@ -94,9 +94,9 @@ gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
 gem "cocoon"
-gem 'simple_form', :git => 'git@github.com:plataformatec/simple_form.git', :branch => "v2.2"
-gem 'acts_as_relation', git: 'git@github.com:raymondtangsc/acts_as_relation.git', branch: 'V1.0'
-gem 'amoeba', git: 'git@github.com:raymondtangsc/amoeba.git'
+gem 'simple_form', :github => 'plataformatec/simple_form', :branch => "v2.2"
+gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0'
+gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"
 gem "nokogiri"

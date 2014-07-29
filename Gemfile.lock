@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:plataformatec/simple_form.git
+  remote: git://github.com/plataformatec/simple_form.git
   revision: a43bd2722f95102a60ea1bf50c866857d7949bb8
   branch: v2.2
   specs:
@@ -8,7 +8,7 @@ GIT
       activemodel (~> 3.0)
 
 GIT
-  remote: git@github.com:raymondtangsc/acts_as_relation.git
+  remote: git://github.com/raymondtangsc/acts_as_relation.git
   revision: a206b1c0094708207d3e6a00d211ba44f5de05e5
   branch: V1.0
   specs:
@@ -16,7 +16,7 @@ GIT
       activerecord
 
 GIT
-  remote: git@github.com:raymondtangsc/amoeba.git
+  remote: git://github.com/raymondtangsc/amoeba.git
   revision: c34132f3f38ef4678f61248f80039bb69c9c4454
   specs:
     amoeba (2.0.0)
