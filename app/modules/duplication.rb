@@ -159,9 +159,9 @@ module Duplication
 
       # clone the entity
       (course.missions + course.trainings).each do |asm|
-        clone_asm = duplicate_asm_no_log(asm, asm.class == Mission ? options[:mission_files] : options[:training_files])
+        clone_asm = duplicate_asm_no_log(asm, asm.class == Assessment::Mission ? options[:mission_files] : options[:training_files])
         clone_asm.course = clone
-        if asm.class == Mission
+        if asm.class == Assessment::Mission
           diff = options[:mission_diff]
           clone_asm.close_at = clone_asm.close_at + diff
         else

@@ -30,15 +30,15 @@ class FileUploadsController < ApplicationController
 
     owner = nil
     if params[:mission_id]
-      owner =  Mission.find_by_id(params[:mission_id])
+      owner =  Assessment::Mission.find_by_id(params[:mission_id])
     end
 
     if params[:training_id]
-      owner = Training.find_by_id(params[:training_id])
+      owner = Assessment::Training.find_by_id(params[:training_id])
     end
 
     if params[:submission_id]
-      owner = Submission.find_by_id(params[:submission_id])
+      owner = Assessment::Submission.find_by_id(params[:submission_id])
     end
 
     file = params[:files].class == Array ? params[:files].first : params[:files]
@@ -88,11 +88,11 @@ class FileUploadsController < ApplicationController
   def index
     owner = nil
     if params[:training_id]
-      owner = Training.find(params[:training_id])
+      owner = Assessment::Training.find(params[:training_id])
     elsif params[:mission_id]
-      owner = Mission.find(params[:mission_id])
+      owner = Assessment::Mission.find(params[:mission_id])
     elsif params[:submission_id]
-      owner = Submission.find(params[:submission_id])
+      owner = Assessment::Submission.find(params[:submission_id])
     elsif params[:survey_question_id]
       owner = SurveyQuestion.find(params[:survey_question_id])
     end

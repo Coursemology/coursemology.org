@@ -5,9 +5,9 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
 
     if name == 'AutoSubmissions'
       if type == 'Create'
-        item_id ? create_submissions_mission(Mission.find(item_id)) : create_submissions_course(course)
+        item_id ? create_submissions_mission(Assessment::Mission.find(item_id)) : create_submissions_course(course)
       elsif type == 'Cancel'
-        item_id ? cancel_submissions_mission(Mission.find(item_id)) : cancel_submissions_course(course)
+        item_id ? cancel_submissions_mission(Assessment::Mission.find(item_id)) : cancel_submissions_course(course)
       end
     end
 
@@ -45,7 +45,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
   def create_submissions_mission(mission)
     cancel_submissions_mission(mission)
     mission.course.user_courses.student.each do |uc|
-      sbm = Submission.where(std_course_id: uc.id, mission_id: mission.id).first
+      sbm = Assessment::Submission.where(std_course_id: uc.id, mission_id: mission.id).first
       unless sbm
         sbm = mission.submissions.build
         sbm.std_course = uc

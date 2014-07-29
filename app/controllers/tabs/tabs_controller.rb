@@ -44,7 +44,7 @@ class Tabs::TabsController < ApplicationController
     @tab = @course.tabs.build(JSON.parse(params[:tab]))
 
     if @course.tabs.count == 0
-      if @tab.owner_type == Training.to_s
+      if @tab.owner_type == Assessment::Training.to_s
         @course.trainings.each do |training|
           training.tab = @tab
           training.save
