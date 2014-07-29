@@ -331,7 +331,7 @@ class Course < ActiveRecord::Base
   end
 
   def customized_title_by_model(model_class)
-    r =  self.course_navbar_preferences.find_by_item(model_class.model_name.downcase.pluralize)
+    r =  self.course_navbar_preferences.find_by_item(model_class.model_name.demodulize.downcase.pluralize)
     r.name if r
   end
 
