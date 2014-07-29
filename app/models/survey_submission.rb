@@ -3,7 +3,7 @@ class SurveySubmission < ActiveRecord::Base
   attr_accessible :user_course_id, :survey_id, :open_at, :submitted_at, :status, :current_qn
 
   belongs_to :user_course
-  belongs_to :survey
+  belongs_to :survey, class_name: "Survey"
   has_many   :survey_mrq_answers, dependent: :destroy
   has_many   :survey_essay_answers, dependent: :destroy
   belongs_to :exp_transaction

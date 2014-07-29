@@ -3,7 +3,7 @@
 </div>
 
 <%= render partial: "nav_bar" %>
-
+<% no_qn = @survey.survey_questions.count %>
 <% [@staff_courses, @std_courses, @std_courses_phantom].each_with_index do |user_courses, index| %>
     <% case index  %>
     <% when 0 %>
@@ -31,7 +31,7 @@
             <% end %>
 
             <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
-            <td><%= sub ? (sub.current_qn || 0) : 0 %>/ <%= @survey.survey_questions.count %></td>
+            <td><%= sub ? (sub.current_qn || 0) : 0 %>/ <%= no_qn %></td>
           </tr>
       <% end %>
       </tbody>
