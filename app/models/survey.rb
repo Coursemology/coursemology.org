@@ -14,7 +14,7 @@ class Survey < ActiveRecord::Base
 
   has_many :survey_sections,    dependent: :destroy
   has_many :survey_questions,   dependent: :destroy
-  has_many :submissions, class_name: "SurveySubmission", dependent: :destroy
+  has_many :survey_submissions, class_name: "SurveySubmission", dependent: :destroy
   has_many :pending_actions, as: :item, dependent: :destroy
   has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
 
@@ -31,6 +31,10 @@ class Survey < ActiveRecord::Base
     #enqueue pending action job
     delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, Survey.to_s, self.id), run_at: self.open_at)
     self.queued_jobs.create(delayed_job_id: delayed_job.id)
+  end
+
+  def submissions
+    survey_submissions
   end
 
   def questions
