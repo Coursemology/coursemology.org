@@ -29,6 +29,7 @@
 //= require bootstrap-button
 //= require bootstrap-tab
 //= require bootstrap-tooltip
+//= require bootstrap-popover
 //= require bootstrap-affix
 //= require bootstrap-scrollspy
 //
@@ -248,6 +249,10 @@ $(document).ready(function() {
     $(".sort tbody").sortable({
         helper: fixHelper
     }).disableSelection();
+
+    $('.team_popover').popover({ 
+        trigger: "hover"
+    });
 });
 
 // Define our framework for implementing client-side form validation.
