@@ -28,7 +28,6 @@ class Assessment::AssessmentsController < ApplicationController
 
       if params['_tab'] and (@tab = @course.tabs.where(id:@tab_id).first)
         @assessments = @tab.assessments
-        #@trainings = @trainings.where(t_type: AssignmentType.extra)
       elsif @tabs.length > 0
         @tab_id = @tabs.first.id.to_s
         @assessments= @tabs.first.assessments

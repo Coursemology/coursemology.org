@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
     end
 
     #TO REMOVE
-    if can? :manage, Course
+    if can? :manage, @course
 
       general_items <<    {
           item: "pending_gradings",
@@ -93,7 +93,7 @@ class ApplicationController < ActionController::Base
                               icon: "icon-group"
                           }]
     end
-    admin_nav_items + [{
+    admin_nav_items += [{
                            text: "Manage Users",
                            url:  main_app.course_manage_students_url(@course),
                            icon: "icon-user"
@@ -137,6 +137,7 @@ class ApplicationController < ActionController::Base
           icon: "icon-cog"
       }
     end
+    admin_nav_items
   end
 
 
