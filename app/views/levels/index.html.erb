@@ -4,13 +4,13 @@
 
 <% if @levels.size <= 1 && (can? :manage, Level) %>
   <%= form_tag course_levels_populate_path(@course), method: "POST" do %>
-    <h2>Number of level:
+    <h2>Number of levels:
       <input name="num_level" />
       <button type="submit" class="btn btn-primary">Create levels</button>
     </h2>
   <% end %>
 <% else %>
-  <h2>Number of level: <%= @levels.size %></h2>
+  <h2>Number of levels: <%= @levels.size-1 %></h2>
 
   <%= form_tag(course_levels_mass_update_path(@course)) do %>
     <table class="table" id="exp-table">
