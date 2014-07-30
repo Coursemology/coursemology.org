@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
                            url: main_app.course_duplicate_url(@course),
                            icon: "icon-bolt"
                        }]
-    if curr_user_course.is_lecturer?
+    if can? :manage, :course_admin
       admin_nav_items << {
           text: "Settings",
           url: main_app.course_preferences_path(@course),
