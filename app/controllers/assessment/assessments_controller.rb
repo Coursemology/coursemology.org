@@ -17,8 +17,8 @@ class Assessment::AssessmentsController < ApplicationController
     @assessments = @course.assessments.send(assessment_type)
 
     if selected_tags
-      tags = Tag.find(selected_tags)
-      @assessments = tags.questions.assessmenets
+      selected_tags = selected_tags.split(",")
+      @assessments = @course.questions.tagged_with(selected_tags, any: true).assessments.send(assessment_type)
     end
 
     #TODO: refactoring
@@ -82,7 +82,7 @@ class Assessment::AssessmentsController < ApplicationController
               ast.get_path
     end
 
-    @summary = {selected_tags: selected_tags,
+    @summary = {selected_tags: selected_tags || [],
                 actions: action_map,
                 columns: display_columns,
                 time_format: time_format,
