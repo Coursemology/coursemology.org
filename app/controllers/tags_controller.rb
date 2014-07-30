@@ -2,10 +2,9 @@ class TagsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :tag, through: :course
 
-  before_filter :load_general_course_data, only: [:new, :edit, :show, :index]
+  before_filter :load_general_course_data, only: [:new, :edit, :create, :show, :index]
 
   def new
-    @tag_groups = @course.tag_groups
   end
 
   def create
@@ -43,7 +42,15 @@ class TagsController < ApplicationController
 
   def index
     @tag_groups = @course.tag_groups.includes(:tags)
-    @uncat_tags = @course.tags.uncategorized
+    #always put uncategorized last
+    uc = @course.tag_groups.uncategorized
+    @tag_groups -= [uc]
+    @tag_groups << uc
+
+    respond_to do |format|
+      format.json { render json: @tags.map {|t| {id: t.id, name: t.name }}}
+      format.html
+    end
   end
 
   def destroy
@@ -53,6 +60,5 @@ class TagsController < ApplicationController
       format.html { redirect_to course_tags_url(@course),
                     notice: "The tag '#{@tag.name}' has been removed." }
     end
-
   end
 end

@@ -2,7 +2,7 @@ class TagGroupsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :tag_group, through: :course
 
-  before_filter :load_general_course_data, only: [:new, :edit, :show, :index]
+  before_filter :load_general_course_data, only: [:new, :edit, :create]
 
   def new
   end
