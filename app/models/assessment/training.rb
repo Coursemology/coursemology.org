@@ -11,6 +11,8 @@ class Assessment::Training < ActiveRecord::Base
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
   attr_accessible :tab_id, :display_mode_id, :dependent_id
 
+  validates_presence_of :title, :exp, :open_at
+
   validates_with DateValidator, fields: [:open_at, :bonus_cutoff_at]
 
   def full_title

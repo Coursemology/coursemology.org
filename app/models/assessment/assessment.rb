@@ -16,6 +16,8 @@ class Assessment < ActiveRecord::Base
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
   attr_accessible :tab_id, :display_mode_id, :dependent_id
 
+  validates_presence_of :title
+
 
   include HasRequirement
   include ActivityObject

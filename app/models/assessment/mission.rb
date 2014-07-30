@@ -10,6 +10,8 @@ class Assessment::Mission < ActiveRecord::Base
   attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn,
                    :dependent_id, :display_mode_id
 
+  validates_presence_of :title, :exp, :open_at, :close_at
+
 
   #TODO
   validates_with DateValidator, fields: [:open_at, :close_at]
