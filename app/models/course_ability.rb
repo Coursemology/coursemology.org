@@ -48,13 +48,14 @@ class CourseAbility  < Ability
       # this is enough since all resources are loaded related to
       # the current course
       # can :manage, :all
-      can :see_all, [Assessment::Submission, Level]
       can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
       can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      can :manage, [Assessment::Answer, Assessment::McqAnswer, Assessment::CodingAnswer, Assessment::GeneralAnswer]
       can :manage, [Level, Achievement, Tag, Tab, Announcement]
       can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
       can :manage, [Survey, ForumForum, ForumTopic]
       can :manage, [Course, UserCourse, ExpTransaction]
+      can :manage, [Annotation, Comment]
       can :participate, Course
       can :duplicate, Course
       # can :award_points, UserCourse
