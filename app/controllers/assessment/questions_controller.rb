@@ -1,6 +1,8 @@
 class Assessment::QuestionsController < ApplicationController
   load_and_authorize_resource :course
   load_resource :assessment, through: :course
+  before_filter :build_resource
+  before_filter :extract_tags, only: [:update]
   before_filter :load_general_course_data, only: [:show, :new, :edit]
 
 
@@ -30,13 +32,20 @@ class Assessment::QuestionsController < ApplicationController
 
   protected
 
-  def build_resource(resource)
+  def extract_tags
+    tags = (params[params[:controller].gsub('/', '_').singularize] || {}).delete(:tags) || ""
+    @question.tag_list = @course.tags.find_or_create_all_with_like_by_name(tags.split(","))
+  end
+
+  def build_resource
+    resource = params[:controller].classify.constantize
     if params[:id]
       @question = resource.send(:find, params[:id])
     elsif params[:action] == 'index'
       @questions = resource.accessible_by(current_ability)
     else
       @question = resource.new
+      extract_tags
       (params[resource.to_s.underscore.gsub('/', '_')] || {}).each do |key, value|
         @question.send("#{key}=", value)
       end

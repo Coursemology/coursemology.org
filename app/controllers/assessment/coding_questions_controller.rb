@@ -1,5 +1,4 @@
 class Assessment::CodingQuestionsController < Assessment::QuestionsController
-  before_filter {|c| c.build_resource Assessment::CodingQuestion }
   before_filter :set_avaialbe_test_types, only: [:new, :edit]
 
   def new
@@ -24,6 +23,7 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
   end
 
   def update
+    super
     @question.update_attributes(params[:assessment_coding_question])
 
     respond_to do |format|
