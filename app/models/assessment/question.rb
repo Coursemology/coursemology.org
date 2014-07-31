@@ -17,7 +17,7 @@ class Assessment::Question < ActiveRecord::Base
   # has_many  :tags, through: :taggable_tags
   #was std_answers
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
-  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answer
+  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
   has_one   :comment_topic, as: :topic
   # accepts_nested_attributes_for :tags
 
