@@ -26,7 +26,7 @@ class Course < ActiveRecord::Base
   has_many  :comics, dependent: :destroy
   has_many  :tag_groups, dependent: :destroy
   has_many  :tags, dependent: :destroy
-  has_many  :taggable_tags, through: :tags
+  has_many  :taggings, through: :tags
   has_many  :surveys, dependent: :destroy
   has_many  :forums, dependent: :destroy, class_name: 'ForumForum'
   has_many  :tabs, dependent: :destroy

@@ -29,9 +29,9 @@ class Tag < ActsAsTaggableOn::Tag
   #
   # has_many :questions, through: :taggable_tags, source: :taggable, source_type: "Assessment::Question"
   #
-  # amoeba do
-  #   include_field :taggable_tags
-  # end
+  amoeba do
+    include_field :taggings
+  end
   #
   # # before_create :init
   #
