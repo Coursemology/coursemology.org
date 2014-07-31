@@ -31,6 +31,7 @@ class Assessment::Submission < ActiveRecord::Base
 
   has_many :files, as: :owner, class_name: "FileUpload", dependent: :destroy
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
+  has_one :comment_topic, as: :topic
 
   after_create :set_attempting
 
