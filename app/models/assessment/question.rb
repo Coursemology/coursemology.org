@@ -2,6 +2,7 @@ class Assessment::Question < ActiveRecord::Base
   acts_as_paranoid
   acts_as_duplicable
   acts_as_superclass as: :as_question
+  acts_as_taggable
 
   attr_accessible :creator_id, :dependent_id
   attr_accessible :title, :description, :max_grade, :attempt_limit, :staff_comments
@@ -12,12 +13,13 @@ class Assessment::Question < ActiveRecord::Base
 
   #TODO, dependent: :destroy here
   has_many  :question_assessments, dependent: :destroy
-  has_many  :taggable_tags, as: :taggable, dependent: :destroy
-  has_many  :tags, through: :taggable_tags
+  # has_many  :taggable_tags, as: :taggable, dependent: :destroy
+  # has_many  :tags, through: :taggable_tags
   #was std_answers
   has_many  :answers, class_name: Assessment::Answer, dependent: :destroy
-  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answers
+  has_many  :answer_gradings, class_name: Assessment::AnswerGrading, through: :answer
   has_one   :comment_topic, as: :topic
+  # accepts_nested_attributes_for :tags
 
   before_update :clean_up_description, :if => :description_changed?
   after_update  :update_assessment_grade, if: :max_grade_changed?
@@ -57,7 +59,7 @@ class Assessment::Question < ActiveRecord::Base
   #proxy methods
   def self.assessments
     Assessment.joins("LEFT JOIN  question_assessments ON question_assessments.assessment_id = assessments.id")
-    .where("question_assessments.question_id IN (?)", self.all)
+    .where("question_assessments.question_id IN (?)", self.all).uniq
   end
 
   #TODO: i hope mysql is smart enough to optimize this

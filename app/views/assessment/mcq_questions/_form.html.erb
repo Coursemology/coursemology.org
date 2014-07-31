@@ -4,6 +4,7 @@
 
     <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
     <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"} %>
+    <%= f.input :tags, as: :tag, url: course_tags_path, input_html: {class: "span7"}  %>
     <%= f.input :select_all, as: :boolean,
                 input_html: {class: ""},
                 inline_label:"Student must pick all correct answers" %>

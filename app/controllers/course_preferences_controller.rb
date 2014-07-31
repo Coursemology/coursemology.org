@@ -9,12 +9,12 @@ class CoursePreferencesController < ApplicationController
     case @tab
       when 'mission'
         @tab = "MissionPreference"
-        @preferences = @course.assessment_columns('mission', true)
+        @preferences = @course.assessment_columns('mission')
         @time_format =  @course.time_format('mission')
         @auto_submit = @course.auto_create_sbm_pref
       when 'training'
         @tab = "TrainingPreference"
-        @preferences = @course.assessment_columns('training', true)
+        @preferences = @course.assessment_columns('training')
         @time_format =  @course.time_format('training')
         @reattempt = @course.training_reattempt
       when 'mcq'

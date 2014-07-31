@@ -26,7 +26,7 @@ class CourseAbility  < Ability
       cannot :read, [Assessment::Mission, Assessment::Training]
     end
 
-    if user.is_lecturer? || user.is_admin?
+    if user.is_lecturer?
       can :ask_for_share, Course
       can :create, Course
       user.user_courses.lecturer.includes(:course).each do |uc|
@@ -34,7 +34,7 @@ class CourseAbility  < Ability
       end
     end
 
-    if user_course.is_shared? || user.is_admin?
+    if user_course.is_shared?
       can :share, Course
       can :participate, Course
       can :duplicate, Course
@@ -47,30 +47,25 @@ class CourseAbility  < Ability
     if user.is_admin?  || user_course.is_staff?
       # this is enough since all resources are loaded related to
       # the current course
-      # can :manage, :all
-      can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
-      can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
-      can :manage, [Assessment::Answer, Assessment::McqAnswer, Assessment::CodingAnswer, Assessment::GeneralAnswer]
-      can :manage, [Level, Achievement, Tag, Tab, Announcement]
-      can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
-      can :manage, [Survey, ForumForum, ForumTopic]
-      can :manage, [Course, UserCourse, ExpTransaction]
-      can :manage, [Annotation, Comment]
-      can :participate, Course
-      can :duplicate, Course
-      # can :award_points, UserCourse
-      can :see, :pending_gradings
-      can :see, :pending_comments
-      can :unsubmit, Assessment::Submission
-      can :view, :staff_leaderboard
-      can :manage, :forum_participation
-      can :manage, [EnrollRequest, MassEnrollmentEmail]
+      can :manage, :all
+      # can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
+      # can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      # can :manage, [Assessment::Answer, Assessment::McqAnswer, Assessment::CodingAnswer, Assessment::GeneralAnswer]
+      # can :manage, [Level, Achievement, Tab, Announcement]
+      # can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
+      # can :manage, [Survey, ForumForum, ForumTopic]
+      # can :manage, [Course, UserCourse, ExpTransaction]
+      # can :manage, [Annotation, Comment]
+      # can :manage, [TagGroup, Tag]
+      # can :see, :pending_gradings
+      # can :see, :pending_comments
+      # can :view, :staff_leaderboard
+      # can :manage, :forum_participation
+      # can :manage, [EnrollRequest, MassEnrollmentEmail]
 
       cannot :modify, Assessment::Submission
-    end
-
-    if user.is_admin? || user_course.is_creator?
-      can :destroy, Course
+      #TOFIX, this is just for english
+      cannot :manage, TagGroup, name: "Uncategorized"
     end
 
     if user_course.is_lecturer? && !user.is_admin?

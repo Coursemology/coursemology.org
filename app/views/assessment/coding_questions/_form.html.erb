@@ -10,6 +10,8 @@
                       include_blank: true, hint: "Include student solution from this question" %>
 
     <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :tags, as: :tag, url: course_tags_path, input_html: {class: "span7"}  %>
+
     <%= f.input :auto_graded, as: :boolean, inline_label: "Check to enable auto-grading",
                 wrapper_html: {class: "#{'hidden' unless @assessment.is_mission?}"},
                 input_html: {"data-toggle" => "collapse", "data-target" => "#auto-grading-setting"}  %>

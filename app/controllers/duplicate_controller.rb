@@ -167,7 +167,7 @@ class DuplicateController < ApplicationController
 
     #tags
     q_logs = clone.questions.all_dest_logs
-    clone.taggable_tags.each do |tt|
+    clone.taggings.each do |tt|
       l = (tt.taggable.duplicate_logs_orig & q_logs).first
       unless l
         next

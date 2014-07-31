@@ -10,8 +10,7 @@ class Course < ActiveRecord::Base
                   :missions_attributes,
                   :trainings_attributes
 
-  before_create :populate_preference
-  after_create  :create_materials_root
+  after_create  :initialize_default_settings
 
   belongs_to :creator, class_name: "User"
 
@@ -27,7 +26,7 @@ class Course < ActiveRecord::Base
   has_many  :comics, dependent: :destroy
   has_many  :tag_groups, dependent: :destroy
   has_many  :tags, dependent: :destroy
-  has_many  :taggable_tags, through: :tags
+  has_many  :taggings, through: :tags
   has_many  :surveys, dependent: :destroy
   has_many  :forums, dependent: :destroy, class_name: 'ForumForum'
   has_many  :tabs, dependent: :destroy
@@ -92,10 +91,6 @@ class Course < ActiveRecord::Base
 
   def pending_comments
     self.comment_topics.where(pending: true)
-  end
-
-  def create_materials_root
-    MaterialFolder.create(:course => self, :name => "Root")
   end
 
   #TODO: scope in survey model
@@ -340,6 +335,12 @@ class Course < ActiveRecord::Base
     is_staff ? tabs : tabs.where(is_displayed: true)
   end
 
+  def initialize_default_settings
+    populate_preference
+    create_materials_root
+    create_uncategorized_taggroup
+  end
+
   def populate_preference
     puts "populate_preference populate_preference"
     course_preferences.each do |pref|
@@ -384,6 +385,14 @@ class Course < ActiveRecord::Base
         pref.save
       end
     end
+  end
+
+  def create_materials_root
+    MaterialFolder.create(:course => self, :name => "Root")
+  end
+
+  def create_uncategorized_taggroup
+    self.tag_groups.create({name: "Uncategorized"})
   end
 
 

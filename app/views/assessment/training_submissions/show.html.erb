@@ -27,7 +27,7 @@
     <% if qn.specific.class == Assessment::McqQuestion %>
         <% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options) %>
         <% if answers.length > 0 %>
-            <%=render partial: "assessment/mcqs/one", locals: {q: qn} %>
+            <%=render partial: "assessment/mcq_questions/one", locals: {q: qn} %>
             <%=render partial: "mcq_review", locals: {answers: answers} %>
         <% end %>
     <% elsif qn.specific.class == Assessment::CodingQuestion %>

@@ -99,7 +99,7 @@
                 </div>
 
                 <% if q.class == Assessment::McqQuestion %>
-                    <%= render partial: "assessment/mcqs/one", locals: { q: q, show_answer: true } %>
+                    <%= render partial: "assessment/mcq_questions/one", locals: { q: q, show_answer: true } %>
                 <% else %>
                     <%= style_format(q.description) %>
                 <% end %>

@@ -3,7 +3,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
 
   def show
-    if curr_user_course.is_student?
+    if curr_user_course.is_student? && !current_user.is_admin?
       redirect_to course_assessment_trainings_path
       return
     end

@@ -1,5 +1,4 @@
 class Assessment::GeneralQuestionsController < Assessment::QuestionsController
-  before_filter {|c| c.build_resource Assessment::GeneralQuestion}
 
   def create
     saved = super
@@ -16,6 +15,7 @@ class Assessment::GeneralQuestionsController < Assessment::QuestionsController
   end
 
   def update
+    super
     respond_to do |format|
       if @question.update_attributes(params[:assessment_general_question])
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),

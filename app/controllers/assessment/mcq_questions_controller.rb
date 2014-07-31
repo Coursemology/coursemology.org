@@ -1,6 +1,5 @@
-class Assessment::McqsController < Assessment::QuestionsController
+class Assessment::McqQuestionsController < Assessment::QuestionsController
   # https://github.com/ryanb/cancan/wiki/Nested-Resources
-  before_filter {|c| c.build_resource Assessment::McqQuestion}
 
   def update_answers(mcq)
     updated = true
@@ -42,6 +41,7 @@ class Assessment::McqsController < Assessment::QuestionsController
   end
 
   def update
+    super
     updated = update_answers(@question) && @question.update_attributes(params["assessment_mcq_question"])
     respond_to do |format|
       if updated && @question.save

@@ -9,10 +9,25 @@
       <%= render  partial: "assessment/trainings/tabs" %>
       <%- new_url = new_course_assessment_training_path(@course) %>
       <%- ast_path = lambda { |c, a| course_assessment_training_path(c, a) } %>
+      <%- asts_path = course_assessment_trainings_path %>
   <% else %>
       <%= render partial: "assessment/missions/navigation", locals: {title: title} %>
       <%- new_url = new_course_assessment_mission_path(@course) %>
       <%- ast_path = lambda { |c, a| course_assessment_mission_path(c, a) } %>
+      <%- asts_path = course_assessment_missions_path %>
+  <% end %>
+  <% to_display = @summary[:columns].keys %>
+  <% if to_display.include? 'tag' %>
+      <%= form_tag asts_path, :method => 'get', class: "form-inline" do %>
+          <label>Filter by Tag:</label>
+          <div class="tag" style="display: inline; width: 400px">
+            <input type="tag" name="tags"
+                   allowFreeTagging="false"
+                   url="<%= course_tags_path %>"
+                   value="<%= @summary[:selected_tags].map {|s| {id: 0, name:s}}.to_json %>">
+          </div>
+          <button type="submit" class="btn">Search</button>
+      <% end %>
   <% end %>
 
   <% if can? :create, Assessment %>
@@ -21,10 +36,6 @@
                     new_url,
                     :class => 'btn btn-primary' %>
       </p>
-  <% end %>
-  <% to_display = @summary[:columns].keys %>
-  <% if to_display.include? 'tag' %>
-      <p class="assignments-blurb"><em>* Click on the tags to view <%= @course.customized_title(model_name).pluralize.downcase %> and <%= @course.customized_title('Training').pluralize.downcase %> in that tag.</em></p>
   <% end %>
 
   <table class="table assignments missions-list-table">
