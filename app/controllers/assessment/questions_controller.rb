@@ -22,6 +22,10 @@ class Assessment::QuestionsController < ApplicationController
     @question.save && qa.save
   end
 
+  def update
+
+  end
+
   def destroy
     @question.destroy
     respond_to do |format|
