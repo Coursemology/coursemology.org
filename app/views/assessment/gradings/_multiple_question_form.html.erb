@@ -135,7 +135,7 @@
       </div>
     </div>
     <% unless @assessment.comment_per_qn? %>
-        <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_mission_submission_url(@course, @mission, @submission) %>">
+        <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
         <div class="row">
           <div class="span8">
             <%= render partial: "comments/list",
