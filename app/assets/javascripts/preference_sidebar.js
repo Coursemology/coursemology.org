@@ -3,8 +3,13 @@ $(document).ready(function() {
 		e.preventDefault(); 
 		var $select_option = $('#course_navbar_preference_course_id').find(':selected');
 		if($select_option.val()){			       
-			var data = { func : 'add', id : $select_option.val() };  
-			sidebar_update_values(data, this);		
+			var data = {add : true, id : $select_option.val(), arg : {is_enabled : true}, success_func : function(result){
+					if(result != null){
+						update_layout_add(result);
+					}					
+				}
+			};  
+			sidebar_update_values(data);		
 		}		
 	});
 	
@@ -12,7 +17,7 @@ $(document).ready(function() {
     	e.preventDefault();
     	var id = $(this).attr('id').split('_')[$(this).attr('id').split('_').length - 1];	
         var data = { func : 'update_display_st_level_ach',id : id, checked : $(this).is(":checked") };         	
-        update_display_student_level_achievement(data, this);         
+        update_display_student_level_achievement(data);         
     });
     
 	$('.btn-remove-sidebar-item').click(function(e) {
@@ -76,8 +81,13 @@ $(document).ready(function() {
 		    
 		    //update database
 		    var index = $('#tb_course_navbar_preferences tr').index($temp_tr);			
-			var data = { func : 'update_pos', id : $temp_tr.next('input').val(), pos : index, old_pos : old_pos };    			
-	        sidebar_update_values(data, $temp_tr);	    
+			var data = { arg : {pos : index}, id : $temp_tr.next('input').val(), pos : index, old_pos : old_pos, success_func : function(result){
+				if(result != null && !isNaN(result.index)){
+						update_layout_pos($temp_tr,result.index, result.count);
+					}
+				}
+			};    			
+	        sidebar_update_values(data);	    
 	    }	
 	});    
 	$("#tb_course_navbar_preferences tbody").mousedown(function(){
@@ -87,9 +97,15 @@ $(document).ready(function() {
 });
 
 function set_event_remove(e, handler){
-	e.preventDefault();        
-	var data = { func : 'remove', id : '0' };  
-	sidebar_update_values(data, handler);		
+	e.preventDefault();
+	var id = $(handler).parent().parent().next().val();	
+	var data = { arg : {is_enabled : false}, id : id, success_func : function(result){
+			if(result != null && result.status == 'OK'){
+				update_layout_remove(handler);
+			}
+		}
+	};  
+	sidebar_update_values(data);		
 }
 
 function set_event_update_name(e, handler){
@@ -97,20 +113,27 @@ function set_event_update_name(e, handler){
 	   if($(handler).val() === ''){
 		$(handler).val($(handler).data("old_value"));
     }else{            
-	    var data = { func : 'update_name', id : '0', name : $(handler).val() };    
-	    sidebar_update_values(data, handler);	       
+    	var id = $(handler).parent().parent().next().val();
+	    var data = { arg : {name : $(handler).val()}, id : id, success_func : function(result){
+				if(result != null && result.status == 'OK'){
+					update_layout_name(handler);
+				}
+			}
+		};    
+	    sidebar_update_values(data);	       
 	}
 }
 
 function set_event_update_displayed(e, handler){
-	e.preventDefault();         	
-	var data = { func : 'update_is_displayed', id : '0', checked : $(handler).is(":checked") };          	
-    sidebar_update_values(data, $(handler).parent());
+	e.preventDefault();
+	var id = $(handler).parent().parent().parent().next().val();       	
+	var data = { arg : {is_displayed : $(handler).is(":checked")}, id : id, success_func : function(result){} };          	
+    sidebar_update_values(data);
 }
 function update_layout_pos(handler, index, count){	
-	var item = handler.find('input.sidebar-item-name').val();       
-	var $litag = $('ul#navbar_tabs span#badge_' + item).parent().parent().clone();	
-	$('ul#navbar_tabs span#badge_' + item).parent().parent().remove();
+	var item_name = handler.find('input.sidebar-item-name').val();       
+	var $litag = $('li#li_' + item_name).clone();	
+	$('li#li_' + item_name).remove();
 	if(parseInt(index) <= parseInt(count - 2)){
 		$('ul#navbar_tabs li:eq(' + index + ')').before($litag);
 	}else {
@@ -120,14 +143,8 @@ function update_layout_pos(handler, index, count){
 }
 
 function update_layout_name(handler){
-	var $tr_to_change = $(handler).parent().parent();
-	var item = $tr_to_change.find('input.sidebar-item-name').val();        
-	var $atag = $('ul#navbar_tabs span#badge_' + item).parent();
-	var $children = $atag.children();	
-	$atag.empty();	
-	$atag.append($children.eq(0));	
-	$atag.append($(handler).val());
-	$atag.append($children.eq(1));
+	var item_name = $(handler).parent().parent().find('input.sidebar-item-name').val();
+	$('span#sp_text_' + item_name).text($(handler).val());
 	$(handler).data("old_value", $(handler).val());
 }
 
@@ -139,23 +156,23 @@ function update_layout_remove(handler){
 		value : $tr_to_hide.next().val(),
 		text : $tr_to_hide.children(':first').children(':first').val()
 	}));
-	var item = $tr_to_hide.find('input.sidebar-item-name').val();
-	$('ul#navbar_tabs span#badge_' + item).parent().parent().hide(); 
+	var item_name = $tr_to_hide.find('input.sidebar-item-name').val();
+	$('li#li_' + item_name).hide(); 
 
 }
 
-function update_layout_add(handler ,result){
+function update_layout_add(result){
 	var $tr_to_show = $('input:hidden[value="'+ result.id +'"]').prev();		
 	$tr_to_show.find('input[id*="is_enabled"]').prop('checked', true);
 	$tr_to_show.removeClass('hidden_navbar_tr');
 	$('#course_navbar_preference_course_id').find(':selected').remove();
 			
-	var litag = '<li>';
+	var litag = '<li id="li_' + result.item + '">';
 	litag += 		'<a href="' + result.url + '">';
 	litag += 			'<span class="nav-icon">';
 	litag += 				'<i class="' + result.icon + '"></i>';
 	litag += 			'</span>';
-	litag += 			result.name;
+	litag += 			'<span id="sp_text_' + result.item + '">' + result.name + '</span>';
 	litag += 			'<span id="badge_' + result.item + '" class="sidenav-count" style="display: none"></span>';
 	litag +=		'</a>';
 	litag +=	'</li>';
@@ -167,34 +184,21 @@ function update_layout_add(handler ,result){
 	}
 }
 
-function sidebar_update_values(data, handler){		
-	var course_id = $('div.div-add-item-sidebar input.sidebar-course-id').val();        
-	var url = '/courses/' + course_id + '/preferences/sidebar_update_values';		
-	if(data.func != 'add' && data.func != 'update_pos'){
-		data.id = $(handler).parent().parent().next().val();	
-	}		
+function sidebar_update_values(data){	
+	var url = $('input.hdf-ajax-update-navbar-url').val();		
 	$.ajax({
 		url : url,
 		type : 'POST',
 		dataType : 'json',
 		data : data,
 		success : function(result) {
-			if (data.func == 'add' && result != null){
-				update_layout_add(handler ,result);
-			}else if (data.func == 'remove' && result.status == 'OK'){
-				update_layout_remove(handler);
-			}else if (data.func == 'update_name' && result.status == 'OK'){
-				update_layout_name(handler);
-			}else if (data.func == 'update_pos' && !isNaN(result.index)){				
-				update_layout_pos(handler,result.index, result.count);
-			}			
+			data.success_func(result);					
 		}
 	}); 	
 }
 
-function update_display_student_level_achievement(data, handler){		
-	var course_id = $('div.div-add-item-sidebar input.sidebar-course-id').val();        
-	var url = '/courses/' + course_id + '/preferences/update_display_student_level_achievement';	
+function update_display_student_level_achievement(data){
+	var url = $('input.hdf-ajax-update-level-ach-url').val();	
 	$.ajax({
 		url : url,
 		type : 'POST',

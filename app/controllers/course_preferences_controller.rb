@@ -67,41 +67,31 @@ class CoursePreferencesController < ApplicationController
     
     cnp = CourseNavbarPreference.find(params[:id])
     cnp_arr = []
-    case params[:func]
-      when 'add'
-        cnp.is_enabled = true    
-      when 'remove'
-        cnp.is_enabled = false
-      when 'update_name'
-        cnp.name = params[:name]
-      when 'update_pos'        
-        if params[:pos].to_i > params[:old_pos].to_i
-          CourseNavbarPreference.where(:course_id => @course.id).where('pos > ? and pos <= ?',params[:old_pos],params[:pos]).each do |c|
-            c.pos = c.pos - 1
-            cnp_arr << c     
-          end
-        elsif params[:pos].to_i < params[:old_pos].to_i
-          CourseNavbarPreference.where(:course_id => @course.id).where(' pos >= ? and pos < ?',params[:pos],params[:old_pos]).each do |c|
-            c.pos = c.pos + 1
-            cnp_arr << c           
-          end
+    if params.has_key? :pos        
+      if params[:pos].to_i > params[:old_pos].to_i
+        CourseNavbarPreference.where(:course_id => @course.id).where('pos > ? and pos <= ?',params[:old_pos],params[:pos]).each do |c|
+          c.pos = c.pos - 1
+          cnp_arr << c     
         end
-        cnp.pos = params[:pos]
-      when 'update_is_displayed'
-        cnp.is_displayed = params[:checked]=='true' ? 1 : 0         
-    end    
+      elsif params[:pos].to_i < params[:old_pos].to_i
+        CourseNavbarPreference.where(:course_id => @course.id).where(' pos >= ? and pos < ?',params[:pos],params[:old_pos]).each do |c|
+          c.pos = c.pos + 1
+           cnp_arr << c           
+        end
+      end         
+    end
     
     respond_to do |format|      
-      if cnp.save         
-        if params[:func] == 'add' || params[:func] == 'update_pos'
-          if cnp_arr.count > 0
-            cnp_arr.each do |c|
-              c.save
-            end
+      if cnp.update_attributes(params[:arg])
+        if cnp_arr.count > 0
+          cnp_arr.each do |c|
+            c.save
           end
+        end   
+        if (params.has_key? :add) || (params.has_key? :pos)          
           tags = @course.course_navbar_preferences.where(is_enabled: true).order(:pos)
           new_index = tags.find_index{ |item| item.id.to_s == params[:id] }
-          if params[:func] == 'add'
+          if params.has_key? :add
             url_and_icon = get_url_and_icon(cnp.item);
             format.json { render json: { index: new_index,
                                          count: tags.count,

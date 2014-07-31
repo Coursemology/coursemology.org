@@ -24,6 +24,8 @@
 	    <input type="button" value="Add" class=" btn btn-primary" id="btn_add_sidebar_item"/>
 	    <input type="hidden" class="sidebar-course-id" value="<%= @course.id %>"/>   
     </div>
+    <input type="hidden" class="hdf-ajax-update-navbar-url" value="/courses/<%= @course.id %>/preferences/sidebar_update_values"/>
+    <input type="hidden" class="hdf-ajax-update-level-ach-url" value="/courses/<%= @course.id %>/preferences/update_display_student_level_achievement"/>
     <h3>Levels and Achievement:</h3>
     <p><%= @ranking.preferable_item.description %></p>
     <div class="info-block checkbox-text">    	
