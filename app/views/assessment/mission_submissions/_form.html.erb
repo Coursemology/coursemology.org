@@ -33,7 +33,7 @@
                 <% if question.class == Assessment::GeneralQuestion %>
                     <textarea name="answers[<%= q.id %>]" class="span8 html-editor" rows="8">
                       <% if answer %>
-                          <%= answer.answer %>
+                          <%= answer.content %>
                       <% end %>
                     </textarea>
                 <% else %>
