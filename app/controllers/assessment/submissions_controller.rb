@@ -22,7 +22,7 @@ class Assessment::SubmissionsController < ApplicationController
       @reattempt = @course.training_reattempt
       #continue unfinished training, or go to finished training of can't reattempt
       if sbm && (!sbm.graded? ||  !@reattempt || !@reattempt.display)
-        redirect_to edit_course_assessment_assessment_submission_path(@course, @assessment, sbm)
+        redirect_to edit_course_assessment_submission_path(@course, @assessment, sbm)
         return
       end
       sbm_count = @assessment.submissions.where(std_course_id: curr_user_course).count
