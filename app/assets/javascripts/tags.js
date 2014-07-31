@@ -30,6 +30,11 @@ $(document).ready(function() {
         var url = $a.attr("url");
         var existing = [];
         var result = [];
+        var allowFreeTagging = true;
+        if ($a.attr("allowFreeTagging") == "false") {
+            allowFreeTagging = false;
+        }
+
         if($a.attr("value") != "")
             existing = JSON.parse($a.attr("value"));
         if(url != "") {
@@ -44,13 +49,13 @@ $(document).ready(function() {
                 async: false
             });
         }
-        var x = $a.tokenInput(result,
+        $a.tokenInput(result,
             {
                 prePopulate: existing,
                 tokenValue: "name",
                 theme: "facebook",
                 searchDelay: 0,
-                allowFreeTagging: true,
+                allowFreeTagging: allowFreeTagging,
                 preventDuplicates: true,
                 hintText: "Type in a tag"});
 

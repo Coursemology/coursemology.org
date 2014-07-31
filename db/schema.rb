@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140729064205) do
+ActiveRecord::Schema.define(:version => 20140729131241) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -758,6 +758,21 @@ ActiveRecord::Schema.define(:version => 20140729064205) do
   add_index "notifications", ["obj_id", "obj_type"], :name => "index_notifications_on_obj_id_and_obj_type"
   add_index "notifications", ["target_course_id"], :name => "index_notifications_on_target_course_id"
 
+  create_table "old_tags", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "course_id"
+    t.string   "icon_url"
+    t.integer  "max_exp"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "tag_group_id"
+    t.time     "deleted_at"
+  end
+
+  add_index "old_tags", ["course_id"], :name => "index_tags_on_course_id"
+  add_index "old_tags", ["tag_group_id"], :name => "index_tags_on_tag_group_id"
+
   create_table "pending_actions", :force => true do |t|
     t.integer  "course_id"
     t.integer  "user_course_id"
@@ -1065,19 +1080,31 @@ ActiveRecord::Schema.define(:version => 20140729064205) do
 
   add_index "taggable_tags", ["taggable_id", "taggable_type"], :name => "index_taggable_tags_on_taggable_id_and_taggable_type"
 
-  create_table "tags", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "course_id"
-    t.string   "icon_url"
-    t.integer  "max_exp"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.integer  "tag_group_id"
-    t.time     "deleted_at"
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       :limit => 128
+    t.datetime "created_at"
   end
 
-  add_index "tags", ["course_id"], :name => "index_tags_on_course_id"
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], :name => "taggings_idx", :unique => true
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string   "name"
+    t.integer  "taggings_count", :default => 0
+    t.text     "description"
+    t.integer  "course_id"
+    t.integer  "tag_group_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tags", ["name"], :name => "index_tags_on_name"
   add_index "tags", ["tag_group_id"], :name => "index_tags_on_tag_group_id"
 
   create_table "theme_attributes", :force => true do |t|

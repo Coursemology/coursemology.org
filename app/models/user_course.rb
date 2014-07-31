@@ -53,8 +53,6 @@ class UserCourse < ActiveRecord::Base
   has_many :submissions, class_name: Assessment::Submission,
            foreign_key: "std_course_id", dependent: :destroy
 
-
-
   has_many :seen_assessments, through: :seen_stuff, source: :obj, source_type: "Assessment"
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"

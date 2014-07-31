@@ -303,7 +303,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
         var x = function(){
             var len = $(document).scroll().width() - self.wrapper.offset().left - self.wrapper.width();
             _cb_mw = len;
-        }
+        };
         x();
     }
 

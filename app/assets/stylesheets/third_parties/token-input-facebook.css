@@ -3,7 +3,6 @@ ul.token-input-list-facebook {
     overflow: hidden; 
     height: auto !important; 
     height: 1%;
-    /*width: 400px;*/
     border: 1px solid #cccccc;
     border-radius: 3px;
     cursor: text;
@@ -14,11 +13,16 @@ ul.token-input-list-facebook {
     padding: 0;
     background-color: #fff;
     list-style-type: none;
+    width: inherit;
     /*clear: left;*/
 }
 
 .tag[class*="span"] {
     margin-left: 0px;
+}
+
+.tag ul{
+  display: inline-flex;
 }
 
 ul.token-input-list-facebook li input {

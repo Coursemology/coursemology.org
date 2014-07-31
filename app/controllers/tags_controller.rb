@@ -36,8 +36,9 @@ class TagsController < ApplicationController
   end
 
   def show
-    @missions = @tag.missions.accessible_by(current_ability)
-    @trainings = @tag.trainings.accessible_by(current_ability)
+    @questions =  @course.questions.tagged_with(@tag, any: true)
+    @missions = @questions.assessments.accessible_by(current_ability).mission
+    @trainings = @questions.assessments.accessible_by(current_ability).training
   end
 
   def index

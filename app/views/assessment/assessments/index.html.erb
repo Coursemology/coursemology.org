@@ -21,7 +21,9 @@
       <%= form_tag asts_path, :method => 'get', class: "form-inline" do %>
           <label>Filter by Tag:</label>
           <div class="tag" style="display: inline; width: 400px">
-            <input type="tag" name="tags" url="<%= course_tags_path %>"
+            <input type="tag" name="tags"
+                   allowFreeTagging="false"
+                   url="<%= course_tags_path %>"
                    value="<%= @summary[:selected_tags].map {|s| {id: 0, name:s}}.to_json %>">
           </div>
           <button type="submit" class="btn">Search</button>

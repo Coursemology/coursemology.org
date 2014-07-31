@@ -65,7 +65,7 @@ Coursemology::Application.routes.draw do
 
       resources :assessment_mcq_questions,
                 path:       :mcqs,
-                controller: :mcqs
+                controller: :mcq_questions
 
       resources :assessment_coding_questions,
                 path:       :coding_questions,
@@ -131,11 +131,11 @@ Coursemology::Application.routes.draw do
       post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
     end
 
+    resources :tags
+
 
 
     get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
-
-    resources :mcq_answers
 
     resources :announcements
 
@@ -184,8 +184,6 @@ Coursemology::Application.routes.draw do
     match "enroll_requests/delete_selected" => "enroll_requests#delete_selected", as: :enroll_request_delete_selected
 
     resources :enroll_requests
-
-    resources :tags
 
     resources :tag_groups
 
