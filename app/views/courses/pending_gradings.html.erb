@@ -22,7 +22,7 @@
         <td>
           <%= sub.std_course.get_my_tutor_name %>
         </td>
-        <% if can? :manage, SubmissionGrading %>
+        <% if can? :manage, Assessment::Submission %>
 
             <td>
               <%= link_to "Evaluate",
