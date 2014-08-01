@@ -86,9 +86,13 @@ class Assessment < ActiveRecord::Base
     # as_requirements
   end
 
+  #callbacks
   before_update :clean_up_description, :if => :description_changed?
+  after_save :update_opening_tasks, if: [:open_at_changed?, :published]
+  after_save :update_closing_tasks, if: [:close_at_changed?, :published]
+  after_save :create_or_destroy_tasks, if: :published_changed?
 
-  #was get title
+
 
   def self.submissions
     Assessment::Submission.where(assessment_id: self.all)
@@ -111,11 +115,11 @@ class Assessment < ActiveRecord::Base
   end
 
   def is_mission?
-    as_assessment_type == "Assessment::Mission"
+    as_assessment_type == Assessment::Mission.name
   end
 
   def is_training?
-    as_assessment_type == "Assessment::Training"
+    as_assessment_type == Assessment::Training.name
   end
 
   def single_question?
@@ -148,8 +152,8 @@ class Assessment < ActiveRecord::Base
 
   def get_path
     is_mission? ?
-        course_assessment_mission_path(self.course, self.specific) :
-        course_assessment_training_path(self.course, self.specific)
+        course_assessment_mission_url(self.course, self.specific) :
+        course_assessment_training_url(self.course, self.specific)
   end
 
   def as_lesson_plan_entry
@@ -187,39 +191,6 @@ class Assessment < ActiveRecord::Base
       end
     end
     true
-  end
-
-  #TODO
-  def schedule_tasks(redirect_to)
-    # type = self.class
-    # QueuedJob.destroy(self.queued_jobs)
-    # course = self.course
-    #
-    # #enqueue pending action job
-    # delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, type.to_s, self.id), run_at: self.open_at)
-    # self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    #
-    # if self.open_at > Time.now && type == Mission && course.auto_create_sbm_pref.display?
-    #   BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel', self.id)
-    #   delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create', self.id), run_at: self.open_at)
-    #   self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    # end
-    #
-    # if type == Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
-    #   return
-    # end
-    # if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
-    #   return
-    # end
-    # if self.open_at >= Time.now and self.publish?
-    #   delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to), run_at: self.open_at)
-    #   self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    # end
-    #
-    # if type == Mission and self.close_at >= Time.now and self.publish?
-    #   delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to, true), run_at: 1.day.ago(self.close_at))
-    #   self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    # end
   end
 
   #TOFIX: it's better to have callback rather than currently directly call this in
@@ -283,5 +254,71 @@ class Assessment < ActiveRecord::Base
         file.save
       end
     end
+  end
+
+  #callbacks
+  def update_opening_tasks
+    puts "update openining tasks "
+    #1. pending actions
+    #2. auto submission
+    #3. email notifications
+
+    tks = {PendingAction: true,
+           AutoSubmissions:  is_mission? && course.auto_create_sbm_pref.enabled?,
+           Notification: self.open_at >= Time.now &&
+               course.email_notify_enabled?(PreferableItem.new_assessment(as_assessment_type.constantize)) }
+
+    tks.each do |type, condition|
+      if condition
+        self.queued_jobs.where(job_type: type).destroy_all
+        delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course, type, Assessment.to_s.to_sym, self.id), run_at: self.open_at)
+        self.queued_jobs.create({delayed_job_id: delayed_job.id, job_type: type})
+      end
+    end
+  end
+
+  def update_closing_tasks
+    #1. remainder
+    puts "update closing tasks "
+
+  end
+
+  def create_or_destroy_tasks
+    unless published?
+      QueuedJob.destroy(self.queued_jobs)
+    end
+  end
+
+  #TODO
+  def schedule_tasks(redirect_to)
+    # type = self.class
+    #
+    # course = self.course
+    #
+    # #enqueue pending action job
+    # delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, type.to_s, self.id), run_at: self.open_at)
+    # self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    #
+    # if self.open_at > Time.now && is_mission? && course.auto_create_sbm_pref.enabled?
+    #   BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel', self.id)
+    #   delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create', self.id), run_at: self.open_at)
+    #   self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    # end
+    #
+    # if type == Mission && !course.email_notify_enabled?(PreferableItem.new_mission)
+    #   return
+    # end
+    # if type == Training && !course.email_notify_enabled?(PreferableItem.new_training)
+    #   return
+    # end
+    if self.open_at >= Time.now and self.published?
+      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, self.class.to_s, self.id, redirect_to), run_at: self.open_at)
+      self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    end
+    #
+    # if is_mission? and self.close_at >= Time.now and self.publish?
+    #   delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, type.to_s, self.id, redirect_to, true), run_at: 1.day.ago(self.close_at))
+    #   self.queued_jobs.create(delayed_job_id: delayed_job.id)
+    # end
   end
 end

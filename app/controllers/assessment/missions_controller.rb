@@ -63,7 +63,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     respond_to do |format|
       if @mission.save
         @mission.create_local_file
-        @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been created." }
       else
@@ -76,7 +75,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
         update_single_question_type
-        @mission.schedule_tasks(course_assessment_mission_url(@course, @mission))
         format.html { redirect_to course_assessment_mission_path(@course, @mission),
                                   notice: "The mission #{@mission.title} has been updated." }
       else
