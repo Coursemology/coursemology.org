@@ -43,8 +43,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   end
 
   def cancel_submissions_mission(asm)
-    q = QueuedJob.where(owner_id: asm.id, owner_type: asm.class.to_s, job_type: 'AutoSubmissions')
-    q.destroy_all
+    asm.queued_jobs.where(job_type: :AutoSubmissions).destroy_all
   end
 
   def create_submissions_mission(asm)
@@ -56,28 +55,9 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
         sbm.std_course = uc
         sbm.save
       end
-      sbm.build_initial_answers(uc.user)
+      sbm.build_initial_answers
       sbm.update_attribute(:status,'submitted')
       sbm.update_attribute(:submitted_at, Time.now)
-    end
-  end
-
-  def cancel_submissions_course(course)
-    course.missions.each do |mission|
-      cancel_submissions_mission(mission)
-    end
-  end
-
-  def create_submissions_course(course)
-    course.missions.each do |mission|
-      if mission.open_at > Time.now
-        q = QueuedJob.new
-        q.owner = mission
-        q.delayed_job_id = Delayed::Job.enqueue(
-            BackgroundJob.new(course.id, 'AutoSubmissions', 'Create', mission.id),
-            run_at: mission.open_at).id
-        q.save
-      end
     end
   end
 
