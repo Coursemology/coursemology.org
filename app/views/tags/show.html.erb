@@ -20,7 +20,7 @@
             <a href="#" class="btn disabled">Done</a>
           <% else %>
             <%= link_to 'Attempt',
-                    new_course_mission_submission_path(@course, mission),
+                    new_course_assessment_submission_path(@course, mission.assessment),
                     class: 'btn btn-success' %>
           <% end %>
         </td>
@@ -47,7 +47,7 @@
             <% end %>
           <% else %>
             <%= link_to 'Start',
-                    new_course_assessment_training_training_submission_path(@course, training),
+                    new_course_assessment_submission_path(@course, training.assessment),
                     class: 'btn btn-success' %>
           <% end %>
         </td>
