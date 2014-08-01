@@ -18,7 +18,7 @@ class Assessment::AssessmentsController < ApplicationController
 
     if selected_tags
       selected_tags = selected_tags.split(",")
-      @assessments = @course.questions.tagged_with(selected_tags, any: true).assessments.send(assessment_type)
+      @assessments = @course.questions.tagged_with(@course.tags.named_any(selected_tags).all, any: true).assessments.send(assessment_type)
     end
 
     #TODO: refactoring
