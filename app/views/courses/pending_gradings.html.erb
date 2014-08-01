@@ -4,11 +4,11 @@
 <table class="table">
   <thead>
   <tr>
-    <th width="15%">Student</th>
+    <th>Student</th>
     <th>Mission</th>
-    <th width="15%">Submitted at </th>
+    <th>Submitted at </th>
     <th>Tutor</th>
-    <th width="10%">Action</th>
+    <th>Action</th>
   </tr>
   </thead>
   <tbody>
@@ -22,11 +22,11 @@
         <td>
           <%= sub.std_course.get_my_tutor_name %>
         </td>
-        <% if can? :manage, SubmissionGrading %>
+        <% if can? :manage, Assessment::Grading %>
 
             <td>
               <%= link_to "Evaluate",
-                          sub.get_new_grading_path,
+                          new_course_assessment_submission_grading_path(@course, sub.assessment, sub),
                           class: "btn btn-primary" %>
             </td>
         <% end %>
