@@ -136,9 +136,9 @@ class Tag < ActiveRecord::Base
   #   std_tag.save
   # end
   #
-  # def title
-  #   name
-  # end
+  def title
+    name
+  end
 
   class << self
     private
