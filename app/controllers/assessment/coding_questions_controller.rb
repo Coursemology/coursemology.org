@@ -3,6 +3,7 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
 
   def new
     @question.auto_graded = !@assessment.is_mission?
+    @question.language = ProgrammingLanguage.first
     super
   end
 
