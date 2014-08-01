@@ -36,9 +36,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   def edit
     @missions = @course.missions
-    @tags = @course.tags
-    @asm_tags = {}
-    # @mission.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def create
@@ -49,7 +46,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     if params[:files]
       @mission.attach_files(params[:files].values)
     end
-    @mission.update_tags(params[:tags])
 
     if params[:single_question].to_i == 1
       if params[:answer_type] == 'code'

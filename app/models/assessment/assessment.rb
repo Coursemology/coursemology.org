@@ -86,7 +86,6 @@ class Assessment < ActiveRecord::Base
     # as_requirements
   end
 
-  after_save  :after_save_asm
   before_update :clean_up_description, :if => :description_changed?
 
   #was get title
@@ -188,28 +187,6 @@ class Assessment < ActiveRecord::Base
       end
     end
     true
-  end
-
-
-  #TODO
-  def update_tags(all_tags = [])
-    # all_tags = all_tags.collect { |id| id.to_i }
-    # removed_asm_tags = []
-    # existing_tags = []
-    # self.asm_tags.each do |asm_tag|
-    #   if !all_tags.include?(asm_tag.tag_id)
-    #     removed_asm_tags << asm_tag.id
-    #   else
-    #     existing_tags << asm_tag.tag_id
-    #   end
-    # end
-    # AsmTag.delete(removed_asm_tags)
-    # self.add_tags(all_tags - existing_tags)
-  end
-
-  def after_save_asm
-    #TODO
-    # self.tags.each { |tag| tag.update_max_exp }
   end
 
   #TODO
