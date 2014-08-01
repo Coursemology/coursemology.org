@@ -5,6 +5,7 @@ class Ability
     if user
       can :manage, User, id: user.id
       can :manage, RoleRequest, user_id: user.id
+      can :read, Course
       cannot :update_role, User
 
       if user.is_admin?
