@@ -2,16 +2,16 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
   def perform
     course = Course.find_by_id(course_id)
     if reminder
-      mission_reminder(Mission.find(type_id), course)
+      mission_reminder(Assessment::Mission.find(type_id), course)
       return
     end
     case type
       when Announcement.to_s
         new_announcements(Announcement.find(type_id), course)
-      when Mission.to_s
-        new_mission(Mission.find(type_id), course)
-      when Training.to_s
-        new_training(Training.find(type_id), course)
+      when Assessment::Mission.to_s
+        new_mission(Assessment::Mission.find(type_id), course)
+      when Assessment::Training.to_s
+        new_training(Assessment::Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
       when ForumPost.to_s
