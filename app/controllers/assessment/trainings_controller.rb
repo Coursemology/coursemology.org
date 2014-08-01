@@ -36,7 +36,6 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
     @training.position = @course.trainings.count + 1
     @training.creator = current_user
     @training.course_id = @course.id
-    @training.update_tags(params[:tags])
     if params[:files]
       @training.attach_files(params[:files].values)
     end
@@ -55,12 +54,9 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
   def edit
     @tags = @course.tags
-    @asm_tags = {}
-    # @training.asm_tags.each { |asm_tag| @asm_tags[asm_tag.tag_id] = true }
   end
 
   def update
-    @training.update_tags(params[:tags])
     respond_to do |format|
       if @training.update_attributes(params[:assessment_training])
         @training.schedule_tasks(course_assessment_training_url(@course, @training))
