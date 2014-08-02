@@ -82,11 +82,16 @@ class UserMailer < ActionMailer::Base
   end
 
   def mission_due(user, assessment, course)
-    @user_name = user.name
-    @mission_title = mission.title
-    @due_time = mission.close_at
-    @redirect_url = redirect_to
-    mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
+    @user = user
+    @assessment = assessment
+    @redirect_url = new_course_assessment_submission_url(course, assessment)
+    mail(to: @user.email, subject: "[Coursemology] Reminder about #{assessment.title} in Course #{course.title}")
+  end
+
+  def mission_reminder_summary(students, asm, staff)
+    @assessment = asm
+    @students = students
+    mail(to:staff.email,  subject: "Reminder about #{asm.title}")
   end
 
   def forum_digest(user, posts, course, date)
@@ -129,13 +134,6 @@ class UserMailer < ActionMailer::Base
     @course_title = course_title
     @redirect_url = redirect_url
     mail(to: std_email, subject: "Invitation to enroll in: #{course_title}")
-  end
-
-  def mission_reminder_summary(students, mission, staff)
-    @assignment = mission.title
-    @students = students
-    @due_date = mission.close_at
-    mail(to:staff.email,  subject: "Reminder about #{mission.title}")
   end
 
   def course_deleted(title, user)

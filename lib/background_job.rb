@@ -11,6 +11,8 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
         create_submissions_mission(item_type.to_s.constantize.find(item_id))
       when :Notification
         new_notification(item_type, item_id, course)
+      when :mission_due
+        mission_reminder(item_type, item_id, course)
       else
         puts "else"
     end
@@ -71,6 +73,24 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
         else
           puts "new notification"
 
+      end
+    end
+  end
+
+  def mission_reminder(item_type, item_id, course)
+    asm = item_type.to_s.constantize.find(item_id)
+    submitted_std = asm.submissions.map {|sub| sub.std_course.user }
+    all_std = course.user_courses.student.where(is_phantom: false).map {|uc| uc.user }
+
+    students = []
+    (all_std - submitted_std).each do |user|
+      UserMailer.delay.mission_due(user, asm, course)
+      students << {name: user.name, email: user.email}
+    end
+
+    if students.count > 0
+      course.user_courses.staff.each do |staff|
+        UserMailer.delay.mission_reminder_summary(students, asm, staff.user)
       end
     end
   end
