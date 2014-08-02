@@ -3,8 +3,9 @@ class Assessment::McqQuestionsController < Assessment::QuestionsController
 
   def update_answers(mcq)
     updated = true
-    if params[:options]
-      params[:options].each do |i, option|
+    param_options = params["assessment_mcq_question"][:options]
+    if param_options
+      param_options.each do |i, option|
         option['correct'] = option.has_key?('correct')
         if option.has_key?('id')
           opt = Assessment::McqOption.find(option['id'])
