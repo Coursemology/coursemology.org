@@ -31,7 +31,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     @redirect_url = course_assessment_submission_url(course, sbm.assessment, sbm)
     @sbm = sbm
-    mail(to: user.email, subject: "New Submission on : #{mission.title}!")
+    mail(to: user.email, subject: "New Submission on : #{sbm.assessment.title}!")
   end
 
   def new_lecturer(user)
