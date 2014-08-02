@@ -110,7 +110,8 @@ class Assessment::GradingsController < ApplicationController
       end
       if @ag.grade != ag[:grade].to_f
         @ag.grade = ag[:grade].to_f
-        @ag.grader = curr_user_course
+        @ag.grader = current_user
+        @ag.grader_course = curr_user_course
         @ag.save
       end
 

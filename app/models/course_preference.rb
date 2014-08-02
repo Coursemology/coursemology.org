@@ -57,18 +57,37 @@ class CoursePreference < ActiveRecord::Base
   before_update :schedule_auto_sbm_job, :if => :display_changed?
   after_update :update_related_pref, :if => :prefer_value_changed?
 
+  def cancel_submissions
+    course.assessments.mission.each do |asm|
+      asm.queued_jobs.where(job_type: :AutoSubmissions).destroy_all
+    end
+  end
+
+  def create_submissions
+    course.assessments.mission.each do |asm|
+      if asm.open_at > Time.now
+        type = :AutoSubmissions
+        asm.queued_jobs.where(job_type: type).destroy_all
+        delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course, type, Assessment.to_s.to_sym, asm.id), run_at: asm.open_at)
+        asm.queued_jobs.create({delayed_job_id: delayed_job.id, job_type: type})
+      end
+    end
+  end
+
   def schedule_auto_sbm_job
     if preferable_item == PreferableItem.where(item: 'Mission', item_type: 'Submission', name: 'auto').first
-      if display?
-        Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Create'))
-      else
-        Delayed::Job.enqueue(BackgroundJob.new(course_id, 'AutoSubmissions', 'Cancel'))
+      Thread.new do
+         display? ? create_submissions : cancel_submissions
       end
     end
   end
 
   def self.fetch
 
+  end
+
+  def enabled?
+    display?
   end
 
   def update_related_pref

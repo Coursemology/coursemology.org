@@ -43,7 +43,6 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
     respond_to do |format|
       if @training.save
         @training.create_local_file
-        @training.schedule_tasks(course_assessment_training_url(@course, @training))
         format.html { redirect_to course_assessment_training_path(@course, @training),
                                   notice: "The training '#{@training.title}' has been created." }
       else
@@ -59,7 +58,6 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   def update
     respond_to do |format|
       if @training.update_attributes(params[:assessment_training])
-        @training.schedule_tasks(course_assessment_training_url(@course, @training))
         format.html { redirect_to course_assessment_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
       else

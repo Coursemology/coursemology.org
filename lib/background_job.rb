@@ -1,23 +1,24 @@
-class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
+class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   require 'enumerable'
+
   def perform
     course = Course.find_by_id(course_id)
 
-    if name == 'AutoSubmissions'
-      if type == 'Create'
-        item_id ? create_submissions_mission(Mission.find(item_id)) : create_submissions_course(course)
-      elsif type == 'Cancel'
-        item_id ? cancel_submissions_mission(Mission.find(item_id)) : cancel_submissions_course(course)
-      end
+    case name
+      when :PendingAction
+        create_pending_actions(course, item_type, item_id)
+      when :AutoSubmissions
+        create_submissions_mission(item_type.to_s.constantize.find(item_id))
+      when :Notification
+        new_notification(item_type, item_id, course)
+      else
+        puts "else"
     end
 
     if name == 'RewardAchievement'
       check_achievement(course, Achievement.find(item_id))
     end
 
-    if name == PendingAction.to_s
-      create_pending_actions(course, type, item_id)
-    end
 
     if name == "DeleteCourse"
       course.destroy
@@ -29,64 +30,57 @@ class BackgroundJob < Struct.new(:course_id, :name, :type, :item_id)
     end
   end
 
-  def create_submissions_course(course)
-    course.missions.each do |mission|
-      if mission.open_at > Time.now
-        q = QueuedJob.new
-        q.owner = mission
-        q.delayed_job_id = Delayed::Job.enqueue(
-            BackgroundJob.new(course.id, 'AutoSubmissions', 'Create', mission.id),
-            run_at: mission.open_at).id
-        q.save
-      end
+  def create_pending_actions(course, item_type, item_id)
+    course.user_courses.student.each do |sc|
+      exist = sc.pending_actions.where(item_type: item_type, item_id: item_id).first
+      next if exist
+      pa = sc.pending_actions.build
+      pa.course = course
+      pa.item_type = item_type
+      pa.item_id = item_id
+      pa.save
     end
   end
 
-  def create_submissions_mission(mission)
-    cancel_submissions_mission(mission)
-    mission.course.user_courses.student.each do |uc|
-      sbm = Submission.where(std_course_id: uc.id, mission_id: mission.id).first
+  def cancel_submissions_mission(asm)
+    asm.queued_jobs.where(job_type: :AutoSubmissions).destroy_all
+  end
+
+  def create_submissions_mission(asm)
+    cancel_submissions_mission(asm)
+    asm.course.user_courses.student.each do |uc|
+      sbm = Assessment::Submission.where(std_course_id: uc.id, assessment_id: asm.id).first
       unless sbm
-        sbm = mission.submissions.build
+        sbm = asm.submissions.build
         sbm.std_course = uc
         sbm.save
       end
-      sbm.build_initial_answers(uc.user)
+      sbm.build_initial_answers
       sbm.update_attribute(:status,'submitted')
-      sbm.update_attribute(:submit_at, Time.now)
+      sbm.update_attribute(:submitted_at, Time.now)
     end
   end
 
-  def cancel_submissions_course(course)
-    course.missions.each do |mission|
-      cancel_submissions_mission(mission)
+  def new_notification(item_type, item_id, course)
+    course.user_courses.each do |uc|
+      user = uc.user
+      case item_type.to_sym
+        when :Assessment
+          UserMailer.delay.new_assessment(user, item_type.to_s.constantize.find(item_id), course)
+        when :Announcement
+        else
+          puts "new notification"
+
+      end
     end
   end
 
-  def cancel_submissions_mission(mission)
-    q = QueuedJob.where(owner_id: mission.id, owner_type: mission.class.to_s)
-    q.destroy_all
-  end
 
   def check_achievement(course, achievement)
     course.user_courses.each do |user_course|
       if user_course.is_student?
         user_course.check_achievement(achievement)
       end
-    end
-  end
-
-  def create_pending_actions(course, item_type, item_id)
-    course.user_courses.student.each do |std_course|
-      exist = std_course.pending_actions.where(item_type: item_type, item_id: item_id).first
-      if exist
-        next
-      end
-      pending_act = std_course.pending_actions.build
-      pending_act.course = course
-      pending_act.item_type = item_type
-      pending_act.item_id = item_id
-      pending_act.save
     end
   end
 
