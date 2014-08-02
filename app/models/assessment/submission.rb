@@ -173,7 +173,7 @@ class Assessment::Submission < ActiveRecord::Base
 
   #callbacks
   def status_change_tasks
-    if status_was == 'attempting' && status == 'submitted'
+    if assessment.is_mission? && status_was == 'attempting' && status == 'submitted'
       pending_action = std_course.pending_actions.where(item_type: Assessment.to_s, item_id: self.assessment.id).first
       pending_action.set_done if pending_action
 
