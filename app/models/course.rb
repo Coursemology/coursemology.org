@@ -257,6 +257,10 @@ class Course < ActiveRecord::Base
     self.course_preferences.join_items.item("Achievements").item_type('Icon').name('locked').first
   end
 
+  def auto_create_sbm_pref
+    self.course_preferences.join_items.item('Mission').item_type('Submission').name('auto').first
+  end
+
   def email_notifications
     course_preferences.email_notifications
   end
@@ -305,12 +309,6 @@ class Course < ActiveRecord::Base
 
   def home_activities_no_pref
     course_home_events_no_pref.select { |pref| pref.preferable_item.name == "activities_no" }.first
-  end
-
-  def auto_create_sbm_pref
-    course_preferences.select { |pref| pref.preferable_item.item == 'Mission' and
-        pref.preferable_item.item_type == 'Submission' and
-        pref.preferable_item.name == 'auto' }.first
   end
 
   def customized_leaderboard_title

@@ -1,6 +1,6 @@
 Hi,
 
-<p>Emails were sent to the following students to remind them that <%= @assignment %> is due on <%= @due_date %></p>
+<p>Emails were sent to the following students to remind them that <%= @assessment.title %> is due on <%= @assessment.close_at %></p>
 
 <ul>
 <% @students.each do |student| %>

@@ -32,6 +32,10 @@ class PreferableItem < ActiveRecord::Base
     'new_announcement'
   end
 
+  def self.new_assessment(model)
+    "new_#{model.to_s.demodulize.downcase}"
+  end
+
   def self.new_mission
     'new_mission'
   end
