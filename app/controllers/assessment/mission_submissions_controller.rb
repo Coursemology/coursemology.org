@@ -5,7 +5,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   def show
     # if student is still attempting a mission, redirect to edit page
     if @submission.attempting? and @submission.std_course == curr_user_course
-      redirect_to edit_course_mission_submission_path
+      redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)
       return
     end
 
@@ -58,7 +58,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
   def unsubmit
     @submission.set_attempting
     flash[:notice] = "Successfully unsubmited submission."
-    redirect_to course_assessment_submission_path(@course, @mission.assessment, @submission)
+    redirect_to course_assessment_submission_path(@course, @assessment, @submission)
   end
 
   def test_answer
