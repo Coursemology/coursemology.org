@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140729131241) do
+ActiveRecord::Schema.define(:version => 20140801051806) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -571,13 +571,6 @@ ActiveRecord::Schema.define(:version => 20140729131241) do
   add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true
   add_index "forum_forums", ["course_id"], :name => "index_forum_forums_on_course_id"
 
-  create_table "forum_post_votes", :force => true do |t|
-    t.integer  "post_id"
-    t.integer  "vote"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "forum_posts", :force => true do |t|
     t.integer  "topic_id"
     t.integer  "parent_id"
@@ -837,6 +830,7 @@ ActiveRecord::Schema.define(:version => 20140729131241) do
     t.integer  "delayed_job_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.string   "job_type"
   end
 
   add_index "queued_jobs", ["delayed_job_id"], :name => "index_queued_jobs_on_delayed_job_id"
@@ -904,17 +898,6 @@ ActiveRecord::Schema.define(:version => 20140729131241) do
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
-
-  create_table "std_tags", :force => true do |t|
-    t.integer  "std_course_id"
-    t.integer  "tag_id"
-    t.integer  "exp"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "std_tags", ["std_course_id"], :name => "index_std_tags_on_std_course_id"
-  add_index "std_tags", ["tag_id"], :name => "index_std_tags_on_tag_id"
 
   create_table "survey_essay_answers", :force => true do |t|
     t.integer  "user_course_id"
@@ -1080,19 +1063,6 @@ ActiveRecord::Schema.define(:version => 20140729131241) do
 
   add_index "taggable_tags", ["taggable_id", "taggable_type"], :name => "index_taggable_tags_on_taggable_id_and_taggable_type"
 
-  create_table "taggings", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "taggable_id"
-    t.string   "taggable_type"
-    t.integer  "tagger_id"
-    t.string   "tagger_type"
-    t.string   "context",       :limit => 128
-    t.datetime "created_at"
-  end
-
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], :name => "taggings_idx", :unique => true
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
-
   create_table "tags", :force => true do |t|
     t.string   "name"
     t.integer  "taggings_count", :default => 0
@@ -1156,17 +1126,6 @@ ActiveRecord::Schema.define(:version => 20140729131241) do
   add_index "user_courses", ["level_id"], :name => "index_user_courses_on_level_id"
   add_index "user_courses", ["role_id"], :name => "index_user_courses_on_role_id"
   add_index "user_courses", ["user_id"], :name => "index_user_courses_on_user_id"
-
-  create_table "user_rewards", :force => true do |t|
-    t.integer  "user_course_id"
-    t.integer  "reward_id"
-    t.datetime "claimed_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "user_rewards", ["reward_id"], :name => "index_user_rewards_on_reward_id"
-  add_index "user_rewards", ["user_course_id"], :name => "index_user_rewards_on_user_course_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

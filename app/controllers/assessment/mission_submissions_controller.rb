@@ -45,7 +45,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
           format.html { redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been saved." }
         else
-          @submission.set_submitted(course_assessment_submission_url(@course, @assessment, @submission))
+          @submission.set_submitted
           format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                     notice: "Your submission has been updated." }
         end

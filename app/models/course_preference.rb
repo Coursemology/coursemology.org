@@ -54,6 +54,7 @@ class CoursePreference < ActiveRecord::Base
   default_scope includes(:preferable_item)
 
 
+  #TODO, cancel notification jobs when email notification pref changes
   before_update :schedule_auto_sbm_job, :if => :display_changed?
   after_update :update_related_pref, :if => :prefer_value_changed?
 

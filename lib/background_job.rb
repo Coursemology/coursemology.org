@@ -13,6 +13,8 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
         new_notification(item_type, item_id, course)
       when :mission_due
         mission_reminder(item_type, item_id, course)
+      when :new_submission
+        notify_submission(course, item_type.to_s.constantize.find(item_id))
       else
         puts "else"
     end
@@ -95,6 +97,15 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
     end
   end
 
+  def notify_submission(course, sbm)
+    sbm.std_course.get_staff_incharge.each do |uc|
+      UserMailer.delay.new_submission(
+          uc.user,
+          course,
+          sbm
+      )
+    end
+  end
 
   def check_achievement(course, achievement)
     course.user_courses.each do |user_course|

@@ -34,6 +34,8 @@ class Assessment::Submission < ActiveRecord::Base
   has_one :comment_topic, as: :topic
 
   after_create :set_attempting
+  after_save   :status_change_tasks, if: :status_changed?
+
 
   def graders
     self.gradings.map(&:grader).select{|g| g}.map(&:name)
@@ -77,30 +79,11 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   #TODO
-  def set_submitted(redirect_url = "", notify = true)
+  def set_submitted
     self.update_attribute(:status,'submitted')
     self.update_attribute(:submitted_at, updated_at)
-
-    pending_action = std_course.pending_actions.where(item_type: Assessment.to_s, item_id: self.assessment.id).first
-    pending_action.set_done if pending_action
-
-    notify_submission(redirect_url) if notify
   end
 
-  def notify_submission(redirect_url)
-    unless std_course.course.email_notify_enabled?(PreferableItem.new_submission)
-      return
-    end
-    std_course.get_staff_incharge.each do |uc|
-      #TODO: logging
-      UserMailer.delay.new_submission(
-          uc.user,
-          std_course.user,
-          assessment,
-          redirect_url
-      )
-    end
-  end
 
   def set_graded
     self.update_attribute(:status,'graded')
@@ -188,8 +171,17 @@ class Assessment::Submission < ActiveRecord::Base
     end
   end
 
-  #TODO
-  # def assignment
-  #   training
-  # end
+  #callbacks
+  def status_change_tasks
+    if status_was == 'attempting' && status == 'submitted'
+      pending_action = std_course.pending_actions.where(item_type: Assessment.to_s, item_id: self.assessment.id).first
+      pending_action.set_done if pending_action
+
+      course = assessment.course
+      if std_course.is_student? and course.email_notify_enabled?(PreferableItem.new_submission)
+        Delayed::Job.enqueue(BackgroundJob.new(course, :new_submission, self.class.name.to_sym, self.id),
+                             run_at: Time.now)
+      end
+    end
+  end
 end

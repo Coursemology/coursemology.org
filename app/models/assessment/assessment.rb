@@ -152,8 +152,8 @@ class Assessment < ActiveRecord::Base
 
   def get_path
     is_mission? ?
-        course_assessment_mission_url(self.course, self.specific) :
-        course_assessment_training_url(self.course, self.specific)
+        course_assessment_mission_path(self.course, self.specific) :
+        course_assessment_training_path(self.course, self.specific)
   end
 
   def as_lesson_plan_entry
