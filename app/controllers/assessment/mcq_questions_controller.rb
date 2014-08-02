@@ -3,13 +3,13 @@ class Assessment::McqQuestionsController < Assessment::QuestionsController
 
   def update_answers(mcq)
     updated = true
-    param_options = params["assessment_mcq_question"][:options]
+    param_options = params["options"]
     if param_options
       param_options.each do |i, option|
         option['correct'] = option.has_key?('correct')
         if option.has_key?('id')
           opt = Assessment::McqOption.find(option['id'])
-          opt.question = mcq.question
+          opt.question = mcq
           # TODO: check if this answer does belong to the current question
           if !option['text'] || option['text'] == ''
             opt.destroy
