@@ -61,7 +61,6 @@ class UserCourse < ActiveRecord::Base
 
   has_many :notifications, foreign_key: "target_course_id"
 
-  has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_group_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
   has_many :tut_group_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
   has_many :std_courses, through: :std_group_courses
@@ -128,6 +127,7 @@ class UserCourse < ActiveRecord::Base
     # find all submission_grading and calculate the score
     # get all (final grading)
     puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
+    puts "EXP", self.exp_transactions.sum(&:exp)
 
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
@@ -199,17 +199,6 @@ class UserCourse < ActiveRecord::Base
     if uach
       uach.destroy
     end
-  end
-
-  def create_all_std_tags
-    # in case there are tags that are not associated with the student, create new std_tag record
-    self.course.tags.each do |tag|
-      std_tag = self.std_tags.find_by_tag_id(tag.id)
-      if not std_tag
-        self.std_tags.build( { tag_id: tag.id, exp: 0 } )
-      end
-    end
-    self.save
   end
 
   def init
