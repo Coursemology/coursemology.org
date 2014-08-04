@@ -172,10 +172,10 @@ class CommentsController < ApplicationController
   private
 
   def get_comment_permalink(commentable)
-    case commentable
-      when Assessment::Question, Assessment::CodingQuestion, Assessment::McqQuestion, Assessment::GeneralQuestion
+    case
+      when commentable.is_a?(Assessment::Question)
         return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
-      when Assessment::Answer, Assessment::CodingAnswer, Assessment::McqAnswer, Assessment::TextAnswer
+      when commentable.is_a?(Assessment::Answer)
         submission = commentable.submission
         assessment = submission.assessment
 
