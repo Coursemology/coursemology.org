@@ -1,44 +1,17 @@
-class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :reminder)
+class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to)
+
   def perform
     course = Course.find_by_id(course_id)
-    if reminder
-      mission_reminder(Mission.find(type_id), course)
-      return
-    end
+
     case type
-      when Announcement.to_s
-        new_announcements(Announcement.find(type_id), course)
-      when Assessment.to_s
-        new_mission(Assessment.find(type_id), course)
-      # when Training.to_s
-      #   new_training(Training.find(type_id), course)
       when MassEnrollmentEmail.to_s
         enrollment_invitations(MassEnrollmentEmail.where(course_id: course_id, signed_up: false), course)
       when ForumPost.to_s
         forum_notification(ForumPost.find(type_id), course)
       when 'ForumDigests'
         forum_digests
-    end
-  end
-
-  def new_announcements(ann, course)
-    course.user_courses.each do |uc|
-      user = uc.user
-      UserMailer.delay.new_announcement(user.name, ann, user.email, redirect_to, course.title)
-    end
-  end
-
-  def new_mission(mission, course)
-    course.user_courses.each do |uc|
-      user = uc.user
-      UserMailer.delay.new_mission(user.name , user.email, mission, course)
-    end
-  end
-
-  def new_training(training, course)
-    course.user_courses.each do |uc|
-      user = uc.user
-      UserMailer.delay.new_training(user.name , user.email, training.title, course, redirect_to)
+      else
+        raise "unknown mailing job type - #{type}"
     end
   end
 
@@ -56,7 +29,6 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
       enrol.save
     end
   end
-
 
   def forum_notification(post, course)
 
@@ -119,5 +91,4 @@ class MailingJob < Struct.new(:course_id, :type, :type_id, :redirect_to, :remind
       UserMailer.delay.forum_digest(last_subscription[:user], last_subscription[:posts], course, digest_date)
     end
   end
-
 end
