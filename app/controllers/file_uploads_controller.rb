@@ -27,19 +27,16 @@ class FileUploadsController < ApplicationController
       @course = Course.find(params[:course_id])
       authorize! :upload_file, @course
     end
-
+    resources = [Assessment, Assessment::Submission]
     owner = nil
-    if params[:mission_id]
-      owner =  Mission.find_by_id(params[:mission_id])
+
+    resources.each do |r|
+      id = params["#{r.name.underscore.gsub('/', '_')}_id"]
+      next if params[id]
+      owner = r.find_by_id(id)
+      break if owner
     end
 
-    if params[:training_id]
-      owner = Training.find_by_id(params[:training_id])
-    end
-
-    if params[:submission_id]
-      owner = Submission.find_by_id(params[:submission_id])
-    end
 
     file = params[:files].class == Array ? params[:files].first : params[:files]
     file_upload = FileUpload.create({
@@ -52,7 +49,7 @@ class FileUploadsController < ApplicationController
 
       #save to local folder, in case the file will be included for code question.
       #TODO: improve, should only save coding related file to local disk
-      if params[:mission_id] or params[:training_id]
+      if params[:assessment_id]
         PythonEvaluator.create_local_file_for_asm(owner, file_upload)
       end
 
@@ -87,12 +84,10 @@ class FileUploadsController < ApplicationController
 
   def index
     owner = nil
-    if params[:training_id]
-      owner = Training.find(params[:training_id])
-    elsif params[:mission_id]
-      owner = Mission.find(params[:mission_id])
-    elsif params[:submission_id]
-      owner = Submission.find(params[:submission_id])
+    if params[:assessment_id]
+      owner = Assessment.find(params[:assessment_id])
+    elsif params[:assessment_submission_id]
+      owner = Assessment::Submission.find(params[:assessment_submission_id])
     elsif params[:survey_question_id]
       owner = SurveyQuestion.find(params[:survey_question_id])
     end
