@@ -107,7 +107,7 @@
                 <% if @summary[:time_format].prefer_value == 'ago' %>
                     <%= if close > Time.now then time_ago_in_words(close) else '----' end%>
                 <% else %>
-                    <%= close.strftime(@summary[:time_format].prefer_value) %>
+                    <%= close.strftime(@summary[:time_format].prefer_value) if close %>
                 <% end %>
               </td>
           <% end %>
