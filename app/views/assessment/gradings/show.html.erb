@@ -13,7 +13,7 @@
           <%= @grading.grade %> / <%= @assessment.max_grade %>
           <% if curr_user_course.is_staff? %>
               <%= link_to 'Update',
-                          edit_course_assessment_mission_assessment_submission_grading_path(@course, @mission, @submission, @grading)
+                          edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
               %>
           <% end %>
         </td>
