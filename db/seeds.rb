@@ -722,8 +722,19 @@ end
 
 
 if ProgrammingLanguage.count == 0
-  ProgrammingLanguage.create! name: "Python",
+  ProgrammingLanguage.create!({name: "Python",
                               codemirror_mode: "python",
-                              version:  "3.3"
+                              version:  "3.3",
+                              cmd: "python3.3"}, :without_protection => true)
+
+
+end
+
+if ProgrammingLanguage.count == 1
+  ProgrammingLanguage.create!({name: "Python",
+                               codemirror_mode: "python",
+                               version:  "3.4",
+                               cmd: "python3.4"}, :without_protection => true)
+
 
 end
