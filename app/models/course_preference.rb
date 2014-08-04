@@ -60,14 +60,14 @@ class CoursePreference < ActiveRecord::Base
 
   def cancel_submissions
     course.assessments.mission.each do |asm|
-      asm.queued_jobs.where(job_type: :AutoSubmissions).destroy_all
+      asm.queued_jobs.where(job_type: :auto_submission).destroy_all
     end
   end
 
   def create_submissions
     course.assessments.mission.each do |asm|
       if asm.open_at > Time.now
-        type = :AutoSubmissions
+        type = :auto_submission
         asm.queued_jobs.where(job_type: type).destroy_all
         delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course, type, Assessment.to_s.to_sym, asm.id), run_at: asm.open_at)
         asm.queued_jobs.create({delayed_job_id: delayed_job.id, job_type: type})

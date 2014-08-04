@@ -130,7 +130,7 @@ class CoursesController < ApplicationController
     @course.lect_courses.each do |uc|
       UserMailer.delay.course_deleted(@course.title, uc.user)
     end
-    Delayed::Job.enqueue(BackgroundJob.new(@course.id, "DeleteCourse"))
+    Delayed::Job.enqueue(BackgroundJob.new(@course.id, :delete_course))
     respond_to do |format|
       flash[:notice] = "The course '#{title}' is pending for deletion."
       redirect_url = params[:origin] || courses_url

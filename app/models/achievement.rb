@@ -15,8 +15,7 @@ class Achievement < ActiveRecord::Base
   has_many :user_achievements, dependent: :destroy
   has_many :user_courses, through: :user_achievements
 
-  after_create :check_and_reward
-  after_update :check_and_reward
+  after_save :check_and_reward
 
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case
@@ -59,7 +58,7 @@ class Achievement < ActiveRecord::Base
   end
 
   def check_and_reward
-    Delayed::Job.enqueue(BackgroundJob.new(course_id, 'RewardAchievement', '', self.id))
+    Delayed::Job.enqueue(BackgroundJob.new(course_id, :reward_achievement, Achievement.name, self.id))
   end
 
 end
