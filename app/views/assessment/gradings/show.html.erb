@@ -24,7 +24,7 @@
           <%= @grading.exp %> / <%= @assessment.exp %>
         </td>
       </tr>
-      <tr><td>Grader: </td><td><%= @grading.grader.name %></td></tr>
+      <tr><td>Grader: </td><td><%= @grading.grader.name if @grading.grader %></td></tr>
       <tr>
         <td>Graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
       </tr>
