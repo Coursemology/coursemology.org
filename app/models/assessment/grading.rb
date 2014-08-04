@@ -10,8 +10,9 @@ class Assessment::Grading < ActiveRecord::Base
   has_many  :answer_gradings, class_name: Assessment::AnswerGrading
   has_many  :grading_logs, class_name: Assessment::GradingLog, dependent: :destroy
 
-  after_save :update_exp_transaction, if: :grade_or_exp_changed?
-  after_save :create_log, if: :grade_or_exp_changed?
+  after_save  :update_exp_transaction, if: :grade_or_exp_changed?
+  after_save  :create_log, if: :grade_or_exp_changed?
+  after_create  :send_notification
 
 
   def grade_or_exp_changed?
@@ -19,7 +20,11 @@ class Assessment::Grading < ActiveRecord::Base
   end
 
   def create_log
-    grading_logs.create({grade: grade, exp: exp, grader_course_id: grader_course_id, grader_id: grader_id}, :without_protection => true)
+    grading_logs.create({grade: grade,
+                         exp: exp,
+                         grader_course_id: grader_course_id,
+                         grader_id: grader_id},
+                        :without_protection => true)
   end
 
   def update_grade
@@ -30,13 +35,13 @@ class Assessment::Grading < ActiveRecord::Base
     asm = submission.assessment
 
     unless self.exp_transaction
-      self.exp_transaction = ExpTransaction.new
-      self.exp_transaction.giver = self.grader
-      self.exp_transaction.user_course = submission.std_course
-      self.exp_transaction.reason = "Exp for #{asm.title}"
-      self.exp_transaction.is_valid = true
-      self.exp_transaction.rewardable = submission
-      self.save
+      self.exp_transaction = ExpTransaction.create({giver_id: self.grader_id,
+                                                    user_course_id: submission.std_course_id,
+                                                    reason: "Exp for #{asm.title}",
+                                                    is_valid: true,
+                                                    rewardable_id: submission.id,
+                                                    rewardable_type: submission.class.name },
+                                                   without_protection: true)
     end
 
     self.exp_transaction.exp = self.exp || (self.grade || 0) * asm.exp / asm.max_grade
@@ -47,5 +52,15 @@ class Assessment::Grading < ActiveRecord::Base
     end
 
     self.exp_transaction.save
+  end
+
+  def send_notification
+    course = student.course
+    asm = submission.assessment
+    if asm.is_mission? and asm.published? and student.is_student? and course.email_notify_enabled?(PreferableItem.new_grading)
+      UserMailer.delay.new_grading(
+          student,
+          self)
+    end
   end
 end

@@ -64,7 +64,7 @@ class Assessment::AssessmentsController < ApplicationController
         #1, can mange, 2, opened and fulfil the dependency requirements
       elsif (ast.opened? and (ast.as_assessment.class == Assessment::Training or
           ast.dependent_id.nil? or ast.dependent_id == 0 or
-          (sub_ids.include? ast.dependent_id and sub_map[ast.dependent_id].submitted?))) or
+          (sub_ids.include? ast.dependent_id and !sub_map[ast.dependent_id].attempting?))) or
           can?(:manage, ast)
 
         action_map[ast.id] = {action: "Attempt",

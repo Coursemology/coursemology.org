@@ -20,11 +20,13 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "New annotation by #{@comment.user_course.name}!")
   end
 
-  def new_grading(user, redirect_url)
-    puts "to email #{user.email} redirect #{redirect_url}"
-    @user = user
-    @redirect_url = redirect_url
-    mail(to: user.email, subject: "New Grading available!")
+  def new_grading(uc, grading)
+    @user = uc.user
+    @redirect_url = course_assessment_submission_grading_url(uc.course,
+                                                             grading.submission.assessment,
+                                                             grading.submission,
+                                                             grading)
+    mail(to: @user.email, subject: "New Grading available!")
   end
 
   def new_submission(user, course, sbm)
