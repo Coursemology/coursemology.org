@@ -262,9 +262,9 @@ class Assessment < ActiveRecord::Base
     #1. pending actions
     #2. auto submission
     #3. email notifications
-    tks = {PendingAction: true,
-           AutoSubmissions:  is_mission? && course.auto_create_sbm_pref.enabled?,
-           Notification: self.open_at >= Time.now &&
+    tks = {pending_action: true,
+           auto_submission:  is_mission? && course.auto_create_sbm_pref.enabled?,
+           notification: self.open_at >= Time.now &&
                course.email_notify_enabled?(PreferableItem.new_assessment(as_assessment_type.constantize)) }
 
     tks.each do |type, condition|

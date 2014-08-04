@@ -12,11 +12,14 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "New comment by #{@comment.user_course.name}!")
   end
 
-  def new_annotation(user, annotation, assignment, redirect_url)
+
+  def new_annotation(user, submission, annotation)
     @user = user
     @comment = annotation
-    @redirect_url = redirect_url
-    @assignment = assignment
+    @redirect_url = course_assessment_submission_url(submission.assessment.course,
+                                                     submission.assessment,
+                                                     submission)
+    @assessment = submission.assessment
     mail(to: user.email, subject: "New annotation by #{@comment.user_course.name}!")
   end
 
@@ -67,12 +70,11 @@ class UserMailer < ActionMailer::Base
     mail(to:lecturer.email, subject: "New enroll request for your course on Coursemology")
   end
 
-  def new_announcement(user_name, ann, user_email, redirect_to, course_name)
-    @user_name = user_name
-    @redirect_url = redirect_to
-    @ann = ann
-    @course_name = course_name
-    mail(to: user_email, subject: "#{course_name} New Announcement: #{ann.title}")
+  def new_announcement(user, item, course)
+    @user = user
+    @ann = item
+    @course = course
+    mail(to: @user.email, subject: "#{course.title} New Announcement: #{@ann.title}")
   end
 
   def new_assessment(user, asm, course)

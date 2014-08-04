@@ -4,33 +4,32 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   def perform
     course = Course.find_by_id(course_id)
 
+    begin
+      item = item_type.to_s.constantize.find(item_id)
+    rescue
+      item = nil
+    end
+
     case name
-      when :PendingAction
+      when :pending_action
         create_pending_actions(course, item_type, item_id)
-      when :AutoSubmissions
-        create_submissions_mission(item_type.to_s.constantize.find(item_id))
-      when :Notification
-        new_notification(item_type, item_id, course)
       when :mission_due
-        mission_reminder(item_type, item_id, course)
+        mission_reminder(course, item)
+      when :notification
+        new_notification(course, item)
+      when :auto_submission
+        create_submissions_mission(item)
       when :new_submission
-        notify_submission(course, item_type.to_s.constantize.find(item_id))
+        notify_submission(course, item)
+      when :reward_achievement
+        check_achievement(course, item)
+      when :delete_course
+        course.destroy
+      when :delete_user
+        user = item_type.to_s.constantize.find(item_id)
+        user.destroy if user
       else
-        puts "else"
-    end
-
-    if name == 'RewardAchievement'
-      check_achievement(course, Achievement.find(item_id))
-    end
-
-
-    if name == "DeleteCourse"
-      course.destroy
-    end
-
-    if name == "DeleteUser"
-      user = User.find_by_id(item_id)
-      user.destroy if user
+        raise "background job not supported - #{name}"
     end
   end
 
@@ -47,7 +46,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   end
 
   def cancel_submissions_mission(asm)
-    asm.queued_jobs.where(job_type: :AutoSubmissions).destroy_all
+    asm.queued_jobs.where(job_type: :auto_submission).destroy_all
   end
 
   def create_submissions_mission(asm)
@@ -65,22 +64,21 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
     end
   end
 
-  def new_notification(item_type, item_id, course)
+  def new_notification(course, item)
     course.user_courses.each do |uc|
       user = uc.user
-      case item_type.to_sym
+      case item.class.name.to_sym
         when :Assessment
-          UserMailer.delay.new_assessment(user, item_type.to_s.constantize.find(item_id), course)
+          UserMailer.delay.new_assessment(user, item, course)
         when :Announcement
+          UserMailer.delay.new_announcement(user, item, course)
         else
-          puts "new notification"
-
+          puts "new notification for #{item}"
       end
     end
   end
 
-  def mission_reminder(item_type, item_id, course)
-    asm = item_type.to_s.constantize.find(item_id)
+  def mission_reminder(course, asm)
     submitted_std = asm.submissions.map {|sub| sub.std_course.user }
     all_std = course.user_courses.student.where(is_phantom: false).map {|uc| uc.user }
 
@@ -114,22 +112,4 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
       end
     end
   end
-
-  def update_tutor_monitoring(user_course_id)
-    ta = UserCourse.find(user_course_id)
-    gradings = ta.submission_gradings.includes(:sbm).order(:created_at)
-    time_diff = gradings.reduce([]) { |acc, g| (g.created_at - g.sbm.submit_at > 0) ? (acc << g.created_at - g.sbm.submit_at) : acc }
-    avg = time_diff.mean
-    std_dev = time_diff.standard_deviation
-    monitoring = TutorMonitoring.where(user_course_id: user_course_id).first
-    if monitoring
-      monitoring.average_time = avg
-      monitoring.std_dev = std_dev
-      monitoring.save
-    else
-      monitoring = TutorMonitoring.create(course_id. ta.course, user_course_id: user_course_id, average_time: avg, std_dev: std_dev)
-      monitoring.save
-    end
-  end
-
 end
