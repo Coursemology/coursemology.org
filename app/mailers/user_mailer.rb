@@ -12,11 +12,14 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "New comment by #{@comment.user_course.name}!")
   end
 
-  def new_annotation(user, annotation, assignment, redirect_url)
+
+  def new_annotation(user, submission, annotation)
     @user = user
     @comment = annotation
-    @redirect_url = redirect_url
-    @assignment = assignment
+    @redirect_url = course_assessment_submission_url(submission.assessment.course,
+                                                     submission.assessment,
+                                                     submission)
+    @assessment = submission.assessment
     mail(to: user.email, subject: "New annotation by #{@comment.user_course.name}!")
   end
 

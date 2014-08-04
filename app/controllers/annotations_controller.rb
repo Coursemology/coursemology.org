@@ -8,24 +8,9 @@ class AnnotationsController < ApplicationController
   def create
     @annotation = Annotation.new(params[:annotation])
     @annotation.user_course = curr_user_course
-    std_course = @annotation.annotable.std_course
-    to_notify = [std_course]
-
-    if std_course == curr_user_course
-      to_notify = std_course.get_staff_incharge
-    end
-
-    sub = Assessment::Submission.find_by_id(params[:submission_id])
 
     authorize! :read, @annotation.annotable
     if @annotation.save
-      # TODO: fix the notify_user function
-      # currently this method wouldn't find the correct users to notify, marking pending wouldn't work either
-      # I think it can be resolved by adding the annotable to the CommentTopic list. However, need to avoid
-      # it being removed (when comments count == 0, the topic is removed -- see CommentController#destroy)
-      if sub.assessment.published?
-        @annotation.notify_user(to_notify, sub.assessment, course_assessment_submission_url(@course, sub.assessment, sub))
-      end
       respond_to do |format|
         format.json {render json: get_all}
       end
