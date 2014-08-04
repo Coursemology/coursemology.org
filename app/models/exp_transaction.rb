@@ -1,9 +1,8 @@
 class ExpTransaction < ActiveRecord::Base
   acts_as_paranoid
 
-  after_create :update_user_data
   after_destroy :update_user_data
-  after_update :update_user_data, :if => :exp_changed?
+  after_save :update_user_data, :if => :exp_changed?
 
   attr_accessible :exp, :reason
   # attr_accessible :exp, :giver_id, :is_valid, :reason, :user_course_id, :created_at

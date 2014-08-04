@@ -47,7 +47,5 @@ class Assessment::Grading < ActiveRecord::Base
     end
 
     self.exp_transaction.save
-    # sbm.tags.each { |tag| tag.update_exp_for_std(sbm.std_course_id) }
-    self.exp_transaction.update_user_data
   end
 end
