@@ -42,7 +42,7 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_final_grading(build_params = {})
-    self.gradings.last || gradings.create(build_params)
+    self.gradings.last || gradings.build(build_params)
   end
 
   def get_all_answers
