@@ -18,6 +18,7 @@ module AutoGrader
     #   + Otherwise 1pt
 
     grading = submission.get_final_grading
+    grading.save unless grading.persisted?
     ag = grading.answer_gradings.for_question(mcq.question).first ||
         grading.answer_gradings.create({answer_id: ans.id})
 
@@ -41,6 +42,7 @@ module AutoGrader
   def AutoGrader.coding_question_grader(submission, question, ans)
     # note: this grader doesn't update the EXP of the student
     grading = submission.get_final_grading
+    grading.save unless grading.persisted?
 
     ag = grading.answer_gradings.for_question(question.question).first ||
         grading.answer_gradings.create({answer_id: ans.id})

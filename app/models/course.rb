@@ -44,9 +44,10 @@ class Course < ActiveRecord::Base
             source: :as_assessment, source_type: "Assessment::Training"
 
   amoeba do
-    include_field [:levels, :assessments, :achievements, :lesson_plan_milestones,
+    include_field [:levels, :tabs, :course_preferences, :course_navbar_preferences,
+                   :assessments, :achievements, :lesson_plan_milestones,
                    :lesson_plan_entries, :root_folder, :comics, :tag_groups,
-                   :surveys, :forums, :tabs, :course_preferences, :course_navbar_preferences]
+                   :surveys, :forums]
     prepend :title => "Clone of: "
     set :is_publish => false
   end
