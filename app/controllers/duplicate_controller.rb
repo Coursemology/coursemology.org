@@ -92,8 +92,11 @@ class DuplicateController < ApplicationController
         training_files: params[:training_files] == "true",
         workbin_files: params[:workbin_files] == "true"
     }
-
+    #
     Course.skip_callback(:create, :after, :initialize_default_settings)
+    Assessment.skip_callback(:save, :after, :update_opening_tasks)
+    Assessment.skip_callback(:save, :after, :update_closing_tasks)
+    Assessment.skip_callback(:save, :after, :create_or_destroy_tasks)
     clone = @course.amoeba_dup
     clone.creator = current_user
     user_course = clone.user_courses.build
@@ -104,6 +107,9 @@ class DuplicateController < ApplicationController
 
     clone.save
     Course.set_callback(:create, :after, :initialize_default_settings)
+    Assessment.set_callback(:save, :after, :update_opening_tasks)
+    Assessment.set_callback(:save, :after, :update_closing_tasks)
+    Assessment.set_callback(:save, :after, :create_or_destroy_tasks)
 
     handle_relationships(clone)
 
