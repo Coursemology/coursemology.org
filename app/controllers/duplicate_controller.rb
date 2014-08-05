@@ -93,8 +93,7 @@ class DuplicateController < ApplicationController
         workbin_files: params[:workbin_files] == "true"
     }
 
-    Course.skip_callback(:create, :before, :populate_preference)
-    Course.skip_callback(:create, :after, :create_materials_root)
+    Course.skip_callback(:create, :after, :initialize_default_settings)
     clone = @course.amoeba_dup
     clone.creator = current_user
     user_course = clone.user_courses.build
@@ -104,8 +103,7 @@ class DuplicateController < ApplicationController
     clone.end_at =  clone.end_at ? clone.end_at + options[:course_diff] : clone.end_at
 
     clone.save
-    Course.set_callback(:create, :before, :populate_preference)
-    Course.set_callback(:create, :after, :create_materials_root)
+    Course.set_callback(:create, :after, :initialize_default_settings)
 
     handle_relationships(clone)
 
