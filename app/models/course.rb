@@ -23,7 +23,7 @@ class Course < ActiveRecord::Base
   has_many  :material_folders
   has_many  :comics, dependent: :destroy
   has_many  :tag_groups, dependent: :destroy
-  has_many  :tags, dependent: :destroy
+  has_many  :tags, through: :tag_groups, dependent: :destroy
   has_many  :taggings, through: :tags
   has_many  :surveys, dependent: :destroy
   has_many  :forums, dependent: :destroy, class_name: 'ForumForum'

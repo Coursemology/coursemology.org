@@ -22,7 +22,7 @@ class Tag < ActiveRecord::Base
   #adopted from gem: acts-as-taggble-on
   def self.named_any(list)
     clause = list.map { |tag|
-      sanitize_sql(['LOWER(name) = LOWER(?)', as_8bit_ascii(unicode_downcase(tag))])
+      sanitize_sql(['LOWER(tags.name) = LOWER(?)', as_8bit_ascii(unicode_downcase(tag))])
     }.join(' OR ')
     where(clause)
   end
