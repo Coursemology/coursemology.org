@@ -10,8 +10,6 @@ class Course < ActiveRecord::Base
                   :missions_attributes,
                   :trainings_attributes
 
-  after_create  :initialize_default_settings
-
   belongs_to :creator, class_name: "User"
 
   has_many  :announcements, dependent: :destroy
@@ -68,6 +66,8 @@ class Course < ActiveRecord::Base
   accepts_nested_attributes_for :course_navbar_preferences
   accepts_nested_attributes_for :trainings
   accepts_nested_attributes_for :missions
+
+  after_create  :initialize_default_settings
 
   def self.online_course
     Course.where(is_publish: true)
