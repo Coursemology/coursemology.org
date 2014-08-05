@@ -61,7 +61,6 @@ class Course < ActiveRecord::Base
   has_many  :comment_topics,         dependent: :destroy
   has_many  :mass_enrollment_emails, dependent: :destroy
   has_many  :enroll_requests,        dependent: :destroy
-  has_many  :tutor_monitorings,      dependent: :destroy
   has_many  :pending_actions
 
   accepts_nested_attributes_for :course_navbar_preferences
