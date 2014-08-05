@@ -170,6 +170,12 @@ class DuplicateController < ApplicationController
     end
 
     #tags
+    clone.tag_groups.each do |tg|
+      tg.tags.each do |t|
+        t.course = tg.course
+        t.save
+      end
+    end
     q_logs = clone.questions.all_dest_logs
     clone.taggings.each do |tt|
       l = (tt.taggable.duplicate_logs_orig & q_logs).first
