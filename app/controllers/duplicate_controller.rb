@@ -106,12 +106,11 @@ class DuplicateController < ApplicationController
     clone.end_at =  clone.end_at ? clone.end_at + options[:course_diff] : clone.end_at
 
     clone.save
+    handle_relationships(clone)
     Course.set_callback(:create, :after, :initialize_default_settings)
     Assessment.set_callback(:save, :after, :update_opening_tasks)
     Assessment.set_callback(:save, :after, :update_closing_tasks)
     Assessment.set_callback(:save, :after, :create_or_destroy_tasks)
-
-    handle_relationships(clone)
 
     respond_to do |format|
       flash[:notice] = "The course '#{@course.title}' has been duplicated."

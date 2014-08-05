@@ -258,7 +258,6 @@ class Assessment < ActiveRecord::Base
 
   #callbacks
   def update_opening_tasks
-    puts "update openining tasks "
     #1. pending actions
     #2. auto submission
     #3. email notifications
