@@ -6,10 +6,11 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
+  gem "pry"
   gem 'meta_request'
   gem "better_errors"
+  gem "spring"
 end
-
 
 group :production do
   gem 'mysql2'
