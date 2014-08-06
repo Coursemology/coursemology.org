@@ -126,8 +126,6 @@ class UserCourse < ActiveRecord::Base
     # recalculate the EXP and level of the student (user)
     # find all submission_grading and calculate the score
     # get all (final grading)
-    puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
-    puts "EXP", self.exp_transactions.sum(&:exp)
 
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
@@ -170,7 +168,7 @@ class UserCourse < ActiveRecord::Base
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
     changed = false
     if uach
-      unless ach.fulfilled_conditions?(self)
+      if !ach.fulfilled_conditions?(self) and ach.auto_assign?
         remove_achievement(ach)
         changed = true
       end
