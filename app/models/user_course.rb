@@ -156,7 +156,6 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_achievements
-    puts "CHECK ACHIEVEMENT ", self.to_json
     new_ach = false
     self.course.achievements.each do |ach|
       new_ach ||= self.check_achievement(ach)
@@ -169,16 +168,21 @@ class UserCourse < ActiveRecord::Base
   def check_achievement(ach, should_notify=true)
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    fulfilled = false
-    unless uach
+    changed = false
+    if uach
+      unless ach.fulfilled_conditions?(self)
+        remove_achievement(ach)
+        changed = true
+      end
+    else
       # not earned yet, check this achievement
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
-        fulfilled = true
+        changed = true
         self.give_achievement(ach, should_notify)
       end
     end
-    fulfilled
+    changed
   end
 
   def give_achievement(ach, should_notify=true)
