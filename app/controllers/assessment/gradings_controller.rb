@@ -87,10 +87,6 @@ class Assessment::GradingsController < ApplicationController
     end
   end
 
-  def edit
-    build_summary
-  end
-
   def update
     invalid_assign = false
     @grading.grade = 0
@@ -134,7 +130,14 @@ class Assessment::GradingsController < ApplicationController
 
   end
 
+  def edit
+    build_summary
+  end
+
   def show
+    if curr_user_course.is_staff?
+      redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
+    end
     build_summary
   end
 
