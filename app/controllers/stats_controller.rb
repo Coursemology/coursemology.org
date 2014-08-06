@@ -3,6 +3,7 @@ class StatsController < ApplicationController
   before_filter :load_general_course_data
 
   def general
+    authorize! :manage, @course
   end
 
   # data is a map of the chart column to list of student submission
@@ -25,7 +26,7 @@ class StatsController < ApplicationController
 
   def mission
     @mission = Assessment::Mission.find(params[:mission_id])
-    authorize! :view_stat, @mission
+    authorize! :manage, @mission
 
     @sbms = @mission.submissions
     @graded = @sbms.where(status: 'graded').map { |sbm| sbm.std_course }
@@ -51,7 +52,7 @@ class StatsController < ApplicationController
 
   def training
     @training = Assessment::Training.find(params[:training_id])
-    authorize! :view_stat, @training
+    authorize! :manage, @training
 
     @summary = {}
     is_all = ((params[:mode] != nil) && params[:mode] == "all") || (curr_user_course.std_courses.count == 0)

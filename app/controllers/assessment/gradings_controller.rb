@@ -41,10 +41,11 @@ class Assessment::GradingsController < ApplicationController
     end
   end
 
+  #TODO,refactoring, duplicate code with update
   def create
     if @submission.graded?
       flash[:error] = "Submission has already been graded by " + @submission.gradings.last.grader.name
-      redirect_to course_mission_submission_path(@course, @assessment, @submission)
+      redirect_to course_assessment_submission_grading_path(@course, @assessment, @submission,  @submission.gradings.last)
       return
     end
 
@@ -87,17 +88,21 @@ class Assessment::GradingsController < ApplicationController
     end
   end
 
-  def edit
-    build_summary
-  end
-
   def update
     invalid_assign = false
     @grading.grade = 0
     @grading.exp = params[:assessment_grading][:exp].to_i
 
-    params[:ags].each do |id, ag|
-      @ag = @grading.answer_gradings.find(id)
+    params[:ags].each do |v|
+      if v.is_a? Array
+        @ag = @grading.answer_gradings.find(v.first)
+        ag = v.last
+      else
+        @ag = @grading.answer_gradings.build(v)
+        @ag.grader = current_user
+        @ag.grader_course = curr_user_course
+        ag = v
+      end
       unless validate_gradings(@ag, ag)
         invalid_assign = true
         break
@@ -106,6 +111,7 @@ class Assessment::GradingsController < ApplicationController
         @ag.grade = ag[:grade].to_f
         @ag.grader = current_user
         @ag.grader_course = curr_user_course
+        #is this save necessary
         @ag.save
       end
 
@@ -134,7 +140,14 @@ class Assessment::GradingsController < ApplicationController
 
   end
 
+  def edit
+    build_summary
+  end
+
   def show
+    if curr_user_course.is_staff?
+      redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
+    end
     build_summary
   end
 
