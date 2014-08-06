@@ -14,12 +14,12 @@ class Requirement < ActiveRecord::Base
     # depends on the kind of requirement
     # level
     # achievement
-    case req
-      when Achievement
+    case req.class.to_s.to_sym
+      when :Achievement
         return check_achievement(user_course)
-      when AsmReq
+      when :AsmReq
         return req.satisfied?(user_course)
-      when Level
+      when :Level
         return req.satisfied?(user_course)
       else
         return true
