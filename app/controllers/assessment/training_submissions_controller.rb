@@ -32,7 +32,7 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     if current && current.class == Assessment::CodingQuestion
       prefilled_code = current.template
       if current.dependent_on
-        std_answer = current.dependent_on.answers.where("correct is 1 AND std_course_id = ?", curr_user_course.id).last
+        std_answer = current.dependent_on.answers.where("correct = 1 AND std_course_id = ?", curr_user_course.id).last
         code = std_answer ? std_answer.content : ""
         prefilled_code = "#Answer from your previous question \n" + code + (prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + prefilled_code))
       end

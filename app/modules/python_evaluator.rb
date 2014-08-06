@@ -47,6 +47,7 @@ class PythonEvaluator
     # memory_limit = qn.memory_limit * 1024
     sandbox = File.open(get_sandbox_file, 'r')
     code = combine_code([sandbox.read, code])
+    cmd = qn.language.cmd
 
     #if resource_limit
     #  code = combine_code(resource_limit(memory_limit, time_limit), code)
@@ -98,7 +99,7 @@ class PythonEvaluator
         file.close
 
         Dir.chdir(dir){
-          @stdout,@stderr, @status = Open3.capture3("python3.3 #{file_path}")
+          @stdout,@stderr, @status = Open3.capture3("#{cmd} #{file_path}")
         }
         errors = @stderr
         stdout = @stdout

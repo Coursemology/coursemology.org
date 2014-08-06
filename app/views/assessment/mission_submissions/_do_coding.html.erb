@@ -53,21 +53,21 @@
         <% if question.data_hash["public"].length > 0 %>
             <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Public Tests",
                                                                                             tests: question.data_hash["public"],
-                                                                                            results: answer.result_hash["public"],
+                                                                                            results: answer.result_hash["publicResults"],
                                                                                             actual: answer.result_hash["publicResults"] } %>
         <% end %>
 
         <% if  curr_user_course.is_staff? %>
-            <% if qn.data_hash["privateTests"].length > 0 %>
-                <%= render partial: "submissions/test_result_table", locals:{title: "Private Tests",
-                                                                             tests: qn.data_hash["privateTests"],
-                                                                             results: answer.result_hash["privateTests"],
+            <% if question.data_hash["private"].length > 0 %>
+                <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Private Tests",
+                                                                             tests: question.data_hash["private"],
+                                                                             results: answer.result_hash["privateResults"],
                                                                              actual: answer.result_hash["privateResults"] } %>
             <% end %>
-            <% if qn.data_hash["evalTests"].length > 0 %>
-                <%= render partial: "submissions/test_result_table", locals:{title: "Evaluation Tests",
-                                                                             tests: qn.data_hash["evalTests"],
-                                                                             results: answer.result_hash["evalTests"],
+            <% if question.data_hash["eval"].length > 0 %>
+                <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Evaluation Tests",
+                                                                             tests: question.data_hash["eval"],
+                                                                             results: answer.result_hash["evalResults"],
                                                                              actual: answer.result_hash["evalResults"] } %>
             <% end %>
 

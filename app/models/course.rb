@@ -10,8 +10,6 @@ class Course < ActiveRecord::Base
                   :missions_attributes,
                   :trainings_attributes
 
-  after_create  :initialize_default_settings
-
   belongs_to :creator, class_name: "User"
 
   has_many  :announcements, dependent: :destroy
@@ -25,7 +23,7 @@ class Course < ActiveRecord::Base
   has_many  :material_folders
   has_many  :comics, dependent: :destroy
   has_many  :tag_groups, dependent: :destroy
-  has_many  :tags, dependent: :destroy
+  has_many  :tags, through: :tag_groups, dependent: :destroy
   has_many  :taggings, through: :tags
   has_many  :surveys, dependent: :destroy
   has_many  :forums, dependent: :destroy, class_name: 'ForumForum'
@@ -46,9 +44,10 @@ class Course < ActiveRecord::Base
             source: :as_assessment, source_type: "Assessment::Training"
 
   amoeba do
-    include_field [:levels, :assessments, :achievements, :lesson_plan_milestones,
+    include_field [:levels, :tabs, :course_preferences, :course_navbar_preferences,
+                   :assessments, :achievements, :lesson_plan_milestones,
                    :lesson_plan_entries, :root_folder, :comics, :tag_groups,
-                   :surveys, :forums, :tabs, :course_preferences, :course_navbar_preferences]
+                   :surveys, :forums]
     prepend :title => "Clone of: "
     set :is_publish => false
   end
@@ -62,12 +61,13 @@ class Course < ActiveRecord::Base
   has_many  :comment_topics,         dependent: :destroy
   has_many  :mass_enrollment_emails, dependent: :destroy
   has_many  :enroll_requests,        dependent: :destroy
-  has_many  :tutor_monitorings,      dependent: :destroy
   has_many  :pending_actions
 
   accepts_nested_attributes_for :course_navbar_preferences
   accepts_nested_attributes_for :trainings
   accepts_nested_attributes_for :missions
+
+  after_create  :initialize_default_settings
 
   def self.online_course
     Course.where(is_publish: true)

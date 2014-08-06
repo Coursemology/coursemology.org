@@ -33,10 +33,6 @@ class CommentsController < ApplicationController
 
     CommentSubscription.populate_subscription(@comment)
 
-    if @course.email_notify_enabled?(PreferableItem.new_comment) and comment_topic.can_access?
-      comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
-    end
-
     respond_to do |format|
       format.json {render json: comment_topic.comments_json(curr_user_course)}
     end
@@ -176,10 +172,10 @@ class CommentsController < ApplicationController
   private
 
   def get_comment_permalink(commentable)
-    case commentable
-      when Assessment::Question, Assessment::CodingQuestion, Assessment::McqQuestion, Assessment::GeneralQuestion
+    case
+      when commentable.is_a?(Assessment::Question)
         return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
-      when Assessment::Answer, Assessment::CodingAnswer, Assessment::McqAnswer, Assessment::TextAnswer
+      when commentable.is_a?(Assessment::Answer)
         submission = commentable.submission
         assessment = submission.assessment
 

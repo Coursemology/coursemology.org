@@ -307,11 +307,7 @@ Coursemology::Application.routes.draw do
 
   match "file_uploads/:id/toggle_access" => "file_uploads#toggle_access", as: :file_uploads_toggle_access
 
-  resources :assessment_trainings do
-    resources :file_uploads
-  end
-
-  resources :assessment_missions do
+  resources :assessments do
     resources :file_uploads
   end
 

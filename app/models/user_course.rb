@@ -61,7 +61,6 @@ class UserCourse < ActiveRecord::Base
 
   has_many :notifications, foreign_key: "target_course_id"
 
-  has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_group_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
   has_many :tut_group_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
   has_many :std_courses, through: :std_group_courses
@@ -128,6 +127,7 @@ class UserCourse < ActiveRecord::Base
     # find all submission_grading and calculate the score
     # get all (final grading)
     puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
+    puts "EXP", self.exp_transactions.sum(&:exp)
 
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
@@ -156,7 +156,6 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_achievements
-    puts "CHECK ACHIEVEMENT ", self.to_json
     new_ach = false
     self.course.achievements.each do |ach|
       new_ach ||= self.check_achievement(ach)
@@ -169,16 +168,21 @@ class UserCourse < ActiveRecord::Base
   def check_achievement(ach, should_notify=true)
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    fulfilled = false
-    unless uach
+    changed = false
+    if uach
+      unless ach.fulfilled_conditions?(self)
+        remove_achievement(ach)
+        changed = true
+      end
+    else
       # not earned yet, check this achievement
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
-        fulfilled = true
+        changed = true
         self.give_achievement(ach, should_notify)
       end
     end
-    fulfilled
+    changed
   end
 
   def give_achievement(ach, should_notify=true)
@@ -199,17 +203,6 @@ class UserCourse < ActiveRecord::Base
     if uach
       uach.destroy
     end
-  end
-
-  def create_all_std_tags
-    # in case there are tags that are not associated with the student, create new std_tag record
-    self.course.tags.each do |tag|
-      std_tag = self.std_tags.find_by_tag_id(tag.id)
-      if not std_tag
-        self.std_tags.build( { tag_id: tag.id, exp: 0 } )
-      end
-    end
-    self.save
   end
 
   def init

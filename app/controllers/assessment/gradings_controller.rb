@@ -76,12 +76,6 @@ class Assessment::GradingsController < ApplicationController
     elsif @grading.save
       @submission.set_graded
 
-      if @course.email_notify_enabled?(PreferableItem.new_grading) and @assessment.published?
-        UserMailer.delay.new_grading(
-            @submission.std_course.user,
-            course_assessment_submission_url(@course, @assessment, @submission)
-        )
-      end
       respond_to do |format|
         format.html { redirect_to course_assessment_submission_path(@course, @assessment, @submission),
                                   notice: "Grading has been recorded." }
@@ -91,10 +85,6 @@ class Assessment::GradingsController < ApplicationController
         format.html { render action: "new" }
       end
     end
-  end
-
-  def edit
-    build_summary
   end
 
   def update
@@ -140,7 +130,14 @@ class Assessment::GradingsController < ApplicationController
 
   end
 
+  def edit
+    build_summary
+  end
+
   def show
+    if curr_user_course.is_staff?
+      redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
+    end
     build_summary
   end
 

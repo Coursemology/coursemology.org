@@ -17,17 +17,16 @@
       <%- asts_path = course_assessment_missions_path %>
   <% end %>
   <% to_display = @summary[:columns].keys %>
-  <% if to_display.include? 'tag' %>
-      <%= form_tag asts_path, :method => 'get', class: "form-inline" do %>
-          <label>Filter by Tag:</label>
-          <div class="tag" style="display: inline; width: 400px">
-            <input type="tag" name="tags"
-                   allowFreeTagging="false"
-                   url="<%= course_tags_path %>"
-                   value="<%= @summary[:selected_tags].map {|s| {id: 0, name:s}}.to_json %>">
-          </div>
-          <button type="submit" class="btn">Search</button>
-      <% end %>
+
+  <%= form_tag asts_path, :method => 'get', class: "form-inline" do %>
+      <label>Filter by Tag:</label>
+      <div class="tag" style="display: inline; width: 400px">
+        <input type="tag" name="tags"
+               allowFreeTagging="false"
+               url="<%= course_tags_path %>"
+               value="<%= @summary[:selected_tags].map {|s| {id: 0, name:s}}.to_json %>">
+      </div>
+      <button type="submit" class="btn">Search</button>
   <% end %>
 
   <% if can? :create, Assessment %>
@@ -108,7 +107,7 @@
                 <% if @summary[:time_format].prefer_value == 'ago' %>
                     <%= if close > Time.now then time_ago_in_words(close) else '----' end%>
                 <% else %>
-                    <%= close.strftime(@summary[:time_format].prefer_value) %>
+                    <%= close.strftime(@summary[:time_format].prefer_value) if close %>
                 <% end %>
               </td>
           <% end %>

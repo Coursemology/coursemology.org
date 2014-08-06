@@ -92,9 +92,11 @@ class DuplicateController < ApplicationController
         training_files: params[:training_files] == "true",
         workbin_files: params[:workbin_files] == "true"
     }
-
-    Course.skip_callback(:create, :before, :populate_preference)
-    Course.skip_callback(:create, :after, :create_materials_root)
+    #
+    Course.skip_callback(:create, :after, :initialize_default_settings)
+    Assessment.skip_callback(:save, :after, :update_opening_tasks)
+    Assessment.skip_callback(:save, :after, :update_closing_tasks)
+    Assessment.skip_callback(:save, :after, :create_or_destroy_tasks)
     clone = @course.amoeba_dup
     clone.creator = current_user
     user_course = clone.user_courses.build
@@ -104,10 +106,11 @@ class DuplicateController < ApplicationController
     clone.end_at =  clone.end_at ? clone.end_at + options[:course_diff] : clone.end_at
 
     clone.save
-    Course.set_callback(:create, :before, :populate_preference)
-    Course.set_callback(:create, :after, :create_materials_root)
-
     handle_relationships(clone)
+    Course.set_callback(:create, :after, :initialize_default_settings)
+    Assessment.set_callback(:save, :after, :update_opening_tasks)
+    Assessment.set_callback(:save, :after, :update_closing_tasks)
+    Assessment.set_callback(:save, :after, :create_or_destroy_tasks)
 
     respond_to do |format|
       flash[:notice] = "The course '#{@course.title}' has been duplicated."
@@ -166,6 +169,12 @@ class DuplicateController < ApplicationController
     end
 
     #tags
+    clone.tag_groups.each do |tg|
+      tg.tags.each do |t|
+        t.course = tg.course
+        t.save
+      end
+    end
     q_logs = clone.questions.all_dest_logs
     clone.taggings.each do |tt|
       l = (tt.taggable.duplicate_logs_orig & q_logs).first

@@ -13,7 +13,7 @@ class ForumPost < ActiveRecord::Base
   after_create :send_notification
 
   def send_notification
-    Delayed::Job.enqueue(MailingJob.new(author.course.id, ForumPost.to_s, self.id, "", false), run_at: Time.now)
+    Delayed::Job.enqueue(MailingJob.new(author.course.id, ForumPost.to_s, self.id, ""), run_at: Time.now)
   end
 
   def unread?(user_course)
