@@ -8,7 +8,7 @@ gem 'rails', '3.2.14'
 gem 'mysql2'
 
 group :development do
-  # gem 'debugger'
+  gem 'debugger'
   gem 'pry'
   gem 'pry-debugger'
   gem 'pry-rescue'
