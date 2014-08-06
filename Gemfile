@@ -6,16 +6,8 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
-  gem 'debugger'
-  gem 'sqlite3'
-  gem 'pry'
-  gem 'pry-debugger'
-  gem 'pry-rescue'
-  gem 'pry-stack_explorer'
   gem 'meta_request'
-  gem 'figaro'
   gem "better_errors"
-  gem 'spring'
 end
 
 
