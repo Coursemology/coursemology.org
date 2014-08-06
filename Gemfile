@@ -5,10 +5,9 @@ gem 'rails', '3.2.14'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2'
-
 group :development do
-  # gem 'debugger'
+  gem 'debugger'
+  gem 'sqlite3'
   gem 'pry'
   gem 'pry-debugger'
   gem 'pry-rescue'
@@ -21,6 +20,7 @@ end
 
 
 group :production do
+  gem 'mysql2'
   gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
   gem 'dalli'
