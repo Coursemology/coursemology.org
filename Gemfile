@@ -19,9 +19,6 @@ group :production do
   gem 'connection_pool'
 end
 
-# Exclude from test to speed up bundle install
-gem 'newrelic_rpm', :group => [:production, :development]
-
 gem "rspec-rails", :group => [:test, :development]
 gem "guard-rspec", :group => [:test, :development]
 gem 'spork-rails', :group => [:test, :development]
@@ -94,6 +91,7 @@ gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"
 gem "nokogiri"
+gem "newrelic"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
