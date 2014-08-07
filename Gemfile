@@ -19,6 +19,8 @@ group :production do
   gem 'connection_pool'
 end
 
+# Exclude from test to speed up bundle install
+gem 'newrelic_rpm', :group => [:production, :development]
 
 gem "rspec-rails", :group => [:test, :development]
 gem "guard-rspec", :group => [:test, :development]
@@ -72,7 +74,6 @@ gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
-gem 'newrelic_rpm'
 gem 'aws-sdk', '1.28.0'
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
