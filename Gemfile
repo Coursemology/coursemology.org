@@ -13,7 +13,6 @@ group :development do
 end
 
 group :production do
-  gem 'mysql2'
   gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
   gem 'dalli'
@@ -51,6 +50,7 @@ group :assets do
 end
 
 #gem 'pg'
+gem 'mysql2'
 gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
