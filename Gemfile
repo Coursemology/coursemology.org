@@ -19,7 +19,6 @@ group :production do
   gem 'connection_pool'
 end
 
-
 gem "rspec-rails", :group => [:test, :development]
 gem "guard-rspec", :group => [:test, :development]
 gem 'spork-rails', :group => [:test, :development]
@@ -72,7 +71,6 @@ gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
-gem 'newrelic_rpm'
 gem 'aws-sdk', '1.28.0'
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
@@ -93,6 +91,7 @@ gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"
 gem "nokogiri"
+gem "newrelic_rpm"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
