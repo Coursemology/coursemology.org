@@ -3,7 +3,8 @@ class AchievementsController < ApplicationController
   load_and_authorize_resource :achievement, through: :course
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
-  before_filter :get_fbgraph_for_app, only: [:create, :destroy]
+  before_filter :get_fbgraph_for_app, only: [:create, :destroy, :update]
+  before_filter :init_badge, only: [:create]
 
   def index
     #TODO: improve speed
@@ -61,14 +62,8 @@ class AchievementsController < ApplicationController
   def create
     @achievement.creator = current_user
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
-    badge = {"title" => @achievement.title, "description" => @achievement.description}
 
-    #Facebook doesn't like an empty string for image URL
-    unless @achievement.icon_url.blank?
-      badge["image"] = @achievement.icon_url
-    end
-
-    facebook_obj_id = @graph.put_connections("app", "objects/fonglh-coursemology:badge", :object => JSON.generate(badge))
+    facebook_obj_id = @graph.put_connections("app", "objects/fonglh-coursemology:badge", :object => JSON.generate(@badge))
     @achievement.facebook_obj_id = facebook_obj_id["id"]
 
     respond_to do |format|
@@ -88,6 +83,9 @@ class AchievementsController < ApplicationController
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
+        #update the Facebook object
+        init_badge
+        @graph.graph_call("", {id: @achievement.facebook_obj_id, object: JSON.generate(@badge)}, "post")
         format.html { redirect_to course_achievements_url(@course),
                                   notice: "The achievement '#{@achievement.title}' has been updated." }
       else
@@ -115,5 +113,15 @@ class AchievementsController < ApplicationController
       app_token = oauth.get_app_access_token
 
       @graph = Koala::Facebook::API.new(app_token)
+    end
+
+    # initialize the @badge instance variable with the necessary contents from @achievement
+    def init_badge
+      @badge = {"title" => @achievement.title, "description" => @achievement.description}
+
+      #Facebook doesn't like an empty string for image URL
+      unless @achievement.icon_url.blank?
+        @badge["image"] = @achievement.icon_url
+      end
     end
 end
