@@ -74,6 +74,10 @@ class UserCourse < ActiveRecord::Base
     self.role && self.role.name == 'student'
   end
 
+  def is_real_student?
+    !self.is_phantom? && is_student?
+  end
+
   def is_lecturer?
     self.role && self.role.name == 'lecturer'
   end
@@ -117,8 +121,11 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_exp_and_level_async
+    update_exp_and_level
+
     Thread.new {
-      update_exp_and_level
+      self.update_achievements
+      ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
     }
   end
 
@@ -130,28 +137,19 @@ class UserCourse < ActiveRecord::Base
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
 
-    new_level = nil
-    self.course.levels.each do |lvl|
-      if lvl.exp_threshold <= self.exp
-        new_level = lvl
-      else
-        break
-      end
-    end
+    new_level = self.course.levels.where("exp_threshold <=? ", self.exp ).last || self.level
 
-    if new_level && self.level != new_level && self.is_student?
-      self.level = new_level
-      unless self.is_phantom?
-        Activity.reached_lvl(self, new_level)
-        Notification.leveledup(self, new_level)
-      end
+    if new_level.level > self.level.level && self.is_real_student?
+      Activity.reached_lvl(self, new_level)
+      Notification.leveledup(self, new_level)
     end
+    self.level = new_level
 
     self.exp_updated_at = Time.now
     self.save
-    self.update_achievements
     ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
   end
+
 
   def update_achievements
     new_ach = false

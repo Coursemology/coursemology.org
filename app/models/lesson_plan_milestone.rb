@@ -77,7 +77,11 @@ class LessonPlanMilestone < ActiveRecord::Base
 
     if include_virtual
       virtual_entries = course.lesson_plan_virtual_entries(start_date, cutoff_time)
-      virtual_strictly_before_cutoff = virtual_entries.select { |e| e.start_at < cutoff_time }
+      virtual_strictly_before_cutoff = virtual_entries.select do |e|
+        if cutoff_time
+          e.start_at < cutoff_time
+        end
+      end
       actual_entries + virtual_strictly_before_cutoff
     else
       actual_entries
