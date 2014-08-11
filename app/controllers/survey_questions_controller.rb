@@ -123,5 +123,11 @@ class SurveyQuestionsController < ApplicationController
     end
     render nothing: true
   end
+  def reorder
+    @survey.questions.reordering(params['sortable-item'])
+    #TODO; we need to clean up dependency after reordering
+
+    render nothing: true
+  end
 end
 
