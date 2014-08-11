@@ -2,7 +2,7 @@ class AchievementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :achievement, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :create]
 
   def index
     #TODO: improve speed
@@ -37,19 +37,11 @@ class AchievementsController < ApplicationController
     }
   end
 
-  def fetch_data_for_form
-    @all_ach = @course.achievements
-    @all_asm = @course.assessments
-    @all_level = @course.levels
-  end
-
   def new
-    fetch_data_for_form
     @achievement.auto_assign = true
   end
 
   def edit
-    fetch_data_for_form
   end
 
   def show
