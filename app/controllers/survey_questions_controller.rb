@@ -115,18 +115,7 @@ class SurveyQuestionsController < ApplicationController
   end
 
   def reorder
-    params['asm-qn'].each_with_index do |id, index|
-      # binding.pry
-      qn = @survey.questions.find(id)
-      qn.pos = index
-      qn.save
-    end
-    render nothing: true
-  end
-  def reorder
     @survey.questions.reordering(params['sortable-item'])
-    #TODO; we need to clean up dependency after reordering
-
     render nothing: true
   end
 end
