@@ -4,11 +4,13 @@
       <li class="checkbox-text">
         <% if q.type == SurveyQuestionType.MRQ.first %>
             <input class="choices" max_response="<%= q.max_response %>" type="checkbox"
+                   id="value=<%= opt.id %>"
                    name="answers[<%=q.id %>][]"
                    value="<%= opt.id %>"  <%= 'checked' if  answers.include? opt.id %>
                    <%= 'disabled' unless editable %>/>
         <% else %>
             <input class="choices" type="radio"
+                   id="value=<%= opt.id %>"
                    name="answers[<%=q.id %>]"
                    value="<%= opt.id %>" <%= 'checked' if answers.include? opt.id %>
                    <%= 'disabled' unless editable %>/>

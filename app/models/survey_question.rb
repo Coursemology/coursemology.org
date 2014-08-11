@@ -45,4 +45,12 @@ class SurveyQuestion < ActiveRecord::Base
   def is_essay?
     type == SurveyQuestionType.Essay.first
   end
+
+  def self.reordering(new_order)
+    new_order.each_with_index do |id, index|
+      orderable = self.find_by_id(id)
+      orderable.pos = index
+      orderable.save
+    end
+  end
 end
