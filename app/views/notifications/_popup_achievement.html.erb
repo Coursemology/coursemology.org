@@ -8,6 +8,7 @@
     <%= achievement.title %>
   </div>
   <div class="modal-footer">
+    <%= button_to 'Share on Facebook', :action => "obtain_badge", :controller => "/facebook", remote: true %>
     <a href="#" class="btn popup-btn-close">Yay!</a>
   </div>
 </div>
