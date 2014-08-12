@@ -1,4 +1,4 @@
-<div class="modal hide fade">
+<div id="achievement-popup" class="modal hide fade">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3>New Achievement!</h3>
@@ -8,7 +8,7 @@
     <%= achievement.title %>
   </div>
   <div class="modal-footer">
-    <%= button_to 'Share on Facebook', :action => "obtain_badge", :controller => "/facebook", remote: true %>
+    <%= button_to 'Share on Facebook', facebook_obtain_badge_path(facebook_obj_id: achievement.facebook_obj_id), remote: true %>
     <a href="#" class="btn popup-btn-close">Yay!</a>
   </div>
 </div>
