@@ -409,5 +409,4 @@ class Course < ActiveRecord::Base
     end
     url
   end
- 
 end

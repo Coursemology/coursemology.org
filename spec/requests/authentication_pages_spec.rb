@@ -1,37 +1,53 @@
-require 'rspec'
+require 'spec_helper'
 
-describe 'Authentication' do
+
+signin_path = 'users/sign_in'
+signout_path = 'users/sign_out'
+
+describe "AuthenticationPages" do
 
   subject { page }
 
-  describe "signin page", :type=> :feature do
-    before { visit new_user_session_path }
+  describe "signin page" do
+    before { visit signin_path }
 
-    it {  should have_selector('h1', text:"Sign in") }
-    #it {  should have_selector('title', text:"Sign in") }
+    it { should have_selector('h1', 'Sign in')}
+    it { should have_button('Sign in') }
+
   end
 
-  describe "signin", :type=>:feature do
-    before {visit new_user_session_path }
+
+  describe "sign in" do
+    before { visit signin_path }
 
     describe "with invalid information" do
       before { click_button "Sign in" }
 
-      it {  should have_selector('h1',text:'Sign in') }
-      it {  should have_selector('div.alert.alert-error',text:'Invalid email or password.') }
+      it { should have_selector('h1', text: 'Sign in') }
+      it { should have_selector('div.alert.alert-error', text: 'Invalid') }
     end
 
     describe "with valid information" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryGirl.create( :lecturer ) }
       before do
-        fill_in "Email",        with:user.email
-        fill_in "Password",     with:user.password
-        click_button  "Sign in"
+        fill_in "Email",    with: user.email.upcase
+        fill_in "Password", with: user.password
+        click_button "Sign in"
       end
 
-      #TODO
-      #it {   should have_link('Sign out',href:destroy_user_session_path)  }
+      it { should have_selector('h1', text: user.name) }
+
+      it { should have_link('My Courses', href: my_courses_path) }
+      it { should have_link('management') }
+      it { should have_link('Sign out') }
+      it { should_not have_link('Sign in', href: signin_path) }
+
+      describe "followed by signout" do
+        before { click_link "Sign out" }
+        it { should have_link('Sign in') }
+      end
     end
 
   end
+
 end

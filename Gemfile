@@ -6,27 +6,18 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
-  gem 'debugger'
-  gem 'sqlite3'
-  gem 'pry'
-  gem 'pry-debugger'
-  gem 'pry-rescue'
-  gem 'pry-stack_explorer'
+  gem "pry"
   gem 'meta_request'
-  gem 'figaro'
   gem "better_errors"
-  gem 'spring'
+  gem "spring"
 end
 
-
 group :production do
-  gem 'mysql2'
   gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
   gem 'dalli'
   gem 'connection_pool'
 end
-
 
 gem "rspec-rails", :group => [:test, :development]
 gem "guard-rspec", :group => [:test, :development]
@@ -58,6 +49,7 @@ group :assets do
 end
 
 #gem 'pg'
+gem 'mysql2'
 gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
@@ -79,7 +71,6 @@ gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
-gem 'newrelic_rpm'
 gem 'aws-sdk', '1.28.0'
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
@@ -100,6 +91,7 @@ gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"
 gem "nokogiri"
+gem "newrelic_rpm"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

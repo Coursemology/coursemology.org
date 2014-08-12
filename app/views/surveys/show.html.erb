@@ -81,25 +81,25 @@
 
     <% if @survey.has_section? %>
         <h2 class="asm-qns-title">Survey Sections</h2>
-        <table class="table asm-qns-table sort no-boarder">
-          <tbody class="asm-qns" url="<%= reorder_course_survey_survey_sections_path(@course, @survey) %>">
+        <table class="table asm-qns-table no-boarder">
+          <tbody class="asm-qns sortable-table" url="<%= reorder_course_survey_survey_sections_path(@course, @survey) %>">
           <% @survey.survey_sections.each_with_index do |s, index| %>
-              <tr class="asm-qn" id="asm-qn_<%= s.id %>" >
+              <tr class="asm-qn" id="sortable-item_<%= s.id %>" >
                 <td>
                   <div class="asm-qn-handler">
                     <i class="icon-move handler-icon"></i>
-                    <h3 class="handler-text">Section <%= index + 1 %>
+                    <h3 class="handler-text">Section <span class="asm-qn-index"><%= index + 1 %></span>
                       : <%= s.title %>
                     </h3>
                   </div>
                   <table class="table" style="margin-left:  20px;margin-right: 10px">
-                    <tbody class="asm-qns" url="<%= reorder_course_survey_survey_questions_path(@course, @survey) %>">
+                    <tbody class="asm-qns sortable-table" url="<%= reorder_course_survey_survey_questions_path(@course, @survey) %>">
                     <% s.survey_questions.each_with_index do |q, i| %>
-                        <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
+                        <tr class="asm-qn" id="sortable-item_<%= q.id %>" >
                           <td>
                             <div class="asm-qn-handler" style="background-color: #d9edf7">
                               <i class="icon-move handler-icon"></i>
-                              <h3 class="handler-text">Question <%= i + 1 %> :  <%= q.type.title %></h3>
+                              <h3 class="handler-text">Question <span class="asm-qn-index"><%= i + 1 %></span> :  <%= q.type.title %></h3>
                               <strong style="color: #ff0000"><%= '(* required)' if q.is_required? %></strong>
                             </div>
                             <%= render partial: "survey_questions/one", :locals => {q: q} %>

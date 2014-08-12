@@ -92,5 +92,8 @@ module Coursemology
     }
 
     config.jquery_templates.prefix = "templates"
+
+    # Collect more metrics from GC in New Relic
+    GC::Profiler.enable
   end
 end

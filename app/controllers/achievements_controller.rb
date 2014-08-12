@@ -39,19 +39,11 @@ class AchievementsController < ApplicationController
     }
   end
 
-  def fetch_data_for_form
-    @all_ach = @course.achievements
-    @all_asm = @course.assessments
-    @all_level = @course.levels
-  end
-
   def new
-    fetch_data_for_form
     @achievement.auto_assign = true
   end
 
   def edit
-    fetch_data_for_form
   end
 
   def show

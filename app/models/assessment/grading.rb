@@ -42,6 +42,7 @@ class Assessment::Grading < ActiveRecord::Base
                                                     rewardable_id: submission.id,
                                                     rewardable_type: submission.class.name },
                                                    without_protection: true)
+      self.save
     end
 
     self.exp_transaction.exp = self.exp || (self.grade || 0) * asm.exp / asm.max_grade
