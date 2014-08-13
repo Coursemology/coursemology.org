@@ -35,7 +35,7 @@ class AdminsController < ApplicationController
 
   def search(role = nil)
     unless params[:search].nil?
-      @users = User.search(params[:search].strip, role).order(:name).page(params[:page]).per(50)
+      @users = User.search(params[:search].strip, role).order("users.name").page(params[:page]).per(50)
     end
     if params[:origin]
       redirect_to params[:origin]
