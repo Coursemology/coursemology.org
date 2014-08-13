@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1><%= @course.customized_announcements_title.singularize %></h1>
+  <h1><%= @course.customized_title(Announcement.to_s).singularize %></h1>
 </div>
 <div class="announcement">
   <h3><%= @announcement.title %></h3>
