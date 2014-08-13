@@ -103,13 +103,13 @@ class User < ActiveRecord::Base
   end
 
   def use_default_photo_pic?
-    return self.profile_photo_url ==
+    self.profile_photo_url ==
         'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
   end
 
   def self.search(search, role = nil)
     search_condition = "%" + search.downcase + "%"
-    result = User.where(['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    result = User.where(['lower(users.name) LIKE ? OR lower(users.email) LIKE ?', search_condition, search_condition])
     if role
       result = result.where(system_role_id: role)
     end
@@ -135,7 +135,6 @@ class User < ActiveRecord::Base
   end
 
   def auto_enroll_for_invited(confirm_token = nil)
-    puts "auto enroll", email, confirm_token
     invs = MassEnrollmentEmail.where(email: self.email)
     if !invs.first and confirm_token
       invs = MassEnrollmentEmail.where(confirm_token: confirm_token)
