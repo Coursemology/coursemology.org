@@ -32,7 +32,7 @@ class Annotation < ActiveRecord::Base
     sbm = commentable.submission
 
     if sbm.assessment.published?
-      to_notify = sbm.std_course == user_course ? std_course.get_staff_incharge : [sbm.std_course]
+      to_notify = sbm.std_course == user_course ? user_course.get_staff_incharge : [sbm.std_course]
       to_notify.each do |uc|
         UserMailer.delay.new_annotation(uc.user, sbm, self)
       end

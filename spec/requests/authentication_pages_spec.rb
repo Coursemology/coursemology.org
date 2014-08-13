@@ -1,15 +1,11 @@
 require 'spec_helper'
 
-
-signin_path = 'users/sign_in'
-signout_path = 'users/sign_out'
-
 describe "AuthenticationPages" do
 
   subject { page }
 
   describe "signin page" do
-    before { visit signin_path }
+    before { visit new_user_session_path }
 
     it { should have_selector('h1', 'Sign in')}
     it { should have_button('Sign in') }
@@ -18,7 +14,7 @@ describe "AuthenticationPages" do
 
 
   describe "sign in" do
-    before { visit signin_path }
+    before { visit new_user_session_path }
 
     describe "with invalid information" do
       before { click_button "Sign in" }
@@ -40,7 +36,7 @@ describe "AuthenticationPages" do
       it { should have_link('My Courses', href: my_courses_path) }
       it { should have_link('management') }
       it { should have_link('Sign out') }
-      it { should_not have_link('Sign in', href: signin_path) }
+      it { should_not have_link('Sign in', href: new_user_session_path) }
 
       describe "followed by signout" do
         before { click_link "Sign out" }

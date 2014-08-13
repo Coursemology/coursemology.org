@@ -62,5 +62,4 @@ class Achievement < ActiveRecord::Base
   def check_and_reward
     Delayed::Job.enqueue(BackgroundJob.new(course_id, :reward_achievement, Achievement.name, self.id))
   end
-
 end

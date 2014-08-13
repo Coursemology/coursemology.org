@@ -139,10 +139,11 @@ class DuplicateController < ApplicationController
     end
 
     #achievements requirements
+    asm_req_logs = clone.assessments.map { |asm| asm.as_asm_reqs.all_dest_logs}.flatten
     asm_logs = clone.assessments.all_dest_logs
     lvl_logs = clone.levels.all_dest_logs
     ach_logs = clone.achievements.all_dest_logs
-    logs = asm_logs + lvl_logs + ach_logs
+    logs = asm_req_logs + lvl_logs + ach_logs
 
     clone.achievements.each do |ach|
       ach.requirements.each do |ar|

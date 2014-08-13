@@ -49,7 +49,7 @@ class AnnotationsController < ApplicationController
 
   private
   def get_all
-    @annotations = Annotation.find_all_by_annotable_id_and_annotable_type(params[:annotation][:annotable_id],params[:annotation][:annotable_type])
+    @annotations = Annotation.includes(:user_course).find_all_by_annotable_id_and_annotable_type(params[:annotation][:annotable_id],params[:annotation][:annotable_type])
     responds = []
     @annotations.each do |anno|
       edit = curr_user_course.is_staff? || (curr_user_course == anno.user_course)
