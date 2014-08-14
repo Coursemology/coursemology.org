@@ -65,13 +65,10 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def get_bonus
-    specific = assessment.specific
-    if specific.respond_to? :bonus_cutoff
-      if specific.bonus_cutoff && specific.bonus_cutoff > Time.now
-        return specific.bonus_exp
-      end
-    end
-    0
+    assessment.bonus_cutoff_at &&
+        assessment.bonus_cutoff_at > Time.now ?
+        assessment.bonus_exp :
+        0
   end
 
   def set_attempting
@@ -114,14 +111,16 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def update_grade
+    #TODO should update this when submission is created.
     self.submitted_at = DateTime.now
     self.set_graded
 
-    pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.id).first
+    pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.assessment.id).first
     pending_action.set_done if pending_action
 
     grading = self.get_final_grading
     grading.update_grade
+
     grading.save
     grading.exp
   end
