@@ -1,6 +1,6 @@
 class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :course
-  load_and_authorize_resource :assessment, only: [:reorder, :stats]
+  load_and_authorize_resource :assessment, only: [:reorder, :stats, :access_denied]
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview, :listall]
 
   def index
@@ -180,8 +180,13 @@ class Assessment::AssessmentsController < ApplicationController
     #  end
     #end
 
+    sbms_paging = nil
+    if assessment_type == "training"
+      sbms_paging = @course.paging_pref('TrainingSubmissions')
+    else
+      sbms_paging= @course.paging_pref('MissionSubmissions')
+    end
 
-    sbms_paging = @course.paging_pref('MissionSubmissions')
     if sbms_paging.display?
       sbms = sbms.page(params[:page]).per(sbms_paging.prefer_value.to_i)
     end
@@ -191,11 +196,13 @@ class Assessment::AssessmentsController < ApplicationController
     @summary[:paging] = sbms_paging
   end
 
+  def access_denied
+  end
+
   private
 
   def extract_type
     controller = request.filtered_parameters["controller"].split('/').last
     controller.singularize
   end
-
 end

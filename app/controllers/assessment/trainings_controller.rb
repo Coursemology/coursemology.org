@@ -116,8 +116,4 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
     render nothing: true
   end
-
-  def access_denied
-  end
-
 end

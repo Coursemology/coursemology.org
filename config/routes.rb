@@ -61,6 +61,7 @@ Coursemology::Application.routes.draw do
         get 'show', to: 'assessments#show'
         get 'stats'
         post 'reorder'
+        get 'access_denied'
       end
 
       resources :assessment_mcq_questions,
@@ -162,8 +163,6 @@ Coursemology::Application.routes.draw do
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
-    match "missions/:id/access_denied" => "missions#access_denied", as: :mission_access_denied
-    match "trainings/:id/access_denied" => "trainings#access_denied", as: :training_access_denied
 
     resources :levels
 
