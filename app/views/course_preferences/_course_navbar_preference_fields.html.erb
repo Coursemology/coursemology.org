@@ -1,6 +1,11 @@
-<tr>
+<tr class='<%= "hidden_navbar_tr" if !f.object.is_enabled? %>'>
   <td><%= f.input_field :name %></td>
-  <td><%= f.input_field :pos %></td>
+  <td class="hidden_navbar_td"><%= f.input_field :pos %></td>
   <td><%= f.input_field :is_displayed, as: :boolean %></td>
-  <td><%= f.input_field :is_enabled, as: :boolean %></td>
+  <td class="hidden_navbar_td"><%= f.input_field :is_enabled, as: :boolean %></td>
+  <td>
+  	<%= submit_tag 'Remove', :type => 'button', :class => "btn btn-remove-sidebar-item" %>
+  	<input type="hidden" class="sidebar-item-name" value="<%= f.object.item %>"/>
+  </td>
+  
 </tr>

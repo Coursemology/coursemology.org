@@ -1,37 +1,40 @@
 <%= simple_form_for @course,url: course_preferences_path(@course),method: "POST", :html => { :multipart => true } do |f| %>
     <input type="hidden" name="origin" class="origin_url">
-    <table class="table table-bordered table-center">
+    <table class="table table-bordered table-center" id="tb_course_navbar_preferences">
       <thead>
       <th>
         Name
-      </th>
-      <th>
-        Order
-      </th>
+      </th>     
       <th>
         Display?(Hide for students)
       </th>
       <th>
-        Enabled?
+        Action
       </th>
 
       </thead>
       <tbody>
-      <%= f.simple_fields_for :course_navbar_preferences do |pref| %>
+      <%= f.simple_fields_for :course_navbar_preferences, @course.course_navbar_preferences.order(:pos)  do |pref| %>
         <%= render 'course_navbar_preference_fields', f: pref %>
       <% end %>
       </tbody>
     </table>
+    <div class="div-add-item-sidebar">
+	    <%= collection_select(:course_navbar_preference,:course_id,@course.course_navbar_preferences.where(is_enabled: false),:id,:name,:include_blank => 'Browse more sidebar features')%>
+	    <input type="button" value="Add" class=" btn btn-primary" id="btn_add_sidebar_item"/>
+	    <input type="hidden" class="sidebar-course-id" value="<%= @course.id %>"/>   
+    </div>
+    <input type="hidden" class="hdf-ajax-update-navbar-url" value="/courses/<%= @course.id %>/preferences/sidebar_update_values"/>
+    <input type="hidden" class="hdf-ajax-update-level-ach-url" value="/courses/<%= @course.id %>/preferences/update_display_student_level_achievement"/>
+    
     <h3>Levels and Achievement:</h3>
     <p><%= @ranking.preferable_item.description %></p>
-    <div class="info-block checkbox-text">
+    <div class="info-block checkbox-text">    	
       <input type="checkbox"
-             name="preferences[<%= @ranking.id %>][display]"
-             <%= "checked" if @ranking.display %>>
+      		id="ip_display_st_level_ach_<%= @ranking.id %>"
+      		name="preferences[<%= @ranking.id %>][display]"
+      		<%= "checked" if @ranking.display %>>
       </input>Display
       <input type="hidden" name="preferences[<%= @ranking.id %>][prefer_value]" value="<%= @ranking.prefer_value %>" >
-    </div>
-    <div class="center">
-        <%= f.button :submit, "Update", class: " btn-large btn-primary"%>
     </div>
 <% end %>
