@@ -87,7 +87,7 @@ class CourseAbility  < Ability
     if user_course.is_student?
       can :participate, Course
       can :read, UserCourse
-      can :read, Announcement, Announcement.published
+      can :read, Announcement, Announcement.publish_at
 
       # Materials: The file is accessible to students if the student uploaded
       # the file, or course staff uploaded the file.
