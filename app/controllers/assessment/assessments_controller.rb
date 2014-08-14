@@ -180,8 +180,13 @@ class Assessment::AssessmentsController < ApplicationController
     #  end
     #end
 
+    sbms_paging = nil
+    if assessment_type == "training"
+      sbms_paging = @course.paging_pref('TrainingSubmissions')
+    else
+      sbms_paging= @course.paging_pref('MissionSubmissions')
+    end
 
-    sbms_paging = @course.paging_pref('MissionSubmissions')
     if sbms_paging.display?
       sbms = sbms.page(params[:page]).per(sbms_paging.prefer_value.to_i)
     end
