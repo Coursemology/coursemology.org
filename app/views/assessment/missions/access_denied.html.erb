@@ -1,8 +1,0 @@
-<div class="page-header">
-  <h1><%= @mission.title %></h1>
-</div>
-
-
-<% unless @mission.can_start? curr_user_course%>
-    <p class="mission-not-opened"> You have no access to this assessment :|</p>
-<% end %>

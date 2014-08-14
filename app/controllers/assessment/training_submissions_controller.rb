@@ -157,8 +157,8 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       return true
     end
 
-    if @assessment.specific.open_at > Time.now
-      redirect_to course_assessment_training_access_denied_path(@course, @assessment.specific)
+    unless @assessment.can_start?(curr_user_course)
+      redirect_to access_denied_course_assessment_path(@course, @assessment)
     end
   end
 end
