@@ -117,7 +117,7 @@ class Assessment::Submission < ActiveRecord::Base
     self.submitted_at = DateTime.now
     self.set_graded
 
-    pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.id).first
+    pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.assessment.id).first
     pending_action.set_done if pending_action
 
     grading = self.get_final_grading
