@@ -111,7 +111,8 @@ class Assessment::Submission < ActiveRecord::Base
   end
 
   def update_grade
-    #self.submitted_at = DateTime.now
+    #TODO should update this when submission is created.
+    self.submitted_at = DateTime.now
     self.set_graded
 
     pending_action = std_course.pending_actions.where(item_type: self.assessment.class.to_s, item_id: self.id).first
