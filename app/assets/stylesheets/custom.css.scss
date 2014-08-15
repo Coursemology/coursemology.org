@@ -449,6 +449,24 @@ f
   margin: 20px;
 }
 
+.popup-fb-share {
+ float: right; 
+ margin-right: 10px;
+}
+
+.popup-btn-close {
+ float: right; 
+}
+
+.popup-btn-fb-share {
+  background: #3b5998;
+  color: #fff;
+
+  &:hover {
+    background: #2f4679;
+    color: #fff;
+  }
+}
 
 
 .step {
