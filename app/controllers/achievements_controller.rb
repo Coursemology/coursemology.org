@@ -55,7 +55,8 @@ class AchievementsController < ApplicationController
     @achievement.creator = current_user
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
 
-    facebook_obj_id = @graph.put_connections("app", "objects/fonglh-coursemology:badge", :object => JSON.generate(@badge))
+    @app_namespace = @graph.get_connection("app", "")["namespace"]
+    facebook_obj_id = @graph.put_connections("app", "objects/#{@app_namespace}:badge", :object => JSON.generate(@badge))
     @achievement.facebook_obj_id = facebook_obj_id["id"]
 
     respond_to do |format|
