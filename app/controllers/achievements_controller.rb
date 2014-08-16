@@ -2,7 +2,7 @@ class AchievementsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :achievement, through: :course
 
-  before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
+  before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :create]
   before_filter :get_fbgraph_for_app, only: [:create, :destroy, :update]
   before_filter :init_badge, only: [:create]
 
