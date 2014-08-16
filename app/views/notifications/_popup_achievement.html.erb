@@ -4,8 +4,10 @@
     <h3>New Achievement!</h3>
   </div>
   <div class="modal-body popup-ach-content">
-    <img class="pull-right popup-ach-icon" src="<%= achievement.icon_url %>">
-    <%= achievement.title %>
+    <img class="pull-left popup-ach-icon" src="<%= achievement.icon_url %>" />
+    <div class="popup-ach-title">
+      <%= achievement.title %>
+    </div>
   </div>
   <div class="modal-footer">
     <a href="#" class="btn popup-btn-close">Yay!</a>
