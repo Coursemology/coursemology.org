@@ -135,6 +135,7 @@ $(document).ready(function() {
             var options = {
                 mode: {name: language, version: version, singleLineStringErrors: false},
                 lineNumbers: true,
+                indentUnit: 4,
                 tabMode: "shift",
                 matchBrackets: true,
 //                TODO: refactor theme
