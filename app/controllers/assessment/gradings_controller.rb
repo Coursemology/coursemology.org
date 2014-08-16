@@ -147,6 +147,7 @@ class Assessment::GradingsController < ApplicationController
   def show
     if curr_user_course.is_staff?
       redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
+      return
     end
     build_summary
   end
