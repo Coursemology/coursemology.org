@@ -437,18 +437,44 @@ f
 }
 
 .popup-ach-content {
-  min-height: 100px;
+  min-height: 70px;
+  padding: 10px;
 }
 
 .popup-ach-icon {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
 }
 
 .alert {
   margin: 20px;
 }
 
+.popup-fb-share {
+ float: right; 
+ margin-right: 10px;
+ margin-bottom: 0;
+}
+
+.popup-ach-title {
+  overflow: hidden;
+  text-align: center;
+}
+
+.popup-btn-close {
+ float: right; 
+}
+
+.popup-btn-fb-share {
+  background: #3b5998;
+  color: #fff;
+
+  &:hover {
+    background: #2f4679;
+    color: #fff;
+  }
+}
 
 
 .step {
