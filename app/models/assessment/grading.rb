@@ -51,7 +51,9 @@ class Assessment::Grading < ActiveRecord::Base
       self.exp_transaction.exp *= submission.multiplier
     end
 
-    self.exp_transaction.exp += submission.get_bonus
+    if self.submission.done?
+      self.exp_transaction.exp += submission.get_bonus
+    end
     self.exp_transaction.save
   end
 
