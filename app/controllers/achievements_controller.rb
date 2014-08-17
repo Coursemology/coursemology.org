@@ -76,9 +76,14 @@ class AchievementsController < ApplicationController
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
     respond_to do |format|
       if @achievement.update_attributes(params[:achievement])
-        #update the Facebook object
+        #update the Facebook object, catch the exception if the id doesn't exist
         init_badge
-        @graph.graph_call("", {id: @achievement.facebook_obj_id, object: JSON.generate(@badge)}, "post")
+        begin
+          @graph.graph_call("", {id: @achievement.facebook_obj_id, object: JSON.generate(@badge)}, "post")
+        rescue Koala::Facebook::APIError => e
+          logger.error e.fb_error_message
+        end
+
         format.html { redirect_to course_achievements_url(@course),
                                   notice: "The achievement '#{@achievement.title}' has been updated." }
       else
@@ -88,8 +93,12 @@ class AchievementsController < ApplicationController
   end
 
   def destroy
-    # delete badge from Facebook
-    @graph.graph_call("", {id: @achievement.facebook_obj_id}, "delete")
+    # delete badge from Facebook, catch the exception if the id doesn't exist
+    begin
+      @graph.graph_call("", {id: @achievement.facebook_obj_id}, "delete")
+    rescue Koala::Facebook::APIError => e
+      logger.error e.fb_error_message
+    end
 
     @achievement.destroy
     respond_to do |format|
