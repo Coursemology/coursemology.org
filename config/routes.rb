@@ -1,4 +1,6 @@
 Coursemology::Application.routes.draw do
+  post "facebook/obtain_badge" => "facebook#obtain_badge"
+
   authenticated :user do
     root :to => "home#index"
   end
