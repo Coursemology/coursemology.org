@@ -29,7 +29,11 @@ class Assessment::Grading < ActiveRecord::Base
   end
 
   def update_grade
-    self.grade = answer_gradings.sum(&:grade)
+    self.grade = answer_gradings.
+        joins(:answer).
+        where("question_id is not null").
+        group(:question_id).
+        map{|x| x.grade}.sum()
   end
 
   def update_exp_transaction
