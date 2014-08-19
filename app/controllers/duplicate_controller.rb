@@ -81,10 +81,6 @@ class DuplicateController < ApplicationController
        end
     end
 
-
-
-
-
     tag_group_ids = params[:TagGroup] || []
     groups = @course.tag_groups.where(id: tag_group_ids)
 
