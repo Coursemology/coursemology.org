@@ -26,6 +26,56 @@ class DuplicateController < ApplicationController
     }
   end
 
+  def handle_question_relationship(assessment)
+    qns_logs = assessment.questions.all_dest_logs
+    question_above = Array.new
+    assessment.questions.each do |qn|
+      unless qn.dependent_on
+        next
+      end
+      l = (qn.dependent_on.duplicate_logs_orig & qns_logs).first
+      unless l
+        next
+      end
+
+      if question_above.include?(l.dest_obj_id)
+        qn.dependent_id = l.dest_obj_id
+      else
+        qn.dependent_id = nil
+      end
+      qn.save
+      question_above << qn.id
+    end
+  end
+
+  def handle_dup_questions_position(dup)
+    pos = 0
+    dup.questions.each do |qn|
+      dqa = qn.question_assessments.where(assessment_id: dup.id).first
+      dqa.position = pos
+      dqa.save
+      pos += 1
+    end
+  end
+
+  def assign_tab_id(assessment, training_tab, mission_tab)
+    if assessment.is_a? Assessment::Training
+      if training_tab
+        assessment.tab_id = training_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    else
+      if mission_tab
+        assessment.tab_id = mission_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    end
+    assessment.save
+  end
+
+
   def duplicate_assignments
     require 'duplication'
     dest_course = Course.find(params[:dest_course])
@@ -40,6 +90,9 @@ class DuplicateController < ApplicationController
     forums = @course.forums.where(id: params[:Forum] || [])
     surveys = @course.surveys.where(id: params[:Survey] || [])
 
+    training_tab = dest_course.tabs.training.first
+    mission_tab = dest_course.tabs.mission.first
+
     (assessments + achievements + levels + milestones + entries +
         forums + surveys).each do |record|
        c = record.amoeba_dup
@@ -48,8 +101,12 @@ class DuplicateController < ApplicationController
          record.dependent_id = 0
        end
        c.save
+       if c.is_a? Assessment
+         handle_dup_questions_position(c)
+         handle_question_relationship(c)
+         assign_tab_id(c, training_tab, mission_tab)
+       end
     end
-
 
     tag_group_ids = params[:TagGroup] || []
     groups = @course.tag_groups.where(id: tag_group_ids)
@@ -167,6 +224,13 @@ class DuplicateController < ApplicationController
       end
       asm.dependent_id = l.dest_obj_id
       asm.save
+    end
+
+
+    #question position & dependency
+    clone.assessments.each do |asm|
+      handle_dup_questions_position(asm)
+      handle_question_relationship(asm)
     end
 
     #tags
