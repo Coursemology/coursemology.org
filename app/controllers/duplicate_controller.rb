@@ -37,10 +37,11 @@ class DuplicateController < ApplicationController
       unless l
         next
       end
-      self_pos = qn.question_assessments.where(assessment_id: assessment.id).first.position
-      depend_pos = Assessment::Question.find(l.dest_obj_id)
-                    .question_assessments.where(assessment_id: assessment.id).first.position
-      if self_pos > depend_pos
+
+      self_qa = qn.question_assessments.where(assessment_id: assessment.id).first
+      depend_qn = Assessment::Question.find(l.dest_obj_id)
+      depend_qa = depend_qn.question_assessments.where(assessment_id: assessment.id).first
+      if self_qa && depend_qa && self_qa.position > depend_qa.position
         qn.dependent_id = l.dest_obj_id
       else
         qn.dependent_id = nil
