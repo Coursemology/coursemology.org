@@ -11,9 +11,6 @@
   </div>
   <div class="modal-footer">
     <a href="#" class="btn popup-btn-close">Yay!</a>
-    <% if achievement.facebook_obj_id && session[:fb_access_token] %>
-      <%= button_to 'Share on Facebook', facebook_obtain_badge_path(facebook_obj_id: achievement.facebook_obj_id), :form_class => 'popup-fb-share', :class => 'btn popup-btn-fb-share', remote: true %>
-    <% end %>
   </div>
 </div>
 
