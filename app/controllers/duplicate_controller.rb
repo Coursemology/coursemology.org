@@ -10,8 +10,8 @@ class DuplicateController < ApplicationController
     staff_courses = current_user.user_courses.staff
     @my_courses = staff_courses.map { |uc| uc.course }
     @duplicable_items = {
-        Mission: @course.missions,
-        Training: @course.trainings,
+        Mission: @course.assessments.mission,
+        Training: @course.assessments.training,
         Achievement: @course.achievements,
         Level: @course.levels,
         TagGroup: @course.tag_groups,
@@ -44,7 +44,7 @@ class DuplicateController < ApplicationController
         forums + surveys).each do |record|
        c = record.amoeba_dup
        c.course = dest_course
-       if record.respond_to? dependent_id
+       if record.respond_to? :dependent_id
          record.dependent_id = 0
        end
        c.save
