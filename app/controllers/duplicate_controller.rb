@@ -37,7 +37,14 @@ class DuplicateController < ApplicationController
       unless l
         next
       end
-      qn.dependent_id = l.dest_obj_id
+      self_pos = qn.question_assessments.where(assessment_id: assessment.id).first.position
+      depend_pos = Assessment::Question.find(l.dest_obj_id)
+                    .question_assessments.where(assessment_id: assessment.id).first.position
+      if self_pos > depend_pos
+        qn.dependent_id = l.dest_obj_id
+      else
+        qn.dependent_id = nil
+      end
       qn.save
     end
   end
@@ -51,7 +58,6 @@ class DuplicateController < ApplicationController
       dqa.save
     end
   end
-
 
   def duplicate_assignments
     require 'duplication'
@@ -76,8 +82,8 @@ class DuplicateController < ApplicationController
        end
        c.save
        if c.is_a? Assessment
-         handle_question_relationship(c)
          handle_dup_questions_position(record, c)
+         handle_question_relationship(c)
        end
     end
 
