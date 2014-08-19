@@ -28,7 +28,7 @@ class DuplicateController < ApplicationController
 
   def handle_question_relationship(assessment)
     qns_logs = assessment.questions.all_dest_logs
-
+    question_above = Array.new
     assessment.questions.each do |qn|
       unless qn.dependent_on
         next
@@ -38,27 +38,43 @@ class DuplicateController < ApplicationController
         next
       end
 
-      self_qa = qn.question_assessments.where(assessment_id: assessment.id).first
-      depend_qn = Assessment::Question.find(l.dest_obj_id)
-      depend_qa = depend_qn.question_assessments.where(assessment_id: assessment.id).first
-      if self_qa && depend_qa && self_qa.position > depend_qa.position
+      if question_above.include?(l.dest_obj_id)
         qn.dependent_id = l.dest_obj_id
       else
         qn.dependent_id = nil
       end
       qn.save
+      question_above << qn.id
     end
   end
 
-  def handle_dup_questions_position(orig, dup)
+  def handle_dup_questions_position(dup)
+    pos = 0
     dup.questions.each do |qn|
-      orig_qn = qn.duplicate_logs_dest.first.origin_obj
       dqa = qn.question_assessments.where(assessment_id: dup.id).first
-      oqa = orig_qn.question_assessments.where(assessment_id: orig.id).first
-      dqa.position = oqa.position
+      dqa.position = pos
       dqa.save
+      pos += 1
     end
   end
+
+  def assign_tab_id(assessment, training_tab, mission_tab)
+    if assessment.is_a? Assessment::Training
+      if training_tab
+        assessment.tab_id = training_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    else
+      if mission_tab
+        assessment.tab_id = mission_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    end
+    assessment.save
+  end
+
 
   def duplicate_assignments
     require 'duplication'
@@ -74,6 +90,9 @@ class DuplicateController < ApplicationController
     forums = @course.forums.where(id: params[:Forum] || [])
     surveys = @course.surveys.where(id: params[:Survey] || [])
 
+    training_tab = dest_course.tabs.training.first
+    mission_tab = dest_course.tabs.mission.first
+
     (assessments + achievements + levels + milestones + entries +
         forums + surveys).each do |record|
        c = record.amoeba_dup
@@ -83,8 +102,9 @@ class DuplicateController < ApplicationController
        end
        c.save
        if c.is_a? Assessment
-         handle_dup_questions_position(record, c)
+         handle_dup_questions_position(c)
          handle_question_relationship(c)
+         assign_tab_id(c, training_tab, mission_tab)
        end
     end
 
