@@ -26,6 +26,33 @@ class DuplicateController < ApplicationController
     }
   end
 
+  def handle_question_relationship(assessment)
+    qns_logs = assessment.questions.all_dest_logs
+
+    assessment.questions.each do |qn|
+      unless qn.dependent_on
+        next
+      end
+      l = (qn.dependent_on.duplicate_logs_orig & qns_logs).first
+      unless l
+        next
+      end
+      qn.dependent_id = l.dest_obj_id
+      qn.save
+    end
+  end
+
+  def handle_dup_questions_position(orig, dup)
+    dup.questions.each do |qn|
+      orig_qn = qn.duplicate_logs_dest.first.origin_obj
+      dqa = qn.question_assessments.where(assessment_id: dup.id).first
+      oqa = orig_qn.question_assessments.where(assessment_id: orig.id).first
+      dqa.position = oqa.position
+      dqa.save
+    end
+  end
+
+
   def duplicate_assignments
     require 'duplication'
     dest_course = Course.find(params[:dest_course])
@@ -48,7 +75,14 @@ class DuplicateController < ApplicationController
          record.dependent_id = 0
        end
        c.save
+       if c.is_a? Assessment
+         handle_question_relationship(c)
+         handle_dup_questions_position(record, c)
+       end
     end
+
+
+
 
 
     tag_group_ids = params[:TagGroup] || []
