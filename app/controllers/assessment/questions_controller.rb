@@ -38,7 +38,7 @@ class Assessment::QuestionsController < ApplicationController
 
   def extract_tags
     tags = (params[params[:controller].gsub('/', '_').singularize] || {}).delete(:tags) || ""
-    tt = @course.tags.find_or_create_all_with_like_by_name(tags.split(","))
+    tt = @course.tags.find_or_create_all_with_like_by_name(course_id = @course.id, tags.split(","))
     @question.tags = tt
   end
 

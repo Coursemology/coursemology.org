@@ -27,7 +27,7 @@ class Tag < ActiveRecord::Base
     where(clause)
   end
 
-  def self.find_or_create_all_with_like_by_name(*list)
+  def self.find_or_create_all_with_like_by_name(course_id, *list)
     list = Array(list).flatten
 
     return [] if list.empty?
@@ -38,7 +38,7 @@ class Tag < ActiveRecord::Base
       comparable_tag_name = comparable_name(tag_name)
       existing_tag = existing_tags.find { |tag| comparable_name(tag.name) == comparable_tag_name }
       begin
-        existing_tag || create(name: tag_name)
+        existing_tag || create({name: tag_name, course_id: course_id})
       rescue ActiveRecord::RecordNotUnique
         # Postgres aborts the current transaction with
         # PG::InFailedSqlTransaction: ERROR:  current transaction is aborted, commands ignored until end of transaction block
