@@ -226,6 +226,13 @@ class DuplicateController < ApplicationController
       asm.save
     end
 
+
+    #question position & dependency
+    clone.assessments.each do |asm|
+      handle_dup_questions_position(asm)
+      handle_question_relationship(asm)
+    end
+
     #tags
     clone.tag_groups.each do |tg|
       tg.tags.each do |t|
