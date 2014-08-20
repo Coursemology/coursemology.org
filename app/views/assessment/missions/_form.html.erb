@@ -59,7 +59,7 @@
 
     <%= f.association :display_mode, input_html: {class: "input-medium"}, include_blank: false %>
     <%= f.association :dependent_on,
-                      collection: @course.missions - [@mission],
+                      collection: @course.assessments.mission - [@mission.assessment],
                       input_html: {class: "input-large"}, include_blank: true %>
 
     <div id="uploaded_files_div"></div>
