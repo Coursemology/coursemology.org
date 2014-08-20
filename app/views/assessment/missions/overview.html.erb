@@ -26,7 +26,7 @@
               <td><%= mf.input_field :close_at, as: :datetime_picker, class: "input-medium" %></td>
               <td>
                 <%= mf.association :dependent_on,
-                                  collection: @course.missions - [mf.object],
+                                  collection: @course.assessments.mission - [mf.object.assessment],
                                   label_method: :title, value_method: :id,
                                   include_blank: "No Dependency",
                                   label: false,
