@@ -14,14 +14,19 @@
           <% end %>
           <th>Status</th>
           <th>Grade</th>
+          <th>EXP</th>
           </thead>
           <tbody>
           <% stds.each do |std| %>
               <% sub = @submissions.select {|s| s.std_course_id == std.id }.first %>
               <% grade = nil %>
+              <% exp = nil %>
               <tr>
                 <% if sub %>
                     <% grade = sub.gradings.first %>
+                        <% if grade %>
+                            <% exp = grade.exp_transaction %>
+                        <% end %>
                     <td><a href="<%= course_assessment_submission_path(@course, @assessment, sub) %>"><%= std.name %></a> </td>
                 <% else %>
                     <td><%= std.name %></td>
@@ -31,6 +36,7 @@
                 <% end %>
                 <td><%= (sub and sub.status) ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
                 <td><%= grade ? grade.grade : 0 %> / <%= @assessment.max_grade %></td>
+                <td><%= exp ? exp.exp : 0 %></td>
               </tr>
           <% end %>
           </tbody>

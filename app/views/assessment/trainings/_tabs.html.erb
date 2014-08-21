@@ -138,7 +138,7 @@
                 $scope.save = function() {
                     var attrs = $scope.tab;
                     console.log(attrs);
-                    attrs.owner_type = 'Training';
+                    attrs.owner_type = 'Assessment::Training';
                     tabs.create(attrs, function() {
                         $timeout(function() { $location.path('/'); });
                     });
