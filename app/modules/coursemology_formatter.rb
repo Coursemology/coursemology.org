@@ -1,5 +1,4 @@
 class CoursemologyFormatter
-  require 'htmlentities'
 
   def self.format(text)
     '<p>' + sanitize(text) + '</p>'
