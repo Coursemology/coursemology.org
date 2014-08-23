@@ -18,7 +18,7 @@
     <% if question.class == Assessment::GeneralQuestion %>
         <div class="row-fluid">
           <div class="submission-question-block span10">
-            <%= answer.content.html_safe %>
+            <%= (answer.content || "").html_safe %>
           </div>
         </div>
     <% else %>

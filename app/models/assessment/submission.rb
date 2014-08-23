@@ -142,7 +142,7 @@ class Assessment::Submission < ActiveRecord::Base
         ans_class.create!({std_course_id: std_course_id,
                            question_id: qn.id,
                            #TODO, a acts_as_relation bug, parent can access children attributes, but respond_to return false
-                           content: qn.specific.respond_to?(:template) ? qn.template : nil,
+                           content: qn.specific.respond_to?(:template) ? qn.template : "",
                            submission_id: self.id,
                            attempt_left: qn.attempt_limit})
       end

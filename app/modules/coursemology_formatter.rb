@@ -1,4 +1,5 @@
 class CoursemologyFormatter
+
   def self.format(text)
     '<p>' + sanitize(text) + '</p>'
   end
@@ -60,5 +61,21 @@ class CoursemologyFormatter
       "[mc]" + stripped_children.join + "[/mc]"
     end
     result
+  end
+
+  def self.style_format(str, html_safe = false, lang='python')
+    # TODO: Find a more consistent way for both back- and front-end to access styling without needing this.
+    if str.to_s.length > 0
+      unless html_safe
+        str = self.sanitize(str)
+      end
+      str = str.gsub(/\n/,"<br/>")
+      str = str.gsub(/\[b\](.*?)\[\/b\]/m,'<strong>\1</strong>')
+      str = str.gsub(/\[c\](.*?)\[\/c\]/m,'<div class="cos_code"><span class="jfdiCode cm-s-molokai ' << lang << 'Code">\1</span></div>')
+      str = str.gsub(/\[mc\](.*?)\[\/mc\]/m){'<div class="cos_code"><pre><div class="jfdiCode cm-s-molokai ' << lang << 'Code">'<< $1.gsub(/<br>/,'
+      ') <<'</div></pre></div>'}
+      return str.html_safe
+    end
+    ""
   end
 end
