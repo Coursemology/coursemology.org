@@ -23,7 +23,7 @@
             <% else %>
                 <div class="row-fluid">
                   <div class="submission-question-block span10">
-                    <%= qn_dic[:ans].content.html_safe %>
+                    <%= (qn_dic[:ans].content || "").html_safe %>
                   </div>
                 </div>
             <% end %>
