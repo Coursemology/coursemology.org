@@ -23,7 +23,7 @@ class Assessment::Question < ActiveRecord::Base
 
   #TOFIX
   def get_title
-    title && !title.empty? ? title : "Question #{question_assessments.first.position}"
+    title && !title.empty? ? title : "Question #{question_assessments.first.position + 1}"
   end
 
   #callback methods
