@@ -1,6 +1,8 @@
 class FacebookController < ApplicationController
   def obtain_badge
     get_fb_app_namespace
+    @ask_for_permission = false
+    @facebook_obj_id = params[:facebook_obj_id]
 
     @graph = Koala::Facebook::API.new(session[:fb_access_token])
     # check for publish_actions, permissions is of class GraphCollection
@@ -8,21 +10,12 @@ class FacebookController < ApplicationController
     permissions = @graph.get_connections("me", "permissions")
     if permissions[0]["publish_actions"].nil? 
       # no publish_actions
-      # TODO: might be able to improve user experience by redirecting
-      # and asking for permission
-      logger.error "no publish_actions permission, booo"
-      session[:fb_permissions] = 'publish_actions'
+      @ask_for_permission = true
 
       # check if user has been asked 3 times
-    else
-      begin
-        @graph.put_connections("me", "#{@app_namespace}:obtain", :badge => params[:facebook_obj_id], "fb:explicitly_shared" => true)
-      rescue Koala::Facebook::APIError => e
-        # catch and log errors posting to the fb
-        logger.error e.fb_error_message
-      end
     end
 
+    # actual post will be handled by JS
     respond_to do |format|
       format.js
     end
