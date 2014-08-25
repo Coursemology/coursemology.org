@@ -137,6 +137,10 @@ class UserCourse < ActiveRecord::Base
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
 
+    unless self.level
+      self.level = self.course.levels.find_by_level(0)
+    end
+
     new_level = self.course.levels.where("exp_threshold <=? ", self.exp ).last || self.level
 
     if new_level.level > self.level.level && self.is_real_student?
