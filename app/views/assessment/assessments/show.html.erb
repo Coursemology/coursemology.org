@@ -39,7 +39,7 @@
       </div>
     </td>
 
-    <% if current_user and not UserCourse.where(:user_id => current_user.id, :course_id => @assessment.course_id).empty? and can? :manage, Assessment::Submission %>
+    <% if curr_user_course.id and can? :manage, Assessment::Submission %>
         <td>
           <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
         </td>
