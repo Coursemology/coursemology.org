@@ -9,10 +9,18 @@ class FacebookController < ApplicationController
     # which extends Array, so need to index it first to get the hash
     permissions = @graph.get_connections("me", "permissions")
     if permissions[0]["publish_actions"].nil? 
-      # no publish_actions
-      @ask_for_permission = true
+      # initialize or increment counter which tracks how many times publish_actions has been requested
+      if current_user.pub_ask_ctr.nil?
+        current_user.pub_ask_ctr = 1
+      else
+        current_user.pub_ask_ctr += 1
+      end
 
-      # check if user has been asked 3 times
+      # save new value of counter to database
+      current_user.save!
+
+      # no publish_actions, set instance variable which will be checked by JS later
+      @ask_for_permission = true
     end
 
     # actual post will be handled by JS
