@@ -4,11 +4,7 @@ class FacebookController < ApplicationController
     @ask_for_permission = false
     @facebook_obj_id = params[:facebook_obj_id]
 
-    @graph = Koala::Facebook::API.new(session[:fb_access_token])
-    # check for publish_actions, permissions is of class GraphCollection
-    # which extends Array, so need to index it first to get the hash
-    permissions = @graph.get_connections("me", "permissions")
-    if permissions[0]["publish_actions"].nil? 
+    if !current_user.can_publish_to_fb?(session[:fb_access_token])
       # initialize or increment counter which tracks how many times publish_actions has been requested
       if current_user.pub_ask_ctr.nil?
         current_user.pub_ask_ctr = 1
@@ -16,12 +12,15 @@ class FacebookController < ApplicationController
         current_user.pub_ask_ctr += 1
       end
 
-      # save new value of counter to database
-      current_user.save!
-
       # no publish_actions, set instance variable which will be checked by JS later
       @ask_for_permission = true
+    else
+      # reset publish_actions request counter when permission has been used
+      current_user.pub_ask_ctr = 0
     end
+
+    # save new value of counter to database
+    current_user.save!
 
     # actual post will be handled by JS
     respond_to do |format|
