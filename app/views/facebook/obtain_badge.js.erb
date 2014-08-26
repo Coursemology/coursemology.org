@@ -4,7 +4,6 @@ function post_badge() {
   FB.api("me/<%= @app_namespace %>:obtain", 'post',
           { badge: <%= @facebook_obj_id %>, 'fb:explicitly_shared': true },
           function(response) {
-            console.log(response.id);
             //hide the achievement popup modal after posting the badge
             $('#achievement-popup').modal('hide');
           });
@@ -19,7 +18,6 @@ if (ask_for_permission) {
       post_badge();
     }
     else {
-      console.log("publish_actions not granted");
       //hide the achievement popup modal in case permission is not granted
       $('#achievement-popup').modal('hide');
     }

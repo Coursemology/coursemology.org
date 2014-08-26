@@ -16,19 +16,28 @@ class FacebookController < ApplicationController
       @ask_for_permission = true
     else
       # reset publish_actions request counter when permission has been used
+      #
+      # Edge case exists if user grants permission on the 3rd request and revokes it immediately.
+      # That post will be successful but as pub_ask_ctr == 3 and there is no publish_actions permission,
+      # the 'Share' button will not be displayed again.
+      #
+      # The counter is reset here to prevent this happening if permission is revoked immediately after
+      # the 1st or 2nd request is granted.
       current_user.pub_ask_ctr = 0
     end
 
-    # save new value of counter to database
+    # save new value of counter to database here as all paths through the if statement above
+    # modify it
     current_user.save!
 
-    # actual post will be handled by JS
+    # actual facebook post will be handled by JS
     respond_to do |format|
       format.js
     end
   end
 
   private
+    # sets up the instance variable for the FB JS SDK in the response
     def get_fb_app_namespace
       oauth = Koala::Facebook::OAuth.new
       app_token = oauth.get_app_access_token
