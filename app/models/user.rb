@@ -50,6 +50,10 @@ class User < ActiveRecord::Base
     !permissions[0]["publish_actions"].nil?
   end
 
+  def show_fb_achievement_share_button?(fb_access_token)
+    can_publish_to_fb?(fb_access_token) || self.fb_publish_actions_request_count < 3
+  end
+
   def self.admins
     User.where(system_role_id: Role.admin.first)
   end
