@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140805142804) do
+ActiveRecord::Schema.define(:version => 20140827042756) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20140805142804) do
     t.text     "requirement_text"
     t.boolean  "published",                     :default => true
     t.integer  "facebook_obj_id",  :limit => 8
+    t.integer  "pos"
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
@@ -667,7 +668,7 @@ ActiveRecord::Schema.define(:version => 20140805142804) do
   end
 
   add_index "levels", ["course_id"], :name => "index_levels_on_course_id"
-  add_index "levels", ["creator_id"], :name => "index_levels_on_creator_id"
+  add_index "levels", ["creator_id"], :name => "index_levels_on_creator_id"  
 
   create_table "masquerade_logs", :force => true do |t|
     t.integer  "by_user_id"
@@ -1086,7 +1087,7 @@ ActiveRecord::Schema.define(:version => 20140805142804) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
-
+  
   create_table "tutorial_groups", :force => true do |t|
     t.integer  "course_id"
     t.integer  "std_course_id"

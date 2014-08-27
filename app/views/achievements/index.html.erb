@@ -7,6 +7,7 @@
     <%= link_to t('.new', :default => t("helpers.links.new")),
                 new_course_achievement_path(@course),
                 :class => 'btn btn-primary' %>
+    <input type="hidden" class="ajax_update_pos_url" value="<%= course_path(@course)%>/achievements/update_achievement_pos">
 <% end %>
 
 <table class="table achievement-list">
@@ -91,6 +92,7 @@
                           class: 'btn btn-danger' do %>
                   <i class="icon-trash"></i>
               <% end %>
+              <input type="hidden" id="achievement_id" value="<%= ach.id%>">
             </td>
         <% end %>
       </tr>

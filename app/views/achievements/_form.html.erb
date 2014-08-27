@@ -59,6 +59,14 @@
       </div>
     </div>
     
+    <div class="control-group">
+      <%= f.label "Position", class: 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :pos, type: 'number',required: 'required',min: 1, max: (@course.achievements.count + 1), class: 'numeric integer required number_field input-small' %>
+      </div>
+    </div>
+       
+    
     <hr/>
     <h2>Requirements</h2><p>The requirements are optional, and you can have as
   many requirements as you want. Student must fulfill all requirements.</p>

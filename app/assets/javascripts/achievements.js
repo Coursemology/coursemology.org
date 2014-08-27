@@ -92,4 +92,45 @@ $(document).ready(function() {
     e.preventDefault();
     $(this).parents('tr').remove();
   });
+  
+  //ordering achievements
+  $("table.achievement-list tbody").sortable({
+  	cursor: 'move',
+	helper: function(e, tr){
+		var $originals = tr.children();
+		var $helper = tr.clone();
+	    $helper.children().each(function(index){		      
+	      $(this).width($originals.eq(index).width());
+	    });
+	    return $helper;
+	},
+	start: function(event, ui) {
+       	ui.item.data('old_pos',$('table.achievement-list tr').index(ui.item));	           
+	},
+	stop: function(event, ui) {		 
+		var old_pos = ui.item.data('old_pos');
+	    var new_pos = $('table.achievement-list tr').index(ui.item);	
+	    if(old_pos != new_pos){
+			var data = { arg : {pos : new_pos}, id : ui.item.find('input#achievement_id').val(), pos : new_pos, old_pos : ui.item.data('old_pos') };    			
+	        update_achievement_pos(data);
+        }	    
+	}	
+  });    
+  $("table.achievement-list tbody").mousedown(function(){
+	document.activeElement.blur();
+  });
 });
+
+function update_achievement_pos(data){	
+	var url = $('input.ajax_update_pos_url').val();		
+	$.ajax({
+		url : url,
+		type : 'POST',
+		dataType : 'json',
+		data : data,
+		async : false,
+		success : function(result) {
+			console.log(result);					
+		}
+	}); 	
+}
