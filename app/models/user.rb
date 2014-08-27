@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
   end
 
   def show_fb_achievement_share_button?(fb_access_token)
-    can_publish_to_fb?(fb_access_token) || self.fb_publish_actions_request_count < 3
+    can_publish_to_fb?(fb_access_token) || fb_publish_actions_request_count < 3
   end
 
   def self.admins
