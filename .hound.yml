@@ -1,5 +1,5 @@
 ShowCopNames: true
 
-Style/LineLength:
+LineLength:
   Description: 'Limit lines to 130 characters.'
   Max: 130
