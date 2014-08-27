@@ -7,7 +7,7 @@ class Achievement < ActiveRecord::Base
   include HasRequirement
   include AsRequirement
 
-  attr_accessible :course_id, :creator_id, :description, :icon_url, :title, :requirement_text, :auto_assign, :published
+  attr_accessible :course_id, :creator_id, :description, :icon_url, :title, :requirement_text, :auto_assign, :published, :pos
 
   validates :title, presence: true
 

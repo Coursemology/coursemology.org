@@ -8,10 +8,10 @@ class AchievementsController < ApplicationController
 
   def index
     #TODO: improve speed
-    @achievements = @achievements.includes(:requirements, :as_requirements)
+    @achievements = @achievements.order('pos').includes(:requirements, :as_requirements)
     @ach_paging = @course.paging_pref(Achievement.to_s)
     if @ach_paging.display?
-      @achievements = @achievements.page(params[:page]).per(@ach_paging.prefer_value.to_i)
+      @achievements = @achievements.order('pos').page(params[:page]).per(@ach_paging.prefer_value.to_i)
     end
     @achievements_with_info = []
     # uca = curr_user_course.user_achievements.includes(:achievement)
@@ -41,6 +41,7 @@ class AchievementsController < ApplicationController
 
   def new
     @achievement.auto_assign = true
+    @achievement.pos = @course.achievements.count + 1
   end
 
   def edit
@@ -53,15 +54,25 @@ class AchievementsController < ApplicationController
 
   def create
     @achievement.creator = current_user
-    @achievement.update_requirement(params[:reqids], params[:new_reqs])
-
+    @achievement.update_requirement(params[:reqids], params[:new_reqs])    
+    cnp_arr = []
+    if @achievement.pos <= @course.achievements.count
+      Achievement.where(:course_id => @course.id).where('pos >= ?',@achievement.pos).each do |c|
+        c.pos = c.pos + 1
+        cnp_arr << c
+      end 
+    end
     @app_namespace = @graph.get_connection("app", "")["namespace"]
     facebook_obj_id = @graph.put_connections("app", "objects/#{@app_namespace}:badge", :object => JSON.generate(@badge))
     @achievement.facebook_obj_id = facebook_obj_id["id"]
 
     respond_to do |format|
       if @achievement.save
-
+        if cnp_arr.count > 0
+          cnp_arr.each do |c|
+            c.save
+          end
+        end
         format.html { redirect_to course_achievements_url(@course),
                                   notice: "The achievement '#{@achievement.title}' has been created." }
       else
@@ -107,6 +118,34 @@ class AchievementsController < ApplicationController
     end
   end
 
+  def update_achievement_pos
+    ach = Achievement.find(params[:id])
+    cnp_arr = []
+    if params[:pos].to_i > params[:old_pos].to_i
+      Achievement.where(:course_id => @course.id).where('pos > ? and pos <= ?',params[:old_pos],params[:pos]).each do |c|
+        c.pos = c.pos - 1
+        cnp_arr << c    
+    end
+    elsif params[:pos].to_i < params[:old_pos].to_i
+      Achievement.where(:course_id => @course.id).where(' pos >= ? and pos < ?',params[:pos],params[:old_pos]).each do |c|
+        c.pos = c.pos + 1
+        cnp_arr << c           
+      end
+    end      
+    respond_to do |format|
+      if ach.update_attributes(params[:arg])  
+        if cnp_arr.count > 0
+          cnp_arr.each do |c|
+            c.save
+          end
+        end
+        format.json { render json: { status: 'OK' }} 
+      else
+        format.json { render json: {errors: 'Fail'}}
+      end
+    end
+  end
+  
   private
     # initialize FB graph object with the app access token
     # graph will be used to manage (create update delete) badges

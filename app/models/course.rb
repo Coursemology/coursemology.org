@@ -409,4 +409,14 @@ class Course < ActiveRecord::Base
     end
     url
   end
+  
+  def fill_achievement_pos
+    if self.achievements.where(:pos => nil).count > 0
+      self.achievements.order('created_at').each_with_index do |ach, index|
+        ach.pos = index + 1
+        ach.save
+      end
+    end
+  end
+  
 end

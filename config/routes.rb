@@ -169,6 +169,7 @@ Coursemology::Application.routes.draw do
     resources :levels
 
     resources :achievements
+    post "achievements/update_achievement_pos" => "achievements#update_achievement_pos", as: :update_achievement_pos
 
     resources :requirements
 
