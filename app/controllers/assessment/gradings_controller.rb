@@ -33,7 +33,7 @@ class Assessment::GradingsController < ApplicationController
         tests = qn.data_hash["eval"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
-        ag = ans.answer_grading.new
+        ag = ans.build_answer_grading
         ag.grade = grade
 
         @summary[:qn_ans][qn.question.id][:grade] = ag
