@@ -15,7 +15,12 @@ class Assessment::SubmissionsController < ApplicationController
     if sbm
       @submission = sbm
     else
-      @submission.std_course = curr_user_course
+      if curr_user_course.id
+        @submission.std_course = curr_user_course
+      else
+        redirect_to access_denied_path, alert: 'You are not enrolled to this course.'
+        return
+      end
     end
 
     if @assessment.is_a?(Assessment::Training)
