@@ -1133,14 +1133,14 @@ ActiveRecord::Schema.define(:version => 20140825131756) do
     t.string   "name"
     t.string   "profile_photo_url"
     t.string   "display_name"
-    t.datetime "created_at",                                             :null => false
-    t.datetime "updated_at",                                             :null => false
-    t.string   "email",                               :default => "",    :null => false
-    t.string   "encrypted_password",                  :default => "",    :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.string   "email",                                         :default => "",    :null => false
+    t.string   "encrypted_password",                            :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                       :default => 0
+    t.integer  "sign_in_count",                                 :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -1153,10 +1153,10 @@ ActiveRecord::Schema.define(:version => 20140825131756) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "is_logged_in",                        :default => true
-    t.boolean  "is_pending_deletion",                 :default => false
-    t.boolean  "use_uploaded_picture",                :default => false
-    t.integer  "pub_ask_ctr",            :limit => 1
+    t.boolean  "is_logged_in",                                  :default => true
+    t.boolean  "is_pending_deletion",                           :default => false
+    t.boolean  "use_uploaded_picture",                          :default => false
+    t.integer  "fb_publish_actions_request_count", :limit => 1, :default => 0,     :null => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
