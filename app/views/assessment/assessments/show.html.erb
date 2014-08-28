@@ -39,7 +39,7 @@
       </div>
     </td>
 
-    <% if can? :manage, Assessment::Submission %>
+    <% if curr_user_course.id and can? :manage, Assessment::Submission %>
         <td>
           <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
         </td>
