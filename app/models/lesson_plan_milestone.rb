@@ -91,4 +91,14 @@ class LessonPlanMilestone < ActiveRecord::Base
   def is_virtual?
     false
   end
+
+  #return true if current time falls in milestone period
+  def on_going?
+    time = Time.now
+    if !end_at || (time >= start_at && time <= end_at)
+      true
+    else
+      false
+    end
+  end
 end

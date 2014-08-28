@@ -15,8 +15,13 @@
           <div>
             <h2>
               <% if entries.length > 0 %>
+                <% if milestone.is_a?(LessonPlanMilestone) && milestone.on_going? %>
+                  <a class="lesson-plan-hide-entries"><i class="icon-minus"></i></a>
+                  <a class="lesson-plan-show-entries" style="display: none;"><i class="icon-plus"></i></a>
+                <% else %>
                   <a class="lesson-plan-hide-entries" style="display: none;"><i class="icon-minus"></i></a>
                   <a class="lesson-plan-show-entries"><i class="icon-plus"></i></a>
+                <% end %>
               <% end %>
               <%= milestone.title %>
               <% if milestone.start_at %>
@@ -67,11 +72,15 @@
   </div>
 
   <% if entries.length > 0 then %>
-      <div class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
-        <% entries.each {|entry| %>
+      <% if milestone.is_a?(LessonPlanMilestone) && milestone.on_going? %>
+        <div class="lesson-plan-body lesson-plan-remove-margin">
+      <% else %>
+        <div class="lesson-plan-body lesson-plan-remove-margin" style="display: none;" data-hidden="true">
+      <% end %>
+          <% entries.each {|entry| %>
             <%= render :partial => 'lesson_plan/entry', locals: { :entry => entry } %>
-        <% } %>
-      </div>
+          <% } %>
+        </div>
   <% end %>
   <hr class="hr-shrink-margin" />
 </div>
