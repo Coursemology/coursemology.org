@@ -11,6 +11,10 @@
   </div>
   <div class="modal-footer">
     <a href="#" class="btn popup-btn-close">Yay!</a>
+    <%#= Show the 'Share' button when there is an FB object for the achievement, user is logged in with FB, publish_actions granted or not requested 3 times yet %>
+    <% if achievement.facebook_obj_id && session[:fb_access_token] && current_user.show_fb_achievement_share_button?(session[:fb_access_token]) %>
+      <%= button_to 'Share on Facebook', facebook_obtain_badge_path(facebook_obj_id: achievement.facebook_obj_id), :form_class => 'popup-fb-share', :class => 'btn popup-btn-fb-share', remote: true %>
+    <% end %>
   </div>
 </div>
 
