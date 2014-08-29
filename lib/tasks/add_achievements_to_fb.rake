@@ -10,15 +10,19 @@ namespace :db do
 
     #iterate through all undeleted achievements
     Achievement.all.each do |ach|
-      badge = init_badge(ach) #prepare the badge object
+      # assume that if facebook_obj_id is not NULL, the Facebook object already exists
+      # verifying the object ID with Facebook and trying to self correct is a bit complicated
+      if ach.facebook_obj_id.nil?
+        badge = init_badge(ach) #prepare the badge object
 
-      #post badge object to FB
-      id = @graph.put_connections("app", "objects/#{app_namespace}:badge",
-                                  :object => JSON.generate(badge))
+        #post badge object to FB
+        id = @graph.put_connections("app", "objects/#{app_namespace}:badge",
+                                    :object => JSON.generate(badge))
 
-      # get ID as response and save it to the db
-      ach.facebook_obj_id = id["id"]
-      ach.save!
+        # get ID as response and save it to the db
+        ach.facebook_obj_id = id["id"]
+        ach.save!
+      end
     end
   end
 
