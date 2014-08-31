@@ -11,7 +11,8 @@ namespace :db do
     #iterate through all undeleted achievements
     Achievement.all.each do |ach|
       # assume that if facebook_obj_id is not NULL, the Facebook object already exists
-      # verifying the object ID with Facebook and trying to self correct is a bit complicated
+      # verifying the object ID with Facebook and trying to self correct is unnecessarily complicated for
+      # a one time task
       if ach.facebook_obj_id.nil?
         badge = init_badge(ach) #prepare the badge object
 
@@ -22,6 +23,7 @@ namespace :db do
         # get ID as response and save it to the db
         ach.facebook_obj_id = id["id"]
         ach.save!
+        puts "Facebook object " + ach.facebook_obj_id.to_s + " created for " + ach.title
       end
     end
   end
