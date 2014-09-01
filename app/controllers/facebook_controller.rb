@@ -1,23 +1,39 @@
 class FacebookController < ApplicationController
   def obtain_badge
     get_fb_app_namespace
+    @ask_for_permission = false
+    @facebook_obj_id = params[:facebook_obj_id]
 
-    @graph = Koala::Facebook::API.new(session[:fb_access_token])
-    begin
-      @graph.put_connections("me", "#{@app_namespace}:obtain", :badge => params[:facebook_obj_id], "fb:explicitly_shared" => true)
-    rescue Koala::Facebook::APIError => e
-      # catch and log errors posting to the fb
-      logger.error e.fb_error_message
-      # TODO: might be able to improve user experience by redirecting
-      # and asking for permission
+    if !current_user.can_publish_to_fb?(session[:fb_access_token])
+      # Increment counter which tracks how many times publish_actions has been requested
+      current_user.fb_publish_actions_request_count += 1
+
+      # no publish_actions, set instance variable which will be checked by JS later
+      @ask_for_permission = true
+    else
+      # reset publish_actions request counter when permission has been used
+      #
+      # Edge case exists if user grants permission on the 3rd request and revokes it immediately.
+      # That post will be successful but as fb_publish_actions_request_count == 3 and there is no publish_actions permission,
+      # the 'Share' button will not be displayed again.
+      #
+      # The counter is reset here to prevent this happening if permission is revoked immediately after
+      # the 1st or 2nd request is granted.
+      current_user.fb_publish_actions_request_count = 0
     end
 
+    # save new value of counter to database here as all paths through the if statement above
+    # modify it
+    current_user.save!
+
+    # actual facebook post will be handled by JS
     respond_to do |format|
       format.js
     end
   end
 
   private
+    # sets up the instance variable for the FB JS SDK in the response
     def get_fb_app_namespace
       oauth = Koala::Facebook::OAuth.new
       app_token = oauth.get_app_access_token

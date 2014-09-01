@@ -1,2 +1,30 @@
-//hide the achievement popup modal when the 'Share on Facebook' button is clicked
-$('#achievement-popup').modal('hide');
+var ask_for_permission = <%= @ask_for_permission %>;
+
+function post_badge() {
+  FB.api("me/<%= @app_namespace %>:obtain", 'post',
+          { badge: <%= @facebook_obj_id %>, 'fb:explicitly_shared': true },
+          function(response) {
+            //hide the achievement popup modal after posting the badge
+            $('#achievement-popup').modal('hide');
+          });
+}
+
+//check if publish_actions needs to be granted
+if (ask_for_permission) {
+  //call login prompt for additional permission, then post the badge
+  FB.login(function(response) {
+    if (response.authResponse.grantedScopes.indexOf("publish_actions") > -1) {
+      //Yay we can now publish
+      post_badge();
+    }
+    else {
+      //hide the achievement popup modal in case permission is not granted
+      $('#achievement-popup').modal('hide');
+    }
+  },
+  {scope: 'publish_actions', return_scopes: true});
+
+}
+else {
+  post_badge();
+}
