@@ -240,6 +240,7 @@ class DuplicateController < ApplicationController
         t.save
       end
     end
+
     q_logs = clone.questions.all_dest_logs
     clone.taggings.each do |tt|
       l = (tt.taggable.duplicate_logs_orig & q_logs).first
@@ -249,5 +250,7 @@ class DuplicateController < ApplicationController
       tt.taggable = l.dest_obj
       tt.save
     end
+
+    #survey
   end
 end
