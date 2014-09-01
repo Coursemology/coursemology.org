@@ -40,7 +40,7 @@ namespace :training do
 
   def mcq_grader(submission, ans, mcq, pref_grader, ag)
     std_answers = submission.answers.where(question_id: ans.question_id).order(created_at: :asc)
-    if pref_grader != 'two-one-zero' || std_answers.first.correct
+    if std_answers.first.correct
       ag.grade = mcq.max_grade
     else
       num_wrong_choices = mcq.options.find_all_by_correct(false).count
