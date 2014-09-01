@@ -21,7 +21,6 @@ module AutoGrader
     grading.save unless grading.persisted?
     ag = grading.answer_gradings.for_question(mcq.question).first ||
         grading.answer_gradings.create({answer_id: ans.id})
-
     unless ag.grade
       std_answers = submission.answers.where(question_id: ans.question_id)
       if pref_grader != 'two-one-zero' || std_answers.count == 0
@@ -31,18 +30,16 @@ module AutoGrader
       else
         num_wrong_choices = mcq.options.find_all_by_correct(false).count
         uniq_wrong_attempts = std_answers.unique_attempts(false).count
-        if num_wrong_choices == 0
+        if uniq_wrong_attempts == 0
           ag.grade = mcq.max_grade
         elsif uniq_wrong_attempts >= num_wrong_choices
           ag.grade = 0
         else
           ag.grade = mcq.max_grade / 2.0
         end
-        debugger
       end
       ag.save
     end
-
     return ag.grade
   end
 
