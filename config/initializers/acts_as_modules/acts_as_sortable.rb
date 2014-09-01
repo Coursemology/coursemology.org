@@ -10,7 +10,7 @@ module ActsAsSortable
       def self.reordering(new_order)
         self.transaction do
           new_order.each_with_index do |id, index|
-            asm_qn = self.find_by_id(id.to_i).update_attribute("#{position_column}", index)
+            self.find_by_id(id.to_i).update_attribute("#{position_column}", index)
           end
         end
       end

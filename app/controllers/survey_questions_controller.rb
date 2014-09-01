@@ -115,7 +115,7 @@ class SurveyQuestionsController < ApplicationController
   end
 
   def reorder
-    @survey.questions.reordering(params['sortable-item'])
+    SurveyQuestion.reordering(params['sortable-item'])
     render nothing: true
   end
 end

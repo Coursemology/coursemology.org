@@ -1,5 +1,6 @@
 class SurveyQuestion < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_sortable column: :pos
   default_scope { order("pos") }
   attr_accessible :type_id,:survey_id, :survey_section_id, :description, :max_response, :publish, :is_required
 
@@ -44,13 +45,5 @@ class SurveyQuestion < ActiveRecord::Base
 
   def is_essay?
     type == SurveyQuestionType.Essay.first
-  end
-
-  def self.reordering(new_order)
-    new_order.each_with_index do |id, index|
-      orderable = self.find_by_id(id)
-      orderable.pos = index
-      orderable.save
-    end
   end
 end

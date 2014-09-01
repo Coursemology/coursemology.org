@@ -105,7 +105,7 @@
                             <%= render partial: "survey_questions/one", :locals => {q: q} %>
                           </td>
                           <% if can? :manage, Survey %>
-                              <td style="width: 70px">
+                              <td class="action-two-icons">
                                 <%= link_to edit_course_survey_survey_question_path(@course, @survey, q),
                                             class: 'btn',
                                             rel: 'tooltip',
@@ -128,7 +128,7 @@
                   </table>
                 </td>
                 <% if can? :manage, Survey %>
-                    <td style="width: 110px">
+                    <td class="action-there-icons">
                       <%= link_to "#{new_course_survey_survey_question_path(@course, @survey)}?section_id=#{s.id}",
                                   class: 'btn',
                                   rel: 'tooltip',
