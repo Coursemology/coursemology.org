@@ -30,7 +30,7 @@ codeEvaluator = function () {
 
             $.ajax({
                 url: url,
-                type: "GET",
+                type: "POST",
                 data: {
                     answer_id: ans_id,
                     code: code
