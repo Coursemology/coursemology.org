@@ -14,19 +14,24 @@ namespace :training do
     trainings = Course.find(args.course_id).trainings
 
     trainings.each do |training|
-      submissions = training.assessment.submissions
+      submissions = training.submissions
       submissions.each do |sub|
+        effected = false
         correct_answers = sub.answers.where(correct:true)
         correct_answers.each do |ans|
           if ans.question.is_a?(Assessment::McqQuestion)
             grading = ans.answer_grading
             if grading
-              mcq_grader(sub, ans, ans.question, pref_grader)
+              prev_grade = grading.grade
+              current_grade = mcq_grader(sub, ans, ans.question, pref_grader)
+              if !effected && prev_grade != current_grade
+                effect = true
+              end
             end
           end
         end
 
-        if sub.done?
+        if sub.done? && effected
           sub.update_grade
         end
 
@@ -55,6 +60,7 @@ namespace :training do
       end
     end
     ag.save
+    ag.grade
   end
 
 end
