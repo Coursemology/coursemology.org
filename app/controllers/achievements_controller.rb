@@ -107,6 +107,11 @@ class AchievementsController < ApplicationController
     end
   end
 
+  def reorder
+    Achievement.reordering(params['sortable-item'])
+    render nothing: true
+  end
+
   private
     # initialize FB graph object with the app access token
     # graph will be used to manage (create update delete) badges
