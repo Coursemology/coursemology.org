@@ -31,7 +31,14 @@ module AutoGrader
       else
         num_wrong_choices = mcq.options.find_all_by_correct(false).count
         uniq_wrong_attempts = std_answers.unique_attempts(false).count
-        ag.grade = (num_wrong_choices <= uniq_wrong_attempts) ? 0 : 1
+        if num_wrong_choices == 0
+          ag.grade = mcq.max_grade
+        elsif uniq_wrong_attempts >= num_wrong_choices
+          ag.grade = 0
+        else
+          ag.grade = mcq.max_grade / 2.0
+        end
+        debugger
       end
       ag.save
     end
