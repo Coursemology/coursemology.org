@@ -40,9 +40,9 @@
                   <div class="bar bar-success" style="width: <%= curr_user_course.level_percentage %>%"></div>
                 </div>
                 <span class="pull-right">
-                    <strong style="font-size: 1.2em"><%= curr_user_course.exp %></strong>
+                    <strong style="font-size: 1.2em"><%= curr_user_course.exp_gained_in_level %></strong>
                     /
-                  <%= curr_user_course.level ? curr_user_course.level.next_level.exp_threshold : @course.levels.first.exp_threshold %> EXP</span>
+                  <%= curr_user_course.level ? curr_user_course.exp_to_next_level : @course.levels.first.exp_threshold %> EXP</span>
                 <div class="clearfix"></div>
               </div>
           <% end %>
