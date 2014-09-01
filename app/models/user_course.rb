@@ -101,7 +101,7 @@ class UserCourse < ActiveRecord::Base
   def level_percentage
     if self.level
       lvl_exp = exp_to_next_level
-      lvl_exp == 0? 0 : exp_gained_in_level * 100 / lvl_exp
+      lvl_exp == 0 ? 0 : exp_gained_in_level * 100 / lvl_exp
     else
       0
     end
