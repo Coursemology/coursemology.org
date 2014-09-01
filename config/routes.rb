@@ -88,6 +88,7 @@ Coursemology::Application.routes.draw do
 
         member do
           get 'test', to: 'mission_submissions#test_answer'
+          post 'test', to: 'mission_submissions#test_answer'
           get 'unsubmit' => 'mission_submissions#unsubmit'
         end
 
