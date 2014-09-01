@@ -53,6 +53,7 @@ class AchievementsController < ApplicationController
 
   def create
     @achievement.creator = current_user
+    @achievement.position = @course.achievements.count
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
 
     @app_namespace = @graph.get_connection("app", "")["namespace"]
