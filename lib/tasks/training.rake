@@ -17,16 +17,14 @@ namespace :training do
       submissions = training.submissions
       submissions.each do |sub|
         effected = false
-        correct_answers = sub.answers.where(correct:true)
+        correct_answers = sub.answers.where(correct:true, as_answer_type: 'Assessment::McqAnswer')
         correct_answers.each do |ans|
-          if ans.question.is_a?(Assessment::McqQuestion)
-            grading = ans.answer_grading
-            if grading
-              prev_grade = grading.grade
-              current_grade = mcq_grader(sub, ans, ans.question, pref_grader, grading)
-              if !effected && prev_grade != current_grade
-                effect = true
-              end
+          grading = ans.answer_grading
+          if grading
+            prev_grade = grading.grade
+            current_grade = mcq_grader(sub, ans, ans.question, pref_grader, grading)
+            if !effected && prev_grade != current_grade
+              effect = true
             end
           end
         end
