@@ -30,9 +30,9 @@ class ApplicationController < ActionController::Base
 
   def load_theme_setting
     atts = []
-    # atts << ThemeAttribute.find_by_name('Background Color')
-    # atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    # atts << ThemeAttribute.find_by_name('Cust om CSS')
+    atts << ThemeAttribute.find_by_name('Background Color')
+    atts << ThemeAttribute.find_by_name('Sidebar Link Color')
+    atts << ThemeAttribute.find_by_name('Cust om CSS')
     # atts << ThemeAttribute.find_by_name('Announcements Icon')
     # atts << ThemeAttribute.find_by_name('Missions Icon')
     # atts << ThemeAttribute.find_by_name('Trainings Icon')
@@ -42,8 +42,10 @@ class ApplicationController < ActionController::Base
 
     @theme_settings = {}
     atts.each do |att|
-      ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
-      @theme_settings[att.name] = ca.value
+      if att
+        ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+        @theme_settings[att.name] = ca.value
+      end
     end
 
     theme = @course.course_themes.first
