@@ -100,10 +100,27 @@ class UserCourse < ActiveRecord::Base
 
   def level_percentage
     if self.level
-      threshold = self.level.next_level.exp_threshold
-      return threshold == 0? 0 : self.exp * 100 / self.level.next_level.exp_threshold
+      lvl_exp = exp_to_next_level
+      lvl_exp == 0? 0 : exp_gained_in_level * 100 / lvl_exp
+    else
+      0
     end
-    0
+  end
+
+  def exp_gained_in_level
+    if self.level
+      self.exp - self.level.exp_threshold
+    else
+      0
+    end
+  end
+
+  def exp_to_next_level
+    if self.level && self.level.next_level
+      self.level.next_level.exp_threshold - self.level.exp_threshold
+    else
+      0
+    end
   end
 
   def get_seen_sbms
