@@ -169,7 +169,11 @@ Coursemology::Application.routes.draw do
 
     resources :levels
 
-    resources :achievements
+    resources :achievements do
+      collection do
+        post 'reorder'
+      end
+    end
 
     resources :requirements
 

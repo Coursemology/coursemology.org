@@ -1,5 +1,6 @@
 class Survey < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
   default_scope { order("open_at") }
   attr_accessible :course_id, :title, :creator_id, :description,
                   :open_at, :expire_at, :anonymous, :publish,
@@ -13,7 +14,7 @@ class Survey < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
 
   has_many :survey_sections,    dependent: :destroy
-  has_many :survey_questions,   dependent: :destroy
+  has_many :survey_questions, through: :survey_sections, dependent: :destroy
   has_many :survey_submissions, class_name: "SurveySubmission", dependent: :destroy
   has_many :pending_actions, as: :item, dependent: :destroy
   has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140825131756) do
+ActiveRecord::Schema.define(:version => 20140901043213) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20140825131756) do
     t.text     "requirement_text"
     t.boolean  "published",                     :default => true
     t.integer  "facebook_obj_id",  :limit => 8
+    t.integer  "position"
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
