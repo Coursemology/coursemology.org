@@ -42,6 +42,18 @@ class User < ActiveRecord::Base
     self.is_admin? || (self.system_role && self.system_role.name == 'lecturer')
   end
 
+  def can_publish_to_fb?(fb_access_token)
+    graph = Koala::Facebook::API.new(fb_access_token)
+    permissions = graph.get_connections("me", "permissions")
+    # check for publish_actions, permissions is of class GraphCollection
+    # which extends Array, so need to index it first to get the hash
+    !permissions[0]["publish_actions"].nil?
+  end
+
+  def show_fb_achievement_share_button?(fb_access_token)
+    can_publish_to_fb?(fb_access_token) || fb_publish_actions_request_count < 3
+  end
+
   def self.admins
     User.where(system_role_id: Role.admin.first)
   end

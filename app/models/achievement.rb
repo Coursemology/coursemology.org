@@ -1,13 +1,16 @@
 class Achievement < ActiveRecord::Base
   acts_as_paranoid
   acts_as_duplicable
+  acts_as_sortable
+
+  default_scope { order("position") }
 
   include Rails.application.routes.url_helpers
   include ActivityObject
   include HasRequirement
   include AsRequirement
 
-  attr_accessible :course_id, :creator_id, :description, :icon_url, :title, :requirement_text, :auto_assign, :published
+  attr_accessible :course_id, :creator_id, :description, :icon_url, :title, :requirement_text, :auto_assign, :published, :position
 
   validates :title, presence: true
 
@@ -17,7 +20,11 @@ class Achievement < ActiveRecord::Base
   has_many :user_achievements, dependent: :destroy
   has_many :user_courses, through: :user_achievements
 
-  after_save :check_and_reward
+  after_save :check_and_reward, if: :rewarding_changed?
+
+  def rewarding_changed?
+    published_changed? or auto_assign_changed?
+  end
 
   def fulfilled_conditions?(user_course)
     # consider achievement with no requirement a special case

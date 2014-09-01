@@ -1,5 +1,7 @@
 class SurveySection < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
+  acts_as_sortable column: :pos
   default_scope { order(:pos) }
 
   attr_accessible :survey_id, :title, :description, :pos
@@ -13,13 +15,5 @@ class SurveySection < ActiveRecord::Base
 
   def questions
     survey_questions
-  end
-
-  def self.reordering(new_order)
-    new_order.each_with_index do |id, index|
-      orderable = self.find_by_id(id)
-      orderable.pos = index
-      orderable.save
-    end
   end
 end

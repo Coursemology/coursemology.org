@@ -103,6 +103,12 @@ class Assessment::AssessmentsController < ApplicationController
   def show
     @summary = {}
     @summary[:questions] = @assessment.questions
+    qas = @assessment.question_assessments
+    @summary[:qas] = {}
+    @summary[:questions].each do |qn|
+      @summary[:qas][qn] = qas.where(question_id: qn.id).first
+    end
+
   end
 
   def stats
