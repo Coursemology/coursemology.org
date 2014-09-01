@@ -23,7 +23,7 @@ namespace :training do
             grading = ans.answer_grading
             if grading
               prev_grade = grading.grade
-              current_grade = mcq_grader(sub, ans, ans.question, pref_grader)
+              current_grade = mcq_grader(sub, ans, ans.question, pref_grader, grading)
               if !effected && prev_grade != current_grade
                 effect = true
               end
@@ -40,13 +40,9 @@ namespace :training do
 
   end
 
-  def mcq_grader(submission, ans, mcq, pref_grader)
-    grading = submission.get_final_grading
-    grading.save unless grading.persisted?
-    ag = grading.answer_gradings.for_question(mcq.question).first ||
-        grading.answer_gradings.create({answer_id: ans.id})
-    std_answers = submission.answers.where(question_id: ans.question_id)
-    if pref_grader != 'two-one-zero' || (std_answers.count == 1 && std_answers.first.correct)
+  def mcq_grader(submission, ans, mcq, pref_grader, ag)
+    std_answers = submission.answers.where(question_id: ans.question_id).order(created_at: :asc)
+    if pref_grader != 'two-one-zero' || std_answers.first.correct
       ag.grade = mcq.max_grade
     else
       num_wrong_choices = mcq.options.find_all_by_correct(false).count
