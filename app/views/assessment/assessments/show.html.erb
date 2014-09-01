@@ -88,7 +88,7 @@
       <tbody class="asm-qns sortable-table" url="<%= reorder_course_assessment_path(@course, @assessment) %>">
       <% @summary[:questions].each_with_index do |qn, index| %>
           <% q = qn.as_question %>
-          <tr class="asm-qn" id="sortable-item_<%= qn.id %>" >
+          <tr class="asm-qn" id="sortable-item_<%= @summary[:qas][qn].id %>" >
             <td>
               <div>
                 <div class="asm-qn-handler">
