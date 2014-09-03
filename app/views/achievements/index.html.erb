@@ -32,7 +32,9 @@
         </td>
         <td>
           <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
-          <p><%= ach.description %></p>
+          <div class="description">
+            <%= ach.description.html_safe %>
+          </div>
         </td>
         <td>
           <% if ach.auto_assign? %>
@@ -101,4 +103,3 @@
 <% if @ach_paging.display? %>
     <%= paginate @achievements %>
 <% end %>
-
