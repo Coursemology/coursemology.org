@@ -35,8 +35,10 @@
           <% if ach.description.chomp.lines.count > 1 %>
             <ul style="list-style-type: disc">
               <% ach.description.each_line do |line| %>
-                <li><%= line.chomp %></li>
+                <% if line.chomp != "" %>
+                  <li><%= line.chomp %></li>
                 <% end %>
+              <% end %>
             </ul>
           <% else %>
             <p><%= ach.description %></p>
