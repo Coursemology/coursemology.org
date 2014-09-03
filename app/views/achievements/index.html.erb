@@ -32,17 +32,9 @@
         </td>
         <td>
           <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
-          <% if ach.description.lines.count > 1 %>
-            <ul style="list-style-type: disc">
-              <% ach.description.each_line do |line| %>
-                <% if line.chomp != "" %>
-                  <li><%= line.chomp %></li>
-                <% end %>
-              <% end %>
-            </ul>
-          <% else %>
-            <p><%= ach.description %></p>
-          <% end %>
+          <div class="description">
+            <%= ach.description.html_safe %>
+          </div>
         </td>
         <td>
           <% if ach.auto_assign? %>
@@ -111,3 +103,9 @@
 <% if @ach_paging.display? %>
     <%= paginate @achievements %>
 <% end %>
+
+<style>
+    div.description ul{
+        list-style-type: disc
+    }
+</style>
