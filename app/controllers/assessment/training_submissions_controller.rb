@@ -27,6 +27,7 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     step = (curr_user_course.is_staff? || @training.skippable?) ? request_step : [next_undone , request_step].min
     step = step > questions.length ? next_undone : step
     current = step > questions.length ? current : questions[step - 1]
+    finished = finalised.include? current
 
     current = current.specific if current
     if current && current.class == Assessment::CodingQuestion
@@ -37,8 +38,9 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
         prefilled_code = "#Answer from your previous question \n" + code + (prefilled_code.empty? ? "" : ("\n\n#prefilled code \n" + prefilled_code))
       end
     end
+
     @summary = {questions: questions, finalised: finalised, step: step,
-                current: current, next_undone: next_undone, prefilled: prefilled_code}
+                current: current, next_undone: next_undone, prefilled: prefilled_code, finished: finished, last_attempt: code_of_last_attempt(current)}
   end
 
   def submit
@@ -149,6 +151,15 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       end
     end
     eval_summary
+  end
+
+  def code_of_last_attempt(question)
+    ans = question.answers.where(std_course_id: curr_user_course.id).last
+    if ans
+      ans.content
+    else
+      nil
+    end
   end
 
   private
