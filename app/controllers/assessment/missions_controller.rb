@@ -124,31 +124,25 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     redirect_to overview_course_assessment_missions_path
   end
 
-  def access_denied
-    respond_to   do |format|
-      format.html # show.html.erb
-    end
-  end
-
   def dump_code
-
+    @mission = @course.missions.find(params[:assessment_mission_id])
     case params[:_type]
-      when 'mine'
+      when 'My'
         std_courses =  curr_user_course.std_courses
-      when 'phantom'
+      when 'Phantom'
         std_courses = @course.user_courses.student.where(is_phantom: true)
       else
         std_courses = @course.user_courses.student.where(is_phantom: false)
     end
 
     sbms = @mission.submissions.
-        where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:std_coding_answers)
+        where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:coding_answers)
 
     result = nil
 
     Dir.mktmpdir("mission-dump-temp-#{Time.now}") { |dir|
       sbms.each do |sbm|
-        ans = sbm.std_coding_answers.first
+        ans = sbm.coding_answers.first
         unless ans
           next
         end
@@ -168,7 +162,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
         title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
         file = File.open(File.join(path, title), 'w+')
-        file.write(ans.code)
+        file.write(ans.content)
         file.close
       end
 
@@ -196,4 +190,11 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       }
     end
   end
+
+  def access_denied
+    respond_to   do |format|
+      format.html # show.html.erb
+    end
+  end
+
 end
