@@ -29,14 +29,29 @@
     </table>
 <% end %>
 <h3>Your Answer</h3>
+
 <div class="path_cm_txtbox cos_code">
   <textarea name="ans" id="ans" render="code"
+            data-prefilled="<%= prefilled %>"
             language="<%= question.language.codemirror_mode %>"
-            version="<%= question.language.version %>"><%= prefilled %></textarea>
+            version="<%= question.language.version %>"><% if !finished && last_attempt %><%= last_attempt %><% else %><%= prefilled %><% end %></textarea>
 </div>
+
+<% if last_attempt && !finished %>
+    <div class="btn btn-warning btn-small" id="revert-button" style="margin-top: 5px">We have restored your previous code, click to revert</div>
+<% end %>
 <br/>
 
 <h3>Evaluation Result</h3>
 <div id="eval_result" style="font-size: 14px;padding-left: 10px">
   Click Run to see your evaluation result.
 </div>
+
+<script>
+    $('div#revert-button').click(function(){
+        var editor = $('.CodeMirror')[0].CodeMirror;
+        var code = $('textarea#ans').data('prefilled');
+        editor.getDoc().setValue(code);
+        $('div#revert-button').fadeOut(500)
+    });
+</script>
