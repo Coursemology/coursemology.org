@@ -1,5 +1,5 @@
 <%- display_name = @course.customized_title_by_model(Achievement).singularize -%>
-<%= form_for [@course, @achievement], html: { class: 'form-horizontal' } do |f| %>
+<%= simple_form_for [@course, @achievement], html: { class: 'form-horizontal' } do |f| %>
 
   <% if @achievement.errors.any? %>
     <div id="error_explanation">
@@ -22,13 +22,8 @@
       </div>
     </div>
 
-    <div class="control-group">
-      <%= f.label :description, class: 'control-label' %>
-      <div class="controls">
-        <%= f.text_area :description, class: 'text_area span7', rows: '10',
-                        placeholder: "Give it a awesome back story."%>
-      </div>
-    </div>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}, placeholder: "Give it a awesome back story." %>
+
     <div class="control-group">
       <%= f.label "Assign Mode", class: 'control-label' %>
       <div class="controls checkbox-text">
@@ -186,3 +181,4 @@
 
     });
 </script>
+
