@@ -40,7 +40,8 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     end
 
     @summary = {questions: questions, finalised: finalised, step: step,
-                current: current, next_undone: next_undone, prefilled: prefilled_code, finished: finished, last_attempt: code_of_last_attempt(current)}
+                current: current, next_undone: next_undone, prefilled: prefilled_code,
+                finished: finished, last_attempt: code_of_last_attempt(current) }
   end
 
   def submit
