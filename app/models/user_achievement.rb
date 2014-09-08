@@ -5,7 +5,7 @@ class UserAchievement < ActiveRecord::Base
   belongs_to :achievement
 
   def update_date
-  # update achievement gain date to submission date(not grading date)
+    # update achievement gain date to submission date(not grading date)
     unless achievement && user_course
       return
     end
@@ -25,5 +25,4 @@ class UserAchievement < ActiveRecord::Base
       self.updated_at = lastest_submission_date
     end
   end
-
 end
