@@ -207,6 +207,7 @@ class UserCourse < ActiveRecord::Base
     unless uach
       uach = self.user_achievements.build
       uach.achievement = ach
+      uach.update_date
       if should_notify && self.is_student? && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
