@@ -38,6 +38,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       @submission.attach_files(params[:files].values)
     end
 
+    if params[:commit] == 'Save'
+      @submission.saved_at = Time.now
+    end
+
     respond_to do |format|
       if @submission.save
         if params[:commit] == 'Save'
