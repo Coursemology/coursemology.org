@@ -63,7 +63,7 @@ class Assessment::Grading < ActiveRecord::Base
 
     unless exp_changed
       # do this when only grade changed
-      self.user_course.update_ach_async
+      self.student.update_ach_async
     end
   end
 
