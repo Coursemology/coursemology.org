@@ -23,8 +23,7 @@ class Survey < ActiveRecord::Base
     include_field :survey_sections
   end
 
-  after_create :update_pending_actions
-  after_update :update_pending_actions
+  after_save :update_pending_actions
 
   def update_pending_actions
     QueuedJob.destroy(self.queued_jobs)
