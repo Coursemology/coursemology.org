@@ -58,7 +58,13 @@ class Assessment::Grading < ActiveRecord::Base
     if self.submission.done?
       self.exp_transaction.exp += submission.get_bonus
     end
+    exp_changed = exp_transaction.exp_changed?
     self.exp_transaction.save
+
+    unless exp_changed
+      # do this when only grade changed
+      self.user_course.update_ach_async
+    end
   end
 
   def send_notification
