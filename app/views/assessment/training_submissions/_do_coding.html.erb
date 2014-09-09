@@ -46,18 +46,3 @@
 <div id="eval_result" style="font-size: 14px;padding-left: 10px">
   Click Run to see your evaluation result.
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('div#revert-button').click(function () {
-            var editor = $('.CodeMirror')[0].CodeMirror;
-            var code = $('textarea#ans').data('prefilled');
-            editor.getDoc().setValue(code);
-            $('div#revert-button').fadeOut(500);
-        });
-
-        $("#pathrun").bind("click",function(){
-            $('div#revert-button').fadeOut(500);
-        });
-    });
-</script>

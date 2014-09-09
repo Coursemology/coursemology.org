@@ -129,6 +129,17 @@ $(document).ready(function(){
                 $("#pathrun").attr("disabled",false);
             }, 'json')
     }
+
+    $('div#revert-button').click(function () {
+        var editor = $('.CodeMirror')[0].CodeMirror;
+        var code = $('textarea#ans').data('prefilled');
+        editor.getDoc().setValue(code);
+        $('div#revert-button').fadeOut(500);
+    });
+
+    $("#pathrun").bind("click",function(){
+        $('div#revert-button').fadeOut(500);
+    });
 });
 
 
