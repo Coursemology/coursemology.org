@@ -98,16 +98,6 @@ class SurveysController < ApplicationController
   end
 
   def summary_xlsx(include_phantom = true)
-    # Axlsx::Package.new do |p|
-    #   p.workbook.add_worksheet(:name => "Pie Chart") do |sheet|
-    #     sheet.add_row ["Simple Pie Chart"]
-    #     %w(first second third).each { |label| sheet.add_row [label, rand(24)+1] }
-    #     sheet.add_chart(Axlsx::Pie3DChart, :start_at => [0,5], :end_at => [10, 20], :title => "example 3: Pie Chart") do |chart|
-    #       chart.add_series :data => sheet["B2:B4"], :labels => sheet["A2:A4"],  :colors => ['FF0000', '00FF00', '0000FF']
-    #     end
-    #   end
-    #   p.serialize('simple.xlsx')
-    # end
     export_dir = "#{Rails.root}/tmp/export/#{curr_user_course.id}"
     Dir.exist?(export_dir) ||  FileUtils.mkdir_p(export_dir)
 
@@ -130,8 +120,6 @@ class SurveysController < ApplicationController
     end
   end
 
-
-
   def question_summary(question, include_phantom = true)
     summary = {}
     summary[:question] = question
@@ -148,32 +136,6 @@ class SurveysController < ApplicationController
     end
     summary
   end
-
-  #def summary
-  #  @charts = []
-  #  @survey.questions.each do |question|
-  #    rows = {}
-  #    data_table = GoogleVisualr::DataTable.new
-  #    data_table.new_column('string', 'Rank' )
-  #    data_table.new_column('number', 'No. of votes')
-  #    #data_table.new_column('string', nil, nil, 'tooltip')
-  #    question.survey_mrq_answers.each do |answer|
-  #      answer.options.each do |option|
-  #        if rows[option]
-  #          rows[option] += 1
-  #        else
-  #          rows[option] = 1
-  #        end
-  #      end
-  #    end
-  #  rows.sort_by{|k, v| v}.reverse[0, 10].each do |key, value|
-  #      data_table.add_row([key.description, value])
-  #    end
-  #    opt = { width: 600, height: 600, title: question.description }
-  #    @charts << GoogleVisualr::Interactive::BarChart.new(data_table, opt)
-  #  end
-  #  #@charts = @charts[0,1]
-  #end
 
   def destroy
     @survey.destroy
