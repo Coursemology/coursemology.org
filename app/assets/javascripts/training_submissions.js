@@ -130,15 +130,16 @@ $(document).ready(function(){
             }, 'json')
     }
 
-    $('div#revert-button').click(function () {
-        var editor = $('.CodeMirror')[0].CodeMirror;
-        var code = $('textarea#ans').data('prefilled');
-        editor.getDoc().setValue(code);
-        $('div#revert-button').fadeOut(500);
+    $('.revert-button').click(function () {
+        var index = event.target.id;
+        var code = $('textarea[index=' + index + ']').data('prefilled');
+        var editor = $('.CodeMirror')[index].CodeMirror;
+        editor.getDoc().setValue(code);;
+        $('.revert-button#' + index).fadeOut(500);
     });
 
-    $("#pathrun").bind("click",function(){
-        $('div#revert-button').fadeOut(500);
+    $('#pathrun').bind('click',function(){
+        $('.revert-button').fadeOut(500);
     });
 });
 
