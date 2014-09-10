@@ -41,8 +41,7 @@
           <%= render partial:"do_mcq", locals: {mcq: @summary[:current]} %>
       <% elsif @summary[:current].class == Assessment::CodingQuestion %>
           <%= render partial: "do_coding", locals: { question: @summary[:current], prefilled: @summary[:prefilled],
-                                                    finished: @summary[:finished], last_attempt: @summary[:last_attempt],
-                                                    index: 0 } %>
+                                                    finished: @summary[:finished], last_attempt: @summary[:last_attempt] } %>
       <% end %>
 
       <div class="form-actions">

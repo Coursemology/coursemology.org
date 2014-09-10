@@ -131,11 +131,10 @@ $(document).ready(function(){
     }
 
     $('.revert-button').click(function () {
-        var index = event.target.id;
         var code = $('textarea#ans').data('prefilled');
-        var editor = $('.CodeMirror')[index].CodeMirror;
+        var editor = $('.CodeMirror')[0].CodeMirror;
         editor.getDoc().setValue(code);;
-        $('.revert-button#' + index).fadeOut(500);
+        $('.revert-button').fadeOut(500);
     });
 
     $('#pathrun').bind('click',function(){
