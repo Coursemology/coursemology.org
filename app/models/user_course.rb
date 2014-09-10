@@ -139,10 +139,10 @@ class UserCourse < ActiveRecord::Base
 
   def update_exp_and_level_async
     update_exp_and_level
-    update_ach_async
-    Thread.new {
+    Thread.new do
+      self.update_achievements
       ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
-    }
+    end
   end
 
   def update_ach_async
