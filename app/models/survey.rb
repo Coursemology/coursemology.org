@@ -4,7 +4,7 @@ class Survey < ActiveRecord::Base
   default_scope { order("open_at") }
   attr_accessible :course_id, :title, :creator_id, :description,
                   :open_at, :expire_at, :anonymous, :publish,
-                  :allow_modify, :has_section, :exp
+                  :allow_modify, :is_contest, :exp
 
 
   scope :opened, lambda { where("open_at <= ? ", Time.now) }
