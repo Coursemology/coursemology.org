@@ -61,10 +61,7 @@ class Assessment::Grading < ActiveRecord::Base
     exp_changed = exp_transaction.exp_changed?
     self.exp_transaction.save
 
-    unless exp_changed
-      # do this when only grade changed
-      self.student.update_ach_async
-    end
+    student.update_exp_and_level_async unless exp_changed
   end
 
   def send_notification

@@ -145,12 +145,6 @@ class UserCourse < ActiveRecord::Base
     end
   end
 
-  def update_ach_async
-    Thread.new {
-      update_achievements
-    }
-  end
-
   def update_exp_and_level
     # recalculate the EXP and level of the student (user)
     # find all submission_grading and calculate the score
