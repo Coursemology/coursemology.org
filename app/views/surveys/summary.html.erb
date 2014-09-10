@@ -9,16 +9,15 @@
   <a class="btn" href="<%= course_survey_summary_with_format_path(format:"xlsx") %>?_tab=<%= @tab %>">Export Summary as .xlsx</a>
 </div>
 
-<% if @survey.has_section? %>
+<% if @survey.is_contest? %>
+    <%= render partial: "questions_summary", locals: {questions: @summaries} %>
+<% else %>
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">
           <h2><%= summary[:section].title %></h2>
         </div>
         <%= render partial: "questions_summary", locals: {questions: summary[:questions]} %>
-
     <% end %>
-<% else %>
-    <%= render partial: "questions_summary", locals: {questions: @summaries} %>
 <% end %>
 
 

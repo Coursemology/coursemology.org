@@ -4,7 +4,7 @@ class Survey < ActiveRecord::Base
   default_scope { order("open_at") }
   attr_accessible :course_id, :title, :creator_id, :description,
                   :open_at, :expire_at, :anonymous, :publish,
-                  :allow_modify, :has_section, :exp
+                  :allow_modify, :is_contest, :exp
 
 
   scope :opened, lambda { where("open_at <= ? ", Time.now) }
@@ -23,8 +23,7 @@ class Survey < ActiveRecord::Base
     include_field :survey_sections
   end
 
-  after_create :update_pending_actions
-  after_update :update_pending_actions
+  after_save :update_pending_actions
 
   def update_pending_actions
     QueuedJob.destroy(self.queued_jobs)
