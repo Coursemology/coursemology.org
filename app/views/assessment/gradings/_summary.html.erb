@@ -21,6 +21,10 @@
       </tr>
       <!--TODO: display grading logs-->
   <% end %>
+  <tr><td>Attempted at: </td><td><%= datetime_format(@submission.created_at) %></td></tr>
+  <% if @submission.saved_at %>
+    <tr><td>Last save: </td><td><%= datetime_format(@submission.saved_at) %></td></tr>
+  <% end %>
   <tr><td>Submitted at: </td><td><%= datetime_format(@submission.submitted_at || @submission.created_at) %></td></tr>
   <tr><td>Due on:</td><td><%= datetime_format @assessment.specific.close_at %></td></tr>
 </table>
