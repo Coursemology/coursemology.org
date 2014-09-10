@@ -6,23 +6,26 @@ class UserAchievement < ActiveRecord::Base
 
   def update_date
     # update achievement gain date to submission date(not grading date)
-    unless achievement && user_course
-      return
-    end
+    submissions = Assessment::Submission.joins(
+        "INNER JOIN assessments
+            ON assessments.id = assessment_submissions.assessment_id
+            AND assessment_submissions.std_course_id = #{ user_course_id }
+        INNER JOIN asm_reqs
+            ON asm_reqs.asm_id = assessments.id
+        INNER JOIN (SELECT requirements.req_id FROM requirements
+            WHERE requirements.obj_id = #{ achievement.id }
+            AND requirements.obj_type = 'Achievement'
+            AND requirements.req_type = 'AsmReq') req
+            ON req.req_id = asm_reqs.id")
 
     lastest_submission_date = nil
-    achievement.requirements.asm_req.each do |req|
-      asm = req.req.asm
-      submission = asm.submissions.where(std_course_id: user_course_id).first
-      if submission && submission.submitted_at
-        if !lastest_submission_date || submission.submitted_at > lastest_submission_date
-          lastest_submission_date = submission.submitted_at
-        end
+    submissions.each do |submission|
+      if submission.submitted_at &&
+          (!lastest_submission_date ||
+              submission.submitted_at > lastest_submission_date)
+        lastest_submission_date = submission.submitted_at
       end
     end
-
-    if lastest_submission_date
-      self.updated_at = lastest_submission_date
-    end
+    self.updated_at = lastest_submission_date if lastest_submission_date
   end
 end
