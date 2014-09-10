@@ -69,21 +69,15 @@ class SurveysController < ApplicationController
     @tab = params[:_tab]
     include_phantom = @tab == "summary_phantom"
     @summaries = []
-    if @survey.has_section?
-      @survey.sections.each do |section|
-        summary = {}
-        summary[:section] = section
-        summary_qns = []
-        section.questions.each do |question|
-          summary_qns << question_summary(question, include_phantom)
-        end
-        summary[:questions] = summary_qns
-        @summaries << summary
+    @survey.sections.each do |section|
+      summary = {}
+      summary[:section] = section
+      summary_qns = []
+      section.questions.each do |question|
+        summary_qns << question_summary(question, include_phantom)
       end
-    else
-      @survey.questions.each do |question|
-        @summaries << question_summary(question)
-      end
+      summary[:questions] = summary_qns
+      @summaries << summary
     end
   end
 
@@ -130,7 +124,7 @@ class SurveysController < ApplicationController
       summary[:total] = question.no_unique_voters(include_phantom)
       #TODO: hardcoded 10
       summary[:options] = question.options.order("count desc")
-      unless @survey.has_section?
+      if @survey.is_contest?
         summary[:options] = summary[:options].first(10)
       end
     end
@@ -147,14 +141,7 @@ class SurveysController < ApplicationController
   private
 
   def summary_rows(include_phantom = true)
-    questions = []
-    if @survey.has_section?
-      @survey.sections.each do |s|
-        questions += s.questions
-      end
-    else
-      questions = @survey.questions
-    end
+    questions = @survey.questions
 
     rows = []
     rows << ["Name"] + questions.map {|qn| qn.description }

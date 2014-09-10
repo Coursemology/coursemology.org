@@ -1,17 +1,15 @@
 class SurveyQuestionsController < ApplicationController
-  require 'zip/zipfilesystem'
   load_and_authorize_resource :course
   load_and_authorize_resource :survey, through: :course
-  load_and_authorize_resource :survey_question, through: :survey
+  load_and_authorize_resource :survey_section, through: :survey
+  load_and_authorize_resource :survey_question, through: :survey_section
 
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit]
   require 'digest/md5'
+  require 'zip/zipfilesystem'
 
   def new
     @survey_question.type_id = 2
-    if params[:section_id]
-      @survey_question.survey_section_id = params[:section_id]
-    end
   end
 
   def edit
