@@ -1,7 +1,7 @@
 class UserAchievement < ActiveRecord::Base
   attr_accessible :achievement_id, :user_course_id
 
-  after_create :set_obtained_at
+  before_create :set_obtained_at
 
   belongs_to :user_course
   belongs_to :achievement
@@ -16,6 +16,6 @@ class UserAchievement < ActiveRecord::Base
   end
 
   def set_obtained_at
-    self.obtained_at = created_at
+    self.obtained_at ||= Time.now
   end
 end
