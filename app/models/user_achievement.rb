@@ -1,5 +1,8 @@
 class UserAchievement < ActiveRecord::Base
   attr_accessible :achievement_id, :user_course_id
+
+  after_create :set_obtained_at
+
   belongs_to :user_course
   belongs_to :achievement
 
@@ -10,5 +13,9 @@ class UserAchievement < ActiveRecord::Base
         .where(std_course_id: user_course_id)
         .order("submitted_at DESC").first
     self.obtained_at = submission.submitted_at || obtained_at if submission
+  end
+
+  def set_obtained_at
+    self.obtained_at = created_at
   end
 end
