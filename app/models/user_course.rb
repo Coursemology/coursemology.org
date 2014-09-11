@@ -21,7 +21,7 @@ class UserCourse < ActiveRecord::Base
       order('lower(users.name) ASC') }
   scope :top_achievements,
         joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
-        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements.created_at) as ach_last_updated')
+        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements. ) as ach_last_updated')
         .group('user_courses.id')
         .order('ach_count DESC, ach_last_updated ASC, id ASC')
 
@@ -206,7 +206,7 @@ class UserCourse < ActiveRecord::Base
     unless uach
       uach = self.user_achievements.build
       uach.achievement = ach
-      uach.update_date
+      uach.assign_obtained_date
       if should_notify && self.is_student? && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
