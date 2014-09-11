@@ -9,8 +9,6 @@ namespace :user_achievement do
   end
 
   def obtained_date(achievement, user_course_id)
-    puts achievement.inspect
-    puts user_course_id
     submission = Assessment.joins(:as_asm_reqs)
     .where("asm_reqs.id IN (?)", achievement.requirements.asm_req.pluck(:req_id)).submissions
     .where(std_course_id: user_course_id)
