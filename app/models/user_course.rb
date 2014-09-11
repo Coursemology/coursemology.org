@@ -21,7 +21,7 @@ class UserCourse < ActiveRecord::Base
       order('lower(users.name) ASC') }
   scope :top_achievements,
         joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
-        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements.obtained_at ) as ach_last_updated')
+        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements.obtained_at) as ach_last_updated')
         .group('user_courses.id')
         .order('ach_count DESC, ach_last_updated ASC, id ASC')
 
