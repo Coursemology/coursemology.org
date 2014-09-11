@@ -29,11 +29,17 @@
     </table>
 <% end %>
 <h3>Your Answer</h3>
+
 <div class="path_cm_txtbox cos_code">
   <textarea name="ans" id="ans" render="code"
+            data-prefilled="<%= prefilled %>"
             language="<%= question.language.codemirror_mode %>"
-            version="<%= question.language.version %>"><%= prefilled %></textarea>
+            version="<%= question.language.version %>"><% if !finished && last_attempt %><%= last_attempt %><% else %><%= prefilled %><% end %></textarea>
 </div>
+
+<% if last_attempt && !finished %>
+    <div class="revert-button btn btn-warning btn-small" style="margin-top: 5px">Last attempt restored, Click to revert</div>
+<% end %>
 <br/>
 
 <h3>Evaluation Result</h3>
