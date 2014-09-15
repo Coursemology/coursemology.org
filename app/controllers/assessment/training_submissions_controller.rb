@@ -155,12 +155,10 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
   end
 
   def code_of_last_attempt(question)
+    return unless question
+
     ans = question.answers.where(std_course_id: curr_user_course.id).last
-    if ans
-      ans.content
-    else
-      nil
-    end
+    ans.content if ans
   end
 
   private
