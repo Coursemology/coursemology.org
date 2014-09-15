@@ -20,7 +20,7 @@ codeEvaluator = function () {
     return {
         testRun: function (ans_id, url, btn) {
             if (self.running) return;
-            
+
             self.running = true;
             var index = self.ans_ids.indexOf(ans_id);
             var code = self.cvs[index].editor.getValue();
