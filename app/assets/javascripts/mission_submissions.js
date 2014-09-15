@@ -20,7 +20,6 @@ codeEvaluator = function () {
     return {
         testRun: function (ans_id, url, btn) {
             if (self.running) return;
-
             self.running = true;
             var index = self.ans_ids.indexOf(ans_id);
             var code = self.cvs[index].editor.getValue();
@@ -91,12 +90,12 @@ codeEvaluator = function () {
                         $er.html("Your answer failed to pass one or more of the public test cases.").animate(failColor, animateOpt);
                     }
 
-                    if (resp.errors.length <= 0) {
-                        if (resp.can_test) {
-                            $(btn).attr("disabled", false);
-                        }
-                    } else {
+                    if (resp.errors.length > 0) {
                         $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
+                    }
+
+                    if (resp.can_test) {
+                        $(btn).attr("disabled", false);
                     }
                     self.running = false;
                 }
