@@ -38,16 +38,16 @@ class Assessment::Grading < ActiveRecord::Base
 
   def update_exp_transaction
     asm = submission.assessment
-
     unless self.exp_transaction
-      self.exp_transaction = ExpTransaction.create({giver_id: self.grader_id,
+      exp_transaction = ExpTransaction.create({ giver_id: self.grader_id,
                                                     user_course_id: submission.std_course_id,
                                                     reason: "Exp for #{asm.title}",
                                                     is_valid: true,
                                                     rewardable_id: submission.id,
                                                     rewardable_type: submission.class.name },
                                                    without_protection: true)
-      self.save
+      exp_create_or_changed = true
+      update_column(:exp_transaction_id, exp_transaction.id)
     end
 
     self.exp_transaction.exp = self.exp || (self.grade || 0) * asm.exp / asm.max_grade
@@ -58,10 +58,10 @@ class Assessment::Grading < ActiveRecord::Base
     if self.submission.done?
       self.exp_transaction.exp += submission.get_bonus
     end
-    exp_changed = exp_transaction.exp_changed?
+    exp_create_or_changed ||= self.exp_transaction.exp_changed?
     self.exp_transaction.save
 
-    student.update_exp_and_level_async unless exp_changed
+    student.update_exp_and_level_async unless exp_create_or_changed
   end
 
   def send_notification
