@@ -10,7 +10,7 @@
 </div>
 
 <% if @survey.is_contest? %>
-    <%= render partial: "questions_summary", locals: {questions: @summaries} %>
+    <%= render partial: "questions_summary", locals: {questions: @summaries[0][:questions]} %>
 <% else %>
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">
