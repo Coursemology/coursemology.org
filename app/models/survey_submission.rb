@@ -56,7 +56,11 @@ class SurveySubmission < ActiveRecord::Base
     self.status == 'submitted'
   end
 
+  def answer_count
+    self.survey_mrq_answers.count + survey_essay_answers.count
+  end
+
   def done?
-    (self.current_qn || 1) > self.survey.survey_questions.count
+    answer_count > self.survey.survey_questions.count
   end
 end
