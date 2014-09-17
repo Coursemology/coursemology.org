@@ -31,7 +31,7 @@
             <% end %>
 
             <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
-            <td><%= sub ? (sub.current_qn || 0) : 0 %>/ <%= no_qn %></td>
+            <td><%= sub ? (sub.answer_count || 0) : 0 %>/ <%= no_qn %></td>
           </tr>
       <% end %>
       </tbody>
