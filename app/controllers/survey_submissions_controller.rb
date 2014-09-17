@@ -155,18 +155,15 @@ class SurveySubmissionsController < ApplicationController
         answer = question.survey_mrq_answers.build
         answer.option_id = id
         answer.user_course = curr_user_course
+        answer.survey_submission = @survey_submission
         answer.save
         answer.option.increase_count
       end
 
       step += 1
-      if answers.count == 0
-        @survey_submission.current_qn = (@survey_submission.current_qn || 1) + 1
-        @survey_submission.save
 
-        if @survey_submission.done?
-          @survey_submission.set_submitted
-        end
+      if @survey_submission.done?
+        @survey_submission.set_submitted
       end
     end
     respond_to do |format|

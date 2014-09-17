@@ -57,7 +57,8 @@ class SurveySubmission < ActiveRecord::Base
   end
 
   def answer_count
-    self.survey_mrq_answers.count + survey_essay_answers.count
+    self.survey_mrq_answers.select(:question_id).uniq.count +
+    self.survey_essay_answers.select(:question_id).uniq.count
   end
 
   def done?
