@@ -62,6 +62,6 @@ class SurveySubmission < ActiveRecord::Base
   end
 
   def done?
-    answer_count > self.survey.survey_questions.count
+    answer_count >= self.survey.survey_questions.count
   end
 end
