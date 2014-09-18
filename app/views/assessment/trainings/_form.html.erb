@@ -20,6 +20,7 @@
 
     <%= f.association :dependent_on,
                       collection: @course.assessments.training - [@training.assessment] + @course.assessments.mission,
+                      label_method: :get_title,
                       input_html: {class: "input-large"},
                       include_blank: true %>
 
