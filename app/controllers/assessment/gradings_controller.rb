@@ -214,7 +214,7 @@ class Assessment::GradingsController < ApplicationController
       combined_code = PythonEvaluator.combine_code([qn.pre_include, ans.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn, true)
       ans.result = result.to_json
-      ans.save
+      ans.specific.save
     end
     # }
   end
