@@ -7,13 +7,13 @@
 
 <% if @assessment.have_dependent_assessment?(curr_user_course) %>
   <% dep_asm = @assessment.get_dependent_assessment(curr_user_course) %>
-  <p>
+  <p class="mission-not-opened">
     Please complete
     <% if dep_asm.is_mission? %>
       <%= link_to dep_asm.full_title, course_assessment_missions_path %>
     <% else %>
       <%= link_to dep_asm.full_title, course_assessment_trainings_path %>
     <% end %>
-    before starting this!
+    before attempting this!
   </p>
 <% end %>
