@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140911054305) do
+ActiveRecord::Schema.define(:version => 20140918115607) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1026,6 +1026,7 @@ ActiveRecord::Schema.define(:version => 20140911054305) do
     t.datetime "updated_at",  :null => false
     t.string   "owner_type",  :null => false
     t.integer  "pos"
+    t.datetime "deleted_at"
   end
 
   add_index "tabs", ["course_id"], :name => "index_tabs_on_course_id"
