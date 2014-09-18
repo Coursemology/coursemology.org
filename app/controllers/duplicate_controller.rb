@@ -182,7 +182,7 @@ class DuplicateController < ApplicationController
     #tab
     t_map = {}
     clone.tabs.each do |tab|
-      t_map[tab.id] = tab.duplicate_logs_dest.first.origin_obj_id
+      t_map[tab.id] = tab.duplicate_logs_dest.order("created_at desc").first.origin_obj_id
     end
     t_map.each do |k, v|
       sql = "UPDATE assessments SET tab_id = #{k} WHERE course_id =#{clone.id} AND tab_id = #{v}"
