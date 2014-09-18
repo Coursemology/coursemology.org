@@ -59,7 +59,8 @@
 
     <%= f.association :display_mode, input_html: {class: "input-medium"}, include_blank: false %>
     <%= f.association :dependent_on,
-                      collection: @course.assessments - [@mission.assessment],
+                      collection: @course.assessments.mission - [@mission.assessment] + @course.assessments.training,
+                      label_method: :get_title,
                       input_html: {class: "input-large"},
                       include_blank: true %>
 

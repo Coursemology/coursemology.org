@@ -19,7 +19,7 @@
                 inline_label:"Check to publish #{display_name.downcase}" %>
 
     <%= f.association :dependent_on,
-                      collection: @course.assessments - [@training.assessment],
+                      collection: @course.assessments.training - [@training.assessment] + @course.assessments.mission,
                       input_html: {class: "input-large"},
                       include_blank: true %>
 
