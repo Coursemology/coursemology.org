@@ -39,6 +39,7 @@ class SurveysController < ApplicationController
 
   def show
     @survey_section = SurveySection.new
+    @survey.sections << @survey_section
   end
 
   def edit
