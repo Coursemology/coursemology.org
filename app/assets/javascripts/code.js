@@ -207,6 +207,12 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
             });
         return $lines;
     }
+    function sanctifyCommentsHtmlTags(string){
+        if(string.charAt(0) != '#') {
+            return string;
+        }
+        return string.replace(/(>|<)/g, "<span class=\"cm-comment\">$1</span>");
+    };
     var $active = false;
     function activateComment($com) {
         if (!$com.is('#temporary-comment-box')){
@@ -489,6 +495,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                 zam.push('<pre class="line">'+str+"\n"+'</pre>');
                 accum = [];
             }else if (style){
+                string = sanctifyCommentsHtmlTags(string);
                 accum.push("<span class=\"cm-" + style + "\">" + string + "</span>");
             }else{
                 accum.push(string);
