@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140918115607) do
+ActiveRecord::Schema.define(:version => 20140919103853) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1000,7 +1000,7 @@ ActiveRecord::Schema.define(:version => 20140918115607) do
     t.boolean  "anonymous",    :default => false
     t.boolean  "publish",      :default => true
     t.boolean  "allow_modify", :default => true
-    t.boolean  "is_contest",   :default => true
+    t.boolean  "is_contest",   :default => false
     t.time     "deleted_at"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
