@@ -110,6 +110,11 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       explanation = selected_options.first.explanation
     end
 
+    if correct
+      explanation = question.options.pluck(:explanation).
+          delete_if(&:blank?).join("<br>")
+    end
+
     {is_correct: correct,
      result: correct ? correct_str : "Incorrect!",
      explanation: explanation
