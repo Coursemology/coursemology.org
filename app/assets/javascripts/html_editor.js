@@ -43,24 +43,19 @@
   };
 })(wysihtml5);
 
+
+
+
 $(document).ready(function() {
   // setup html editor
-  var imgUploadHtml = $('#html-editor-image-upload-tab').html();
-
+  // the buttons have been modified so that they work with Bootstrap 2.
+  
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
-  options.toolbar = {
-    code: '<li>' +
-            '<div class="btn-group">' +
-            '<a class="btn" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
-            '</div>' +
-          '</li>'
-  };
+  options.customTemplates = {};
   options.parserRules.classes['coursemology-code'] = 1;
 
-  options.customTemplates = {};
-
-  options.html = true;
-
+  // image upload button
+  var imgUploadHtml = $('#html-editor-image-upload-tab').html();
   if (imgUploadHtml) {
     options.customTemplates = {
       image: function(locale) {
@@ -69,20 +64,91 @@ $(document).ready(function() {
     };
   }
 
-  // FontAwesome's semantics are wrong >_<. This fix removes the default
-  // indent/outdent tools and insert our modified indent and outdent buttons.
-  options.lists = true;
-  var modifiedListHtml = function(locale) {
+  // link button
+  var modifiedLinkTemplate = function(locale) {
+      return "<li>" +
+          '<div class="bootstrap-wysihtml5-insert-link-modal modal fade"> \
+              <div class="modal-dialog ">  \
+                <div class="modal-content">  \
+                  <div class="modal-header">   \
+                    <a class="close" data-dismiss="modal">×</a>\
+                    <h3>Insert link</h3>\
+                  </div>\
+                  <div class="modal-body">\
+                    <input value="http://" class="bootstrap-wysihtml5-insert-link-url form-control">\
+                    <label class="checkbox"> <input class="bootstrap-wysihtml5-insert-link-target" checked="" type="checkbox">Open link in new window</label>\
+                  </div>\
+                  <div class="modal-footer">\
+                    <a class="btn btn-default" data-dismiss="modal">Cancel</a>\
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Insert link</a>\
+                  </div>\
+                </div>\
+              </div>\
+            </div>' +
+             "<a class='btn btn-default' data-wysihtml5-command='createLink' title='Insert Link' tabindex='-1'><i class='icon-link'></i></a>" + 
+             "</li>";
+  };
+  options.customTemplates.link = modifiedLinkTemplate;
+  
+  // blockquote button
+  var modifiedQuoteTemplate = function(locale) {
+      return "<li>" +
+             "<div class='btn-group'>" +
+             '<a class="btn  btn-default" data-wysihtml5-command="formatBlock" '+  //wysihtml5-command-active
+             'data-wysihtml5-command-value="blockquote" data-wysihtml5-display-format-name="false" tabindex="-1">'+
+             "<i class='icon-quote-right'></i></a>" +
+             "</div>" +
+             "</li>";
+  };
+  options.customTemplates.blockquote = modifiedQuoteTemplate;
+
+  // lists buttons
+  var modifiedListTemplate = function(locale) {
       return "<li>" +
              "<div class='btn-group'>" +
              "<a class='btn' data-wysihtml5-command='insertUnorderedList' title='Unordered List'><i class='icon-list'></i></a>" +
-             "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Ordered List'><i class='icon-th-list'></i></a>" +
+             "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Ordered Lists'><i class='icon-th-list'></i></a>" +
              "<a class='btn' data-wysihtml5-command='Outdent' title='Outdent'><i class='icon-indent-left'></i></a>" +
              "<a class='btn' data-wysihtml5-command='Indent' title='Indent'><i class='icon-indent-right'></i></a>" +
              "</div>" +
              "</li>";
   };
-  options.customTemplates.lists = modifiedListHtml;
+  options.customTemplates.lists = modifiedListTemplate;
+
+  // html toggle
+  var modifiedHtmlTemplate = function(locale) {
+      return "<li>" +
+             "<div class='btn-group'>" +
+             "<a class='btn  btn-default' data-wysihtml5-action='change_view' title='Edit Html'><i class='icon-pencil'></i></a>" +
+             "</div>" +
+             "</li>";
+  };
+  options.customTemplates.html = modifiedHtmlTemplate;
+  
+  // code button
+  var codeButtonTemplate = function(locale) {
+    return '<li>' +
+            '<div class="btn-group">' +
+            '<a class="btn" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
+            '</div>' +
+            '</li>';
+  };
+  options.customTemplates.code = codeButtonTemplate;
+
+
+  options.toolbar = {
+    "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+    "emphasis": true, //Italics, bold, etc. Default true
+    "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+    "html": true, //Button which allows you to edit the generated HTML. Default false
+    "link": true, //Button to insert a link. Default true
+    "image": true, //Button to insert an image. Default true,
+    "color": false, //Button to change color of font  
+    "blockquote": true, //Blockquote  
+    //"size": <buttonsize> //default: none, other options are xs, sm, lg
+    "code": true
+  }
+
 
   var handler = function() {
     var $this = $(this);
