@@ -25,12 +25,12 @@
                  html: { method: :POST, class: "form-horizontal" } ) do |f| %>
         <input type="hidden" name="question" value="<%= question.id %>">
         <input type="hidden" name="step" value="<%= @step %>">
-        <input type="hidden" id="max-allowed" value="<%= question.max_response %>">
+        <input type="hidden" id="max-allowed" value="<%= question.max_choices %>">
         <div class="runes-container survey" ng-controller="VotesController">
           <div class="large-12 columns">
             <h1><%= question.description.html_safe %></h1>
             <br>
-            <p style="font-size: 20px">Choose up to <strong><%= question.max_response %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= answers.count  %></span> entries.</p>
+            <p style="font-size: 20px">Choose up to <strong><%= question.max_choices %></strong> entries. You have selected a total of <span class="vote-count ng-binding"><%= answers.count  %></span> entries.</p>
             <br>
             <% if !@survey_submission.done? || @survey.allow_modify? %>
                 <button class="btn btn-success survey-submit" type="submit">Next</button>
