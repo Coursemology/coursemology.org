@@ -41,6 +41,27 @@
     exec: exec,
     state: state
   };
+
+
+  wysi.commands.sup = {
+    exec: function(composer, command) {
+      return wysihtml5.commands.formatInline.exec(composer, command, "sup");
+    },
+    state: function(composer, command) {
+      return wysihtml5.commands.formatInline.state(composer, command, "sup");
+    }
+  };
+
+  wysi.commands.sub = {
+    exec: function(composer, command) {
+      return wysihtml5.commands.formatInline.exec(composer, command, "sub");
+    },
+    state: function(composer, command) {
+      return wysihtml5.commands.formatInline.state(composer, command, "sub");
+    }
+  };
+
+
 })(wysihtml5);
 
 
@@ -51,8 +72,10 @@ $(document).ready(function() {
   // the buttons have been modified so that they work with Bootstrap 2.
   
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
-  options.customTemplates = {};
   options.parserRules.classes['coursemology-code'] = 1;
+  options.parserRules.tags['sub'] = 1;
+  options.parserRules.tags['sup'] = 1;
+  options.customTemplates = {};
 
   // image upload button
   var imgUploadHtml = $('#html-editor-image-upload-tab').html();
@@ -129,12 +152,22 @@ $(document).ready(function() {
   var codeButtonTemplate = function(locale) {
     return '<li>' +
             '<div class="btn-group">' +
-            '<a class="btn" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
+            '<a class="btn  btn-default" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
             '</div>' +
             '</li>';
   };
   options.customTemplates.code = codeButtonTemplate;
 
+  // superscript and subscript button
+  var subSupButtonsTemplate = function(locale) {
+    return '<li>' +
+            '<div class="btn-group">' +
+            '<a class="btn  btn-default" data-wysihtml5-command="sup" title="Superscript" tabindex="-1">x<sup>2</sup></a>' +
+            '<a class="btn  btn-default" data-wysihtml5-command="sub" title="Subscript" tabindex="-1">x<sub>2</sub></a>' +
+            '</div>' +
+            '</li>';
+  };
+  options.customTemplates.subSup = subSupButtonsTemplate;
 
   options.toolbar = {
     "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
@@ -144,9 +177,10 @@ $(document).ready(function() {
     "link": true, //Button to insert a link. Default true
     "image": true, //Button to insert an image. Default true,
     "color": false, //Button to change color of font  
-    "blockquote": true, //Blockquote  
+    "blockquote": false, //Blockquote  
     //"size": <buttonsize> //default: none, other options are xs, sm, lg
-    "code": true
+    "code": true,
+    "subSup": true
   }
 
 
