@@ -39,7 +39,7 @@ class SurveysController < ApplicationController
 
   def show
     @survey_section = SurveySection.new
-    @survey.sections << @survey_section
+    @survey.sections << @survey_section if @survey.is_contest? && @survey.sections.empty?
   end
 
   def edit
