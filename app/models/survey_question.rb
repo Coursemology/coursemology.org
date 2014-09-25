@@ -46,4 +46,8 @@ class SurveyQuestion < ActiveRecord::Base
   def is_essay?
     type == SurveyQuestionType.Essay.first
   end
+
+  def max_choices
+    max_response || 1
+  end
 end
