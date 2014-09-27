@@ -61,8 +61,12 @@
     <%= f.association :dependent_on,
                       collection: @course.assessments.mission - [@mission.assessment] + @course.assessments.training,
                       label_method: :get_title,
+                      label: "Dependent On <br>
+                        <span class='dependency-guide'>
+                            (Control + Click for <br> multiple selections)
+                        </span>".html_safe,
                       input_html: {class: "input-large"},
-                      include_blank: true %>
+                      include_blank: "No Dependency" %>
 
     <div id="uploaded_files_div"></div>
     <%= f.button :form_submit,
