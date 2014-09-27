@@ -34,9 +34,19 @@ class Assessment < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
   belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
-  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
 
-  has_many  :required_for, class_name: "Assessment", foreign_key: 'dependent_id'
+  has_and_belongs_to_many :dependent_on,
+                          class_name: "Assessment",
+                          foreign_key: :as_assessment_id,
+                          association_foreign_key: :dependent_id,
+                          join_table: :assessment_dependency
+
+  has_and_belongs_to_many :required_for,
+                          class_name: "Assessment",
+                          foreign_key: :dependent_id,
+                          association_foreign_key: :as_assessment_id,
+                          join_table: :assessment_dependency
+
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
   has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
