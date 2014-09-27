@@ -191,31 +191,30 @@ class Assessment < ActiveRecord::Base
 
   #TODO
   def can_start?(curr_user_course)
-    # if a student has ever attempted, do not check dependency
     return true if submissions.where(std_course_id: curr_user_course.id).any?
 
     if open_at > Time.now
-      return  false
+      return false
     end
-    if have_dependent_assessment?(curr_user_course)
+    if get_dependent_assessment(curr_user_course)
       return false
     end
     true
   end
 
-  def have_dependent_assessment?(curr_user_course)
-    if dependent_on
-      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
+  def get_dependent_assessment(curr_user_course) # returns nil if no pending assessments
+    return nil unless dependent_on.count
+    unfinished_assessment = []
+    dependent_on.each do |asm|
+      sbm = assessment.submissions.where(assessment_id: asm.dependent_id, std_course_id: curr_user_course).first
       if !sbm || sbm.attempting?
-        return true
+        unfinished_assessment << asm
       end
     end
-    false
-  end
-
-  def get_dependent_assessment(curr_user_course)
-    if have_dependent_assessment?(curr_user_course)
-      dependent_on
+    if unfinished_assessment.count == 0
+      nil
+    else
+      unfinished_assessment
     end
   end
 

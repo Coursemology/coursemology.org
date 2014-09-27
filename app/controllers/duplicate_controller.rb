@@ -215,14 +215,16 @@ class DuplicateController < ApplicationController
 
     #assessment dependency
     clone.assessments.each do |asm|
-      unless asm.dependent_on
+      unless asm.dependent_on.count
         next
       end
-      l = (asm.dependent_on.duplicate_logs_orig & asm_logs).first
-      unless l
-        next
+      asm.dependent_on.each do |asm_dep|
+        l = (asm_dep.duplicate_logs_orig & asm_logs).first
+        unless l
+          next
+        end
+        asm.dependent_on << l.dest_obj_id
       end
-      asm.dependent_id = l.dest_obj_id
       asm.save
     end
 
