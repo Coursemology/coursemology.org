@@ -33,7 +33,7 @@ class Assessment::Mission < ActiveRecord::Base
   end
 
   def missions_dep_on_published
-    missions_dependent_on.where(publish:true)
+    missions.required_for.where(publish:true)
   end
 
   def current_exp
