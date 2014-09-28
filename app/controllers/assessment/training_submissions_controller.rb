@@ -102,6 +102,9 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     if question.select_all?
       if incomplete
         explanation = "Not all correct answers are selected."
+      elsif correct
+        explanation = question.options.pluck(:explanation).
+            delete_if(&:blank?).join("<br>")
       else
         c_count = eval_array.select{|x| x}.length
         explanation = "#{c_count} correct, #{eval_array.length - c_count} wrong"
