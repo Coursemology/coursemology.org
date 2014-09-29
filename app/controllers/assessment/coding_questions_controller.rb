@@ -9,6 +9,8 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
 
   def create
     @question.auto_graded = !@assessment.is_mission?
+    @question.update_attributes(params[:assessment_coding_question])
+
     saved = super
     # update max grade of the asm it belongs to
     respond_to do |format|
