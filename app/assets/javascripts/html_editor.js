@@ -60,12 +60,83 @@
     }
   };
 
+
+  wysi.commands.insertYoutube = {
+    exec: function(composer, command, values) {
+      /* eg. 
+        value = {
+          "videoUrl": "https://www.youtube.com/watch?v=80u2RixDLyk",
+          "height": 123,
+          "width": 234,
+          "start": 30,
+          "end": 60,
+        };
+      */
+
+      if (!values || typeof values.videoUrl === "undefined") {
+        return false;
+      }
+
+      var vidURL = values.videoUrl,
+          vidID;
+      if ( vidURL.substr(0,31) == 'http://www.youtube.com/watch?v=' ) {
+        vidID = vidURL.substr(31).split('&')[0];
+      } else if ( vidURL.substr(0,32) == 'https://www.youtube.com/watch?v=' ){
+        vidID = vidURL.substr(32).split('&')[0];
+      } else {
+        //errorSpan.show();
+        //alert("error");
+        return false;
+      }
+
+      var doc     = composer.doc,
+          textNode;
+      var NODE_NAME = "IFRAME";
+
+      var video = doc.createElement(NODE_NAME);
+      var source = "http://www.youtube.com/embed/" + vidID
+      var defaults = {
+        "height": 315,
+        "width": 420,
+      };
+
+      if ((values.start !== "") && (values.end !== "")) {
+        source += "?start=" + values.start + "&end=" + values.end;
+      } else if (values.start !== "") {
+        source += "?start=" + values.start
+      } else if (values.end !== "") {
+        source += "?end=" + values.end
+      }
+
+      video.setAttribute("src", source);
+      video.setAttribute("frameborder", "0");
+      if ((values.height !== "") && (values.width !== "")) {
+        video.setAttribute("width", Math.max(values["width"], 250));
+        video.setAttribute("height", Math.max(values["height"], 150));
+      } else {
+        video.setAttribute("width", defaults["width"]);
+        video.setAttribute("height", defaults["height"]);
+      }
+
+      composer.selection.insertNode(video);
+      if (wysihtml5.browser.hasProblemsSettingCaretAfterImg()) {
+        textNode = doc.createTextNode(wysihtml5.INVISIBLE_SPACE);
+        composer.selection.insertNode(textNode);
+        composer.selection.setAfter(textNode);
+      } else {
+        composer.selection.setAfter(video);
+      }
+    },
+    state: function(composer) {
+      // Disallow selecting of video iframes
+      return false;
+    }
+  };
+
 })(wysihtml5);
 
 $(document).ready(function() {
   // setup html editor
-  var imgUploadHtml = $('#html-editor-image-upload-tab').html();
-
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
   options.parserRules.classes['coursemology-code'] = 1;
   options.parserRules.tags = {
@@ -84,16 +155,6 @@ $(document).ready(function() {
     },
   };
 
-  options.customTemplates = {};
-
-  if (imgUploadHtml) {
-    options.customTemplates = {
-      image: function(locale) {
-        return imgUploadHtml;
-      }
-    };
-  }
-
   options.toolbar = {
     // code font button
       code: '<li>' +
@@ -111,7 +172,24 @@ $(document).ready(function() {
             '</li>',
   };
 
+  // image upload button
+  var imageUploadHtml = $('#html-editor-image-upload-tab').html();
+  if (imageUploadHtml) {
+    options.customTemplates = { 
+      image: function(locale) {
+        return imageUploadHtml;
+      }
+    };
+  }
+
+  // insert youtube button
+  var youtubeUploadHtml = $('#html-editor-insert-youtube-tab').html();
+  if (youtubeUploadHtml) {
+    options.toolbar.youtube = youtubeUploadHtml;
+  }
+
   options.html = true;
+  options.youtube = true;
 
   var handler = function() {
     var $this = $(this);
@@ -126,7 +204,31 @@ $(document).ready(function() {
     $(this).wysihtml5(options);
   };
 
+  var exec_insert_youtube = function() {
+
+    var youtubeUrl = $("#html-editor-youtube-url").val(),
+        start = $("#html-editor-youtube-start").val(),
+        end = $("#html-editor-youtube-end").val(),
+        height = $("#html-editor-youtube-height").val(),
+        width = $("#html-editor-youtube-width").val();
+
+    editor.currentView.element.focus();
+    editor.composer.commands.exec('insertYoutube', {
+      "videoUrl": youtubeUrl,
+      "start": start,
+      "end": end,
+      "height": height,
+      "width": width,
+    });
+  };
+
+
   $(document).on('DOMNodeInserted', function(e) {
     $('textarea.html-editor', e.target).each(handler);
+
+    // Add hook to insert youtube button
+    // 'off' prevents button from inserting twice, since component has to be re-initialised.
+    $('#insert-youtube-button', e.target).off('click', exec_insert_youtube ); 
+    $('#insert-youtube-button', e.target).on('click', exec_insert_youtube );
   });
 });
