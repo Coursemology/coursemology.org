@@ -62,8 +62,8 @@ class Assessment::AssessmentsController < ApplicationController
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-      elsif (ast.opened? and # assessment must be open
-              !ast.get_dependent_assessment(@course.id)) or
+      elsif ast.can_start? or
+              #!ast.get_dependent_assessment) or
               #(ast.dependent_on.nil? or ast.dependent_id == [] or
               #(sub_ids.include? ast.dependent_id and
               #  !sub_map[ast.dependent_id].attempting?))) or

@@ -196,18 +196,17 @@ class Assessment < ActiveRecord::Base
     if open_at > Time.now
       return false
     end
-    if get_dependent_assessment(curr_user_course)
+    if get_dependent_assessment
       return false
     end
     true
   end
 
-  def get_dependent_assessment(curr_user_course) # returns nil if no pending assessments
+  def get_dependent_assessment # returns nil if no pending assessments
     return nil unless dependent_on.count
     unfinished_assessment = []
     dependent_on.each do |asm|
-      if assessment
-      sbm = assessment.submissions.where(assessment_id: asm.dependent_id, std_course_id: curr_user_course).first
+      sbm = assessment.submissions.where(assessment_id: asm.id).first
       if !sbm || sbm.attempting?
         unfinished_assessment << asm
       end
