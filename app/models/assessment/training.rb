@@ -7,7 +7,7 @@ class Assessment::Training < ActiveRecord::Base
   #TODO, fix
   attr_accessible :exp, :bonus_exp
   attr_accessible :title, :description
-  attr_accessible :published, :comment_per_qn, :required_for_ids
+  attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
   attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
 

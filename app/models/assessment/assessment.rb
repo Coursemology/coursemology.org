@@ -12,7 +12,7 @@ class Assessment < ActiveRecord::Base
 
   attr_accessible :exp, :bonus_exp
   attr_accessible :title, :description
-  attr_accessible :published, :comment_per_qn, :required_for_ids
+  attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
   attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
 
@@ -193,13 +193,11 @@ class Assessment < ActiveRecord::Base
   def can_start?(curr_user_course)
     return true if submissions.where(std_course_id: curr_user_course.id).any?
 
-    if open_at > Time.now
-      return false
+    if open_at > Time.now || get_dependent_assessment
+      false
+    else
+      true
     end
-    if get_dependent_assessment
-      return false
-    end
-    true
   end
 
   def get_dependent_assessment # returns nil if no pending assessments

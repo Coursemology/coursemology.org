@@ -62,13 +62,7 @@ class Assessment::AssessmentsController < ApplicationController
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-      elsif ast.can_start? or
-              #!ast.get_dependent_assessment) or
-              #(ast.dependent_on.nil? or ast.dependent_id == [] or
-              #(sub_ids.include? ast.dependent_id and
-              #  !sub_map[ast.dependent_id].attempting?))) or
-            can?(:manage, ast) # user is an admin
-
+      elsif ast.can_start? or can?(:manage, ast) # user can start or is an admin
         action_map[ast.id] = {action: "Attempt",
                               url: new_course_assessment_submission_path(@course, ast)}
       else
