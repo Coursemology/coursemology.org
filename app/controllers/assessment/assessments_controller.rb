@@ -62,10 +62,12 @@ class Assessment::AssessmentsController < ApplicationController
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-      elsif (ast.opened? and (ast.as_assessment.class == Assessment::Training or
-          ast.dependent_id.nil? or ast.dependent_id == 0 or
-          (sub_ids.include? ast.dependent_id and !sub_map[ast.dependent_id].attempting?))) or
-          can?(:manage, ast)
+      elsif (ast.opened? and # assessment must be open
+              !ast.get_dependent_assessment) or
+              #(ast.dependent_on.nil? or ast.dependent_id == [] or
+              #(sub_ids.include? ast.dependent_id and
+              #  !sub_map[ast.dependent_id].attempting?))) or
+            can?(:manage, ast) # user is an admin
 
         action_map[ast.id] = {action: "Attempt",
                               url: new_course_assessment_submission_path(@course, ast)}

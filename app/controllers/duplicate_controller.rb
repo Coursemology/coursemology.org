@@ -97,8 +97,10 @@ class DuplicateController < ApplicationController
         forums + surveys).each do |record|
        c = record.amoeba_dup
        c.course = dest_course
-       if record.respond_to? :dependent_id
-         record.dependent_id = 0
+       if record.respond_to? :dependent_on
+         record.each do |rcd|
+           rcd.dependent_id = 0
+         end
        end
        c.save
        if c.is_a? Assessment
