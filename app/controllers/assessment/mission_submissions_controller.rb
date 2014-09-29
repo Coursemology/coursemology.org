@@ -78,10 +78,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       combined_code = PythonEvaluator.combine_code([qn.pre_include, std_answer.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn.specific, false)
 
-      #if fail private test cases, show hints
-      public_tests = result[:public].length == 0 ? true : result[:public].inject{|sum,a| sum and a}
-      private_tests = result[:private].length == 0 ? true : result[:private].inject{|sum,a| sum and a}
-      if public_tests and result[:private].length > 0 and !private_tests
+      # if fail private test cases, show hints
+      public_tests = result[:public].length == 0 ? true : result[:public].inject { |sum,a| sum and a }
+      private_tests = result[:private].length == 0 ? true : result[:private].inject { |sum,a| sum and a }
+      if public_tests && result[:private].length > 0 && !private_tests
         index = result[:private].find_index(false)
         result[:hint] = qn.data_hash["private"][index]["hint"]
       end
