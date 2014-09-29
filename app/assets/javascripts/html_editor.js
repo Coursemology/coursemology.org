@@ -41,6 +41,25 @@
     exec: exec,
     state: state
   };
+
+  wysi.commands.sup = {
+    exec: function(composer, command) {
+      return wysihtml5.commands.formatInline.exec(composer, command, "sup");
+    },
+    state: function(composer, command) {
+      return wysihtml5.commands.formatInline.state(composer, command, "sup");
+    }
+  };
+
+  wysi.commands.sub = {
+    exec: function(composer, command) {
+      return wysihtml5.commands.formatInline.exec(composer, command, "sub");
+    },
+    state: function(composer, command) {
+      return wysihtml5.commands.formatInline.state(composer, command, "sub");
+    }
+  };
+
 })(wysihtml5);
 
 $(document).ready(function() {
@@ -48,18 +67,8 @@ $(document).ready(function() {
   var imgUploadHtml = $('#html-editor-image-upload-tab').html();
 
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
-  options.toolbar = {
-    code: '<li>' +
-            '<div class="btn-group">' +
-            '<a class="btn" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
-            '</div>' +
-          '</li>'
-  };
   options.parserRules.classes['coursemology-code'] = 1;
-
   options.customTemplates = {};
-
-  options.html = true;
 
   if (imgUploadHtml) {
     options.customTemplates = {
@@ -69,20 +78,24 @@ $(document).ready(function() {
     };
   }
 
-  // FontAwesome's semantics are wrong >_<. This fix removes the default
-  // indent/outdent tools and insert our modified indent and outdent buttons.
-  options.lists = true;
-  var modifiedListHtml = function(locale) {
-      return "<li>" +
-             "<div class='btn-group'>" +
-             "<a class='btn' data-wysihtml5-command='insertUnorderedList' title='Unordered List'><i class='icon-list'></i></a>" +
-             "<a class='btn' data-wysihtml5-command='insertOrderedList' title='Ordered List'><i class='icon-th-list'></i></a>" +
-             "<a class='btn' data-wysihtml5-command='Outdent' title='Outdent'><i class='icon-indent-left'></i></a>" +
-             "<a class='btn' data-wysihtml5-command='Indent' title='Indent'><i class='icon-indent-right'></i></a>" +
-             "</div>" +
-             "</li>";
+  options.toolbar = {
+    // code font button
+      code: '<li>' +
+            '<div class="btn-group">' +
+            '<a class="btn" data-wysihtml5-command="createCode" title="Insert Code" tabindex="-1"><i class="icon-wrench"></i></a>' +
+            '</div>' +
+            '</li>',
+
+    // superscript and subscript button
+    subSup: '<li>' +
+            '<div class="btn-group">' +
+            '<a class="btn btn-default" data-wysihtml5-command="sup" title="Superscript" tabindex="-1">x<sup>2</sup></a>' +
+            '<a class="btn btn-default" data-wysihtml5-command="sub" title="Subscript" tabindex="-1">x<sub>2</sub></a>' +
+            '</div>' +
+            '</li>',
   };
-  options.customTemplates.lists = modifiedListHtml;
+
+  options.html = true;
 
   var handler = function() {
     var $this = $(this);
