@@ -68,6 +68,22 @@ $(document).ready(function() {
 
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
   options.parserRules.classes['coursemology-code'] = 1;
+  options.parserRules.tags = {
+    'sub':    1,
+    'sup':    1,
+    'iframe': {
+      "check_attributes": {
+        "width": "numbers",
+        "alt": "alt",
+        "src": "url", 
+        "height": "numbers",
+      },
+      "set_attributes": {
+        "frameborder": "0",
+      }
+    },
+  };
+
   options.customTemplates = {};
 
   if (imgUploadHtml) {
