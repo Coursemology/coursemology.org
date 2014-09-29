@@ -12,9 +12,9 @@ class Assessment < ActiveRecord::Base
 
   attr_accessible :exp, :bonus_exp
   attr_accessible :title, :description
-  attr_accessible :published, :comment_per_qn
+  attr_accessible :published, :comment_per_qn, :required_for_ids
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
-  attr_accessible :tab_id, :display_mode_id, :dependent_on
+  attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
 
   validates_presence_of :title
 
@@ -206,6 +206,7 @@ class Assessment < ActiveRecord::Base
     return nil unless dependent_on.count
     unfinished_assessment = []
     dependent_on.each do |asm|
+      if assessment
       sbm = assessment.submissions.where(assessment_id: asm.dependent_id, std_course_id: curr_user_course).first
       if !sbm || sbm.attempting?
         unfinished_assessment << asm
