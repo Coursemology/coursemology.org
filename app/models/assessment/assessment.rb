@@ -37,14 +37,14 @@ class Assessment < ActiveRecord::Base
 
   has_and_belongs_to_many :dependent_on,
                           class_name: "Assessment",
-                          foreign_key: :as_assessment_id,
+                          foreign_key: :id,
                           association_foreign_key: :dependent_id,
                           join_table: :assessment_dependency
 
   has_and_belongs_to_many :required_for,
                           class_name: "Assessment",
                           foreign_key: :dependent_id,
-                          association_foreign_key: :as_assessment_id,
+                          association_foreign_key: :id,
                           join_table: :assessment_dependency
 
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
@@ -205,7 +205,7 @@ class Assessment < ActiveRecord::Base
       sbm = assessment.submissions.where(assessment_id: asm.id).first
       unfinished_assessment << asm if !sbm || sbm.attempting?
     end
-    (unfinished_assessment.count) ? unfinished_assessment : nil
+    (unfinished_assessment.count > 0) ? unfinished_assessment : nil
   end
 
   #TOFIX: it's better to have callback rather than currently directly call this in
