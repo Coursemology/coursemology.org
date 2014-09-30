@@ -30,17 +30,15 @@
 
 <h2 class="assignments-description-title"><%= display_name %> Description</h2>
 
-<table class="table-top-align">
+<table class="table-top-align assessment-description-table">
   <tr>
-    <td>
-      <div class="pull-left">
+    <td class="span11">
         <p><%= style_format(@summary[:specific].description) %></p>
         <%= render partial: "assessment/#{@summary[:type].pluralize}/details", locals: {ast: @summary[:specific] } %>
-      </div>
     </td>
 
     <% if curr_user_course.id and can? :manage, Assessment::Submission %>
-        <td>
+        <td class="pull-right">
           <%= render partial: "assessment/#{@summary[:type].pluralize}/action", locals: {ast: @assessment} %>
         </td>
     <% end %>
