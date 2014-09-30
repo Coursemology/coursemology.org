@@ -193,27 +193,19 @@ class Assessment < ActiveRecord::Base
   def can_start?(curr_user_course)
     return true if submissions.where(std_course_id: curr_user_course.id).any?
 
-    if open_at > Time.now || get_dependent_assessment
-      false
-    else
-      true
-    end
+    (open_at > Time.now || get_dependent_assessment) ? false : true
   end
 
   def get_dependent_assessment # returns nil if no pending assessments
-    return nil unless dependent_on.count
+    unless dependent_on.count #if no dependencies
+      return nil
+    end
     unfinished_assessment = []
     dependent_on.each do |asm|
       sbm = assessment.submissions.where(assessment_id: asm.id).first
-      if !sbm || sbm.attempting?
-        unfinished_assessment << asm
-      end
+      unfinished_assessment << asm if !sbm || sbm.attempting?
     end
-    if unfinished_assessment.count == 0
-      nil
-    else
-      unfinished_assessment
-    end
+    (unfinished_assessment.count) ? unfinished_assessment : nil
   end
 
   #TOFIX: it's better to have callback rather than currently directly call this in
