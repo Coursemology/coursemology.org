@@ -66,10 +66,10 @@
       /* eg. 
         value = {
           "videoUrl": "https://www.youtube.com/watch?v=80u2RixDLyk",
-          "height": 123,
-          "width": 234,
-          "start": 30,
-          "end": 60,
+          "height": "123",
+          "width": "234",
+          "start": "0:30",
+          "end": "1:22",
         };
       */
 
@@ -100,12 +100,42 @@
         "width": 420,
       };
 
-      if ((values.start !== "") && (values.end !== "")) {
-        source += "?start=" + values.start + "&end=" + values.end;
-      } else if (values.start !== "") {
-        source += "?start=" + values.start
-      } else if (values.end !== "") {
-        source += "?end=" + values.end
+      
+      var hhmmss_to_s = function (hhmmss) {
+        // Helper to convert from hh:mm:ss to seconds. e.g. 1:22 --> 82
+        //disallow 0 as a start or end time. Use it as a sentinel value
+        if (hhmmss == "") {
+          return 0;
+        }
+
+        var tokens = hhmmss.split(':');
+        var tok = parseInt(tokens[0]);
+        var s;
+        if (tokens.length < 2 || isNaN(tok) || tok > 59 || tok < 0) {
+          return 0;
+        } else {
+          s = tok;
+        }
+        for (var i = 1; i < tokens.length; i++) {
+          tok = parseInt(tokens[i]);
+          if (isNaN(tok)) {
+            return 0;
+          } else {
+            s = (s * 60) + tok;
+          }
+        }
+        return s;
+      };
+      var start = hhmmss_to_s(values.start);
+      var end = hhmmss_to_s(values.end);
+
+
+      if ((start != 0) && (end != 0)) {
+        source += "?start=" + start + "&end=" + end;
+      } else if (start != 0) {
+        source += "?start=" + start;
+      } else if (end != 0) {
+        source += "?end=" + end;
       }
 
       video.setAttribute("src", source);
@@ -209,19 +239,36 @@ $(document).ready(function() {
     var youtubeUrl = $("#html-editor-youtube-url").val(),
         start = $("#html-editor-youtube-start").val(),
         end = $("#html-editor-youtube-end").val(),
-        height = $("#html-editor-youtube-height").val(),
-        width = $("#html-editor-youtube-width").val();
+        size = $("#html-editor-youtube-size").val(),
+        sizes = {
+          "sm": {
+            "height": 150,
+            "width": 250
+          },
+          "med": {
+            "height": 315,
+            "width": 420
+          },
+          "lg": {
+            "height": 360,
+            "width": 480
+          },
+        },
+        hw = sizes[size];
+
+    if (!hw) {
+      hw = sizes["med"];
+    }
 
     editor.currentView.element.focus();
     editor.composer.commands.exec('insertYoutube', {
       "videoUrl": youtubeUrl,
       "start": start,
       "end": end,
-      "height": height,
-      "width": width,
+      "height": hw.height,
+      "width": hw.width,
     });
   };
-
 
   $(document).on('DOMNodeInserted', function(e) {
     $('textarea.html-editor', e.target).each(handler);

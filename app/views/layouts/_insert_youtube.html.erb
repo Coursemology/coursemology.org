@@ -1,4 +1,4 @@
-<div class="modal fade" id="html-editor-insert-youtube-modal">
+<div class="modal fade" id="html-editor-insert-youtube-modal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -6,9 +6,9 @@
         <h3>Insert Youtube Video</h3>
       </div>
       <div class="modal-body">
-        <label class="control-label" for="html-editor-youtube-url">Youtube Video URL</label>
+        <label class="control-label" for="html-editor-youtube-url">Youtube Video URL</label>  
         <div class="controls">
-          <input class="input-large" placeholder="https://www.youtube.com/watch?v=" id="html-editor-youtube-url">
+          <input type="text" class="input-block-level" placeholder="https://www.youtube.com/watch?v=" id="html-editor-youtube-url">
         </div>
         <div class="panel-group" id="accordion">
           <div class="panel panel-default">
@@ -23,24 +23,22 @@
               <div class="panel-body">
                 <label class="control-label" for="html-editor-youtube-start">Start Time</label>
                 <div class="controls">
-                  <input class="input-small" placeholder="0:00" id="html-editor-youtube-start">
+                  <input type="text" class="input-small" pattern="([0-9]?[0-9]:)?[0-5]?[0-9](:[0-5][0-9])" placeholder="0:00" id="html-editor-youtube-start" name="start">
                 </div>
                 <br>
                 <label class="control-label" for="html-editor-youtube-end">End Time</label>
                 <div class="controls">
-                  <input class="input-small" placeholder="10:00" id="html-editor-youtube-end">
+                  <input type="text" class="input-small form-control" pattern="([0-9]?[0-9]:)?[0-5]?[0-9](:[0-5][0-9])" placeholder="10:00" id="html-editor-youtube-end" name="end">
                 </div>
                 <br>
-                <label class="control-label" for="html-editor-youtube-height">Height</label>
+                <label class="control-label" for="html-editor-youtube-size">Size</label>
                 <div class="controls">
-                  <input class="input-small" placeholder="315" id="html-editor-youtube-height">
+                  <select id="html-editor-youtube-size">
+                    <option value="sm">Small</option>
+                    <option value="med" selected="selected">Medium (Default)</option>
+                    <option value="lg">Large</option>
+                  </select>
                 </div>
-                <br>
-                <label class="control-label" for="html-editor-youtube-width">Width</label>
-                <div class="controls">
-                  <input class="input-small" placeholder="420" id="html-editor-youtube-width">
-                </div>
-
               </div>
             </div>
           </div>
