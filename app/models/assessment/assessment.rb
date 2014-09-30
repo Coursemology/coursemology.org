@@ -14,7 +14,8 @@ class Assessment < ActiveRecord::Base
   attr_accessible :title, :description
   attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
-  attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
+  attr_accessible :tab_id, :display_mode_id
+  attr_accessible :dependent_on, :dependent_on_ids
 
   validates_presence_of :title
 
@@ -46,6 +47,8 @@ class Assessment < ActiveRecord::Base
                           foreign_key: :dependent_id,
                           association_foreign_key: :id,
                           join_table: :assessment_dependency
+
+  accepts_nested_attributes_for :dependent_on
 
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
   has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements

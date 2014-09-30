@@ -1,0 +1,8 @@
+<div class="nested-fields">
+  <%= f.collection_select :dependent_on_ids,
+                          @course.assessments.training - [@training.assessment] + @course.assessments.mission,
+                          :id,
+                          :get_title,
+                          { include_blank: "No Dependency"} %>
+    <%= link_to_remove_association 'Remove Dependency', f %>
+</div>
