@@ -178,7 +178,8 @@ namespace :db do
     elsif open_state == 0
       open_at = DateTime.now.prev_day
       close_at = DateTime.now.next_month + rand(10)
-    elsif open_at = DateTime.now.next_month + rand(10)
+    else
+      open_at = DateTime.now.next_month + rand(10)
       close_at = DateTime.now.next_month(2) + rand(10)
     end
 
