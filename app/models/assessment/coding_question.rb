@@ -11,6 +11,7 @@ class Assessment::CodingQuestion < ActiveRecord::Base
   belongs_to  :language, class_name: "ProgrammingLanguage"
 
   after_save :refresh_asm_autograding, :if => :eval_attributes_changed?
+  before_create :set_default_values
 
   def eval_attributes_changed?
     memory_limit_changed? || time_limit_changed? ||
@@ -39,5 +40,13 @@ class Assessment::CodingQuestion < ActiveRecord::Base
 
   def self.reflect_on_association(association)
     super || self.parent.reflect_on_association(association)
+  end
+
+  private
+
+  def set_default_values
+    self.memory_limit = 1 unless memory_limit
+    self.time_limit = 1 unless time_limit
+    self.attempt_limit = 0 unless attempt_limit
   end
 end
