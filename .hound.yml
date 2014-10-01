@@ -3,3 +3,6 @@ ShowCopNames: true
 LineLength:
   Description: 'Limit lines to 130 characters.'
   Max: 130
+
+java_script:
+  enabled: true
