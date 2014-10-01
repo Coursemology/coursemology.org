@@ -3,11 +3,13 @@
     <% if summary[:question].is_essay? %>
         <ul style="margin-left: 6%; width: 90%; margin-top: 0px">
           <% summary[:responds].each do |resp| %>
-            <li>
-              <div class="well">
-                <%= resp.text.html_safe %>
-              </div>
-            </li>
+              <% if resp.text.strip() != "" %>
+                <li>
+                  <div class="well">
+                    <%= resp.text.html_safe %>
+                  </div>
+                </li>
+              <% end %>
           <% end %>
         </ul>
     <% else %>

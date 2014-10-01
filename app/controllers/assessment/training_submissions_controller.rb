@@ -102,6 +102,9 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     if question.select_all?
       if incomplete
         explanation = "Not all correct answers are selected."
+      elsif correct
+        explanation = question.options.pluck(:explanation).
+            delete_if(&:blank?).join("<br>")
       else
         c_count = eval_array.select{|x| x}.length
         explanation = "#{c_count} correct, #{eval_array.length - c_count} wrong"
@@ -129,14 +132,8 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     #evaluate
     code_to_write = PythonEvaluator.combine_code([question.pre_include, code, question.append_code])
     eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), code_to_write, question)
-    public_tests = eval_summary[:public].length == 0 ? true : eval_summary[:public].inject{|sum,a| sum and a}
-    private_tests = eval_summary[:private].length == 0 ? true : eval_summary[:private].inject{|sum,a| sum and a}
 
-    #if fail private test cases, show hints
-    if public_tests and eval_summary[:private].length > 0 and !private_tests
-      index = eval_summary[:private].find_index(false)
-      eval_summary[:hint] = question.data_hash["private"][index]["hint"]
-    end
+    set_hints(eval_summary, question)
 
     if eval_summary[:errors].length == 0 and public_tests and private_tests
       sma.correct = true
