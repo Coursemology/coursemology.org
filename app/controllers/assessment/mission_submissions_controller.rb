@@ -77,6 +77,8 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       qn = std_answer.question
       combined_code = PythonEvaluator.combine_code([qn.pre_include, std_answer.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn.specific, false)
+
+      set_hints(result, qn)
     end
     result[:can_test] = std_answer.can_run_test? curr_user_course
     respond_to do |format|
