@@ -40,6 +40,13 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
       @training.attach_files(params[:files].values)
     end
 
+    if params[:dependent_on]
+      @mission.dependent_on = []
+      params[:dependent_on].each do |dep|
+        @mission.dependent_on << Assessment.find(dep[:dependent_id])
+      end
+    end
+
     respond_to do |format|
       if @training.save
         @training.create_local_file
