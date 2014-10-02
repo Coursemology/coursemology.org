@@ -41,9 +41,9 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
     end
 
     if params[:dependent_on]
-      @mission.dependent_on = []
+      @training.dependent_on = []
       params[:dependent_on].each do |dep|
-        @mission.dependent_on << Assessment.find(dep[:dependent_id])
+        @training.dependent_on << Assessment.find(dep[:dependent_id])
       end
     end
 
