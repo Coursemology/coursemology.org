@@ -57,6 +57,20 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
 
   def update
     respond_to do |format|
+
+      # Have to add the HABTM relationship for new dependencies before updating attributes
+      # Bug: Used cocoon for dynamic forms - but it has some issue saving the id of new dependencies
+      # fix - dep_on_asm_ids will store dependent assessment ids, and if the id is new, record will be added first
+      dep_on_asm_ids = params[:dependent_on].collect { |dep| dep[:dependent_id]}
+      params[:assessment_training][:dependent_on_attributes].each do |k, v|
+        if v[:id]
+          dep_on_asm_ids.delete(v[:id])
+        else
+          v[:id] = dep_on_asm_ids.pop
+          @training.dependent_on << Assessment.find(v[:id])
+        end
+      end
+
       if @training.update_attributes(params[:assessment_training])
         format.html { redirect_to course_assessment_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }

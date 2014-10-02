@@ -10,7 +10,7 @@ class Assessment::Training < ActiveRecord::Base
   attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
   attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
-  attr_accessible :dependent_on
+  attr_accessible :dependent_on, :dependent_on_attributes
 
   validates_presence_of :title, :exp, :open_at
 

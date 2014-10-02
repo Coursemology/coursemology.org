@@ -22,21 +22,21 @@
       <label class="select optional control-label" for="assessment_training_dependent_on_ids">
         Dependent On
       </label>
-
-      <% if @training.dependent_on %>
-        <div class="controls">
-          <%= f.simple_fields_for :dependent_on do |dep_on| %>
-            <%= render partial: "dependent_on_fields",
-                       locals: { f: dep_on } %>
-          <% end %>
-          <div class="links">
-            <%= link_to_add_association 'Add Dependency', f, :dependent_on %>
-          </div>
+      <div class="controls" id="dependent_on_ids dependent_on">
+        <% if @training.dependent_on %>
+            <%= f.simple_fields_for :dependent_on do |dep_on| %>
+                <%= render partial: "dependent_on_fields",
+                           locals: { f: dep_on } %>
+            <% end %>
+        <% end %>
+        <div class="links">
+          <%= link_to_add_association '<i class="icon-plus-sign"></i> Add Dependency'.html_safe,
+                                      f,
+                                      :dependent_on,
+                                      html_options: { class: "btn btn-info" } %>
         </div>
-      <% end %>
-
+      </div>
     </div>
-
 
     <div id="uploaded_files_div"></div>
     <%= f.button :form_submit, cancel: course_assessment_trainings_path %>

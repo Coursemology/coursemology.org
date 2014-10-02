@@ -8,7 +8,7 @@ class Assessment::Mission < ActiveRecord::Base
                   :file_submission_only
 
   attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn,
-                   :dependent_on_ids, :display_mode_id, :dependent_on
+                   :dependent_on_ids, :display_mode_id, :dependent_on, :dependent_on_attributes
 
   validates_presence_of :title, :exp, :open_at, :close_at
 
