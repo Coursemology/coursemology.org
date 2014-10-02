@@ -92,7 +92,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
         @mission.dependent_on << Assessment.find(v[:id])
       end
     end
-    params.delete(:dependent_on)
+
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
         update_single_question_type
