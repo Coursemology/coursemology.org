@@ -64,7 +64,7 @@
         Dependent On
       </label>
       <div class="controls" id="dependent_on_ids dependent_on">
-        <% if @training.dependent_on %>
+        <% if @mission.dependent_on %>
             <%= f.simple_fields_for :dependent_on do |dep_on| %>
                 <%= render partial: "dependent_on_fields",
                            locals: { f: dep_on } %>
