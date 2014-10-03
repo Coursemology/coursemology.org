@@ -12,6 +12,9 @@
 <% if @survey.is_contest? %>
     <%= render partial: "questions_summary", locals: {questions: @summaries[0][:questions]} %>
 <% else %>
+    <%= check_box_tag "check", '1', params[:order] == 'yes', id: 'reorder-check-box' %>
+    <%= label_tag "Sort answers by voting count" %>
+
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">
           <h2><%= summary[:section].title %></h2>
@@ -73,7 +76,6 @@
                     .css("left",(e.pageX + yOffset) + "px");
         });
     };
-
 
     $(document).ready(function(){
         imagePreview();
