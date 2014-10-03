@@ -77,6 +77,17 @@
         });
     };
 
+    function changeOrAddParamByName(href, paramName, newVal) {
+        if (href.indexOf(paramName) < 0){
+            href += '&' + paramName + '=' + newVal
+        } else {
+            var tmpRegex = new RegExp("(" + paramName + "=)[a-z]+", 'ig');
+            href = href.replace(tmpRegex, '$1' + newVal);
+        }
+
+        return href
+    }
+
     $(document).ready(function(){
         imagePreview();
     });
