@@ -67,6 +67,7 @@ class SurveysController < ApplicationController
   end
 
   def summary
+    #debugger
     @tab = params[:_tab]
     include_phantom = @tab == "summary_phantom"
     @summaries = []
@@ -124,7 +125,11 @@ class SurveysController < ApplicationController
     else
       summary[:total] = question.no_unique_voters(include_phantom)
       #TODO: hardcoded 10
-      summary[:options] = question.options.order("count desc")
+      if params[:order] == 'yes'
+        summary[:options] = question.options.order("count desc")
+      else
+        summary[:options] = question.options
+      end
       if @survey.is_contest?
         summary[:options] = summary[:options].first(10)
       end
