@@ -67,7 +67,6 @@ class SurveysController < ApplicationController
   end
 
   def summary
-    #debugger
     @tab = params[:_tab]
     include_phantom = @tab == "summary_phantom"
     @summaries = []
