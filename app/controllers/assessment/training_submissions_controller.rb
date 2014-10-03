@@ -132,15 +132,8 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     #evaluate
     code_to_write = PythonEvaluator.combine_code([question.pre_include, code, question.append_code])
     eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), code_to_write, question)
-
-    public_tests = eval_summary[:public].length == 0 ? true : eval_summary[:public].inject { |sum, a| sum && a }
-    private_tests = eval_summary[:private].length == 0 ? true : eval_summary[:private].inject { |sum, a| sum && a }
-    if public_tests && eval_summary[:private].length > 0 && !private_tests
-      index = eval_summary[:private].find_index(false)
-      eval_summary[:hint] = question.data_hash["private"][index]["hint"]
-    end
     
-    if eval_summary[:errors].length == 0 and public_tests and private_tests
+    if set_hints(eval_summary, question) && eval_summary[:errors].length == 0
       sma.correct = true
       sma.finalised = true
       sma.save
