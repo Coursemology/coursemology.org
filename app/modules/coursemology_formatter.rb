@@ -21,7 +21,7 @@ class CoursemologyFormatter
           'col'        => ['span', 'width'],
           'colgroup'   => ['span', 'width'],
           'del'        => ['cite', 'datetime'],
-          'iframe'     => ['align', 'alt', 'frameborder', 'height', 'src', 'width'],
+          'iframe'     => ['align', 'alt', 'frameborder', 'height', 'src', 'src2', 'width'],
           'img'        => ['align', 'alt', 'height', 'src', 'width'],
           'ins'        => ['cite', 'datetime'],
           'ol'         => ['start', 'reversed', 'type'],
@@ -37,7 +37,8 @@ class CoursemologyFormatter
           'a'          => {'href' => ['ftp', 'http', 'https', 'mailto', :relative]},
           'blockquote' => {'cite' => ['http', 'https', :relative]},
           'del'        => {'cite' => ['http', 'https', :relative]},
-          'iframe'     => {'src'  => ['http', 'https', :relative]},
+          'iframe'     => {'src'  => ['http', 'https', :relative],
+                           'src2' => ['http', 'https', :relative]},
           'img'        => {'src'  => ['http', 'https', :relative]},
           'ins'        => {'cite' => ['http', 'https', :relative]},
           'q'          => {'cite' => ['http', 'https', :relative]}

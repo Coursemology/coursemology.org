@@ -139,6 +139,7 @@
       }
 
       video.setAttribute("src", source);
+      video.setAttribute("src2", source);
       video.setAttribute("frameborder", "0");
       if ((values.height !== "") && (values.width !== "")) {
         video.setAttribute("width", Math.max(values["width"], 250));
@@ -176,7 +177,8 @@ $(document).ready(function() {
       "check_attributes": {
         "width": "numbers",
         "alt": "alt",
-        "src": "url", 
+        "src": "url",
+        "src2": "url", 
         "height": "numbers",
       },
       "set_attributes": {
@@ -278,4 +280,12 @@ $(document).ready(function() {
     $('#insert-youtube-button', e.target).off('click', exec_insert_youtube ); 
     $('#insert-youtube-button', e.target).on('click', exec_insert_youtube );
   });
+
+  // This is a workaround for webkit's XSS measures.
+  // http://stackoverflow.com/questions/6838172/embedded-video-not-rendering-in-chrome-on-first-load-after-embed-code-is-saved-t?lq=1
+  if ($.browser.webkit) {
+    $("iframe").each(function(){
+        $(this).attr('src', $(this).attr('src2'));
+    });
+  };
 });
