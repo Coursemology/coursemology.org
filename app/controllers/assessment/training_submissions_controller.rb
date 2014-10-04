@@ -164,7 +164,7 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
       return true
     end
 
-    unless @assessment.can_start?
+    unless @assessment.can_start?(curr_user_course)
       redirect_to access_denied_course_assessment_path(@course, @assessment)
     end
   end

@@ -195,17 +195,16 @@ class Assessment < ActiveRecord::Base
   #TODO
   def can_start?(curr_user_course)
     return true if submissions.where(std_course_id: curr_user_course.id).any?
-
-    (open_at > Time.now || get_dependent_assessment) ? false : true
+    (open_at > Time.now || get_dependent_assessment(curr_user_course)) ? false : true
   end
 
-  def get_dependent_assessment # returns nil if no pending assessments
+  def get_dependent_assessment(curr_user_course) # returns nil if no pending assessments
     unless dependent_on.count #if no dependencies
       return nil
     end
     unfinished_assessment = []
     dependent_on.each do |asm|
-      sbm = assessment.submissions.where(assessment_id: asm.id).first
+      sbm = assessment.submissions.where(assessment_id: asm.id, std_course_id: curr_user_course).first
       unfinished_assessment << asm if !sbm || sbm.attempting?
     end
     (unfinished_assessment.count > 0) ? unfinished_assessment : nil

@@ -5,7 +5,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   def show
     @assessment = @mission.assessment
-    if curr_user_course.is_student? and !@assessment.can_start?
+    if curr_user_course.is_student? and !@assessment.can_start?(curr_user_course)
       redirect_to course_assessment_missions_path
       return
     end

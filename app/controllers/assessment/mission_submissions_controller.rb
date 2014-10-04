@@ -120,7 +120,7 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       return true
     end
 
-    can_start = @assessment.can_start?
+    can_start = @assessment.can_start?(curr_user_course)
     unless can_start
       redirect_to access_denied_course_assessment_path(@course, @assessment)
     end
