@@ -1,0 +1,53 @@
+<div class="modal fade" id="html-editor-insert-youtube-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>Insert Youtube Video</h3>
+      </div>
+      <div class="modal-body">
+        <label class="control-label" for="html-editor-youtube-url">Youtube Video URL</label>  
+        <div class="controls">
+          <input type="text" class="input-block-level" placeholder="https://www.youtube.com/watch?v=" id="html-editor-youtube-url">
+        </div>
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                  More Options
+                </a>
+              </h4> 
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+              <div class="panel-body">
+                <label class="control-label" for="html-editor-youtube-start">Start Time</label>
+                <div class="controls">
+                  <input type="text" class="input-small" pattern="([0-9]?[0-9]:)?[0-5]?[0-9](:[0-5][0-9])" placeholder="0:00" id="html-editor-youtube-start" name="start">
+                </div>
+                <br>
+                <label class="control-label" for="html-editor-youtube-end">End Time</label>
+                <div class="controls">
+                  <input type="text" class="input-small form-control" pattern="([0-9]?[0-9]:)?[0-5]?[0-9](:[0-5][0-9])" placeholder="10:00" id="html-editor-youtube-end" name="end">
+                </div>
+                <br>
+                <label class="control-label" for="html-editor-youtube-size">Size</label>
+                <div class="controls">
+                  <select id="html-editor-youtube-size">
+                    <option value="sm">Small</option>
+                    <option value="med" selected="selected">Medium (Default)</option>
+                    <option value="lg">Large</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-default" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary" id="insert-youtube-button" data-dismiss="modal">Insert Video</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,3 +7,14 @@
     <a class="btn" data-wysihtml5-command="insertImage"><i class="icon-picture"></i></a>
   </li>
 </div>
+
+<div id="html-editor-insert-youtube-tab" style="display:none">
+  <li>
+    <%= render partial: "layouts/insert_youtube" %>
+    <div class='btn-group'>                     
+    	<a class="btn btn-default" title="Insert Youtube Video" tabindex="-1" data-toggle="modal" data-target="#html-editor-insert-youtube-modal">
+    		<span class="icon-facetime-video"></span>
+  		</a>
+	</div>
+  </li>
+</div>

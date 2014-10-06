@@ -37,7 +37,7 @@ group :assets do
   gem 'bootstrap-sass', '2.1.0.0'
   gem 'font-awesome-sass-rails'
   gem 'bootstrap-datetimepicker-rails'
-  gem 'bootstrap-wysihtml5-rails'
+  gem 'bootstrap-wysihtml5-rails', '0.3.1.24'
   gem 'jquery-fileupload-rails'
   gem 'bootstrap-colorpicker-rails'
   gem 'bootstrap-select-rails'
