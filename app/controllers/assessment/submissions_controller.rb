@@ -54,7 +54,7 @@ class Assessment::SubmissionsController < ApplicationController
       evaluate_result[:hint] = question.data_hash["private"][index]["hint"]
     end
 
-    public_tests && private_tests
+    return public_tests, private_tests
   end
 
   private
