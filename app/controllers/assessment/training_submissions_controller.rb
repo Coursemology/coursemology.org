@@ -132,8 +132,10 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
     #evaluate
     code_to_write = PythonEvaluator.combine_code([question.pre_include, code, question.append_code])
     eval_summary = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), code_to_write, question)
-    
-    if set_hints(eval_summary, question) && eval_summary[:errors].length == 0
+
+    public_tests, private_tests = set_hints(eval_summary, question)
+
+    if eval_summary[:errors].length == 0 && public_tests && private_tests
       sma.correct = true
       sma.finalised = true
       sma.save
