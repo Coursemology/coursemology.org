@@ -59,14 +59,21 @@ class Assessment::AssessmentsController < ApplicationController
         attempting = sub_map[ast.id].attempting?
         action_map[ast.id] = { action: attempting ? "Edit" : "Review",
                                url: edit_course_assessment_submission_path(@course, ast, sub_map[ast.id]) }
+      else
+        # retrieve dependent_submissions
+        dep_id = ast.dependent_on_ids
+        dep_sub = dep_id.map { |id| sub_map[id].attempting? }
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-      elsif ast.can_start? or can?(:manage, ast) # user can start or is an admin
-        action_map[ast.id] = {action: "Attempt",
+        if ast.opened? and (ast.dependent_on.count == 0
+                             or ((ast.dependent_on_ids - sub_ids).empty? # All dependent assessments have submissions
+                                  and !dep_sub.include?(true))) # All submissions have to be submitted or graded
+            or can?(:manage, ast) # user is admin
+          action_map[ast.id] = {action: "Attempt",
                               url: new_course_assessment_submission_path(@course, ast)}
-      else
-        action_map[ast.id] = {action: nil}
+        else
+          action_map[ast.id] = {action: nil}
       end
 
       action_map[ast.id][:new] = false
