@@ -12,6 +12,9 @@
 <% if @survey.is_contest? %>
     <%= render partial: "questions_summary", locals: {questions: @summaries[0][:questions]} %>
 <% else %>
+    <%= check_box_tag "reorder-check-box", "", params[:order] == "yes" %>
+    <%= label_tag "Sort answers by voting count" %>
+
     <% @summaries.each_with_index do |summary, i| %>
         <div class="page-header">
           <h2><%= summary[:section].title %></h2>
@@ -74,8 +77,24 @@
         });
     };
 
+    function changeOrAddParamByName( href, paramName, newVal ) {
+        if ( href.indexOf( paramName ) < 0 ){
+            href += "&" + paramName + "=" + newVal
+        } else {
+            var tmpRegex = new RegExp("(" + paramName + "=)[a-z]+", "ig");
+            href = href.replace( tmpRegex, "$1" + newVal );
+        }
 
-    $(document).ready(function(){
+        return href
+    }
+
+    $( document ).ready(function(){
         imagePreview();
+
+        $( "#reorder-check-box" ).change(function(){
+            var url = window.location.href;
+            url = changeOrAddParamByName( url, "order", this.checked ? "yes" : "no" );
+            window.location.href = url;
+        });
     });
 </script>
