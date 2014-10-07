@@ -61,7 +61,7 @@ class Assessment::AssessmentsController < ApplicationController
       else
         # retrieve dependent_submissions
         dep_id = ast.dependent_on_ids
-        dep_sub = dep_id.empty? ? [] : dep_id.map { |id| sub_map[id].attempting? }
+        dep_sub = dep_id.empty? ? [] : dep_id.map { |id| sub_map[id].nil? ? nil : sub_map[id].attempting? }
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements

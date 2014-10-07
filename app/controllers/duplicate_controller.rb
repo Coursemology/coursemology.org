@@ -98,10 +98,8 @@ class DuplicateController < ApplicationController
        c = record.amoeba_dup
        c.course = dest_course
        if record.respond_to? :dependent_on
-         record.each do |rcd|
-           rcd.dependent_id = 0
-         end
-       end
+         record.dependent_on = []
+        end
        c.save
        if c.is_a? Assessment
          handle_dup_questions_position(c)
@@ -217,16 +215,17 @@ class DuplicateController < ApplicationController
 
     #assessment dependency
     clone.assessments.each do |asm|
-      unless asm.dependent_on.count
+      if asm.dependent_on.count == 0
         next
       end
-      asm.dependent_on.each do |asm_dep|
-        l = (asm_dep.duplicate_logs_orig & asm_logs).first
-        unless l
-          next
+      c = []
+      asm.dependent_on.each do |dep_asm|
+        l = (dep_asm.duplicate_logs_orig & asm_logs).first
+        if l
+          c << clone.assessments.find(l.dest_obj_id)
         end
-        asm.dependent_on << l.dest_obj_id
       end
+      asm.dependent_on = c
       asm.save
     end
 
