@@ -206,6 +206,8 @@ GEM
       addressable
       faraday
       multi_json
+    launchy (2.4.2)
+      addressable (~> 2.3)
     listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -431,6 +433,7 @@ DEPENDENCIES
   jquery-validation-rails
   kaminari
   koala
+  launchy
   meta_request
   momentjs-rails
   mysql2

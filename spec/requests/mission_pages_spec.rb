@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "MissionPages" do
+describe "MissionPages", :type => :feature do
 
   describe "Mission admin pages" do
 

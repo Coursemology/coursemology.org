@@ -19,15 +19,14 @@ group :production do
   gem 'connection_pool'
 end
 
-gem "rspec-rails", :group => [:test, :development]
-gem "guard-rspec", :group => [:test, :development]
-gem 'spork-rails', :group => [:test, :development]
-gem "guard-spork", :group => [:test, :development]
-
-
-group :test do
-  gem "factory_girl_rails"
-  gem "capybara"
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'guard-rspec'
+  gem 'spork-rails'
+  gem 'guard-spork'
+  gem 'factory_girl_rails'
+  gem 'capybara'
+  gem 'launchy'
 end
 
 # Gems used only for assets and not required
