@@ -5,7 +5,7 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
-bundler_args: --without assets:development:production
+bundler_args: --without development:production
 before_script:
   - cp config/database.yml.travis config/database.yml
   - cp sample_config/facebook.yml.sample config/facebook.yml
