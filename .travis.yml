@@ -19,4 +19,4 @@ env:
     - BUNDLE_JOBS=4
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 script:
-  - bundle exec rake travis
+  - "export DISPLAY=:99.0 && xvfb-run bundle exec rspec"
