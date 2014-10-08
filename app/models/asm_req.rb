@@ -16,7 +16,7 @@ class AsmReq < ActiveRecord::Base
 
     if last_sbm
       final_grading = last_sbm.get_final_grading
-      if final_grading
+      if final_grading && asm.max_grade
         return ((final_grading.grade || 0) * 100 / asm.max_grade) >= min_grade - EPS
       end
     end
