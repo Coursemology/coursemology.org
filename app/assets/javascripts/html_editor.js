@@ -170,21 +170,19 @@ $(document).ready(function() {
   // setup html editor
   var options = $.extend(true, {}, $.fn.wysihtml5.defaultOptions);
   options.parserRules.classes['coursemology-code'] = 1;
-  options.parserRules.tags = {
-    'sub':    1,
-    'sup':    1,
-    'iframe': {
-      "check_attributes": {
-        "width": "numbers",
-        "alt": "alt",
-        "src": "url",
-        "src2": "url", 
-        "height": "numbers",
-      },
-      "set_attributes": {
-        "frameborder": "0",
-      }
+  options.parserRules.tags.sub = 1;
+  options.parserRules.tags.sup = 1;
+  options.parserRules.tags.iframe = {
+    "check_attributes": {
+      "width": "numbers",
+      "alt": "alt",
+      "src": "url",
+      "src2": "url",
+      "height": "numbers",
     },
+    "set_attributes": {
+      "frameborder": "0",
+    }
   };
 
   options.toolbar = {
