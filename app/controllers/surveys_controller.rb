@@ -124,7 +124,11 @@ class SurveysController < ApplicationController
     else
       summary[:total] = question.no_unique_voters(include_phantom)
       #TODO: hardcoded 10
-      summary[:options] = question.options.order("count desc")
+      if params[:order] == 'yes'
+        summary[:options] = question.options.order("count desc")
+      else
+        summary[:options] = question.options
+      end
       if @survey.is_contest?
         summary[:options] = summary[:options].first(10)
       end
@@ -145,10 +149,14 @@ class SurveysController < ApplicationController
     questions = @survey.questions
 
     rows = []
-    rows << ["Name"] + questions.map {|qn| qn.description }
+    if @survey.anonymous?
+      rows << questions.map { |qn| qn.description }
+    else
+      rows << ["Name"] + questions.map { |qn| qn.description }
+    end
     (include_phantom ? @survey.submissions.students : @survey.submissions.students.exclude_phantom).order(:submitted_at).each do |submission|
       row = []
-      row << (submission.user_course.nil? ? "" :  submission.user_course.name)
+      row << (submission.user_course.nil? ? "" :  submission.user_course.name) unless @survey.anonymous?
       questions.each do |qn|
         ans = submission.get_answer(qn)
         ans = qn.is_essay? ? ans.map {|a| a.text }.join(",") : ans.map {|q| q.option.description }.join(",")

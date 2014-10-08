@@ -8,7 +8,7 @@ class CoursemologyFormatter
     whitelist = {
       :elements => %w[
         a abbr b bdo blockquote br caption cite code col colgroup dd del dfn div dl
-        dt em figcaption figure h1 h2 h3 h4 h5 h6 hgroup i img ins kbd li mark
+        dt em figcaption figure h1 h2 h3 h4 h5 h6 hgroup i iframe img ins kbd li mark
         ol p pre q rp rt ruby s samp small strike strong sub sup table tbody td
         tfoot th thead time tr u ul var wbr
       ],
@@ -21,6 +21,7 @@ class CoursemologyFormatter
           'col'        => ['span', 'width'],
           'colgroup'   => ['span', 'width'],
           'del'        => ['cite', 'datetime'],
+          'iframe'     => ['align', 'alt', 'frameborder', 'height', 'src', 'src2', 'width'],
           'img'        => ['align', 'alt', 'height', 'src', 'width'],
           'ins'        => ['cite', 'datetime'],
           'ol'         => ['start', 'reversed', 'type'],
@@ -36,6 +37,8 @@ class CoursemologyFormatter
           'a'          => {'href' => ['ftp', 'http', 'https', 'mailto', :relative]},
           'blockquote' => {'cite' => ['http', 'https', :relative]},
           'del'        => {'cite' => ['http', 'https', :relative]},
+          'iframe'     => {'src'  => ['http', 'https', :relative],
+                           'src2' => ['http', 'https', :relative]},
           'img'        => {'src'  => ['http', 'https', :relative]},
           'ins'        => {'cite' => ['http', 'https', :relative]},
           'q'          => {'cite' => ['http', 'https', :relative]}

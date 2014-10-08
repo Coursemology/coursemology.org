@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'pp'
-describe "CoursePages" do
+require 'rails_helper'
+
+describe "CoursePages", :type => :feature do
   subject { page }
 
   let(:admin) { FactoryGirl.create(:admin) }
@@ -10,7 +10,6 @@ describe "CoursePages" do
     before do
       visit my_courses_path
       click_link "New Course"
-
     end
 
     # describe "with invalid information" do

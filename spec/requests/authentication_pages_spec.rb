@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "AuthenticationPages" do
+describe "AuthenticationPages", :type => :feature do
 
   subject { page }
 
