@@ -124,13 +124,13 @@ class SurveysController < ApplicationController
     else
       summary[:total] = question.no_unique_voters(include_phantom)
       #TODO: hardcoded 10
-      if params[:order] == 'yes'
+      if params[:order] == 'yes' || @survey.is_contest?
         summary[:options] = question.options.order("count desc")
       else
         summary[:options] = question.options
       end
       if @survey.is_contest?
-        summary[:options] = summary[:options].first(10)
+        summary[:options] = summary[:options].limit(10)
       end
     end
     summary
