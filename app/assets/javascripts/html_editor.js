@@ -210,6 +210,12 @@ $(document).ready(function() {
         return imageUploadHtml;
       }
     };
+  } else {
+      options.customTemplates = {
+          image: function(locale) {
+              return false;
+          }
+      };
   }
 
   // insert youtube button
