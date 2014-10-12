@@ -181,6 +181,9 @@ class Assessment < ActiveRecord::Base
 
   #TODO
   def can_start?(curr_user_course)
+    # if a student has ever attempted, do not check dependency
+    return true if submissions.where(std_course_id: curr_user_course.id).any?
+
     if open_at > Time.now
       return  false
     end
