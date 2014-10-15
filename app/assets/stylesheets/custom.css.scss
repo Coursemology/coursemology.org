@@ -437,18 +437,44 @@ f
 }
 
 .popup-ach-content {
-  min-height: 100px;
+  min-height: 70px;
+  padding: 10px;
 }
 
 .popup-ach-icon {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
 }
 
 .alert {
   margin: 20px;
 }
 
+.popup-fb-share {
+ float: right; 
+ margin-right: 10px;
+ margin-bottom: 0;
+}
+
+.popup-ach-title {
+  overflow: hidden;
+  text-align: center;
+}
+
+.popup-btn-close {
+ float: right; 
+}
+
+.popup-btn-fb-share {
+  background: #3b5998;
+  color: #fff;
+
+  &:hover {
+    background: #2f4679;
+    color: #fff;
+  }
+}
 
 
 .step {
@@ -588,6 +614,7 @@ li .thumbnail {
 
 .label {
   text-transform: none;
+  padding: 2px 4px 2px;
 }
 
 .about-course-logo {
@@ -924,6 +951,8 @@ $grayMediumLight: #eaeaea;
   //padding: 0;
   //margin:0;
   vertical-align: 0px;
+  float: left;
+  margin-right: 5px;
   //position: relative;
   top: -1px;
   *overflow: hidden;
@@ -1168,13 +1197,6 @@ body.loading .modal_loading {
   margin: 0;
 }
 
-td.action-two-icons {
-  min-width: 70px
-}
-
-td.action-there-icons {
-  min-width: 110px
-}
 .dropdown-menu li {
   display: block;
 }
@@ -1186,6 +1208,16 @@ td.action-there-icons {
 
 .table td {
   vertical-align: middle;
+}
+
+td.action-two-icons {
+  width: 75px;
+  vertical-align: top;
+}
+
+td.action-there-icons {
+  width: 110px;
+  vertical-align: top;
 }
 
 .float-alert {
@@ -1214,4 +1246,16 @@ td.action-there-icons {
 
 .exp-input-reason {
   width: 90%;
+}
+
+.btn-large-icon {
+  font-size: 20px;
+}
+
+div.description ul{
+  list-style-type: disc
+}
+
+.assessment-description-table {
+  table-layout: fixed;
 }

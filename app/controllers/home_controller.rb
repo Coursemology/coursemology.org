@@ -14,8 +14,8 @@ class HomeController < ApplicationController
   end
 
   def my_courses
-    authorize! :read, Course
-    if not current_user then
+    # authorize! :read, Course
+    unless current_user
       raise CanCan::AccessDenied
     end
 

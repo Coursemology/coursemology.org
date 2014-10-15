@@ -18,7 +18,7 @@ class StudentSummaryController < ApplicationController
 
 
     @students = @students.includes(:exp_transactions)
-    @std_summary_paging = @course.std_summary_paging_pref
+    @std_summary_paging = @course.paging_pref('StudentSummary')
     if @std_summary_paging.display?
       @students = @students.page(params[:page]).per(@std_summary_paging.prefer_value.to_i)
     end

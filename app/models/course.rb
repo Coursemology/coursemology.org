@@ -1,69 +1,77 @@
 class Course < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_duplicable
 
-  # default_scope where(:is_pending_deletion => false)
+  # default_scope -> { where("courses.is_pending_deletion = 0 ") }
 
-  attr_accessible :creator_id, :description, :logo_url, :title, :is_publish,
-                  :is_active, :is_open, :start_at, :end_at, :course_navbar_preferences_attributes
-  before_create :populate_preference
-  after_create :create_materials_root
+  attr_accessible :creator_id, :description, :logo_url, :title, :start_at, :end_at
+  attr_accessible :is_publish, :is_active, :is_open
+  attr_accessible :course_navbar_preferences_attributes,
+                  :missions_attributes,
+                  :trainings_attributes
 
   belongs_to :creator, class_name: "User"
 
-  has_many :missions,          dependent: :destroy
-  has_many :announcements,     dependent: :destroy
-  has_many :user_courses ,     dependent: :destroy
-  has_many :trainings,         dependent: :destroy
-  has_many :lesson_plan_entries, dependent: :destroy
-  has_many :lesson_plan_milestones, dependent: :destroy
-  has_one  :root_folder, dependent: :destroy, :conditions => { :parent_folder_id => nil }, class_name: "MaterialFolder"
-  has_many :material_folders
+  has_many  :announcements, dependent: :destroy
+  has_many  :levels, dependent: :destroy
+  has_many  :achievements, dependent: :destroy
+  has_many  :assessments, dependent: :destroy
+  has_many  :questions, through: :assessments
+  has_many  :lesson_plan_milestones, dependent: :destroy
+  has_many  :lesson_plan_entries, dependent: :destroy
+  has_one   :root_folder, dependent: :destroy, conditions: { parent_folder_id: nil }, class_name: "MaterialFolder"
+  has_many  :material_folders
+  has_many  :comics, dependent: :destroy
+  has_many  :tag_groups, dependent: :destroy
+  has_many  :tags, through: :tag_groups, dependent: :destroy
+  has_many  :taggings, through: :tags
+  has_many  :surveys, dependent: :destroy
+  has_many  :forums, dependent: :destroy, class_name: 'ForumForum'
+  has_many  :tabs, dependent: :destroy
+  has_many  :course_themes, dependent: :destroy  # currently only has one though
+  has_many  :file_uploads, as: :owner
+  has_many  :course_preferences, dependent: :destroy
+  has_many  :course_navbar_preferences, dependent: :destroy
 
-  has_many :comics,            dependent: :destroy
-
-  has_many :mcqs,             through: :trainings
-  has_many :coding_questions, through: :trainings
-
-  has_many :users, through: :user_courses
-
-  has_many :std_answers,        through: :user_courses
-  has_many :std_coding_answers, through: :user_courses
-
-  has_many :submissions,          through: :user_courses
-  has_many :training_submissions, through: :user_courses
-
-  has_many :activities, dependent: :destroy
-
-  has_many :levels,       dependent: :destroy
-  has_many :achievements, dependent: :destroy
-
-  has_many :tags,       dependent: :destroy
-  has_many :tag_groups, dependent: :destroy
-
-  has_many :course_themes, dependent: :destroy  # currently only has one though
-
-  has_many :tutorial_groups,        dependent: :destroy
-  has_many :file_uploads,           as: :owner
-  has_many :course_preferences,     dependent: :destroy
-  has_many :course_navbar_preferences, dependent: :destroy
-  accepts_nested_attributes_for :course_navbar_preferences
-  has_many :comment_topics,         dependent: :destroy
-  has_many :mass_enrollment_emails, dependent: :destroy
-  has_many :enroll_requests,        dependent: :destroy
-  has_many :tutor_monitorings,      dependent: :destroy
-  has_many :surveys,                dependent: :destroy
-  has_many :forums,                 dependent: :destroy, class_name: 'ForumForum'
-  has_many :tabs,                   dependent: :destroy
-  has_many :pending_actions
-
-  def asms
-    missions + trainings
+  has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
+            source: :as_assessment, source_type: "Assessment::Mission" do
+    def published
+      where("assessments.published = ?", true)
+    end
   end
 
-  # def commented_topics
-  #  # self.comment_subscriptions.map { |cs| cs.topic }.select{ |cs| cs.}.uniq
-  #  self.comment_subscriptions.reduce([]) { |acc, cs| cs.topic.comments.count > 0 ? acc.push(cs.topic) : acc }.uniq
-  #end
+  has_many  :trainings, class_name: "Assessment::Training", through: :assessments,
+            source: :as_assessment, source_type: "Assessment::Training"
+
+  amoeba do
+    include_field [:levels, :tabs, :course_preferences, :course_navbar_preferences,
+                   :assessments, :achievements, :lesson_plan_milestones,
+                   :lesson_plan_entries, :root_folder, :comics, :tag_groups,
+                   :surveys, :forums]
+    prepend :title => "Clone of: "
+    set :is_publish => false
+  end
+
+  #user related
+  has_many  :user_courses,  dependent: :destroy
+  has_many  :users, through: :usccer_courses
+  has_many  :submissions, through: :user_courses
+  has_many  :activities, dependent: :destroy
+  has_many  :tutorial_groups,        dependent: :destroy
+  has_many  :comment_topics,         dependent: :destroy
+  has_many  :mass_enrollment_emails, dependent: :destroy
+  has_many  :enroll_requests,        dependent: :destroy
+  has_many  :pending_actions
+
+  accepts_nested_attributes_for :course_navbar_preferences
+  accepts_nested_attributes_for :trainings
+  accepts_nested_attributes_for :missions
+
+  after_create  :initialize_default_settings
+
+  def self.online_course
+    Course.where(is_publish: true)
+  end
 
   def lect_courses
     user_courses.joins(:role).where('roles.name' => 'lecturer')
@@ -73,36 +81,160 @@ class Course < ActiveRecord::Base
     self.user_courses.student
   end
 
-  def get_pending_gradings(curr_user_course)
+  def pending_gradings(curr_user_course)
     if curr_user_course.is_lecturer?
-      @pending_gradings = submissions.where(status:"submitted").order(:submit_at)
+      submissions.mission_submissions.where(status:"submitted").order(:submitted_at)
     else
-      @pending_gradings = submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submit_at)
+      submissions.mission_submissions.where(status:"submitted",std_course_id:curr_user_course.get_my_stds).order(:submitted_at)
     end
   end
 
-  def get_all_answers
-    std_answers + std_coding_answers + mcqs + coding_questions
-  end
-
-  def get_pending_comments
+  def pending_comments
     self.comment_topics.where(pending: true)
   end
 
-  def count_pending_comments
-    self.comment_topics.where(pending: true).count
+  #TODO: scope in survey model
+  def pending_surveys(user_course)
+    if user_course.is_student?
+      self.surveys.where("open_at < ? and expire_at > ? and publish = 1", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
+    else
+      []
+    end
   end
 
-  def mission_columns
-    self.course_preferences.mission_columns
+  # Note: this method returns entries in the closed interval
+  # of from and to: i.e. entries starting at both from and to
+  # are included. [from, to]
+  def lesson_plan_virtual_entries(from = nil, to = nil)
+    self.assessments.where("TRUE " +
+                               (if from then "AND assessments.open_at >= :from " else "" end) +
+                               (if to then "AND assessments.open_at <= :to" else "" end),
+                           :from => from, :to => to
+    ).map { |m| m.as_lesson_plan_entry }
   end
 
-  def training_columns
-    self.course_preferences.training_columns
+  def materials_virtual_entries
+    mission_files =
+        # Get the missions' files, and map it to the virtual entries.
+        (self.missions.map { |m|
+          m.files.map { |f|
+            material = Material.create_virtual(m, f)
+            material.file = f
+            material.filename = m.title + ": " + f.display_filename
+            material.filesize = f.file_file_size
+            material.updated_at = f.file_updated_at
+            material.url = f.file_url
+
+            material
+          }
+        })
+        .reduce { |mission, files| mission + files }
+
+    # Make sure we return at least an empty list, in case there are no missions.
+    if mission_files == nil
+      mission_files = []
+    end
+
+    #TODO: fix name
+    missions = MaterialFolder.create_virtual("missions", root_folder.id)
+    missions.name = customized_title('Mission').pluralize
+    missions.description = missions.name.singularize + " descriptions and other files"
+    missions.files = mission_files
+
+    training_files =
+        # Get the trainings' files, and map it to the virtual entries.
+        (self.trainings.map { |t|
+          t.files.map { |f|
+            material = Material.create_virtual(t, f)
+            material.file = f
+            material.filename = t.title + ": " + f.display_filename
+            material.filesize = f.file_file_size
+            material.updated_at = f.file_updated_at
+            material.url = f.file_url
+
+            material
+          }
+        })
+        .reduce { |training, files| training + files }
+
+    # Make sure we return at least an empty list, in case there are no trainings.
+    if training_files == nil
+      training_files = []
+    end
+
+    trainings = MaterialFolder.create_virtual("trainings", root_folder.id)
+    trainings.name = customized_title('Training').pluralize
+    trainings.description = trainings.name + " descriptions and other files"
+    trainings.files = training_files
+
+    [missions, trainings]
+  end
+
+  def self.search(search)
+    search_condition = "%" + search.downcase + "%"
+    Course.includes(:creator).where(['lower(title) LIKE ? or lower(users.name) LIKE ?', search_condition, search_condition])
+  end
+
+  def training_tabs
+    tabs.training
+  end
+
+  def mission_tabs
+    tabs.mission
+  end
+
+  def accessible_comics(user_course)
+    comics.select {|comic| comic.can_view?(user_course)}
+  end
+
+  #course preferences (TODO: move to course preferences file)
+  def assessments_by_type(type)
+    type = type.pluralize
+    if self.respond_to? type
+      self.send type
+    else
+      raise  "#{self.class.name} has no association named #{type}"
+    end
+  end
+
+  def assessment_columns(type, enabled = false)
+    columns = self.course_preferences.join_items.column
+
+    if columns.respond_to? type
+      columns = columns.send type
+    else
+      raise type + " not found in assessment column preferences"
+    end
+
+    enabled ? columns.send(:enabled) : columns
+  end
+
+  def time_format(type)
+    time_formats = self.course_preferences.join_items.time_format
+
+    if time_formats.respond_to? type
+      time_formats = time_formats.send type
+    else
+      raise type + " not found in assessment time format preferences"
+    end
+    time_formats.first
+  end
+
+  def paging_pref(page)
+    paging = paging_prefs
+    paging.item_type(page.pluralize).first || paging.item_type(page).first ||(raise page + " has no paging preference")
+  end
+
+  def paging_prefs
+    self.course_preferences.join_items.paging
+  end
+
+  def training_reattempt
+    self.course_preferences.join_items.training.reattempt.first
   end
 
   def mcq_auto_grader
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mcq" && pref.preferable_item.item_type == "AutoGrader"}.first
+    self.course_preferences.join_items.item("Mcq").item_type('AutoGrader').first
   end
 
   def student_sidebar_items
@@ -113,91 +245,20 @@ class Course < ActiveRecord::Base
     student_sidebar_items.where(display: true)
   end
 
-  def mission_columns_display
-    mission_columns.select {|pref| pref.display }
-  end
-
   def student_sidebar_ranking
     self.course_preferences.other_sidebar_items.where("preferable_items.name = 'ranking'").first
   end
+
   def show_ranking?
     student_sidebar_ranking.display?
   end
 
-  def training_columns_display
-    training_columns.select {|pref| pref.display }
-  end
-
-  def mission_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Mission" &&
-        pref.preferable_item.item_type == "Time" }.first
-  end
-
-  def training_time_format
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Training" &&
-        pref.preferable_item.item_type == "Time" }.first
-  end
-
-  def trainings_paging_pref
-    paging_pref('Trainings')
-  end
-
-  def missions_paging_pref
-    paging_pref('Missions')
-  end
-
-  def announcements_paging_pref
-    paging_pref('Announcements')
-  end
-
-  def missions_stats_paging_pref
-    paging_pref('MissionStats')
-  end
-
-  def mission_sbm_paging_pref
-    paging_pref('MissionSubmissions')
-  end
-
-  def training_stats_paging_pref
-    paging_pref('TrainingStats')
-  end
-
-  def training_sbm_paging_pref
-    paging_pref('TrainingSubmissions')
-  end
-
-  def comments_paging_pref
-    paging_pref('Comments')
-  end
-
-  def achievements_paging_pref
-    paging_pref('Achievements')
-  end
-
-  def students_paging_pref
-    paging_pref('Students')
-  end
-
-  def forum_paging_pref
-    paging_pref('Forums')
-  end
-
-  def mgmt_std_paging_pref
-    paging_pref('ManageStudents')
-  end
-
-  def std_summary_paging_pref
-    paging_pref('StudentSummary')
-  end
-
-  def paging_pref(page)
-    self.course_preferences.course_paging_prefs.select { |pref| pref.preferable_item.item_type == page}.first
-  end
-
   def achievements_locked_display
-    self.course_preferences.select { |pref| pref.preferable_item.item == "Achievements" &&
-        pref.preferable_item.item_type == "Icon" &&
-        pref.preferable_item.name == 'locked' }.first
+    self.course_preferences.join_items.item("Achievements").item_type('Icon').name('locked').first
+  end
+
+  def auto_create_sbm_pref
+    self.course_preferences.join_items.item('Mission').item_type('Submission').name('auto').first
   end
 
   def email_notifications
@@ -250,66 +311,21 @@ class Course < ActiveRecord::Base
     course_home_events_no_pref.select { |pref| pref.preferable_item.name == "activities_no" }.first
   end
 
-  def auto_create_sbm_pref
-    course_preferences.select { |pref| pref.preferable_item.item == 'Mission' and
-        pref.preferable_item.item_type == 'Submission' and
-        pref.preferable_item.name == 'auto' }.first
-  end
-
-  def customized_missions_title
-    customized_title('missions')
-  end
-
-  def customized_trainings_title
-    customized_title('trainings')
-  end
-
-  def customized_announcements_title
-    customized_title('announcements')
-  end
-
-  def customized_submissions_title
-    customized_title('submissions')
-  end
-
-  def customized_achievements_title
-    customized_title('achievements')
-  end
-
   def customized_leaderboard_title
-    customized_title('leaderboard')
-  end
-
-  def customized_students_title
-    customized_title('students')
-  end
-
-  def customized_surveys_title
-    customized_title('surveys')
-  end
-
-  def customized_materials_title
-    customized_title('materials')
+    self.course_navbar_preferences.find_by_item('leaderboard').name
   end
 
   def customized_lesson_plan_title
-    customized_title('lesson_plan')
-  end
-
-  def customized_forums_title
-    customized_title('forums')
-  end
-
-  def customized_comments_title
-    customized_title('comments')
+    self.course_navbar_preferences.find_by_item('lesson_plan').name
   end
 
   def customized_title(tab)
-    self.course_navbar_preferences.find_by_item(tab).name
+    self.course_navbar_preferences.find_by_item(tab.pluralize).name
   end
 
   def customized_title_by_model(model_class)
-    self.course_navbar_preferences.find_by_item(model_class.model_name.downcase.pluralize).name
+    r =  self.course_navbar_preferences.find_by_item(model_class.model_name.demodulize.downcase.pluralize)
+    r.name if r
   end
 
   def navbar_tabs(is_staff = false)
@@ -317,7 +333,14 @@ class Course < ActiveRecord::Base
     is_staff ? tabs : tabs.where(is_displayed: true)
   end
 
+  def initialize_default_settings
+    populate_preference
+    create_materials_root
+    create_uncategorized_taggroup
+  end
+
   def populate_preference
+    puts "populate_preference populate_preference"
     course_preferences.each do |pref|
       item = PreferableItem.find_by_id(pref.preferable_item_id)
       unless item
@@ -366,119 +389,16 @@ class Course < ActiveRecord::Base
     MaterialFolder.create(:course => self, :name => "Root")
   end
 
+  def create_uncategorized_taggroup
+    self.tag_groups.create({name: "Uncategorized"})
+  end
+
+
   def enrol_user(user, role)
     if UserCourse.where(course_id: self, user_id: user).first
       return
     end
     self.user_courses.create(user_id: user.id, role_id: role.id)
-  end
-
-  def pending_surveys(user_course)
-    if user_course.is_student?
-      self.surveys.where("open_at < ? and expire_at > ? and publish = true", Time.now, Time.now).select {|s| !s.submission_by(user_course) }
-    else
-      []
-    end
-  end
-
-  def self.online_course
-    Course.where(is_publish: true)
-  end
-
-  # Note: this method returns entries in the closed interval
-  # of from and to: i.e. entries starting at both from and to
-  # are included. [from, to]
-  def lesson_plan_virtual_entries(from = nil, to = nil)
-    missions = self.missions.where("TRUE " +
-                                       (if from then "AND open_at >= :from " else "" end) +
-                                       (if to then "AND open_at <= :to" else "" end),
-                                   :from => from, :to => to
-    )
-
-    entries = missions.map { |m| m.as_lesson_plan_entry }
-
-    trainings = self.trainings.where("TRUE " +
-                                         (if from then "AND open_at >= :from " else "" end) +
-                                         (if to then "AND open_at <= :to" else "" end),
-                                     :from => from, :to => to
-    )
-
-    entries += trainings.map { |t| t.as_lesson_plan_entry }
-  end
-
-  def materials_virtual_entries
-    mission_files =
-        # Get the missions' files, and map it to the virtual entries.
-        (self.missions.map { |m|
-          m.files.map { |f|
-            material = Material.create_virtual(m, f)
-            material.file = f
-            material.filename = m.title + ": " + f.display_filename
-            material.filesize = f.file_file_size
-            material.updated_at = f.file_updated_at
-            material.url = f.file_url
-
-            material
-          }
-        })
-        .reduce { |mission, files| mission + files }
-
-    # Make sure we return at least an empty list, in case there are no missions.
-    if mission_files == nil
-      mission_files = []
-    end
-
-    missions = MaterialFolder.create_virtual("missions", root_folder.id)
-    missions.name = customized_title_by_model(Mission).pluralize
-    missions.description = missions.name.singularize + " descriptions and other files"
-    missions.files = mission_files
-
-    training_files =
-        # Get the trainings' files, and map it to the virtual entries.
-        (self.trainings.map { |t|
-          t.files.map { |f|
-            material = Material.create_virtual(t, f)
-            material.file = f
-            material.filename = t.title + ": " + f.display_filename
-            material.filesize = f.file_file_size
-            material.updated_at = f.file_updated_at
-            material.url = f.file_url
-
-            material
-          }
-        })
-        .reduce { |training, files| training + files }
-
-    # Make sure we return at least an empty list, in case there are no trainings.
-    if training_files == nil
-      training_files = []
-    end
-
-    trainings = MaterialFolder.create_virtual("trainings", root_folder.id)
-    trainings.name = customized_title_by_model(Training).pluralize
-    trainings.description = trainings.name + " descriptions and other files"
-    trainings.files = training_files
-
-    [missions, trainings]
-  end
-
-  def self.search(search)
-    search_condition = "%" + search.downcase + "%"
-    #User.where('lower(name) LIKE ?', search_condition)
-    Course.includes(:creator).where(['lower(title) LIKE ? or lower(users.name) LIKE ?', search_condition, search_condition])
-    #find(:all, :conditions => ['lower(name) LIKE ? OR lower(email) dLIKE ?', search_condition, search_condition])
-  end
-
-  def training_tabs
-    tabs.where(owner_type: Training.to_s)
-  end
-
-  def mission_tabs
-    tabs.where(owner_type: Mission.to_s)
-  end
-
-  def accessible_comics(user_course)
-    comics.select {|comic| comic.can_view?(user_course)}
   end
 
   def logo_url
@@ -489,5 +409,4 @@ class Course < ActiveRecord::Base
     end
     url
   end
- 
 end

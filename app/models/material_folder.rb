@@ -1,4 +1,5 @@
 class MaterialFolder < ActiveRecord::Base
+  acts_as_duplicable
   belongs_to :creator, class_name: "User"
 
   # Folder structure
@@ -10,6 +11,12 @@ class MaterialFolder < ActiveRecord::Base
   scope :opened_folder, where("(open_at IS NULL OR open_at <= ?) and (close_at is NULL or close_at >= ?)", DateTime.now, DateTime.now)
 
   attr_accessible :parent_folder, :course, :course_id, :name, :description, :can_student_upload, :open_at, :close_at
+
+  amoeba do
+    include_field [:subfolders, :files]
+    #course_navbar_preferences
+    # course_preferences
+  end
 
   # Creates a virtual item of this class that is backed by some other data store.
   def self.create_virtual(id, parent_id)

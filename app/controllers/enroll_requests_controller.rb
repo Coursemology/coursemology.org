@@ -21,7 +21,7 @@ class EnrollRequestsController < ApplicationController
   end
 
   def new
-    if !current_user
+    unless current_user
       redirect_to new_user_session_path
       return
     end

@@ -6,7 +6,7 @@ class StaffLeaderboardController < ApplicationController
 
   def index
     @tab = 'Summary'
-    authorize! :can, :view, :staff_leaderboard
+    authorize! :view, :staff_leaderboard
     # summaries =[summary[:tutor], summary[:detail], summary[:students]]
     @result = {}
     tutors = get_tutors
@@ -26,13 +26,13 @@ class StaffLeaderboardController < ApplicationController
 
 
   def monitoring
-    authorize! :can, :view, :staff_leaderboard
+    authorize! :view, :staff_leaderboard
     @tab = 'Monitoring'
     if params[:_tutor_id]
       tutor = UserCourse.find(params[:_tutor_id])
       @tutor_details = {}
       @tutor_details[:tutor] = tutor.name
-      @tutor_details[:gradings] = tutor.submission_gradings.includes(:sbm).order(:created_at)
+      @tutor_details[:gradings] = tutor.gradings.includes(:submission).order(:created_at)
     end
     @tutors = get_tutors
 
@@ -40,18 +40,17 @@ class StaffLeaderboardController < ApplicationController
     @tutors.each do |tutor|
       summary = {count: 0, avg: Float::INFINITY, std_dev: Float::INFINITY }
       @summaries[tutor.id] = summary
-      gradings = tutor.submission_gradings.includes(:sbm).order(:created_at)
+      gradings = tutor.gradings.includes(:submission).order(:created_at)
+      @summaries[tutor.id][:std_count] = tutor.std_courses.where(is_phantom: false).count
       if gradings.count == 0
         next
       end
-      time_diff = gradings.reduce([]) { |acc, g| (g.created_at - g.sbm.submit_at > 0) ? (acc << g.created_at - g.sbm.submit_at) : acc }
+      time_diff = gradings.reduce([]) { |acc, g| (g.created_at - g.submission.submitted_at > 0) ? (acc << g.created_at - g.submission.submitted_at) : acc }
       avg = time_diff.mean
       std_dev = time_diff.standard_deviation
       summary[:count] = gradings.length
       summary[:avg] = avg
       summary[:std_dev] = std_dev
-      students = tutor.std_courses.where(is_phantom: false)
-      summary[:std_count] = students.count
     end
     @tutors = @tutors.sort_by! { |tutor| [@summaries[tutor.id][:avg], @summaries[tutor.id][:std_dev]] }
   end

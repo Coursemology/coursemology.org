@@ -7,33 +7,33 @@
  */
 $(document).ready(function(){
 
-    $("#mission-update").click(function(e) {
-        start = date_from_string($("#open_at").val());
-        end = date_from_string($("#close_at").val());
-
-        error_msg = [];
-        if((typeof start != 'undefined') && (typeof end != 'undefined')) {
-            if(start >= end) {
-                error_msg.push('Close time should be after open time.');
-            }
-        }
-        grade = $("#mission-max-grade");
-        checked = $("#mission-format-checkbox").is(':checked');
-        if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
-            error_msg.push('Please specify a proper grade.');
-        }
-
-        mission_exp = $("#mission-exp").val();
-        if(!IsPositive(mission_exp)) {
-            error_msg.push('Please specify a proper value for EXP.');
-        }
-
-        if (error_msg.length > 0) {
-            $('html,body').scrollTop(0);
-            e.preventDefault();
-            showErrorNotice(error_msg)
-        }
-    });
+//    $("#mission-update").click(function(e) {
+//        start = date_from_string($("#open_at").val());
+//        end = date_from_string($("#close_at").val());
+//
+//        error_msg = [];
+//        if((typeof start != 'undefined') && (typeof end != 'undefined')) {
+//            if(start >= end) {
+//                error_msg.push('Close time should be after open time.');
+//            }
+//        }
+//        grade = $("#mission-max-grade");
+//        checked = $("#mission-format-checkbox").is(':checked');
+//        if (checked && (!(grade.val() - 0) || (grade.val() - 0 ) <= 0)) {
+//            error_msg.push('Please specify a proper grade.');
+//        }
+//
+//        mission_exp = $("#mission-exp").val();
+//        if(!IsPositive(mission_exp)) {
+//            error_msg.push('Please specify a proper value for EXP.');
+//        }
+//
+//        if (error_msg.length > 0) {
+//            $('html,body').scrollTop(0);
+//            e.preventDefault();
+//            showErrorNotice(error_msg)
+//        }
+//    });
 
     $("#training-update").click(function(e){
         start = date_from_string($("#open_at").val());
@@ -98,8 +98,8 @@ $(document).ready(function(){
         return new Date(year, month, day, hour, min, sec);
     }
 
-    // Make the table rows (the questions / asm-qns) sortable
-    $(".asm-qns").sortable({
+    // Make the table rows (the text_questions / asm-qns) sortable
+    $(".sortable-table").sortable({
         update: function(event, ui){
 
             // create a list of asm_qns' id, based on the order in the DOM
@@ -114,16 +114,9 @@ $(document).ready(function(){
             });
 
             // update question number in the view
-            var question_headers = $(this).children().children().children().children(".asm-qn-handler > h3");
-//            var question_headers = $(".asm-qn-handler > h3", this.children);
+            var question_headers = $(this).find(".asm-qn-index");
             $.each(question_headers, function(index, question_header){
-                var old_header = $(question_header).text();
-                if (old_header.indexOf('Question') != -1 ) {
-                    var new_header = old_header.replace(/Question [0-9]+/, "Question " + (index + 1).toString());
-                } else {
-                    var new_header = old_header.replace(/Section [0-9]+/, "Section " + (index + 1).toString());
-                }
-                $(question_header).text(new_header);
+                $(question_header).html(index + 1)
             });
         }
     });

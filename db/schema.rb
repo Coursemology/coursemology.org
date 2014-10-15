@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140723210136) do
+ActiveRecord::Schema.define(:version => 20140919103853) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -19,12 +19,14 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.text     "description"
     t.integer  "creator_id"
     t.integer  "course_id"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.time     "deleted_at"
     t.boolean  "auto_assign"
     t.text     "requirement_text"
-    t.boolean  "published",        :default => true
+    t.boolean  "published",                     :default => true
+    t.integer  "facebook_obj_id",  :limit => 8
+    t.integer  "position"
   end
 
   add_index "achievements", ["course_id"], :name => "index_achievements_on_course_id"
@@ -91,38 +93,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "announcements", ["course_id"], :name => "index_announcements_on_course_id"
   add_index "announcements", ["creator_id"], :name => "index_announcements_on_creator_id"
 
-  create_table "answer_gradings", :force => true do |t|
-    t.integer  "grader_id"
-    t.integer  "grade"
-    t.text     "comment"
-    t.integer  "student_answer_id"
-    t.integer  "submission_grading_id"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
-    t.string   "student_answer_type"
-    t.integer  "exp"
-  end
-
-  add_index "answer_gradings", ["grader_id"], :name => "index_answer_gradings_on_grader_id"
-  add_index "answer_gradings", ["student_answer_id", "student_answer_type"], :name => "index_on_student_answer"
-  add_index "answer_gradings", ["student_answer_id"], :name => "index_answer_gradings_on_student_answer_id"
-  add_index "answer_gradings", ["submission_grading_id"], :name => "index_answer_gradings_on_submission_grading_id"
-
-  create_table "asm_qns", :force => true do |t|
-    t.integer  "asm_id"
-    t.string   "asm_type"
-    t.integer  "qn_id"
-    t.string   "qn_type"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.integer  "pos"
-  end
-
-  add_index "asm_qns", ["asm_id"], :name => "index_asm_qns_on_asm_id"
-  add_index "asm_qns", ["asm_type"], :name => "index_asm_qns_on_asm_type"
-  add_index "asm_qns", ["qn_id", "qn_type"], :name => "index_asm_qns_on_qn_id_and_qn_type"
-  add_index "asm_qns", ["qn_id"], :name => "index_asm_qns_on_qn_id"
-
   create_table "asm_reqs", :force => true do |t|
     t.integer  "asm_id"
     t.string   "asm_type"
@@ -134,18 +104,212 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "asm_reqs", ["asm_id"], :name => "index_asm_reqs_on_asm_id"
   add_index "asm_reqs", ["asm_type"], :name => "index_asm_reqs_on_asm_type"
 
-  create_table "asm_tags", :force => true do |t|
-    t.integer  "asm_id"
-    t.string   "asm_type"
-    t.integer  "tag_id"
-    t.integer  "max_exp"
+  create_table "assessment_answer_grading_logs", :force => true do |t|
+    t.integer  "answer_grading_id"
+    t.integer  "grader_course_id"
+    t.integer  "grader_id"
+    t.float    "grade"
+    t.datetime "deleted_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "assessment_answer_gradings", :force => true do |t|
+    t.integer  "answer_id"
+    t.integer  "grading_id"
+    t.integer  "grader_id"
+    t.integer  "grader_course_id"
+    t.float    "grade"
+    t.datetime "deleted_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "assessment_answer_gradings", ["answer_id", "grading_id"], :name => "index_assessment_answer_gradings_on_answer_id_and_grading_id"
+
+  create_table "assessment_answer_options", :force => true do |t|
+    t.integer  "answer_id"
+    t.integer  "option_id"
+    t.datetime "deleted_at"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  add_index "asm_tags", ["asm_id", "asm_type"], :name => "index_asm_tags_on_asm_id_and_asm_type"
-  add_index "asm_tags", ["asm_id"], :name => "index_asm_tags_on_asm_id"
-  add_index "asm_tags", ["tag_id"], :name => "index_asm_tags_on_tag_id"
+  add_index "assessment_answer_options", ["answer_id"], :name => "index_assessment_answer_options_on_answer_id"
+  add_index "assessment_answer_options", ["option_id"], :name => "index_assessment_answer_options_on_option_id"
+
+  create_table "assessment_answers", :force => true do |t|
+    t.integer  "as_answer_id"
+    t.string   "as_answer_type"
+    t.integer  "submission_id"
+    t.integer  "question_id"
+    t.integer  "std_course_id"
+    t.text     "content",        :limit => 16777215
+    t.integer  "attempt_left",                       :default => 0
+    t.boolean  "finalised",                          :default => false
+    t.boolean  "correct",                            :default => false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
+  end
+
+  add_index "assessment_answers", ["as_answer_id", "as_answer_type"], :name => "index_on_as_answer", :unique => true
+  add_index "assessment_answers", ["question_id"], :name => "index_assessment_answers_on_question_id"
+  add_index "assessment_answers", ["submission_id", "question_id"], :name => "index_on_answer_submission_question"
+
+  create_table "assessment_coding_answers", :force => true do |t|
+    t.text     "result"
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_coding_questions", :force => true do |t|
+    t.integer  "language_id"
+    t.boolean  "auto_graded"
+    t.text     "tests"
+    t.integer  "memory_limit"
+    t.integer  "time_limit"
+    t.text     "template"
+    t.text     "pre_include"
+    t.text     "append_code"
+    t.datetime "deleted_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "assessment_general_answers", :force => true do |t|
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_general_questions", :force => true do |t|
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_grading_logs", :force => true do |t|
+    t.integer  "grading_id"
+    t.integer  "grader_course_id"
+    t.integer  "grader_id"
+    t.float    "grade"
+    t.integer  "exp"
+    t.datetime "deleted_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "assessment_gradings", :force => true do |t|
+    t.integer  "submission_id"
+    t.integer  "grader_id"
+    t.integer  "grader_course_id"
+    t.integer  "std_course_id"
+    t.float    "grade"
+    t.integer  "exp"
+    t.integer  "exp_transaction_id"
+    t.boolean  "autograding_refresh", :default => false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+  end
+
+  create_table "assessment_mcq_answers", :force => true do |t|
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessment_mcq_options", :force => true do |t|
+    t.integer  "creator_id"
+    t.integer  "question_id"
+    t.text     "text"
+    t.text     "explanation"
+    t.boolean  "correct"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "assessment_mcq_questions", :force => true do |t|
+    t.boolean  "select_all", :default => false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "assessment_missions", :force => true do |t|
+    t.boolean  "file_submission",      :default => false
+    t.boolean  "file_submission_only", :default => false
+    t.datetime "deleted_at"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+  end
+
+  create_table "assessment_questions", :force => true do |t|
+    t.integer  "as_question_id"
+    t.string   "as_question_type"
+    t.integer  "creator_id"
+    t.integer  "dependent_id"
+    t.string   "title"
+    t.text     "description"
+    t.float    "max_grade"
+    t.integer  "attempt_limit"
+    t.boolean  "file_submission",  :default => false
+    t.text     "staff_comments"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+  end
+
+  add_index "assessment_questions", ["as_question_id", "as_question_type"], :name => "index_on_as_question", :unique => true
+
+  create_table "assessment_submissions", :force => true do |t|
+    t.integer  "assessment_id"
+    t.integer  "std_course_id"
+    t.string   "status"
+    t.float    "multiplier"
+    t.datetime "opened_at"
+    t.datetime "submitted_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.datetime "saved_at"
+  end
+
+  create_table "assessment_trainings", :force => true do |t|
+    t.boolean  "skippable"
+    t.datetime "deleted_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "assessments", :force => true do |t|
+    t.integer  "as_assessment_id"
+    t.string   "as_assessment_type"
+    t.integer  "course_id"
+    t.integer  "creator_id"
+    t.integer  "tab_id"
+    t.string   "title"
+    t.text     "description"
+    t.integer  "position"
+    t.integer  "exp"
+    t.float    "max_grade"
+    t.boolean  "published"
+    t.boolean  "comment_per_qn",     :default => true
+    t.integer  "dependent_id"
+    t.integer  "display_mode_id"
+    t.integer  "bonus_exp"
+    t.datetime "bonus_cutoff_at"
+    t.datetime "open_at"
+    t.datetime "close_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+  end
+
+  add_index "assessments", ["as_assessment_id", "as_assessment_type"], :name => "index_on_as_assessment", :unique => true
 
   create_table "assignment_display_modes", :force => true do |t|
     t.string "title"
@@ -158,23 +322,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
-
-  create_table "coding_questions", :force => true do |t|
-    t.integer  "creator_id"
-    t.string   "title"
-    t.text     "description"
-    t.text     "data"
-    t.integer  "max_grade"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.string   "staff_comments"
-    t.datetime "last_commented_at"
-    t.integer  "include_sol_qn_id"
-    t.boolean  "is_auto_grading",   :default => false
-  end
-
-  add_index "coding_questions", ["creator_id"], :name => "index_coding_questions_on_creator_id"
-  add_index "coding_questions", ["include_sol_qn_id"], :name => "index_coding_questions_on_include_sol_qn_id"
 
   create_table "comic_pages", :force => true do |t|
     t.integer  "comic_id"
@@ -320,6 +467,12 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
 
   add_index "courses", ["creator_id"], :name => "index_courses_on_creator_id"
 
+  create_table "data_maps", :force => true do |t|
+    t.string  "data_type"
+    t.integer "old_data_id"
+    t.integer "new_data_id"
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -402,116 +555,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "file_uploads", ["creator_id"], :name => "index_file_uploads_on_creator_id"
   add_index "file_uploads", ["owner_id", "owner_type"], :name => "index_file_uploads_on_owner_id_and_owner_type"
 
-  create_table "forem_categories", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "slug"
-  end
-
-  add_index "forem_categories", ["slug"], :name => "index_forem_categories_on_slug", :unique => true
-
-  create_table "forem_category_subscriptions", :force => true do |t|
-    t.integer "subscriber_id"
-    t.integer "category_id"
-    t.integer "is_digest",     :default => 0
-  end
-
-  create_table "forem_forums", :force => true do |t|
-    t.string  "name"
-    t.text    "description"
-    t.integer "category_id"
-    t.integer "views_count", :default => 0
-    t.string  "slug"
-  end
-
-  add_index "forem_forums", ["slug"], :name => "index_forem_forums_on_slug", :unique => true
-
-  create_table "forem_groups", :force => true do |t|
-    t.string "name"
-  end
-
-  add_index "forem_groups", ["name"], :name => "index_forem_groups_on_name"
-
-  create_table "forem_memberships", :force => true do |t|
-    t.integer "group_id"
-    t.integer "member_id"
-  end
-
-  add_index "forem_memberships", ["group_id"], :name => "index_forem_memberships_on_group_id"
-
-  create_table "forem_moderator_groups", :force => true do |t|
-    t.integer "forum_id"
-    t.integer "group_id"
-  end
-
-  add_index "forem_moderator_groups", ["forum_id"], :name => "index_forem_moderator_groups_on_forum_id"
-
-  create_table "forem_posts", :force => true do |t|
-    t.integer  "topic_id"
-    t.text     "text"
-    t.integer  "user_id"
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
-    t.integer  "reply_to_id"
-    t.string   "state",              :default => "pending_review"
-    t.boolean  "notified",           :default => false
-    t.integer  "cached_votes_total", :default => 0
-    t.integer  "cached_votes_score", :default => 0
-    t.integer  "cached_votes_up",    :default => 0
-    t.integer  "cached_votes_down",  :default => 0
-  end
-
-  add_index "forem_posts", ["cached_votes_down"], :name => "index_forem_posts_on_cached_votes_down"
-  add_index "forem_posts", ["cached_votes_score"], :name => "index_forem_posts_on_cached_votes_score"
-  add_index "forem_posts", ["cached_votes_total"], :name => "index_forem_posts_on_cached_votes_total"
-  add_index "forem_posts", ["cached_votes_up"], :name => "index_forem_posts_on_cached_votes_up"
-  add_index "forem_posts", ["reply_to_id"], :name => "index_forem_posts_on_reply_to_id"
-  add_index "forem_posts", ["state"], :name => "index_forem_posts_on_state"
-  add_index "forem_posts", ["topic_id"], :name => "index_forem_posts_on_topic_id"
-  add_index "forem_posts", ["user_id"], :name => "index_forem_posts_on_user_id"
-
-  create_table "forem_subscriptions", :force => true do |t|
-    t.integer "subscriber_id"
-    t.integer "topic_id"
-  end
-
-  create_table "forem_topics", :force => true do |t|
-    t.integer  "forum_id"
-    t.integer  "user_id"
-    t.string   "subject"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-    t.boolean  "locked",       :default => false,            :null => false
-    t.boolean  "pinned",       :default => false
-    t.boolean  "hidden",       :default => false
-    t.datetime "last_post_at"
-    t.string   "state",        :default => "pending_review"
-    t.integer  "views_count",  :default => 0
-    t.string   "slug"
-    t.integer  "notified",     :default => 0
-  end
-
-  add_index "forem_topics", ["forum_id"], :name => "index_forem_topics_on_forum_id"
-  add_index "forem_topics", ["slug"], :name => "index_forem_topics_on_slug", :unique => true
-  add_index "forem_topics", ["state"], :name => "index_forem_topics_on_state"
-  add_index "forem_topics", ["user_id"], :name => "index_forem_topics_on_user_id"
-
-  create_table "forem_views", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "viewable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "count",             :default => 0
-    t.string   "viewable_type"
-    t.datetime "current_viewed_at"
-    t.datetime "past_viewed_at"
-  end
-
-  add_index "forem_views", ["updated_at"], :name => "index_forem_views_on_updated_at"
-  add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
-  add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
-
   create_table "forum_forum_subscriptions", :force => true do |t|
     t.integer "forum_id"
     t.integer "user_id"
@@ -530,13 +573,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
 
   add_index "forum_forums", ["cached_slug"], :name => "index_forum_forums_on_cached_slug", :unique => true
   add_index "forum_forums", ["course_id"], :name => "index_forum_forums_on_course_id"
-
-  create_table "forum_post_votes", :force => true do |t|
-    t.integer  "post_id"
-    t.integer  "vote"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
 
   create_table "forum_posts", :force => true do |t|
     t.integer  "topic_id"
@@ -683,65 +719,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
 
   add_index "materials", ["folder_id"], :name => "index_materials_on_folder_id"
 
-  create_table "mcq_answers", :force => true do |t|
-    t.integer  "mcq_id"
-    t.text     "text"
-    t.integer  "creator_id"
-    t.text     "explanation"
-    t.boolean  "is_correct"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "mcq_answers", ["creator_id"], :name => "index_mcq_answers_on_creator_id"
-  add_index "mcq_answers", ["mcq_id"], :name => "index_mcq_answers_on_mcq_id"
-
-  create_table "mcqs", :force => true do |t|
-    t.integer  "creator_id"
-    t.text     "description"
-    t.integer  "correct_answer_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-    t.integer  "max_grade"
-    t.text     "correct_answers"
-    t.boolean  "select_all"
-    t.datetime "last_commented_at"
-  end
-
-  add_index "mcqs", ["correct_answer_id"], :name => "index_mcqs_on_correct_answer_id"
-  add_index "mcqs", ["creator_id"], :name => "index_mcqs_on_creator_id"
-
-  create_table "missions", :force => true do |t|
-    t.integer  "course_id"
-    t.integer  "exp"
-    t.datetime "open_at"
-    t.datetime "close_at"
-    t.datetime "deadline"
-    t.integer  "timelimit"
-    t.integer  "attempt_limit"
-    t.integer  "auto_graded"
-    t.integer  "pos"
-    t.text     "description"
-    t.integer  "creator_id"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.string   "title"
-    t.integer  "max_grade"
-    t.boolean  "single_question",      :default => false
-    t.boolean  "is_file_submission",   :default => false
-    t.integer  "dependent_id"
-    t.boolean  "publish",              :default => true
-    t.integer  "tab_id"
-    t.boolean  "file_submission_only", :default => false
-    t.integer  "display_mode",         :default => 1
-    t.boolean  "comment_per_qn",       :default => true
-  end
-
-  add_index "missions", ["course_id"], :name => "index_missions_on_course_id"
-  add_index "missions", ["creator_id"], :name => "index_missions_on_creator_id"
-  add_index "missions", ["dependent_id"], :name => "index_missions_on_dependent_id"
-  add_index "missions", ["display_mode"], :name => "index_missions_on_display_mode"
-
   create_table "navbar_link_types", :force => true do |t|
     t.string   "link_type"
     t.datetime "created_at", :null => false
@@ -816,16 +793,25 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.datetime "updated_at",      :null => false
   end
 
-  create_table "questions", :force => true do |t|
-    t.integer  "creator_id"
-    t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.integer  "max_grade"
-    t.string   "title"
+  create_table "programming_languages", :force => true do |t|
+    t.string   "name"
+    t.string   "codemirror_mode"
+    t.string   "version"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.string   "cmd"
   end
 
-  add_index "questions", ["creator_id"], :name => "index_questions_on_creator_id"
+  create_table "question_assessments", :force => true do |t|
+    t.integer  "question_id"
+    t.integer  "assessment_id"
+    t.integer  "position"
+    t.datetime "deleted_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "question_assessments", ["question_id", "assessment_id"], :name => "index_on_question_assessment"
 
   create_table "queued_jobs", :force => true do |t|
     t.integer  "owner_id"
@@ -833,20 +819,23 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.integer  "delayed_job_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.string   "job_type"
   end
 
   add_index "queued_jobs", ["delayed_job_id"], :name => "index_queued_jobs_on_delayed_job_id"
   add_index "queued_jobs", ["owner_id"], :name => "index_queued_jobs_on_owner_id"
   add_index "queued_jobs", ["owner_type"], :name => "index_queued_jobs_on_owner_type"
 
-  create_table "read_marks", :force => true do |t|
-    t.integer  "readable_id"
-    t.integer  "user_id",                     :null => false
-    t.string   "readable_type", :limit => 20, :null => false
-    t.datetime "timestamp"
+  create_table "requirable_requirements", :force => true do |t|
+    t.integer  "requirable_id"
+    t.string   "requirable_type"
+    t.integer  "requirement_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
-  add_index "read_marks", ["user_id", "readable_type", "readable_id"], :name => "index_read_marks_on_user_id_and_readable_type_and_readable_id"
+  add_index "requirable_requirements", ["requirable_id", "requirable_type"], :name => "index_on_requirables"
 
   create_table "requirements", :force => true do |t|
     t.integer  "req_id"
@@ -861,19 +850,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "requirements", ["obj_id"], :name => "index_requirements_on_obj_id"
   add_index "requirements", ["req_id", "req_type"], :name => "index_requirements_on_req_id_and_req_type"
   add_index "requirements", ["req_id"], :name => "index_requirements_on_req_id"
-
-  create_table "rewards", :force => true do |t|
-    t.string   "icon_url"
-    t.string   "title"
-    t.text     "description"
-    t.integer  "creator_id"
-    t.integer  "course_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "rewards", ["course_id"], :name => "index_rewards_on_course_id"
-  add_index "rewards", ["creator_id"], :name => "index_rewards_on_creator_id"
 
   create_table "role_requests", :force => true do |t|
     t.integer  "user_id"
@@ -898,21 +874,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
 
   add_index "roles", ["name"], :name => "index_roles_on_name"
 
-  create_table "sbm_answers", :force => true do |t|
-    t.integer  "sbm_id"
-    t.string   "sbm_type"
-    t.integer  "answer_id"
-    t.string   "answer_type"
-    t.boolean  "is_final"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "sbm_answers", ["answer_id", "answer_type"], :name => "index_sbm_answers_on_answer_id_and_answer_type"
-  add_index "sbm_answers", ["answer_id"], :name => "index_sbm_answers_on_answer_id"
-  add_index "sbm_answers", ["sbm_id", "sbm_type"], :name => "index_sbm_answers_on_sbm_id_and_sbm_type"
-  add_index "sbm_answers", ["sbm_id"], :name => "index_sbm_answers_on_sbm_id"
-
   create_table "seen_by_users", :force => true do |t|
     t.integer  "user_course_id"
     t.integer  "obj_id"
@@ -926,116 +887,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "seen_by_users", ["user_course_id", "obj_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_id_and_obj_type", :unique => true
   add_index "seen_by_users", ["user_course_id", "obj_type"], :name => "index_seen_by_users_on_user_course_id_and_obj_type"
   add_index "seen_by_users", ["user_course_id"], :name => "index_seen_by_users_on_user_course_id"
-
-  create_table "std_answers", :force => true do |t|
-    t.text     "text"
-    t.integer  "student_id"
-    t.integer  "question_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-    t.datetime "last_commented_at"
-    t.integer  "std_course_id"
-  end
-
-  add_index "std_answers", ["question_id"], :name => "index_std_answers_on_question_id"
-  add_index "std_answers", ["std_course_id"], :name => "index_std_answers_on_std_course_id"
-  add_index "std_answers", ["student_id"], :name => "index_std_answers_on_student_id"
-
-  create_table "std_coding_answers", :force => true do |t|
-    t.text     "code"
-    t.integer  "student_id"
-    t.integer  "qn_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-    t.boolean  "is_correct"
-    t.integer  "std_course_id"
-    t.datetime "last_commented_at"
-    t.integer  "test_left"
-    t.text     "result"
-  end
-
-  add_index "std_coding_answers", ["qn_id"], :name => "index_std_coding_answers_on_qn_id"
-  add_index "std_coding_answers", ["std_course_id"], :name => "index_std_coding_answers_on_std_course_id"
-  add_index "std_coding_answers", ["student_id"], :name => "index_std_coding_answers_on_student_id"
-
-  create_table "std_mcq_all_answers", :force => true do |t|
-    t.text     "selected_choices"
-    t.integer  "student_id"
-    t.integer  "mcq_id"
-    t.integer  "std_course_id"
-    t.text     "choices"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
-  add_index "std_mcq_all_answers", ["mcq_id"], :name => "index_std_mcq_all_answers_on_mcq_id"
-  add_index "std_mcq_all_answers", ["std_course_id"], :name => "index_std_mcq_all_answers_on_std_course_id"
-  add_index "std_mcq_all_answers", ["student_id"], :name => "index_std_mcq_all_answers_on_student_id"
-
-  create_table "std_mcq_answers", :force => true do |t|
-    t.integer  "mcq_answer_id"
-    t.string   "choices"
-    t.integer  "student_id"
-    t.integer  "mcq_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.integer  "std_course_id"
-  end
-
-  add_index "std_mcq_answers", ["mcq_answer_id"], :name => "index_std_mcq_answers_on_mcq_answer_id"
-  add_index "std_mcq_answers", ["mcq_id"], :name => "index_std_mcq_answers_on_mcq_id"
-  add_index "std_mcq_answers", ["std_course_id"], :name => "index_std_mcq_answers_on_std_course_id"
-  add_index "std_mcq_answers", ["student_id"], :name => "index_std_mcq_answers_on_student_id"
-
-  create_table "std_tags", :force => true do |t|
-    t.integer  "std_course_id"
-    t.integer  "tag_id"
-    t.integer  "exp"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "std_tags", ["std_course_id"], :name => "index_std_tags_on_std_course_id"
-  add_index "std_tags", ["tag_id"], :name => "index_std_tags_on_tag_id"
-
-  create_table "submission_gradings", :force => true do |t|
-    t.integer  "grader_id"
-    t.integer  "total_grade"
-    t.text     "comment"
-    t.integer  "sbm_id"
-    t.datetime "publish_at"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "sbm_type"
-    t.integer  "exp_transaction_id"
-    t.integer  "total_exp"
-    t.datetime "last_grade_updated"
-    t.integer  "grader_course_id"
-    t.boolean  "autograding_refresh", :default => false
-  end
-
-  add_index "submission_gradings", ["exp_transaction_id"], :name => "index_submission_gradings_on_exp_transaction_id"
-  add_index "submission_gradings", ["grader_course_id"], :name => "index_submission_gradings_on_grader_course_id"
-  add_index "submission_gradings", ["grader_id"], :name => "index_submission_gradings_on_grader_id"
-  add_index "submission_gradings", ["sbm_id", "sbm_type"], :name => "index_submission_gradings_on_sbm_id_and_sbm_type"
-  add_index "submission_gradings", ["sbm_id"], :name => "index_submission_gradings_on_sbm_id"
-
-  create_table "submissions", :force => true do |t|
-    t.integer  "std_course_id"
-    t.integer  "mission_id"
-    t.datetime "open_at"
-    t.datetime "submit_at"
-    t.integer  "attempt"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.integer  "final_grading_id"
-    t.time     "deleted_at"
-    t.string   "status"
-  end
-
-  add_index "submissions", ["final_grading_id"], :name => "index_submissions_on_final_grading_id"
-  add_index "submissions", ["mission_id"], :name => "index_submissions_on_mission_id"
-  add_index "submissions", ["std_course_id"], :name => "index_submissions_on_std_course_id"
 
   create_table "survey_essay_answers", :force => true do |t|
     t.integer  "user_course_id"
@@ -1149,7 +1000,7 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.boolean  "anonymous",    :default => false
     t.boolean  "publish",      :default => true
     t.boolean  "allow_modify", :default => true
-    t.boolean  "has_section",  :default => true
+    t.boolean  "is_contest",   :default => false
     t.time     "deleted_at"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
@@ -1175,6 +1026,7 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.datetime "updated_at",  :null => false
     t.string   "owner_type",  :null => false
     t.integer  "pos"
+    t.datetime "deleted_at"
   end
 
   add_index "tabs", ["course_id"], :name => "index_tabs_on_course_id"
@@ -1190,19 +1042,29 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
 
   add_index "tag_groups", ["course_id"], :name => "index_tag_groups_on_course_id"
 
-  create_table "tags", :force => true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "course_id"
-    t.string   "icon_url"
-    t.integer  "max_exp"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.integer  "tag_group_id"
-    t.time     "deleted_at"
+  create_table "taggable_tags", :force => true do |t|
+    t.string   "taggable_type"
+    t.integer  "taggable_id"
+    t.integer  "tag_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  add_index "tags", ["course_id"], :name => "index_tags_on_course_id"
+  add_index "taggable_tags", ["taggable_id", "taggable_type"], :name => "index_taggable_tags_on_taggable_id_and_taggable_type"
+
+  create_table "tags", :force => true do |t|
+    t.string   "name"
+    t.integer  "taggings_count", :default => 0
+    t.text     "description"
+    t.integer  "course_id"
+    t.integer  "tag_group_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tags", ["name"], :name => "index_tags_on_name"
   add_index "tags", ["tag_group_id"], :name => "index_tags_on_tag_group_id"
 
   create_table "theme_attributes", :force => true do |t|
@@ -1212,70 +1074,6 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
-
-  create_table "titles", :force => true do |t|
-    t.string   "title"
-    t.text     "description"
-    t.integer  "creator_id"
-    t.integer  "course_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "titles", ["course_id"], :name => "index_titles_on_course_id"
-  add_index "titles", ["creator_id"], :name => "index_titles_on_creator_id"
-
-  create_table "training_submissions", :force => true do |t|
-    t.integer  "std_course_id"
-    t.integer  "training_id"
-    t.integer  "current_step"
-    t.datetime "open_at"
-    t.datetime "submit_at"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.time     "deleted_at"
-    t.float    "multiplier"
-    t.string   "status"
-  end
-
-  add_index "training_submissions", ["std_course_id"], :name => "index_training_submissions_on_std_course_id"
-  add_index "training_submissions", ["training_id"], :name => "index_training_submissions_on_training_id"
-
-  create_table "trainings", :force => true do |t|
-    t.integer  "course_id"
-    t.integer  "creator_id"
-    t.string   "title"
-    t.text     "description"
-    t.integer  "exp"
-    t.datetime "open_at"
-    t.integer  "pos"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-    t.integer  "max_grade"
-    t.time     "deleted_at"
-    t.integer  "bonus_exp"
-    t.datetime "bonus_cutoff"
-    t.boolean  "publish",      :default => true
-    t.integer  "t_type",       :default => 1
-    t.integer  "tab_id"
-    t.boolean  "can_skip",     :default => false
-  end
-
-  add_index "trainings", ["course_id"], :name => "index_trainings_on_course_id"
-  add_index "trainings", ["creator_id"], :name => "index_trainings_on_creator_id"
-  add_index "trainings", ["tab_id"], :name => "index_trainings_on_tab_id"
-
-  create_table "tutor_monitorings", :force => true do |t|
-    t.integer  "course_id"
-    t.integer  "user_course_id"
-    t.integer  "average_time"
-    t.integer  "std_dev"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "tutor_monitorings", ["course_id"], :name => "index_tutor_monitorings_on_course_id"
-  add_index "tutor_monitorings", ["user_course_id"], :name => "index_tutor_monitorings_on_user_course_id", :unique => true
 
   create_table "tutorial_groups", :force => true do |t|
     t.integer  "course_id"
@@ -1293,6 +1091,7 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.integer  "achievement_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "obtained_at"
   end
 
   add_index "user_achievements", ["achievement_id"], :name => "index_user_achievements_on_achievement_id"
@@ -1319,40 +1118,18 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
   add_index "user_courses", ["role_id"], :name => "index_user_courses_on_role_id"
   add_index "user_courses", ["user_id"], :name => "index_user_courses_on_user_id"
 
-  create_table "user_rewards", :force => true do |t|
-    t.integer  "user_course_id"
-    t.integer  "reward_id"
-    t.datetime "claimed_at"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "user_rewards", ["reward_id"], :name => "index_user_rewards_on_reward_id"
-  add_index "user_rewards", ["user_course_id"], :name => "index_user_rewards_on_user_course_id"
-
-  create_table "user_titles", :force => true do |t|
-    t.integer  "user_course_id"
-    t.integer  "title_id"
-    t.integer  "is_using"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "user_titles", ["title_id"], :name => "index_user_titles_on_title_id"
-  add_index "user_titles", ["user_course_id"], :name => "index_user_titles_on_user_course_id"
-
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "profile_photo_url"
     t.string   "display_name"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.string   "email",                                         :default => "",    :null => false
+    t.string   "encrypted_password",                            :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                                 :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -1365,9 +1142,10 @@ ActiveRecord::Schema.define(:version => 20140723210136) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "is_logged_in",           :default => true
-    t.boolean  "is_pending_deletion",    :default => false
-    t.boolean  "use_uploaded_picture",   :default => false
+    t.boolean  "is_logged_in",                                  :default => true
+    t.boolean  "is_pending_deletion",                           :default => false
+    t.boolean  "use_uploaded_picture",                          :default => false
+    t.integer  "fb_publish_actions_request_count", :limit => 1, :default => 0,     :null => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

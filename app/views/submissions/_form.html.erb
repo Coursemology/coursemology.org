@@ -1,5 +1,4 @@
 <%= form_for [@course, @mission, @submission], :html => { :class => 'form-horizontal' } do |f| %>
-
     <div id="uploaded_files_div"></div>
     <div class="tabbable tabs-below">
       <% if @mission.assignment_display_mode == AssignmentDisplayMode.tab_mode && !@mission.single_question? %>

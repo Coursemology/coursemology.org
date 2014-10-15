@@ -6,7 +6,7 @@ class AnnouncementsController < ApplicationController
 
   def index
     @is_new = {}
-    @paging_pref = @course.announcements_paging_pref
+    @paging_pref = @course.paging_pref(Announcement.to_s)
     @announcements = @course.announcements.accessible_by(current_ability)
                         .order("publish_at DESC")
     if @paging_pref.display
@@ -14,7 +14,6 @@ class AnnouncementsController < ApplicationController
     end
     if curr_user_course.id
       unseen = @announcements - curr_user_course.seen_announcements
-      puts "seen:", curr_user_course.seen_announcements.first(30).to_json
       unseen.each do |ann|
         @is_new[ann.id] = true
         curr_user_course.mark_as_seen(ann)
@@ -34,7 +33,6 @@ class AnnouncementsController < ApplicationController
     @announcement.creator = current_user
     respond_to do |format|
       if @announcement.save
-        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course), true)
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been created." }
       else
@@ -46,7 +44,6 @@ class AnnouncementsController < ApplicationController
   def update
     respond_to do |format|
       if @announcement.update_attributes(params[:announcement])
-        @announcement.schedule_mail(@course.user_courses, course_announcements_url(@course))
         format.html { redirect_to course_announcements_url(@course),
                       notice: "The announcement '#{@announcement.title}' has been updated." }
       else

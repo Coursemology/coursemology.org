@@ -1,6 +1,6 @@
 <%- model_class = Announcement -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => @course.customized_announcements_title.pluralize %></h1>
+  <h1><%=t '.title', :default => @course.customized_title(Announcement.to_s).pluralize %></h1>
   <% if can? :manage, Announcement %>
       <%= link_to t('.new', :default => t("helpers.links.new")),
                   new_course_announcement_path(@course),

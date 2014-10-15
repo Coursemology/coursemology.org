@@ -2,25 +2,26 @@ class UserCourse < ActiveRecord::Base
   acts_as_paranoid
 
   include Rails.application.routes.url_helpers
+  default_scope includes(:role)
 
   attr_accessible :course_id, :exp, :role_id, :user_id, :level_id, :is_phantom, :last_active_time
 
   before_create :init
   after_create  :notify_student
 
-  scope :lecturer, where(:role_id => Role.lecturer.first)
-  scope :tutor, where(:role_id => Role.tutor.first)
-  scope :student, where(:role_id => Role.student.first)
-  scope :real_students, where(:role_id => Role.student.first, is_phantom: false)
-  scope :active_last_week, where("last_active_time > ?", (Time.now - 7.days))
+  scope :lecturer, -> { where(:role_id => Role.lecturer.first) }
+  scope :tutor, -> { where(:role_id => Role.tutor.first) }
+  scope :student, -> { where(:role_id => Role.student.first) }
+  scope :real_students, -> { where(:role_id => Role.student.first, is_phantom: false) }
+  scope :active_last_week, lambda {where("last_active_time > ?", (Time.now - 7.days))}
 
-  scope :shared, where(:role_id => Role.shared.first)
-  scope :staff, where(:role_id => [Role.lecturer.first, Role.tutor.first]).
+  scope :shared, -> { where(:role_id => Role.shared.first) }
+  scope :staff, -> { where(:role_id => [Role.lecturer.first, Role.tutor.first]).
       joins('LEFT JOIN users on user_courses.user_id = users.id').
-      order('lower(users.name) ASC')
+      order('lower(users.name) ASC') }
   scope :top_achievements,
         joins('LEFT JOIN user_achievements ON user_courses.id=user_achievements.user_course_id')
-        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements.created_at) as ach_last_updated')
+        .select('user_courses.*, count(user_achievements.id) as ach_count, max(user_achievements.obtained_at) as ach_last_updated')
         .group('user_courses.id')
         .order('ach_count DESC, ach_last_updated ASC, id ASC')
 
@@ -40,27 +41,28 @@ class UserCourse < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :comment_topics, through: :comment_subscriptions
 
-  has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
-  has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
+  #TODO
+  # has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
+  # has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
+  # has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
+  has_many :gradings, class_name: "Assessment::Grading", foreign_key: "grader_course_id"
 
-  has_many :std_answers, foreign_key: "std_course_id", dependent: :destroy
-  has_many :std_coding_answers, foreign_key: "std_course_id", dependent: :destroy
+  has_many :submissions, class_name: Assessment::Submission,
+           foreign_key: "std_course_id", dependent: :destroy
 
-  has_many :seen_missions, through: :seen_stuff, source: :obj, source_type: "Mission"
-  has_many :seen_trainings, through: :seen_stuff, source: :obj, source_type: "Training"
+  has_many :seen_assessments, through: :seen_stuff, source: :obj, source_type: "Assessment"
   has_many :seen_announcements, through: :seen_stuff, source: :obj, source_type: "Announcement"
-  has_many :seen_submissions, through: :seen_stuff, source: :obj, source_type: "Submission"
-  has_many :seen_training_submissions, through: :seen_stuff, source: :obj, source_type: "TrainingSubmission"
   has_many :seen_materials, through: :seen_stuff, source: :obj, source_type: "Material"
   has_many :seen_notifications, through: :seen_stuff, source: :obj, source_type: "Notification"
   has_many :seen_comics, through: :seen_stuff, source: :obj, source_type: "Comic"
 
   has_many :notifications, foreign_key: "target_course_id"
 
-  has_many :std_tags, foreign_key: "std_course_id", dependent: :destroy
   has_many :std_group_courses, class_name: "TutorialGroup",foreign_key:"tut_course_id", dependent: :destroy
   has_many :tut_group_courses, class_name: "TutorialGroup",foreign_key:"std_course_id", dependent: :destroy
-  has_many :submission_gradings, foreign_key: "grader_course_id"
   has_many :std_courses, through: :std_group_courses
   has_many :tut_courses, through: :tut_group_courses
   has_many :activities, foreign_key: "actor_course_id", dependent: :destroy
@@ -69,15 +71,19 @@ class UserCourse < ActiveRecord::Base
   default_scope includes(:course)
 
   def is_student?
-    self.role == Role.find_by_name('student')
+    self.role && self.role.name == 'student'
+  end
+
+  def is_real_student?
+    !self.is_phantom? && is_student?
   end
 
   def is_lecturer?
-    self.role == Role.find_by_name('lecturer')
+    self.role && self.role.name == 'lecturer'
   end
 
   def is_ta?
-    self.role == Role.find_by_name('ta')
+    self.role && self.role.name == 'ta'
   end
 
   def is_staff?
@@ -88,12 +94,33 @@ class UserCourse < ActiveRecord::Base
     self.user and self.user == self.course.creator
   end
 
+  def is_shared?
+    self.role && self.role.name == 'shared'
+  end
+
   def level_percentage
     if self.level
-      threshold = self.level.next_level.exp_threshold
-      return threshold == 0? 0 : self.exp * 100 / self.level.next_level.exp_threshold
+      lvl_exp = exp_to_next_level
+      lvl_exp == 0 ? 0 : exp_gained_in_level * 100 / lvl_exp
+    else
+      0
     end
-    0
+  end
+
+  def exp_gained_in_level
+    if self.level
+      self.exp - self.level.exp_threshold
+    else
+      0
+    end
+  end
+
+  def exp_to_next_level
+    if self.level && self.level.next_level
+      self.level.next_level.exp_threshold - self.level.exp_threshold
+    else
+      0
+    end
   end
 
   def get_seen_sbms
@@ -111,45 +138,40 @@ class UserCourse < ActiveRecord::Base
   end
 
   def update_exp_and_level_async
-    Thread.new {
-      update_exp_and_level
-    }
+    update_exp_and_level
+    Thread.new do
+      update_achievements
+      ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
+    end
   end
 
   def update_exp_and_level
     # recalculate the EXP and level of the student (user)
     # find all submission_grading and calculate the score
     # get all (final grading)
-    puts "UPDATE EXP AND LEVEL OF STUDENT", self.to_json
 
     self.exp = self.exp_transactions.sum(&:exp)
     self.exp = self.exp >= 0 ? self.exp : 0
 
-    new_level = nil
-    self.course.levels.each do |lvl|
-      if lvl.exp_threshold <= self.exp
-        new_level = lvl
-      else
-        break
-      end
+    unless self.level
+      self.level = self.course.levels.find_by_level(0)
     end
 
-    if new_level && self.level != new_level && self.is_student?
-      self.level = new_level
-      unless self.is_phantom?
-        Activity.reached_lvl(self, new_level)
-        Notification.leveledup(self, new_level)
-      end
+    new_level = self.course.levels.where("exp_threshold <=? ", self.exp ).last || self.level
+
+    if new_level.level > self.level.level && self.is_real_student?
+      Activity.reached_lvl(self, new_level)
+      Notification.leveledup(self, new_level)
     end
+    self.level = new_level
 
     self.exp_updated_at = Time.now
     self.save
-    self.update_achievements
     ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
   end
 
+
   def update_achievements
-    puts "CHECK ACHIEVEMENT ", self.to_json
     new_ach = false
     self.course.achievements.each do |ach|
       new_ach ||= self.check_achievement(ach)
@@ -162,16 +184,21 @@ class UserCourse < ActiveRecord::Base
   def check_achievement(ach, should_notify=true)
     # verify if users will win achievement ach
     uach = UserAchievement.find_by_user_course_id_and_achievement_id(id, ach.id)
-    fulfilled = false
-    unless uach
+    changed = false
+    if uach
+      if !ach.fulfilled_conditions?(self) and ach.auto_assign?
+        remove_achievement(ach)
+        changed = true
+      end
+    else
       # not earned yet, check this achievement
       if ach.fulfilled_conditions?(self)
         # assign the achievement to student
-        fulfilled = true
+        changed = true
         self.give_achievement(ach, should_notify)
       end
     end
-    fulfilled
+    changed
   end
 
   def give_achievement(ach, should_notify=true)
@@ -179,6 +206,7 @@ class UserCourse < ActiveRecord::Base
     unless uach
       uach = self.user_achievements.build
       uach.achievement = ach
+      uach.assign_obtained_date
       if should_notify && self.is_student? && !self.is_phantom?
         Activity.earned_smt(self, ach)
         Notification.earned_achievement(self, ach)
@@ -192,17 +220,6 @@ class UserCourse < ActiveRecord::Base
     if uach
       uach.destroy
     end
-  end
-
-  def create_all_std_tags
-    # in case there are tags that are not associated with the student, create new std_tag record
-    self.course.tags.each do |tag|
-      std_tag = self.std_tags.find_by_tag_id(tag.id)
-      if not std_tag
-        self.std_tags.build( { tag_id: tag.id, exp: 0 } )
-      end
-    end
-    self.save
   end
 
   def init
@@ -279,7 +296,7 @@ class UserCourse < ActiveRecord::Base
     self.user_achievements.order('created_at desc').first(6)
   end
 
-private
+  private
   # @param [Array] An array of objects which will be marked as seen
   def mark_as_seen_array(objs)
     return if objs.empty?

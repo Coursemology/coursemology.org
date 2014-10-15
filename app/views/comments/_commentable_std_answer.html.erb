@@ -1,18 +1,16 @@
-<% sbm_answer = std_answer.sbm_answers.first %>
-<% submission = sbm_answer ? sbm_answer.sbm : nil %>
-<% if !submission %>
+<% submission = std_answer.submission %>
+<% unless submission %>
     <% return %>
 <% end %>
 
 <% question = std_answer.question %>
-<% asm_qn = question.asm_qns.first %>
-<% pos = asm_qn ? asm_qn.pos : 0 %>
-<% mission = asm_qn ? asm_qn.asm : nil %>
+<% asm_qn = question.question_assessments.first %>
+<% pos = asm_qn ? asm_qn.position : 0 %>
+<% mission = asm_qn ? asm_qn.assessment : nil %>
 <% std_course = std_answer.std_course %>
 
-<input type="hidden" id="submission_url_<%=ecid%>" value="<%= course_mission_submission_url(@course, mission, submission) %>">
-<div class="mission-box" href="<%= course_mission_submission_url(@course, mission, submission) %>">
-  <!--<img class="small-mission-pic" width="54" height="54" src="public/images/mission_icons/mission22_small.jpg">-->
+<input type="hidden" id="submission_url_<%=ecid%>" value="<%= course_assessment_submission_url(@course, mission, submission) %>">
+<div class="mission-box" href="<%= course_assessment_submission_url(@course, mission, submission) %>">
   <div class="title"><%= mission.title.html_safe %></div>
   <div class="student"><label>by:</label><span class="student-link">
     <a href="<%= course_user_course_path(@course, std_course) %>"><%= std_course.name %></a>

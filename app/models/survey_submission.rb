@@ -3,7 +3,7 @@ class SurveySubmission < ActiveRecord::Base
   attr_accessible :user_course_id, :survey_id, :open_at, :submitted_at, :status, :current_qn
 
   belongs_to :user_course
-  belongs_to :survey
+  belongs_to :survey, class_name: "Survey"
   has_many   :survey_mrq_answers, dependent: :destroy
   has_many   :survey_essay_answers, dependent: :destroy
   belongs_to :exp_transaction
@@ -56,7 +56,12 @@ class SurveySubmission < ActiveRecord::Base
     self.status == 'submitted'
   end
 
+  def answer_count
+    self.survey_mrq_answers.select(:question_id).uniq.count +
+    self.survey_essay_answers.select(:question_id).uniq.count
+  end
+
   def done?
-    (self.current_qn || 1) > self.survey.survey_questions.count
+    answer_count >= self.survey.survey_questions.count
   end
 end

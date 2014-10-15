@@ -21,6 +21,7 @@
 //= require angular-ui-sortable-rails
 //= require jquery.validate
 //= require jquery.validate.additional-methods
+//= require jquery-tmpl
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -28,6 +29,7 @@
 //= require bootstrap-button
 //= require bootstrap-tab
 //= require bootstrap-tooltip
+//= require bootstrap-popover
 //= require bootstrap-affix
 //= require bootstrap-scrollspy
 //
@@ -49,6 +51,7 @@
 //= require cocoon
 //
 //= require_self
+//= require_tree ./templates
 //= require_tree .
 
 $(document).ready(function() {
@@ -246,6 +249,10 @@ $(document).ready(function() {
     $(".sort tbody").sortable({
         helper: fixHelper
     }).disableSelection();
+
+    $('.team_popover').popover({ 
+        trigger: "hover"
+    });
 });
 
 // Define our framework for implementing client-side form validation.
@@ -406,3 +413,15 @@ function event_log(category, label, action, push){
         _gaq.push(['_trackEvent',category, action, label]);
     }
 }
+
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+};

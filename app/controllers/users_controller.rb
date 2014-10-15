@@ -55,7 +55,7 @@ class UsersController < ApplicationController
     @user.is_pending_deletion = true
     @user.save
     UserMailer.delay.user_deleted(@user.name, @user.email)
-    Delayed::Job.enqueue(BackgroundJob.new(0, "DeleteUser", "User", @user.id))
+    Delayed::Job.enqueue(BackgroundJob.new(0, :delete_user, User.name, @user.id))
     respond_to do |format|
       flash[:notice] = "'#{@user.name}' is pending for deletion."
       redirect_url = params[:origin] || courses_url

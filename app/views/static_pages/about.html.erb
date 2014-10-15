@@ -1,8 +1,220 @@
-<p>
-Coursemology is a free educational platform. Our goal is to help teachers
-bring fun and engage students in learning!
-</p>
-<p>
-Become a lecturer and integrate the fun into your class!
-</p>
-<a href="<%= new_role_request_path %>" class="btn btn-primary">Request to be a lecturer</a>
+<meta name="viewport" content="width=device-width">
+
+<div class="hero-unit about_quote">
+	<div class="row-fluid">
+		<div class="pagination-centered">
+			<h1>"Learning should be easy and fun."</h1>
+			<p>We are working hard to realise this dream.</p>
+		</div>
+	</div>
+</div>
+
+<div class="row-fluid">
+	<div class="span2"></div>
+	<div class="span8 about_wrapper">
+		<div class="row-fluid" id="story">
+			<div class="about_us">
+				<h2>Our Story</h2>
+				<div class="row-fluid">
+					<div class="span2"></div>
+					<div class="span8">
+						<p>
+							Coursemology is a gamified learning platform, built by teachers, for teachers. Based in Singapore, Coursemology is built to allow teachers do what they do best - <em>Teach</em>. <br><br> <u>Our Vision</u>: To make Technology Easy for Educators, Increase Student Engagement and Make Learning Fun!
+						</p>
+					</div>
+					<div class="span2"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid" id="instructors">
+			<div class="about_us">
+				<h2>Instructors</h2>
+				<div class="row-fluid">
+					<div class="span2"></div>
+					<div class="span8">
+						<p>
+							Coursemoloy provides powerful features to enhance teaching producitivity and effectiveness. Developed with actual users, Coursemology is used and loved by both teachers and students. 
+						</p>
+					</div>
+					<div class="span2"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span1"></div>
+			<div class="span10">
+				<div class="span4 about_us features">
+					<img src="/images/feature-analytics.png" class="about_img">
+					<h4>Teaching analytics at all levels</h4>
+				</div>
+				<div class="span4 about_us features">
+					<img src="/images/feature-ui.png" class="about_img">
+					<h4>Intuitive user interface</h4>	
+				</div>
+				<div class="span4 about_us features">
+					<img src="/images/feature-gamify.png" class="about_img">
+					<h4>Gamify the learning experience</h4>
+				</div>
+			</div>
+			<div class="span1"></div>
+		</div>
+		<br>
+		<div class="row-fluid">
+			<div class="span2"></div>
+			<div class="about_us span8">
+				<%# Can consider adding in some student/teacher reviews.	%>
+				<p>
+					To get started, sign up as an instructor to teach a course on Coursemology!
+				</p>
+				<div class="row-fluid">
+					<div class="span2"></div>
+					<div class="span8">
+						<p>
+							<a href="<%= new_role_request_path %>" class="btn btn-large btn-success btn-block about_signup_button">
+								Request to be an Instructor
+							</a>
+						</p>
+					</div>
+					<div class="span2"></div>
+				</div>
+			</div>
+			<div class="span2"></div>
+		</div>
+
+		<div class="row-fluid" id="team">
+			<div class="about_us">
+				<h2>
+					Meet the Team
+				</h2>
+				<div class="row-fluid">
+					<div class="span2"></div>
+					<div class="span8">
+						<div class="row-fluid team_members">
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-content="The Boss - the one who decided that it was good to build Coursemology!"
+									data-title="Ben Leong">
+									<img src="http://www.gravatar.com/avatar/c64ec3db451c18cd2217bcacb43970da?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/benleong" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-content="Raymoond is a passionate Web and Mobile platform developer, and is skilled in Rails and iOS development. He has great interests in teaching, and using technology to transform education." 
+									data-title="Raymoond Tang">
+									<img src="http://www.gravatar.com/avatar/cf646db90dfe75565fcf38e7c42cc4b5?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/raymondtangsc" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
+
+							<div class="span2 about_us">
+								<a class="team_popover"
+									data-content="Joel is a third-year undergraduate student at the National University of Singapore. He has worked on a large variety of projects, spanning system security, developer tools, utilities, line-of-business applications and even the Linux kernel." 
+									data-title="Joel Low">
+									<img src="https://s.gravatar.com/avatar/157127ea0cb407f9d190fa2850b6cfb3?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/lowjoel" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-html="true"
+									data-content="🏃🐗🔨🔪🔫💉🚀"
+									data-title="Jason Yeo">
+									<img src="http://www.gravatar.com/avatar/df4e511ca1ecf66a86a231d7bc728d07?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/jsyeo" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-content="A driven and creative person, Yang Shun's main passions lie in coding, designing and teaching. Having spent a year in Silicon Valley as a Software Engineering intern at a bay area startup, he has experience in web development, mobile development and design. He also likes to impart knowledge to others and has found interest in teaching, actively serving as a tutor in school." 
+									data-title="Tay Yang Shun">
+									<img src="http://www.gravatar.com/avatar/66eca275a85a6a0c06b0a0f7039b074b?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/yangshun" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-content="Hung always wants to develop software that is beneficial for its users. He believes Coursemology will help students enjoy learning and achieve higher result in learning. He also like drawing and reading books" 
+									data-title="Hung Doan">
+									<img src="http://www.gravatar.com/avatar/68b4ed657ecc33c96dd02730556fb41e?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/manhhung741" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>	
+						</div>
+						<div class="row-fluid team_members">
+
+							<div class="span2 about_us">
+								<a class="team_popover" 
+									data-content="I'm a graduate student from Sichuan University, working full-time on coursemology. I have experience in mobile development. In addition, I'm also a hardware guy and am interested in all things digital and electronic." 
+									data-title="Wang Qiang">
+									<img src="http://www.gravatar.com/avatar/0916fd2eee2aaa87d6a59cf579bed887?s=70" class="about_profile_pic">
+								</a>
+								<br>
+								<a href="https://github.com/rovingbreeze" target="_blank">
+									<i class="icon-github icon-2x"></i>
+								</a>
+							</div>	
+
+							<%# Add in new developers within this section. %>
+						</div>					
+					</div>
+					<div class="span2"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid" id="contribution">
+			<div class="about_us">
+				<h2>Contributions</h2>
+				<div class="row-fluid">
+					<div class="span2"></div>
+					<div class="span8">
+						<p>
+							We always strive to make Coursemology better - with your help! Do send us suggestions on features or bug reports using <a href="https://github.com/Coursemology/coursemology.org/issues?state=open" target="_blank" class="about_link">Github Issues</a>. It would be advisable to check if similar issues are open and being worked on to avoid duplication. 
+						</p>
+						<p>
+							Coursemology is currently supported by teaching grants from the National University of Singapore.	Developers interested in contributing are welcome - please get started at <a href="https://github.com/Coursemology/coursemology.org" target="_blank" class="about_link">Github</a>!
+						</p>
+						<p>
+							<iframe src="http://ghbtns.com/github-btn.html?user=Coursemology&repo=coursemology.org&type=watch&count=true"
+						  allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+							<iframe src="http://ghbtns.com/github-btn.html?user=Coursemology&repo=coursemology.org&type=fork&count=true"
+						  allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+						</p>
+						<br><br>
+						<p class="about_license">
+							Coursemology.org's source code is released under the <a href="http://opensource.org/licenses/MIT" target="_blank" class="about_link">MIT License</a>.
+						</p>
+					</div>
+					<div class="span2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="span2"></div>
+</div>

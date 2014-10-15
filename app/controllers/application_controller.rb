@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   skip_before_filter  :verify_authenticity_token
 
   rescue_from CanCan::AccessDenied do |exception|
-
     unless current_user
       session[:request_url] = request.url
     end
@@ -33,7 +32,7 @@ class ApplicationController < ActionController::Base
     atts = []
     atts << ThemeAttribute.find_by_name('Background Color')
     atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Custom CSS')
+    atts << ThemeAttribute.find_by_name('Cust om CSS')
     # atts << ThemeAttribute.find_by_name('Announcements Icon')
     # atts << ThemeAttribute.find_by_name('Missions Icon')
     # atts << ThemeAttribute.find_by_name('Trainings Icon')
@@ -43,8 +42,10 @@ class ApplicationController < ActionController::Base
 
     @theme_settings = {}
     atts.each do |att|
-      ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
-      @theme_settings[att.name] = ca.value
+      if att
+        ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+        @theme_settings[att.name] = ca.value
+      end
     end
 
     theme = @course.course_themes.first
@@ -72,7 +73,7 @@ class ApplicationController < ActionController::Base
     end
 
     #TO REMOVE
-    if can? :manage, Course
+    if can? :manage, @course
 
       general_items <<    {
           item: "pending_gradings",
@@ -94,47 +95,51 @@ class ApplicationController < ActionController::Base
                               icon: "icon-group"
                           }]
     end
-    admin_nav_items + [{
-                            text: "Manage Users",
-                            url:  main_app.course_manage_students_url(@course),
-                            icon: "icon-user"
-                        },{
-                            text: "Student Summary",
-                            url:  main_app.course_student_summary_url(@course),
-                            icon: "icon-user"
-                        },{
-                            text: "Staff Summary",
-                            url: main_app.course_staff_monitoring_path(@course),
-                            icon: "icon-trophy"
-                        },{
-                            text:   "Levels",
-                            url:    main_app.course_levels_url(@course),
-                            icon:   "icon-star-empty"
-                        },{
-                            text: "Tags",
-                            url: main_app.course_tags_url(@course),
-                            icon: "icon-tags"
-                        },{
-                            text: "Award Give-away",
-                            url: main_app.course_manual_exp_url(@course),
-                            icon: "icon-star"
-                        }, {
-                            text: "Statistics",
-                            url: main_app.course_stats_url(@course),
-                            icon: "icon-bar-chart"
-                        },{
-                            text: "Enrollment",
-                            url: main_app.course_enroll_requests_url(@course),
-                            icon: "icon-bolt"
-                        }, {
-                            text: "Duplicate Data",
-                            url: main_app.course_duplicate_url(@course),
-                            icon: "icon-bolt"
-                        }, {
-                            text: "Settings",
-                            url: main_app.course_preferences_path(@course),
-                            icon: "icon-cog"
-                        }]
+    admin_nav_items += [{
+                           text: "Manage Users",
+                           url:  main_app.course_manage_students_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Student Summary",
+                           url:  main_app.course_student_summary_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Staff Summary",
+                           url: main_app.course_staff_monitoring_path(@course),
+                           icon: "icon-trophy"
+                       },{
+                           text:   "Levels",
+                           url:    main_app.course_levels_url(@course),
+                           icon:   "icon-star-empty"
+                       },{
+                           text: "Tags",
+                           url: main_app.course_tags_url(@course),
+                           icon: "icon-tags"
+                       },{
+                           text: "Award Give-away",
+                           url: main_app.course_manual_exp_url(@course),
+                           icon: "icon-star"
+                       }, {
+                           text: "Statistics",
+                           url: main_app.course_stats_url(@course),
+                           icon: "icon-bar-chart"
+                       },{
+                           text: "Enrollment",
+                           url: main_app.course_enroll_requests_url(@course),
+                           icon: "icon-bolt"
+                       }, {
+                           text: "Duplicate Data",
+                           url: main_app.course_duplicate_url(@course),
+                           icon: "icon-bolt"
+                       }]
+    if can? :manage, :course_admin
+      admin_nav_items << {
+          text: "Settings",
+          url: main_app.course_preferences_path(@course),
+          icon: "icon-cog"
+      }
+    end
+    admin_nav_items
   end
 
 
@@ -143,7 +148,7 @@ class ApplicationController < ActionController::Base
     # home
     @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course ? curr_user_course.role_id : 0}") { sidebar_general_items }
 
-    if can? :manage, Course
+    if can? :manage, @course
       @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
     end
   end
@@ -212,13 +217,13 @@ class ApplicationController < ActionController::Base
         url = main_app.course_announcements_path(@course)
         icon = 'icon-bullhorn'
       when 'missions'
-        url = main_app.course_missions_url(@course)
+        url = main_app.course_assessment_missions_url(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = main_app.course_trainings_path(@course)
+        url = main_app.course_assessment_trainings_url(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
-        url = main_app.course_submissions_path(@course)
+        url = main_app.submissions_course_assessment_missions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
         url = main_app.course_achievements_url(@course)

@@ -518,14 +518,6 @@ if PreferableItem.count == 56
 
 end
 
-if AssignmentType.count == 0
-  AssignmentType.create!  title:        "Main",
-                          description:  "Main mission or training"
-
-  AssignmentType.create! title:         "Extra",
-                         description:   "Extra mission or training"
-end
-
 if SurveyQuestionType.count == 0
   SurveyQuestionType.create! title:         "MCQ",
                              description:   "Multiple Choice Question"
@@ -726,4 +718,23 @@ if NavbarPreferableItem.count == 12
                                is_enabled: false,
                                description: "course comics",
                                pos: 13
+end
+
+
+if ProgrammingLanguage.count == 0
+  ProgrammingLanguage.create!({name: "Python",
+                              codemirror_mode: "python",
+                              version:  "3.3",
+                              cmd: "python3.3"}, :without_protection => true)
+
+
+end
+
+if ProgrammingLanguage.count == 1
+  ProgrammingLanguage.create!({name: "Python",
+                               codemirror_mode: "python",
+                               version:  "3.4",
+                               cmd: "python3.4"}, :without_protection => true)
+
+
 end

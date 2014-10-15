@@ -47,7 +47,9 @@ class SurveySubmissionsController < ApplicationController
       return
     end
 
-    if @survey.has_section?
+    if @survey.is_contest?
+      submit_single_question
+    else
       answers = {}
       params[:answers].each do |vals|
         qn = @survey.questions.where(id: vals.first).first
@@ -62,7 +64,7 @@ class SurveySubmissionsController < ApplicationController
             essay.text = answers[qn]
             essay.save
           else
-            essay.destory
+            essay.destroy
           end
         else
           #TODO: improve
@@ -103,8 +105,6 @@ class SurveySubmissionsController < ApplicationController
                                    notice: "Survey status has been saved."}
         end
       end
-    else
-      submit_single_question
     end
   end
 
@@ -139,8 +139,8 @@ class SurveySubmissionsController < ApplicationController
 
     question = @survey.survey_questions.where(id:params[:question]).first
     options = params[:option].keys.map {|k| k.to_i}
-    if question.max_response < options.count
-      flash[:error] ="Max response allowed is #{question.max_response}, but #{options.count} have been selected."
+    if question.max_choices < options.count
+      flash[:error] = "Max response allowed is #{question.max_choices}, but #{options.count} have been selected."
     else
       answers = question.survey_mrq_answers.where(user_course_id:curr_user_course)
 
@@ -155,18 +155,15 @@ class SurveySubmissionsController < ApplicationController
         answer = question.survey_mrq_answers.build
         answer.option_id = id
         answer.user_course = curr_user_course
+        answer.survey_submission = @survey_submission
         answer.save
         answer.option.increase_count
       end
 
       step += 1
-      if answers.count == 0
-        @survey_submission.current_qn = (@survey_submission.current_qn || 1) + 1
-        @survey_submission.save
 
-        if @survey_submission.done?
-          @survey_submission.set_submitted
-        end
+      if @survey_submission.done?
+        @survey_submission.set_submitted
       end
     end
     respond_to do |format|

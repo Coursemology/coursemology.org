@@ -616,3 +616,145 @@ label.error a.emailWarning,label.error a.numberWarning {
   color: red;
   font-weight: bold;
 }
+
+.about_quote {
+  background-color: #f2f2f2;
+  margin-bottom: 0;
+
+  h1 {
+    font-size: 49px;
+    font-weight: 300;
+    padding-bottom: 10px;
+  }
+
+  p {
+    font-size: 20px;
+    font-weight: 300;
+  }
+}
+
+
+.about_wrapper {
+  border-radius: 20px;
+}
+
+.about_us {
+  margin:0 auto;
+  float:none;
+  text-align: center;
+
+  h2 {
+    font-size: 30px;
+    font-family: 'lato', 'sans-serif';
+    font-weight: bold;
+    padding-top: 30px;
+    padding-bottom: 5px;
+    margin: 15px 0;
+    text-transform: uppercase;
+    &:hover {
+      text-decoration: underline;  
+    }
+  }
+
+  p {
+    font-size: 16px;
+    font-family: 'lato', 'sans-serif';
+    letter-spacing: 0.4px;
+    padding: 5px 0;
+    text-align: center;
+    line-height: 1.8;
+  }
+}
+
+.about_signup_button {
+  height: 40px;
+  font-size :120%;
+  padding-top: 5px;
+  vertical-align: middle;
+}
+
+.about_img {
+  box-shadow: 0 0 5px #999999;
+  margin-bottom: 5px;
+}
+
+.features {
+  margin-top: 5px;
+  
+  h4 {
+    font: {
+      size: 16px;
+      weight: normal;
+      style: oblique;
+    }
+    color: #575757;
+    padding-bottom: 5px;
+  }
+}
+
+.about_profile_pic {
+  border-radius: 50px;
+  align: middle;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #777777;
+}
+
+.team_members {
+  margin-bottom: 10px;
+}
+
+.team_popover {
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.icon-github {
+  color: #404040;
+  padding-bottom: 10px;
+}
+
+.popover {
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2)
+}
+
+.popover-title {
+  text-align: center;
+  font-weight: bolder;
+  font-size: large;
+  background-color: #3d3d3d;
+  color: #ffffff;
+  border-radius: 10px 10px 0 0;
+}
+
+.popover-content {
+  border-radius: 10px;
+  text-align: center;
+}
+
+p.about_license {
+  font-size: small;
+}
+
+.about_link {
+  color: initial;
+  text-decoration: underline;
+}
+
+.terms_of_service {
+  font-size: 110%;
+  font-family: 'lato', 'sans-serif';
+
+  strong {
+    text-transform: uppercase;  
+  }
+
+  p {
+    padding-top: 1px;
+  }
+
+  h3 {
+    padding-top: 1em;
+  }
+}

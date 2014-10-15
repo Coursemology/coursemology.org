@@ -1,8 +1,7 @@
 <div class="page-header">
   <h1>Training Statistics: <span style="font-style: italic; font-weight: normal"><%= @training.title %></span> </h1>
   <%= link_to "Click here",
-              course_submissions_path(@course, asm: {id: @training.id,
-                                                     type: @training.class.name}.to_json),
+              submissions_course_assessment_trainings_path(@course, asm: @training.assessment.id),
               method: "GET" %>
   to review all submission for this training.
 </div>
@@ -22,7 +21,7 @@
   </tr>
   <% @summary[:progress].each do |current_step, sbms| %>
       <tr>
-        <td><%= current_step > @training.asm_qns.count ? 'Finished' : current_step %></td>
+        <td><%= current_step > @training.questions.count ? 'Finished' : current_step %></td>
         <td><%= sbms.size %></td>
         <td>
           <% sbms.each do |sbm| %>
@@ -67,26 +66,10 @@
   </thead>
   <tbody>
   <% @training.questions.each_with_index do |qn, i| %>
-      <% if qn.class == Mcq && qn.select_all? %>
-          <% next %>
-      <% end %>
       <tr>
         <td style="text-align: center"><a href="#question_<%= i + 1%>"> <%= i + 1 %></a></td>
         <td style="text-align: center">
-          <% wrong = 0 %>
-          <% total = 0 %>
-          <% if qn.class == CodingQuestion %>
-              <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]) %>
-              <% wrong = answers.where(is_correct:false).length %>
-              <% total = answers.length %>
-          <% else %>
-              <% qn.mcq_answers.each do |choice| %>
-                  <% ans_no = choice.std_mcq_answers.where(std_course_id:@summary[:student_courses]).length %>
-                  <% wrong += choice.is_correct ? 0 : ans_no %>
-                  <% total += ans_no %>
-              <% end %>
-          <% end %>
-          <strong style="color: red"> <%= wrong %> </strong> / <%= total %>
+          <strong style="color: red"> <%= qn.answers.where(correct: false).count %> </strong> / <%= qn.answers.count %>
         </td>
       </tr>
   <% end %>
@@ -101,18 +84,18 @@
         <strong><%= i + 1 %>. </strong>
         <%= style_format qn.description %>
       </div>
-      <% if qn.class == Mcq %>
+      <% if qn.specific.class == Assessment::McqQuestion %>
           <table class="table" style="margin: 10px; margin-left: 50px; width: auto; min-width: 90%">
             <colgroup>
               <col width="5%"/>
               <col width="35%"/>
               <col width="5%"/>
             </colgroup>
-            <% qn.mcq_answers.each do |choice| %>
-                <% uniq_stds = choice.std_mcq_answers.where(std_course_id:@summary[:student_courses]).includes(:std_course).map {|ans| ans.std_course }.uniq %>
+            <% qn.options.each do |opt| %>
+                <% uniq_stds = opt.uniq_std(@course).uniq %>
                 <tr>
-                  <td><input type="checkbox" disabled <%= "checked" if choice.is_correct %> /></td>
-                  <td><%= choice.text %></td>
+                  <td><input type="checkbox" disabled <%= "checked" if opt.correct %> /></td>
+                  <td><%= opt.text %></td>
                   <td><%= uniq_stds.size %></td>
                   <td>
                     <% uniq_stds.each do |std| %>
@@ -123,19 +106,19 @@
             <% end %>
           </table>
       <% else %>
-          <% answers = qn.std_coding_answers.where(std_course_id: @summary[:student_courses]).order(:std_course_id) %>
+          <% answers = qn.answers.where(std_course_id: @summary[:student_courses]).order(:std_course_id) %>
           <div style="margin: 10px; margin-left: 50px;">
-            Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(is_correct:false).length %> </strong> / <%= answers.length %>
+            Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(correct:false).length %> </strong> / <%= answers.length %>
             <a class="btn" data-toggle="collapse"  href="#code<%= i + 1%>">Click To Expand / Collapse Code</a>
           </div>
           <div id="code<%= i + 1%>" class="collapse out">
             <% answers.each_with_index do |ans, index| %>
-                <div class="code-review-header <%= ans.is_correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>" style="margin-left: 50px">
+                <div class="code-review-header <%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>" style="margin-left: 50px">
                   <%= index + 1 %> : <%= ans.std_course.name %>
                   <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
                 </div>
                 <div style="margin-left: 60px">
-                  <%= style_format('[mc]' + ans.code + '[/mc]', false) %>
+                  <%= style_format('[mc]' + ans.content + '[/mc]', false) %>
                 </div>
             <% end %>
           </div>

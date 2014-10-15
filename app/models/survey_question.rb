@@ -1,5 +1,6 @@
 class SurveyQuestion < ActiveRecord::Base
   acts_as_paranoid
+  acts_as_sortable column: :pos
   default_scope { order("pos") }
   attr_accessible :type_id,:survey_id, :survey_section_id, :description, :max_response, :publish, :is_required
 
@@ -12,6 +13,10 @@ class SurveyQuestion < ActiveRecord::Base
   has_many :survey_mrq_answers, foreign_key: "question_id"
   has_many :survey_essay_answers, :foreign_key => "question_id"
   has_many :files, through: :options
+
+  amoeba do
+    include_field :options
+  end
 
   def user_answered?(user_course)
     answers = answer_for_user(user_course)
@@ -40,5 +45,9 @@ class SurveyQuestion < ActiveRecord::Base
 
   def is_essay?
     type == SurveyQuestionType.Essay.first
+  end
+
+  def max_choices
+    max_response || 1
   end
 end

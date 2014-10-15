@@ -29,7 +29,7 @@
       <a href="#post-<%= post.id %>"><%= post.title %></a>
     </h4>
 
-    <%= CoursemologyFormatter.sanitize(post.text).html_safe %>
+    <%= CoursemologyFormatter.style_format(post.text) %>
 
     <div class="info">
       <div class="pull-right">

@@ -2,7 +2,9 @@ class User < ActiveRecord::Base
   acts_as_paranoid
   acts_as_voter
 
-  default_scope where(:is_pending_deletion => false)
+  #TODO
+  # default_scope where(:is_pending_deletion => false)
+  default_scope includes(:system_role)
 
   before_create :set_default_role
   before_create :set_default_profile_pic
@@ -33,11 +35,23 @@ class User < ActiveRecord::Base
   belongs_to :system_role, class_name: "Role"
 
   def is_admin?
-    self.system_role == Role.find_by_name('superuser')
+    self.system_role && self.system_role.name == 'superuser'
   end
 
   def is_lecturer?
-    self.is_admin? || self.system_role == Role.find_by_name('lecturer')
+    self.is_admin? || (self.system_role && self.system_role.name == 'lecturer')
+  end
+
+  def can_publish_to_fb?(fb_access_token)
+    graph = Koala::Facebook::API.new(fb_access_token)
+    permissions = graph.get_connections("me", "permissions")
+    # check for publish_actions, permissions is of class GraphCollection
+    # which extends Array, so need to index it first to get the hash
+    !permissions[0]["publish_actions"].nil?
+  end
+
+  def show_fb_achievement_share_button?(fb_access_token)
+    can_publish_to_fb?(fb_access_token) || fb_publish_actions_request_count < 3
   end
 
   def self.admins
@@ -101,13 +115,13 @@ class User < ActiveRecord::Base
   end
 
   def use_default_photo_pic?
-    return self.profile_photo_url ==
+    self.profile_photo_url ==
         'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
   end
 
   def self.search(search, role = nil)
     search_condition = "%" + search.downcase + "%"
-    result = User.where(['lower(name) LIKE ? OR lower(email) LIKE ?', search_condition, search_condition])
+    result = User.where(['lower(users.name) LIKE ? OR lower(users.email) LIKE ?', search_condition, search_condition])
     if role
       result = result.where(system_role_id: role)
     end
@@ -133,7 +147,6 @@ class User < ActiveRecord::Base
   end
 
   def auto_enroll_for_invited(confirm_token = nil)
-    puts "auto enroll", email, confirm_token
     invs = MassEnrollmentEmail.where(email: self.email)
     if !invs.first and confirm_token
       invs = MassEnrollmentEmail.where(confirm_token: confirm_token)

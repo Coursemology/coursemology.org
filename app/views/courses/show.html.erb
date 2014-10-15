@@ -68,10 +68,10 @@
               <td style="vertical-align: middle"><%= date_mdY(item.close_at) %></td>
               <td style="vertical-align: middle"><%= item.current_exp %></td>
               <td style="vertical-align: middle">
-                <% if item.class == Mission %>
-                    <%= render partial: "missions/action", locals: {mission: item, event_label: "PendingActions"} %>
-                <% elsif item.class == Training %>
-                    <%= render partial: "trainings/action", locals: {training: item, event_label: "PendingActions"} %>
+                <% if item.is_a? (Assessment::Mission) %>
+                    <%= render partial: "assessment/missions/action", locals: {ast: item, event_label: "PendingActions"} %>
+                <% elsif item.is_a?(Assessment::Training) %>
+                    <%= render partial: "assessment/trainings/action", locals: {ast: item, event_label: "PendingActions"} %>
                 <% elsif item.class == Survey %>
                     <%= render partial: "surveys/action", locals:{survey: item, event_label: "PendingActions"} %>
                 <% end %>

@@ -1,8 +1,8 @@
 <div class="page-header">
   <h1>Course Statistics</h1>
 </div>
-<h3>Assignment</h3>
-<p>View detail statistics of each assignment:</p>
+<h3>Assessment</h3>
+<p>View detail statistics of each assessment:</p>
 <table class="table-basic">
   <tr>
     <td>Mission</td>
@@ -71,7 +71,7 @@
       <% no = std_ucs.count  %>
       <% if no > 0 %>
           <tr>
-            <td><img src="<%= ach.icon_url %>" /></td>
+            <td><img class="achievement-icon" src="<%= ach.icon_url %>" /></td>
             <td><%= ach.title %></td>
             <td><%= no %></td>
             <td>

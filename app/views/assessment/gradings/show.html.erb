@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h1>Grading :  <%= @assessment.title %></h1>
+</div>
+<% require 'digest/md5' %>
+<table class="table table-bordered" style="width: 300px">
+  <tbody class="table-hover">
+  <tr><td style="width: 100px">Student: </td><td><%= render partial: 'layouts/user_name_link', locals: {user_course: @submission.std_course}%></td></tr>
+  <tr><td>Status:</td><td><strong><%= @submission.status  %></strong></td></tr>
+  <% if @grading %>
+      <tr>
+        <td>Total grade: </td>
+        <td>
+          <%= @grading.grade %> / <%= @assessment.max_grade %>
+          <% if curr_user_course.is_staff? %>
+              <%= link_to 'Update',
+                          edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
+              %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Total EXP: </td>
+        <td>
+          <%= @grading.exp %> / <%= @assessment.exp %>
+        </td>
+      </tr>
+      <tr><td>Grader: </td><td><%= @grading.grader.name if @grading.grader %></td></tr>
+      <tr>
+        <td>Graded at:</td><td><%=  datetime_format(@grading.created_at) %></td>
+      </tr>
+  <% end %>
+  <% if @submission.submitted? || @submission.graded? %>
+      <tr><td>Submitted at:</td><td><%= datetime_format(@submission.submitted_at || @submission.updated_at) %> </td></tr>
+  <% end %>
+  <tr><td>Due on:</td><td><%= datetime_format @assessment.close_at %></td></tr>
+  </tbody>
+</table>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @assessment}%>
+
+<%= render partial: "file_uploads/download_files",
+           locals: {owner: @submission}%>
+<hr/>
+
+<div class="well"><%= @assessment.description.html_safe %></div>
+
+
+
+<% if @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
+    <%= render :partial => 'single_question_form', locals: {mode: "view"} %>
+<% else %>
+    <%= render :partial => 'multiple_question_form', locals: {mode: "view"} %>
+<% end %>

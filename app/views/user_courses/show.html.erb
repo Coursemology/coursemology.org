@@ -40,7 +40,7 @@
     <h3>Achievements</h3>
     <br/>
     <ul class="thumbnails">
-      <% @user_course.user_achievements.each do |uach| %>
+      <% @user_course.user_achievements.includes(:achievement).each do |uach| %>
           <li class="profile-achievement-icon">
             <a href="<%= course_achievement_path(@course, uach.achievement) %>"
                rel="tooltip"
@@ -54,32 +54,36 @@
 <% end %>
 
 <% if @user_course.is_student? && @course.tags.count > 0 %>
+    <% tag_exp = @course.tags.max_exp %>
+    <% tag_exp_earned = @course.tags.exp_earned(@user_course) %>
     <h3>Topic Mastery</h3>
     <br/>
-    <table class="table span6">
+    <table class="table span6 table-hover">
       <colgroup>
         <col width="30%">
         <col width="50%">
       </colgroup>
-      <% prev_tag = nil %>
-      <% @std_tags.each do |std_tag| %>
-          <% if !prev_tag || std_tag.tag.tag_group_id != prev_tag.tag.tag_group_id %>
+      <% @tag_groups.each do |tg| %>
+          <% next if tg.tags.length <= 0 %>
+          <tr class="well">
+            <td colspan="5"><strong><%= tg.name %></strong></td>
+          </tr>
+          <% tg.tags.each do |tag| %>
+              <% earned = tag_exp_earned[tag.id].to_i %>
+              <% max = tag_exp[tag.id].to_i %>
+              <% earned =[earned, max].min %>
               <tr>
-                <td><strong><%= std_tag.tag.tag_group.name if std_tag.tag.tag_group %></strong></td>
+                <td><%= link_to tag.name, course_tag_path(@course, tag) %></td>
+                <td>
+                  <div class="progress" style="margin-bottom: 3px">
+                    <div class="bar bar-success" style="width: <%= max == 0 ? 0 : earned / max.to_f * 100%>%"></div>
+                  </div>
+                </td>
+                <td><%= tag_exp_earned[tag.id].to_i %></td>
+                <td>/</td>
+                <td><%= tag_exp[tag.id].to_i %></td>
               </tr>
           <% end %>
-          <% prev_tag = std_tag %>
-          <tr>
-            <td><%= link_to std_tag.tag.name, course_tag_path(@course, std_tag.tag) %></td>
-            <td>
-              <div class="progress" style="margin-bottom: 3px">
-                <div class="bar bar-success" style="width: <%= std_tag.get_completion_percentage %>%"></div>
-              </div>
-            </td>
-            <td><%= std_tag.exp %></td>
-            <td>/</td>
-            <td><%= std_tag.tag.max_exp %></td>
-          </tr>
       <% end %>
     </table>
 <% end %>

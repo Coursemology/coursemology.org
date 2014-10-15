@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   load_and_authorize_resource
-  before_filter :load_general_course_data, only: [:show, :students, :edit, :pending_gradings, :manage_students]
+  before_filter :load_general_course_data, only: [:show, :students, :pending_gradings, :manage_students]
 
   def index
     @courses = Course.online_course
@@ -18,7 +18,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save  && user_course.save
-        format.html { redirect_to edit_course_path(@course),
+        format.html { redirect_to course_preferences_path(@course),
                                   notice: "The course '#{@course.title}' has been created." }
       else
         format.html { render action: "new" }
@@ -65,7 +65,7 @@ class CoursesController < ApplicationController
       elsif params[:course_owner]
         format.json {render json:  {course:@course, owner: @course.creator.name } }
       elsif @course.update_attributes(params[:course])
-        format.html { redirect_to edit_course_path(@course),
+        format.html { redirect_to course_preferences_path(@course),
                                   notice: 'Course setting has been updated.' }
       else
         format.html { render action: "edit" }
@@ -106,8 +106,9 @@ class CoursesController < ApplicationController
         @activities = @course.activities.order("created_at DESC").first(@course.home_activities_no_pref.prefer_value.to_i)
       end
 
+      #TODO
       @pending_actions = curr_user_course.pending_actions.includes(:item).to_show.
-          select { |pa| pa.item.publish? && pa.item.open_at < Time.now }.
+          select { |pa| pa.item.published? && pa.item.open_at < Time.now }.
           sort_by {|pa| pa.item.close_at || Time.now }.first(3)
 
       respond_to do |format|
@@ -129,7 +130,7 @@ class CoursesController < ApplicationController
     @course.lect_courses.each do |uc|
       UserMailer.delay.course_deleted(@course.title, uc.user)
     end
-    Delayed::Job.enqueue(BackgroundJob.new(@course.id, "DeleteCourse"))
+    Delayed::Job.enqueue(BackgroundJob.new(@course.id, :delete_course))
     respond_to do |format|
       flash[:notice] = "The course '#{title}' is pending for deletion."
       redirect_url = params[:origin] || courses_url
@@ -143,7 +144,7 @@ class CoursesController < ApplicationController
     @student_courses = @course.user_courses.student.where(is_phantom: false)
     @ta_courses = @course.user_courses.tutor
 
-    @std_paging = @course.students_paging_pref
+    @std_paging = @course.paging_pref('students')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -169,7 +170,7 @@ class CoursesController < ApplicationController
     @staff_courses = @course.user_courses.staff
     @student_count = @student_courses.length
 
-    @std_paging = @course.mgmt_std_paging_pref
+    @std_paging = @course.paging_pref('ManageStudents')
     if @std_paging.display?
       @student_courses = Kaminari.paginate_array(@student_courses).page(params[:page]).per(@std_paging.prefer_value.to_i)
     end
@@ -178,7 +179,7 @@ class CoursesController < ApplicationController
 
   def pending_gradings
     authorize! :see, :pending_gradings
-    @pending_gradings = @course.get_pending_gradings(curr_user_course)
+    @pending_gradings = @course.pending_gradings(curr_user_course)
   end
 
 end

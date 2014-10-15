@@ -4,10 +4,10 @@
 
 <p><%= @survey.description.html_safe %></p>
 
-<% if @survey.has_section? %>
-    <%= render partial: "with_section_template", locals: {mode: "#{@editable ? 'Edit' : 'Review'}"} %>
-<% else %>
+<% if @survey.is_contest? %>
     <%= render partial: "no_section_template" %>
+<% else %>
+    <%= render partial: "with_section_template", locals: {mode: "#{@editable ? 'Edit' : 'Review'}"} %>
 <% end %>
 
 

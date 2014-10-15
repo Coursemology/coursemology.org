@@ -1,9 +1,12 @@
 Coursemology::Application.routes.draw do
+  post "facebook/obtain_badge" => "facebook#obtain_badge"
+
   authenticated :user do
     root :to => "home#index"
   end
 
   root :to => "static_pages#welcome"
+  get "terms_of_service" => "static_pages#terms_of_service"
   get "welcome" => "static_pages#welcome"
   get "about" => "static_pages#about"
   get "privacy_policy" => "static_pages#privacy_policy"
@@ -40,8 +43,6 @@ Coursemology::Application.routes.draw do
   resources :role_requests
 
   resources :courses do
-    match "/submissions" => "submissions#listall", as: :submissions
-    match "/training_submissions" => "training_submissions#listall", as: :training_submissions
     get "/notifications" => "course_notifications#get"
 
     match "/leaderboards"     => "leaderboards#show", as: :leaderboards
@@ -50,51 +51,95 @@ Coursemology::Application.routes.draw do
     match "/manage_group"  => "course_groups#manage_group", as: :manage_group
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
-    match "missions/overview" => "missions#overview", as: :missions_overview
-    post  "missions/bulk_update" => "missions#bulk_update", as: :missions_bulk_update
-    match "trainings/overview" => "trainings#overview", as: :trainings_overview
-    post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :trainings_duplicate_qn
-    post  "trainings/bulk_update" => "trainings#bulk_update", as: :trainings_bulk_update
+
 
     resources :user_courses do
       resources :exp_transactions
       resources :user_achievements
     end
 
-    resources :missions do
-      resources :mission_coding_questions, as: :coding_questions
-      resources :questions
-      resources :submissions do
-        resources :submission_gradings
+    resources :assessments, module: :assessment, only: [:show] do
+      member do
+        get 'show', to: 'assessments#show'
+        get 'stats'
+        post 'reorder'
+        get 'access_denied'
       end
-      post "submissions/:id/unsubmit" => "submissions#unsubmit", as: :submissions_unsubmit
-      post "submissions/:id/test" => "submissions#test_answer", as: :submission_test
 
-      resources :asm_qns do
-        collection do
-          post 'reorder'
+      resources :assessment_mcq_questions,
+                path:       :mcqs,
+                controller: :mcq_questions
+
+      resources :assessment_coding_questions,
+                path:       :coding_questions,
+                controller: :coding_questions
+
+      resources :assessment_general_questions,
+                path:       :general_questions,
+                controller: :general_questions
+
+      resources :assessment_submissions,
+                path:       :submissions,
+                as:         :submissions,
+                controller: :mission_submissions,
+                except: [:create],
+                constraints: MissionConstraint.new do
+
+
+        member do
+          get 'test', to: 'mission_submissions#test_answer'
+          post 'test', to: 'mission_submissions#test_answer'
+          get 'unsubmit' => 'mission_submissions#unsubmit'
+        end
+
+        resources :assessment_submission_gradings,
+                  path: :gradings,
+                  as:   :gradings,
+                  controller: :gradings
+      end
+
+      resources :assessment_submissions,
+                path:       :submissions,
+                as:         :submissions,
+                controller: :training_submissions,
+                except: [:create],
+                constraints: TrainingConstraint.new do
+        member do
+          get 'submit' => 'training_submissions#submit'
         end
       end
     end
-    match "missions/:id/stats" => "missions#stats", as: :mission_stats
-    match "missions/:id/dump_code" => "missions#dump_code", as: :mission_dump_code
 
-    resources :trainings do
-      resources :mcqs
-      resources :coding_questions
-      resources :training_submissions
-      post "training_submissions/:id/submit" => "training_submissions#submit", as: :training_submission_submit
+    resources :assessment_missions, path: 'missions', controller: :missions, module: :assessment do
+      collection do
+        get :index, to: 'assessments#index', type: 'mission'
+        post 'bulk_update' => 'missions#bulk_update'
+        get 'overview' => 'missions#overview'
+        get 'stats' => 'missions#stats'
+        get 'submissions' => 'assessments#listall', type: 'mission'
+      end
+      get 'dump_code' => 'missions#dump_code'
+    end
 
-      resources :asm_qns do
-        collection do
-          post 'reorder'
-        end
+    resources :assessment_trainings, path: 'trainings', controller: :trainings, module: :assessment do
+      collection do
+        get :index, to: 'assessments#index', type: 'training'
+        post 'bulk_update' => 'trainings#bulk_update'
+        get 'overview' => 'trainings#overview'
+        get 'stats' => 'trainings#stats'
+        get 'submissions' => 'assessments#listall', type: 'training'
       end
     end
-    match "trainings/:id/stats" => "trainings#stats", as: :training_stats
+
+    scope module: 'assessment' do
+      post "trainings/duplicate_qn" => "trainings#duplicate_qn", as: :assessment_trainings_duplicate_qn
+    end
+
+    resources :tags
+
+
+
     get "pending_actions/:id/ignore" => "pending_actions#ignore", as: :pending_actions_ignore
-
-    resources :mcq_answers
 
     resources :announcements
 
@@ -121,12 +166,14 @@ Coursemology::Application.routes.draw do
 
     post "levels/populate" => "levels#populate", as: :levels_populate
     post "levels/mass_update" => "levels#mass_update", as: :levels_mass_update
-    match "missions/:id/access_denied" => "missions#access_denied", as: :mission_access_denied
-    match "trainings/:id/access_denied" => "trainings#access_denied", as: :training_access_denied
 
     resources :levels
 
-    resources :achievements
+    resources :achievements do
+      collection do
+        post 'reorder'
+      end
+    end
 
     resources :requirements
 
@@ -143,8 +190,6 @@ Coursemology::Application.routes.draw do
     match "enroll_requests/delete_selected" => "enroll_requests#delete_selected", as: :enroll_request_delete_selected
 
     resources :enroll_requests
-
-    resources :tags
 
     resources :tag_groups
 
@@ -169,7 +214,7 @@ Coursemology::Application.routes.draw do
 
     get "duplicate_course" => "duplicate#duplicate_course", as: :duplicate_course
 
-    match "duplicate_assignments" => "duplicate#duplicate_assignments", as: :duplicate_assignments
+    post "duplicate_assignments" => "duplicate#duplicate_assignments", as: :duplicate_assignments
 
     match "award_exp" => "manual_rewards#manual_exp", as: :manual_exp
 
@@ -199,10 +244,11 @@ Coursemology::Application.routes.draw do
         collection do
           post 'reorder'
         end
-      end
-      resources :survey_questions, only: [:new, :create, :edit, :update, :destroy] do
-        collection do
-          post 'reorder'
+
+        resources :survey_questions, only: [:new, :create, :edit, :update, :destroy] do
+          collection do
+            post 'reorder'
+          end
         end
       end
       resources :survey_submissions
@@ -268,15 +314,11 @@ Coursemology::Application.routes.draw do
 
   match "file_uploads/:id/toggle_access" => "file_uploads#toggle_access", as: :file_uploads_toggle_access
 
-  resources :trainings do
+  resources :assessments do
     resources :file_uploads
   end
 
-  resources :missions do
-    resources :file_uploads
-  end
-
-  resources :submissions do
+  resources :assessment_submissions do
     resources :file_uploads
   end
 

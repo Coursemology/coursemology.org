@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1><%= @course.customized_comments_title %></h1>
+  <h1><%= @course.customized_title(Comment.to_s) %></h1>
 </div>
 <% require 'digest/md5' %>
 
@@ -33,15 +33,15 @@
 
     <% # currently the topic of the comment is only student answer for a question %>
     <% ecid =  Digest::MD5.hexdigest(comment_topic.topic.class.to_s << comment_topic.topic.id.to_s) %>
-    <% if comment_topic.topic.class == StdAnswer || comment_topic.topic.class == StdCodingAnswer %>
+    <% if comment_topic.topic.class == Assessment::Answer %>
         <%= render partial: "commentable_std_answer", locals: { std_answer: comment_topic.topic, ecid: ecid } %>
-    <% elsif comment_topic.topic.class == Mcq || comment_topic.topic.class == CodingQuestion %>
+    <% elsif comment_topic.topic.class == Assessment::Question %>
         <%= render partial: "commentable_training_question", locals: { question: comment_topic.topic, ecid: ecid } %>
-    <% elsif comment_topic.topic.class == Submission %>
+    <% elsif comment_topic.topic.class == Assessment::Submission %>
         <%= render partial: "commentable_sbm", locals: { sbm: comment_topic.topic} %>
     <% end %>
 
-    <% if comment_topic.topic.class == StdCodingAnswer %>
+    <% if comment_topic.topic.is_a?(Assessment::CodingAnswer) %>
         <% annotations = comment_topic.topic.annotations.sort_by {|anno| anno.line_start } %>
         <% start = -1 %>
         <% if annotations.count > 0 %>

@@ -21,10 +21,10 @@
     <% end %>
   </tr>
   </thead>
-  <tbody>
+  <tbody class="<%= 'sortable-table' if can? :manage, Achievement %>" url="<%= reorder_course_achievements_path(@course) %>">
   <% @achievements_with_info.each do |ach_info| %>
       <% ach = ach_info[:ach] %>
-      <tr class="<%= ach_info[:won] ? "ach-won" : "ach-normal" %>">
+      <tr class="<%= ach_info[:won] ? "ach-won" : "ach-normal" %>" id="sortable-item_<%= ach.id %>">
         <% can_view = ach_info[:won] || (can? :manage, Achievement) %>
         <% lock_display = @course.achievements_locked_display.display? %>
         <td>
@@ -32,7 +32,9 @@
         </td>
         <td>
           <h4><%= link_to ach.title, course_achievement_path(@course, ach) %></h4>
-          <p><%= ach.description %></p>
+          <div class="description">
+            <%= ach.description.html_safe %>
+          </div>
         </td>
         <td>
           <% if ach.auto_assign? %>
@@ -101,4 +103,3 @@
 <% if @ach_paging.display? %>
     <%= paginate @achievements %>
 <% end %>
-

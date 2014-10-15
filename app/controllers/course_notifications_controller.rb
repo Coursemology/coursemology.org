@@ -4,16 +4,16 @@ class CourseNotificationsController < ApplicationController
   def get
     counts = {}
     if curr_user_course.id
-      all_trainings = @course.trainings.accessible_by(current_ability)
-      unseen_trainings = all_trainings - curr_user_course.seen_trainings
+      all_trainings = @course.assessments.training.accessible_by(current_ability)
+      unseen_trainings = all_trainings.map(&:id) - curr_user_course.seen_assessments.map(&:id)
       counts[:trainings] = unseen_trainings.count
 
       all_announcements = @course.announcements.accessible_by(current_ability)
       unseen_anns = all_announcements - curr_user_course.seen_announcements
       counts[:announcements] = unseen_anns.count
 
-      all_missions = @course.missions.accessible_by(current_ability)
-      unseen_missions = all_missions - curr_user_course.seen_missions
+      all_missions = @course.assessments.mission.accessible_by(current_ability)
+      unseen_missions = all_missions.map(&:id) - curr_user_course.seen_assessments.map(&:id)
       counts[:missions] = unseen_missions.count
       counts[:surveys]  = @course.pending_surveys(curr_user_course).count
 
@@ -35,10 +35,10 @@ class CourseNotificationsController < ApplicationController
       #  counts[:submissions] = unseen_sbms.count
       #end
       if can? :see, :pending_grading
-        counts[:pending_gradings] = @course.get_pending_gradings(curr_user_course).count
+        counts[:pending_gradings] = @course.pending_gradings(curr_user_course).count
       end
       if can? :see, :pending_comments
-        counts[:comments] = @course.count_pending_comments
+        counts[:comments] = @course.pending_comments.count
       end
 
       if can? :approve, EnrollRequest

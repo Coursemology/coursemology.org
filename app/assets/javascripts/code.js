@@ -117,7 +117,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                     submission_id: self.sub_id,
                     annotation:{
                         annotable_id: self.code_id,
-                        annotable_type: "StdCodingAnswer",
+                        annotable_type: "Assessment::Answer",
                         text: t,
                         line_start: s,
                         line_end: e
@@ -207,6 +207,12 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
             });
         return $lines;
     }
+    function sanctifyCommentsHtmlTags(string){
+        if(string.charAt(0) != '#') {
+            return string;
+        }
+        return string.replace(/(>|<)/g, "<span class=\"cm-comment\">$1</span>");
+    };
     var $active = false;
     function activateComment($com) {
         if (!$com.is('#temporary-comment-box')){
@@ -303,7 +309,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
         var x = function(){
             var len = $(document).scroll().width() - self.wrapper.offset().left - self.wrapper.width();
             _cb_mw = len;
-        }
+        };
         x();
     }
 
@@ -454,7 +460,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
         $.get(self.annotation_url, {
             annotation:{
                 annotable_id: self.code_id,
-                annotable_type: "StdCodingAnswer"
+                annotable_type: "Assessment::Answer"
             }}, function(s){
             parseComments(s);
             setTimeout(refreshComments, 4000);
@@ -489,6 +495,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                 zam.push('<pre class="line">'+str+"\n"+'</pre>');
                 accum = [];
             }else if (style){
+                string = sanctifyCommentsHtmlTags(string);
                 accum.push("<span class=\"cm-" + style + "\">" + string + "</span>");
             }else{
                 accum.push(string);
