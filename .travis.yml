@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+  - 2.1.2
+  - ruby-head
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+bundler_args: --without assets:development:production
+before_script:
+  - cp config/database.yml.travis config/database.yml
+  - cp sample_config/facebook.yml.sample config/facebook.yml
+  - cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
+  - bundle exec rake db:create db:schema:load db:seed
+script:
+  - bundle exec rspec

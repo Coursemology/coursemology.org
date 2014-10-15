@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   skip_before_filter  :verify_authenticity_token
 
   rescue_from CanCan::AccessDenied do |exception|
-
     unless current_user
       session[:request_url] = request.url
     end
@@ -33,7 +32,7 @@ class ApplicationController < ActionController::Base
     atts = []
     atts << ThemeAttribute.find_by_name('Background Color')
     atts << ThemeAttribute.find_by_name('Sidebar Link Color')
-    atts << ThemeAttribute.find_by_name('Custom CSS')
+    atts << ThemeAttribute.find_by_name('Cust om CSS')
     # atts << ThemeAttribute.find_by_name('Announcements Icon')
     # atts << ThemeAttribute.find_by_name('Missions Icon')
     # atts << ThemeAttribute.find_by_name('Trainings Icon')
@@ -43,8 +42,10 @@ class ApplicationController < ActionController::Base
 
     @theme_settings = {}
     atts.each do |att|
-      ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
-      @theme_settings[att.name] = ca.value
+      if att
+        ca = CourseThemeAttribute.where(course_id: @course.id, theme_attribute_id:att.id).first_or_create
+        @theme_settings[att.name] = ca.value
+      end
     end
 
     theme = @course.course_themes.first
@@ -58,241 +59,98 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_sidebar_data
-    counts = {}
-    if curr_user_course.id
-      all_trainings = @course.trainings.accessible_by(current_ability)
-      unseen_trainings = all_trainings - curr_user_course.seen_trainings
-      counts[:trainings] = unseen_trainings.count
+  def sidebar_general_items
+    general_items = []
 
-      all_announcements = @course.announcements.accessible_by(current_ability)
-      unseen_anns = all_announcements - curr_user_course.seen_announcements
-      counts[:announcements] = unseen_anns.count
-
-      all_missions = @course.missions.accessible_by(current_ability)
-      unseen_missions = all_missions - curr_user_course.seen_missions
-      counts[:missions] = unseen_missions.count
-      counts[:surveys]  = @course.pending_surveys(curr_user_course).count
-
-      all_materials = Material.where(folder_id: (curr_user_course.is_student? ?
-          @course.material_folders.opened_folder :
-          @course.material_folders)).accessible_by(current_ability)
-      unseen_materials = all_materials - curr_user_course.seen_materials
-      counts[:materials] = unseen_materials.count
-
-      all_comics = @course.accessible_comics(curr_user_course)
-      unseen_comics = all_comics - curr_user_course.seen_comics
-      counts[:comics] = unseen_comics.count
-
-      #if can? :see_all, Submission
-      #  # lecturers see number of new submissions of all students in the course
-      #  all_sbms = @course.submissions.accessible_by(current_ability) +
-      #      @course.training_submissions.accessible_by(current_ability)
-      #  unseen_sbms = all_sbms - curr_user_course.get_seen_sbms
-      #  counts[:submissions] = unseen_sbms.count
-      #end
-      if can? :see, :pending_grading
-        counts[:pending_grading] = @course.get_pending_gradings(curr_user_course).count
-      end
-      if can? :see, :pending_comments
-        counts[:pending_comments] = @course.count_pending_comments
-      end
-      counts[:pending_enrol] = @course.enroll_requests.count
-      # TODO students see the number of new gradings
-
-      counts[:forums] = ForumTopic.unread(curr_user_course).
-          where(forum_id: @course.forums.accessible_by(current_ability)).count
-    end
-    # in the future, nav items can be loaded from the database
-    @nav_items = []
-    # home
-
-    if curr_user_course.is_student?
-      @course.student_sidebar_display.each do |item|
-        item_name = item.preferable_item.name
-        url_and_icon = get_url_and_icon(item_name)
-        @nav_items << {
-            text: item.prefer_value,
-            url:  url_and_icon.first,
-            icon: url_and_icon.last,
-            count: counts[item_name.to_sym] || 0
-        }
-      end
-    end
-
-    if can? :manage, Course
-      @nav_items = [{
-                        text:   @course.customized_title_by_model(Announcement),
-                        url:    main_app.course_announcements_url(@course),
-                        img:    @theme_settings["Announcements Icon"],
-                        icon:   "icon-bullhorn",
-                        count:  counts[:announcements] || 0
-                    }, {
-                        text:   @course.customized_title_by_model(Mission),
-                        url:    main_app.course_missions_url(@course),
-                        img:    @theme_settings["Missions Icon"],
-                        icon:   "icon-fighter-jet",
-                        count:   counts[:missions] || 0
-                    }, {
-                        text:   @course.customized_title_by_model(Training),
-                        url:    main_app.course_trainings_url(@course),
-                        img:    @theme_settings["Trainings Icon"],
-                        icon:   "icon-upload-alt",
-                        count:  counts[:trainings] || 0
-                    }, {
-                        text:   @course.customized_title_by_model(Submission),
-                        url:    main_app.course_submissions_url(@course),
-                        img:    @theme_settings["Submissions Icon"],
-                        icon:   "icon-envelope-alt",
-                        #count:  counts[:submissions] || 0
-                    }, {
-                        text:   @course.customized_lesson_plan_title,
-                        url:    main_app.course_lesson_plan_url(@course),
-                        img:    @theme_settings["Lesson Plan Icon"],
-                        icon:   "icon-time"
-                    }, {
-                        text:   @course.customized_materials_title,
-                        url:    main_app.course_materials_url(@course),
-                        img:    @theme_settings["Materials Icon"],
-                        icon:   "icon-download",
-                        count:  counts[:materials] || 0
-                    }, {
-                        text:   "Comics",
-                        url:    main_app.course_comics_url(@course),
-                        img:    @theme_settings["Comics Icon"],
-                        icon:   "icon-picture",
-                        count:  counts[:comics] || 0
-                    }]
-      @nav_items <<   {
-          text:   @course.customized_title_by_model(Comment),
-          url:    main_app.course_comments_url(@course),
-          icon:   "icon-comments",
-          count:  counts[:pending_comments] || 0
+    @course.navbar_tabs(curr_user_course.is_staff?).each do |item|
+      url_and_icon = get_url_and_icon(item.item)
+      general_items << {
+          item: item.item,
+          text: item.name,
+          url:  url_and_icon.first,
+          icon: url_and_icon.last,
       }
-      @nav_items <<    {
+    end
+
+    #TO REMOVE
+    if can? :manage, @course
+
+      general_items <<    {
+          item: "pending_gradings",
           text: "Pending Gradings",
           url:  main_app.course_pending_gradings_url(@course),
           icon: "icon-question-sign",
-          count: counts[:pending_grading] || 0
-      }
-      @nav_items << {
-          text:   @course.customized_title_by_model(Achievement),
-          url:    main_app.course_achievements_url(@course),
-          icon:   "icon-trophy"
-      }
-      @nav_items <<    {
-          text:   @course.customized_leaderboard_title,
-          url:    main_app.course_leaderboards_url(@course),
-          img:    @theme_settings["Leaderboards Icon"],
-          icon:   "icon-star-empty"
-      }
-      @nav_items <<    {
-          text:   @course.customized_students_title,
-          url:    main_app.course_students_url(@course),
-          icon:   "icon-group",
-      }
-      @nav_items << {
-          text: @course.customized_title_by_model(Survey),
-          url: main_app.course_surveys_path(@course),
-          icon: "icon-edit"
-      }
-      @nav_items << {
-          text:   @course.customized_title("Forums"),
-          url:    main_app.course_forums_url(@course),
-          icon:   "icon-th-list",
-          count: counts[:forums]
       }
     end
 
-    if can? :manage, Course
-      @admin_nav_items = []
-      if curr_user_course.is_staff?
-        @admin_nav_items << {
-            text: "My Students",
-            url: main_app.course_manage_group_url(@course),
-            icon: "icon-group"
-        }
-        @admin_nav_items << {
-            text: "Forum Participation",
-            url:  main_app.course_forum_participation_url(@course),
-            icon: "icon-group"
-        }
-      end
-      @admin_nav_items << {
-          text: "Manage Staff",
-          url:  main_app.course_staff_url(@course),
-          icon: "icon-user"
-      }
-      @admin_nav_items << {
-          text: "Manage Students",
-          url:  main_app.course_manage_students_url(@course),
-          icon: "icon-user"
-      }
+    general_items
+  end
 
-      @admin_nav_items << {
-          text: "Student Summary",
-          url:  main_app.course_student_summary_url(@course),
-          icon: "icon-user"
-      }
-
-      @admin_nav_items << {
-          text: "Tutor Summary",
-          url: main_app.course_staff_monitoring_path(@course),
-          icon: "icon-trophy"
-      }
-      @admin_nav_items << {
-          text:   "Levels",
-          url:    main_app.course_levels_url(@course),
-          icon:   "icon-star-empty"
-      }
-
-      @admin_nav_items << {
-          text: "Tags",
-          url: main_app.course_tags_url(@course),
-          icon: "icon-tags"
-      }
-      @admin_nav_items << {
-          text: "Award Give-away",
-          url: main_app.course_manual_exp_url(@course),
-          icon: "icon-star"
-      }
-      @admin_nav_items << {
-          text: "Statistics",
-          url: main_app.course_stats_url(@course),
-          icon: "icon-bar-chart"
-      }
-
-      @admin_nav_items << {
-          text: "Enrollment",
-          url: main_app.course_enroll_requests_url(@course),
-          icon: "icon-bolt",
-          count: counts[:pending_enrol] || 0
-      }
-
-      @admin_nav_items << {
-          text: "Mass Enrollment",
-          url: main_app.course_mass_enrollment_emails_path(@course),
-          icon: "icon-bolt"
-      }
-
-      @admin_nav_items << {
-          text: "Duplicate Data",
-          url: main_app.course_duplicate_url(@course),
-          icon: "icon-bolt"
-      }
-
-      @admin_nav_items << {
-          text: "Course Settings",
-          url: main_app.edit_course_url(@course),
-          icon: "icon-cog"
-      }
-      @admin_nav_items << {
-          text: "Preference Settings",
+  def sidebar_admin_items
+    admin_nav_items = []
+    if curr_user_course.is_staff?
+      admin_nav_items += [{
+                              text: "Forum Participation",
+                              url:  main_app.course_forum_participation_url(@course),
+                              icon: "icon-group"
+                          }]
+    end
+    admin_nav_items += [{
+                           text: "Manage Users",
+                           url:  main_app.course_manage_students_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Student Summary",
+                           url:  main_app.course_student_summary_url(@course),
+                           icon: "icon-user"
+                       },{
+                           text: "Staff Summary",
+                           url: main_app.course_staff_monitoring_path(@course),
+                           icon: "icon-trophy"
+                       },{
+                           text:   "Levels",
+                           url:    main_app.course_levels_url(@course),
+                           icon:   "icon-star-empty"
+                       },{
+                           text: "Tags",
+                           url: main_app.course_tags_url(@course),
+                           icon: "icon-tags"
+                       },{
+                           text: "Award Give-away",
+                           url: main_app.course_manual_exp_url(@course),
+                           icon: "icon-star"
+                       }, {
+                           text: "Statistics",
+                           url: main_app.course_stats_url(@course),
+                           icon: "icon-bar-chart"
+                       },{
+                           text: "Enrollment",
+                           url: main_app.course_enroll_requests_url(@course),
+                           icon: "icon-bolt"
+                       }, {
+                           text: "Duplicate Data",
+                           url: main_app.course_duplicate_url(@course),
+                           icon: "icon-bolt"
+                       }]
+    if can? :manage, :course_admin
+      admin_nav_items << {
+          text: "Settings",
           url: main_app.course_preferences_path(@course),
           icon: "icon-cog"
       }
     end
+    admin_nav_items
+  end
 
+
+  def load_sidebar_data
+    # in the future, nav items can be loaded from the database
+    # home
+    @nav_items = Rails.cache.fetch("nav_items_#{@course.id}_#{curr_user_course ? curr_user_course.role_id : 0}") { sidebar_general_items }
+
+    if can? :manage, @course
+      @admin_nav_items = Rails.cache.fetch("admin_nav_items_#{@course.id}") { sidebar_admin_items }
+    end
   end
 
   def load_popup_notifications
@@ -359,13 +217,13 @@ class ApplicationController < ActionController::Base
         url = main_app.course_announcements_path(@course)
         icon = 'icon-bullhorn'
       when 'missions'
-        url = main_app.course_missions_url(@course)
+        url = main_app.course_assessment_missions_url(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = main_app.course_trainings_path(@course)
+        url = main_app.course_assessment_trainings_url(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
-        url = main_app.course_submissions_path(@course)
+        url = main_app.submissions_course_assessment_missions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
         url = main_app.course_achievements_url(@course)
@@ -396,6 +254,10 @@ class ApplicationController < ActionController::Base
         icon = 'icon-picture'
     end
     [url, icon]
+  end
+
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
   end
 
   helper_method :masquerading?

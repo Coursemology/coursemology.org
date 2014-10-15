@@ -1,0 +1,48 @@
+<div class="page-header">
+  <h1>
+    Training submission: <%= @training.title %>
+  </h1>
+</div>
+
+<table width="100%">
+  <col width="10%" />
+  <tr><td><strong>Student:</strong> </td><td><%= render partial: "layouts/user_name_link", locals: {user_course: @submission.std_course} %></td></tr>
+  <tr><td><strong>Submitted at:</strong> </td><td><%= time_ago_in_words(@submission.created_at) %> ago</td></tr>
+  <% if @grading %>
+      <tr>
+        <td><strong>Total grade:</strong> </td>
+        <td>
+          <%= @grading.grade %> / <%= @training.max_grade %>
+        </td>
+      </tr>
+
+      <tr><td><strong>Grader:</strong> </td><td>Auto graded!</td></tr>
+  <% end %>
+</table>
+<hr/>
+
+<p class="well"><%= style_format(@training.description) %></p>
+<% @training.questions.includes(:as_question).each_with_index do |qn, index| %>
+    <h4>Question: <%= index + 1 %> </h4>
+    <% if qn.specific.class == Assessment::McqQuestion %>
+        <% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options) %>
+        <% if answers.length > 0 %>
+            <%=render partial: "assessment/mcq_questions/one", locals: {q: qn} %>
+            <%=render partial: "mcq_review", locals: {answers: answers} %>
+        <% end %>
+    <% elsif qn.specific.class == Assessment::CodingQuestion %>
+        <% answers = qn.answers.where(std_course_id: @submission.std_course, submission_id: @submission.id) %>
+        <% if answers.length > 0 %>
+            <span><%= style_format(qn.description) %></span>
+            <%= render partial: "coding_review", locals: {answers: answers} %>
+        <% end %>
+    <% end %>
+
+    <% grade = qn.answer_gradings.
+            where("assessment_answers.std_course_id = ? and assessment_answer_gradings.grading_id = ?",
+                  @submission.std_course, @submission.gradings.last).last %>
+    <% if grade %>
+        <p><strong>Final Grade: </strong><%= grade.grade %> / <%= qn.max_grade %></p>
+    <% end %>
+    <hr />
+<% end %>

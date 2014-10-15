@@ -21,6 +21,7 @@
 //= require angular-ui-sortable-rails
 //= require jquery.validate
 //= require jquery.validate.additional-methods
+//= require jquery-tmpl
 //
 //= require bootstrap-dropdown
 //= require bootstrap-transition
@@ -28,6 +29,7 @@
 //= require bootstrap-button
 //= require bootstrap-tab
 //= require bootstrap-tooltip
+//= require bootstrap-popover
 //= require bootstrap-affix
 //= require bootstrap-scrollspy
 //
@@ -46,8 +48,10 @@
 //= require codemirror/addons/runmode/runmode
 //= require codemirror/addons/edit/matchbrackets
 //= require moment
+//= require cocoon
 //
 //= require_self
+//= require_tree ./templates
 //= require_tree .
 
 $(document).ready(function() {
@@ -138,7 +142,7 @@ $(document).ready(function() {
 
     $('.colorpicker').colorpicker();
     $('.selectpicker').selectpicker();
-
+    $('.origin_url').val(document.URL);
     // For our delete buttons, detach the companion button so it looks nicer in a .btn-group.
     // Then move it one level up so it acts like a first class citizen.
     $('.delete-button').each(function(n, elem) {
@@ -188,7 +192,7 @@ $(document).ready(function() {
     );
 
     $(function(){
-        $(".jfdiCode").each(_jfdiFormatFunc);
+        $(".coursemology-code").each(_coursemologyFormatFunc);
     });
 
     $(function(){
@@ -245,6 +249,10 @@ $(document).ready(function() {
     $(".sort tbody").sortable({
         helper: fixHelper
     }).disableSelection();
+
+    $('.team_popover').popover({ 
+        trigger: "hover"
+    });
 });
 
 // Define our framework for implementing client-side form validation.
@@ -335,14 +343,14 @@ jQuery.fn.extend({
 
 });
 
-function _jfdiFormatFunc(i, elem) {
+function _coursemologyFormatFunc(i, elem) {
     var $elem = $(elem);
 
     // Make sure we process every code block exactly once.
-    if ($elem.data('jfdiFormatted')) {
+    if ($elem.data('formatted')) {
         return;
     }
-    $elem.data('jfdiFormatted', true);
+    $elem.data('formatted', true);
 
     // Replace all <br /> with \n for CodeMirror.
     var $br = $('br', $elem);
@@ -372,8 +380,9 @@ function _jfdiFormatFunc(i, elem) {
         CodeMirror.runMode(code, 'python', elem);
     }
 }
-function jfdiFormat(element){
-    $(element).find(".jfdiCode").each(_jfdiFormatFunc);
+
+function coursemologyFormat(element){
+    $(element).find(".coursemology-code").each(_coursemologyFormatFunc);
 }
 
 String.prototype.nl2br = function(){
@@ -404,3 +413,15 @@ function event_log(category, label, action, push){
         _gaq.push(['_trackEvent',category, action, label]);
     }
 }
+
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+};

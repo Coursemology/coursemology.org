@@ -117,7 +117,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                     submission_id: self.sub_id,
                     annotation:{
                         annotable_id: self.code_id,
-                        annotable_type: "StdCodingAnswer",
+                        annotable_type: "Assessment::Answer",
                         text: t,
                         line_start: s,
                         line_end: e
@@ -303,7 +303,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
         var x = function(){
             var len = $(document).scroll().width() - self.wrapper.offset().left - self.wrapper.width();
             _cb_mw = len;
-        }
+        };
         x();
     }
 
@@ -447,14 +447,14 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
             .append('<a href="' + annotation.f + '"><img class="small-profile-pic" src="'+annotation.p+'" width="32" height="32" /></a>')
             .append($div)
             .appendTo(parent.find('.annotate-area'));
-        jfdiFormat($li.find('.comment').get(0));
+        coursemologyFormat($li.find('.comment').get(0));
     }
 
     function refreshComments(){
         $.get(self.annotation_url, {
             annotation:{
                 annotable_id: self.code_id,
-                annotable_type: "StdCodingAnswer"
+                annotable_type: "Assessment::Answer"
             }}, function(s){
             parseComments(s);
             setTimeout(refreshComments, 4000);

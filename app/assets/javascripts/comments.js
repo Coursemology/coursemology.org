@@ -141,7 +141,7 @@ var Comment = (function(){
                     comment:{
                         // TODO: store the comment_topic id for easy retrieval
                         topic_id: $("#"+ecid+"_commentable_id").val(),
-                        topic_type: $("#"+ecid+"_commentable_type").val(),
+                        topic_type: $("#"+ecid+"_commentable_type").val()
                     },
                     brief: true},
                     function(s){
@@ -218,7 +218,7 @@ var Comment = (function(){
                 $li.appendTo($obj);
             }
             if ($li.find('.comment').size()){
-                jfdiFormat($li.find('.comment').get(0));
+                coursemologyFormat($li.find('.comment').get(0));
             }
         }
     }
@@ -245,7 +245,7 @@ $(function(){
         var $this = $(this);
         $.post($("#comments_togging_path").val(),
             {
-                cid: $(this).attr('cid'),
+                cid: $(this).attr('cid')
             },
             function(s){
                 if ($this.text().trim() == 'Mark as pending'){

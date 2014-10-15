@@ -68,10 +68,10 @@
               <td style="vertical-align: middle"><%= date_mdY(item.close_at) %></td>
               <td style="vertical-align: middle"><%= item.current_exp %></td>
               <td style="vertical-align: middle">
-                <% if item.class == Mission %>
-                    <%= render partial: "missions/action", locals: {mission: item, event_label: "PendingActions"} %>
-                <% elsif item.class == Training %>
-                    <%= render partial: "trainings/action", locals: {training: item, event_label: "PendingActions"} %>
+                <% if item.is_a? (Assessment::Mission) %>
+                    <%= render partial: "assessment/missions/action", locals: {ast: item, event_label: "PendingActions"} %>
+                <% elsif item.is_a?(Assessment::Training) %>
+                    <%= render partial: "assessment/trainings/action", locals: {ast: item, event_label: "PendingActions"} %>
                 <% elsif item.class == Survey %>
                     <%= render partial: "surveys/action", locals:{survey: item, event_label: "PendingActions"} %>
                 <% end %>
@@ -92,21 +92,23 @@
     <table class="activities">
       <% @activities.each do |act| %>
           <% unless act.actor_course.nil? || act.action.nil? || act.actor_course.is_phantom? || act.actor_course.is_staff? || act.obj.nil? %>
-              <tr>
-                <td width="25px">
-                  <a class="pull-left activity-icon" href="<%= get_social_media_url(act.actor_course) %>">
-                    <img class="media-object"
-                         src="<%= act.actor_course.user.get_profile_photo_url %>">
-                  </a>
-                </td>
-                <td>
-                  <a href="<%= course_user_course_path(@course, act.actor_course) %>">
-                    <%= act.actor_course.name %>
-                  </a> <%= act.action.text %>
-                  <strong> <%= act.obj_url ? "<a href=\"#{act.obj_url}\">#{act.obj.get_title}</a>".html_safe : act.obj.get_title%></strong>
-                  <br/>
-                  <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
-                </td>
+              <% cache ("activities/#{act.id}") do %>
+                  <tr>
+                    <td width="25px">
+                      <a class="pull-left activity-icon" href="<%= get_social_media_url(act.actor_course) %>">
+                        <img class="media-object"
+                             src="<%= act.actor_course.user.get_profile_photo_url %>">
+                      </a>
+                    </td>
+                    <td>
+                      <a href="<%= course_user_course_path(@course, act.actor_course) %>">
+                        <%= act.actor_course.name %>
+                      </a> <%= act.action.text %>
+                      <strong> <%= act.obj_url ? "<a href=\"#{act.obj_url}\">#{act.obj.get_title}</a>".html_safe : act.obj.get_title%></strong>
+                      <br/>
+              <% end %>
+              <span class="time-small"><%= time_ago_in_words(act.created_at) %> ago</span>
+              </td>
               </tr>
           <% end %>
       <% end %>

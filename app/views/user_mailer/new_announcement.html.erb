@@ -1,11 +1,11 @@
-Hello, <%= @user_name %>!
+Hello, <%= @user.name %>!
 
-<p>New announcement from course: <%= @course_name %></p>
+<p>New announcement from course: <%= @course.title %></p>
 <blockquote>
   <%= @ann.description.html_safe %>
 </blockquote>
 
-<p><a href="<%= @redirect_url %>"> Click here</a> to view.</p>
+<p><a href="<%= course_announcement_url(@course, @ann) %>"> Click here</a> to view.</p>
 
 Best Regards,
 <br/>

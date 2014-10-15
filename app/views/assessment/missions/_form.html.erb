@@ -1,0 +1,76 @@
+<%- display_name = @course.customized_title("Missions").singularize -%>
+<%= simple_form_for [@course, @mission],
+                    :html => { :class => 'form-horizontal' },
+                    defaults: { input_html: { class: 'span7' } } do |f| %>
+    <%= f.input :title %>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :exp, as: :integer, input_html: {class: "number_field input-medium"}  %>
+    <%= f.input :open_at, as: :datetime_picker, input_html: {class: "input-medium"} %>
+    <%= f.input :close_at, as: :datetime_picker, input_html: {class: "input-medium"} %>
+    <%= f.input :published, as: :boolean, label: "Publish?",
+                input_html: {class: ""},
+                inline_label:"Check to publish #{display_name.downcase}"%>
+    <%= f.input :comment_per_qn, as: :boolean, label: "Comment Mode",
+                input_html: {class: ""},
+                inline_label:"Check to have comment box per question (Otherwise per mission)"%>
+    <%= f.input :file_submission, as: :boolean, label: "Submission Type",
+                input_html: {class: ""},
+                inline_label:"Allow File Submission"%>
+    <%= f.input :file_submission_only, as: :boolean, label: "Submission Format",
+                input_html: {class: ""},
+                inline_label:"Check to ONLY allow file submission"%>
+
+
+    <div class="control-group">
+      <%= f.label "Format", class: 'control-label' %>
+      <div class="controls" >
+        <div class="checkbox-text">
+          <input name="single_question" type="hidden" value="0">
+          <input name="single_question" type="checkbox" value="<%= @mission.single_question? ? 1 : 0  %>"
+                 data-toggle="collapse"
+                 data-target="#question-types"
+                 id="mission-format-checkbox"
+                 <%= 'checked' if @mission.single_question? %>>
+          <label>
+            A single question <%= display_name.downcase %>
+          </label>
+        </div>
+        <br>
+        <div id="question-types" class="collapse <%= @mission.single_question? ? 'in' : 'out'  %>">
+          <div class="control-group">
+            <%= f.label "Question Type", class: 'control-label' %>
+            <div class="controls">
+              <% qn = @mission.questions.first  %>
+              <select name="answer_type" class="input-medium" >
+                <option value="code" <%= 'selected="selected"' if !qn or qn.is_a?(Assessment::CodingQuestion) %>>Code</option>
+                <option value="essay" <%= 'selected="selected"' if qn and qn.is_a?(Assessment::GeneralQuestion) %>> Essay </option>
+              </select>
+            </div>
+          </div>
+          <div class="control-group">
+            <%= f.label "Max Grade", class: 'control-label' %>
+            <div class="controls">
+              <input type="text" class="input-medium" name="max_grade" id="mission-max-grade" value="<%= @mission.max_grade %>">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= f.association :display_mode, input_html: {class: "input-medium"}, include_blank: false %>
+    <%= f.association :dependent_on,
+                      collection: @course.assessments.mission - [@mission.assessment],
+                      input_html: {class: "input-large"}, include_blank: true %>
+
+    <div id="uploaded_files_div"></div>
+    <%= f.button :form_submit,
+                 cancel: @mission.persisted? ? course_assessment_mission_path(@course, @mission) :
+                         course_assessment_missions_path(@course) %>
+
+    <%= render :partial => 'layouts/html_editor' %>
+<% end %>
+<h3>Upload <%= display_name.downcase.humanize %> files</h3>
+<br/>
+<%= render partial: "layouts/file_uploader_complicated",
+           locals: { owner: @mission.assessment, access_control: true } %>
+

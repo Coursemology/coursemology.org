@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if current_page?(:submissions_course_assessment_missions) %>">
+    <a href="<%= submissions_course_assessment_missions_path(@course) %>"><%= "#{@course.customized_title('mission').singularize} #{ title }" %></a>
+  </li>
+  <li class="<%= "active" if current_page?(:submissions_course_assessment_trainings) %>">
+    <a href="<%= submissions_course_assessment_trainings_path(@course) %>"><%= "#{@course.customized_title('training').singularize} #{ title }" %></a>
+  </li>
+</ul>

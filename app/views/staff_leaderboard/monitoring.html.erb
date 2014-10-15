@@ -1,9 +1,9 @@
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "Monitoring" %>">
-    <a href="<%= course_staff_monitoring_path(@course) %>">Tutor Monitoring</a>
+    <a href="<%= course_staff_monitoring_path(@course) %>">Staff Monitoring</a>
   </li>
   <li class="<%= "active" if @tab == "Summary" %>">
-    <a href="<%= course_staff_leaderboard_index_path(@course) %>">Tutor Summary</a>
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>">Staff Summary</a>
   </li>
 </ul>
 <% if @tutor_details %>
@@ -22,10 +22,10 @@
       <tbody>
       <% @tutor_details[:gradings].each do |grading| %>
           <tr>
-            <% sbm = grading.sbm %>
-            <td><%=link_to sbm.mission.title, course_mission_submission_path(@course, sbm.mission, sbm) %></td>
+            <% sbm = grading.submission %>
+            <td><%=link_to sbm.assessment.title, course_assessment_submission_path(@course, sbm.assessment, sbm) %></td>
             <td><%= sbm.std_course.name %></td>
-            <td><%= distance_of_time(grading.created_at - sbm.submit_at) %></td>
+            <td><%= distance_of_time(grading.created_at - sbm.submitted_at) %></td>
             <td><%= datetime_format grading.created_at %></td>
             <!--<td></td>-->
           </tr>
@@ -54,8 +54,8 @@
         <td style="text-align: left"><%= tutor.name %></td>
         <td><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= summary[:count] %> </a></td>
         <td><%= summary[:std_count] %></td>
-        <td><%= distance_of_time(summary[:avg].to_i) if summary[:avg] != Float::INFINITY %></td>
-        <td><%= distance_of_time(summary[:std_dev].to_i) if summary[:std_dev] != Float::INFINITY %></td>
+        <td><%= summary[:avg] != Float::INFINITY ? distance_of_time(summary[:avg].to_i) : "99 d 99:99:99" %></td>
+        <td><%= summary[:std_dev] != Float::INFINITY ? distance_of_time(summary[:std_dev].to_i) : "99 d 99:99:99" %></td>
       </tr>
   <% end %>
   </tbody>

@@ -2,6 +2,8 @@
   <h1>Enrollment Invitations</h1>
 </div>
 
+<%= render partial: "enroll_requests/enroll_tab", locals: { mass_requests: true } %>
+
 <% num_of_invitation = @registered_stds.count + @unregistered_stds.count %>
 
 <% if num_of_invitation > 0 %>

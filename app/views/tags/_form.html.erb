@@ -1,29 +1,9 @@
-<%= form_for [@course, @tag], html: { class: 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :name, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, :class => 'text_field span7' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, :class => 'text_area span7', :rows => 10 %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label "Tag group", :class => 'control-label' %>
-    <div class="controls">
-      <select name="tag[tag_group_id]">
-        <option>Uncategorized</option>
-        <%= @tag_groups.each do |tag_group| %>
-          <option value="<%= tag_group.id %>"><%= tag_group.name %></option>
-        <% end %>
-      </select>
-    </div>
-  </div>
-  <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to "Cancel", course_path(@course), :class => 'btn' %>
-  </div>
+<%= simple_form_for [@course, @tag],
+                    :html => { :class => 'form-horizontal' },
+                    defaults: { input_html: { class: 'span7' } } do |f| %>
+    <%= f.input :name %>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area", rows:10}  %>
+    <%= f.association :tag_group, collection: @course.tag_groups, input_html: {class: "input-medium"}, include_blank: false%>
+
+    <%= f.button :form_submit, cancel: course_tags_path(@course) %>
 <% end %>

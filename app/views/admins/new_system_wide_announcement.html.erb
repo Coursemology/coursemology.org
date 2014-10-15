@@ -1,0 +1,25 @@
+<h3>Send System Wide Announcement</h3>
+<%= simple_form_for(@system_wide_announcement,
+                    :url => url_for(:action => 'send_system_wide_announcement',
+                                    :controller => 'admins')) do |f| %>
+  <%= f.error_notification %>
+  <div class="system-wide-announcement-content">
+    <div class="row-fluid control-group">
+      <%= f.label :subject, class:"control-label" %>
+      <div class="controls">
+        <%= f.text_field :subject, required: true, class: 'span10', required: 'required' %>
+      </div>
+    </div>
+  
+    <div class="row-fluid control-group">
+      <%= f.label :body, class:"control-label" %>
+      <div class="controls">
+        <%= f.text_area :body , label: false, required: true, class: 'text_area span10 html-editor', required: 'required' %>
+      </div>
+    </div>
+  
+  </div>
+  <div class="form-actions">
+    <%= f.submit 'Send Announcement', class: 'btn btn-primary' %>
+  </div>
+<% end %>

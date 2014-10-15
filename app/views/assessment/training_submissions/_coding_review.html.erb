@@ -1,0 +1,13 @@
+<strong>Answer attempts</strong>
+
+<% if answers.length > 0 %>
+    <% answers.each_with_index do |ans, index| %>
+        <div class="code-review-header <%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
+          <%= index + 1 %>
+          <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
+        </div>
+        <div style="margin-left: 10px">
+          <%= style_format('[mc]' + ans.content + '[/mc]', false) %>
+        </div>
+    <% end %>
+<% end %>

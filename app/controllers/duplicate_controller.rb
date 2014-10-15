@@ -4,21 +4,21 @@ class DuplicateController < ApplicationController
 
 
   def manage
-    authorize! :can, :duplicate, @course
+    authorize! :duplicate, @course
     @missions = @course.missions
     @trainings = @course.trainings
     staff_courses = current_user.user_courses.staff
     @my_courses = staff_courses.map { |uc| uc.course }
     @duplicable_items = {
-        Mission     => @course.missions,
-        Training    => @course.trainings,
-        Achievement => @course.achievements,
-        Level       => @course.levels,
-        TagGroup    => @course.tag_groups,
-        MaterialFolder  => @course.root_folder,
-        LessonPlanMilestone => @course.lesson_plan_milestones,
-        ForumForum          => @course.forums,
-        Survey              => @course.surveys
+        Mission: @course.assessments.mission,
+        Training: @course.assessments.training,
+        Achievement: @course.achievements,
+        Level: @course.levels,
+        TagGroup: @course.tag_groups,
+        MaterialFolder: @course.root_folder,
+        LessonPlanMilestone: @course.lesson_plan_milestones,
+        Forum:  @course.forums,
+        Survey: @course.surveys
     }
 
     @dates = {
@@ -26,61 +26,97 @@ class DuplicateController < ApplicationController
     }
   end
 
+  def handle_question_relationship(assessment)
+    qns_logs = assessment.questions.all_dest_logs
+    question_above = Array.new
+    assessment.questions.each do |qn|
+      unless qn.dependent_on
+        next
+      end
+      l = (qn.dependent_on.duplicate_logs_orig & qns_logs).first
+      unless l
+        next
+      end
+
+      if question_above.include?(l.dest_obj_id)
+        qn.dependent_id = l.dest_obj_id
+      else
+        qn.dependent_id = nil
+      end
+      qn.save
+      question_above << qn.id
+    end
+  end
+
+  def handle_dup_questions_position(dup)
+    pos = 0
+    dup.questions.each do |qn|
+      dqa = qn.question_assessments.where(assessment_id: dup.id).first
+      dqa.position = pos
+      dqa.save
+      pos += 1
+    end
+  end
+
+  def assign_tab_id(assessment, training_tab, mission_tab)
+    if assessment.is_a? Assessment::Training
+      if training_tab
+        assessment.tab_id = training_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    else
+      if mission_tab
+        assessment.tab_id = mission_tab.id
+      else
+        assessment.tab_id = 0
+      end
+    end
+    assessment.save
+  end
+
+
   def duplicate_assignments
     require 'duplication'
     dest_course = Course.find(params[:dest_course])
     authorize! :manage, dest_course
     authorize! :duplicate, @course
 
-    training_ids = params[Training.model_name] || []
-    training_ids.each do |id|
-      training = @course.trainings.find(id)
-      if training
-        Duplication.duplicate_asm(current_user, training, @course, dest_course)
-      end
+    assessments = @course.assessments.where(id: (params[:Training] || []) + (params[:Mission] || []))
+    achievements = @course.achievements.where(id: params[:Achievement] || [])
+    levels = @course.levels.where(id: params[:Level] || [])
+    milestones = @course.lesson_plan_milestones.where(id: params[:LessonPlanMilestone] || [])
+    entries = @course.lesson_plan_entries.where(id: params[:LessonPlanEntry] || [])
+    forums = @course.forums.where(id: params[:Forum] || [])
+    surveys = @course.surveys.where(id: params[:Survey] || [])
+
+    training_tab = dest_course.tabs.training.first
+    mission_tab = dest_course.tabs.mission.first
+
+    (assessments + achievements + levels + milestones + entries +
+        forums + surveys).each do |record|
+       c = record.amoeba_dup
+       c.course = dest_course
+       if record.respond_to? :dependent_id
+         record.dependent_id = 0
+       end
+       c.save
+       if c.is_a? Assessment
+         handle_dup_questions_position(c)
+         handle_question_relationship(c)
+         assign_tab_id(c, training_tab, mission_tab)
+       end
     end
-    #
-    mission_ids = params[Mission.model_name] || []
-    mission_ids.each do |id|
-      mission = @course.missions.find(id)
-      if mission
-        Duplication.duplicate_asm(current_user, mission, @course, dest_course)
-      end
-    end
 
-    achievement_ids   = params[Achievement.model_name] || []
-    achievements = @course.achievements.where(id:achievement_ids)
-
-    levels = []
-    if dest_course.levels.length == 1
-      level_ids         = params[Level.model_name] || []
-      levels = @course.levels.where(id: level_ids)
-    end
-
-    lesson_plan_milestone_ids = params[LessonPlanMilestone.model_name] || []
-    milestones = @course.lesson_plan_milestones.where(id: lesson_plan_milestone_ids)
-
-    lesson_plan_entry_ids     = params[LessonPlanEntry.model_name] || []
-    entries = @course.lesson_plan_entries.where(id: lesson_plan_entry_ids)
-
-    forum_ids                 = params[ForumForum.model_name] || []
-    forums = @course.forums.where(id: forum_ids)
-
-    survey_ids                = params[Survey.model_name] || []
-    surveys = @course.surveys.where(id: survey_ids)
-
-    (achievements + levels + milestones + entries +
-        forums + surveys).map {|record| Duplication.duplicate_record(current_user, record, @course, dest_course)}
-
-    tag_group_ids = params[TagGroup.model_name] || []
+    tag_group_ids = params[:TagGroup] || []
     groups = @course.tag_groups.where(id: tag_group_ids)
 
     tag_ids = params[Tag.model_name] || []
     tags = @course.tags.where(id: tag_ids)
 
-    groups.map {|grp| Duplication.duplicate_tag_group(current_user, grp, tags, @course, dest_course)}
+    groups.map {|grp| Duplication.duplicate_tag_group(current_user, grp, tags, @course, dest_course) }
 
-    material_folder_ids = params[MaterialFolder.model_name] || []
+    material_folder_ids = params[:MaterialFolder] || []
     folders = @course.root_folder.subfolders.where(id: material_folder_ids)
     folders.map {|folder| Duplication.duplicate_folder(current_user, folder, @course, dest_course) }
 
@@ -113,13 +149,105 @@ class DuplicateController < ApplicationController
         training_files: params[:training_files] == "true",
         workbin_files: params[:workbin_files] == "true"
     }
+    #
+    Course.skip_callback(:create, :after, :initialize_default_settings)
+    Assessment.skip_callback(:save, :after, :update_opening_tasks)
+    Assessment.skip_callback(:save, :after, :update_closing_tasks)
+    Assessment.skip_callback(:save, :after, :create_or_destroy_tasks)
+    clone = @course.amoeba_dup
+    clone.creator = current_user
+    user_course = clone.user_courses.build
+    user_course.user = current_user
+    user_course.role = Role.find_by_name(:lecturer)
+    clone.start_at = clone.start_at ? clone.start_at + options[:course_diff] : clone.start_at
+    clone.end_at =  clone.end_at ? clone.end_at + options[:course_diff] : clone.end_at
 
-    clone = Duplication.duplicate_course(current_user, @course, options)
+    clone.save
+    handle_relationships(clone)
+    Course.set_callback(:create, :after, :initialize_default_settings)
+    Assessment.set_callback(:save, :after, :update_opening_tasks)
+    Assessment.set_callback(:save, :after, :update_closing_tasks)
+    Assessment.set_callback(:save, :after, :create_or_destroy_tasks)
+
     respond_to do |format|
       flash[:notice] = "The course '#{@course.title}' has been duplicated."
-      format.html { redirect_to edit_course_path(clone) }
+      format.html { redirect_to course_preferences_path(clone) }
 
-      format.json {render json: {url: edit_course_path(clone)} }
+      format.json {render json: {url: course_preferences_path(clone)} }
+    end
+  end
+
+  def handle_relationships(clone)
+    #handle relation tables
+    #tab
+    t_map = {}
+    clone.tabs.each do |tab|
+      t_map[tab.id] = tab.duplicate_logs_dest.first.origin_obj_id
+    end
+    t_map.each do |k, v|
+      sql = "UPDATE assessments SET tab_id = #{k} WHERE course_id =#{clone.id} AND tab_id = #{v}"
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
+    #subfolders
+    clone.root_folder.subfolders.each do |f|
+      f.course = clone
+      f.save
+    end
+
+    #achievements requirements
+    asm_req_logs = clone.assessments.map { |asm| asm.as_asm_reqs.all_dest_logs}.flatten
+    asm_logs = clone.assessments.all_dest_logs
+    lvl_logs = clone.levels.all_dest_logs
+    ach_logs = clone.achievements.all_dest_logs
+    logs = asm_req_logs + lvl_logs + ach_logs
+
+    clone.achievements.each do |ach|
+      ach.requirements.each do |ar|
+        l = (ar.req.duplicate_logs_orig & logs).first
+        unless l
+          next
+        end
+        ar.req = l.dest_obj
+        ar.save
+      end
+    end
+
+    #assessment dependency
+    clone.assessments.each do |asm|
+      unless asm.dependent_on
+        next
+      end
+      l = (asm.dependent_on.duplicate_logs_orig & asm_logs).first
+      unless l
+        next
+      end
+      asm.dependent_id = l.dest_obj_id
+      asm.save
+    end
+
+
+    #question position & dependency
+    clone.assessments.each do |asm|
+      handle_dup_questions_position(asm)
+      handle_question_relationship(asm)
+    end
+
+    #tags
+    clone.tag_groups.each do |tg|
+      tg.tags.each do |t|
+        t.course = tg.course
+        t.save
+      end
+    end
+    q_logs = clone.questions.all_dest_logs
+    clone.taggings.each do |tt|
+      l = (tt.taggable.duplicate_logs_orig & q_logs).first
+      unless l
+        next
+      end
+      tt.taggable = l.dest_obj
+      tt.save
     end
   end
 end

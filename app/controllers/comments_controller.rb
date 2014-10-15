@@ -33,10 +33,6 @@ class CommentsController < ApplicationController
 
     CommentSubscription.populate_subscription(@comment)
 
-    if @course.email_notify_enabled? PreferableItem.new_comment and comment_topic.can_access?
-      comment_topic.notify_user(curr_user_course, @comment, comment_topic.permalink)
-    end
-
     respond_to do |format|
       format.json {render json: comment_topic.comments_json(curr_user_course)}
     end
@@ -48,7 +44,7 @@ class CommentsController < ApplicationController
       @tab = params[:_tab]
 
       @all_topics = @course.comment_topics
-      @pending_comments = @course.get_pending_comments
+      @pending_comments = @course.pending_comments
       @my_topics = curr_user_course.comment_topics
       @mine_pending_comments = @my_topics.where(pending: true)
 
@@ -81,7 +77,7 @@ class CommentsController < ApplicationController
       @topics = curr_user_course.comment_topics.where(id: topic_ids)
     end
 
-    @comments_paging = @course.comments_paging_pref
+    @comments_paging = @course.paging_pref(Comment.to_s)
     if @comments_paging.display?
       @topics = @topics.page(params[:page]).per(@comments_paging.prefer_value.to_i)
     end
@@ -174,21 +170,16 @@ class CommentsController < ApplicationController
   end
 
   private
+
   def get_comment_permalink(commentable)
-    case commentable
-      when Mcq, CodingQuestion
+    case
+      when commentable.is_a?(Assessment::Question)
         return course_comments_question_url(@course, qn_type: commentable.class, qn_id: commentable.id)
-      when StdAnswer, StdCodingAnswer
-        sbm_answer = commentable.sbm_answers.first
-        submission = sbm_answer ? sbm_answer.sbm : nil
+      when commentable.is_a?(Assessment::Answer)
+        submission = commentable.submission
+        assessment = submission.assessment
 
-        question = commentable.question
-        asm_qn = question.asm_qns.first
-        mission = asm_qn ? asm_qn.asm : nil
-
-        if mission && submission
-          return course_mission_submission_url(@course, mission, submission)
-        end
+        return course_assessment_submission_url(assessment.course, assessment, submission)
     end
     course_comments_url(@course)
   end

@@ -1,10 +1,10 @@
 
 <ul class="nav nav-tabs">
   <li class="<%= "active" if @tab == "MissionPreference" %>">
-    <a href="<%= course_staff_monitoring_path(@course) %>">Tutor Monitoring</a>
+    <a href="<%= course_staff_monitoring_path(@course) %>">Staff Monitoring</a>
   </li>
   <li class="<%= "active" if @tab == "Summary" %>">
-    <a href="<%= course_staff_leaderboard_index_path(@course) %>">Tutor Summary</a>
+    <a href="<%= course_staff_leaderboard_index_path(@course) %>">Staff Summary</a>
   </li>
 </ul>
 <table class="table table-hover no-boarder">
@@ -51,5 +51,4 @@
       </tr>
   <% end %>
   </tbody>
-
 </table>

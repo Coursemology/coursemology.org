@@ -4,63 +4,90 @@
 
 <div style="width:93%">
     <span  class="pull-left`" style="font-size: 1.3em">
-      Total EXP:   <strong style="font-size: 1.6em"> <%= @user_course.exp %> EXP</strong>
+      Total EXP:   <strong style="font-size: 1.6em"> <div style="display: inline" id="exp-sum"><%= @user_course.exp %></div> EXP</strong>
     </span>
 </div>
 <br>
-<table class="table">
-  <thead>
-  <tr>
-    <th>
-      Awarded by
-    </th>
-    <th>
-      Reason
-    </th>
-    <!--<th>-->
-    <!--Grade-->
-    <!--</th>-->
-    <th>
-      Amount
-    </th>
-    <th>
-      Time Entered
-    </th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @exp_transactions.each do |et| %>
+<%= simple_form_for @course, html: {id: "exp-transactions-form"} do |f| %>
+    <table class="table">
+      <thead>
       <tr>
-        <td>
-          <% if et.giver %>
-              <%= et.giver.name %>
-          <% else %>
-              Self
-          <% end %>
-        </td>
-        <td>
-          <%= et.reason %>
-        </td>
-        <td>
-          <%= et.exp %> EXP
-        </td>
-        <td>
-          <%= datetime_format(et.created_at) %>
-        </td>
-        <td>
-          <% if can? :manage, :ExpTransaction %>
-              <%= link_to course_user_course_exp_transaction_path(@course, @user_course, et),
-                          class: "btn btn-danger",
-                          method: "DELETE",
-                          data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to delete this EXP transaction with Amount: #{et.exp} EXP ? "))} do %>
-                  <i class="icon-trash"></i>
-              <% end %>
-          <% end %>
-        </td>
-
+        <th>
+          Awarded by
+        </th>
+        <th>
+          Reason
+        </th>
+        <!--<th>-->
+        <!--Grade-->
+        <!--</th>-->
+        <th>
+          Amount(EXP)
+        </th>
+        <th>
+          Time Entered
+        </th>
+        <th></th>
       </tr>
-  <% end %>
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+      <% @exp_transactions.each do |et| %>
+          <tr>
+              <td>
+              <input type="hidden" class="et-update-path" value="<%= course_user_course_exp_transaction_path(@course, @user_course, et) %>">
+              <% if et.giver %>
+                  <%= et.giver.name %>
+              <% else %>
+                  Self
+              <% end %>
+            </td>
+            <td>
+              <% if can?(:manage, et) and et.is_manual_reward? %>
+                  <input type="text" value="<%= et.reason %>" class="exp-input-reason" required="true">
+              <% else %>
+              	<!--Linking to submission-->
+              	<% link = et.get_submission_path %>
+              	<%if !link.nil? %>
+                	<%= link_to et.reason, link %>
+                <% else %>
+                	<%= et.reason %>
+                <% end %>
+                <!---->
+              <% end %>
+            </td>
+            <td>
+              <% if can?(:manage, et) and et.can_edit_exp? %>
+                  <input type="number" min="0" class="exp-input-mini" value="<%= et.exp %>" name="et-<%=et.id%>" required="true">
+              <% else %>
+                  <%= et.exp %>
+              <% end %>
 
+            </td>
+            <td>
+              <%= datetime_format(et.created_at) %>
+            </td>
+            <% if can?(:manage, et) %>
+                <td style="min-width: 70px">
+                  <% if et.can_edit_exp? %>
+                      <%= link_to '#', class: 'btn update-exp-transaction' do %>
+                          <i class="icon-ok"></i>
+                      <% end %>
+
+                      <% if et.is_manual_reward? %>
+                          <%= link_to course_user_course_exp_transaction_path(@course, @user_course, et),
+                                      class: "btn btn-danger",
+                                      method: "DELETE",
+                                      data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure you want to delete this EXP transaction with Amount: #{et.exp} EXP ? "))} do %>
+                              <i class="icon-trash"></i>
+                          <% end %>
+                      <% end %>
+                  <% end %>
+                </td>
+            <% end %>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <div class="alert alert-success float-alert hidden">Update role successful</div>
+<% end %>

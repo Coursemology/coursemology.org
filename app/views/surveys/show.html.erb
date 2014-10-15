@@ -33,8 +33,8 @@
           </tr>
 
           <tr>
-            <td><strong>Has sections:</strong></td>
-            <td><%= @survey.has_section? ? 'Yes' : 'No' %></td>
+            <td><strong>Is Contest:</strong></td>
+            <td><%= @survey.is_contest? ? 'Yes' : 'No' %></td>
           </tr>
           <tr>
             <td><strong>Modification After Submission:</strong></td>
@@ -62,7 +62,11 @@
     <hr/>
     <% if can? :manage, @survey %>
 
-        <% if @survey.has_section? %>
+        <% if @survey.is_contest? %>
+            <%= link_to t('.new', :default => t("helpers.links.new_qn")),
+                        new_course_survey_survey_section_survey_question_path(@course, @survey, @survey.sections.first),
+                        :class => 'btn btn-primary' %>
+        <% else %>
             <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#new_section_form">
               New Section
             </button>
@@ -72,48 +76,67 @@
                 <%= render "survey_sections/form" %>
               </div>
             </div>
-        <% else %>
-            <%= link_to t('.new', :default => t("helpers.links.new_qn")),
-                        new_course_survey_survey_question_path(@course, @survey),
-                        :class => 'btn btn-primary' %>
         <% end %>
     <% end %>
 
-    <% if @survey.has_section? %>
+    <% if @survey.is_contest? %>
+        <table class="table asm-qns-table">
+          <tbody class="asm-qns">
+          <% @survey.questions.each_with_index do |question, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= question.description.html_safe %></td>
+                <td>
+                  <%= link_to edit_course_survey_survey_section_survey_question_path(@course, @survey, @survey.sections.first, question), class: 'btn' do %>
+                      <i class="icon-edit"></i>
+                  <% end %>
+                  <%= link_to course_survey_survey_section_survey_question_path(@course, @survey, @survey.sections.first, question),
+                              method: :delete,
+                              data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                              class: 'btn btn-danger' do %>
+                      <i class="icon-trash"></i>
+                  <% end %>
+
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+    <% else %>
         <h2 class="asm-qns-title">Survey Sections</h2>
-        <table class="table asm-qns-table sort no-boarder">
-          <tbody class="asm-qns" url="<%= reorder_course_survey_survey_sections_path(@course, @survey) %>">
+        <table class="table asm-qns-table no-boarder">
+          <tbody class="asm-qns sortable-table" url="<%= reorder_course_survey_survey_sections_path(@course, @survey) %>">
           <% @survey.survey_sections.each_with_index do |s, index| %>
-              <tr class="asm-qn" id="asm-qn_<%= s.id %>" >
+              <tr class="asm-qn" id="sortable-item_<%= s.id %>" >
                 <td>
                   <div class="asm-qn-handler">
                     <i class="icon-move handler-icon"></i>
-                    <h3 class="handler-text">Section <%= index + 1 %>
+                    <h3 class="handler-text">Section <span class="asm-qn-index"><%= index + 1 %></span>
                       : <%= s.title %>
                     </h3>
                   </div>
                   <table class="table" style="margin-left:  20px;margin-right: 10px">
-                    <tbody class="asm-qns" url="<%= reorder_course_survey_survey_questions_path(@course, @survey) %>">
+                    <tbody class="asm-qns sortable-table" url="<%= reorder_course_survey_survey_section_survey_questions_path(@course, @survey, s) %>">
                     <% s.survey_questions.each_with_index do |q, i| %>
-                        <tr class="asm-qn" id="asm-qn_<%= q.id %>" >
+                        <tr class="asm-qn" id="sortable-item_<%= q.id %>" >
                           <td>
                             <div class="asm-qn-handler" style="background-color: #d9edf7">
                               <i class="icon-move handler-icon"></i>
-                              <h3 class="handler-text">Question <%= i + 1 %> :  <%= q.type.title %></h3>
+                              <h3 class="handler-text">Question <span class="asm-qn-index"><%= i + 1 %></span> :  <%= q.type.title %></h3>
                               <strong style="color: #ff0000"><%= '(* required)' if q.is_required? %></strong>
                             </div>
                             <%= render partial: "survey_questions/one", :locals => {q: q} %>
                           </td>
                           <% if can? :manage, Survey %>
-                              <td style="width: 70px">
-                                <%= link_to edit_course_survey_survey_question_path(@course, @survey, q),
+                              <td class="action-two-icons">
+                                <%= link_to edit_course_survey_survey_section_survey_question_path(@course, @survey, s, q),
                                             class: 'btn',
                                             rel: 'tooltip',
                                             "data-original-title"=>"Edit Question" do %>
                                     <i class="icon-edit"></i>
                                 <% end %>
 
-                                <%= link_to course_survey_survey_question_path(@course, @survey, q),
+                                <%= link_to course_survey_survey_section_survey_question_path(@course, @survey, s, q),
                                             class: 'btn',
                                             method: :delete,
                                             data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => "Are you sure to delete this question?")) },
@@ -128,8 +151,8 @@
                   </table>
                 </td>
                 <% if can? :manage, Survey %>
-                    <td style="width: 110px">
-                      <%= link_to "#{new_course_survey_survey_question_path(@course, @survey)}?section_id=#{s.id}",
+                    <td class="action-there-icons">
+                      <%= link_to new_course_survey_survey_section_survey_question_path(@course, @survey, s),
                                   class: 'btn',
                                   rel: 'tooltip',
                                   "data-original-title"=>"Add new question" do %>
@@ -149,31 +172,6 @@
                       <% end %>
                     </td>
                 <% end %>
-              </tr>
-          <% end %>
-          </tbody>
-        </table>
-
-    <% else %>
-
-        <table class="table asm-qns-table">
-          <tbody class="asm-qns">
-          <% @survey.questions.each_with_index do |question, index| %>
-              <tr>
-                <td><%= index + 1 %></td>
-                <td><%= question.description.html_safe %></td>
-                <td>
-                  <%= link_to edit_course_survey_survey_question_path(@course, @survey, question), class: 'btn' do %>
-                      <i class="icon-edit"></i>
-                  <% end %>
-                  <%= link_to course_survey_survey_question_path(@course, @survey, question),
-                              method: :delete,
-                              data: { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                              class: 'btn btn-danger' do %>
-                      <i class="icon-trash"></i>
-                  <% end %>
-
-                </td>
               </tr>
           <% end %>
           </tbody>

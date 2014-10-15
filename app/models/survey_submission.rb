@@ -3,7 +3,7 @@ class SurveySubmission < ActiveRecord::Base
   attr_accessible :user_course_id, :survey_id, :open_at, :submitted_at, :status, :current_qn
 
   belongs_to :user_course
-  belongs_to :survey
+  belongs_to :survey, class_name: "Survey"
   has_many   :survey_mrq_answers, dependent: :destroy
   has_many   :survey_essay_answers, dependent: :destroy
   belongs_to :exp_transaction
@@ -11,6 +11,7 @@ class SurveySubmission < ActiveRecord::Base
   default_scope includes(:user_course)
 
   scope :exclude_phantom, where("user_courses.is_phantom = 0")
+  scope :students, -> { where("user_courses.role_id = ?", Role.find_by_name('student').id) }
 
 
   def set_started
@@ -37,6 +38,7 @@ class SurveySubmission < ActiveRecord::Base
       self.exp_transaction.reason = "Exp for #{survey.title}"
       self.exp_transaction.is_valid = true
       self.exp_transaction.exp = survey.exp
+      self.exp_transaction.rewardable = survey
       self.save
       self.exp_transaction.update_user_data
     end

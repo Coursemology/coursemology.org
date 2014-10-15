@@ -1,5 +1,8 @@
 
 <ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "CoursePreference" %>">
+    <a href="<%= course_preferences_path(@course) %>?_tab=coursepref">Course Preferences</a>
+  </li>
   <li class="<%= "active" if @tab == "Sidebar" %>">
     <a href="<%= course_preferences_path(@course) %>?_tab=sidebar">Sidebar</a>
   </li>
@@ -23,7 +26,9 @@
   </li>
 </ul>
 
-<% if @tab == "NotificationPreference" %>
+<% if @tab == "CoursePreference" %>
+    <%= render partial: "course_preference" %>
+<% elsif @tab == "NotificationPreference" %>
     <%= render partial: "email_form" %>
 <% elsif @tab == "McqPreference" %>
     <%= render partial: "mcq_form" %>
@@ -31,6 +36,8 @@
     <%= render partial: "paging" %>
 <% elsif @tab == 'OtherPreference' %>
     <%= render partial: "misc" %>
+<% elsif @tab == 'Sidebar' %>
+    <%= render partial: "navbar_form" %>
 <% else %>
     <%=render partial: "form" %>
 <% end %>

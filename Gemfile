@@ -6,25 +6,28 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
-  gem 'sqlite3'
-  gem 'pry'
+  gem "pry"
   gem 'meta_request'
-  gem 'figaro'
+  gem "better_errors"
+  gem "spring"
 end
-
 
 group :production do
-  gem 'mysql2'
   gem 'puma', "~> 2.6.0"
   gem 'exception_notification'
+  gem 'dalli'
+  gem 'connection_pool'
 end
 
-
 gem "rspec-rails", :group => [:test, :development]
+gem "guard-rspec", :group => [:test, :development]
+gem 'spork-rails', :group => [:test, :development]
+gem "guard-spork", :group => [:test, :development]
+
+
 group :test do
   gem "factory_girl_rails"
   gem "capybara"
-  gem "guard-rspec"
 end
 
 # Gems used only for assets and not required
@@ -46,11 +49,13 @@ group :assets do
 end
 
 #gem 'pg'
+gem 'mysql2'
 gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails', '2.1.3'
 gem 'jqtree-rails'
+gem 'jquery-tmpl-rails'
 gem 'devise', '3.0'
-gem 'cancan'
+gem 'cancancan', '~> 1.8'
 gem 'paperclip', '~>3.0'
 gem 'faker'
 gem 'acts_as_paranoid', '~>0.4.0'
@@ -66,7 +71,6 @@ gem 'kaminari'
 gem 'best_in_place'
 gem "codemirror-rails", "~> 3.14"
 gem 'htmlentities'
-gem 'newrelic_rpm'
 gem 'aws-sdk', '1.28.0'
 gem 'sanitize'
 gem 'acts_as_votable', '~> 0.7.1'
@@ -80,6 +84,14 @@ gem 'clockwork'
 gem 'angularjs-rails'
 gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
+gem "cocoon"
+gem 'simple_form', :github => 'plataformatec/simple_form', :branch => "v2.2"
+gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0'
+gem 'amoeba', :github => 'raymondtangsc/amoeba'
+gem "haml"
+gem "axlsx"
+gem "nokogiri"
+gem "newrelic_rpm"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

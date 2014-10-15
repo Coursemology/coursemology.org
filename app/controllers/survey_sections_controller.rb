@@ -57,13 +57,7 @@ class SurveySectionsController < ApplicationController
   end
 
   def reorder
-    params['asm-qn'].each_with_index do |id, index|
-      # binding.pry
-      section = @survey.sections.find(id)
-      section.pos = index
-      section.save
-    end
+    SurveySection.reordering(params['sortable-item'])
     render nothing: true
   end
-
 end

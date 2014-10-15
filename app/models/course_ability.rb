@@ -1,4 +1,4 @@
-class CourseAbility
+class CourseAbility  < Ability
   include CanCan::Ability
 
   # checkout:
@@ -13,33 +13,34 @@ class CourseAbility
         Then authorize admin(manage all)
 =end
   def initialize(user, user_course)
+    super(user)
     user ||= User.new
     user_course ||= UserCourse.new
+    course = user_course.course
 
-    can :read, Course
+    can :read, course
     can :new, EnrollRequest
-
-    if !user.persisted?
+    can :read, UserCourse
+    unless user.persisted?
       # not logged in user
-      cannot :read, [Mission, Training]
+      cannot :read, [Assessment::Mission, Assessment::Training]
     end
 
-    if user.is_lecturer? || user.is_admin?
+    if user.is_lecturer?
       can :ask_for_share, Course
       can :create, Course
-      user.user_courses.lecturer.each do |uc|
+      user.user_courses.lecturer.includes(:course).each do |uc|
         can :manage, uc.course
       end
     end
 
-    if user_course.role == Role.shared.first || user.is_admin?
+    if user_course.is_shared?
       can :share, Course
       can :participate, Course
       can :duplicate, Course
-      can :read, [Mission, Training]
-      can :view_detail, [Mission, Training]
+      can :read, [Assessment::Mission, Assessment::Training]
+      can :view_detail, [Assessment::Mission, Assessment::Training]
       can :read, Tag
-      can :read, [Level, Achievement, Title, Reward]
       can :students, Course
     end
 
@@ -47,23 +48,24 @@ class CourseAbility
       # this is enough since all resources are loaded related to
       # the current course
       can :manage, :all
-      can :see_all, [Submission, TrainingSubmission, Level]
-      can :view_stat, [Mission, Training]
-      can :view_detail, [Mission, Training, Survey]
-      can :participate, Course
-      can :duplicate, Course
-      can :award_points, UserCourse
-      can :see, :pending_grading
-      can :see, :pending_comments
-      can :unsubmit, Submission
-      can :view, :staff_leaderboard
-      can :manage, :forum_participation
+      # can :manage, [Assessment, Assessment::Training, Assessment::Mission, Assessment::Submission, Assessment::Grading]
+      # can :manage, [Assessment::Question, Assessment::McqQuestion, Assessment::CodingQuestion]
+      # can :manage, [Assessment::Answer, Assessment::McqAnswer, Assessment::CodingAnswer, Assessment::GeneralAnswer]
+      # can :manage, [Level, Achievement, Tab, Announcement]
+      # can :manage, [LessonPlanEntry, LessonPlanMilestone, MaterialFolder, Material]
+      # can :manage, [Survey, ForumForum, ForumTopic]
+      # can :manage, [Course, UserCourse, ExpTransaction]
+      # can :manage, [Annotation, Comment]
+      # can :manage, [TagGroup, Tag]
+      # can :see, :pending_gradings
+      # can :see, :pending_comments
+      # can :view, :staff_leaderboard
+      # can :manage, :forum_participation
+      # can :manage, [EnrollRequest, MassEnrollmentEmail]
 
-      cannot :modify, TrainingSubmission
-    end
-
-    if user.is_admin? || user_course.is_creator?
-      can :destroy, Course
+      cannot :modify, Assessment::Submission
+      #TOFIX, this is just for english
+      cannot :manage, TagGroup, name: "Uncategorized"
     end
 
     if user_course.is_lecturer? && !user.is_admin?
@@ -74,7 +76,6 @@ class CourseAbility
       cannot :manage, :user
       cannot :manage, :course_preference
       cannot :manage, :staff
-      cannot :approve, EnrollRequest
       cannot :destroy, Course
       cannot :manage, :course_admin
     end
@@ -147,30 +148,32 @@ class CourseAbility
       can :read, [LessonPlanEntry]
       can :read, [LessonPlanMilestone], is_publish: true
 
-      can :read, [Mission, Training, Survey], publish: true
+      can :read, Assessment, published: true
+      can :access_denied, Assessment
+      can :read, [Assessment::Mission, Assessment::Training], assessment: {published: true}
+      can :read, Survey, publish: true
 
-      can :read, [Mcq, Question, CodingQuestion]
+      # can :read, [Mcq, Question, CodingQuestion]
 
       can :read, Tag
-      can :read, [Achievement, Title, Reward]
+      can :read, Achievement
       can :students, Course
-      can :access_denied, Mission
-      can :access_denied, Training
 
-      can :manage, [Submission, TrainingSubmission], std_course_id: user_course.id
+      can :manage, [Assessment::Submission], std_course_id: user_course.id
       can :manage, [Annotation, Comment], user_course_id: user_course.id
       can :manage, SurveySubmission, user_course_id: user_course.id
       can :manage, SurveyMrqAnswer, user_course_id: user_course.id
-      can :manage, [StdAnswer, StdMcqAnswer, StdCodingAnswer], student_id: user_course.user.id
-      can :manage, ExpTransaction, user_course_id: user_course.id
+      can :manage, Assessment::Answer, std_course_id: user_course.id
+      can :read, Assessment::Grading, std_course_id: user_course.id
+      can :read, ExpTransaction, user_course_id: user_course.id
 
       can :ignore, PendingAction, user_course: user_course
 
       can :read, Comic
       can :info, Comic
-      cannot :modify, TrainingSubmission
 
-      cannot :see_all, [Submission, TrainingSubmission]
+      cannot :modify, Assessment::Submission
+      cannot :see_all, Assessment::Submission
     end
   end
 end

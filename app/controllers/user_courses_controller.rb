@@ -5,8 +5,10 @@ class UserCoursesController < ApplicationController
   before_filter :load_general_course_data, only: [:show,:staff, :achievements]
 
   def show
-    @user_course.create_all_std_tags
-    @std_tags = @user_course.std_tags.sort_by { |std_tag| std_tag.tag.tag_group_id || 0 }
+    @tag_groups = @course.tag_groups.includes(:tags)
+    uc = @course.tag_groups.uncategorized
+    @tag_groups -= [uc]
+    @tag_groups << uc
   end
 
   def destroy

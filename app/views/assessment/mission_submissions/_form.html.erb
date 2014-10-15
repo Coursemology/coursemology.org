@@ -1,0 +1,91 @@
+<%= form_for @submission, url: course_assessment_submission_path(@course, @assessment, @submission), html: { class: 'form-horizontal' } do |f| %>
+    <div class="tabbable tabs-below">
+      <% if @mission.display_mode == AssignmentDisplayMode.tab_mode && !@mission.single_question? %>
+          <ul class="nav nav-tabs" id="assign-qn-tabs">
+            <% @questions.each_with_index do |q, i| %>
+                <li class="<%= 'active' if i == 0 %>"><a href="#tab<%= i %>" data-toggle="tab"><%=  q.get_title %></a></li>
+            <% end %>
+          </ul>
+      <% else %>
+          <hr />
+      <% end %>
+      <div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+        <% @questions.each_with_index do |q, i| %>
+            <% if @mission.display_mode == AssignmentDisplayMode.tab_mode && !@mission.single_question? %>
+                <div class="tab-pane <%= 'active' if i == 0%>" id="tab<%= i %>">
+            <% end %>
+            <% unless @mission.single_question? %>
+                <h3><%=  q.get_title%></h3>
+            <% end %>
+            <div class="row">
+              <div class="span8">
+                <span><%= style_format(q.description) %></span>
+              </div>
+            </div>
+
+            <%- answer = @submission.answers.where(question_id: q.id).first %>
+            <% if @mission.file_submission_only? %>
+                <p style="font-style: italic"> Please include you answer in file(s).</p>
+            <% else %>
+                <h3>Your answer:</h3>
+                <%- answer = @submission.answers.where(question_id: q.id).first %>
+                <%- question = q.specific %>
+                <% if question.class == Assessment::GeneralQuestion %>
+                    <textarea name="answers[<%= q.id %>]" class="span8 html-editor" rows="8">
+                      <% if answer %>
+                          <%= answer.content %>
+                      <% end %>
+                    </textarea>
+                <% else %>
+                    <%=render partial: 'do_coding',
+                              locals: { answer: answer,
+                                        question: question,
+                                        submission: @submission,
+                                        mode: "edit" } %>
+                <% end %>
+            <% end %>
+
+            <% if @mission.comment_per_qn? %>
+                <hr />
+
+                <% require 'digest/md5' %>
+                <% ecid =  Digest::MD5.hexdigest(answer.id.to_s) %>
+                <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
+
+                <div class="row-fluid">
+                  <div class="span10">
+                    <%= render partial: "comments/list",
+                               locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
+                                         target:    answer,
+                                         header:    'Comments',
+                                         ecid:      ecid } %>
+                  </div>
+                </div>
+            <% end %>
+            <% if @mission.display_mode == AssignmentDisplayMode.tab_mode && !@mission.single_question? %>
+                </div>
+            <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <br />
+
+    <div id="uploaded_files_div"></div>
+    <div class="form-actions">
+      <%= f.submit 'Save', :class => 'btn btn-primary', id: "mission-save" %>
+      <%= f.submit 'Finalize Submission', :class => 'btn btn-danger', id:"mission_submit" %>
+    </div>
+<% end %>
+
+<% if @mission.file_submission? || @mission.file_submission_only  %>
+    <span class="btn" data-toggle="collapse" data-target="#submission-files">
+    <i class="icon-upload icon-white"></i>
+    <span>Add files for submission</span>
+  </span>
+    <br/><br/>
+    <div id="submission-files" class="collapse out">
+      <%= render partial: 'layouts/file_uploader_complicated',
+                 locals: { owner: @submission } %>
+    </div>
+<% end %>

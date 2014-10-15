@@ -47,7 +47,9 @@ class SurveySubmissionsController < ApplicationController
       return
     end
 
-    if @survey.has_section?
+    if @survey.is_contest?
+      submit_single_question
+    else
       answers = {}
       params[:answers].each do |vals|
         qn = @survey.questions.where(id: vals.first).first
@@ -62,7 +64,7 @@ class SurveySubmissionsController < ApplicationController
             essay.text = answers[qn]
             essay.save
           else
-            essay.destory
+            essay.destroy
           end
         else
           #TODO: improve
@@ -103,8 +105,6 @@ class SurveySubmissionsController < ApplicationController
                                    notice: "Survey status has been saved."}
         end
       end
-    else
-      submit_single_question
     end
   end
 

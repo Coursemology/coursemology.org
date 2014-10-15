@@ -31,4 +31,8 @@ class RegistrationsController < Devise::RegistrationsController
     @setting = true
     super
   end
+
+  def after_update_path_for(resource)
+    main_app.users_settings_path
+  end
 end

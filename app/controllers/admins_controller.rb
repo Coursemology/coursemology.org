@@ -35,7 +35,7 @@ class AdminsController < ApplicationController
 
   def search(role = nil)
     unless params[:search].nil?
-      @users = User.search(params[:search].strip, role).order(:name).page(params[:page]).per(50)
+      @users = User.search(params[:search].strip, role).order("users.name").page(params[:page]).per(50)
     end
     if params[:origin]
       redirect_to params[:origin]
@@ -75,6 +75,31 @@ class AdminsController < ApplicationController
 
     if params[:origin]
       redirect_to params[:origin]
+    end
+  end
+
+  def new_system_wide_announcement
+    @system_wide_announcement = SystemWideAnnouncement.new
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def send_system_wide_announcement
+    @system_wide_announcement = SystemWideAnnouncement.new(params[:system_wide_announcement])
+
+    if @system_wide_announcement.save
+      Thread.new do
+        User.all.each do |user|
+          UserMailer.delay.system_wide_announcement(user.name, user.email,
+                                                    @system_wide_announcement.subject,
+                                                    @system_wide_announcement.body)
+        end
+      end
+      redirect_to admins_url, notice: 'System wide announcement successfully sent.'
+    else
+      redirect_to admins_url, :flash => { :error => 'Error sending system wide announcement.' }
     end
   end
 

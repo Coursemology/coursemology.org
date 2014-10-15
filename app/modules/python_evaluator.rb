@@ -1,5 +1,6 @@
 class PythonEvaluator
   require 'fileutils'
+  require 'open3'
 
   def self.get_asm_file_path(assign)
     "#{Rails.root}/#{assign.class.to_s}/#{assign.id}/files/"
@@ -30,21 +31,23 @@ class PythonEvaluator
     full_path
   end
 
-  def self.combine_code(c1, c2)
-    c1 + "\n" + c2
+  def self.combine_code(a)
+    a.join("\n")
   end
 
-  def self.eval_python(dir, code, data, eval = false)
+  def self.eval_python(dir, code, qn, eval = false)
     file_path = PythonEvaluator.get_tmp_file_name(dir, ".py")
 
-    tests = {publicTests: data["publicTests"],
-             privateTests:data["privateTests"],
-             evalTests:   data["evalTests"]}
+    data = qn.data_hash
+    tests = {public: data["public"],
+             private:data["private"],
+             eval:   data["eval"]}
 
-    time_limit = data["timeLimitInSec"]
-    memory_limit = data["memoryLimitInMB"] * 1024
+    time_limit = qn.time_limit
+    # memory_limit = qn.memory_limit * 1024
     sandbox = File.open(get_sandbox_file, 'r')
-    code = combine_code(sandbox.read, code)
+    code = combine_code([sandbox.read, code])
+    cmd = qn.language.cmd
 
     #if resource_limit
     #  code = combine_code(resource_limit(memory_limit, time_limit), code)
@@ -52,7 +55,7 @@ class PythonEvaluator
 
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
-    summary ={publicTests: [],privateTests: [], evalTests: [],errors:[]}
+    summary ={publics: [],private: [], eval: [],errors:[]}
     range = eval ? 2 : 1
     times = eval ? 1 : 0
 
@@ -71,13 +74,13 @@ class PythonEvaluator
         need_std_answer = time == 1
         case i
           when 0
-            test_type = :publicTests
+            test_type = :public
             result_type = :publicResults
           when 1
-            test_type = :privateTests
+            test_type = :private
             result_type = :privateResults
           else
-            test_type = :evalTests
+            test_type = :eval
             result_type = :evalResults
         end
 
@@ -86,35 +89,31 @@ class PythonEvaluator
         test_cases.each do |test|
           exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
           exp_excep = need_std_answer ? "e" : "False"
-          if test_type == :evalTests || need_std_answer
-            test_code << "\ntry:\n"
-            test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
-            test_code << "except Exception as e:\n"
-            test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
-          else
-            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
-          end
+          test_code << "\ntry:\n"
+          test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
+          test_code << "except Exception as e:\n"
+          test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
         end
 
         file.write(test_code)
         file.close
 
         Dir.chdir(dir){
-          @stdout,@stderr, @status = Open3.capture3("python3.3 #{file_path}")
+          @stdout,@stderr, @status = Open3.capture3("#{cmd} #{file_path}")
         }
         errors = @stderr
         stdout = @stdout
         status = @status
         #puts "status", status
         #puts "stdout",stdout
-        # puts "error", errors
+        #puts "error", errors
         print_outs = stdout.split("\n").select{|r| r.include? hash }.map{|r| r.gsub(hash + " ", '').gsub("\n",'') }
         if need_std_answer
           results = print_outs
         else
           results = print_outs.map{|r| r == "True" ? true : false }
         end
-        File.delete(file_path)
+        # File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)
 

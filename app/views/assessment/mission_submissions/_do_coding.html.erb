@@ -1,0 +1,120 @@
+<div class="row-fluid">
+  <div class="code-submission span10">
+    <% if mode == "view" %>
+        <div class="btn-group" style="float: right" >
+          <a class="btn" href="#" id="select-all-code-<%= answer.id  %>" title="Select entire code"><i class="icon-file"></i></a>
+          <a class="btn" href="#" id="toggle-comment-<%= answer.id  %>" title="Toggle Annotations"><i class="icon-comment"></i></a>
+          <a class="btn" href="#" id="fullscreen-link-<%= answer.id  %>" title="View in fullscreen"><i class="icon-fullscreen"></i></a>
+        </div>
+    <% end %>
+    <div id="source-code-<%= answer.id  %>" class="code-wrapper cos_code"></div>
+    <% if question.auto_graded? and mode != 'view' %>
+        <% if question.data_hash['public'].length > 0 %>
+            <h3>Public Tests</h3>
+            <p>The following expressions will be executed.</p>
+            <table class="table table-striped table-bordered" id="public-test-table-<%= answer.id %>">
+              <thead>
+              <tr>
+                <td>Expression</td>
+                <td>Expected Output</td>
+              </tr>
+              </thead>
+              <tbody>
+              <% question.data_hash["public"].each do |test| %>
+                  <tr>
+                    <td><%= test["expression"] %></td>
+                    <td><%= test["expected"] %></td>
+                  </tr>
+              <% end %>
+              </tbody>
+            </table>
+        <% end %>
+        <h3>Testing</h3>
+        <% unless curr_user_course.is_staff? %>
+            <div style="font-size: 14px;padding-left: 10px">
+              Click Run to test your answer. You can maximally run <%= question.attempt_limit %> times.
+            </div>
+        <% end %>
+        <button class="btn btn-large btn-block btn-danger"
+                type="button"
+                id="run-qn-test"
+                <%= 'disabled' unless answer.can_run_test?(curr_user_course) %>
+                onclick="codeEvaluator.testRun('<%= answer.id %>','<%= test_course_assessment_submission_url(@course, @assessment, @submission) %>', this);" >
+          RUN
+          <% unless curr_user_course.is_staff? %>
+              ( <span id="run-count-down-<%= answer.id %>"><%= answer.attempt_left %></span> times left )
+          <% end %>
+        </button>
+        <br>
+        <div id="eval-result-<%= answer.id %>" style="font-size: 14px;padding-left: 10px">
+        </div>
+    <% elsif question.auto_graded?  %>
+        <h3>Auto Grading Summary</h3>
+        <% if question.data_hash["public"].length > 0 %>
+            <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Public Tests",
+                                                                                            tests: question.data_hash["public"],
+                                                                                            results: answer.result_hash["publicResults"],
+                                                                                            actual: answer.result_hash["publicResults"] } %>
+        <% end %>
+
+        <% if  curr_user_course.is_staff? %>
+            <% if question.data_hash["private"].length > 0 %>
+                <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Private Tests",
+                                                                             tests: question.data_hash["private"],
+                                                                             results: answer.result_hash["privateResults"],
+                                                                             actual: answer.result_hash["privateResults"] } %>
+            <% end %>
+            <% if question.data_hash["eval"].length > 0 %>
+                <%= render partial: "assessment/mission_submissions/test_result_table", locals:{title: "Evaluation Tests",
+                                                                             tests: question.data_hash["eval"],
+                                                                             results: answer.result_hash["evalResults"],
+                                                                             actual: answer.result_hash["evalResults"] } %>
+            <% end %>
+
+            <% if answer.result_hash["errors"] && answer.result_hash["errors"].length > 0 %>
+                <h4>Error Message</h4>
+                <div id="eval-error-message" style="font-size: 14px; padding-left: 10px; background-color: rgb(225, 193, 177);"><%= answer.result_hash["errors"] %></div>
+            <% end %>
+        <% end %>
+    <% end %>
+  </div>
+  <div class="span2"></div>
+</div>
+<input type="hidden" name="answers[<%= question.question.id %>]" id="code_<%= answer.id  %>" >
+<input type="hidden" id="annotation-path-<%= answer.id  %>" value="/courses/<%=@course.id%>/annotations">
+<input type="hidden" class="code-ans" value="<%= answer.id  %>" >
+<input type="hidden" id="submission-id-<%= answer.id  %>" value="<%= submission.id %>">
+<input type="hidden" id="mode_<%= answer.id  %>" value="<%= mode %>">
+<input type="hidden" id="code-language-<%= answer.id  %>" value="python">
+<style>
+    .CodeMirror-scroll {
+        height: 495px !important;
+    }
+    pre {
+        background: transparent;
+        white-space: pre;
+        font-family:  monospace;
+    }
+
+    pre, div {
+        padding: 0;
+        margin: 0;
+        border: 0;
+        vertical-align: baseline;
+        text-align: left;
+        color: inherit;
+    }
+    #annotate-area {
+        padding: 5px;
+    }
+</style>
+<script>
+    var source_code = <%= answer ? raw(answer.content.to_json) : raw(question.template.to_json) %>;
+    $('#code_<%= answer.id  %>').val(source_code);
+
+
+    var _c = [];
+    var _ca = true;
+    var _cc = true;
+
+</script>

@@ -1,6 +1,6 @@
-Hello, <%= @user_name %>!
+Hello, <%= @user.name %>
 
-<p>Please be reminded that: <a href="<%= @redirect_url %>"> <%= @mission_title %></a> is due on <%= @due_time %></p>
+<p>Please be reminded that: <a href="<%= @redirect_url %>"> <%= @assessment.title %></a> is due on <%= @assessment.close_at %></p>
 
 Best Regards,
 <br/>

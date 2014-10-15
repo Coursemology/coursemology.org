@@ -12,27 +12,31 @@ class UserMailer < ActionMailer::Base
     mail(to: user.email, subject: "New comment by #{@comment.user_course.name}!")
   end
 
-  def new_annotation(user, annotation, assignment, redirect_url)
+
+  def new_annotation(user, submission, annotation)
     @user = user
     @comment = annotation
-    @redirect_url = redirect_url
-    @assignment = assignment
+    @redirect_url = course_assessment_submission_url(submission.assessment.course,
+                                                     submission.assessment,
+                                                     submission)
+    @assessment = submission.assessment
     mail(to: user.email, subject: "New annotation by #{@comment.user_course.name}!")
   end
 
-  def new_grading(user, redirect_url)
-    puts "to email #{user.email} redirect #{redirect_url}"
-    @user = user
-    @redirect_url = redirect_url
-    mail(to: user.email, subject: "New Grading available!")
+  def new_grading(uc, grading)
+    @user = uc.user
+    @redirect_url = course_assessment_submission_grading_url(uc.course,
+                                                             grading.submission.assessment,
+                                                             grading.submission,
+                                                             grading)
+    mail(to: @user.email, subject: "New Grading available!")
   end
 
-  def new_submission(user, submitted_by, mission, redirect_url)
-    puts "to email #{user.email} redirect #{redirect_url}"
+  def new_submission(user, course, sbm)
     @user = user
-    @redirect_url = redirect_url
-    @submitted_by = submitted_by
-    mail(to: user.email, subject: "New Submission on : #{mission.title}!")
+    @redirect_url = course_assessment_submission_url(course, sbm.assessment, sbm)
+    @sbm = sbm
+    mail(to: user.email, subject: "New Submission on : #{sbm.assessment.title}!")
   end
 
   def new_lecturer(user)
@@ -66,34 +70,31 @@ class UserMailer < ActionMailer::Base
     mail(to:lecturer.email, subject: "New enroll request for your course on Coursemology")
   end
 
-  def new_announcement(user_name, ann, user_email, redirect_to, course_name)
-    @user_name = user_name
-    @redirect_url = redirect_to
-    @ann = ann
-    @course_name = course_name
-    mail(to: user_email, subject: "#{course_name} New Announcement: #{ann.title}")
+  def new_announcement(user, item, course)
+    @user = user
+    @ann = item
+    @course = course
+    mail(to: @user.email, subject: "#{course.title} New Announcement: #{@ann.title}")
   end
 
-  def new_mission(user_name, user_email, mission_title, course, redirect_to)
-    @user_name = user_name
-    @mission_title = mission_title
-    @redirect_to = redirect_to
-    mail(to: user_email, subject: "#{course.title}: New #{course.customized_title_by_model(Mission).singularize} Available!")
+  def new_assessment(user, asm, course)
+    @redirect_to = new_course_assessment_submission_url(course, asm)
+    @user = user
+    @assessment = asm
+    mail(to: user.email, subject: "[Coursemology] New #{course.customized_title_by_model(asm.specific.class).singularize} Available in Course #{course.title}")
   end
 
-  def new_training(user_name, user_email, training_title, course, redirect_to)
-    @user_name = user_name
-    @training_title = training_title
-    @redirect_to = redirect_to
-    mail(to: user_email, subject: "#{course.title}: New #{course.customized_title_by_model(Training).singularize} Available!")
+  def mission_due(user, assessment, course)
+    @user = user
+    @assessment = assessment
+    @redirect_url = new_course_assessment_submission_url(course, assessment)
+    mail(to: @user.email, subject: "[Coursemology] Reminder about #{assessment.title} in Course #{course.title}")
   end
 
-  def mission_due(user, mission, course, redirect_to)
-    @user_name = user.name
-    @mission_title = mission.title
-    @due_time = mission.close_at
-    @redirect_url = redirect_to
-    mail(to: user.email, subject: "#{course.title}: Reminder about #{mission.title}")
+  def mission_reminder_summary(students, asm, staff)
+    @assessment = asm
+    @students = students
+    mail(to:staff.email,  subject: "Reminder about #{asm.title}")
   end
 
   def forum_digest(user, posts, course, date)
@@ -138,13 +139,6 @@ class UserMailer < ActionMailer::Base
     mail(to: std_email, subject: "Invitation to enroll in: #{course_title}")
   end
 
-  def mission_reminder_summary(students, mission, staff)
-    @assignment = mission.title
-    @students = students
-    @due_date = mission.close_at
-    mail(to:staff.email,  subject: "Reminder about #{mission.title}")
-  end
-
   def course_deleted(title, user)
     @user = user
     @title = title
@@ -154,5 +148,11 @@ class UserMailer < ActionMailer::Base
   def user_deleted(name, email)
     @name = name
     mail(to:email, subject: "Your account has been deleted")
+  end
+
+  def system_wide_announcement(name, email, subject, body)
+    @name = name
+    @body = body
+    mail(to: email, subject: "[Coursemology] #{subject}")
   end
 end

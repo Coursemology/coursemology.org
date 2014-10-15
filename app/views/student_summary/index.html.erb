@@ -3,78 +3,13 @@
   <a href="<%= course_student_summary_export_path %>" class="btn btn-success" style="float: right; margin-right: 20px;width: 100px;margin-top: -30px">Export .csv</a>
   <!--<a href="#optionModal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>-->
 </div>
-<% has_tutor = @course.tutorial_groups.count > 0 %>
 
-<table class="table table-center">
-  <thead>
-  <th>S/N</th>
-  <th style="text-align: left"><%= sortable 'Name', course_student_summary_path %></th>
-  <% if has_tutor %>
-      <th style="text-align: left">Tutor</th>
-  <% end %>
-  <th><%= sortable 'Level', course_student_summary_path %></th>
-  <th><%= sortable 'Exp', course_student_summary_path %></th>
-  <th>Exp Count</th>
-  </thead>
-  <tbody>
-  <% @students.each_with_index do |std, index| %>
-      <tr>
-        <td><%= index + 1%></td>
-        <td style="text-align: left"><a href="<%= course_user_course_path(@course, std)%>"><%= std.name %></a></td>
-        <% if has_tutor %>
-            <td style="text-align: left"> <%= std.get_my_tutor_name %></td>
-        <% end %>
-        <td><%= std.level ? std.level.level : 0%> </td>
-        <td><a href="<%= course_user_course_exp_transactions_path(@course, std) %>"> <%= std.exp %> EXP</a></td>
-        <td><%= std.exp_transactions.length %></td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
-
-<% if @std_summary_paging.display? %>
-    <%= paginate @students %>
-<% end %>
-
-<hr>
-<h1>Phantom Students</h1>
-<table class="table table-center">
-  <thead>
-  <th>S/N</th>
-  <th style="text-align: left">Name</th>
-  <% if has_tutor %>
-      <th style="text-align: left">Tutor</th>
-  <% end %>
-  <th>Level</th>
-  <th>Exp</th>
-  <th>Exp Count</th>
-  </thead>
-  <tbody>
-  <% @phantom_students.each_with_index do |std, index| %>
-      <tr>
-        <td><%= index + 1%></td>
-        <td style="text-align: left"><a href="<%= course_user_course_path(@course, std)%>"><%= std.name %></a></td>
-        <% if has_tutor %>
-            <td style="text-align: left"> <%= std.get_my_tutor_name %></td>
-        <% end %>
-        <td><%= std.level ? std.level.level : 0%> </td>
-        <td><a href="<%= course_user_course_exp_transactions_path(@course, std) %>"> <%= std.exp %> EXP</a></td>
-        <td><%= std.exp_transactions.length %></td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
-
-<!--<div id="optionModal" class="modal hide fade">-->
-  <!--<div class="modal-header">-->
-    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-    <!--<h3>Export Options</h3>-->
-  <!--</div>-->
-  <!--<div class="modal-body">-->
-    <!--<p>One fine body…</p>-->
-  <!--</div>-->
-  <!--<div class="modal-footer">-->
-    <!--<a href="#" class="btn">Close</a>-->
-    <!--<a href="#" class="btn btn-primary">Save changes</a>-->
-  <!--</div>-->
-<!--</div>-->
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a href='<%= course_student_summary_path(@course) %>'>Student Summary</a>
+  </li>
+  <li>
+    <a href='<%= course_manage_group_path(@course) %>'>My Students</a>
+  </li>
+</ul>
+<%= render partial: "student_summary" %>

@@ -12,23 +12,14 @@ class CommentTopic < ActiveRecord::Base
 
   default_scope includes(:topic)
 
-  def notify_user(curr_user_course, comment, redirect_url)
-    # notify everyone except the ones who made the comment
-    user_courses = self.user_courses - [curr_user_course]
-    user_courses.each do |uc|
-      UserMailer.delay.new_comment(uc.user, comment, redirect_url)
-    end
-  end
-
   def can_access?
     submission = nil
-    if topic.respond_to?(:sbm_answers)
-      sbm_answer = topic.sbm_answers.first
-      submission = sbm_answer ? sbm_answer.sbm : nil
-    elsif topic.class == Submission
-      submission = comment_topic.topic
+    if topic.is_a? Assessment::Answer
+      submission = topic.submission
+    elsif topic.is_a? Assessment::Submission
+      submission = topic
     end
-    submission.nil? || (submission && submission.assignment.published?)
+    submission.nil? || (submission && submission.assessment.published?)
   end
 
   def comments_json(curr_user_course = nil, brief = false)

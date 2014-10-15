@@ -21,8 +21,8 @@ end
 if User.count == 0
   admin = User.create!(name: "Admin", email: "jfdi@academy.com",
                        password: "supersecretpass",
-                       password_confirmation: "supersecretpass",
-                       system_role_id: super_role.id)
+                       password_confirmation: "supersecretpass")
+  admin.system_role_id = super_role.id
   admin.skip_confirmation!
   admin.save!
 end
@@ -518,14 +518,6 @@ if PreferableItem.count == 56
 
 end
 
-if AssignmentType.count == 0
-  AssignmentType.create!  title:        "Main",
-                          description:  "Main mission or training"
-
-  AssignmentType.create! title:         "Extra",
-                         description:   "Extra mission or training"
-end
-
 if SurveyQuestionType.count == 0
   SurveyQuestionType.create! title:         "MCQ",
                              description:   "Multiple Choice Question"
@@ -610,4 +602,139 @@ if PreferableItem.count == 63
                          default_value: "Comics",
                          description:   "Comics",
                          default_display: true
+end
+
+if NavbarLinkType.count == 0
+  NavbarLinkType.create! link_type: 'module'
+  NavbarLinkType.create! link_type: 'admin'
+end
+
+if NavbarPreferableItem.count == 0
+  NavbarPreferableItem.create! item:  "announcements",
+                               navbar_link_type_id:  1,
+                               name: "Announcements",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course announcements",
+                               pos: 1
+
+  NavbarPreferableItem.create! item:  "missions",
+                               navbar_link_type_id:  1,
+                               name: "Missions",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course missions",
+                               pos: 2
+
+  NavbarPreferableItem.create! item:  "trainings",
+                               navbar_link_type_id:  1,
+                               name: "Trainings",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course trainings",
+                               pos: 3
+
+
+  NavbarPreferableItem.create! item:  "submissions",
+                               navbar_link_type_id:  1,
+                               name: "Submissions",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course submissions",
+                               pos: 4
+
+  NavbarPreferableItem.create! item:  "achievements",
+                               navbar_link_type_id:  1,
+                               name: "Achievements",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course achievements",
+                               pos: 5
+
+  NavbarPreferableItem.create! item:  "comments",
+                               navbar_link_type_id:  1,
+                               name: "Comments",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course comments",
+                               pos: 6
+
+
+  NavbarPreferableItem.create! item:  "leaderboard",
+                               navbar_link_type_id:  1,
+                               name: "Leaderboard",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course leaderboard",
+                               pos: 7
+
+  NavbarPreferableItem.create! item:  "students",
+                               navbar_link_type_id:  1,
+                               name: "Students",
+                               is_displayed: true,
+                               is_enabled: true,
+                               description: "course students",
+                               pos: 8
+
+  NavbarPreferableItem.create! item:  "lesson_plan",
+                               navbar_link_type_id:  1,
+                               name: "Lesson Plan",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course lesson plan",
+                               pos: 9
+
+  NavbarPreferableItem.create! item:  "materials",
+                               navbar_link_type_id:  1,
+                               name: "Materials",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course materials",
+                               pos: 10
+
+  NavbarPreferableItem.create! item:  "forums",
+                               navbar_link_type_id:  1,
+                               name: "Forums",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course forums",
+                               pos: 11
+
+  NavbarPreferableItem.create! item:  "surveys",
+                               navbar_link_type_id:  1,
+                               name: "Surveys",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course surveys",
+                               pos: 12
+
+end
+
+if NavbarPreferableItem.count == 12
+  NavbarPreferableItem.create! item:  "comics",
+                               navbar_link_type_id:  1,
+                               name: "Comics",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course comics",
+                               pos: 13
+end
+
+
+if ProgrammingLanguage.count == 0
+  ProgrammingLanguage.create!({name: "Python",
+                              codemirror_mode: "python",
+                              version:  "3.3",
+                              cmd: "python3.3"}, :without_protection => true)
+
+
+end
+
+if ProgrammingLanguage.count == 1
+  ProgrammingLanguage.create!({name: "Python",
+                               codemirror_mode: "python",
+                               version:  "3.4",
+                               cmd: "python3.4"}, :without_protection => true)
+
+
 end

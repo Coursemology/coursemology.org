@@ -3,6 +3,12 @@ $(document).ready(function() {
   // setup the drag drop zone
   var target_el = '';
 
+  var showError = function(message) {
+    var $alert = $('.alert');
+    $alert.removeClass('hidden');
+    $alert.html("Error uploading image: " + message);
+  };
+
   $('.image-uploader-trigger').click(function() {
     target_el = $(this).attr('data-target');
     var modal = $(this).attr('href');
@@ -53,6 +59,34 @@ $(document).ready(function() {
         }
       ],
 
+      add: function(e, data) {
+        // the jquery-fileupload-rails gem doesn't include the validation
+        // scripts, we have to do the check manually. >_<
+
+        var file = data.files[0],
+            that = $(this).data('blueimp-fileupload') || $(this).data('fileupload'),
+            options = that.options,
+            $modal = $('.modal'),
+            fileSize;
+
+        if (options.maxFileSize) {
+          fileSize = file.size;
+        }
+
+        if ($.type(fileSize) === 'number' &&
+            fileSize > options.maxFileSize) {
+          showError("File is too large");
+          $modal.modal('hide');
+        } else if (options.acceptFileTypes &&
+            !(options.acceptFileTypes.test(file.type) ||
+            options.acceptFileTypes.test(file.name))) {
+          showError("Unaccepted file type");
+          $modal.modal('hide');
+        } else {
+          data.submit();
+        }
+      },
+
       progress: function(e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10),
             $bar = $(this).find('.bar'),
@@ -70,14 +104,11 @@ $(document).ready(function() {
       },
 
       fail: function(e, data) {
-        var $alert = $('.alert');
-        $alert.removeClass('hidden');
-        $alert.html("Error uploading image: " + data.errorThrown);
+        showError(data.errorThrown);
       },
 
       always: function(e, data) {
         var $bar = $(this).find('.bar');
-
         $bar.width(0);
         $bar.html('');
         // dismiss modal upon success, abort or error. ie. always

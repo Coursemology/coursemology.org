@@ -106,7 +106,7 @@ private
   end
 
   def entries_between_date_range(start_date, end_date)
-    if can? :manage, Mission
+    if can? :manage, Assessment::Mission
       virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date)
     else
       virtual_entries = @course.lesson_plan_virtual_entries(start_date, end_date).select { |entry| entry.is_published }

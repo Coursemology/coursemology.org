@@ -8,19 +8,14 @@ class Announcement < ActiveRecord::Base
   belongs_to :course
   belongs_to :creator, class_name: "User"
   has_many :queued_jobs, as: :owner, class_name: "QueuedJob", dependent: :destroy
+  after_save :schedule_mail, if: :publish_at_changed?
 
-  #before_destroy :delete_jobs
-
-  def schedule_mail(ucs, redirect_to, send = false)
+  def schedule_mail
     QueuedJob.destroy(self.queued_jobs)
 
-    unless course.email_notify_enabled? PreferableItem.new_announcement
-      return
-    end
+    return unless course.email_notify_enabled? PreferableItem.new_announcement
 
-    if publish_at > Time.now || send
-      delayed_job = Delayed::Job.enqueue(MailingJob.new(course_id, Announcement.to_s, self.id, redirect_to), run_at: self.publish_at)
-      self.queued_jobs.create(delayed_job_id: delayed_job.id)
-    end
+    delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, :notification, Announcement.name, self.id), run_at: self.publish_at)
+    self.queued_jobs.create(delayed_job_id: delayed_job.id)
   end
 end

@@ -1,6 +1,6 @@
 <%- model_class = Announcement -%>
 <div class="page-header">
   <h1><%=t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
-                                 :default => "New #{@course.customized_announcements_title.singularize}") %></h1>
+                                 :default => "New #{@course.customized_title('announcement').singularize}") %></h1>
 </div>
 <%= render :partial => 'form' %>

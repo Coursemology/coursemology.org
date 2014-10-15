@@ -3,7 +3,7 @@ class EnrollRequest < ActiveRecord::Base
   attr_accessible :course_id, :role_id, :user_id
 
   include Rails.application.routes.url_helpers
-  scope :student, where(:role_id => Role.student.first)
+  scope :student, -> { where(:role_id => Role.student.first) }
 
   belongs_to :course
   belongs_to :user
