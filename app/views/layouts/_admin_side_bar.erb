@@ -11,7 +11,7 @@
     <li><%= link_to "Masquerade", admin_masquerades_path %></li>
     <li>
       <a href="<%= role_requests_path %>">
-        Role Requests <span class="sidenav-count " ><%= @request_count if @request_count && @request_count > 0  %></span>
+        Role Requests <% if @request_count && @request_count > 0 %><span class="sidenav-count " ><%= @request_count %></span><% end %>
       </a>
     </li>
     <li><%= link_to "Courses", admin_courses_path %></li>
