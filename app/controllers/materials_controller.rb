@@ -306,7 +306,7 @@ private
 
     if include_files then
       folder_metadata['files'] = (folder.is_virtual? ?
-        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
+        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder).includes(:file))
         .map { |file|
           current_file = {}
 
