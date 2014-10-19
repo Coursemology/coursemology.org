@@ -53,7 +53,7 @@ class MaterialsController < ApplicationController
           end
 
           subfolder.materials.each { |material|
-            if not seen_material_ids.include?(material.id) then
+            unless seen_material_ids.include?(material.id)
               @is_subfolder_new[subfolder.id] = true
               break
             end
@@ -316,7 +316,7 @@ private
           current_file['folder_id'] = file.folder_id
           current_file['url'] = course_material_file_path(@course, file)
 
-          if not(folder.is_virtual? || seen_material_ids.include?(file.id)) then
+          unless folder.is_virtual? || seen_material_ids.include?(file.id)
             current_file['is_new'] = true
             folder_metadata['contains_new'] = true
           end
