@@ -61,6 +61,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
   def unsubmit
     @submission.set_attempting
+    # re-run test cases when student submit again
+    grading = @submission.gradings.first
+    grading.update_column(:autograding_refresh, true) if grading
+
     flash[:notice] = "Successfully unsubmited submission."
     redirect_to course_assessment_submission_path(@course, @assessment, @submission)
   end
