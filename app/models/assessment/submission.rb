@@ -170,6 +170,20 @@ class Assessment::Submission < ActiveRecord::Base
     end
   end
 
+  def eval_answer
+    answers.coding.each do |ans|
+      qn = ans.question.specific
+      next unless qn.auto_graded?
+
+      combined_code = PythonEvaluator.combine_code([qn.pre_include, ans.content, qn.append_code])
+      result = PythonEvaluator.eval_python(
+          PythonEvaluator.get_asm_file_path(assessment),
+          combined_code, qn, true)
+      ans.result = result.to_json
+      ans.specific.save
+    end
+  end
+
   #callbacks
   def status_change_tasks
     if assessment.is_mission? && status_was == 'attempting' && status == 'submitted'
