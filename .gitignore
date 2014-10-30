@@ -47,3 +47,5 @@
 
 # Ignore coveralls directory
 /coverage
+
+.vagrant
