@@ -207,7 +207,7 @@ class Assessment::GradingsController < ApplicationController
     @summary = {qn_ans: {}}
 
     if @grading.autograding_refresh
-      eval_answer
+      @submission.eval_answer
       @grading.update_attribute :autograding_refresh, false
     end
 
