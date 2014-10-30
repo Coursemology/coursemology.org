@@ -60,12 +60,10 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       specific.save
     end
 
-    if params[:dependent_on]
-      @mission.dependent_on = []
-      params[:dependent_on].each do |dep|
-        @mission.dependent_on << Assessment.find(dep[:dependent_id])
-      end
+    if params[:assessment_mission][:dependent_on_attributes]
+      @mission.dependent_on_ids = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
     end
+    params[:assessment_mission].delete(:dependent_on_attributes)
 
     respond_to do |format|
       if @mission.save
@@ -80,7 +78,9 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   def update
 
-    params[:assessment_mission][:dependent_on_ids] = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
+    if params[:assessment_mission][:dependent_on_attributes]
+      params[:assessment_mission][:dependent_on_ids] = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
+    end
     params[:assessment_mission].delete(:dependent_on_attributes)
 
     respond_to do |format|

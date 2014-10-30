@@ -40,12 +40,10 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
       @training.attach_files(params[:files].values)
     end
 
-    if params[:dependent_on]
-      @training.dependent_on = []
-      params[:dependent_on].each do |dep|
-        @training.dependent_on << Assessment.find(dep[:dependent_id])
-      end
+    if params[:assessment_training][:dependent_on_attributes]
+      @training.dependent_on_ids = params[:assessment_training][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
     end
+    params[:assessment_training].delete(:dependent_on_attributes)
 
     respond_to do |format|
       if @training.save
@@ -63,11 +61,13 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def update
-    respond_to do |format|
 
+    if params[:assessment_training][:dependent_on_attributes]
       params[:assessment_training][:dependent_on_ids] = params[:assessment_training][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
-      params[:assessment_training].delete(:dependent_on_attributes)
+    end
+    params[:assessment_training].delete(:dependent_on_attributes)
 
+    respond_to do |format|
       if @training.update_attributes(params[:assessment_training])
         format.html { redirect_to course_assessment_training_url(@course, @training),
                                   notice: "The training '#{@training.title}' has been updated." }
