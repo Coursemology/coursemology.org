@@ -80,18 +80,8 @@ class Assessment::MissionsController < Assessment::AssessmentsController
 
   def update
 
-    # Have to add the HABTM relationship for new dependencies before updating attributes
-    # Bug: Used cocoon for dynamic forms - but it has some issue saving the id of new dependencies
-    # fix - dep_on_asm_ids will store dependent assessment ids, and if the id is new, record will be added first
-    dep_on_asm_ids = params[:dependent_on].collect { |dep| dep[:dependent_id]}
-    params[:assessment_mission][:dependent_on_attributes].each do |k, v|
-      if v[:id]
-        dep_on_asm_ids.delete(v[:id])
-      else
-        v[:id] = dep_on_asm_ids.pop
-        @mission.dependent_on << Assessment.find(v[:id])
-      end
-    end
+    params[:assessment_mission][:dependent_on_ids] = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
+    params[:assessment_mission].delete(:dependent_on_attributes)
 
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])

@@ -5,8 +5,7 @@
                           :id, # calls the dependent assessment's ID
                           :get_title,
                           { include_blank: "No Dependency" ,
-                            selected: f.object.id } ,
-                          { name: "dependent_on[][dependent_id]"} %>
+                            selected: f.object.id } %>
 
   <%= link_to_remove_association '<i class="icon-remove-sign"></i> Remove'.html_safe,
                                  f,
