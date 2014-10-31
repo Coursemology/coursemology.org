@@ -3,13 +3,17 @@ class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :assessment, only: [:reorder, :stats, :access_denied]
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview, :listall]
 
+  require 'zip/zipfilesystem'
+  include GradingsHelper
+
   def index
     assessment_type = params[:type]
     selected_tags = params[:tags]
 
     display_columns = {}
-    time_format =  @course.time_format(assessment_type)
+    time_format = @course.time_format(assessment_type)
     paging = @course.paging_pref(assessment_type)
+    pdf_export = @course.pdf_export(assessment_type).display
     @course.assessment_columns(assessment_type, true).each do |cp|
       display_columns[cp.preferable_item.name] = cp.prefer_value
     end
@@ -90,6 +94,7 @@ class Assessment::AssessmentsController < ApplicationController
                 columns: display_columns,
                 time_format: time_format,
                 paging: paging,
+                pdf_export: pdf_export,
                 module: assessment_type.humanize
     }
 
@@ -102,6 +107,81 @@ class Assessment::AssessmentsController < ApplicationController
     end
   end
 
+  # Export all completed assessments of the given type as a zip file of PDFs.
+  def dump_pdfs
+    assessment_type = params[:type]
+
+    # Abort if PDF export is not enabled.
+    @pdf_export = @course.pdf_export(assessment_type).display
+    if !@pdf_export
+      redirect_to access_denied_path, alert: "PDF export for #{assessment_type.pluralize} has not been enabled."
+      return
+    end
+
+    # Configure PDF generation options.
+    load_settings_for_printing
+
+    # Create temporary directory to store PDFs.
+    Dir.mktmpdir do |dir|
+
+      # For each assessment that has been completed, generate PDF and save to temporary directory. 
+      assessments = @course.assessments.send(assessment_type)
+      submissions = @course.submissions.where(std_course_id: curr_user_course.id)
+      submissions_by_assessment_id = {}
+      submissions.each do |s|
+        submissions_by_assessment_id[s.assessment_id] = s
+      end
+      assessments.each do |a|
+        @assessment = a
+        if submissions_by_assessment_id.has_key?(a.id) 
+          @submission = submissions_by_assessment_id[a.id]
+          if !@submission.attempting?
+            @grading = @submission.get_final_grading
+            filename = "#{assessment_type.titleize} #{a.id} - #{a.title}.pdf".gsub(/[^0-9A-Za-z.\-]/, '_')
+            case assessment_type
+            when 'mission'
+              build_gradings_summary true
+              pdf_string = render_to_string :pdf => filename, 
+                :footer => { :center => 'Page [page] of [topage]' },
+                :print_media_type => true,
+                :template => "assessment/gradings/show",
+                :formats => [:pdf]
+            when 'training'
+              @training = @assessment.specific
+              pdf_string = render_to_string :pdf => filename, 
+                :footer => { :center => 'Page [page] of [topage]' },
+                :print_media_type => true,
+                :template => "assessment/training_submissions/show",
+                :formats => [:pdf]
+            else
+              raise "Unknown assessment type - #{assessment_type}"
+            end
+            File.open(File.join(dir, filename), "wb") do |file|
+                file.write pdf_string
+            end
+          end
+        end
+      end
+
+      # Zip up PDFs and send zip file to client.
+      filename = "PDFs - #{@course.title} - #{assessment_type}.zip".gsub(/[^0-9A-Za-z.\-]/, '_')
+      temp_file = Tempfile.new(filename)
+      begin
+        Zip::ZipOutputStream.open(temp_file) { |zos| }   # Needed to create an empty zip structure.
+        Zip::ZipFile.open(temp_file.path, Zip::ZipFile::CREATE) do |zip|
+          Dir.foreach(dir) do |file|
+            zip.add(file, File.join(dir, file))
+          end
+        end
+        zip_data = File.read(temp_file.path)
+        send_data(zip_data, :type => 'application/zip', :filename => filename)
+      ensure
+        temp_file.close
+        temp_file.unlink
+      end
+
+    end
+  end
 
   def show
     @summary = {}

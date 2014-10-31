@@ -1,33 +1,45 @@
-<!--TODO:TOFIX-->
+<% # Renders a summary of attempts for this completed MCQ question. %>
+<% qn   # The McqQuestion to render %>
 
-<strong>Answer attempts</strong>
-<table class="table">
-  <thead>
-  <tr>
-    <th width="2%"></th>
-    <th>Answer</th>
-    <th>Attempts</th>
-    <th width="15%">Submitted at</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% answers.each_with_index do |ans, index| %>
-      <tr class="<%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
-        <td><%= index + 1 %></td>
-        <td>
-          <% if ans.options.length == 1 %>
-              <%= ans.options.first.text %>
-          <% else %>
-              <ul>
-                <% ans.options.each do |opt| %>
-                    <li><%= opt.text %></li>
-                <% end %>
-              </ul>
+<% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options)
+if answers.length > 0 %>
+  <%=render partial: "assessment/mcq_questions/one", locals: {q: qn} %>
+  <strong>Answer attempts</strong>
+  <table class="table">
+    <thead>
+    <tr>
+      <th width="2%"></th>
+      <th>Answer</th>
+      <th>Attempts</th>
+      <% unless @hide_timestamps %>
+        <th>Submitted at</th>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+    <% answers.each_with_index do |ans, index| %>
+      <% unless !ans.correct && @hide_wrong_attempts %>
+        <tr class="<%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
+          <td><%= index + 1 %></td>
+          <td>
+            <% if ans.options.length == 1 %>
+                <%= ans.options.first.text %>
+            <% else %>
+                <ul>
+                  <% ans.options.each do |opt| %>
+                      <li><%= opt.text %></li>
+                  <% end %>
+                </ul>
+            <% end %>
+          </td>
+          <td><%= ans.count %></td>
+          <% unless @hide_timestamps %>
+            <td><%= time_ago_in_words(ans.created_at) + " ago"  %></td>
           <% end %>
-        </td>
-        <td><%= ans.count %></td>
-        <td><%= time_ago_in_words(ans.created_at) + " ago"  %></td>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
+        </tr>
+      <% end %>
+    <% end %>
+    </tbody>
+  </table>
+
+<% end %>

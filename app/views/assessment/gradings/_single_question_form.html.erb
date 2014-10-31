@@ -4,18 +4,23 @@
         course_assessment_submission_grading_path(@course, @assessment, @submission, @grading) :
         course_assessment_submission_gradings_path(@course, @assessment, @submission)),
                     html: { class: "form-horizontal" } do |f| %>
+
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
+
     <hr/>
+
     <h3>Answer:</h3>
+    
     <% if qn_dic[:ans] %>
         <% if @assessment.specific.file_submission_only? %>
             <p style="font-style: italic">Answer is contained in the submission file(s).</p>
         <% elsif qn_dic[:qn].class == Assessment::CodingQuestion %>
-            <%= render partial: "assessment/mission_submissions/do_coding",
-                       locals: {answer: qn_dic[:ans],
+            <%= render partial: "assessment/mission_submissions/" + (@format_for_printing ? "code_for_printing" : "do_coding"),
+                       locals: {answer:       qn_dic[:ans],
                                 question:     qn_dic[:qn],
-                                submission: @submission,
-                                mode:   "view"}%>
+                                annotations:  qn_dic[:annotations],
+                                submission:   @submission,
+                                mode:         "view"} %>
         <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">
@@ -28,6 +33,7 @@
     <% else %>
         <h4>No answer</h4>
     <% end %>
+
     <% if @grading %>
         <hr>
         <div class="row-fluid">
@@ -74,18 +80,22 @@
           </div>
         </div>
     <% end %>
-    <% commentable = @assessment.specific.comment_per_qn? ? qn_dic[:ans] : @submission %>
-    <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
-    <div class="row">
-      <div class="span8">
-        <%= render partial: "comments/list",
-                   locals: { comments:  CommentTopic.comments_to_json(commentable.comment_topic, curr_user_course),
-                             target:    commentable,
-                             header:    "Comments",
-                             ecid:      @assessment.id,
-                             margin_left: "0px"} %>
+
+    <% unless @hide_comments %>
+      <% commentable = @assessment.specific.comment_per_qn? ? qn_dic[:ans] : @submission %>
+      <input type="hidden" id="submission_url_<%= @submission.id %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
+      <div class="row">
+        <div class="span8">
+          <%= render partial: "comments/" + (@format_for_printing ? "list_for_printing" : "list"),
+                     locals: { comments:  CommentTopic.comments_to_json(commentable.comment_topic, curr_user_course),
+                               target:    commentable,
+                               header:    "Comments",
+                               ecid:      @assessment.id,
+                               margin_left: "0px"} %>
+        </div>
       </div>
-    </div>
+    <% end %>
+
     <% if can? :manage, @grading %>
         <div class="form-actions">
           <%= f.submit "Save Grading", data: { disable_with: "Saving..." }, :class => 'btn btn-primary', id: "save_grading" %>
@@ -98,4 +108,5 @@
           <% end %>
         </div>
     <% end %>
+
 <% end %>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html ng-app="coursemologyApp">
+<head>
+  <title>Coursemology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/images/favicon.png">
+  <%= wicked_pdf_stylesheet_link_tag "application", :media => "all" %>
+  <%= wicked_pdf_stylesheet_link_tag "pdf", :media => "all" %>
+</head>
+<body id="pdfbody">
+
+    <div class="container-fluid">
+
+      <div class="page-header">
+        <h1>Training submission: <%= @training.title %></h1>
+      </div>
+
+      <table width="100%">
+        <col width="20%" />
+        <tr><td><strong>Student:</strong> </td><td><%= render partial: "layouts/user_name_link", :formats => [:html], locals: {user_course: @submission.std_course} %></td></tr>
+        <% unless @hide_timestamps %>
+          <tr>
+            <td><strong>Submitted at:</strong> </td><td><%= time_ago_in_words(@submission.created_at) %> ago</td>
+          </tr>
+        <% end %>
+        <% if @grading %>
+            <tr>
+              <td><strong>Total grade:</strong> </td>
+              <td>
+                <%= @grading.grade %> / <%= @training.max_grade %>
+              </td>
+            </tr>
+            <tr><td><strong>Grader:</strong> </td><td>Auto graded!</td></tr>
+        <% end %>
+      </table>
+
+      <hr/>
+
+      <div class="well"><%= style_format(@training.description) %></div>
+
+      <% @training.questions.includes(:as_question).each_with_index do |qn, index| %>
+
+        <% if @add_page_breaks %>
+          <div class="page">
+        <% end %>
+
+          <h4>Question: <%= index + 1 %> </h4>
+          <% if qn.specific.class == Assessment::McqQuestion %>
+              <%= render partial: "assessment/training_submissions/mcq_review", :formats => [:html], locals: {qn: qn} %>
+          <% elsif qn.specific.class == Assessment::CodingQuestion %>
+              <%= render partial: "assessment/training_submissions/coding_review", :formats => [:html], locals: {qn: qn} %>
+          <% end %>
+
+          <% grade = qn.answer_gradings.
+                  where("assessment_answers.std_course_id = ? and assessment_answer_gradings.grading_id = ?",
+                        @submission.std_course, @submission.gradings.last).last %>
+          <% if grade %>
+              <p><strong>Final Grade: </strong><%= grade.grade %> / <%= qn.max_grade %></p>
+          <% end %>
+
+        <% if @add_page_breaks %>
+          </div>
+        <% end %>
+
+      <% end %>
+
+    </div>
+
+</body>
+</html>

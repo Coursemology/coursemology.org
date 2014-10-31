@@ -604,6 +604,24 @@ if PreferableItem.count == 63
                          default_display: true
 end
 
+if PreferableItem.count == 64
+
+  PreferableItem.create! item:          "Mission",
+                         item_type:     "Export",
+                         name:          "pdf",
+                         default_value: "PDF",
+                         description:   "Allow PDF export of completed missions",
+                         default_display: false
+
+  PreferableItem.create! item:          "Training",
+                         item_type:     "Export",
+                         name:          "pdf",
+                         default_value: "PDF",
+                         description:   "Allow PDF export of completed trainings",
+                         default_display: false
+
+end
+
 if NavbarLinkType.count == 0
   NavbarLinkType.create! link_type: 'module'
   NavbarLinkType.create! link_type: 'admin'
