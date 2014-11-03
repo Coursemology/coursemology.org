@@ -14,7 +14,8 @@ class Assessment < ActiveRecord::Base
   attr_accessible :title, :description
   attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
-  attr_accessible :tab_id, :display_mode_id, :dependent_id
+  attr_accessible :tab_id, :display_mode_id, :dependent_on_attributes
+  attr_accessible :dependent_on, :dependent_on_ids, :dependent_id
 
   validates_presence_of :title
 
@@ -34,9 +35,21 @@ class Assessment < ActiveRecord::Base
   belongs_to  :course
   belongs_to  :creator, class_name: "User"
   belongs_to  :display_mode, class_name: "AssignmentDisplayMode", foreign_key: "display_mode_id"
-  belongs_to  :dependent_on, class_name: "Assessment", foreign_key: "dependent_id"
 
-  has_many  :required_for, class_name: "Assessment", foreign_key: 'dependent_id'
+  has_and_belongs_to_many :dependent_on,
+                          class_name: "Assessment",
+                          foreign_key: :id,
+                          association_foreign_key: :dependent_id,
+                          join_table: :assessment_dependency
+
+  has_and_belongs_to_many :required_for,
+                          class_name: "Assessment",
+                          foreign_key: :dependent_id,
+                          association_foreign_key: :id,
+                          join_table: :assessment_dependency
+
+  accepts_nested_attributes_for :dependent_on, allow_destroy: true
+
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
   has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
@@ -82,7 +95,7 @@ class Assessment < ActiveRecord::Base
 
   amoeba do
     clone [:questions]
-    include_field [:questions, :as_asm_reqs]
+    include_field [:questions, :as_asm_reqs, :dependent_on]
     # as_requirements
   end
 
@@ -181,19 +194,20 @@ class Assessment < ActiveRecord::Base
 
   #TODO
   def can_start?(curr_user_course)
-    # if a student has ever attempted, do not check dependency
     return true if submissions.where(std_course_id: curr_user_course.id).any?
+    (open_at > Time.now || get_dependent_assessment(curr_user_course)) ? false : true
+  end
 
-    if open_at > Time.now
-      return  false
+  def get_dependent_assessment(curr_user_course) # returns nil if no pending assessments
+    unless dependent_on.count #if no dependencies
+      return nil
     end
-    if dependent_on
-      sbm = assessment.submissions.where(assessment_id: dependent_id, std_course_id: curr_user_course).first
-      if !sbm || sbm.attempting?
-        return false
-      end
+    unfinished_assessment = []
+    dependent_on.each do |asm|
+      sbm = assessment.submissions.where(assessment_id: asm.id, std_course_id: curr_user_course).first
+      unfinished_assessment << asm if !sbm || sbm.attempting?
     end
-    true
+    (unfinished_assessment.count > 0) ? unfinished_assessment : nil
   end
 
   #TOFIX: it's better to have callback rather than currently directly call this in
