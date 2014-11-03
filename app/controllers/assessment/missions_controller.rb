@@ -60,6 +60,11 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       specific.save
     end
 
+    if params[:assessment_mission][:dependent_on_attributes]
+      @mission.dependent_on_ids = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
+    end
+    params[:assessment_mission].delete(:dependent_on_attributes)
+
     respond_to do |format|
       if @mission.save
         @mission.create_local_file
@@ -72,6 +77,12 @@ class Assessment::MissionsController < Assessment::AssessmentsController
   end
 
   def update
+
+    if params[:assessment_mission][:dependent_on_attributes]
+      params[:assessment_mission][:dependent_on_ids] = params[:assessment_mission][:dependent_on_attributes].values.select {|t| t[:_destroy] == "false"}.collect {|t| t[:dependent_on_ids]}
+    end
+    params[:assessment_mission].delete(:dependent_on_attributes)
+
     respond_to do |format|
       if @mission.update_attributes(params[:assessment_mission])
         update_single_question_type
@@ -90,7 +101,6 @@ class Assessment::MissionsController < Assessment::AssessmentsController
                                 notice: "The mission #{@mission.title} has been removed." }
     end
   end
-
 
   def update_single_question_type
     unless @mission.single_question?

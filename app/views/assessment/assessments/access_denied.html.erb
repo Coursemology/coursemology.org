@@ -2,5 +2,18 @@
   <h1><%= @assessment.title %></h1>
 </div>
 
-
 <p class="mission-not-opened"> You have no access to this assessment :|</p>
+
+<% dep_asm = @assessment.get_dependent_assessment(curr_user_course) %>
+<% if dep_asm %>
+  <p class="mission-not-opened">
+    Please complete the following assessments before attempting this:
+    <% dep_asm.each do |unfinished_assessment| %>
+      <% if unfinished_assessment.is_mission? %>
+        <%= link_to unfinished_assessment.full_title, course_assessment_missions_path %> <br>
+      <% else %>
+        <%= link_to unfinished_assessment.full_title, course_assessment_trainings_path %> <br>
+      <% end %>
+    <% end %>
+  </p>
+<% end %>

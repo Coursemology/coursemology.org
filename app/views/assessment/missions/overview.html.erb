@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        <%= f.simple_fields_for :missions do |mf| %>
+          <%= f.simple_fields_for :missions do |mf| %>
             <tr>
               <td><%= mf.input_field :title, class: "input-medium" %></td>
               <td><%= mf.input_field :exp, as: :integer, class: "input-mini" %></td>
@@ -26,17 +26,17 @@
               <td><%= mf.input_field :close_at, as: :datetime_picker, class: "input-medium" %></td>
               <td>
                 <%= mf.association :dependent_on,
-                                  collection: @course.assessments.mission - [mf.object.assessment],
-                                  label_method: :title, value_method: :id,
+                                  collection: @course.assessments.mission - [mf.object.assessment] + @course.assessments.training,
+                                  label_method: :full_title,
+                                  value_method: :id,
                                   include_blank: "No Dependency",
                                   label: false,
                                   wrapper: false,
                                   input_html: {class: "input-medium"} %>
               </td>
               <td class="publish"><%= mf.input_field :published, as: :boolean %></td>
-
             </tr>
-        <% end %>
+          <% end %>
         </tbody>
       </table>
       <div class="center">

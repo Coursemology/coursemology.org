@@ -1,0 +1,14 @@
+<div class="nested-fields dependency-choice">
+
+  <%= f.collection_select :dependent_on_ids,
+                          @course.assessments.training - [@training.assessment] + @course.assessments.mission,
+                          :id, # calls the dependent assessment's ID
+                          :get_title,
+                          { include_blank: "No Dependency" ,
+                            selected: f.object.id } %>
+
+  <%= link_to_remove_association '<i class="icon-remove-sign"></i> Remove'.html_safe,
+                                 f,
+                                 class: "btn btn-warning btn-small" %>
+
+</div>
