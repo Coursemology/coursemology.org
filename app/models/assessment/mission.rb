@@ -40,9 +40,4 @@ class Assessment::Mission < ActiveRecord::Base
     exp
   end
 
-  #TODO: refactor
-  def self.reflect_on_association(association)
-    super || self.parent.reflect_on_association(association)
-  end
-
 end

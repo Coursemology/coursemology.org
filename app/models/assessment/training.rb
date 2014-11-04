@@ -20,18 +20,6 @@ class Assessment::Training < ActiveRecord::Base
     "#{I18n.t('Assessment.Training')} : #{self.title}"
   end
 
-  def self.reflect_on_association(association)
-    super || self.parent.reflect_on_association(association)
-  end
-  #
-  # def self.reflect_on_aggregation(name)
-  #   super || self.parent.reflect_on_aggregation(name)
-  # end
-  #
-  # def column_for_attribute(name)
-  #   super || self.assessment.column_for_attribute(name)
-  # end
-
   def get_path
     course_assessment_training_path(self.course, self)
   end
