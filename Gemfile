@@ -85,7 +85,7 @@ gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
 gem "cocoon"
 gem 'simple_form', :github => 'plataformatec/simple_form', :branch => "v2.2"
-gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0'
+gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0.2'
 gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"
