@@ -18,7 +18,11 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     if @submission.graded?
       grading = @submission.gradings.first
       redirect_to course_assessment_submission_grading_path(@course, @assessment, @submission,grading)
+      return
     end
+
+    #show running results for staff when the mission is not submitted
+    @submission.eval_answer if curr_user_course.is_staff?
   end
 
 
@@ -61,6 +65,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
   def unsubmit
     @submission.set_attempting
+    # re-run test cases when student submit again
+    grading = @submission.gradings.first
+    grading.update_column(:autograding_refresh, true) if grading
+
     flash[:notice] = "Successfully unsubmited submission."
     redirect_to course_assessment_submission_path(@course, @assessment, @submission)
   end

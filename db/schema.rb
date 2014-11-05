@@ -298,7 +298,6 @@ ActiveRecord::Schema.define(:version => 20140919103853) do
     t.float    "max_grade"
     t.boolean  "published"
     t.boolean  "comment_per_qn",     :default => true
-    t.integer  "dependent_id"
     t.integer  "display_mode_id"
     t.integer  "bonus_exp"
     t.datetime "bonus_cutoff_at"
@@ -307,6 +306,7 @@ ActiveRecord::Schema.define(:version => 20140919103853) do
     t.datetime "deleted_at"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
+    t.integer  "dependent_id"
   end
 
   add_index "assessments", ["as_assessment_id", "as_assessment_type"], :name => "index_on_as_assessment", :unique => true

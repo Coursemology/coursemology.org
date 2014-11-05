@@ -5,7 +5,6 @@ class Assessment::GradingsController < ApplicationController
   load_and_authorize_resource :grading, through: :submission, class: "Assessment::Grading"
 
   before_filter :load_general_course_data, only: [:new, :edit, :show]
-
   # note: it only handles view & grading of missions
 
   def new
@@ -20,7 +19,7 @@ class Assessment::GradingsController < ApplicationController
       @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
     end
 
-    eval_answer
+    @submission.eval_answer
 
     @submission.answers.each do |ans|
       qn = ans.question
@@ -204,26 +203,11 @@ class Assessment::GradingsController < ApplicationController
     end
   end
 
-  def eval_answer
-    # Thread.start {
-    @submission.answers.coding.each do |ans|
-      qn = ans.question.specific
-      unless qn.auto_graded?
-        next
-      end
-      combined_code = PythonEvaluator.combine_code([qn.pre_include, ans.content, qn.append_code])
-      result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn, true)
-      ans.result = result.to_json
-      ans.specific.save
-    end
-    # }
-  end
-
   def build_summary
     @summary = {qn_ans: {}}
 
     if @grading.autograding_refresh
-      eval_answer
+      @submission.eval_answer
       @grading.update_attribute :autograding_refresh, false
     end
 

@@ -13,6 +13,7 @@
         <th><%= @display_columns['start'] %></th>
         <th><%= @display_columns['bonus-exp'] %></th>
         <th><%= @display_columns['bonus-cutoff'] %></th>
+        <th>Dependency</th>
         <th>Tab</th>
         <th>Publish?</th>
       </tr>
@@ -20,11 +21,21 @@
       <tbody>
       <%= f.simple_fields_for :trainings do |mf| %>
           <tr>
-            <td><%= mf.input_field :title, class: "input-medium" %></td>
+            <td><%= mf.input_field :title, class: "input-small" %></td>
             <td><%= mf.input_field :exp, as: :integer, class: "input-mini" %></td>
-            <td><%= mf.input_field :open_at, as: :datetime_picker, class: "input-medium" %></td>
+            <td><%= mf.input_field :open_at, as: :datetime_picker, class: "input-small" %></td>
             <td><%= mf.input_field :bonus_exp, as: :integer, class: "input-mini" %></td>
-            <td><%= mf.input_field :bonus_cutoff_at, as: :datetime_picker, class: "input-medium" %></td>
+            <td><%= mf.input_field :bonus_cutoff_at, as: :datetime_picker, class: "input-small" %></td>
+            <td>
+              <%= mf.association :dependent_on,
+                                 collection: @course.assessments.training - [mf.object.assessment] + @course.assessments.mission,
+                                 label_method: :full_title,
+                                 value_method: :id,
+                                 include_blank: "No Dependency",
+                                 label: false,
+                                 wrapper: false,
+                                 input_html: {class: "input-medium"} %>
+            </td>
             <td>
               <%= mf.association :tab,
                                  collection: @course.training_tabs,

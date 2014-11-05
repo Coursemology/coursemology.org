@@ -9,7 +9,8 @@ class Assessment::Training < ActiveRecord::Base
   attr_accessible :title, :description
   attr_accessible :published, :comment_per_qn
   attr_accessible :open_at, :close_at, :bonus_cutoff_at
-  attr_accessible :tab_id, :display_mode_id, :dependent_id
+  attr_accessible :tab_id, :display_mode_id, :dependent_on_ids
+  attr_accessible :dependent_on, :dependent_on_attributes
 
   validates_presence_of :title, :exp, :open_at
 
@@ -18,18 +19,6 @@ class Assessment::Training < ActiveRecord::Base
   def full_title
     "#{I18n.t('Assessment.Training')} : #{self.title}"
   end
-
-  def self.reflect_on_association(association)
-    super || self.parent.reflect_on_association(association)
-  end
-  #
-  # def self.reflect_on_aggregation(name)
-  #   super || self.parent.reflect_on_aggregation(name)
-  # end
-  #
-  # def column_for_attribute(name)
-  #   super || self.assessment.column_for_attribute(name)
-  # end
 
   def get_path
     course_assessment_training_path(self.course, self)

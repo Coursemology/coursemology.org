@@ -38,10 +38,6 @@ class Assessment::CodingQuestion < ActiveRecord::Base
     end
   end
 
-  def self.reflect_on_association(association)
-    super || self.parent.reflect_on_association(association)
-  end
-
   private
 
   def set_default_values

@@ -37,9 +37,10 @@ class MaterialsController < ApplicationController
           Material.accessible_by(current_ability).where(:folder_id => @folder)
 
         # Compute the new files in this directory
+        seen_material_ids = @curr_user_course.seen_materials.pluck(:id).to_a
         @is_new = {}
         @files.each {|file|
-          unless @curr_user_course.seen_materials.exists?(file)
+          unless seen_material_ids.include?(file.id)
             @is_new[file.id] = true
           end
         }
@@ -52,7 +53,7 @@ class MaterialsController < ApplicationController
           end
 
           subfolder.materials.each { |material|
-            if not @curr_user_course.seen_materials.exists?(material.id) then
+            unless seen_material_ids.include?(material.id)
               @is_subfolder_new[subfolder.id] = true
               break
             end
@@ -301,9 +302,11 @@ private
     folder_metadata['parent_folder_id'] = folder.parent_folder_id
     folder_metadata['count'] = folder.files.length
     folder_metadata['is_virtual'] = folder.is_virtual?
+    seen_material_ids = @curr_user_course.seen_materials.pluck(:id).to_a
+
     if include_files then
       folder_metadata['files'] = (folder.is_virtual? ?
-        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder))
+        folder.files : Material.accessible_by(current_ability).where(:folder_id => folder).includes(:file))
         .map { |file|
           current_file = {}
 
@@ -313,7 +316,7 @@ private
           current_file['folder_id'] = file.folder_id
           current_file['url'] = course_material_file_path(@course, file)
 
-          if not(folder.is_virtual? || @curr_user_course.seen_materials.exists?(file.id)) then
+          unless folder.is_virtual? || seen_material_ids.include?(file.id)
             current_file['is_new'] = true
             folder_metadata['contains_new'] = true
           end

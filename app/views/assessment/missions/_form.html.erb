@@ -58,9 +58,26 @@
     </div>
 
     <%= f.association :display_mode, input_html: {class: "input-medium"}, include_blank: false %>
-    <%= f.association :dependent_on,
-                      collection: @course.assessments.mission - [@mission.assessment],
-                      input_html: {class: "input-large"}, include_blank: true %>
+
+    <div class="control-group select optional assessment_training_dependent_on">
+      <label class="select optional control-label" for="assessment_training_dependent_on_ids">
+        Dependent On
+      </label>
+      <div class="controls" id="dependent_on_ids dependent_on">
+        <% if @mission.dependent_on %>
+            <%= f.simple_fields_for :dependent_on do |dep_on| %>
+                <%= render partial: "dependent_on_fields",
+                           locals: { f: dep_on } %>
+            <% end %>
+        <% end %>
+        <div class="links">
+          <%= link_to_add_association '<i class="icon-plus-sign"></i> Add Dependency'.html_safe,
+                                      f,
+                                      :dependent_on,
+                                      html_options: { class: "btn btn-info" } %>
+        </div>
+      </div>
+    </div>
 
     <div id="uploaded_files_div"></div>
     <%= f.button :form_submit,

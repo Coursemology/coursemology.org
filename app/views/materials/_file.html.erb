@@ -49,7 +49,8 @@
                         </tr>
                         </thead>
                         <% role_counts = [] %>
-                        <% SeenByUser.course(@course).materials.where(:obj_id => material).each {|view| %>
+                        <% SeenByUser.course(@course).materials.where(:obj_id => material).
+                                   includes(user_course: [:role, :user]).each {|view| %>
                             <%
                                unless view.user_course
                                  next
