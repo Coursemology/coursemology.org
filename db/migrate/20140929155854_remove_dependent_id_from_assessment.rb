@@ -4,6 +4,6 @@ class RemoveDependentIdFromAssessment < ActiveRecord::Migration
   end
 
   def down
-    remove_column :assessments, :dependent_id, :integer
+    add_column :assessments, :dependent_id, :integer
   end
 end
