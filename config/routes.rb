@@ -83,6 +83,12 @@ Coursemology::Application.routes.draw do
                 path:       :general_questions,
                 controller: :general_questions
 
+      resources :assessment_scribing_questions,
+                path:       :scribing_questions,
+                controller: :scribing_questions
+
+
+
       resources :assessment_submissions,
                 path:       :submissions,
                 as:         :submissions,
