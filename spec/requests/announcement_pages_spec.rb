@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "AnnouncementPages" do
+RSpec.describe "AnnouncementPages", :type => :feature do
   let(:admin) { FactoryGirl.create(:admin) }
   let(:course) { FactoryGirl.create(:course) }
   before do
