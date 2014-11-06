@@ -4,7 +4,6 @@ describe "MissionPages", :type => :feature do
 
   describe "Mission admin pages" do
 
-    subject { page }
     let(:admin) {FactoryGirl.create(:admin)}
     let(:course) { FactoryGirl.create(:course) }
     before do
@@ -14,8 +13,10 @@ describe "MissionPages", :type => :feature do
     end
 
     describe "mission display" do
-      it {should have_link('New Mission')}
-      it {should have_content('Overview')}
+      it "should have New Mission button and Overview tab" do
+        expect(page).to have_link('New Mission')
+        expect(page).to have_content('Overview')
+      end
     end
 
     describe "mission creation" do
