@@ -53,6 +53,7 @@ FactoryGirl.define do
     after(:build) do |announcement, evaluator|
       announcement.course_id = evaluator.course.try(:id)
       announcement.creator_id = evaluator.creator.try(:id)
+      announcement.expiry_at = evaluator.expiry_at if evaluator.expiry_at
     end
   end
 
