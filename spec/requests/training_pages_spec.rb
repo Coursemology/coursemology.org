@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe "TrainingPages", :type => :request do
 
 	subject { page }
-	
   let(:course) { FactoryGirl.create(:course) }
   let(:training) { FactoryGirl.create(:training) }
 
@@ -18,7 +17,6 @@ RSpec.describe "TrainingPages", :type => :request do
 	  it "has the overview tab" do
 	    is_expected.to have_content('Overview')
 	  end
-
 
 	  describe "creating" do
 		  before do
