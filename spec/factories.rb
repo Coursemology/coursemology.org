@@ -45,4 +45,12 @@ FactoryGirl.define do
     end_at 1.day.from_now.to_s[0..-7]
   end
 
+  factory :training, class: Assessment::Training do
+    title "Danger Room"
+    description "Fight sentinels."
+    exp 200
+    open_at Time.now
+    bonus_cutoff_at Time.now
+  end
+
 end
