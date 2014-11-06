@@ -312,12 +312,15 @@ ActiveRecord::Schema.define(:version => 20141107064604) do
 
   add_index "assessment_questions", ["as_question_id", "as_question_type"], :name => "index_on_as_question", :unique => true
 
+<<<<<<< HEAD
   create_table "assessment_scribing_answers", :force => true do |t|
     t.datetime "deleted_at"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+=======
+>>>>>>> Copy general question as template for scribing qn
   create_table "assessment_scribing_questions", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
