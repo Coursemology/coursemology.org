@@ -27,6 +27,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'launchy'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 # Gems used only for assets and not required
