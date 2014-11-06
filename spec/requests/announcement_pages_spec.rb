@@ -62,6 +62,40 @@ RSpec.describe "AnnouncementPages", :type => :feature do
         expect(page).to have_link('', href: edit_course_announcement_path(course, announcement))
       end
     end
+
+    describe 'edit page' do
+      before { visit edit_course_announcement_path(course, announcement) }
+
+      it 'renders the view correctly' do
+        expect(page).to have_field('Title')
+        expect(page).to have_field('Description')
+        expect(page).to have_content('Publish at')
+        expect(page).to have_button('Update')
+      end
+
+      context 'after changes saved' do
+        let(:new_title)  { 'New Title' }
+        let(:new_content) { 'new content' }
+        before do
+          fill_in 'Title',    with: new_title
+          fill_in 'Description',    with: new_content
+          click_button 'Update'
+        end
+
+        it 'should redirect back to index' do
+          expect(current_path).to eq course_announcements_path(course)
+        end
+
+        it 'should show the success notice' do
+          expect(page).to have_content("'#{new_title}' has been updated")
+        end
+
+        it 'attributes should be changed' do
+          announcement.reload.title.should eq new_title
+          announcement.reload.description.should eq new_content
+        end
+      end
+    end
   end
 
 end
