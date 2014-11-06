@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140919103853) do
+ActiveRecord::Schema.define(:version => 20140929155854) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -178,6 +178,11 @@ ActiveRecord::Schema.define(:version => 20140919103853) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "assessment_dependency", :id => false, :force => true do |t|
+    t.integer "id",           :default => 0, :null => false
+    t.integer "dependent_id"
+  end
+
   create_table "assessment_general_answers", :force => true do |t|
     t.datetime "deleted_at"
     t.datetime "created_at", :null => false
@@ -306,7 +311,6 @@ ActiveRecord::Schema.define(:version => 20140919103853) do
     t.datetime "deleted_at"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
-    t.integer  "dependent_id"
   end
 
   add_index "assessments", ["as_assessment_id", "as_assessment_type"], :name => "index_on_as_assessment", :unique => true
