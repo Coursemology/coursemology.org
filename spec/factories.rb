@@ -41,8 +41,20 @@ FactoryGirl.define do
   factory :course do
     title "Programming"
     description "It's a programming course"
-    start_at Time.now.to_s[0..-7]
-    end_at 1.day.from_now.to_s[0..-7]
+    start_at Time.now
+    end_at 1.day.from_now
+  end
+
+  factory :announcement do
+    title "sample announcement"
+    description "sample content"
+    publish_at Time.now
+    expiry_at 3.day.from_now
+    after(:build) do |announcement, evaluator|
+      announcement.course_id = evaluator.course.try(:id)
+      announcement.creator_id = evaluator.creator.try(:id)
+      announcement.expiry_at = evaluator.expiry_at if evaluator.expiry_at
+    end
   end
 
 end
