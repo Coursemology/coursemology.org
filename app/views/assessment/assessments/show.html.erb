@@ -78,6 +78,16 @@
                     new_course_assessment_assessment_coding_question_path(@course, @assessment),
                     :class => 'btn btn-primary' %>
     <% end %>
+    
+    <% if @summary[:allowed_questions].include? Assessment::ScribingQuestion %>
+        <%= link_to t('.new', :default => t("helpers.links.new_sq")),
+                    new_course_assessment_assessment_scribing_question_path(@course, @assessment),
+                    :class => 'btn btn-primary' %>
+    <% end %>
+
+
+
+
 <% end %>
 
 <% if can? :view_detail, @assessment %>
