@@ -3,14 +3,13 @@ require 'rails_helper'
 RSpec.describe "Training", :type => :feature do
 
   subject { page }
-  let(:course) { FactoryGirl.create(:course) }
-  let!(:training) { FactoryGirl.create(:training, course: course) }
 
-  context "Admin user" do
-    let(:admin) { FactoryGirl.create(:admin) }
+  context "lecturer user" do
+    let(:lecturer) { FactoryGirl.create(:lecturer) }
+    let(:course) { FactoryGirl.create(:course, creator: lecturer) }
+    let!(:training) { FactoryGirl.create(:training, course: course) }
     before do
-      sign_in admin
-      create_course course
+      sign_in lecturer
     end
 
     describe "requests index page" do 
@@ -60,7 +59,6 @@ RSpec.describe "Training", :type => :feature do
 
     describe "edit" do
       before do
-        training.save
         visit course_assessment_training_path(course, training)
         click_link "", href: edit_course_assessment_training_path(course, training)
       end
@@ -110,7 +108,6 @@ RSpec.describe "Training", :type => :feature do
           fill_in "Title", with: new_title
           fill_in "Exp", with: new_exp
           click_button "Update Training"
-          save_and_open_page
         end
 
         it "does not redirect" do
@@ -121,7 +118,6 @@ RSpec.describe "Training", :type => :feature do
 
     describe "destroy" do
       before do
-        training.save
         visit course_assessment_training_path(course, training)
       end
 
