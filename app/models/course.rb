@@ -32,6 +32,7 @@ class Course < ActiveRecord::Base
   has_many  :file_uploads, as: :owner
   has_many  :course_preferences, dependent: :destroy
   has_many  :course_navbar_preferences, dependent: :destroy
+  has_many  :guilds, dependent: :destroy
 
   has_many  :missions, class_name: "Assessment::Mission", through: :assessments,
             source: :as_assessment, source_type: "Assessment::Mission" do
