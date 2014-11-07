@@ -88,7 +88,7 @@
     </div>
     <% if can? :manage, @grading %>
         <div class="form-actions">
-          <%= f.submit "Save Grading", :class => 'btn btn-primary', id: "save_grading" %>
+          <%= f.submit "Save Grading", data: { disable_with: "Saving..." }, :class => 'btn btn-primary', id: "save_grading" %>
           <%= link_to unsubmit_course_assessment_submission_path(@course, @assessment, @submission),
                       method: :GET,
                       data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default =>

@@ -27,6 +27,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'launchy'
+  gem 'coveralls', require: false
 end
 
 # Gems used only for assets and not required
