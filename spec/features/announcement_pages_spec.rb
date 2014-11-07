@@ -1,12 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "AnnouncementPages", :type => :feature do
-  let(:admin) { FactoryGirl.create(:admin) }
-  let(:course) { FactoryGirl.create(:course) }
+  let(:user) { FactoryGirl.create(:lecturer) }
+  let!(:course) { FactoryGirl.create(:course, creator: user) }
 
   before do
-    sign_in admin
-    create_course course
+    sign_in user
   end
 
   describe "create" do
@@ -56,7 +55,7 @@ RSpec.describe "AnnouncementPages", :type => :feature do
   end
 
   describe "index page" do
-    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: user) }
 
     before do
       visit course_announcements_path(course)
@@ -76,7 +75,7 @@ RSpec.describe "AnnouncementPages", :type => :feature do
   end
 
   describe "edit" do
-    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: user) }
     before { visit edit_course_announcement_path(course, announcement) }
 
     describe "page" do
@@ -127,7 +126,7 @@ RSpec.describe "AnnouncementPages", :type => :feature do
   end
 
   describe "destroy" do
-    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: user) }
 
     describe "as correct user" do
       before { visit course_announcements_path(course) }
