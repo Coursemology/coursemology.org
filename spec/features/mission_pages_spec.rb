@@ -4,11 +4,10 @@ describe "MissionPages", :type => :feature do
 
   describe "Mission admin pages" do
 
-    let(:admin) {FactoryGirl.create(:admin)}
-    let(:course) { FactoryGirl.create(:course) }
+    let(:lecturer) {FactoryGirl.create(:lecturer)}
+    let!(:course) { FactoryGirl.create(:course, creator: lecturer) }
     before do
-      sign_in admin
-      create_course course
+      sign_in lecturer
       click_link "Missions"
     end
 
