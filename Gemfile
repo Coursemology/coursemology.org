@@ -28,6 +28,7 @@ group :development, :test do
   gem 'capybara'
   gem 'launchy'
   gem 'coveralls', require: false
+  gem 'fuubar'
 end
 
 # Gems used only for assets and not required
