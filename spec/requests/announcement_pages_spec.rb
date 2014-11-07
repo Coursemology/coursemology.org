@@ -24,8 +24,8 @@ RSpec.describe "AnnouncementPages", :type => :feature do
       let(:announcement) { FactoryGirl.build(:announcement) }
 
       before do
-        fill_in 'Title', with: announcement.title
-        fill_in 'Description', with: announcement.description
+        fill_in "Title", with: announcement.title
+        fill_in "Description", with: announcement.description
       end
 
       it "creates an announcement" do
@@ -49,7 +49,7 @@ RSpec.describe "AnnouncementPages", :type => :feature do
 
     context "when information is not valid" do
       it "does not change announcement count" do
-        pending 'to be implemented'
+        pending "to be implemented"
         expect { click_button 'Create' }.not_to change(Announcement, :count)
       end
     end
@@ -86,8 +86,8 @@ RSpec.describe "AnnouncementPages", :type => :feature do
     end
 
     context "when information is valid" do
-      let(:new_title)  { 'New Title' }
-      let(:new_content) { 'new content' }
+      let(:new_title)  { "New Title" }
+      let(:new_content) { "new content" }
 
       before do
         fill_in "Title", with: new_title
