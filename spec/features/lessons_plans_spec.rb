@@ -23,12 +23,12 @@ feature 'LessonPlan', :type => :feature do
       fill_in 'End at', :with => entry.end_at
     end
 
-    it 'should increase the number of entries by 1' do
+    it 'increases the number of entries by 1' do
       expect { click_button 'Submit' }.to change(LessonPlanEntry, :count).by 1
 
     end
 
-    it 'should show a created notice' do
+    it 'shows a created notice' do
       click_button 'Submit'
       expect(page).to have_text entry.title
     end
@@ -41,11 +41,11 @@ feature 'LessonPlan', :type => :feature do
       visit edit_course_lesson_plan_entry_path(course, entry)
     end
 
-    it 'should display the editing page' do
+    it 'displays the editing page' do
       expect(page).to have_text 'Edit Lesson Plan Entry'
     end
 
-    it 'should contain fields for user to edit' do
+    it 'contains fields for user to edit' do
       expect(page).to have_select 'Type'
       expect(page).to have_field 'Title'
       expect(page).to have_field 'Location'
@@ -63,11 +63,11 @@ feature 'LessonPlan', :type => :feature do
         click_button 'Submit'
       end
 
-      it 'should show the success notice' do
+      it 'shows the success notice' do
         expect(page).to have_content "#{new_title} has been updated"
       end
 
-      it 'should update the attributes of the entry' do
+      it 'updates the attributes of the entry' do
         entry.reload.title.should eq new_title
         entry.reload.description.should eq new_description
       end
