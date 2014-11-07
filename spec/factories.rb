@@ -77,13 +77,14 @@ FactoryGirl.define do
   end
 
   factory :mission, class: Assessment::Mission do
-     open_at Time.now
-     close_at 1.day.from_now
-     exp 10
-     after(:build) do |mission, evaluator|
-       mission.title = evaluator.title
-       mission.course_id = evaluator.course.try(:id)
-     end
-   end
+    title 'Factory mission'
+    open_at Time.now
+    close_at 1.day.from_now
+    exp 10
+    after(:build) do |mission, evaluator|
+      mission.title = evaluator.title
+      mission.course_id = evaluator.course.try(:id)
+    end
+  end
 
 end
