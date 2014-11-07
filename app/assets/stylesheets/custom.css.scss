@@ -614,6 +614,7 @@ li .thumbnail {
 
 .label {
   text-transform: none;
+  padding: 2px 4px 2px;
 }
 
 .about-course-logo {
@@ -1253,4 +1254,15 @@ td.action-there-icons {
 
 div.description ul{
   list-style-type: disc
+}
+
+.assessment-description-table {
+  table-layout: fixed;
+}
+
+.dependency-choice {
+  margin: 0px 8px 10px 0px;
+  select {
+    width: 50%;
+  }
 }

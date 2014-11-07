@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: git://github.com/raymondtangsc/acts_as_relation.git
-  revision: a206b1c0094708207d3e6a00d211ba44f5de05e5
-  branch: V1.0
+  revision: 5fb0f6ca30ba34359872e10de7e49d87530202cf
+  branch: V1.0.2
   specs:
     acts_as_relation (1.0.0)
       activerecord
@@ -84,7 +84,7 @@ GEM
     bootstrap-datetimepicker-rails (0.0.11)
     bootstrap-sass (2.1.0.0)
     bootstrap-select-rails (1.3.0.1)
-    bootstrap-wysihtml5-rails (0.3.2.100)
+    bootstrap-wysihtml5-rails (0.3.1.24)
       railties (>= 3.0)
     builder (3.0.4)
     callsite (0.0.11)
@@ -123,9 +123,16 @@ GEM
     coffee-script-source (1.7.1)
     colorize (0.7.3)
     connection_pool (2.0.0)
+    coveralls (0.7.1)
+      multi_json (~> 1.3)
+      rest-client
+      simplecov (>= 0.7)
+      term-ansicolor
+      thor
     crass (0.2.1)
     daemons (1.1.9)
     dalli (2.7.2)
+    database_cleaner (1.3.0)
     delayed_job (4.0.2)
       activesupport (>= 3.0, < 4.2)
     delayed_job_active_record (4.0.1)
@@ -137,6 +144,7 @@ GEM
       railties (>= 3.2.6, < 5)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    docile (1.1.5)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -157,6 +165,9 @@ GEM
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
     formatador (0.2.5)
+    fuubar (2.0.0)
+      rspec (~> 3.0)
+      ruby-progressbar (~> 1.4)
     gon (5.1.2)
       actionpack (>= 2.3.0)
       json
@@ -206,6 +217,8 @@ GEM
       addressable
       faraday
       multi_json
+    launchy (2.4.2)
+      addressable (~> 2.3)
     listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -233,6 +246,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
+    netrc (0.8.0)
     newrelic_rpm (3.9.1.236)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
@@ -305,6 +319,13 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     request_store (1.0.8)
+    rest-client (1.7.2)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    rest-client (1.7.2-x86-mingw32)
+      ffi (~> 1.9)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -325,6 +346,7 @@ GEM
       rspec-mocks (~> 3.0.0)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.3)
+    ruby-progressbar (1.7.0)
     rubyzip (0.9.9)
     sanitize (3.0.0)
       crass (~> 0.2.0)
@@ -337,6 +359,16 @@ GEM
       tilt (~> 1.3)
     scrollToFixed_rails (1.0.5)
       railties (>= 3.1)
+    selenium-webdriver (2.35.1)
+      childprocess (>= 0.2.5)
+      multi_json (~> 1.0)
+      rubyzip (< 1.0.0)
+      websocket (~> 1.0.4)
+    simplecov (0.9.1)
+      docile (~> 1.1.0)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.8.0)
+    simplecov-html (0.8.0)
     slop (3.6.0)
     slugged (2.0.0)
       activerecord (>= 3.0)
@@ -359,9 +391,12 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     systemu (2.6.4)
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     thor (0.19.1)
     tilt (1.4.1)
     timers (1.1.0)
+    tins (1.3.3)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -375,6 +410,7 @@ GEM
     uuidtools (2.1.5)
     warden (1.2.3)
       rack (>= 1.0)
+    websocket (1.0.7)
     win32-process (0.7.4)
       ffi (>= 1.0.0)
     win32console (1.3.2-x86-mingw32)
@@ -401,7 +437,7 @@ DEPENDENCIES
   bootstrap-datetimepicker-rails
   bootstrap-sass (= 2.1.0.0)
   bootstrap-select-rails
-  bootstrap-wysihtml5-rails
+  bootstrap-wysihtml5-rails (= 0.3.1.24)
   cancancan (~> 1.8)
   capistrano
   capybara
@@ -410,14 +446,17 @@ DEPENDENCIES
   codemirror-rails (~> 3.14)
   coffee-rails
   connection_pool
+  coveralls
   daemons
   dalli
+  database_cleaner
   delayed_job_active_record
   devise (= 3.0)
   exception_notification
   factory_girl_rails
   faker
   font-awesome-sass-rails
+  fuubar
   gon
   google_visualr (>= 2.1)
   guard-rspec
@@ -431,6 +470,7 @@ DEPENDENCIES
   jquery-validation-rails
   kaminari
   koala
+  launchy
   meta_request
   momentjs-rails
   mysql2
@@ -448,6 +488,7 @@ DEPENDENCIES
   sanitize
   sass-rails (~> 3.2.3)
   scrollToFixed_rails (~> 1.0.0)
+  selenium-webdriver
   simple_form!
   slugged (~> 2.0)
   spork-rails

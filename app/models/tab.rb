@@ -1,4 +1,5 @@
 class Tab < ActiveRecord::Base
+  acts_as_paranoid
   acts_as_duplicable
   default_scope { order(:pos) }
   # attr_accessible :title, :body

@@ -19,15 +19,18 @@ group :production do
   gem 'connection_pool'
 end
 
-gem "rspec-rails", :group => [:test, :development]
-gem "guard-rspec", :group => [:test, :development]
-gem 'spork-rails', :group => [:test, :development]
-gem "guard-spork", :group => [:test, :development]
-
-
-group :test do
-  gem "factory_girl_rails"
-  gem "capybara"
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'guard-rspec'
+  gem 'spork-rails'
+  gem 'guard-spork'
+  gem 'factory_girl_rails'
+  gem 'capybara'
+  gem 'launchy'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
+  gem 'coveralls', require: false
+  gem 'fuubar'
 end
 
 # Gems used only for assets and not required
@@ -37,7 +40,7 @@ group :assets do
   gem 'bootstrap-sass', '2.1.0.0'
   gem 'font-awesome-sass-rails'
   gem 'bootstrap-datetimepicker-rails'
-  gem 'bootstrap-wysihtml5-rails'
+  gem 'bootstrap-wysihtml5-rails', '0.3.1.24'
   gem 'jquery-fileupload-rails'
   gem 'bootstrap-colorpicker-rails'
   gem 'bootstrap-select-rails'
@@ -86,7 +89,7 @@ gem 'angular-ui-sortable-rails'
 gem 'jquery-validation-rails'
 gem "cocoon"
 gem 'simple_form', :github => 'plataformatec/simple_form', :branch => "v2.2"
-gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0'
+gem 'acts_as_relation', :github => 'raymondtangsc/acts_as_relation', :branch => 'V1.0.2'
 gem 'amoeba', :github => 'raymondtangsc/amoeba'
 gem "haml"
 gem "axlsx"

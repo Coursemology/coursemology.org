@@ -9,7 +9,7 @@ class Assessment::Answer < ActiveRecord::Base
 
   scope :finalised,  -> { where(finalised: true) }
 
-  attr_accessible :std_course_id, :question_id, :content, :submission_id, :attempt_left
+  attr_accessible :std_course_id, :question_id, :content, :submission_id, :attempt_left, :result
 
   belongs_to  :question, class_name: Assessment::Question
   belongs_to  :std_course, class_name: "UserCourse"

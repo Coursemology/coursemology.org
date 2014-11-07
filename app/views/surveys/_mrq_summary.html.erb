@@ -3,7 +3,7 @@
 <% else %>
     <span class="pull-right" style="font-size: 1.3em; font-style: italic">No of respondents: <strong><%= summary[:total] %></strong></span>
     <table class="table table-hover no-boarder" style="margin-left: 5%; width: 90%; margin-top: 50px" >
-      <% top = summary[:options][0].count || 1 %>
+      <% top = summary[:options].order("count desc")[0].count || 1 %>
       <% summary[:options].each_with_index do |option, index| %>
           <% count = option.get_count(@tab == 'summary_phantom') %>
           <tr>

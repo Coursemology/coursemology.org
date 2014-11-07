@@ -80,7 +80,7 @@ codeEvaluator = function () {
 
                     if (publicTestFlag && !errorFlag) {
                         if (resp.private == null || !privateTestFlag) {
-                            $er.html("Your answer failed to pass one or more of the private test cases.").animate(failColor, animateOpt);
+                            $er.html("Your answer failed to pass one or more of the private test cases."   + (resp.hint ? " <br>Hint: " + resp.hint : "")).animate(failColor, animateOpt);
                         } else {
                             $er.html("You have successfully passed all public and private test cases!").animate(passColor, animateOpt);
                             $(btn).attr("disabled", true);
@@ -91,12 +91,12 @@ codeEvaluator = function () {
                         $er.html("Your answer failed to pass one or more of the public test cases.").animate(failColor, animateOpt);
                     }
 
-                    if (resp.errors.length <= 0) {
-                        if (resp.can_test) {
-                            $(btn).attr("disabled", false);
-                        }
-                    } else {
+                    if (resp.errors.length > 0) {
                         $er.html(escapeHtml(resp.errors)).animate({backgroundColor: "#e1c1b1"}, animateOpt);
+                    }
+
+                    if (resp.can_test) {
+                        $(btn).attr("disabled", false);
                     }
                     self.running = false;
                 }

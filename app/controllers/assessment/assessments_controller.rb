@@ -43,8 +43,7 @@ class Assessment::AssessmentsController < ApplicationController
       @assessments = @assessments.accessible_by(current_ability)
     end
 
-    submissions = @course.submissions.where(assessment_id: @assessments.map {|m| m.id},
-                                            std_course_id: curr_user_course.id)
+    submissions = @course.submissions.where(std_course_id: curr_user_course.id)
 
     sub_ids = submissions.map {|s| s.assessment_id}
     sub_map = {}
@@ -59,18 +58,22 @@ class Assessment::AssessmentsController < ApplicationController
         attempting = sub_map[ast.id].attempting?
         action_map[ast.id] = { action: attempting ? "Edit" : "Review",
                                url: edit_course_assessment_submission_path(@course, ast, sub_map[ast.id]) }
+      else
+        # retrieve dependent_submissions
+        dep_id = ast.dependent_on_ids
+        dep_sub = dep_id.empty? ? [] : dep_id.map { |id| sub_map[id].nil? ? nil : sub_map[id].attempting? }
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-      elsif (ast.opened? and (ast.as_assessment.class == Assessment::Training or
-          ast.dependent_id.nil? or ast.dependent_id == 0 or
-          (sub_ids.include? ast.dependent_id and !sub_map[ast.dependent_id].attempting?))) or
-          can?(:manage, ast)
-
-        action_map[ast.id] = {action: "Attempt",
+        if (ast.opened? and # assessment is open
+              (dep_id.nil? or # i) assessment has no dependent assessments
+                ((dep_id - sub_ids).empty? and !(dep_sub.include? true)))) or # ii) dep asm have submissions which are completed
+            can?(:manage, ast) # user is admin
+          action_map[ast.id] = {action: "Attempt",
                               url: new_course_assessment_submission_path(@course, ast)}
-      else
-        action_map[ast.id] = {action: nil}
+        else
+          action_map[ast.id] = {action: nil}
+        end
       end
 
       action_map[ast.id][:new] = false

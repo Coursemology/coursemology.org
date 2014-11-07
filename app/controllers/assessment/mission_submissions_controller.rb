@@ -18,7 +18,11 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     if @submission.graded?
       grading = @submission.gradings.first
       redirect_to course_assessment_submission_grading_path(@course, @assessment, @submission,grading)
+      return
     end
+
+    #show running results for staff when the mission is not submitted
+    @submission.eval_answer if curr_user_course.is_staff?
   end
 
 
@@ -61,6 +65,10 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
   def unsubmit
     @submission.set_attempting
+    # re-run test cases when student submit again
+    grading = @submission.gradings.first
+    grading.update_column(:autograding_refresh, true) if grading
+
     flash[:notice] = "Successfully unsubmited submission."
     redirect_to course_assessment_submission_path(@course, @assessment, @submission)
   end
@@ -77,6 +85,8 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
       qn = std_answer.question
       combined_code = PythonEvaluator.combine_code([qn.pre_include, std_answer.content, qn.append_code])
       result = PythonEvaluator.eval_python(PythonEvaluator.get_asm_file_path(@assessment), combined_code, qn.specific, false)
+
+      set_hints(result, qn)
     end
     result[:can_test] = std_answer.can_run_test? curr_user_course
     respond_to do |format|

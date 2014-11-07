@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140909023230) do
+ActiveRecord::Schema.define(:version => 20140929155854) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -178,6 +178,11 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "assessment_dependency", :id => false, :force => true do |t|
+    t.integer "id",           :default => 0, :null => false
+    t.integer "dependent_id"
+  end
+
   create_table "assessment_general_answers", :force => true do |t|
     t.datetime "deleted_at"
     t.datetime "created_at", :null => false
@@ -275,6 +280,7 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.datetime "saved_at"
   end
 
   create_table "assessment_trainings", :force => true do |t|
@@ -297,7 +303,6 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.float    "max_grade"
     t.boolean  "published"
     t.boolean  "comment_per_qn",     :default => true
-    t.integer  "dependent_id"
     t.integer  "display_mode_id"
     t.integer  "bonus_exp"
     t.datetime "bonus_cutoff_at"
@@ -999,7 +1004,7 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.boolean  "anonymous",    :default => false
     t.boolean  "publish",      :default => true
     t.boolean  "allow_modify", :default => true
-    t.boolean  "is_contest",   :default => true
+    t.boolean  "is_contest",   :default => false
     t.time     "deleted_at"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
@@ -1025,6 +1030,7 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.datetime "updated_at",  :null => false
     t.string   "owner_type",  :null => false
     t.integer  "pos"
+    t.datetime "deleted_at"
   end
 
   add_index "tabs", ["course_id"], :name => "index_tabs_on_course_id"
@@ -1089,6 +1095,7 @@ ActiveRecord::Schema.define(:version => 20140909023230) do
     t.integer  "achievement_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "obtained_at"
   end
 
   add_index "user_achievements", ["achievement_id"], :name => "index_user_achievements_on_achievement_id"

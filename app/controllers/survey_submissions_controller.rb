@@ -139,8 +139,8 @@ class SurveySubmissionsController < ApplicationController
 
     question = @survey.survey_questions.where(id:params[:question]).first
     options = params[:option].keys.map {|k| k.to_i}
-    if question.max_response < options.count
-      flash[:error] ="Max response allowed is #{question.max_response}, but #{options.count} have been selected."
+    if question.max_choices < options.count
+      flash[:error] = "Max response allowed is #{question.max_choices}, but #{options.count} have been selected."
     else
       answers = question.survey_mrq_answers.where(user_course_id:curr_user_course)
 
@@ -155,18 +155,15 @@ class SurveySubmissionsController < ApplicationController
         answer = question.survey_mrq_answers.build
         answer.option_id = id
         answer.user_course = curr_user_course
+        answer.survey_submission = @survey_submission
         answer.save
         answer.option.increase_count
       end
 
       step += 1
-      if answers.count == 0
-        @survey_submission.current_qn = (@survey_submission.current_qn || 1) + 1
-        @survey_submission.save
 
-        if @survey_submission.done?
-          @survey_submission.set_submitted
-        end
+      if @survey_submission.done?
+        @survey_submission.set_submitted
       end
     end
     respond_to do |format|

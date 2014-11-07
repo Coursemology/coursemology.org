@@ -1,15 +1,23 @@
 language: ruby
+cache: bundler
 rvm:
   - 2.1.2
   - ruby-head
 matrix:
   allow_failures:
     - rvm: ruby-head
-bundler_args: --without assets:development:production
+bundler_args: --without development:production
 before_script:
   - cp config/database.yml.travis config/database.yml
   - cp sample_config/facebook.yml.sample config/facebook.yml
   - cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
-  - bundle exec rake db:create db:schema:load db:seed
+  - bundle exec rake db:create db:schema:load db:migrate db:seed
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 5 # give xvfb some time to start
+env:
+  global:
+    - BUNDLE_JOBS=4
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 script:
   - bundle exec rspec

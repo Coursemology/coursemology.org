@@ -44,7 +44,7 @@ class ComicsController < ApplicationController
                            page: page.page,
                            tbc: page.is_tbc}
       end
-      if @comic.next_mission && @comic.next_mission.can_start?(curr_user_course)
+      if @comic.next_mission && @comic.next_mission.can_start?
         result[:next_mission] = {title: @comic.next_mission.title,
                                  url: course_mission_url(@course, @comic.next_mission)}
       end

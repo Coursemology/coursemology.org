@@ -45,6 +45,18 @@ class Assessment::SubmissionsController < ApplicationController
     end
   end
 
+  def set_hints(evaluate_result, question)
+    # if fail private test cases, show hints
+    public_tests = evaluate_result[:public].length == 0 ? true : evaluate_result[:public].inject { |sum, a| sum && a }
+    private_tests = evaluate_result[:private].length == 0 ? true : evaluate_result[:private].inject { |sum, a| sum && a }
+    if public_tests && evaluate_result[:private].length > 0 && !private_tests
+      index = evaluate_result[:private].find_index(false)
+      evaluate_result[:hint] = question.data_hash["private"][index]["hint"]
+    end
+
+    return public_tests, private_tests
+  end
+
   private
 
   def build_resource

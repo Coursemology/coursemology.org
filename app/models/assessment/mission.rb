@@ -8,7 +8,7 @@ class Assessment::Mission < ActiveRecord::Base
                   :file_submission_only
 
   attr_accessible  :title, :description, :exp, :open_at, :close_at, :published, :comment_per_qn,
-                   :dependent_id, :display_mode_id
+                   :dependent_on_ids, :display_mode_id, :dependent_on, :dependent_on_attributes
 
   validates_presence_of :title, :exp, :open_at, :close_at
 
@@ -33,16 +33,11 @@ class Assessment::Mission < ActiveRecord::Base
   end
 
   def missions_dep_on_published
-    missions_dependent_on.where(publish:true)
+    missions.required_for.where(publish:true)
   end
 
   def current_exp
     exp
-  end
-
-  #TODO: refactor
-  def self.reflect_on_association(association)
-    super || self.parent.reflect_on_association(association)
   end
 
 end

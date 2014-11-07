@@ -8,7 +8,8 @@ class Assessment::CodingQuestionsController < Assessment::QuestionsController
   end
 
   def create
-    @question.auto_graded = !@assessment.is_mission?
+    @question.auto_graded = true if @assessment.is_training?
+
     saved = super
     # update max grade of the asm it belongs to
     respond_to do |format|
