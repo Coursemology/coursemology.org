@@ -43,6 +43,16 @@ FactoryGirl.define do
     description "It's a programming course"
     start_at Time.now
     end_at 1.day.from_now
+    after(:create) do |course, evaluator|
+      if evaluator.creator
+        course.creator = evaluator.creator
+        user_course = course.user_courses.build()
+        user_course.course = course
+        user_course.user = evaluator.creator
+        user_course.role = Role.find_by_name(:lecturer)
+        user_course.save
+      end
+    end
   end
 
   factory :announcement do
@@ -53,7 +63,16 @@ FactoryGirl.define do
     after(:build) do |announcement, evaluator|
       announcement.course_id = evaluator.course.try(:id)
       announcement.creator_id = evaluator.creator.try(:id)
+      announcement.expiry_at = evaluator.expiry_at if evaluator.expiry_at
     end
   end
 
+  factory :lesson_plan_entry do
+    entry_type 0
+    title 'My Lecture'
+    location 'LT26'
+    description 'Teaching an awesome class. How cool is that?'
+    start_at 1.day.from_now
+    end_at 3.days.from_now
+  end
 end

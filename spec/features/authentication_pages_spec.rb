@@ -43,7 +43,6 @@ describe "AuthenticationPages", :type => :feature do
         it { should have_link('Sign in') }
       end
     end
-
   end
 
 end

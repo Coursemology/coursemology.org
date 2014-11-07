@@ -1,6 +1,6 @@
 <%= form_for [@course, @lesson_plan_entry], :html => { :class => 'form-horizontal lesson-plan-entry-form' } do |f| %>
     <div class="control-group">
-      <%= f.label "Type", :class => 'control-label' %>
+      <%= f.label :entry_type, 'Type', :class => 'control-label' %>
       <div class="controls">
         <%= f.select :entry_type, LessonPlanEntry::ENTRY_TYPES, :class => 'span7' %>
       </div>
@@ -21,9 +21,7 @@
     </div>
 
     <div class="control-group">
-      <label class="control-label">
-          Description&#47;Objectives
-      </label>
+      <%= f.label :description, 'Description/Objectives', :class => 'control-label' %>
       <div class="controls">
         <%= f.text_area :description, :class => 'text_field span7 html-editor', :placeholder => "(Optional) What's going to happen? What will students know after attending?" %>
       </div>

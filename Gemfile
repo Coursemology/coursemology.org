@@ -29,6 +29,8 @@ group :development, :test do
   gem 'launchy'
   gem 'selenium-webdriver'
   gem 'database_cleaner'
+  gem 'coveralls', require: false
+  gem 'fuubar'
 end
 
 # Gems used only for assets and not required
