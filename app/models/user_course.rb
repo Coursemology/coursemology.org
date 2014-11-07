@@ -315,7 +315,11 @@ class UserCourse < ActiveRecord::Base
         s = self.seen_stuff.build()
         s.obj_type = objs[0].class.to_s
         s.obj_id = obj
-        s.save
+        # we do have thread safe issues here, since the record is unique, we can ignore the exception
+        begin
+          s.save
+        rescue ActiveRecord::RecordNotUnique
+        end
       end
     end
   end
