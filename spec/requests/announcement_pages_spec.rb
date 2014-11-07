@@ -3,99 +3,138 @@ require 'rails_helper'
 RSpec.describe "AnnouncementPages", :type => :feature do
   let(:admin) { FactoryGirl.create(:admin) }
   let(:course) { FactoryGirl.create(:course) }
+
   before do
     sign_in admin
     create_course course
   end
 
-  describe "creation" do
+  describe "create" do
+    before do
+      visit new_course_announcement_path(course)
+    end
+
+    describe "page" do
+      it "shows the content" do
+        expect(page).to have_content("New Announcement")
+      end
+    end
+
+    context "when information is valid" do
+      let(:announcement) { FactoryGirl.build(:announcement) }
+
+      before do
+        fill_in 'Title', with: announcement.title
+        fill_in 'Description', with: announcement.description
+      end
+
+      it "creates an announcement" do
+        expect { click_button 'Create' }.to change(Announcement, :count).by(1)
+      end
+
+      describe "after announcement created" do
+        before do
+          click_button 'Create'
+        end
+
+        it "displays the announcement title" do
+          expect(page).to have_content(announcement.title)
+        end
+
+        it "displays the announcement description" do
+          expect(page).to have_content(announcement.description)
+        end
+      end
+    end
+
+    context "when information is not valid" do
+      it "does not change announcement count" do
+        pending 'to be implemented'
+        expect { click_button 'Create' }.not_to change(Announcement, :count)
+      end
+    end
+  end
+
+  describe "index page" do
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
+
     before do
       visit course_announcements_path(course)
     end
+
     it "shows the new button" do
       expect(page).to have_link('New', href: new_course_announcement_path(course))
     end
 
-    describe "create action" do
+    it "shows the edit button" do
+      expect(page).to have_link('', href: edit_course_announcement_path(course, announcement))
+    end
+
+    it "shows the delete button" do
+      expect(page).to have_link('', href: course_announcement_path(course, announcement))
+    end
+  end
+
+  describe "edit" do
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
+    before { visit edit_course_announcement_path(course, announcement) }
+
+    describe "page" do
+      it "shows the title" do
+        expect(page).to have_content('Edit Announcement')
+      end
+    end
+
+    context "when information is valid" do
+      let(:new_title)  { 'New Title' }
+      let(:new_content) { 'new content' }
+
       before do
-        click_link 'New'
+        fill_in "Title", with: new_title
+        fill_in "Description", with: new_content
+        click_button "Update"
       end
 
-      it "displays the content" do
-        expect(page).to have_field("Title")
-        expect(page).to have_field("Description")
+      it "redirects back to index" do
+        expect(current_path).to eq course_announcements_path(course)
       end
 
-      describe "with valid information" do
-        let(:announcement) { FactoryGirl.build(:announcement) }
-        before do
-          fill_in 'Title', with: announcement.title
-          fill_in 'Description', with: announcement.description
-        end
+      it "shows the success notice" do
+        expect(page).to have_content("'#{new_title}' has been updated")
+      end
 
-        it "should create an announcement" do
-          expect { click_button 'Create' }.to change(Announcement, :count).by(1)
-        end
+      it "changes the title" do
+        expect(announcement.reload.title).to eq new_title
+      end
 
-        describe "after announcement created" do
-          before do
-            click_button 'Create'
-          end
-          it "displays the announcement just created" do
-            expect(page).to have_content(announcement.title)
-            expect(page).to have_content(announcement.description)
-          end
-        end
+      it "changes the description" do
+        expect(announcement.reload.description).to eq new_content
+      end
+    end
+
+    context "when information is not valid" do
+      before do
+        fill_in "Title", with: ''
+        fill_in "Description", with: ''
+        click_button "Update"
+      end
+
+      it "shows the error" do
+        pending "to be implemented, currently we are allowing empty announcement"
+        expect(page).to have_content("error")
       end
     end
   end
 
-  describe "editing" do
-    let(:announcement) { FactoryGirl.build(:announcement, course: course, creator: admin) }
-    before do
-      announcement.save
-      visit course_announcements_path(course)
-    end
+  describe "destroy" do
+    let!(:announcement) { FactoryGirl.create(:announcement, course: course, creator: admin) }
 
-    describe "page display" do
-      it "shows the edit button" do
-        expect(page).to have_link('', href: edit_course_announcement_path(course, announcement))
-      end
-    end
+    describe "as correct user" do
+      before { visit course_announcements_path(course) }
 
-    describe 'edit page' do
-      before { visit edit_course_announcement_path(course, announcement) }
-
-      it 'renders the view correctly' do
-        expect(page).to have_field('Title')
-        expect(page).to have_field('Description')
-        expect(page).to have_content('Publish at')
-        expect(page).to have_button('Update')
-      end
-
-      context 'after changes saved' do
-        let(:new_title)  { 'New Title' }
-        let(:new_content) { 'new content' }
-        before do
-          fill_in 'Title',    with: new_title
-          fill_in 'Description',    with: new_content
-          click_button 'Update'
-        end
-
-        it 'should redirect back to index' do
-          expect(current_path).to eq course_announcements_path(course)
-        end
-
-        it 'should show the success notice' do
-          expect(page).to have_content("'#{new_title}' has been updated")
-        end
-
-        it 'attributes should be changed' do
-          announcement.reload.title.should eq new_title
-          announcement.reload.description.should eq new_content
-        end
+      it "deletes an announcement" do
+        expect { find("a.btn-danger").click }.to change(Announcement, :count).by(-1)
       end
     end
   end
-
 end
