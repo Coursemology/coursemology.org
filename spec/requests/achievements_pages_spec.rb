@@ -34,7 +34,7 @@ RSpec.describe "Achievements", :type => :request do
           fill_in 'Description', with: achievement.description
         end
 
-        it "should create an achievement" do
+        it "create an achievement" do
           expect { click_button 'Create Achievement' }.to change(Achievement, :count).by(1)
         end
 
@@ -55,13 +55,13 @@ RSpec.describe "Achievements", :type => :request do
     let!(:achievement) { FactoryGirl.create(:achievement, course: course) }
     before { visit course_achievements_path(course) }
 
-    describe "page display" do
+    describe "page" do
       it "shows the edit button" do
         expect(page).to have_link('', href: edit_course_achievement_path(course, achievement))
       end
 
 
-      describe "edit achievements page" do
+      describe "when editing achievements" do
         before { visit edit_course_achievement_path(course, achievement) }
 
         it 'renders the view correctly' do
@@ -70,7 +70,7 @@ RSpec.describe "Achievements", :type => :request do
         end
 
 
-        context 'after changes saved' do
+        context 'with changes saved' do
           let(:new_title) { 'Edited Title' }
           let(:new_description) { 'Edited Description' }
           before do
@@ -80,16 +80,15 @@ RSpec.describe "Achievements", :type => :request do
             click_button 'Update'
           end
 
-          it 'should redirect back to index' do
+          it 'redirects back to index' do
             expect(current_path).to eq course_achievement_path(course)
-            save_and_open_page
           end
 
-          it 'should show the successful notice' do
+          it 'shows the successful notice' do
             expect(page).to have_content("The achievement '#{new_title}' has been updated.")
           end
 
-          it 'should show changed attributes' do
+          it 'shows changed attributes' do
             achievement.reload.title.should eq new_title
             achievement.reload.description.should eq new_description
           end
@@ -102,20 +101,19 @@ RSpec.describe "Achievements", :type => :request do
     let!(:achievement) { FactoryGirl.create(:achievement, course: course) }
     before { visit course_achievements_path(course) }
 
-    describe "page display" do
-      it "shows the delete button" do
+    describe "page" do
+      it 'shows the delete button' do
         expect(page).to have_link 'delete_achievement'
       end
     end
 
     describe "action" do
-
-      it 'should delete the achievement' do
+      it 'deletes the achievement' do
         expect { click_link 'delete_achievement' }.to change(Achievement, :count).by(-1)
       end
     end
 
-    it 'should redirect back to index' do
+    it 'redirects back to index' do
       expect(current_path).to eq course_achievements_path(course)
     end
 
