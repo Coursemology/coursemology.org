@@ -43,6 +43,16 @@ FactoryGirl.define do
     description "It's a programming course"
     start_at Time.now
     end_at 1.day.from_now
+    after(:create) do |course, evaluator|
+      if evaluator.creator
+        course.creator = evaluator.creator
+        user_course = course.user_courses.build()
+        user_course.course = course
+        user_course.user = evaluator.creator
+        user_course.role = Role.find_by_name(:lecturer)
+        user_course.save
+      end
+    end
   end
 
   factory :announcement do
