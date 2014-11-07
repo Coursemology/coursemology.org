@@ -34,6 +34,7 @@ RSpec.describe "Achievements", :type => :request do
           fill_in 'Description', with: achievement.description
         end
 
+        pending "to mock the facebook graph connect"
         it "create an achievement" do
           expect { click_button 'Create Achievement' }.to change(Achievement, :count).by(1)
         end
@@ -107,6 +108,7 @@ RSpec.describe "Achievements", :type => :request do
       end
     end
 
+    pending "to mock the facebook graph connect"
     describe "action" do
       it 'deletes the achievement' do
         expect { click_link 'delete_achievement' }.to change(Achievement, :count).by(-1)
