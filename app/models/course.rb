@@ -54,7 +54,7 @@ class Course < ActiveRecord::Base
 
   #user related
   has_many  :user_courses,  dependent: :destroy
-  has_many  :users, through: :usccer_courses
+  has_many  :users, through: :user_courses
   has_many  :submissions, through: :user_courses
   has_many  :activities, dependent: :destroy
   has_many  :tutorial_groups,        dependent: :destroy
@@ -340,7 +340,6 @@ class Course < ActiveRecord::Base
   end
 
   def populate_preference
-    puts "populate_preference populate_preference"
     course_preferences.each do |pref|
       item = PreferableItem.find_by_id(pref.preferable_item_id)
       unless item
