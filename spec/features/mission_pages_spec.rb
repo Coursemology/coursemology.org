@@ -76,6 +76,28 @@ describe "MissionPages", :type => :feature do
         expect(page).to have_text('Title')
         expect(page).to have_text('Description')
       end
+
+      it "should change mission title and description" do
+        description = 'Some new mission description'
+
+        visit edit_course_assessment_mission_path(course, mission)
+        fill_in 'Title', with: 'Edited mission'
+        fill_in 'Description', with: description
+        click_button "Update Mission"
+
+        expect(page).to have_text('The mission Edited mission has been updated')
+        expect(page).to have_text(description)
+      end
+
+      it "should change mission experience" do
+        exp = 1579
+        
+        visit edit_course_assessment_mission_path(course, mission)
+        fill_in 'assessment_mission_exp', with: exp
+        click_button "Update Mission"
+
+        expect(page).to have_text(exp.to_s)
+      end
     end
 
 
