@@ -24,7 +24,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'spork-rails'
   gem 'guard-spork'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', :require => false
   gem 'capybara'
   gem 'launchy'
   gem 'coveralls', require: false
