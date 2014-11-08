@@ -62,8 +62,8 @@ FactoryGirl.define do
     open_at Time.now
     bonus_cutoff_at Time.now
 
-    after(:build) do |announcement, evaluator|
-      announcement.course_id = evaluator.course.try(:id)
+    after(:build) do |training, evaluator|
+      training.course_id = evaluator.course.try(:id)
     end
   end
 
