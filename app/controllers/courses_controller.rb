@@ -11,7 +11,7 @@ class CoursesController < ApplicationController
     @course.creator = current_user
     @course.levels.build({ level: 0, exp_threshold: 0  })
 
-    user_course = @course.user_courses.build()
+    user_course = @course.user_courses.build
     user_course.course = @course
     user_course.user = current_user
     user_course.role = Role.find_by_name(:lecturer)
@@ -27,7 +27,6 @@ class CoursesController < ApplicationController
   end
 
   respond_to :html, :json
-
   def update
     message = nil
     if params[:user_course_id]

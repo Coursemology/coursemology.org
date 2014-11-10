@@ -6,7 +6,7 @@ gem 'rails', '3.2.14'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
-  gem "pry"
+  gem 'pry-rails'
   gem 'meta_request'
   gem "better_errors"
   gem "spring"
@@ -27,6 +27,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'launchy'
+  gem 'coveralls', require: false
+  gem 'fuubar'
 end
 
 # Gems used only for assets and not required
