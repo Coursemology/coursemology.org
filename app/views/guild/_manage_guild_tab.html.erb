@@ -1,0 +1,25 @@
+<ul class="nav nav-tabs">
+	<% if tab == 'index' %>
+		<li class="active">
+	<% else %>
+		<li>
+	<% end %>
+		<a href='<%= course_guild_path(@course) %>'>Guild Leaderboard</a>
+	</li>
+	<% if tab == 'guild' %>
+		<li class="active">
+	<% else %>
+ 		<li>
+	<% end %>
+		<a href='<%= course_guild_description_path(@course) %>'>Others</a>
+	</li>
+    <% if curr_user_course.is_staff? %>
+        <% if tab == 'manage' %>
+            <li class="active">
+        <% else %>
+            <li>
+        <% end %>
+            <a href='<%= course_manage_guild_path(@course) %>'>Manage Guilds</a>
+        </li>
+    <% end %>
+</ul>

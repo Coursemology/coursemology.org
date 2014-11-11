@@ -1,15 +1,12 @@
 class Guild < ActiveRecord::Base
 
+  attr_accessible :description, :name, :course_id
+
   belongs_to :course
 
-  has_many :GuildUsers
-  has_many :members, class_name: "User", through: :Guild_User do
-    def leaders
-      where("guild_user.role_id = ?", 1)
-    end
-  end
-
-  attr_accessible :description, :name
+  has_many :guild_users, class_name: 'GuildUser', dependent: :destroy
+  #need to set up associations with users? (Probably for leaders?)
+  #need to set up table?
 
   #to add validation
 

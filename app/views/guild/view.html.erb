@@ -1,0 +1,12 @@
+<div class="page-header">
+  <h1>Guilds</h1>
+</div>
+
+<%= render partial: "manage_guild_tab", locals: { tab: 'guild' } %>
+
+<% if @guilds %>
+  <% @guilds.each do |guild| %>
+    <%= guild.name %> </br>
+    <%= guild.description %>
+  <% end %>
+<% end %>

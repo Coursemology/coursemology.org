@@ -52,6 +52,9 @@ Coursemology::Application.routes.draw do
     post  "/add_student"      => "course_groups#add_student", as: :manage_add_student
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
+    get '/guilds' => 'guild#index', as: :guild
+    get '/guilds_description' => 'guild#view', as: :guild_description
+    match '/guilds_management' => 'guild#manage', as: :manage_guild
 
     resources :user_courses do
       resources :exp_transactions

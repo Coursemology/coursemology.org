@@ -1,7 +1,9 @@
 class GuildUser < ActiveRecord::Base
 
-  attr_accessible :role
+  attr_accessible :role_id, :user_course_id, :guild_id
 
   belongs_to :guild
-  has_one :user_course
+  belongs_to :user_course
+  #has_one :user, through: :user_course
+
 end
