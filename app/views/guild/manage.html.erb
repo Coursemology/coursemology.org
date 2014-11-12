@@ -36,9 +36,8 @@
                   <input type="email" name="email" value="<%= student.email %>" required>
                 </td>
                 <td>
-                  <% guild = student_course.get_guild %>
-                  <% if guild %>
-                      <%= select "guild_id","", course_guilds, {:selected => "#{guild.id}" }%>
+                  <% if student_course.get_guild %>
+                      <%= select "guild_id","", course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
                   <% else %>
                       <%= select "guild_id","", course_guilds, {:selected => "#{-1}" }%>
                   <% end %>

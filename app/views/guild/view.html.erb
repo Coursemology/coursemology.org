@@ -2,11 +2,20 @@
   <h1>Guilds</h1>
 </div>
 
-<%= render partial: "manage_guild_tab", locals: { tab: 'guild' } %>
+<%= render partial: 'manage_guild_tab', locals: { tab: 'guild' } %>
 
 <% if @guilds %>
-  <% @guilds.each do |guild| %>
-    <%= guild.name %> </br>
-    <%= guild.description %>
-  <% end %>
+    <% if curr_user_course.is_staff? %>
+        <% @guilds.each do |guild| %>
+            <%= render partial: 'guild_description', locals: { guild: guild } %>
+        <% end %>
+    <% elsif curr_user_course.get_guild %>
+        <%= render partial: 'guild_description', locals: { guild: curr_user_course.get_guild } %>
+    <% else %>
+        <p>You have not been enrolled into a Guild! Please request for your lecturer to add you into a Guild!</p>
+    <% end %>
+<% else %>
+    <p>There are no Guilds here! Please request for your lecturer to add Guilds!</p>
 <% end %>
+
+

@@ -54,7 +54,12 @@ Coursemology::Application.routes.draw do
 
     get '/guilds' => 'guild#index', as: :guild
     get '/guilds_description' => 'guild#view', as: :guild_description
-    match '/guilds_management' => 'guild#manage', as: :manage_guild
+    get '/guilds_management' => 'guild#manage', as: :manage_guild
+    get '/guilds/new' => 'guild#new', as: :new_guild
+    post '/guilds' => 'guild#create'
+    delete '/guilds/:id' => 'guild#destroy', as: :delete_guild
+    get '/guilds/:id/edit' => 'guild#edit', as: :edit_guild
+    put '/guilds/:id/edit' => 'guild#update'
 
     resources :user_courses do
       resources :exp_transactions
