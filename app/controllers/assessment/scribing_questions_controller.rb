@@ -1,9 +1,15 @@
 class Assessment::ScribingQuestionsController < Assessment::QuestionsController
 
   def create
-    saved = super
+    assign_params
+    extract_tags
+    @question.creator = current_user
+    qa = @assessment.question_assessments.new
+    qa.question = @question.question
+    qa.position = @assessment.questions.count
+    
     respond_to do |format|
-      if saved
+      if @question.save && qa.save
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
@@ -15,9 +21,8 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
   end
 
   def update
-    super
     respond_to do |format|
-      if @question.update_attributes(params[:assessment_general_question])
+      if @question.update_attributes(params[:assessment_scribing_question])
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                                   notice: 'Question has been updated.' }
         format.json { head :no_content }
@@ -27,4 +32,28 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
       end
     end
   end
+
+
+  protected
+
+  def build_resource
+    if params[:action] == 'create'
+      @question = Assessment::ScribingQuestion.new
+    elsif params[:action] == 'update'
+      @question = Assessment::ScribingQuestion.find(params[:id])
+    else
+      super
+    end
+  end
+
+
+  private
+
+  def assign_params
+    form_params = params['assessment_scribing_question']
+    @question.title = form_params['title']
+    @question.description = form_params['description']
+    @question.max_grade = form_params['max_grade']
+  end
+
 end
