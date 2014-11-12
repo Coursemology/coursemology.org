@@ -51,7 +51,7 @@ class Assessment::Grading < ActiveRecord::Base
       update_column(:exp_transaction_id, exp_transaction.id)
     end
 
-    self.exp_transaction.exp = self.exp || (self.grade || 0) * asm.exp / asm.max_grade
+    self.exp_transaction.exp = exp || (grade || 0) * asm.exp / (asm.max_grade || 1)
     if submission.has_multiplier?
       self.exp_transaction.exp *= submission.multiplier
     end
