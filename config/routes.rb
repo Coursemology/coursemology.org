@@ -332,4 +332,8 @@ Coursemology::Application.routes.draw do
     resources :file_uploads
   end
 
+  resources :assessment_scribing_questions do
+    resources :file_uploads
+  end
+
 end
