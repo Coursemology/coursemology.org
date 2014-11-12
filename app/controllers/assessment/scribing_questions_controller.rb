@@ -26,14 +26,8 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
   end
 
   def update
-<<<<<<< HEAD
     respond_to do |format|
       if @question.update_attributes(params[:assessment_scribing_question])
-=======
-    super
-    respond_to do |format|
-      if @question.update_attributes(params[:assessment_general_question])
->>>>>>> Copy general question as template for scribing qn
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                                   notice: 'Question has been updated.' }
         format.json { head :no_content }
@@ -43,7 +37,6 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
       end
     end
   end
-<<<<<<< HEAD
 
 
   protected
@@ -68,6 +61,4 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     @question.max_grade = form_params[:max_grade]
   end
 
-=======
->>>>>>> Copy general question as template for scribing qn
 end
