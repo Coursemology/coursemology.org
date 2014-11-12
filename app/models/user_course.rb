@@ -298,20 +298,20 @@ class UserCourse < ActiveRecord::Base
     self.user_achievements.order('created_at desc').first(6)
   end
 
+  def get_guild_id
+    self.guild_user ? self.guild_user.guild_id : nil
+  end
+
   def get_guild
-    if self.guild_user && self.guild_user.guild_id
-      Guild.find self.guild_user.guild_id
-    else
-      nil
-    end
+    self.guild_user ? Guild.find(self.get_guild_id) : nil
   end
 
   def get_guild_name
-    self.get_guild.name
+    self.guild_user ? self.get_guild.name : nil
   end
 
   def get_guild_description
-    self.get_guild_description
+    self.guild_user ? self.get_guild.description : nil
   end
 
   private
