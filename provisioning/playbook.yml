@@ -1,0 +1,61 @@
+---
+- hosts: all
+  vars:
+    db_username: coursemology
+    db_password: coursemology
+    db: coursemology
+    ruby: ruby2.1
+    work_dir: /home/vagrant/coursemology
+  sudo: yes
+  tasks:
+    - apt_repository: repo={{ item }}
+      with_items:
+        - ppa:chris-lea/node.js
+        - ppa:brightbox/ruby-ng
+    - apt: update_cache=yes cache_valid_time=7200
+    - apt: name={{ item }}
+      with_items:
+        - git-core
+        - curl
+        - zlib1g-dev
+        - build-essential
+        - libssl-dev
+        - libreadline-dev
+        - libyaml-dev
+        - libsqlite3-dev
+        - sqlite3
+        - libxml2-dev
+        - libxslt1-dev
+        - libcurl4-openssl-dev
+        - python-software-properties
+        - mysql-server
+        - mysql-client
+        - libmysqlclient-dev
+        - nodejs
+        - python-mysqldb
+        - "{{ ruby }}"
+        - "{{ ruby }}-dev"
+        - ruby-switch
+    - name: Add MySQL user
+      mysql_user: name={{ db_username }}
+                  password={{ db_password }}
+                  priv="*.*:ALL"
+    - name: create MySQL database
+      mysql_db: name={{ db }}
+    - command: ruby-switch --set {{ ruby }}
+
+# without sudo
+- hosts: all
+  vars:
+    work_dir: /home/vagrant/coursemology
+    gem_bin: /home/vagrant/.gem/ruby/2.1.0/bin
+  remote_user: vagrant
+  tasks:
+    - copy: src=files/gemrc dest=~/.gemrc
+    - gem: name=bundle executable=/usr/bin/gem2.1
+    - command: "{{ gem_bin }}/bundle install chdir={{ work_dir }}"
+    - command: cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb chdir={{ work_dir }}
+    - command: cp sample_config/facebook.yml.sample config/facebook.yml chdir={{ work_dir }}
+    - command: cp config/database.yml.sample config/database.yml chdir={{ work_dir }}
+    - command: "{{ gem_bin }}/bundle exec rake db:setup db:migrate chdir={{ work_dir }}"
+    - lineinfile: dest=~/.bashrc line="export PATH={{ gem_bin }}:$PATH"
