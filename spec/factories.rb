@@ -98,5 +98,14 @@ FactoryGirl.define do
       mission.course_id = evaluator.course.try(:id)
     end
   end
+  
+  factory :achievement do
+    title "I won!"
+    description "Yahoo"
+    after(:build) do |achievement, evaluator|
+      achievement.course_id = evaluator.course.try(:id)
+      achievement.creator_id = evaluator.creator.try(:id)
+    end
+  end
 
 end
