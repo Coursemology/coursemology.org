@@ -36,6 +36,12 @@
                           <%= answer.content %>
                       <% end %>
                     </textarea>
+                <% elsif question.class == Assessment::ScribingQuestion %>
+                    <% if question.document %>
+                      File name: <%= question.document.file.to_s %>
+                    <% elsif %>
+                      ==NO FILE==
+                    <% end %>
                 <% else %>
                     <%=render partial: 'do_coding',
                               locals: { answer: answer,
