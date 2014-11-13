@@ -55,6 +55,18 @@ FactoryGirl.define do
     end
   end
 
+  factory :training, class: Assessment::Training do
+    title "Danger Room"
+    description "Fight sentinels."
+    exp 200
+    open_at Time.now
+    bonus_cutoff_at Time.now
+
+    after(:build) do |training, evaluator|
+      training.course_id = evaluator.course.try(:id)
+    end
+  end
+
   factory :announcement do
     title "sample announcement"
     description "sample content"
@@ -75,4 +87,25 @@ FactoryGirl.define do
     start_at 1.day.from_now
     end_at 3.days.from_now
   end
+
+  factory :mission, class: Assessment::Mission do
+    title 'Factory mission'
+    open_at Time.now
+    close_at 1.day.from_now
+    exp 10
+    after(:build) do |mission, evaluator|
+      mission.title = evaluator.title
+      mission.course_id = evaluator.course.try(:id)
+    end
+  end
+  
+  factory :achievement do
+    title "I won!"
+    description "Yahoo"
+    after(:build) do |achievement, evaluator|
+      achievement.course_id = evaluator.course.try(:id)
+      achievement.creator_id = evaluator.creator.try(:id)
+    end
+  end
+
 end
