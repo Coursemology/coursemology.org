@@ -27,6 +27,8 @@ group :development, :test do
   gem 'factory_girl_rails', :require => false
   gem 'capybara'
   gem 'launchy'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
   gem 'coveralls', require: false
   gem 'fuubar'
 end
