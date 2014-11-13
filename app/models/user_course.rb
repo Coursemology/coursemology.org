@@ -298,6 +298,10 @@ class UserCourse < ActiveRecord::Base
     self.user_achievements.order('created_at desc').first(6)
   end
 
+  def has_guild?
+    self.guild_user ? true : false
+  end
+
   def get_guild_id
     self.guild_user ? self.guild_user.guild_id : nil
   end

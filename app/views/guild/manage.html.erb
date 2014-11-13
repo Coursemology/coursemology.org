@@ -4,9 +4,6 @@
 
 <%= render partial: "manage_guild_tab", locals: { tab: 'manage' } %>
 
-<%= @guilds.count %>
-<%= @student_courses.count %>
-
 <% if curr_user_course.is_staff? %>
     <% if @guilds %>
         <% @guilds.each do |guild| %>
@@ -15,34 +12,39 @@
         <% end %>
     <% end %>
 
-    <% course_guilds = @guilds.map {|guild| [guild.name, guild.description] }.unshift(["Unassigned", -1]) %>
+    <% course_guilds = @guilds.map {|guild| [guild.name, guild.id] }.unshift(["Unassigned", -1]) %>
+
     <table class="table">
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th>Guild</th>
         <th>Phantom</th>
+        <th>Guild</th>
         <th></th>
       </tr>
       <% @student_courses.each_with_index do |student_course| %>
           <% student = student_course.user %>
-          <%= form_for [@course,student_course],
+          <%= form_for [@course, student_course],
+                       url: course_edit_guild_user_path(@course),
                        html: { method: :put, class: "form-horizontal" }  do |f| %>
               <tr>
+                <td> <%= student.name %> </td>
+                <td> <%= student.email %> </td>
                 <td>
-                  <input type="text" name="name" value="<%= student.name %>" required>
-                </td>
-                <td>
-                  <input type="email" name="email" value="<%= student.email %>" required>
-                </td>
-                <td>
-                  <% if student_course.get_guild %>
-                      <%= select "guild_id","", course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
+                  <% if student_course.is_phantom? %>
+                    Yes
                   <% else %>
-                      <%= select "guild_id","", course_guilds, {:selected => "#{-1}" }%>
+                    No
                   <% end %>
                 </td>
-                <td><input type="checkbox" name="is_phantom" <%= 'checked' if student_course.is_phantom? %>> </td>
+                <td>
+                  <%= f.hidden_field :user_course, value: student_course.id %>
+                  <% if student_course.has_guild? %>
+                      <%= select 'guild_id', '', course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
+                  <% else %>
+                      <%= select 'guild_id', '', course_guilds, {:selected => "#{-1}" }%>
+                  <% end %>
+                </td>
                 <td>
                   <input type="hidden" name="redirect_back_url" value=course_manage_guild_path(@course)>
                   <button type="submit" class="btn">
@@ -53,6 +55,7 @@
           <% end %>
       <% end %>
     </table>
+
 <% else %>
     <div class="alert alert-error">
       Sorry dude!

@@ -1,0 +1,27 @@
+<%= form_for [@course,student_course],
+             html: { method: :put, class: "form-horizontal" }  do |f| %>
+    <tr>
+      <td>
+        <input type="text" name="name" value="<%= student.name %>" required>
+      </td>
+      <td>
+        <input type="email" name="email" value="<%= student.email %>" required>
+      </td>
+      <td>
+        <%= student_course.get_guild_id %>
+        <% if student_course.has_guild? %>
+            <%= student_course.get_guild_name %>
+            <%= select "guild_id","", course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
+        <% else %>
+            <%= select "guild_id","", course_guilds, {:selected => "#{-1}" }%>
+        <% end %>
+      </td>
+      <td><input type="checkbox" name="is_phantom" <%= 'checked' if student_course.is_phantom? %>> </td>
+      <td>
+        <input type="hidden" name="redirect_back_url" value=course_manage_guild_path(@course)>
+        <button type="submit" class="btn">
+          <i class="icon-ok"></i>
+        </button>
+      </td>
+    </tr>
+<% end %>

@@ -55,6 +55,7 @@ Coursemology::Application.routes.draw do
     get '/guilds' => 'guild#index', as: :guild
     get '/guilds_description' => 'guild#view', as: :guild_description
     get '/guilds_management' => 'guild#manage', as: :manage_guild
+    put '/guilds_management/edit' => 'guild#edit_user', as: :edit_guild_user
     get '/guilds/new' => 'guild#new', as: :new_guild
     post '/guilds' => 'guild#create'
     delete '/guilds/:id' => 'guild#destroy', as: :delete_guild

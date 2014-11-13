@@ -24,6 +24,21 @@ class GuildController < ApplicationController
   def edit
   end
 
+  def edit_user
+    user_course = UserCourse.find(params[:user_course][:user_course])
+    guild_user = user_course.has_guild? ? user_course.guild_user : GuildUser.new(user_course_id: user_course.id)
+    guild_user.guild_id = params[:guild_id][0] == -1 ? nil : params[:guild_id][0]
+
+    respond_to do |format|
+      if guild_user.save
+        format.html { redirect_to course_manage_guild_url(@course),
+                                  notice: "#{user_course.name}'s guild has been updated." }
+      else
+        format.html { render action: "manage" }
+      end
+    end
+  end
+
   def update
     respond_to do |format|
       if @guild.update_attributes(params[:guild])

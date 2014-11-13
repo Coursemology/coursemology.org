@@ -4,17 +4,21 @@
 
 <%= render partial: "manage_guild_tab", locals: { tab: 'index' } %>
 
-<% @course.guilds.each do |guild| %>
-    <%= guild.name %> <br>
-    <%= guild.description %> <br>
-    <% if guild.guild_users.count > 0 %>
-        <% guild.guild_users.each do |user| %>
-            <% uc = UserCourse.find(user.user_course_id) %>
-            <%= uc.name %> <br>
-            <%= Level.find(uc.level_id).level %><br>
+<% if @guilds %>
+    <% @guilds.each do |guild| %>
+        <%= guild.name %> <br>
+        <%= guild.description %> <br>
+        <% if guild.guild_users.count > 0 %>
+            <% guild.guild_users.each do |user| %>
+                <% uc = UserCourse.find(user.user_course_id) %>
+                <%= uc.name %> <br>
+                <%= Level.find(uc.level_id).level %><br>
+            <% end %>
         <% end %>
+        </br>
     <% end %>
-    </br>
+<% else %>
+    <div class="row-fluid">
+        There are no guilds yet! Please contact your lecturer to add guilds!
+    </div>
 <% end %>
-
-<%= curr_user_course.role_id %>
