@@ -55,6 +55,18 @@ FactoryGirl.define do
     end
   end
 
+  factory :training, class: Assessment::Training do
+    title "Danger Room"
+    description "Fight sentinels."
+    exp 200
+    open_at Time.now
+    bonus_cutoff_at Time.now
+
+    after(:build) do |training, evaluator|
+      training.course_id = evaluator.course.try(:id)
+    end
+  end
+
   factory :announcement do
     title "sample announcement"
     description "sample content"
