@@ -3,6 +3,9 @@
 </div>
 
 <%= render partial: "nav_bar" %>
+<div class="col-sm-offset-10 col-sm-2" >
+<%= button_to "Reset Survey", {action: 'reset'}, class:'btn-danger', data:{ confirm: 'All responded answers will be removed. Are you sure to continue?', disable_with: 'Loading..' }  %>
+</div>
 <% no_qn = @survey.survey_questions.count %>
 <% [@staff_courses, @std_courses, @std_courses_phantom].each_with_index do |user_courses, index| %>
     <% case index  %>
