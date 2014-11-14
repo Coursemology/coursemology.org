@@ -65,7 +65,14 @@ class SurveysController < ApplicationController
     @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
     @std_courses_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
   end
-
+  
+  def reset
+    SurveySubmission.where(survey_id: params[:id]).destroy_all
+    respond_to do |format|
+        format.html { redirect_to(course_survey_stats_path(@course, @survey), notice: 'Survey has been reset successfully') }  
+    end
+  end
+  
   def summary
     @tab = params[:_tab]
     include_phantom = @tab == "summary_phantom"
