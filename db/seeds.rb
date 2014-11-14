@@ -720,6 +720,15 @@ if NavbarPreferableItem.count == 12
                                pos: 13
 end
 
+if NavbarPreferableItem.count == 13
+  NavbarPreferableItem.create! item:  "guilds",
+                               navbar_link_type_id:  1,
+                               name: "Guilds",
+                               is_displayed: false,
+                               is_enabled: false,
+                               description: "course guilds",
+                               pos: 14
+end
 
 if ProgrammingLanguage.count == 0
   ProgrammingLanguage.create!({name: "Python",
