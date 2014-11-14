@@ -1,11 +1,11 @@
-<div class="page-header">
+<div class='page-header'>
   <h1>Guild Leaderboard</h1>
 </div>
 
-<%= render partial: "manage_guild_tab", locals: { tab: 'index' } %>
+<%= render partial: 'manage_guild_tab', locals: { tab: 'index' } %>
 
 <% if @guilds %>
-    <table class="table table-striped table-hover guild-table">
+    <table class='table table-striped table-hover guild-table'>
       <thead>
         <tr>
           <th>Position</th>
@@ -20,17 +20,24 @@
         <% @guild_results.each.with_index(1) do |guild, index| %>
           <tr>
             <td><%= index %></td>
-            <td><%= guild[:name] %></td>
+            <td>
+              <a class='guild_members'
+                 data-toggle='tooltip'
+                 data-title='<%= guild[:name] %>'
+                 data-content='<%= guild[:description] %>' >
+                <%= guild[:name] %>
+              </a>
+            </td>
             <td><%= guild[:avg_exp] %></td>
             <td><%= guild[:users].count %></td>
             <td>
               <% 3.times.each do |i| %>
                 <% if i < guild[:users].count %>
-                  <a class="guild_members"
-                    data-content="Exp: <%= guild[:users][i][:exp] %> &lt;br&gt; <%= guild[:users][i][:level] %>"
-                    data-title="<%= guild[:users][i][:name] %>"
+                  <a class='guild_members'
+                    data-content='Exp: <%= guild[:users][i][:exp] %> &lt;br&gt; <%= guild[:users][i][:level] %>'
+                    data-title='<%= guild[:users][i][:name] %>'
                     data-placement='bottom'>
-                    <img class="user-profile-pic" src="<%= guild[:users][i][:profile_pic] %>">
+                    <img class='user-profile-pic' src='<%= guild[:users][i][:profile_pic] %>'>
                   </a>
                 <% end %>
               <% end %>
@@ -40,7 +47,7 @@
       </tbody>
     </table>
 <% else %>
-    <div class="row-fluid">
+    <div class='row-fluid'>
         There are no guilds yet! Please contact your lecturer to add guilds!
     </div>
 <% end %>

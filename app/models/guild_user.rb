@@ -4,6 +4,5 @@ class GuildUser < ActiveRecord::Base
 
   belongs_to :guild
   belongs_to :user_course
-  #has_one :user, through: :user_course
 
 end

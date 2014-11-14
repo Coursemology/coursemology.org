@@ -12,14 +12,14 @@
         <% else %>
             <li>
         <% end %>
-        <a href='<%= course_guild_description_path(@course) %>'>Manage Guilds</a>
+        <a href='<%= course_guild_management_path(@course) %>'>Manage Guilds</a>
         </li>
         <% if tab == 'manage' %>
             <li class="active">
         <% else %>
             <li>
         <% end %>
-            <a href='<%= course_manage_guild_path(@course) %>'>Manage Guild Users</a>
+            <a href='<%= course_guild_users_path(@course) %>'>Manage Guild Users</a>
         </li>
         <% if tab == 'create' %>
             <li class="active">

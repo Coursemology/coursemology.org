@@ -14,6 +14,7 @@ class GuildController < ApplicationController
                                                     :profile_pic => x.user_course.user.get_profile_photo_url,
                                                     :level => x.user_course.level ? x.user_course.level.get_title : 'Level 0'  } }
         guild_info[:name] = guild.name
+        guild_info[:description] = guild.description
         guild_info[:avg_exp] = guild_users.sum { |user| user[:exp] } / guild_users.count
         guild_info[:users] = guild_users.sort { |user| user[:exp] }
 
@@ -41,13 +42,16 @@ class GuildController < ApplicationController
   end
 
   def edit_user
+    # Get usercourse from form data. Determine whether there is a need to create a GuildUser instance
     user_course = UserCourse.find(params[:user_course][:user_course])
     guild_user = user_course.has_guild? ? user_course.guild_user : GuildUser.new(user_course_id: user_course.id)
+
+    # Check to see if user is to be unassigned. A value of -1 means no guild.
     guild_user.guild_id = params[:guild_id][0] == -1 ? nil : params[:guild_id][0]
 
     respond_to do |format|
       if guild_user.save
-        format.html { redirect_to course_manage_guild_url(@course),
+        format.html { redirect_to course_guild_users_url(@course),
                                   notice: "#{user_course.name}'s guild has been updated." }
       else
         format.html { render action: "manage" }
@@ -69,7 +73,7 @@ class GuildController < ApplicationController
   def create
     respond_to do |format|
       if @guild.save
-        format.html { redirect_to course_guild_description_path @course,
+        format.html { redirect_to course_guild_management_path @course,
                                   notice: "The Guild '#{@guild.name}' has been created." }
       end
       format.html { render action: "new" }

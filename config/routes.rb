@@ -53,14 +53,14 @@ Coursemology::Application.routes.draw do
     post  "/update_exp"        => "course_groups#update_exp", as: :manage_update_exp
 
     get '/guilds' => 'guild#index', as: :guild
-    get '/guilds_description' => 'guild#view', as: :guild_description
-    get '/guilds_management' => 'guild#manage', as: :manage_guild
-    put '/guilds_management/edit' => 'guild#edit_user', as: :edit_guild_user
     get '/guilds/new' => 'guild#new', as: :new_guild
     post '/guilds' => 'guild#create'
     delete '/guilds/:id' => 'guild#destroy', as: :delete_guild
     get '/guilds/:id/edit' => 'guild#edit', as: :edit_guild
     put '/guilds/:id/edit' => 'guild#update'
+    get '/guilds_management' => 'guild#view', as: :guild_management
+    get '/guilds_users' => 'guild#manage', as: :guild_users
+    put '/guilds_users/edit' => 'guild#edit_user', as: :edit_guild_user
 
     resources :user_courses do
       resources :exp_transactions
