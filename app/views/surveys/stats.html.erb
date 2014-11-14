@@ -10,6 +10,7 @@
         <h3>Staff</h3>
     <% when 1 %>
         <h3>All Students</h3>
+        <%= button_to "Send Reminder to All", {action: 'reminder_all'}, class:'btn info', data:{ confirm: 'Are you sure you want to send reminder to everyone?', disable_with: 'Loading..' }  %>
     <% when 2 %>
         <h3>Phantom Students </h3>
     <% end %>
@@ -19,6 +20,7 @@
       <th style="width: 50%">Name</th>
       <th >Status</th>
       <th>Progress</th>
+      <th>Action</th>
       </thead>
       <tbody>
       <% user_courses.each do |std| %>
@@ -32,6 +34,11 @@
 
             <td><%= sub ? sub.status.capitalize : '<span class="not-started">Not Started</span>'.html_safe %></td>
             <td><%= sub ? (sub.answer_count || 0) : 0 %>/ <%= no_qn %></td>
+            <% if (sub && sub.answer_count || 0 ) < no_qn  %>
+                <td> <%= button_to "Send Reminder", {action: 'reminder', user_id: std.user_id}, class:'btn info', data:{ confirm: 'Are you sure you want to send reminder?', disable_with: 'Loading..' }  %>  </td>
+            
+            <% end %>
+            
           </tr>
       <% end %>
       </tbody>
