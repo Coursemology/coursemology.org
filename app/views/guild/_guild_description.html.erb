@@ -1,6 +1,7 @@
 <tr>
   <td><%= guild.name %></td>
-  <td>Guild Description: <%= guild.description.html_safe %></td>
+  <td><%= guild.description.html_safe %></td>
+  <td><%= guild.guild_users.count %></td>
   <td>
     <% if curr_user_course.is_staff? or current_user.is_admin? %>
       <%= link_to course_edit_guild_path(@course, guild), class: 'btn' do %>
