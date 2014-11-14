@@ -310,14 +310,6 @@ class UserCourse < ActiveRecord::Base
     self.guild_user ? Guild.find(self.get_guild_id) : nil
   end
 
-  def get_guild_name
-    self.guild_user ? self.get_guild.name : nil
-  end
-
-  def get_guild_description
-    self.guild_user ? self.get_guild.description : nil
-  end
-
   private
   # @param [Array] An array of objects which will be marked as seen
   def mark_as_seen_array(objs)
