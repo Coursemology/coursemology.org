@@ -16,11 +16,11 @@ class GuildController < ApplicationController
         guild_info[:name] = guild.name
         guild_info[:description] = guild.description
         guild_info[:avg_exp] = guild_users.sum { |user| user[:exp] } / guild_users.count
-        guild_info[:users] = guild_users.sort { |user| user[:exp] }
+        guild_info[:users] = guild_users.sort { |usr1, usr2| usr2[:exp] <=> usr1[:exp] }
 
         @guild_results << guild_info
       end
-      @guild_results.sort! { |guild| guild[:avg_exp] }
+      @guild_results.sort! { |guild1, guild2| guild2[:avg_exp] <=> guild1[:avg_exp] }
     end
   end
 
