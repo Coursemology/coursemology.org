@@ -65,7 +65,35 @@ class SurveysController < ApplicationController
     @std_courses = @course.user_courses.student.order(:name).where(is_phantom: false)
     @std_courses_phantom = @course.user_courses.student.order(:name).where(is_phantom: true)
   end
-
+  
+  def reminder
+    @user = User.select('id, email as name').where(id: params[:user_id])
+    UserMailer.survey_reminder(@user, @survey).deliver
+    respond_to do |format|
+      format.html { redirect_to(course_survey_stats_path(@course, @survey), notice: 'Reminder has been sent successfully.') }
+    end
+  end
+  
+  def reminder_all
+    @submissions = @survey.submissions.all
+    @std_courses = @course.user_courses.student.where(is_phantom: false)
+    @std_courses_phantom = @course.user_courses.student.where(is_phantom: true)
+    @no_qn = @survey.survey_questions.count
+    
+        [@std_courses, @std_courses_phantom].each_with_index do |user_courses|
+            user_courses.each do |std|
+              sub = @submissions.select {|sub| sub.user_course == std }.first
+                if (sub && sub.answer_count || 0 ) < @no_qn 
+                @user = User.select('id, email as name').where(id: std.user_id )
+                UserMailer.survey_reminder(@user, @survey).deliver
+                end
+            end
+        end
+    respond_to do |format|
+      format.html { redirect_to(course_survey_stats_path(@course, @survey), notice: 'Reminder has been sent successfully to everyone ') }
+    end
+  end
+  
   def summary
     @tab = params[:_tab]
     include_phantom = @tab == "summary_phantom"
