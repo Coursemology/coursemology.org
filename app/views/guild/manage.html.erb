@@ -4,15 +4,15 @@
 
 <%= render partial: "manage_guild_tab", locals: { tab: 'manage' } %>
 
-<% if curr_user_course.is_staff? %>
+<% if curr_user_course.is_staff? or current_user.is_admin? %>
+
     <% if @guilds %>
-        <% @guilds.each do |guild| %>
-            <%= guild.name %> </br>
-            <%= guild.description %>
-        <% end %>
+        <% course_guilds = @guilds.map {|guild| [guild.name, guild.id] }.unshift(["Unassigned", -1]) %>
+    <% else %>
+        <% course_guilds = nil %>
     <% end %>
 
-    <% course_guilds = @guilds.map {|guild| [guild.name, guild.id] }.unshift(["Unassigned", -1]) %>
+
 
     <table class="table">
       <tr>
@@ -24,35 +24,7 @@
       </tr>
       <% @student_courses.each_with_index do |student_course| %>
           <% student = student_course.user %>
-          <%= form_for [@course, student_course],
-                       url: course_edit_guild_user_path(@course),
-                       html: { method: :put, class: "form-horizontal" }  do |f| %>
-              <tr>
-                <td> <%= student.name %> </td>
-                <td> <%= student.email %> </td>
-                <td>
-                  <% if student_course.is_phantom? %>
-                    Yes
-                  <% else %>
-                    No
-                  <% end %>
-                </td>
-                <td>
-                  <%= f.hidden_field :user_course, value: student_course.id %>
-                  <% if student_course.has_guild? %>
-                      <%= select 'guild_id', '', course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
-                  <% else %>
-                      <%= select 'guild_id', '', course_guilds, {:selected => "#{-1}" }%>
-                  <% end %>
-                </td>
-                <td>
-                  <input type="hidden" name="redirect_back_url" value=course_manage_guild_path(@course)>
-                  <button type="submit" class="btn">
-                    <i class="icon-ok"></i>
-                  </button>
-                </td>
-              </tr>
-          <% end %>
+          <%= render partial: 'guild_user', locals: { student_course: student_course, course_guilds: course_guilds } %>
       <% end %>
     </table>
 

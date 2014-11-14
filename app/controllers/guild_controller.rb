@@ -5,6 +5,22 @@ class GuildController < ApplicationController
 
   def index
     # load all the user exp and calculate the average exp
+    if @guilds
+      @guild_results = []
+      @guilds.each do |guild|
+        guild_info = {}
+        guild_users = guild.guild_users.map { |x| { :name => x.user_course.name,
+                                                    :exp => x.user_course.exp,
+                                                    :profile_pic => x.user_course.user.get_profile_photo_url,
+                                                    :level => x.user_course.level ? x.user_course.level.get_title : 'Level 0'  } }
+        guild_info[:name] = guild.name
+        guild_info[:avg_exp] = guild_users.sum { |user| user[:exp] } / guild_users.count
+        guild_info[:users] = guild_users.sort { |user| user[:exp] }
+
+        @guild_results << guild_info
+      end
+      @guild_results.sort! { |guild| guild[:avg_exp] }
+    end
   end
 
   def view

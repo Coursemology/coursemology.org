@@ -1,25 +1,25 @@
-<ul class="nav nav-tabs">
-	<% if tab == 'index' %>
-		<li class="active">
-	<% else %>
-		<li>
-	<% end %>
-		<a href='<%= course_guild_path(@course) %>'>Guild Leaderboard</a>
-	</li>
-	<% if tab == 'guild' %>
-		<li class="active">
-	<% else %>
- 		<li>
-	<% end %>
-		<a href='<%= course_guild_description_path(@course) %>'>My Guild</a>
-	</li>
-    <% if curr_user_course.is_staff? or current_user.is_admin? %>
+<% if curr_user_course.is_staff? or current_user.is_admin? %>
+    <ul class="nav nav-tabs">
+	    <% if tab == 'index' %>
+		    <li class="active">
+    	<% else %>
+	    	<li>
+    	<% end %>
+	    	<a href='<%= course_guild_path(@course) %>'>Guild Leaderboard</a>
+	    </li>
+        <% if tab == 'guild' %>
+            <li class="active">
+        <% else %>
+            <li>
+        <% end %>
+        <a href='<%= course_guild_description_path(@course) %>'>Manage Guilds</a>
+        </li>
         <% if tab == 'manage' %>
             <li class="active">
         <% else %>
             <li>
         <% end %>
-            <a href='<%= course_manage_guild_path(@course) %>'>Manage Guilds</a>
+            <a href='<%= course_manage_guild_path(@course) %>'>Manage Guild Users</a>
         </li>
         <% if tab == 'create' %>
             <li class="active">
@@ -28,5 +28,5 @@
         <% end %>
             <a href='<%= course_new_guild_path(@course) %>'>Create Guild</a>
         </li>
-    <% end %>
-</ul>
+    </ul>
+ <% end %>

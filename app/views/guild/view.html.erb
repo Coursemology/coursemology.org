@@ -5,7 +5,7 @@
 <%= render partial: 'manage_guild_tab', locals: { tab: 'guild' } %>
 
 <% if @guilds %>
-    <% if curr_user_course.is_staff? %>
+    <% if curr_user_course.is_staff? or current_user.is_admin? %>
         <% @guilds.each do |guild| %>
             <%= render partial: 'guild_description', locals: { guild: guild } %>
         <% end %>
