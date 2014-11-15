@@ -1,0 +1,18 @@
+<tr>
+  <td><%= guild.name %></td>
+  <td><%= guild.description.html_safe %></td>
+  <td><%= guild.guild_users.count %></td>
+  <td>
+    <% if curr_user_course.is_staff? or current_user.is_admin? %>
+      <%= link_to edit_course_guild_path(@course, guild), class: 'btn' do %>
+        <i class="icon-edit"></i>
+      <% end %>
+      <%= link_to course_guild_path(@course, guild),
+                  method: :delete,
+                  data: { confirm: t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  class: 'btn btn-danger' do %>
+        <i class="icon-trash"></i>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

@@ -1,0 +1,57 @@
+<div class='page-header'>
+  <h1>Guild Leaderboard</h1>
+</div>
+
+<%= render partial: 'manage_guild_tab', locals: { tab: 'index' } %>
+
+<% if @guilds %>
+    <table class='table table-striped table-hover guild-table'>
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th>Guild Name</th>
+          <th>Average EXP</th>
+          <th>Number of Members</th>
+          <th>Top Members</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @guild_results.each.with_index(1) do |guild, index| %>
+          <% if guild[:id] == curr_user_course.get_guild_id %>
+            <tr class='info my-guild'>
+          <% else %>
+            <tr>
+          <% end %>
+            <td><%= index %></td>
+            <td>
+              <a class='guild_members'
+                 data-toggle='tooltip'
+                 data-title='<%= guild[:name] %><%= " (Your Guild)" if guild[:id] == curr_user_course.get_guild_id %>'
+                 data-content='<%= guild[:description] %>' >
+                <%= guild[:name] %>
+              </a>
+            </td>
+            <td><%= guild[:avg_exp] %></td>
+            <td><%= guild[:users].count %></td>
+            <td>
+              <% 3.times.each do |i| %>
+                <% if i < guild[:users].count %>
+                  <a class='guild_members'
+                    data-content='Exp: <%= guild[:users][i][:exp] %> &lt;br&gt; <%= guild[:users][i][:level] %>'
+                    data-title='<%= guild[:users][i][:name] %>'
+                    data-placement='bottom'>
+                    <img class='user-profile-pic' src='<%= guild[:users][i][:profile_pic] %>'>
+                  </a>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+<% else %>
+    <div class='row-fluid'>
+        There are no guilds yet! Please contact your lecturer to add guilds!
+    </div>
+<% end %>

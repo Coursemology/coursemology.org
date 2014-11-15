@@ -41,6 +41,8 @@ class UserCourse < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :comment_topics, through: :comment_subscriptions
 
+  has_one :guild_user
+
   #TODO
   # has_many :submissions, foreign_key: "std_course_id", dependent: :destroy
   # has_many :training_submissions, foreign_key: "std_course_id", dependent: :destroy
@@ -294,6 +296,18 @@ class UserCourse < ActiveRecord::Base
 
   def leaderboard_achievements
     self.user_achievements.order('created_at desc').first(6)
+  end
+
+  def has_guild?
+    self.guild_user ? true : false
+  end
+
+  def get_guild_id
+    self.guild_user ? self.guild_user.guild_id : nil
+  end
+
+  def get_guild
+    self.guild_user ? self.guild_user.guild : nil
   end
 
   private
