@@ -1,6 +1,7 @@
 class GuildController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :guild, through: :course
+
   before_filter :load_general_course_data, only: [:index, :view, :manage, :new, :edit] #for pages that client sees
 
   def index
