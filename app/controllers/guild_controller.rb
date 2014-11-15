@@ -10,15 +10,15 @@ class GuildController < ApplicationController
       @guild_results = []
       @guilds.each do |guild|
         guild_info = {}
+        guild_info[:name] = guild.name
+        guild_info[:id] = guild.id
+        guild_info[:description] = guild.description
         guild_users = guild.guild_users.map { |x| { :name => x.user_course.name,
                                                     :exp => x.user_course.exp,
                                                     :profile_pic => x.user_course.user.get_profile_photo_url,
                                                     :level => x.user_course.level ? x.user_course.level.get_title : 'Level 0'  } }
-        guild_info[:name] = guild.name
-        guild_info[:id] = guild.id
-        guild_info[:description] = guild.description
-        guild_info[:avg_exp] = guild_users.sum { |user| user[:exp] } / guild_users.count
         guild_info[:users] = guild_users.sort { |usr1, usr2| usr2[:exp] <=> usr1[:exp] }
+        guild_info[:avg_exp] = guild_users.count == 0 ? 0 : guild_users.sum { |user| user[:exp] } / guild_users.count
 
         @guild_results << guild_info
       end
