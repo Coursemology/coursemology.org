@@ -83,10 +83,6 @@ class GuildController < ApplicationController
   end
 
   def destroy
-    @guild.guild_users.each do |usr|
-      usr.guild_id = nil
-      usr.save
-    end
     @guild.destroy
     respond_to do |format|
       format.html { redirect_to course_guild_url,

@@ -307,7 +307,7 @@ class UserCourse < ActiveRecord::Base
   end
 
   def get_guild
-    self.guild_user ? Guild.find(self.get_guild_id) : nil
+    self.guild_user ? self.guild_user.guild : nil
   end
 
   private
