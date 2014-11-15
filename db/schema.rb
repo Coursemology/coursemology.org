@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140929155854) do
+ActiveRecord::Schema.define(:version => 20141107064604) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -626,6 +626,22 @@ ActiveRecord::Schema.define(:version => 20140929155854) do
   add_index "forum_topics", ["author_id"], :name => "index_forum_topics_on_author_id"
   add_index "forum_topics", ["cached_slug"], :name => "index_forum_topics_on_cached_slug", :unique => true
   add_index "forum_topics", ["forum_id"], :name => "index_forum_topics_on_forum_id"
+
+  create_table "guild_users", :force => true do |t|
+    t.integer  "role_id"
+    t.integer  "user_course_id"
+    t.integer  "guild_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "guilds", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "course_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "lesson_plan_entries", :force => true do |t|
     t.integer  "course_id"

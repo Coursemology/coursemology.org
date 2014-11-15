@@ -1,0 +1,25 @@
+<div class="row-fluid">
+  <%= form_for [@course,@guild], :url => { :action => action }, :html => { :class => 'form-horizontal' } do |f| %>
+      <div class="control-group">
+        <%= f.label :name, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :name, :class => 'text_field span10' %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :description, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_area :description, :class => 'text_area span10 html-editor', :rows => 10 %>
+        </div>
+      </div>
+      <div class="form-actions">
+        <%= f.submit action == 'create' ? 'Create Guild' : 'Update Guild', :class => 'btn btn-primary' %>
+        <%= link_to t('.cancel',
+                      :default => t("helpers.links.cancel")),
+                      course_guilds_path,
+                      :class => 'btn'%>
+      </div>
+  <% end %>
+
+  <%= render partial: 'layouts/html_editor' %>
+</div>

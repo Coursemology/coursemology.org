@@ -144,6 +144,9 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    dotenv (1.0.2)
+    dotenv-rails (1.0.2)
+      dotenv (= 1.0.2)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -446,6 +449,7 @@ DEPENDENCIES
   dalli
   delayed_job_active_record
   devise (= 3.0)
+  dotenv-rails
   exception_notification
   factory_girl_rails
   faker

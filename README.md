@@ -1,101 +1,78 @@
 # Coursemology [![Build Status](https://travis-ci.org/Coursemology/coursemology.org.svg?branch=development)](https://travis-ci.org/Coursemology/coursemology.org) [![Coverage Status](https://coveralls.io/repos/Coursemology/coursemology.org/badge.png)](https://coveralls.io/r/Coursemology/coursemology.org)
 
-# Introduction
+<a href="http://coursemology.org"><img src="https://raw.githubusercontent.com/Coursemology/coursemology.org/development/public/images/coursemology_logo_landscape_100.png"
+ alt="Coursemology logo" title="Coursemology" align="right" /></a>
 
-Coursemology, an open source online education platform for schools :-)
+Coursemology is an open source gamified learning platform that enables educators to increase student engagement and make learning fun.
 
-# Quick Start
-To get started, you will need to do the following:
+## Setting up Coursemology
 
- 1. Clone the repository
- 2. Create a [Facebook app][1] and retrieve its `App ID` and `App secret`
- 3. Install [rvm][2] and install ruby 1.9.3
- 4. Install mysql
+There are two ways to setup a local development instance of Coursemology. You can either use Vagrant and Ansible to automate the setup or you can do it manually.
 
-## Setting up
+### With Vagrant
 
-    $ cp sample_config/facebook.yml.sample config/facebook.yml
-    # Edit the file to use your own Facebook App ID and secret
+#### Requirements
 
-    $ cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
-    # Edit the file (mailer_sender, omniauth)
+1. [VirtualBox](https://www.virtualbox.org/)
+2. [Vagrant](https://www.vagrantup.com/)
+3. [Ansible](http://docs.ansible.com/intro_installation.html)
 
-    $ cp config/database.yml.sample config/database.yml
+#### Setting up 
+
+    cd coursemology.org
+    vagrant up
+    # Grab a cup of coffee
+
+Once the virtual machine is provisioned, you may ssh into the virtual machine and start running the server.
+
+    vagrant ssh
+    cd coursemology
+    rails s
+
+### Manually without Vagrant
+
+#### Requirements
+
+1. Ruby and Ruby on Rails (3.2.14)
+2. MySQL
+
+Setting up a Ruby on Rails environment is pretty involved. You may follow the instructions on [GoRails](https://gorails.com/setup/osx/10.10-yosemite) for your own operating system.
+
+#### Setting up
+
+    cp sample_config/facebook.yml.sample config/facebook.yml
+    cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
+    cp config/database.yml.sample config/database.yml
     # Change the username and password in the development section as appropriate
 
-    # Set 2 environment variables: GMAIL_SMTP_USER and GMAIL_SMTP_PASSWORD
-    # either just run this commands or add them into a .rvmrc file
-    $ export GMAIL_SMTP_USER='your_email@gmail.com'
-    $ export GMAIL_SMTP_PASSWORD='your_password'
-
-    $ bundle install
-    $ rake db:create # Do it for the first time
-    $ rake db:schema:load
-    $ rake db:seed
-    $ rake db:populate_course_pref
-    $ rake db:gen_fake_data # Creates sample courses & users for you, takes a few minutes
-
-    # The app performance can be monitored by adding newrelic config file:
-    # config/newrelic.yml
-
-## `clockwork` and `delayed_job`
-
-Coursemology has got various tasks that need to be run at various intervals; the `clockwork` and `delayed_job` gems are used for this purpose. These need setting up to run alongside your application instance.
-
-Run these tasks from your source checkout directory when your application is launched
-
-    $ script/delayed_job start
-    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids start
-
-To terminate them (for upgrading or reloading)
-
-    $ script/delayed_job stop
-    $ clockworkd -c lib/clock.rb --pid-dir=tmp/pids stop
+    bundle install
+    rake db:setup db:migrate db:populate_course_pref db:gen_fake_data
+    rails s
 
 ## Testing on your local machine
 
-One Superuser is added during `rake db:seed`.
+A Superuser is added during `rake db:seed`.
 
     username: jfdi@academy.com
     password: supersecretpass
 
-The application can be started using `rails server` (using WeBrick) or `puma` (recommended for parallelisation.)
+## Contributing
 
-## Checking available API / routes:
-    $ rake routes
+We love contributors!
 
-# Production builds
+1. Fork the repository.
+2. Clone your fork to your machine.
+3. `git checkout -b awesome-feature`
+4. Make changes.
+5. `git push origin awesome-feature`
+6. Create a pull request on github.
 
-Coursemology utilises the Rails assets pipeline. Also, changes might require schema migrations. Run them all on your deployment servers using the following comments
+Have an idea? Share it with us at the [Coursemology](https://groups.google.com/forum/#!forum/coursemology) mailing list.
 
-    $ rake db:migrate db:seed db:populate_course_pref
-    $ rake tmp:cache:clear assets:clean:all assets:precompile:all
+## Found Boogs?
 
-## Deploying Rails apps with Phusion Messenger
+Create an issue on the Github [issue tracker](https://github.com/Coursemology/coursemology.org/issues).
 
-In case you are trying to deploy the website yourself using Passenger (aka mod_rails), here is a good guide to get started:
+## License
 
-    http://www.web-l.nl/posts/5
-
-## Windows Specific
-
-If you are deploying/developing on Windows, you will need to compile some gems from source using the Ruby DevKit. The following gems require special attention:
-
- - mysql2 requires the MySQL C Connector to be present. Specify the path when installing the gem using `gem install mysql2 --version 0.3.13 -- --with-mysql-dir=.\mysql-connector-c-6.1.3-win32`
- - [Puma](https://github.com/puma/puma/issues/341) requires additional build resources not found within the DevKit. Notably, OpenSSL is missing. Obtain OpenSSL from the URL within the ticket and recompile.
-
-Furthermore, it is good to have [Node.js](http://nodejs.org) installed for the assets pipeline to work. In theory, the asset pipeline can work with `cscript`, but it is known to not produce any output at least on Windows 8.1.
-
-# Third party libraries
-
-You should skim through the README of these following gems to get a gist of how they work.
-
-* Authentication: [Devise](https://github.com/plataformatec/devise)
-* Authorization: [CanCan](https://github.com/ryanb/cancan)
-* Front-end Framework/library: [Bootstrap](http://twitter.github.com/bootstrap/) and [bootstrap-sass](https://github.com/thomas-mcdonald/bootstrap-sass)
-* File upload: [Paperclip](https://github.com/thoughtbot/paperclip) (Very easy to use)
-* Icon: [Font Awesome](http://fortawesome.github.com/Font-Awesome/) and [font-awesome-sass-rails](https://github.com/littlebtc/font-awesome-sass-rails)
-* Datepicker: [Bootstrap Datepicker for Rails](https://github.com/Nerian/bootstrap-datepicker-rails)
-
-[1]: https://developers.facebook.com/apps    "Facebook Apps"
-[2]: https://rvm.io/                         "Ruby Version Manager"
+Copyright (c) 2013 Coursemology.org. This software is licensed under the MIT License.

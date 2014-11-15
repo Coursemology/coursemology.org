@@ -1,0 +1,30 @@
+<%= form_for [@course, student_course],
+             url: course_edit_guild_user_path(@course),
+             html: { method: :put, class: "form-horizontal" }  do |f| %>
+    <tr>
+      <% student = student_course.user %>
+      <td> <%= student.name %> </td>
+      <td> <%= student.email %> </td>
+      <td>
+        <% if student_course.is_phantom? %>
+            Yes
+        <% else %>
+            No
+        <% end %>
+      </td>
+      <td>
+        <%= f.hidden_field :user_course, value: student_course.id %>
+        <% if student_course.has_guild? %>
+            <%= select 'guild_id', '', course_guilds, {:selected => "#{student_course.get_guild_id}" }%>
+        <% else %>
+            <%= select 'guild_id', '', course_guilds, {:selected => "#{-1}" }%>
+        <% end %>
+      </td>
+      <td>
+        <input type="hidden" name="redirect_back_url" value=course_guild_users_path(@course)>
+        <button type="submit" class="btn">
+          <i class="icon-ok"></i>
+        </button>
+      </td>
+    </tr>
+<% end %>

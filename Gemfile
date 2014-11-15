@@ -24,7 +24,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'spork-rails'
   gem 'guard-spork'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', :require => false
   gem 'capybara'
   gem 'launchy'
   gem 'coveralls', require: false
@@ -93,6 +93,7 @@ gem "haml"
 gem "axlsx"
 gem "nokogiri"
 gem "newrelic_rpm"
+gem 'dotenv-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -174,6 +174,9 @@ class CourseAbility  < Ability
 
       cannot :modify, Assessment::Submission
       cannot :see_all, Assessment::Submission
+
+      # students can see the guild leaderboard
+      can :read, Guild
     end
   end
 end
