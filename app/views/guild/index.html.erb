@@ -18,12 +18,16 @@
 
       <tbody>
         <% @guild_results.each.with_index(1) do |guild, index| %>
-          <tr>
+          <% if guild[:id] == curr_user_course.get_guild_id %>
+            <tr class='info my-guild'>
+          <% else %>
+            <tr>
+          <% end %>
             <td><%= index %></td>
             <td>
               <a class='guild_members'
                  data-toggle='tooltip'
-                 data-title='<%= guild[:name] %>'
+                 data-title='<%= guild[:name] %><%= " (Your Guild)" if guild[:id] == curr_user_course.get_guild_id %>'
                  data-content='<%= guild[:description] %>' >
                 <%= guild[:name] %>
               </a>

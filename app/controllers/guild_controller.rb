@@ -15,6 +15,7 @@ class GuildController < ApplicationController
                                                     :profile_pic => x.user_course.user.get_profile_photo_url,
                                                     :level => x.user_course.level ? x.user_course.level.get_title : 'Level 0'  } }
         guild_info[:name] = guild.name
+        guild_info[:id] = guild.id
         guild_info[:description] = guild.description
         guild_info[:avg_exp] = guild_users.sum { |user| user[:exp] } / guild_users.count
         guild_info[:users] = guild_users.sort { |usr1, usr2| usr2[:exp] <=> usr1[:exp] }
