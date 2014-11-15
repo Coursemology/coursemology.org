@@ -1,4 +1,4 @@
-class GuildController < ApplicationController
+class GuildsController < ApplicationController
   load_and_authorize_resource :course
   load_and_authorize_resource :guild, through: :course
 
@@ -53,7 +53,7 @@ class GuildController < ApplicationController
 
     respond_to do |format|
       if guild_user.save
-        format.html { redirect_to course_guild_users_url(@course),
+        format.html { redirect_to course_guild_users_path(@course),
                                   notice: "#{user_course.name}'s guild has been updated." }
       else
         format.html { render action: "manage" }
@@ -64,10 +64,10 @@ class GuildController < ApplicationController
   def update
     respond_to do |format|
       if @guild.update_attributes(params[:guild])
-        format.html { redirect_to course_guild_url(@course),
+        format.html { redirect_to course_guild_management_path(@course),
                                   notice: "The Guild '#{@guild.name}' has been updated." }
       else
-        format.html { render action: "edit" }
+        format.html { render action: "view" }
       end
     end
   end
@@ -85,7 +85,7 @@ class GuildController < ApplicationController
   def destroy
     @guild.destroy
     respond_to do |format|
-      format.html { redirect_to course_guild_url,
+      format.html { redirect_to course_guilds_url,
                      notice: "The Guild '#{@guild.name}' has been removed." }
     end
   end

@@ -22,7 +22,7 @@
           </tbody>
           </table>
     <% elsif curr_user_course.get_guild %>
-        <%= render partial: 'guild_description', locals: { guild: curr_user_course.get_guild } %>
+        <%= render partial: 'guild_description', locals: { guilds: curr_user_course.get_guild } %>
     <% else %>
         <p>You have not been enrolled into a Guild! Please request for your lecturer to add you into a Guild!</p>
     <% end %>

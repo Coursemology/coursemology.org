@@ -5,7 +5,7 @@
     	<% else %>
 	    	<li>
     	<% end %>
-	    	<a href='<%= course_guild_path(@course) %>'>Guild Leaderboard</a>
+	    	<a href='<%= course_guilds_path(@course) %>'>Guild Leaderboard</a>
 	    </li>
         <% if tab == 'guild' %>
             <li class="active">
@@ -26,7 +26,7 @@
         <% else %>
             <li>
         <% end %>
-            <a href='<%= course_new_guild_path(@course) %>'>Create Guild</a>
+            <a href='<%= new_course_guild_path(@course) %>'>Create Guild</a>
         </li>
     </ul>
  <% end %>
