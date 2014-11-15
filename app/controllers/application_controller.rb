@@ -253,7 +253,7 @@ class ApplicationController < ActionController::Base
         url = main_app.course_comics_path(@course)
         icon = 'icon-picture'
       when 'guilds'
-        url = main_app.course_guild_path(@course)
+        url = main_app.course_guilds_path(@course)
         icon = 'icon-home'
     end
     [url, icon]
