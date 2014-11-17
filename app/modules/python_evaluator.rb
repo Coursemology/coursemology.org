@@ -109,7 +109,7 @@ class PythonEvaluator
         print_outs = stdout.split("\n").select{|r| r.include? hash }.map{|r| r.gsub(hash + " ", '').gsub("\n",'') }
         if need_std_answer
           #assuming a correct result no longer than 1000 characters
-          results = print_outs[0..1000]
+          results = print_outs.map{|r| r[0..1000]}
         else
           results = print_outs.map{|r| r == "True" ? true : false }
         end
