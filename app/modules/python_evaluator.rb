@@ -85,13 +85,20 @@ class PythonEvaluator
 
         test_cases = tests[test_type]
         test_code = ''
-        test_cases.each do |test|
-          exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
-          exp_excep = need_std_answer ? "e" : "False"
-          test_code << "\ntry:\n"
-          test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
-          test_code << "except Exception as e:\n"
-          test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
+        if eval
+          test_cases.each do |test|
+            exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
+            exp_excep = need_std_answer ? "e" : "False"
+            test_code << "\ntry:\n"
+            test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
+            test_code << "except Exception as e:\n"
+            test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
+          end
+        else
+          test_cases.each do |test|
+            exp = "#{test["expression"]} == #{test["expected"]}"
+            test_code << "print('#{hash} {0}'.format(#{exp}))\n"
+          end
         end
 
         file.write(test_code)
@@ -133,7 +140,7 @@ class PythonEvaluator
           err_len = error_array.length
           if err_len > 10
             #don't display super long error message, first 5  and last 5
-            error_message = (error_array[0..5] + ['...\n'] + error_array[(err_len - 5)..-1]).join
+            error_message = (error_array[0..5] + ["...\n"] + error_array[(err_len - 5)..-1]).join("\n")
           else
             error_message = errors.gsub(/File "(.+?)", line \d*[\n,]/m, '')
           end
