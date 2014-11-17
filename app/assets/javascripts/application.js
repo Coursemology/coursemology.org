@@ -253,6 +253,10 @@ $(document).ready(function() {
     $('.team_popover').popover({ 
         trigger: "hover"
     });
+
+    $('.guild_members').popover({
+        trigger: "hover"
+    });
 });
 
 // Define our framework for implementing client-side form validation.
