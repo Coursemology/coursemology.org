@@ -180,7 +180,12 @@ class Assessment::Submission < ActiveRecord::Base
           PythonEvaluator.get_asm_file_path(assessment),
           combined_code, qn, true)
       ans.result = result.to_json
-      ans.specific.save
+
+      # catch any exceptions when saving the result
+      begin
+        ans.specific.save
+      rescue Exception
+      end
     end
   end
 
