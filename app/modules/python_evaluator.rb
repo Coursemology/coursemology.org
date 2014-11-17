@@ -97,7 +97,7 @@ class PythonEvaluator
         else
           test_cases.each do |test|
             exp = "#{test["expression"]} == #{test["expected"]}"
-            test_code << "print('#{hash} {0}'.format(#{exp}))\n"
+            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
           end
         end
 
