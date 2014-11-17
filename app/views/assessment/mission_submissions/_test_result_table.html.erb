@@ -15,7 +15,8 @@
           <%= test["expected"] %>
         </td>
         <td>
-          <%= actual[index] if actual %>
+          <!--limit display of result-->
+          <%= actual[index][0..200] if actual %>
         </td>
       </tr>
   <% end %>
