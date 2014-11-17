@@ -180,7 +180,14 @@ class Assessment::Submission < ActiveRecord::Base
           PythonEvaluator.get_asm_file_path(assessment),
           combined_code, qn, true)
       ans.result = result.to_json
-      ans.specific.save
+
+      # catch exceptions when result is too long
+      begin
+        ans.specific.save
+      rescue ActiveRecord::StatementInvalid
+        ans.result = truncate_result(result).to_json
+        ans.specific.save
+      end
     end
   end
 
@@ -196,5 +203,16 @@ class Assessment::Submission < ActiveRecord::Base
                              run_at: Time.now)
       end
     end
+  end
+
+  private
+
+  def truncate_result(result)
+    [:publicResults, :privateResults, :evalResults].each do |result_type|
+      for i in 0..(result[result_type].length - 1)
+        result[result_type][i] = result[result_type][i].truncate(50)
+      end
+    end
+    result
   end
 end
