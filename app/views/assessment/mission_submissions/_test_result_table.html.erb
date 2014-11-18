@@ -11,10 +11,10 @@
   <% tests.each_with_index do |test, index| %>
       <tr>
         <td><%= test["expression"] %></td>
-        <td style="<%=  (!results.nil? && (results.length > index and results[index])) ? 'background-color: rgb(0, 128, 0);' : 'background-color: rgb(225, 193, 177);' %>">
+        <td>
           <%= test["expected"] %>
         </td>
-        <td>
+        <td style="<%=  (!results.nil? && (results.length > index and results[index])) ? 'background-color: rgb(0, 128, 0);' : 'background-color: rgb(225, 193, 177);' %>">
           <!--limit display of result-->
           <%= actual[index][0..200] if actual and actual[index] %>
         </td>
