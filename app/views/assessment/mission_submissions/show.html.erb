@@ -31,19 +31,21 @@
 
     <hr />
 
-    <% require 'digest/md5' %>
-    <% ecid =  Digest::MD5.hexdigest(answer.id.to_s) %>
-    <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
+    <% if @assessment.comment_per_qn? || i == (@assessment.questions.length - 1) %>
+        <% require 'digest/md5' %>
+        <% ecid =  Digest::MD5.hexdigest(answer.id.to_s) %>
+        <input type="hidden" id="submission_url_<%= ecid %>" value="<%= course_assessment_submission_url(@course, @assessment, @submission) %>">
 
-    <div class="row-fluid">
-      <div class="span10">
-        <%= render partial: "comments/list",
-                   locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
-                             target:    answer,
-                             header:    'Comments',
-                             ecid:      ecid } %>
-      </div>
-    </div>
+        <div class="row-fluid">
+          <div class="span10">
+            <%= render partial: "comments/list",
+                       locals: { comments:  CommentTopic.comments_to_json(answer.comment_topic, curr_user_course),
+                                 target:    answer,
+                                 header:    'Comments',
+                                 ecid:      ecid } %>
+          </div>
+        </div>
+    <% end %>
 <% end %>
 
 <br />
