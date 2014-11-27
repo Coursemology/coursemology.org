@@ -8,13 +8,18 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     qa.question = @question.question
     qa.position = @assessment.questions.count
 
-    file_upload = FileUpload.create({creator: current_user,
-                                     owner: @question,
-                                     file: params[:assessment_scribing_question][:document]
-                                     })
+    if params[:assessment_scribing_question][:document]
+      file_upload = FileUpload.create({creator: current_user,
+                                       owner: @question,
+                                       file: params[:assessment_scribing_question][:document]
+                                       })
+      file_save_success = file_upload.save
+    else
+      file_save_success = true
+    end
     
     respond_to do |format|
-      if @question.save && qa.save && file_upload.save
+      if @question.save && qa.save && file_save_success
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }

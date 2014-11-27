@@ -1,0 +1,22 @@
+
+<div class="btn-group">
+	<a class="btn" title="Enter Scribing Mode" id="scribing-mode">
+		<i class="icon-pencil"></i>
+	</a>
+	<a class="btn btn-danger" title="Delete Selection" id="scribing-delete">
+		<i class="icon-trash"></i>
+	</a>
+</div>
+<canvas id="scribing-canvas" 
+				style="border:1px solid black;"
+				width=700
+				height=500
+				data-qid="<%= qid %>"
+				<% if question.document  %>
+					data-url="<%= question.document.file.to_s %>"
+				<% else %>
+					data-url=""
+				<% end %>
+				></canvas>
+
+<%= hidden_field('answers', qid, value: answer.content) %>
