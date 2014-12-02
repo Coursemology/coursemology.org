@@ -29,7 +29,16 @@ $(document).ready(function () {
   $('#scribing-delete').click(delete_selection);
 
   if (underlayUrl != "") {
-    canvas.setBackgroundImage(underlayUrl, canvas.renderAll.bind(canvas));
+    fabric.Image.fromURL(underlayUrl, function(image){ 
+        canvas.setBackgroundImage(image, canvas.renderAll.bind(canvas));
+        console.log(image.height);
+        canvas.setHeight(image.height * image.scaleX);
+        canvas.setWidth(image.width * image.scaleY);
+     }, {
+       opacity: 1,
+       scaleX: 1.0,
+       scaleY: 1.0
+     });
   }
 
   latest_scribble = $('#answers_' + qid).val();
