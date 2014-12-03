@@ -110,8 +110,12 @@ gem 'rollbar'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-#Deploy with Capistrano
+# Deploy with Capistrano
 gem 'capistrano'
+gem 'capistrano-bundler'
+gem 'capistrano-rvm'
+gem 'capistrano-rails'
+gem 'capistrano3-puma'
 
 # To use debugger
 # gem 'debugger'
