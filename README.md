@@ -40,10 +40,7 @@ Setting up a Ruby on Rails environment is pretty involved. You may follow the in
 
 #### Setting up
 
-    cp sample_config/facebook.yml.sample config/facebook.yml
-    cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb
-    cp config/database.yml.sample config/database.yml
-    # Change the username and password in the development section as appropriate
+    cp .env_sample .env
 
     bundle install
     rake db:setup db:migrate db:populate_course_pref db:gen_fake_data

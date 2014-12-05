@@ -54,8 +54,5 @@
     - copy: src=files/gemrc dest=~/.gemrc
     - gem: name=bundle executable=/usr/bin/gem2.1
     - command: "{{ gem_bin }}/bundle install chdir={{ work_dir }}"
-    - command: cp sample_config/devise_initializer.rb.sample config/initializers/devise.rb chdir={{ work_dir }}
-    - command: cp sample_config/facebook.yml.sample config/facebook.yml chdir={{ work_dir }}
-    - command: cp config/database.yml.sample config/database.yml chdir={{ work_dir }}
     - command: "{{ gem_bin }}/bundle exec rake db:setup db:migrate chdir={{ work_dir }}"
     - lineinfile: dest=~/.bashrc line="export PATH={{ gem_bin }}:$PATH"
