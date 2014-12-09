@@ -13,7 +13,7 @@ environment 'production'
 stdout_redirect 'log/puma.log', 'log/puma_err.log'
 
 # quiet
-threads Integer(ENV['MIN_THREADS'] || 1), Integer(ENV['MAX_THREADS'] || 20)
+threads Integer(ENV['MIN_THREADS'] || 1), Integer(ENV['MAX_THREADS'] || 10)
 bind 'unix:///tmp/coursemology_puma.sock'
 
 # ssl_bind '127.0.0.1', '9292', { key: path_to_key, cert: path_to_cert }
