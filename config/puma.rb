@@ -9,16 +9,12 @@
 # end
 
 environment 'production'
-daemonize true
-
-pidfile 'tmp/pids/puma.pid'
-state_path 'tmp/pids/puma.state'
 
 stdout_redirect 'log/puma.log', 'log/puma_err.log'
 
 # quiet
-threads 10, 20
-bind 'unix:///var/www/coursemology/tmp/sockets/puma.sock'
+threads Integer(ENV['MIN_THREADS'] || 1), Integer(ENV['MAX_THREADS'] || 20)
+bind 'unix:///tmp/coursemology_puma.sock'
 
 # ssl_bind '127.0.0.1', '9292', { key: path_to_key, cert: path_to_cert }
 
@@ -38,6 +34,6 @@ workers 2
 
 # === Puma control rack application ===
 
-activate_control_app 'unix://tmp/sockets/pumactl.sock'
+activate_control_app 'unix:///tmp/coursemology_pumactl.sock'
 
 preload_app!
