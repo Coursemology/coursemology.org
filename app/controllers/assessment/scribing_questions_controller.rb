@@ -78,7 +78,7 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     respond_to do |format|
       if @question.save && qa.save && file_save_success
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
-                      notice: "Question has been added." }
+                      notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
         format.html { render action: 'new' }
