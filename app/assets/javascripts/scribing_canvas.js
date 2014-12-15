@@ -1,51 +1,65 @@
 
-$(document).ready(function () {
+// BUTTON EVENT HANDLERS
 
-  // TODO
-  // Ensure this works when there are multiple canvases on a page
-
-  var underlayUrl = $('#scribing-canvas').data('url');
-  var qid = $('#scribing-canvas').data('qid');
-  var canvas = new fabric.Canvas('scribing-canvas');
-
-  var toggle_mode = function () {
+var toggle_mode = function (canvas) {
+  var handler = function () {
     if (canvas.isDrawingMode) {
       canvas.isDrawingMode = false;
+      $(this).removeClass("active");
     } else {
       canvas.isDrawingMode = true;
+      $(this).addClass("active");
+      //$(".buttons a").not(this).removeClass("active");
     }
   };
-  $('#scribing-mode').click(toggle_mode);
+  return handler;
+};
 
-  // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
-  var delete_selection = function () {
+// http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
+var delete_selection = function (canvas) {
+  var handler = function () {
     if(canvas.getActiveGroup()) {
         canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
         canvas.discardActiveGroup().renderAll();
       } else {
         canvas.remove(canvas.getActiveObject());
       }
-  };
-  $('#scribing-delete').click(delete_selection);
+    };
+  return handler;
+};
 
-  if (underlayUrl != "") {
-    fabric.Image.fromURL(underlayUrl, function(image){ 
-        canvas.setBackgroundImage(image, canvas.renderAll.bind(canvas));
-        console.log(image.height);
-        canvas.setHeight(image.height * image.scaleX);
-        canvas.setWidth(image.width * image.scaleY);
-     }, {
-       opacity: 1,
-       scaleX: 1.0,
-       scaleY: 1.0
-     });
+// INITIALISE CANVASES  
+
+$(document).ready(function () {
+  var allCanvases = $('.scribing-canvas');
+  var numCanvases = allCanvases.length;
+  for (var i = 0; i < numCanvases; i++) {
+    var this_canvas = $(allCanvases[i]); // html node
+    var underlayUrl = this_canvas.data('url');
+    var qid = this_canvas.data('qid');
+    var c = new fabric.Canvas('scribing-canvas-' + qid); // js object 
+
+    $('#scribing-mode-' + qid).click(toggle_mode(c));
+    $('#scribing-delete-'  + qid).click(delete_selection(c));
+      
+    if (underlayUrl != "") {
+      fabric.Image.fromURL(underlayUrl, function(image){ 
+          c.setBackgroundImage(image, c.renderAll.bind(c));
+          c.setHeight(image.height * image.scaleX);
+          c.setWidth(image.width * image.scaleY);
+       }, {
+         opacity: 1,
+         scaleX: 1.0,
+         scaleY: 1.0
+       });
+    }
+
+    latest_scribble = $('#answers_' + qid).val();
+    c.loadFromJSON(latest_scribble);
+    c.renderAll();
+
+    c.on('mouse:move', function(options) {
+      $('#answers_' + qid).val(JSON.stringify(c));
+    });
   }
-
-  latest_scribble = $('#answers_' + qid).val();
-  canvas.loadFromJSON(latest_scribble);
-  canvas.renderAll();
-
-  canvas.on('mouse:move', function(options) {
-    $('#answers_' + qid).val(JSON.stringify(canvas));
-  });
 });
