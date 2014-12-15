@@ -22,10 +22,48 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
       convert_cmd += "#{basename}"
       `#{convert_cmd}`
 
-      file_save_success = true
+      # find PNG files
+      #
+      png_files = Dir[ "#{basename}*.png" ]
+
+      # Create questions for them, upload the files and save them
+      png_files.each do |png_file|
+        page_question = Assessment::ScribingQuestion.new
+
+        # set params for the scribing question for this png file
+        page_question.title = png_file
+        page_question.description = @question.description
+        page_question.max_grade = @question.max_grade
+        page_question.creator = current_user
+
+        # create question_assessment
+        qn_assessment = @assessment.question_assessments.new
+        qn_assessment.question = page_question.question
+        qn_assessment.position = @assessment.questions.count
+
+        # make png_file pretend to be an uploaded file
+        fake_upload_file = ActionDispatch::Http::UploadedFile.new(:tempfile => File.new(png_file),
+                                                                  :filename => png_file)
+
+        file_upload = FileUpload.create({creator: current_user,
+                                      owner: page_question,
+                                      file: fake_upload_file
+                                      })
+        file_save_success = file_upload.save
+
+        # save question and question_assessment to db
+        page_question.save
+        qn_assessment.save
+      end
+
 
       # cleanup PDF file
       File.delete(uploaded_file_object.original_filename)
+
+      # clean up PNG files on filesystem
+      png_files.each do |png_file|
+        File.delete(png_file)
+      end
       
     elsif uploaded_file_object
       file_upload = FileUpload.create({creator: current_user,
