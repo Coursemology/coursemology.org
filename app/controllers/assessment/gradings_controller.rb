@@ -7,7 +7,7 @@ class Assessment::GradingsController < ApplicationController
   before_filter :load_general_course_data, only: [:new, :edit, :show]
   # note: it only handles view & grading of missions
 
-  include GradingsHelper
+  include GradingsSummaryBuilder
 
   def new
     if @submission.gradings.count > 0

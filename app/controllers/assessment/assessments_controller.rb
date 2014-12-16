@@ -3,8 +3,7 @@ class Assessment::AssessmentsController < ApplicationController
   load_and_authorize_resource :assessment, only: [:reorder, :stats, :access_denied]
   before_filter :load_general_course_data, only: [:show, :index, :new, :edit, :access_denied, :stats, :overview, :listall]
 
-  require 'zip/zipfilesystem'
-  include GradingsHelper
+  include GradingsSummaryBuilder
 
   def index
     assessment_type = params[:type]
@@ -142,15 +141,11 @@ class Assessment::AssessmentsController < ApplicationController
             when 'mission'
               build_gradings_summary true
               pdf_string = render_to_string :pdf => filename, 
-                :footer => { :center => 'Page [page] of [topage]' },
-                :print_media_type => true,
                 :template => "assessment/gradings/show",
                 :formats => [:pdf]
             when 'training'
               @training = @assessment.specific
               pdf_string = render_to_string :pdf => filename, 
-                :footer => { :center => 'Page [page] of [topage]' },
-                :print_media_type => true,
                 :template => "assessment/training_submissions/show",
                 :formats => [:pdf]
             else
