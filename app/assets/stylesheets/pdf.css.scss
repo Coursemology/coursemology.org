@@ -1,0 +1,46 @@
+/* The following styles are used for PDF generation. */
+
+$font-family: Helvetica, Arial, sans-serif;
+
+.pdfbody {
+
+  background-color: transparent;
+  font-family: $font-family;
+  padding: 0;
+
+  .page {
+    display: block;
+    clear: both;
+    page-break-before: always;
+  }
+
+  .cos_code .cm-s-molokai {
+    background: transparent;
+    color: black;
+  }
+
+  iframe {
+    border: 1px solid red;
+  }
+
+  .line {
+    margin-left: 0;
+  }
+
+  label,
+  p,
+  .comment {
+    font-family: $font-family;
+  }
+
+  .comment-box {
+    clear: right;
+    float: right;
+    max-height: none;
+    min-height: 18px;
+    overflow: auto;
+    position: static;
+    width: 259px;
+  }
+
+}
