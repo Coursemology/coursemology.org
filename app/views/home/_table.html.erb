@@ -1,0 +1,17 @@
+<table class="table table-bordered table-striped span9">
+  <tbody>
+  <% courses.each do |course| %>
+      <tr>
+        <td>
+          <img class="course-thumb-small" src="<%= course.logo_url %>" />
+        </td>
+        <td>
+          <%= link_to course.title, course_path(course) =%>
+        </td>
+        <td>
+          <%= course.created_at.strftime("%Y-%m-%d %H:%M") %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
