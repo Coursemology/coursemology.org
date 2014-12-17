@@ -1,4 +1,11 @@
-<table class="table table-bordered table-striped span9">
+<table class="table table-bordered table-hover span9">
+  <thead>
+      <tr>
+        <th></th>
+        <th>Title</th>
+        <th>Creation Time</th>
+      </tr>
+  </thead>
   <tbody>
   <% courses.each do |course| %>
       <tr>
@@ -8,10 +15,11 @@
         <td>
           <%= link_to course.title, course_path(course) =%>
         </td>
-        <td>
+        <td title="Course creation date">
           <%= course.created_at.strftime("%Y-%m-%d %H:%M") %>
         </td>
       </tr>
   <% end %>
   </tbody>
 </table>
+
