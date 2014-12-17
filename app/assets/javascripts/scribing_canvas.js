@@ -45,8 +45,8 @@ $(document).ready(function () {
     if (underlayUrl != "") {
       fabric.Image.fromURL(underlayUrl, function(image){ 
           c.setBackgroundImage(image, c.renderAll.bind(c));
-          c.setHeight(image.height * image.scaleX);
-          c.setWidth(image.width * image.scaleY);
+          c.setHeight(image.height * image.scaleY);
+          c.setWidth(image.width * image.scaleX);
        }, {
          opacity: 1,
          scaleX: 1.0,
