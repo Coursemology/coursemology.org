@@ -25,21 +25,21 @@
     <% if @courses_std.size > 0 %>
         <h2>Courses you are attending:</h2>
         <br/>
-        <%= render partial: @courses_std.size > 3 ? "table" : "courses/thumbnails", locals: { courses: @courses_std } %>
+        <%= render partial: "table", locals: { courses: @courses_std } %>
     <% end %>
 
     <% if @courses_staff.size > 0 %>
         <h2>Courses you are teaching:</h2>
         <br/>
-        <%= render partial: @courses_staff.size > 3 ? "table" : "courses/thumbnails", locals: { courses: @courses_staff } %>
+        <%= render partial: "table", locals: { courses: @courses_staff } %>
     <% end %>
 
     <% if @courses_shared.size > 0 %>
         <h2>Courses you are observing:</h2>
         <br/>
-        <%= render partial: @courses_shared.size > 3 ? "table" : "courses/thumbnails", locals: { courses: @courses_shared } %>
+        <%= render partial: "table", locals: { courses: @courses_shared } %>
     <% end %>
-    <div class="span6">Click <%= link_to 'here', courses_path %> to view all available courses.</div>
+    <div class="span9">Click <%= link_to 'here', courses_path %> to view all available courses.</div>
 
 <% else %>
     <p>Choose a course to enroll!</p>

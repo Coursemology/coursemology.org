@@ -1,22 +1,14 @@
-<table class="table table-bordered table-hover span9">
-  <thead>
-      <tr>
-        <th></th>
-        <th>Title</th>
-        <th>Creation Time</th>
-      </tr>
-  </thead>
+<table class="table table-bordered table-hover span7">
   <tbody>
   <% courses.each do |course| %>
       <tr>
-        <td>
-          <img class="course-thumb-small" src="<%= course.logo_url %>" />
+        <td class="center">
+          <img class="course-thumb-middle" src="<%= course.logo_url %>" />
         </td>
         <td>
-          <%= link_to course.title, course_path(course) =%>
-        </td>
-        <td title="Course creation date">
-          <%= course.created_at.strftime("%Y-%m-%d %H:%M") %>
+          <h4 class="course-title">
+            <%= link_to course.title, course_path(course) %>
+          </h4>
         </td>
       </tr>
   <% end %>
