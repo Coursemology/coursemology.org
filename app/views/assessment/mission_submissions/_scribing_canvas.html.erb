@@ -13,8 +13,8 @@
 <canvas class="scribing-canvas"
         id="scribing-canvas-<%= qid %>" 
 				style="border:1px solid black;"
-				width=700
-				height=500
+				width=900
+				height=1272
 				data-qid="<%= qid %>"
 				<% if question.document  %>
 					data-url="<%= question.document.file.to_s %>"
@@ -22,5 +22,12 @@
 					data-url=""
 				<% end %>
 				></canvas>
+<% if question.document %>
+  <img style="display: none;" class="scribing-images"
+        src="<%= question.document.file.to_s %>"
+        data-qid="<%= qid %>"
+        ></img>
+
+<% end %>
 
 <%= hidden_field('answers', qid, value: answer.content) %>
