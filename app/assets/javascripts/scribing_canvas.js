@@ -49,38 +49,55 @@ var reload_bg = function (canvas, underlayUrl) {
 // INITIALISE CANVASES  
 
 $(document).ready(function () {
+  //select all canvases and scribing images
   var allCanvases = $('.scribing-canvas');
-  var numCanvases = allCanvases.length;
-  for (var i = 0; i < numCanvases; i++) {
-    var this_canvas = $(allCanvases[i]); // html node
-    var underlayUrl = this_canvas.data('url');
-    var qid = this_canvas.data('qid');
+  var allImages = $('.scribing-images');
+
+  //init associative arrays so canvases and images can be found by qid
+  var fabricCanvases = {};
+  var scribingImages = {};
+
+  //collect all img elements
+  $.each(allImages, function(i, image) {
+    scribingImages[$(image).data('qid')] = image;
+  });
+
+  //init and collect all canvas elements
+  $.each(allCanvases, function(i, c) {
+    var qid = $(c).data('qid');
+    var underlayUrl = $(c).data('url');
     var c = new fabric.Canvas('scribing-canvas-' + qid); // js object 
+    fabricCanvases[qid] = c;
 
     $('#scribing-mode-' + qid).click(toggle_mode(c));
     $('#scribing-delete-' + qid).click(delete_selection(c));
     $('#scribing-reload-' + qid).click(reload_bg(c, underlayUrl));
-      
-    if (underlayUrl != "") {
-      fabric.Image.fromURL(underlayUrl, function(image){ 
-          c.setBackgroundImage(image, c.renderAll.bind(c));
-          c.setHeight(image.height * image.scaleY);
-          c.setWidth(image.width * image.scaleX);
-       }, {
-         opacity: 1,
-         scaleX: 1.0,
-         scaleY: 1.0
-       });
-    }
+  });
 
+  //assign each canvas its image
+  $.each(scribingImages, function(qid, scribingImage) {
+    //get appropriate canvas by qid
+    var c = fabricCanvases[qid];
+
+    //calculate scaleX and scaleY to fit image into canvas before creating fabric.Image object
+    scaleX = c.width / scribingImage.width;
+    scaleY = c.height / scribingImage.height;
+
+    //create fabric.Image object with the right scaling and set as canvas background
+    var fabricImage = new fabric.Image(scribingImage, {opacity: 1, scaleX: scaleX, scaleY: scaleY});
+    c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+
+    // load saved scribblings
     latest_scribble = $('#answers_' + qid).val();
     c.loadFromJSON(latest_scribble);
     c.renderAll();
 
+    //add event handler to save changes in scribbles
     c.on('mouse:move', function(options) {
       $('#answers_' + qid).val(JSON.stringify(c));
     });
-  }
+  });
+
 });
 
 /*
