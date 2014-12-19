@@ -30,7 +30,6 @@ var delete_selection = function (canvas) {
 
 var reload_bg = function (canvas, underlayUrl) {
   var handler = function () {
-    console.log(canvas);
     if (underlayUrl != "") {
       fabric.Image.fromURL(underlayUrl, function(image){ 
           canvas.setBackgroundImage(image, canvas.renderAll.bind(canvas));
@@ -42,6 +41,29 @@ var reload_bg = function (canvas, underlayUrl) {
          scaleY: 1.0
        });
     }
+  };
+  return handler;
+};
+
+var zoom_in = function (canvas) {
+  var handler = function (e) {
+    if (canvas.isDrawingMode) return;
+
+    var newZoom = canvas.getZoom() + 0.1;
+    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    
+  };
+  return handler;
+};
+
+
+var zoom_out = function (canvas) {
+  var handler = function (e) {
+    if (canvas.isDrawingMode) return;
+
+    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    
   };
   return handler;
 };
@@ -71,7 +93,8 @@ $(document).ready(function () {
 
     $('#scribing-mode-' + qid).click(toggle_mode(c));
     $('#scribing-delete-' + qid).click(delete_selection(c));
-    $('#scribing-reload-' + qid).click(reload_bg(c, underlayUrl));
+    $('#scribing-zoom-in-' + qid).click(zoom_in(c));
+    $('#scribing-zoom-out-' + qid).click(zoom_out(c));
   });
 
   //assign each canvas its image
@@ -85,6 +108,8 @@ $(document).ready(function () {
 
     //create fabric.Image object with the right scaling and set as canvas background
     var fabricImage = new fabric.Image(scribingImage, {opacity: 1, scaleX: scaleX, scaleY: scaleY});
+    //c.setHeight(fabricImage.height);
+    //c.setWidth(fabricImage.width);
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
 
     // load saved scribblings
@@ -96,6 +121,8 @@ $(document).ready(function () {
     c.on('mouse:move', function(options) {
       $('#answers_' + qid).val(JSON.stringify(c));
     });
+
+    c.on('click')
   });
 
 });
