@@ -254,6 +254,10 @@ class Assessment < ActiveRecord::Base
     exp
   end
 
+  def total_exp
+    bonus_exp ? bonus_exp + exp : exp 
+  end
+
   def dup
     s = self.specific
     d = s.dup
