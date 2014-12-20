@@ -26,14 +26,14 @@
 		<% culmulative = 0 %>
 		<% @asms.each do |asm| %>
 			<tr>
-				<td><%= @tab_names[asm.tab_id] %></td>
+				<td><%= asm.tab ? asm.tab.title : "" %></td>
 				<td>
 					<% if !asm.published %>
 						<i class="icon-ban-circle"></i>
 					<% end %>
 					<%= asm.title %>
 				</td>
-				<td><%= @asm_names[asm.as_assessment_type] %></td>
+				<td><%= @course.customized_title(asm.is_mission? ? "Mission" : "Training") %></td>
 				<% total_exp = asm.bonus_exp ? asm.bonus_exp + asm.exp : asm.exp %>
 				<% culmulative += total_exp %>
 				<td><%= total_exp %></td>

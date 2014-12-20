@@ -6,21 +6,10 @@ class LevelsController < ApplicationController
 
   def index
     @tab = 'Levels'
-    authorize! :manage, :levels
   end
 
   def chronology
     @tab = 'Chronology'
-    authorize! :manage, :levels
-
-    @tab_names = Hash.new
-    @course.tabs.each do |t|
-      @tab_names[t.id] = t.title
-    end
-
-    @asm_names = { 'Assessment::Training' => 'Training',
-                   'Assessment::Mission' => 'Mission' }
-
     @asms = @course.assessments
   end
 
