@@ -10,7 +10,7 @@ class LevelsController < ApplicationController
 
   def chronology
     @tab = 'Chronology'
-    @asms = @course.assessments
+    @asms = @course.assessments.includes(:tab)
   end
 
   def show
