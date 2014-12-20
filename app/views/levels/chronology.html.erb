@@ -1,0 +1,44 @@
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "Levels" %>">
+    <a href="<%= course_levels_path(@course) %>">Levels</a>
+  </li>
+  <li class="<%= "active" if @tab == "Chronology" %>">
+    <a href="<%= course_exp_chronology_path(@course) %>">EXP Chronology</a>
+  </li>
+</ul>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => "EXP Chronology of Assessments"%></h1>
+</div>
+
+<table class="table">
+  <thead>
+	  <tr>
+	    <th>Name</th>
+	    <th>Type</th>
+	    <th>Tab</th>
+	    <th>EXP</th>
+	    <th>Cumulative</th>
+	    <th>Open Date</th>
+	  </tr>
+	</thead>
+	<tbody>
+		<% culmulative = 0 %>
+		<% @asms.each do |asm| %>
+			<tr>
+				<td>
+					<% if !asm.published %>
+						<i class="icon-ban-circle"></i>
+					<% end %>
+					<%= asm.title %>
+				</td>
+				<td><%= @course.customized_title(asm.is_mission? ? "Mission" : "Training") %></td>
+				<td><%= asm.tab ? asm.tab.title : "" %></td>
+				<% culmulative += asm.total_exp %>
+				<td><%= asm.total_exp %></td>
+				<td><%= culmulative %></td>
+				<td><%= asm.open_at.strftime("%F") %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

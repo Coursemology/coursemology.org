@@ -1,3 +1,12 @@
+<ul class="nav nav-tabs">
+  <li class="<%= "active" if @tab == "Levels" %>">
+    <a href="<%= course_levels_path(@course) %>">Levels</a>
+  </li>
+  <li class="<%= "active" if @tab == "Chronology" %>">
+    <a href="<%= course_exp_chronology_path(@course) %>">EXP Chronology</a>
+  </li>
+</ul>
+
 <div class="page-header">
   <h1><%=t '.title', :default => "Level Design"%></h1>
 </div>
