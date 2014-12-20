@@ -14,9 +14,9 @@
 <table class="table">
   <thead>
 	  <tr>
-	    <th width="80px">tab</th>
 	    <th>Name</th>
 	    <th>Type</th>
+	    <th>Tab</th>
 	    <th>EXP</th>
 	    <th>Cumulative</th>
 	    <th>Open Date</th>
@@ -26,7 +26,6 @@
 		<% culmulative = 0 %>
 		<% @asms.each do |asm| %>
 			<tr>
-				<td><%= asm.tab ? asm.tab.title : "" %></td>
 				<td>
 					<% if !asm.published %>
 						<i class="icon-ban-circle"></i>
@@ -34,6 +33,7 @@
 					<%= asm.title %>
 				</td>
 				<td><%= @course.customized_title(asm.is_mission? ? "Mission" : "Training") %></td>
+				<td><%= asm.tab ? asm.tab.title : "" %></td>
 				<% culmulative += asm.total_exp %>
 				<td><%= asm.total_exp %></td>
 				<td><%= culmulative %></td>
