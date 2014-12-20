@@ -23,19 +23,19 @@
 
 <% if @courses.count > 0 %>
     <% if @courses_std.size > 0 %>
-        <h2>Courses you are attending:</h2>
+        <h2 class="span9">Courses you are attending:</h2>
         <br/>
         <%= render partial: "table", locals: { courses: @courses_std } %>
     <% end %>
 
     <% if @courses_staff.size > 0 %>
-        <h2>Courses you are teaching:</h2>
+        <h2 class="span9">Courses you are teaching:</h2>
         <br/>
         <%= render partial: "table", locals: { courses: @courses_staff } %>
     <% end %>
 
     <% if @courses_shared.size > 0 %>
-        <h2>Courses you are observing:</h2>
+        <h2 class="span9">Courses you are observing:</h2>
         <br/>
         <%= render partial: "table", locals: { courses: @courses_shared } %>
     <% end %>
