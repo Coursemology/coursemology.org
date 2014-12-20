@@ -34,9 +34,8 @@
 					<%= asm.title %>
 				</td>
 				<td><%= @course.customized_title(asm.is_mission? ? "Mission" : "Training") %></td>
-				<% total_exp = asm.bonus_exp ? asm.bonus_exp + asm.exp : asm.exp %>
-				<% culmulative += total_exp %>
-				<td><%= total_exp %></td>
+				<% culmulative += asm.total_exp %>
+				<td><%= asm.total_exp %></td>
 				<td><%= culmulative %></td>
 				<td><%= asm.open_at.strftime("%F") %></td>
 			</tr>
