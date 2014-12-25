@@ -3,7 +3,7 @@
     <%= render partial: "layouts/image_uploader",
                locals: { container_class: "bootstrap-wysihtml5-insert-image-modal",
                          image_url_class: "bootstrap-wysihtml5-insert-image-url",
-                         upload_to: course_file_uploads_path(@course) } %>
+                         upload_to: file_uploads_path } %>
     <a class="btn" data-wysihtml5-command="insertImage"><i class="icon-picture"></i></a>
   </li>
 </div>

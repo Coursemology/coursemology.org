@@ -55,11 +55,10 @@ class PythonEvaluator
 
 
     FileUtils.mkdir_p(dir) unless File.exist?(dir)
-    summary ={publics: [],private: [], eval: [],errors:[]}
+    summary ={public: [],private: [], eval: [],errors:[]}
     range = eval ? 2 : 1
     times = eval ? 1 : 0
 
-    puts eval
     #user could print to stdout, use unique hash to filter out test results
     hash = Digest::MD5.hexdigest(rand().to_s)
 
@@ -86,13 +85,20 @@ class PythonEvaluator
 
         test_cases = tests[test_type]
         test_code = ''
-        test_cases.each do |test|
-          exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
-          exp_excep = need_std_answer ? "e" : "False"
-          test_code << "\ntry:\n"
-          test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
-          test_code << "except Exception as e:\n"
-          test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
+        if eval
+          test_cases.each do |test|
+            exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
+            exp_excep = need_std_answer ? "e" : "False"
+            test_code << "\ntry:\n"
+            test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
+            test_code << "except Exception as e:\n"
+            test_code << "    print('#{hash} {0}'.format(#{exp_excep}))\n"
+          end
+        else
+          test_cases.each do |test|
+            exp = "#{test["expression"]} == #{test["expected"]}"
+            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
+          end
         end
 
         file.write(test_code)
@@ -104,16 +110,17 @@ class PythonEvaluator
         errors = @stderr
         stdout = @stdout
         status = @status
-        #puts "status", status
-        #puts "stdout",stdout
-        #puts "error", errors
+        # puts "status", status
+        # puts "stdout",stdout
+        # puts "error", errors
         print_outs = stdout.split("\n").select{|r| r.include? hash }.map{|r| r.gsub(hash + " ", '').gsub("\n",'') }
         if need_std_answer
-          results = print_outs
+          #assuming a correct result no longer than 1000 characters
+          results = print_outs.map{|r| r[0..1000]}
         else
           results = print_outs.map{|r| r == "True" ? true : false }
         end
-        # File.delete(file_path)
+        File.delete(file_path)
 
         exec_fail = (!status.success? and errors.length == 0)
 
@@ -130,9 +137,10 @@ class PythonEvaluator
         if errors.length > 0
           error_array = errors.split("\n")
 
-          if error_array.length > 10
-            #don't display super long error message
-            error_message = error_array.last.split("\n").join
+          err_len = error_array.length
+          if err_len > 10
+            #don't display super long error message, first 5  and last 5
+            error_message = (error_array[0..5] + ["...\n"] + error_array[(err_len - 5)..-1]).join("\n")
           else
             error_message = errors.gsub(/File "(.+?)", line \d*[\n,]/m, '')
           end
