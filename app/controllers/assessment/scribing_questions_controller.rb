@@ -10,21 +10,8 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     uploaded_file_object = params[:assessment_scribing_question][:document]
 
     if uploaded_file_object && uploaded_file_object.content_type == 'application/pdf'   #special handling for PDF files
-      # write file out to filesystem
-      File.open(uploaded_file_object.original_filename, 'wb') do |file|
-        file.write(uploaded_file_object.read)
-      end
-      basename = uploaded_file_object.original_filename[0..-5]
-
-      #TODO: consider and fix security implications
-      # Puts together and runs the PDF to PNG conversion command
-      convert_cmd = "/usr/bin/pdftoppm -png -r 300 #{uploaded_file_object.original_filename} "
-      convert_cmd += "#{basename}"
-      `#{convert_cmd}`
-
-      # find PNG files
-      #
-      png_files = Dir[ "#{basename}*.png" ]
+      png_converter = PngConvert.new(uploaded_file_object)
+      png_files = png_converter.convert_to_png
 
       # Create questions for them, upload the files and save them
       png_files.each do |png_file|
@@ -56,15 +43,8 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
         qn_assessment.save
       end
 
+      png_converter.clean_up
 
-      # cleanup PDF file
-      File.delete(uploaded_file_object.original_filename)
-
-      # clean up PNG files on filesystem
-      png_files.each do |png_file|
-        File.delete(png_file)
-      end
-      
     elsif uploaded_file_object
       file_upload = FileUpload.create({creator: current_user,
                                        owner: @question,
