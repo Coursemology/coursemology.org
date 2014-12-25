@@ -23,6 +23,11 @@
 			<i class="icon-trash"></i>
 		</a>
 	</div>
+	<div class="btn-group">
+		<a class="btn" title="Save Canvas" id="scribing-save-<%= qid %>">
+			<i class="icon-save"></i>
+		</a>
+	</div>
 </div>
 <canvas class="scribing-canvas"
         id="scribing-canvas-<%= qid %>" 
@@ -44,4 +49,16 @@
 
 <% end %>
 
-<%= hidden_field('answers', qid, value: answer.content) %>
+<% answer.scribbles.each do |scribble| %>
+	<%= scribble.std_course.id %> <br>
+	<%= curr_user_course.id %>
+	<%= scribble.std_course == curr_user_course %>
+	<% is_scribble_locked = (scribble.std_course == curr_user_course) ? "false" : "true"  %>
+	<%= hidden_field('scribbles', scribble.id, class: 'scribble-' + qid.to_s, value: scribble.content, "data-locked" => is_scribble_locked) %>
+<% end %>
+
+<% is_ans_locked = (answer.std_course == curr_user_course) ? "false" : "true"  %>
+<%= hidden_field('answers', qid, value: answer.content, "data-locked" => is_ans_locked) %>
+
+
+

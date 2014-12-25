@@ -83,6 +83,15 @@ var zoom_out = function (canvas) {
   return handler;
 };
 
+var save_canvas = function (canvas) {
+  // Make AJAX call to save scribbles.
+  var handler = function (e) {
+    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+  };
+  return handler;
+};
+
 // INITIALISE CANVASES  
 
 $(document).ready(function () {
@@ -114,6 +123,7 @@ $(document).ready(function () {
     $('#scribing-delete-' + qid).click(delete_selection(c));
     $('#scribing-zoom-in-' + qid).click(zoom_in(c));
     $('#scribing-zoom-out-' + qid).click(zoom_out(c));
+    $('#scribing-save-' + qid).click(save_canvas(c));
   });
 
   //assign each canvas its image
@@ -128,10 +138,47 @@ $(document).ready(function () {
     var fabricImage = new fabric.Image(scribingImage, {opacity: 1, scaleX: scale, scaleY: scale});
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
 
+
+    var load_scribble = function (scribble) {
+      // from http://jsfiddle.net/Kienz/sFGGV/6/ via https://github.com/kangax/fabric.js/issues/704
+      var objects = JSON.parse(scribble.val()).objects;
+      var drawn_items = [];
+      for (var i = 0; i < objects.length; i++) {
+        var klass = fabric.util.getKlass(objects[i].type);
+        if (klass.async) {
+          klass.fromObject(objects[i], function (img) {
+            c.add(img);
+            drawn_items.push(img);
+          });
+        } else {
+          var item = klass.fromObject(objects[i]);
+          c.add(item);
+          drawn_items.push(item);
+        }
+      }      
+          
+      if (scribble.data('locked') && drawn_items.length > 0) {
+        if (drawn_items.length > 1) {
+          scribble_group = new fabric.Group(drawn_items);
+        } else {
+          scribble_group = drawn_items[0];
+        }
+        scribble_group.selectable = false;
+      }
+    };
+
     // load saved scribblings
-    latest_scribble = $('#answers_' + qid).val();
-    c.loadFromJSON(latest_scribble);
+    answer_scribble = $('#answers_' + qid);
+    load_scribble(answer_scribble);
+
+    other_scribbles = $('.scribble-' + qid);
+    $.each(other_scribbles, function (i, scribble) {
+      load_scribble($(scribble));
+    });
+
     c.renderAll();
+
+
 
 
     // Initialize zoom/scrolling variable
