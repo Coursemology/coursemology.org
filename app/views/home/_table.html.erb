@@ -1,0 +1,16 @@
+<table class="table table-bordered table-hover span7">
+  <tbody>
+  <% courses.each do |course| %>
+      <tr>
+        <td class="logo-container">
+          <img class="course-thumb-middle" src="<%= course.logo_url %>" />
+        </td>
+        <td>
+          <h4 class="course-title">
+            <%= link_to course.title, course_path(course) %>
+          </h4>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

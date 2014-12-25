@@ -1,48 +1,50 @@
-<% if flash[:notice] %>
-    <div class="alert alert-success">
-      <%= flash[:notice].html_safe %>
+<div class="span8 my-course-container">
+    <% if flash[:notice] %>
+        <div class="alert alert-success">
+          <%= flash[:notice].html_safe %>
+        </div>
+    <% end %>
+    <% if flash[:error] %>
+        <div class="alert alert-error">
+          <%= flash[:error].html_safe %>
+        </div>
+    <% end %>
+    <div class="page-header">
+      <h1>Hello, <%= current_user.display_name || current_user.name %>!</h1>
+      <% if can? :manage, Course %>
+          <%= link_to 'New Course',
+                      new_course_path,
+                      :class => 'btn btn-primary' %>
+      <% elsif request = RoleRequest.exist_lecturer_request?(current_user) %>
+          <a href="<%= edit_role_request_path(request) %>" class="btn btn-primary">Update your lecturer request</a>
+      <% else %>
+          <a href="<%= new_role_request_path %>" class="btn btn-primary">Request to be a lecturer</a>
+      <% end %>
     </div>
-<% end %>
-<% if flash[:error] %>
-    <div class="alert alert-error">
-      <%= flash[:error].html_safe %>
-    </div>
-<% end %>
-<div class="page-header">
-  <h1>Hello, <%= current_user.display_name || current_user.name %>!</h1>
-  <% if can? :manage, Course %>
-      <%= link_to 'New Course',
-                  new_course_path,
-                  :class => 'btn btn-primary' %>
-  <% elsif request = RoleRequest.exist_lecturer_request?(current_user) %>
-      <a href="<%= edit_role_request_path(request) %>" class="btn btn-primary">Update your lecturer request</a>
-  <% else %>
-      <a href="<%= new_role_request_path %>" class="btn btn-primary">Request to be a lecturer</a>
-  <% end %>
+
+    <% if @courses.count > 0 %>
+        <% if @courses_std.size > 0 %>
+            <h2>Courses you are attending:</h2>
+            <br/>
+            <%= render partial: "table", locals: { courses: @courses_std } %>
+        <% end %>
+
+        <% if @courses_staff.size > 0 %>
+            <h2>Courses you are teaching:</h2>
+            <br/>
+            <%= render partial: "table", locals: { courses: @courses_staff } %>
+        <% end %>
+
+        <% if @courses_shared.size > 0 %>
+            <h2>Courses you are observing:</h2>
+            <br/>
+            <%= render partial: "table", locals: { courses: @courses_shared } %>
+        <% end %>
+        <div class="span9">Click <%= link_to 'here', courses_path %> to view all available courses.</div>
+
+    <% else %>
+        <p>Choose a course to enroll!</p>
+        <br/>
+        <%= render :partial => "courses/thumbnails", :locals => { :courses => @all_courses } %>
+    <% end %>
 </div>
-
-<% if @courses.count > 0 %>
-    <% if @courses_std.size > 0 %>
-        <h2>Courses you are attending:</h2>
-        <br/>
-        <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_std } %>
-    <% end %>
-
-    <% if @courses_staff.size > 0 %>
-        <h2>Courses you are teaching:</h2>
-        <br/>
-        <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_staff } %>
-    <% end %>
-
-    <% if @courses_shared.size > 0 %>
-        <h2>Courses you are observing:</h2>
-        <br/>
-        <%= render :partial => "courses/thumbnails", :locals => { :courses => @courses_shared } %>
-    <% end %>
-    <p>Click <%= link_to 'here', courses_path %> to view all available courses.</p>
-
-<% else %>
-    <p>Choose a course to enroll!</p>
-    <br/>
-    <%= render :partial => "courses/thumbnails", :locals => { :courses => @all_courses } %>
-<% end %>
