@@ -21,12 +21,20 @@
             <%= (answer.content || "").html_safe %>
           </div>
         </div>
-    <% else %>
+    <% elsif question.class == Assessment::CodingQuestion %>
         <%=render partial: 'do_coding',
                   locals: { answer: answer,
                             question: question,
                             submission: @submission,
                             mode: "view" } %>
+
+    <% else %>
+        <%= render partial: 'scribing_canvas',
+                   locals: { question: question,
+                             qid: q.id,
+                             answer: answer,
+                             curr_user_course: curr_user_course
+                           } %>
     <% end %>
 
     <hr />
