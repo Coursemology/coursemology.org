@@ -1,0 +1,14 @@
+<canvas
+  class="scribing-canvas"
+  id="scribing-canvas-1"
+  style="border:1px solid black;"
+  width=900
+  height=1272
+  data-qid="1"
+  ></canvas>
+<% if @question.document %>
+  <img style="display: none;" class="scribing-images"
+        src="<%= @question.document.file.to_s %>"
+        data-qid="1"
+        ></img>
+<% end %>
