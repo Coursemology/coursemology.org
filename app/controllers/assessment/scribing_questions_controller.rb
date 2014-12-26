@@ -12,6 +12,7 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     if uploaded_file_object && uploaded_file_object.content_type == 'application/pdf'   #special handling for PDF files
       png_converter = PngConvert.new(uploaded_file_object)
       png_files = png_converter.convert_to_png
+      png_success = false   #track success of each png file upload
 
       # Create questions for them, upload the files and save them
       png_files.each do |png_file|
@@ -36,7 +37,7 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
                                       owner: page_question,
                                       file: fake_upload_file
                                       })
-        file_save_success = file_upload.save
+        png_success = file_upload.save
 
         # save question and question_assessment to db
         page_question.save
@@ -56,7 +57,15 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     end
     
     respond_to do |format|
-      if @question.save && qa.save && file_save_success
+      # if all the png files are uploaded properly, don't save the current question
+      # and question_assessment. Individual qns and qn_ass have been created for
+      # each png file and the 'dummy' one can be discarded.
+      #
+      # The 'if' condition uses short circuiting when all png files
+      # are successfully uploaded.
+      #
+      # if it's a single file, save the current qn and qn_ass. 
+      if png_success || (@question.save && qa.save && file_save_success)
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
