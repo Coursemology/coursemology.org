@@ -5,19 +5,9 @@
     <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
     <%= f.input :tags, as: :tag, url: course_tags_path, input_html: {class: "span7"}  %>
     <%= f.input :document, as: :file %>
-    <canvas
-        class="scribing-canvas"
-        id="scribing-canvas-1"
-				style="border:1px solid black;"
-				width=700
-				height=500
-				data-qid="1"
-				<% if @question.document  %>
-					data-url="<%= @question.document.file.to_s %>"
-				<% else %>
-					data-url=""
-				<% end %>
-				></canvas>
+    <% if mode == 'edit' %>
+      <%= render :partial => "canvas" %>
+    <% end %>
 
     <%= f.button :form_submit, cancel: :back %>
 

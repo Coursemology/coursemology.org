@@ -35,11 +35,6 @@
 				width=900
 				height=1272
 				data-qid="<%= qid %>"
-				<% if question.document  %>
-					data-url="<%= question.document.file.to_s %>"
-				<% else %>
-					data-url=""
-				<% end %>
 				></canvas>
 <% if question.document %>
   <img style="display: none;" class="scribing-images"
