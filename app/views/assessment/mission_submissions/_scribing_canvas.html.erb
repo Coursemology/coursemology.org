@@ -1,6 +1,36 @@
+<% ajax_scribble = nil %>
+<% answer.scribbles.each do |scribble| %>
+	<% is_scribble_unlocked = (scribble.std_course == curr_user_course) %>
+	<% ajax_scribble = scribble if is_scribble_unlocked %>	
+	<%= hidden_field('scribbles', scribble.id, class: 'scribble-' + qid.to_s, value: scribble.content, "data-locked" => (is_scribble_unlocked ? "false" : "true"), "data-scribe" => scribble.std_course.name) %>
+<% end %>
+
+<% is_ans_unlocked = (answer.std_course == curr_user_course) %>
+<%= hidden_field('answers', qid, value: answer.content, "data-locked" => (is_ans_unlocked ? "false" : "true"), "data-scribe" => answer.std_course.name) %>
+
+
+<% if !is_ans_unlocked %>
+	<!-- undefined method `scribble_path' for #<#<Class:0x007fc8a8f0d6d8>:0x007fc8a8f02d50> in form_for-->
+	<!-- when direct assignment to @scribble is tried -->
+	<% if ajax_scribble != nil %>
+		<%# @scribble = ajax_scribble %>
+		<% @scribble.content = ajax_scribble.content %>
+	<% end %>
+	<% @scribble.std_course_id = curr_user_course.id %>
+	<% @scribble.scribing_answer_id = answer.as_answer_id %>
+	
+	<%= form_for @scribble, :html => {:id => "scribing-ajax-" + qid.to_s}, remote: true do |f| %>
+		<%= f.hidden_field :content, class: "scribble-content" %>
+		<%= f.hidden_field :std_course_id %>
+		<%= f.hidden_field :scribing_answer_id %>
+		<%= f.hidden_field :id %>
+		<%#= f.submit "sub" %>
+	<% end %>
+<% end %>
+
 <div class="btn-toolbar">
 	<div class="btn-group" id="scribing-buttons-<%= qid %>">
-		<a class="btn" title="Enter Edit Mode" id="edit-mode-<%= qid %>">
+		<a class="btn active" title="Enter Edit Mode" id="edit-mode-<%= qid %>">
 			<i class="icon-magnet"></i>
 		</a>
 		<a class="btn" title="Enter Scribing Mode" id="scribing-mode-<%= qid %>">
@@ -19,15 +49,21 @@
 		</a>
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" title="Delete Selection" id="scribing-delete-<%= qid %>">
+		<a class="btn" title="Delete Selection" id="scribing-delete-<%= qid %>">
 			<i class="icon-trash"></i>
 		</a>
 	</div>
 	<div class="btn-group">
+	  <select class="selectpicker show-tick dropdown-trigger-on-hover" multiple="multiple" title="Layers" data-selected-text-format="count" data-width="auto" id="scribing-layers-<%= qid %>" data-header="Show / hide layers">
+	  </select>
+	</div>
+	<div class="btn-group <%= 'hidden' if is_ans_unlocked %>">
 		<a class="btn" title="Save Canvas" id="scribing-save-<%= qid %>">
 			<i class="icon-save"></i>
 		</a>
 	</div>
+
+
 </div>
 <canvas class="scribing-canvas"
         id="scribing-canvas-<%= qid %>" 
@@ -44,16 +80,7 @@
 
 <% end %>
 
-<% answer.scribbles.each do |scribble| %>
-	<%= scribble.std_course.id %> <br>
-	<%= curr_user_course.id %>
-	<%= scribble.std_course == curr_user_course %>
-	<% is_scribble_locked = (scribble.std_course == curr_user_course) ? "false" : "true"  %>
-	<%= hidden_field('scribbles', scribble.id, class: 'scribble-' + qid.to_s, value: scribble.content, "data-locked" => is_scribble_locked) %>
-<% end %>
 
-<% is_ans_locked = (answer.std_course == curr_user_course) ? "false" : "true"  %>
-<%= hidden_field('answers', qid, value: answer.content, "data-locked" => is_ans_locked) %>
 
 
 

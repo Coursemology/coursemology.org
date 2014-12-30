@@ -83,14 +83,40 @@ var zoom_out = function (canvas) {
   return handler;
 };
 
-var save_canvas = function (canvas) {
+var update_layers = function () {
+  $(this).find('option').each(function (i, o) {
+    var show_layer = $(o).attr('selected') == 'selected';
+    $(o).data('toggle_layer')(show_layer);
+  });
+};
+
+var get_json = function (qid, canvas) {
+  // remove all locked layers
+  var layers_list = $('#scribing-layers-' + qid);
+  layers_list.find('option').each(function (i, o) {
+    $(o).data('toggle_layer')(false);
+  });
+
+  // get json output for current user
+  var output = JSON.stringify(canvas._objects);
+
+  // restore locked layers and return
+  layers_list.change();
+  return output;
+};
+
+
+var save_canvas = function (qid, canvas) {
   // Make AJAX call to save scribbles.
   var handler = function (e) {
-    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    var c = $('#scribing-ajax-' + qid + ' .scribble-content');
+    var output = {"objects": get_json(qid, canvas)};
+    console.log(output); /////// TODO
   };
   return handler;
 };
+
+
 
 // INITIALISE CANVASES  
 
@@ -123,7 +149,9 @@ $(document).ready(function () {
     $('#scribing-delete-' + qid).click(delete_selection(c));
     $('#scribing-zoom-in-' + qid).click(zoom_in(c));
     $('#scribing-zoom-out-' + qid).click(zoom_out(c));
-    $('#scribing-save-' + qid).click(save_canvas(c));
+    $('#scribing-save-' + qid).click(save_canvas(qid, c));
+    $('#scribing-layers-' + qid).change(update_layers);
+
   });
 
   //assign each canvas its image
@@ -137,10 +165,16 @@ $(document).ready(function () {
     //create fabric.Image object with the right scaling and set as canvas background
     var fabricImage = new fabric.Image(scribingImage, {opacity: 1, scaleX: scale, scaleY: scale});
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+    c.renderAll();
 
+    var layers_list = $('#scribing-layers-' + qid);
+    layers_list.selectpicker('hide');
 
     var load_scribble = function (scribble) {
       // from http://jsfiddle.net/Kienz/sFGGV/6/ via https://github.com/kangax/fabric.js/issues/704
+      if (scribble.val() == '') {
+        return;
+      }
       var objects = JSON.parse(scribble.val()).objects;
       var drawn_items = [];
       for (var i = 0; i < objects.length; i++) {
@@ -156,15 +190,38 @@ $(document).ready(function () {
           drawn_items.push(item);
         }
       }      
-          
+      
+      // Case when scribble should be read-only    
       if (scribble.data('locked') && drawn_items.length > 0) {
+
+        // Group scribbles and make the group unselectable
         if (drawn_items.length > 1) {
           scribble_group = new fabric.Group(drawn_items);
         } else {
           scribble_group = drawn_items[0];
         }
         scribble_group.selectable = false;
+
+        // Populate drop-down box
+        var new_layer_entry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
+        layers_list.append(new_layer_entry)
+
+        var toggle_layer = function (show_layer) {
+          var this_group = scribble_group;
+          if (show_layer && !c.contains(this_group)) {
+            c.add(this_group);
+          } else if (!show_layer && c.contains(this_group)) {
+            c.remove(scribble_group);
+          }
+          c.renderAll();
+        };
+        new_layer_entry.data({toggle_layer: toggle_layer});
+          
+        layers_list.selectpicker('show');
+        layers_list.selectpicker('refresh');
       }
+
+      c.renderAll();
     };
 
     // load saved scribblings
@@ -175,9 +232,6 @@ $(document).ready(function () {
     $.each(other_scribbles, function (i, scribble) {
       load_scribble($(scribble));
     });
-
-    c.renderAll();
-
 
 
 
@@ -205,12 +259,15 @@ $(document).ready(function () {
     });
     
     c.on('mouse:move', function(options) {
+
+      // Handle 
       if (c.isDrawingMode) {
         //add event handler to save changes in scribbles
         $('#answers_' + qid).val(JSON.stringify(c));
       }
+
+      // Handle panning
       if (c.isGrabMode && isDown) {
-        // Handle panning
         var currentMouseLeft = options.e.clientX;
         var currentMouseTop = options.e.clientY;
 
