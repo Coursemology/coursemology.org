@@ -141,7 +141,7 @@ $(document).ready(function() {
     $('*[rel~=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
-    $('.selectpicker').selectpicker();
+    $('.selectpicker').selectpicker({tickIcon: 'icon-ok'}); // custom icon since we are using bootstrap 2
     $('.origin_url').val(document.URL);
     // For our delete buttons, detach the companion button so it looks nicer in a .btn-group.
     // Then move it one level up so it acts like a first class citizen.
