@@ -2,93 +2,7 @@
 // - Add limit to panning
 
 
-// BUTTON EVENT HANDLERS
-
-var edit_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = false;
-    canvas.isGrabMode = false;
-    canvas.selection = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-var grab_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = false;
-    canvas.isGrabMode = true;
-    canvas.selection = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-var drawing_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = true;
-    canvas.isGrabMode = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-// http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
-var delete_selection = function (canvas) {
-  var handler = function () {
-    if(canvas.getActiveGroup()) {
-        canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
-        canvas.discardActiveGroup().renderAll();
-      } else {
-        canvas.remove(canvas.getActiveObject());
-      }
-    };
-  return handler;
-};
-
-var reload_bg = function (canvas, underlayUrl) {
-  var handler = function () {
-    if (underlayUrl != "") {
-      fabric.Image.fromURL(underlayUrl, function(image){ 
-          canvas.setBackgroundImage(image, canvas.renderAll.bind(canvas));
-          canvas.setHeight(image.height * image.scaleX);
-          canvas.setWidth(image.width * image.scaleY);
-       }, {
-         opacity: 1,
-         scaleX: 1.0,
-         scaleY: 1.0
-       });
-    }
-  };
-  return handler;
-};
-
-var zoom_in = function (canvas) {
-  var handler = function (e) {
-    var newZoom = canvas.getZoom() + 0.1;
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-  };
-  return handler;
-};
-
-
-var zoom_out = function (canvas) {
-  var handler = function (e) {
-    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-  };
-  return handler;
-};
-
-var update_layers = function () {
-  $(this).find('option').each(function (i, o) {
-    var show_layer = $(o).attr('selected') == 'selected';
-    $(o).data('toggle_layer')(show_layer);
-  });
-};
+// HELPER FUNCITONS
 
 var get_json = function (qid, canvas) {
   // remove all locked layers
@@ -102,20 +16,14 @@ var get_json = function (qid, canvas) {
 
   // restore locked layers and return
   layers_list.change();
-  return output;
+  return '{"objects":'+ output +'}';
 };
 
-
-var save_canvas = function (qid, canvas) {
-  // Make AJAX call to save scribbles.
-  var handler = function (e) {
-    var c = $('#scribing-ajax-' + qid + ' .scribble-content');
-    var output = {"objects": get_json(qid, canvas)};
-    console.log(output); /////// TODO
-  };
-  return handler;
+var update_scribble = function (qid, canvas) {
+  var ajax_field = $('#scribing-ajax-' + qid + ' .scribble-content');
+  ajax_field.val(get_json(qid, canvas));
+  $('#scribing-ajax-' + qid).submit();
 };
-
 
 
 // INITIALISE CANVASES  
@@ -140,17 +48,78 @@ $(document).ready(function () {
     var underlayUrl = $(c).data('url');
     var buttons = $('#scribing-buttons-' + qid + ' a')
     var c = new fabric.Canvas('scribing-canvas-' + qid); // js object 
+    c.clear();
     fabricCanvases[qid] = c;
 
+    $('#scribing-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
 
-    $('#scribing-mode-' + qid).click(drawing_mode(c, buttons));
-    $('#edit-mode-' + qid).click(edit_mode(c, buttons));
-    $('#grab-mode-' + qid).click(grab_mode(c, buttons));
-    $('#scribing-delete-' + qid).click(delete_selection(c));
-    $('#scribing-zoom-in-' + qid).click(zoom_in(c));
-    $('#scribing-zoom-out-' + qid).click(zoom_out(c));
-    $('#scribing-save-' + qid).click(save_canvas(qid, c));
-    $('#scribing-layers-' + qid).change(update_layers);
+      canvas.isDrawingMode = true;
+      canvas.isGrabMode = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    $('#edit-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
+
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = false;
+      canvas.selection = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    $('#scribing-color-' + qid).change({ canvas: c }, function(event) {
+      event.data.canvas.freeDrawingBrush.color = this.value;
+    });
+
+    $('#grab-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
+
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = true;
+      canvas.selection = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
+    $('#scribing-delete-' + qid).click({ canvas: c }, function (event) {
+      var canvas = event.data.canvas;
+
+      if(canvas.getActiveGroup()) {
+        canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
+        canvas.discardActiveGroup().renderAll();
+      }
+      else {
+        canvas.remove(canvas.getActiveObject());
+      }
+    });
+
+    $('#scribing-zoom-in-' + qid).click({ canvas: c }, function (event) {
+        var canvas = event.data.canvas;
+
+        var newZoom = canvas.getZoom() + 0.1;
+        canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    });
+
+    $('#scribing-zoom-out-' + qid).click({ canvas: c }, function(event) {
+      var canvas = event.data.canvas;
+
+      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+      canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    });
+
+    $('#scribing-layers-' + qid).change(function () {
+        $(this).find('option').each(function (i, o) {
+          var show_layer = $(o).attr('selected') == 'selected';
+          $(o).data('toggle_layer')(show_layer);
+        });
+    }); 
 
   });
 
@@ -168,50 +137,47 @@ $(document).ready(function () {
     c.renderAll();
 
     var layers_list = $('#scribing-layers-' + qid);
-    layers_list.selectpicker('hide');
+    layers_list.selectpicker('hide'); // remains hidden if there are no layers
 
     var load_scribble = function (scribble) {
       // from http://jsfiddle.net/Kienz/sFGGV/6/ via https://github.com/kangax/fabric.js/issues/704
       if (scribble.val() == '') {
         return;
       }
+ 
+      // Convert javascript objects to fabricjs objects
       var objects = JSON.parse(scribble.val()).objects;
       var drawn_items = [];
       for (var i = 0; i < objects.length; i++) {
         var klass = fabric.util.getKlass(objects[i].type);
         if (klass.async) {
           klass.fromObject(objects[i], function (img) {
-            c.add(img);
             drawn_items.push(img);
           });
         } else {
           var item = klass.fromObject(objects[i]);
-          c.add(item);
           drawn_items.push(item);
         }
       }      
       
       // Case when scribble should be read-only    
       if (scribble.data('locked') && drawn_items.length > 0) {
-
-        // Group scribbles and make the group unselectable
-        if (drawn_items.length > 1) {
-          scribble_group = new fabric.Group(drawn_items);
-        } else {
-          scribble_group = drawn_items[0];
-        }
+        var scribble_group = new fabric.Group(drawn_items);
+        scribble_group.originX = 'center';
+        scribble_group.originY = 'center';
+        c.add(scribble_group);
         scribble_group.selectable = false;
 
         // Populate drop-down box
         var new_layer_entry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
-        layers_list.append(new_layer_entry)
+        layers_list.append(new_layer_entry);
 
         var toggle_layer = function (show_layer) {
           var this_group = scribble_group;
           if (show_layer && !c.contains(this_group)) {
             c.add(this_group);
           } else if (!show_layer && c.contains(this_group)) {
-            c.remove(scribble_group);
+            c.remove(this_group);
           }
           c.renderAll();
         };
@@ -219,9 +185,13 @@ $(document).ready(function () {
           
         layers_list.selectpicker('show');
         layers_list.selectpicker('refresh');
+
+      } else if (!scribble.data('locked')) {
+
+        // Case when scribble is to be editable
+        drawn_items.map( function(o){ c.add(o) } );
       }
 
-      c.renderAll();
     };
 
     // load saved scribblings
@@ -259,14 +229,6 @@ $(document).ready(function () {
     });
     
     c.on('mouse:move', function(options) {
-
-      // Handle 
-      if (c.isDrawingMode) {
-        //add event handler to save changes in scribbles
-        $('#answers_' + qid).val(JSON.stringify(c));
-      }
-
-      // Handle panning
       if (c.isGrabMode && isDown) {
         var currentMouseLeft = options.e.clientX;
         var currentMouseTop = options.e.clientY;
@@ -282,9 +244,16 @@ $(document).ready(function () {
     });
 
     c.on('mouse:up', function() {
+      // Handle panning
       if (c.isGrabMode && isDown) {
         c._drawSelection = _drawSelection;
         isDown = false;
+      }
+
+      // The answer scribble is updated at all times, ready for form submmission.
+      if (!c.isGrabMode) {
+        $('#answers_' + qid).val(get_json(qid,c));
+        update_scribble(qid,c);
       }
     });
 
