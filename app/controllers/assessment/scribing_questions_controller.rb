@@ -8,8 +8,10 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
     qa.question = @question.question
     qa.position = @assessment.questions.count
     uploaded_file_object = params[:assessment_scribing_question][:document]
+    allowed_img_types = ['image/gif', 'image/png', 'image/jpeg', 'image/pjpeg']
 
-    if uploaded_file_object && uploaded_file_object.content_type == 'application/pdf'   #special handling for PDF files
+    #special handling for PDF files
+    if uploaded_file_object && uploaded_file_object.content_type.downcase == 'application/pdf'
       png_converter = PngConvert.new(uploaded_file_object)
       png_files = png_converter.convert_to_png
       png_success = false   #track success of each png file upload
@@ -46,14 +48,14 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
 
       png_converter.clean_up
 
-    elsif uploaded_file_object
+    elsif uploaded_file_object && (allowed_img_types.include? uploaded_file_object.content_type.downcase)
       file_upload = FileUpload.create({creator: current_user,
                                        owner: @question,
                                        file: uploaded_file_object
                                        })
       file_save_success = file_upload.save
     else
-      file_save_success = true
+      file_save_success = false
     end
     
     respond_to do |format|
@@ -64,13 +66,17 @@ class Assessment::ScribingQuestionsController < Assessment::QuestionsController
       # The 'if' condition uses short circuiting when all png files
       # are successfully uploaded.
       #
-      # if it's a single file, save the current qn and qn_ass. 
-      if png_success || (@question.save && qa.save && file_save_success)
+      # if it's a single file of an allowed type, save the current qn and qn_ass. 
+      #
+      # file_save_success MUST be checked first, or invalid questions and questions_assessments
+      # will be created.
+      if png_success || (file_save_success && @question.save && qa.save)
         format.html { redirect_to url_for([@course, @assessment.as_assessment]),
                       notice: 'Question has been added.' }
         format.json { render json: @question, status: :created, location: @question }
       else
-        format.html { render action: 'new' }
+        format.html { redirect_to new_course_assessment_assessment_scribing_question_path(@course, @assessment),
+                      :flash => { :error => 'File type not supported.' } }
         format.json { render json: @question.errors, status: :unprocessable_entity }
       end
     end
