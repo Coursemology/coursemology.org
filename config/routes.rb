@@ -107,6 +107,7 @@ Coursemology::Application.routes.draw do
                   path: :gradings,
                   as:   :gradings,
                   controller: :gradings
+
       end
 
       resources :assessment_submissions,
@@ -343,4 +344,5 @@ Coursemology::Application.routes.draw do
     resources :file_uploads
   end
 
+  resources :scribbles, only: [:create]
 end

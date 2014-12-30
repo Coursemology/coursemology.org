@@ -5,5 +5,6 @@ class Scribble < ActiveRecord::Base
   has_one :user, through: :std_course
 
   attr_accessible :content, :user, :answer
+  attr_accessible :std_course_id, :scribing_answer_id, :id
   
 end
