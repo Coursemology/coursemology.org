@@ -2,57 +2,7 @@
 // - Add limit to panning
 
 
-// BUTTON EVENT HANDLERS
-
-var edit_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = false;
-    canvas.isGrabMode = false;
-    canvas.selection = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-var grab_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = false;
-    canvas.isGrabMode = true;
-    canvas.selection = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-var drawing_mode = function (canvas, buttons) {
-  var handler = function () {
-    canvas.isDrawingMode = true;
-    canvas.isGrabMode = false;
-    $(this).addClass("active");
-    buttons.not(this).removeClass("active");
-  };
-  return handler;
-};
-
-var change_brush_color = function(event) {
-  event.data.canvas.freeDrawingBrush.color = this.value;
-};
-
-// http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
-var delete_selection = function (canvas) {
-  var handler = function () {
-    if(canvas.getActiveGroup()) {
-        canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
-        canvas.discardActiveGroup().renderAll();
-      } else {
-        canvas.remove(canvas.getActiveObject());
-      }
-    };
-  return handler;
-};
-
+// BUTTON EVENT HANDLERS -- unused. event handlers are with the event listener functions
 var reload_bg = function (canvas, underlayUrl) {
   var handler = function () {
     if (underlayUrl != "") {
@@ -66,32 +16,6 @@ var reload_bg = function (canvas, underlayUrl) {
          scaleY: 1.0
        });
     }
-  };
-  return handler;
-};
-
-var zoom_in = function (canvas) {
-  var handler = function (e) {
-    var newZoom = canvas.getZoom() + 0.1;
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-  };
-  return handler;
-};
-
-
-var zoom_out = function (canvas) {
-  var handler = function (e) {
-    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-  };
-  return handler;
-};
-
-var save_canvas = function (canvas) {
-  // Make AJAX call to save scribbles.
-  var handler = function (e) {
-    var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-    canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
   };
   return handler;
 };
@@ -121,14 +45,76 @@ $(document).ready(function () {
     fabricCanvases[qid] = c;
 
 
-    $('#scribing-mode-' + qid).click(drawing_mode(c, buttons));
-    $('#edit-mode-' + qid).click(edit_mode(c, buttons));
-    $('#scribing-color-' + qid).change({ canvas: c }, change_brush_color);
-    $('#grab-mode-' + qid).click(grab_mode(c, buttons));
-    $('#scribing-delete-' + qid).click(delete_selection(c));
-    $('#scribing-zoom-in-' + qid).click(zoom_in(c));
-    $('#scribing-zoom-out-' + qid).click(zoom_out(c));
-    $('#scribing-save-' + qid).click(save_canvas(c));
+    $('#scribing-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
+
+      canvas.isDrawingMode = true;
+      canvas.isGrabMode = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    $('#edit-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
+
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = false;
+      canvas.selection = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    $('#scribing-color-' + qid).change({ canvas: c }, function(event) {
+      event.data.canvas.freeDrawingBrush.color = this.value;
+    });
+
+    $('#grab-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
+
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = true;
+      canvas.selection = false;
+      $(this).addClass("active");
+      buttons.not(this).removeClass("active");
+    });
+
+    // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
+    $('#scribing-delete-' + qid).click({ canvas: c }, function (event) {
+      var canvas = event.data.canvas;
+
+      if(canvas.getActiveGroup()) {
+        canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
+        canvas.discardActiveGroup().renderAll();
+      }
+      else {
+        canvas.remove(canvas.getActiveObject());
+      }
+    });
+
+    $('#scribing-zoom-in-' + qid).click({ canvas: c }, function (event) {
+        var canvas = event.data.canvas;
+
+        var newZoom = canvas.getZoom() + 0.1;
+        canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    });
+
+    $('#scribing-zoom-out-' + qid).click({ canvas: c }, function(event) {
+      var canvas = event.data.canvas;
+
+      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+      canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    });
+
+    $('#scribing-save-' + qid).click({ canvas: c}, function(event) {
+      var canvas = event.data.canvas;
+
+      //TODO: Make AJAX call to save scribbles.
+      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+      canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+    });
   });
 
   //assign each canvas its image
