@@ -36,6 +36,10 @@ var drawing_mode = function (canvas, buttons) {
   return handler;
 };
 
+var change_brush_color = function(event) {
+  event.data.canvas.freeDrawingBrush.color = this.value;
+};
+
 // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
 var delete_selection = function (canvas) {
   var handler = function () {
@@ -119,6 +123,7 @@ $(document).ready(function () {
 
     $('#scribing-mode-' + qid).click(drawing_mode(c, buttons));
     $('#edit-mode-' + qid).click(edit_mode(c, buttons));
+    $('#scribing-color-' + qid).change({ canvas: c }, change_brush_color);
     $('#grab-mode-' + qid).click(grab_mode(c, buttons));
     $('#scribing-delete-' + qid).click(delete_selection(c));
     $('#scribing-zoom-in-' + qid).click(zoom_in(c));

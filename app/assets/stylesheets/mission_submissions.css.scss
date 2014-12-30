@@ -61,6 +61,12 @@ input.button {
   padding:2px 10px 2px 10px; /* Links */
 }
 
+input[type=color] {
+  width: 30px;
+  height: 26px;
+  padding: 0px;
+}
+
 
 //hr { border: 1px solid #353535; border-width: 1px 0 0 0; }
 
