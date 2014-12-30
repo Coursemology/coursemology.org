@@ -8,12 +8,12 @@
 <% is_ans_unlocked = (answer.std_course == curr_user_course) %>
 <%= hidden_field('answers', qid, value: answer.content, "data-locked" => (is_ans_unlocked ? "false" : "true"), "data-scribe" => answer.std_course.name) %>
 
-
 <% if !is_ans_unlocked %>
 	<!-- undefined method `scribble_path' for #<#<Class:0x007fc8a8f0d6d8>:0x007fc8a8f02d50> in form_for-->
 	<!-- when direct assignment to @scribble is tried -->
 	<% if ajax_scribble != nil %>
 		<%# @scribble = ajax_scribble %>
+		<% @scribble.id = ajax_scribble.id %>
 		<% @scribble.content = ajax_scribble.content %>
 	<% end %>
 	<% @scribble.std_course_id = curr_user_course.id %>
@@ -24,7 +24,6 @@
 		<%= f.hidden_field :std_course_id %>
 		<%= f.hidden_field :scribing_answer_id %>
 		<%= f.hidden_field :id %>
-		<%#= f.submit "sub" %>
 	<% end %>
 <% end %>
 
@@ -52,19 +51,14 @@
 		<a class="btn" title="Delete Selection" id="scribing-delete-<%= qid %>">
 			<i class="icon-trash"></i>
 		</a>
-    <input type="color" id="scribing-color-<%= qid %>"></input>
+		
+  	<input type="color" id="scribing-color-<%= qid %>"></input>
+    
 	</div>
 	<div class="btn-group">
 	  <select class="selectpicker show-tick dropdown-trigger-on-hover" multiple="multiple" title="Layers" data-selected-text-format="count" data-width="auto" id="scribing-layers-<%= qid %>" data-header="Show / hide layers">
 	  </select>
 	</div>
-	<div class="btn-group <%= 'hidden' if is_ans_unlocked %>">
-		<a class="btn" title="Save Canvas" id="scribing-save-<%= qid %>">
-			<i class="icon-save"></i>
-		</a>
-	</div>
-
-
 </div>
 <canvas class="scribing-canvas"
         id="scribing-canvas-<%= qid %>" 
