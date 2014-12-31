@@ -51,6 +51,9 @@ $(document).ready(function () {
     c.clear();
     fabricCanvases[qid] = c;
 
+    //set brush width to value declared in scribing canvas view
+    c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
+
     $('#scribing-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
       var canvas = event.data.canvas;
       var buttons = event.data.buttons;
@@ -74,6 +77,10 @@ $(document).ready(function () {
 
     $('#scribing-color-' + qid).change({ canvas: c }, function(event) {
       event.data.canvas.freeDrawingBrush.color = this.value;
+    });
+
+    $('#scribing-width-' + qid).change({ canvas: c }, function(event) {
+      event.data.canvas.freeDrawingBrush.width = this.value;
     });
 
     $('#grab-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
