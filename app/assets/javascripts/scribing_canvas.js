@@ -43,10 +43,10 @@ $(document).ready(function () {
   });
 
   //init and collect all canvas elements
-  $.each(allCanvases, function(i, c) {
-    var qid = $(c).data('qid');
-    var underlayUrl = $(c).data('url');
-    var buttons = $('#scribing-buttons-' + qid + ' a')
+  $.each(allCanvases, function(i, htmlCanvas) {
+    var qid = $(htmlCanvas).data('qid');
+    var underlayUrl = $(htmlCanvas).data('url');
+    var buttons = $('#scribing-buttons-' + qid + ' a');
     var c = new fabric.Canvas('scribing-canvas-' + qid); // js object 
     c.clear();
     fabricCanvases[qid] = c;
