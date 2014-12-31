@@ -62,6 +62,8 @@ $(document).ready(function () {
       canvas.isGrabMode = false;
       $(this).addClass("active");
       buttons.not(this).removeClass("active");
+      $('#scribing-edit-tools-' + qid).addClass("hidden");
+      $('#scribing-drawing-tools-' + qid).removeClass("hidden");
     });
 
     $('#edit-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
@@ -73,6 +75,8 @@ $(document).ready(function () {
       canvas.selection = false;
       $(this).addClass("active");
       buttons.not(this).removeClass("active");
+      $('#scribing-edit-tools-' + qid).removeClass("hidden");
+      $('#scribing-drawing-tools-' + qid).addClass("hidden");
     });
 
     $('#scribing-color-' + qid).change({ canvas: c }, function(event) {
@@ -92,6 +96,8 @@ $(document).ready(function () {
       canvas.selection = false;
       $(this).addClass("active");
       buttons.not(this).removeClass("active");
+      $('#scribing-edit-tools-' + qid).addClass("hidden");
+      $('#scribing-drawing-tools-' + qid).addClass("hidden");
     });
 
     // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
