@@ -241,8 +241,7 @@ $(document).ready(function () {
     var answerScribble = $('#answers_' + qid);
     loadScribble(answerScribble);
 
-    var otherScribbles = $('.scribble-' + qid);
-    $.each(otherScribbles, function (i, scribble) {
+    $('.scribble-' + qid).each(function (i, scribble) {
       loadScribble($(scribble));
     });
 
