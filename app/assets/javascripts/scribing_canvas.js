@@ -45,7 +45,6 @@ $(document).ready(function () {
   //init and collect all canvas elements
   $.each(allCanvases, function(i, htmlCanvas) {
     var qid = $(htmlCanvas).data('qid');
-    var underlayUrl = $(htmlCanvas).data('url');
     var buttons = $('#scribing-buttons-' + qid + ' a');
     var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
     c.clear();
@@ -146,7 +145,10 @@ $(document).ready(function () {
         var canvas = event.data.canvas;
 
         var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-        canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+        canvas.zoomToPoint({
+          x: canvas.height/2,
+          y: canvas.width/2
+        }, newZoom);
       });
 
     $('#scribing-layers-' + qid)
@@ -163,11 +165,19 @@ $(document).ready(function () {
     //get appropriate canvas by qid
     var c = fabricCanvases[qid];
 
-    //calculate scaleX and scaleY to fit image into canvas before creating fabric.Image object
-    var scale = Math.min(c.width / scribingImage.width, c.height / scribingImage.height, 1);
+    //calculate scaleX and scaleY to fit image into canvas
+    //before creating fabric.Image object
+    var scale = Math.min(
+      c.width / scribingImage.width,
+      c.height / scribingImage.height,
+      1);
 
-    //create fabric.Image object with the right scaling and set as canvas background
-    var fabricImage = new fabric.Image(scribingImage, {opacity: 1, scaleX: scale, scaleY: scale});
+    //create fabric.Image object with the right scaling and
+    // set as canvas background
+    var fabricImage = new fabric.Image(
+      scribingImage,
+      {opacity: 1, scaleX: scale, scaleY: scale}
+    );
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
     c.renderAll();
 
@@ -281,17 +291,17 @@ $(document).ready(function () {
         isDown = false;
       }
 
-      // The answer scribble is updated at all times, ready for form submmission.
       if (!c.isGrabMode) {
+        // Either keep answer ready for saving
         var ansField = $('#answers_' + qid);
         if (ansField.data('locked')){
           updateScribble(qid,c);
         } else {
+        // Or save scribbles continuously
           ansField.val(getJSON(qid,c));
         }
       }
     });
 
   });
-
 });
