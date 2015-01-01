@@ -54,8 +54,8 @@
         <td style="text-align: left"><%= tutor.name %></td>
         <td><a href="<%= course_staff_monitoring_path %>?_tutor_id=<%=tutor.id%>"><%= summary[:count] %> </a></td>
         <td><%= summary[:std_count] %></td>
-        <td><%= summary[:avg] != Float::INFINITY ? distance_of_time(summary[:avg].to_i) : "99 d 99:99:99" %></td>
-        <td><%= summary[:std_dev] != Float::INFINITY ? distance_of_time(summary[:std_dev].to_i) : "99 d 99:99:99" %></td>
+        <td><%= summary[:avg] != Float::INFINITY ? distance_of_time(summary[:avg].to_i) : "--:--:--" %></td>
+        <td><%= summary[:std_dev] != Float::INFINITY ? distance_of_time(summary[:std_dev].to_i) : "--:--:--" %></td>
       </tr>
   <% end %>
   </tbody>
