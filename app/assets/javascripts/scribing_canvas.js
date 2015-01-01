@@ -4,7 +4,7 @@
 
 // HELPER FUNCITONS
 
-var getJSON = function (qid, canvas) {
+function getJSON(qid, canvas) {
   // remove all locked layers
   var layersList = $('#scribing-layers-' + qid);
   layersList.find('option').each(function (i, o) {
@@ -19,12 +19,79 @@ var getJSON = function (qid, canvas) {
   return '{"objects":'+ output +'}';
 };
 
-var updateScribble = function (qid, canvas) {
+function updateScribble(qid, canvas) {
   var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
   ajaxField.val(getJSON(qid, canvas));
   $('#scribing-ajax-' + qid).submit();
 };
 
+function loadScribbles(c, qid) {
+  var layersList = $('#scribing-layers-' + qid);
+  layersList.selectpicker('hide'); // remains hidden if there are no layers
+
+  // load answer scribbling
+  var answerScribble = $('#answers_' + qid);
+  loadScribble(c, answerScribble, layersList);
+
+  //load other scribblings
+  $('.scribble-' + qid).each(function (i, scribble) {
+    loadScribble(c, $(scribble), layersList);
+  });
+};
+
+//load a single scribble
+function loadScribble(c, scribble, layersList) {
+  if (scribble.val() === '') {
+    return;
+  }
+
+  // Convert javascript objects to fabricjs objects
+  var objects = JSON.parse(scribble.val()).objects;
+  var fabricObjs = [];
+  for (var i = 0; i < objects.length; i++) {
+    var klass = fabric.util.getKlass(objects[i].type);
+    if (klass.async) {
+      klass.fromObject(objects[i], function(img) {
+        fabricObjs.push(img);
+      });
+    } else {
+      var item = klass.fromObject(objects[i]);
+      fabricObjs.push(item);
+    }
+  }
+
+  // Case when scribble should be read-only
+  if (scribble.data('locked') && fabricObjs.length > 0) {
+    var scribbleGroup = new fabric.Group(fabricObjs);
+    c.add(scribbleGroup);
+    scribbleGroup.selectable = false;
+
+    // Populate drop-down box
+    var newLayerEntry = $('<option>')
+      .text(scribble.data('scribe'))
+      .attr('selected','selected');
+    layersList.append(newLayerEntry);
+
+    var toggleLayer = function (showLayer) {
+      var thisGroup = scribbleGroup;
+      if (showLayer && !c.contains(thisGroup)) {
+        c.add(thisGroup);
+      } else if (!showLayer && c.contains(thisGroup)) {
+        c.remove(thisGroup);
+      }
+      c.renderAll();
+    };
+    newLayerEntry.data({toggleLayer: toggleLayer});
+
+    layersList.selectpicker('show');
+    layersList.selectpicker('refresh');
+
+  } else if (!scribble.data('locked')) {
+
+    // Case when scribble is to be editable
+    fabricObjs.map( function(o){ c.add(o); } );
+  }
+};
 
 // INITIALISE CANVASES
 
@@ -181,69 +248,7 @@ $(document).ready(function () {
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
     c.renderAll();
 
-    var layersList = $('#scribing-layers-' + qid);
-    layersList.selectpicker('hide'); // remains hidden if there are no layers
-
-    var loadScribble = function (scribble) {
-      if (scribble.val() === '') {
-        return;
-      }
-
-      // Convert javascript objects to fabricjs objects
-      var objects = JSON.parse(scribble.val()).objects;
-      var fabricObjs = [];
-      for (var i = 0; i < objects.length; i++) {
-        var klass = fabric.util.getKlass(objects[i].type);
-        if (klass.async) {
-          klass.fromObject(objects[i], function(img) {
-            fabricObjs.push(img);
-          });
-        } else {
-          var item = klass.fromObject(objects[i]);
-          fabricObjs.push(item);
-        }
-      }
-
-      // Case when scribble should be read-only
-      if (scribble.data('locked') && fabricObjs.length > 0) {
-        var scribbleGroup = new fabric.Group(fabricObjs);
-        c.add(scribbleGroup);
-        scribbleGroup.selectable = false;
-
-        // Populate drop-down box
-        var newLayerEntry = $('<option>')
-          .text(scribble.data('scribe'))
-          .attr('selected','selected');
-        layersList.append(newLayerEntry);
-
-        var toggleLayer = function (showLayer) {
-          var thisGroup = scribbleGroup;
-          if (showLayer && !c.contains(thisGroup)) {
-            c.add(thisGroup);
-          } else if (!showLayer && c.contains(thisGroup)) {
-            c.remove(thisGroup);
-          }
-          c.renderAll();
-        };
-        newLayerEntry.data({toggleLayer: toggleLayer});
-
-        layersList.selectpicker('show');
-        layersList.selectpicker('refresh');
-
-      } else if (!scribble.data('locked')) {
-
-        // Case when scribble is to be editable
-        fabricObjs.map( function(o){ c.add(o); } );
-      }
-    };
-
-    // load saved scribblings
-    var answerScribble = $('#answers_' + qid);
-    loadScribble(answerScribble);
-
-    $('.scribble-' + qid).each(function (i, scribble) {
-      loadScribble($(scribble));
-    });
+    loadScribbles(c, qid);
 
     // Initialize zoom/scrolling variable
     var viewportLeft = 0,
