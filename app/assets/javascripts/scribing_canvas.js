@@ -4,10 +4,10 @@
 
 // HELPER FUNCITONS
 
-var get_json = function (qid, canvas) {
+var getJSON = function (qid, canvas) {
   // remove all locked layers
-  var layers_list = $('#scribing-layers-' + qid);
-  layers_list.find('option').each(function (i, o) {
+  var layersList = $('#scribing-layers-' + qid);
+  layersList.find('option').each(function (i, o) {
     $(o).data('toggle_layer')(false);
   });
 
@@ -15,13 +15,13 @@ var get_json = function (qid, canvas) {
   var output = JSON.stringify(canvas._objects);
 
   // restore locked layers and return
-  layers_list.change();
+  layersList.change();
   return '{"objects":'+ output +'}';
 };
 
-var update_scribble = function (qid, canvas) {
-  var ajax_field = $('#scribing-ajax-' + qid + ' .scribble-content');
-  ajax_field.val(get_json(qid, canvas));
+var updateScribble = function (qid, canvas) {
+  var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
+  ajaxField.val(getJSON(qid, canvas));
   $('#scribing-ajax-' + qid).submit();
 };
 
@@ -54,85 +54,94 @@ $(document).ready(function () {
     //set brush width to value declared in scribing canvas view
     c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
 
-    $('#scribing-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
-      var canvas = event.data.canvas;
-      var buttons = event.data.buttons;
+    $('#scribing-mode-' + qid)
+      .click({ canvas: c, buttons: buttons }, function (event) {
+        var canvas = event.data.canvas;
+        var buttons = event.data.buttons;
 
-      canvas.isDrawingMode = true;
-      canvas.isGrabMode = false;
-      $(this).addClass("active");
-      buttons.not(this).removeClass("active");
-      $('#scribing-edit-tools-' + qid).addClass("hidden");
-      $('#scribing-drawing-tools-' + qid).removeClass("hidden");
-    });
+        canvas.isDrawingMode = true;
+        canvas.isGrabMode = false;
+        $(this).addClass('active');
+        buttons.not(this).removeClass('active');
+        $('#scribing-edit-tools-' + qid).addClass('hidden');
+        $('#scribing-drawing-tools-' + qid).removeClass('hidden');
+      });
 
-    $('#edit-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
-      var canvas = event.data.canvas;
-      var buttons = event.data.buttons;
+    $('#edit-mode-' + qid)
+      .click({ canvas: c, buttons: buttons }, function (event) {
+        var canvas = event.data.canvas;
+        var buttons = event.data.buttons;
 
-      canvas.isDrawingMode = false;
-      canvas.isGrabMode = false;
-      canvas.selection = false;
-      $(this).addClass("active");
-      buttons.not(this).removeClass("active");
-      $('#scribing-edit-tools-' + qid).removeClass("hidden");
-      $('#scribing-drawing-tools-' + qid).addClass("hidden");
-    });
+        canvas.isDrawingMode = false;
+        canvas.isGrabMode = false;
+        canvas.selection = false;
+        $(this).addClass('active');
+        buttons.not(this).removeClass('active');
+        $('#scribing-edit-tools-' + qid).removeClass('hidden');
+        $('#scribing-drawing-tools-' + qid).addClass('hidden');
+      });
 
-    $('#scribing-color-' + qid).change({ canvas: c }, function(event) {
-      event.data.canvas.freeDrawingBrush.color = this.value;
-    });
+    $('#scribing-color-' + qid)
+      .change({ canvas: c }, function(event) {
+        event.data.canvas.freeDrawingBrush.color = this.value;
+      });
 
-    $('#scribing-width-' + qid).change({ canvas: c }, function(event) {
-      event.data.canvas.freeDrawingBrush.width = this.value;
-    });
+    $('#scribing-width-' + qid)
+      .change({ canvas: c }, function(event) {
+        event.data.canvas.freeDrawingBrush.width = this.value;
+      });
 
-    $('#grab-mode-' + qid).click({ canvas: c, buttons: buttons }, function (event) {
-      var canvas = event.data.canvas;
-      var buttons = event.data.buttons;
+    $('#grab-mode-' + qid)
+      .click({ canvas: c, buttons: buttons }, function (event) {
+        var canvas = event.data.canvas;
+        var buttons = event.data.buttons;
 
-      canvas.isDrawingMode = false;
-      canvas.isGrabMode = true;
-      canvas.selection = false;
-      $(this).addClass("active");
-      buttons.not(this).removeClass("active");
-      $('#scribing-edit-tools-' + qid).addClass("hidden");
-      $('#scribing-drawing-tools-' + qid).addClass("hidden");
-    });
+        canvas.isDrawingMode = false;
+        canvas.isGrabMode = true;
+        canvas.selection = false;
+        $(this).addClass('active');
+        buttons.not(this).removeClass('active');
+        $('#scribing-edit-tools-' + qid).addClass('hidden');
+        $('#scribing-drawing-tools-' + qid).addClass('hidden');
+      });
 
     // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
-    $('#scribing-delete-' + qid).click({ canvas: c }, function (event) {
-      var canvas = event.data.canvas;
-
-      if(canvas.getActiveGroup()) {
-        canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
-        canvas.discardActiveGroup().renderAll();
-      }
-      else {
-        canvas.remove(canvas.getActiveObject());
-      }
-    });
-
-    $('#scribing-zoom-in-' + qid).click({ canvas: c }, function (event) {
+    $('#scribing-delete-' + qid)
+      .click({ canvas: c }, function (event) {
         var canvas = event.data.canvas;
 
-        var newZoom = canvas.getZoom() + 0.1;
+        if(canvas.getActiveGroup()) {
+          canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
+          canvas.discardActiveGroup().renderAll();
+        }
+        else {
+          canvas.remove(canvas.getActiveObject());
+        }
+      });
+
+    $('#scribing-zoom-in-' + qid)
+      .click({ canvas: c }, function (event) {
+          var canvas = event.data.canvas;
+
+          var newZoom = canvas.getZoom() + 0.1;
+          canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+      });
+
+    $('#scribing-zoom-out-' + qid)
+      .click({ canvas: c }, function(event) {
+        var canvas = event.data.canvas;
+
+        var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
         canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-    });
+      });
 
-    $('#scribing-zoom-out-' + qid).click({ canvas: c }, function(event) {
-      var canvas = event.data.canvas;
-
-      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-      canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
-    });
-
-    $('#scribing-layers-' + qid).change(function () {
-        $(this).find('option').each(function (i, o) {
-          var show_layer = $(o).attr('selected') == 'selected';
-          $(o).data('toggle_layer')(show_layer);
-        });
-    }); 
+    $('#scribing-layers-' + qid)
+      .change(function () {
+          $(this).find('option').each(function (i, o) {
+            var show_layer = $(o).attr('selected') == 'selected';
+            $(o).data('toggle_layer')(show_layer);
+          });
+      }); 
 
   });
 
@@ -149,8 +158,8 @@ $(document).ready(function () {
     c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
     c.renderAll();
 
-    var layers_list = $('#scribing-layers-' + qid);
-    layers_list.selectpicker('hide'); // remains hidden if there are no layers
+    var layersList = $('#scribing-layers-' + qid);
+    layersList.selectpicker('hide'); // remains hidden if there are no layers
 
     var load_scribble = function (scribble) {
       // from http://jsfiddle.net/Kienz/sFGGV/6/ via https://github.com/kangax/fabric.js/issues/704
@@ -183,7 +192,7 @@ $(document).ready(function () {
 
         // Populate drop-down box
         var new_layer_entry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
-        layers_list.append(new_layer_entry);
+        layersList.append(new_layer_entry);
 
         var toggle_layer = function (show_layer) {
           var this_group = scribble_group;
@@ -196,8 +205,8 @@ $(document).ready(function () {
         };
         new_layer_entry.data({toggle_layer: toggle_layer});
           
-        layers_list.selectpicker('show');
-        layers_list.selectpicker('refresh');
+        layersList.selectpicker('show');
+        layersList.selectpicker('refresh');
 
       } else if (!scribble.data('locked')) {
 
@@ -265,8 +274,8 @@ $(document).ready(function () {
 
       // The answer scribble is updated at all times, ready for form submmission.
       if (!c.isGrabMode) {
-        $('#answers_' + qid).val(get_json(qid,c));
-        update_scribble(qid,c);
+        $('#answers_' + qid).val(getJSON(qid,c));
+        updateScribble(qid,c);
       }
     });
 
