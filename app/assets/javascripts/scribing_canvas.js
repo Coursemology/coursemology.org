@@ -26,7 +26,7 @@ var updateScribble = function (qid, canvas) {
 };
 
 
-// INITIALISE CANVASES  
+// INITIALISE CANVASES
 
 $(document).ready(function () {
   //select all canvases and scribing images
@@ -47,7 +47,7 @@ $(document).ready(function () {
     var qid = $(htmlCanvas).data('qid');
     var underlayUrl = $(htmlCanvas).data('url');
     var buttons = $('#scribing-buttons-' + qid + ' a');
-    var c = new fabric.Canvas('scribing-canvas-' + qid); // js object 
+    var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
     c.clear();
     fabricCanvases[qid] = c;
 
@@ -106,8 +106,8 @@ $(document).ready(function () {
       });
 
     $('#scribing-delete-' + qid)
-      .click({ 
-        canvas: c, 
+      .click({
+        canvas: c,
         ajaxSave: $('#answers_' + qid).data('locked'),
         qid: qid
       }, function (event) {
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
         if(canvas.getActiveGroup()) {
           canvas.getActiveGroup().forEachObject(function(o) {
-            canvas.remove(o); 
+            canvas.remove(o);
           });
           canvas.discardActiveGroup().renderAll();
         }
@@ -136,8 +136,8 @@ $(document).ready(function () {
 
           var newZoom = canvas.getZoom() + 0.1;
           canvas.zoomToPoint({
-            x: canvas.height/2, 
-            y: canvas.width/2 
+            x: canvas.height/2,
+            y: canvas.width/2
           },newZoom);
       });
 
@@ -178,30 +178,32 @@ $(document).ready(function () {
       if (scribble.val() === '') {
         return;
       }
- 
+
       // Convert javascript objects to fabricjs objects
       var objects = JSON.parse(scribble.val()).objects;
       var fabricObjs = [];
       for (var i = 0; i < objects.length; i++) {
         var klass = fabric.util.getKlass(objects[i].type);
         if (klass.async) {
-          klass.fromObject(objects[i], function(img) { 
-            fabricObjs.push(img); 
+          klass.fromObject(objects[i], function(img) {
+            fabricObjs.push(img);
           });
         } else {
           var item = klass.fromObject(objects[i]);
-          fabricObjs.push(img);
+          fabricObjs.push(item);
         }
       }
 
-      // Case when scribble should be read-only    
+      // Case when scribble should be read-only
       if (scribble.data('locked') && fabricObjs.length > 0) {
         var scribbleGroup = new fabric.Group(fabricObjs);
         c.add(scribbleGroup);
         scribbleGroup.selectable = false;
 
         // Populate drop-down box
-        var newLayerEntry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
+        var newLayerEntry = $('<option>')
+          .text(scribble.data('scribe'))
+          .attr('selected','selected');
         layersList.append(newLayerEntry);
 
         var toggleLayer = function (showLayer) {
@@ -214,22 +216,22 @@ $(document).ready(function () {
           c.renderAll();
         };
         newLayerEntry.data({toggleLayer: toggleLayer});
-          
+
         layersList.selectpicker('show');
         layersList.selectpicker('refresh');
 
       } else if (!scribble.data('locked')) {
 
         // Case when scribble is to be editable
-        fabricObjs.map( function(o){ c.add(o) } );
+        fabricObjs.map( function(o){ c.add(o); } );
       }
     };
 
     // load saved scribblings
-    answerScribble = $('#answers_' + qid);
+    var answerScribble = $('#answers_' + qid);
     loadScribble(answerScribble);
 
-    otherScribbles = $('.scribble-' + qid);
+    var otherScribbles = $('.scribble-' + qid);
     $.each(otherScribbles, function (i, scribble) {
       loadScribble($(scribble));
     });
@@ -256,7 +258,7 @@ $(document).ready(function () {
         c._drawSelection = function(){ };
       }
     });
-    
+
     c.on('mouse:move', function(options) {
       if (c.isGrabMode && isDown) {
         var currentMouseLeft = options.e.clientX;
