@@ -8,7 +8,7 @@ var getJSON = function (qid, canvas) {
   // remove all locked layers
   var layersList = $('#scribing-layers-' + qid);
   layersList.find('option').each(function (i, o) {
-    $(o).data('toggle_layer')(false);
+    $(o).data('toggleLayer')(false);
   });
 
   // get json output for current user
@@ -105,17 +105,28 @@ $(document).ready(function () {
         $('#scribing-drawing-tools-' + qid).addClass('hidden');
       });
 
-    // http://stackoverflow.com/questions/11829786/delete-multiple-objects-at-once-on-a-fabric-js-canvas-in-html5
     $('#scribing-delete-' + qid)
-      .click({ canvas: c }, function (event) {
+      .click({ 
+        canvas: c, 
+        ajaxSave: $('#answers_' + qid).data('locked'),
+        qid: qid
+      }, function (event) {
         var canvas = event.data.canvas;
+        var ajaxSave = event.data.ajaxSave;
+        var qid = event.data.qid;
 
         if(canvas.getActiveGroup()) {
-          canvas.getActiveGroup().forEachObject(function(o){ canvas.remove(o) });
+          canvas.getActiveGroup().forEachObject(function(o) {
+            canvas.remove(o); 
+          });
           canvas.discardActiveGroup().renderAll();
         }
         else {
           canvas.remove(canvas.getActiveObject());
+        }
+
+        if (ajaxSave) {
+          updateScribble(qid,c);
         }
       });
 
@@ -124,7 +135,10 @@ $(document).ready(function () {
           var canvas = event.data.canvas;
 
           var newZoom = canvas.getZoom() + 0.1;
-          canvas.zoomToPoint({ x: canvas.height/2, y: canvas.width/2 }, newZoom);
+          canvas.zoomToPoint({
+            x: canvas.height/2, 
+            y: canvas.width/2 
+          },newZoom);
       });
 
     $('#scribing-zoom-out-' + qid)
@@ -138,11 +152,10 @@ $(document).ready(function () {
     $('#scribing-layers-' + qid)
       .change(function () {
           $(this).find('option').each(function (i, o) {
-            var show_layer = $(o).attr('selected') == 'selected';
-            $(o).data('toggle_layer')(show_layer);
+            var showLayer = $(o).attr('selected') == 'selected';
+            $(o).data('toggleLayer')(showLayer);
           });
-      }); 
-
+      });
   });
 
   //assign each canvas its image
@@ -161,49 +174,46 @@ $(document).ready(function () {
     var layersList = $('#scribing-layers-' + qid);
     layersList.selectpicker('hide'); // remains hidden if there are no layers
 
-    var load_scribble = function (scribble) {
-      // from http://jsfiddle.net/Kienz/sFGGV/6/ via https://github.com/kangax/fabric.js/issues/704
-      if (scribble.val() == '') {
+    var loadScribble = function (scribble) {
+      if (scribble.val() === '') {
         return;
       }
  
       // Convert javascript objects to fabricjs objects
       var objects = JSON.parse(scribble.val()).objects;
-      var drawn_items = [];
+      var fabricObjs = [];
       for (var i = 0; i < objects.length; i++) {
         var klass = fabric.util.getKlass(objects[i].type);
         if (klass.async) {
-          klass.fromObject(objects[i], function (img) {
-            drawn_items.push(img);
+          klass.fromObject(objects[i], function(img) { 
+            fabricObjs.push(img); 
           });
         } else {
           var item = klass.fromObject(objects[i]);
-          drawn_items.push(item);
+          fabricObjs.push(img);
         }
-      }      
-      
+      }
+
       // Case when scribble should be read-only    
-      if (scribble.data('locked') && drawn_items.length > 0) {
-        var scribble_group = new fabric.Group(drawn_items);
-        scribble_group.originX = 'center';
-        scribble_group.originY = 'center';
-        c.add(scribble_group);
-        scribble_group.selectable = false;
+      if (scribble.data('locked') && fabricObjs.length > 0) {
+        var scribbleGroup = new fabric.Group(fabricObjs);
+        c.add(scribbleGroup);
+        scribbleGroup.selectable = false;
 
         // Populate drop-down box
-        var new_layer_entry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
-        layersList.append(new_layer_entry);
+        var newLayerEntry = $('<option>').text(scribble.data('scribe')).attr('selected','selected');
+        layersList.append(newLayerEntry);
 
-        var toggle_layer = function (show_layer) {
-          var this_group = scribble_group;
-          if (show_layer && !c.contains(this_group)) {
-            c.add(this_group);
-          } else if (!show_layer && c.contains(this_group)) {
-            c.remove(this_group);
+        var toggleLayer = function (showLayer) {
+          var thisGroup = scribbleGroup;
+          if (showLayer && !c.contains(thisGroup)) {
+            c.add(thisGroup);
+          } else if (!showLayer && c.contains(thisGroup)) {
+            c.remove(thisGroup);
           }
           c.renderAll();
         };
-        new_layer_entry.data({toggle_layer: toggle_layer});
+        newLayerEntry.data({toggleLayer: toggleLayer});
           
         layersList.selectpicker('show');
         layersList.selectpicker('refresh');
@@ -211,21 +221,18 @@ $(document).ready(function () {
       } else if (!scribble.data('locked')) {
 
         // Case when scribble is to be editable
-        drawn_items.map( function(o){ c.add(o) } );
+        fabricObjs.map( function(o){ c.add(o) } );
       }
-
     };
 
     // load saved scribblings
-    answer_scribble = $('#answers_' + qid);
-    load_scribble(answer_scribble);
+    answerScribble = $('#answers_' + qid);
+    loadScribble(answerScribble);
 
-    other_scribbles = $('.scribble-' + qid);
-    $.each(other_scribbles, function (i, scribble) {
-      load_scribble($(scribble));
+    otherScribbles = $('.scribble-' + qid);
+    $.each(otherScribbles, function (i, scribble) {
+      loadScribble($(scribble));
     });
-
-
 
     // Initialize zoom/scrolling variable
     var viewportLeft = 0,
@@ -274,8 +281,12 @@ $(document).ready(function () {
 
       // The answer scribble is updated at all times, ready for form submmission.
       if (!c.isGrabMode) {
-        $('#answers_' + qid).val(getJSON(qid,c));
-        updateScribble(qid,c);
+        var ansField = $('#answers_' + qid);
+        if (ansField.data('locked')){
+          updateScribble(qid,c);
+        } else {
+          ansField.val(getJSON(qid,c));
+        }
       }
     });
 

@@ -141,9 +141,9 @@ $(document).ready(function() {
     $('*[rel~=tooltip]').tooltip();
 
     $('.colorpicker').colorpicker();
-    
+
     // custom icon since we are using bootstrap 2
-    $('.selectpicker').selectpicker({tickIcon: 'icon-ok'}); 
+    $('.selectpicker').selectpicker({tickIcon: 'icon-ok'});
 
     $('.origin_url').val(document.URL);
 
