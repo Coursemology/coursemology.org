@@ -52,6 +52,7 @@
   remote_user: vagrant
   tasks:
     - copy: src=files/gemrc dest=~/.gemrc
+    - copy: src=files/my.cnf dest=~/.my.cnf
     - gem: name=bundle executable=/usr/bin/gem2.1
     - command: "{{ gem_bin }}/bundle install chdir={{ work_dir }}"
     - command: "{{ gem_bin }}/bundle exec rake db:setup db:migrate chdir={{ work_dir }}"
