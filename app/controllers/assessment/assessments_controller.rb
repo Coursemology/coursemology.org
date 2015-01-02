@@ -12,7 +12,7 @@ class Assessment::AssessmentsController < ApplicationController
     display_columns = {}
     time_format = @course.time_format(assessment_type)
     paging = @course.paging_pref(assessment_type)
-    pdf_export = @course.pdf_export(assessment_type).display
+    pdf_export = @course.pdf_export_enabled?(assessment_type)
     @course.assessment_columns(assessment_type, true).each do |cp|
       display_columns[cp.preferable_item.name] = cp.prefer_value
     end
@@ -111,8 +111,7 @@ class Assessment::AssessmentsController < ApplicationController
     assessment_type = params[:type]
 
     # Abort if PDF export is not enabled.
-    @pdf_export = @course.pdf_export(assessment_type).display
-    if !@pdf_export
+    unless @course.pdf_export_enabled?(assessment_type)
       redirect_to access_denied_path, alert: "PDF export for #{assessment_type.pluralize} has not been enabled."
       return
     end

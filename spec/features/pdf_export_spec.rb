@@ -41,8 +41,8 @@ describe "PDFExport", :type => :feature do
     let(:new_course) { FactoryGirl.create(:course, creator: lecturer) }
 
     it "has PDF export disabled by default" do
-      expect(new_course.pdf_export('mission').display).to be_falsy
-      expect(new_course.pdf_export('training').display).to be_falsy
+      expect(new_course.pdf_export_enabled?('mission')).to be_falsy
+      expect(new_course.pdf_export_enabled?('training')).to be_falsy
     end
 
     shared_examples "for testing configuration using type" do |type|

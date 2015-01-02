@@ -232,6 +232,10 @@ class Course < ActiveRecord::Base
     pdf_exports.first
   end
 
+  def pdf_export_enabled?(type)
+    pdf_export(type).display
+  end
+
   def paging_pref(page)
     paging = paging_prefs
     paging.item_type(page.pluralize).first || paging.item_type(page).first ||(raise page + " has no paging preference")

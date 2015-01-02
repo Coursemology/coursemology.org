@@ -151,7 +151,7 @@ class Assessment::GradingsController < ApplicationController
       return
     end
     build_gradings_summary true
-    @pdf_export = @course.pdf_export('mission').display
+    @pdf_export = @course.pdf_export_enabled?('mission')
     respond_to do |format|
       format.html
       if @pdf_export
