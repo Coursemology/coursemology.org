@@ -128,13 +128,13 @@ class Assessment::Submission < ActiveRecord::Base
   def build_initial_answers
     self.assessment.questions.includes(:as_question).each do |qn|
       unless self.answers.find_by_question_id(qn.id)
-        case
-          when qn.is_a?(Assessment::GeneralQuestion)
+        case qn.specific
+          when Assessment::GeneralQuestion
             ans_class = Assessment::GeneralAnswer
-          when qn.is_a?(Assessment::CodingQuestion)
+          when Assessment::CodingQuestion
             ans_class = Assessment::CodingAnswer
-          when qn.is_a?(Assessment::McqQuestion)
-            ans_class = Assessment::McqQuestion
+          when Assessment::McqQuestion
+            ans_class = Assessment::McqAnswer
           else
             ans_class = Assessment::GeneralAnswer
         end
