@@ -48,12 +48,19 @@ function loadScribble(c, scribble, layersList) {
   // Convert javascript objects to fabricjs objects
   var objects = JSON.parse(scribble.val()).objects;
   var fabricObjs = [];
+
+  // Declare this helper function here so it can access fabricObjs
+  // and remain outside the loop where it is used.
+  // Keeping function declarations outside loops helps with performance
+  // and stops HoundCI from complaining
+  function pushFabricObjs(img) {
+    fabricObjs.push(img);
+  }
+
   for (var i = 0; i < objects.length; i++) {
     var klass = fabric.util.getKlass(objects[i].type);
     if (klass.async) {
-      klass.fromObject(objects[i], function(img) {
-        fabricObjs.push(img);
-      });
+      klass.fromObject(objects[i], pushFabricObjs);
     } else {
       var item = klass.fromObject(objects[i]);
       fabricObjs.push(item);
