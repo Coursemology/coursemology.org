@@ -17,13 +17,13 @@ function getJSON(qid, canvas) {
   // restore locked layers and return
   layersList.change();
   return '{"objects":'+ output +'}';
-};
+}
 
 function updateScribble(qid, canvas) {
   var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
   ajaxField.val(getJSON(qid, canvas));
   $('#scribing-ajax-' + qid).submit();
-};
+}
 
 function loadScribbles(c, qid) {
   var layersList = $('#scribing-layers-' + qid);
@@ -37,7 +37,7 @@ function loadScribbles(c, qid) {
   $('.scribble-' + qid).each(function (i, scribble) {
     loadScribble(c, $(scribble), layersList);
   });
-};
+}
 
 //load a single scribble
 function loadScribble(c, scribble, layersList) {
@@ -91,7 +91,7 @@ function loadScribble(c, scribble, layersList) {
     // Case when scribble is to be editable
     fabricObjs.map( function(o){ c.add(o); } );
   }
-};
+}
 
 // INITIALISE CANVASES
 
