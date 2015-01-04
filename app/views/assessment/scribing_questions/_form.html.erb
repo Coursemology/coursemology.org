@@ -1,0 +1,18 @@
+<%= simple_form_for [@course, @assessment, @question],
+                    html: { :class => 'form-horizontal', multipart: true } do |f| %>
+    <%= f.input :title %>
+    <%= f.input :description, as: :text, input_html:{class: "span7 text-area html-editor", rows:10}  %>
+    <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
+    <%= f.input :tags, as: :tag, url: course_tags_path, input_html: {class: "span7"}  %>
+
+    <% if mode == 'edit' %>
+      <%= render :partial => "canvas" %>
+    <% else %>
+      <%= f.input :document, as: :file %>
+    <% end %>
+
+    <%= f.button :form_submit, cancel: :back %>
+
+  <%= render :partial => "layouts/html_editor" %>
+<% end %>
+

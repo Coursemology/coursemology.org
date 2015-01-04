@@ -15,7 +15,7 @@
                 <div class="tab-pane <%= 'active' if i == 0%>" id="tab<%= i %>">
             <% end %>
             <% unless @mission.single_question? %>
-                <h3><%=  q.get_title%></h3>
+                <h3><%=  q.get_title %></h3>
             <% end %>
             <div class="row">
               <div class="span8">
@@ -36,6 +36,12 @@
                           <%= answer.content %>
                       <% end %>
                     </textarea>
+                <% elsif question.class == Assessment::ScribingQuestion %>
+                    <%= render partial: 'scribing_canvas',
+                               locals: { question: question,
+                                         qid: q.id,
+                                         answer: answer
+                                       } %>
                 <% else %>
                     <%=render partial: 'do_coding',
                               locals: { answer: answer,
@@ -68,7 +74,7 @@
         <% end %>
       </div>
     </div>
-
+    
     <br />
 
     <div id="uploaded_files_div"></div>
