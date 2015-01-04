@@ -17,13 +17,13 @@ function getJSON(qid, canvas) {
   // restore locked layers and return
   layersList.change();
   return '{"objects":'+ output +'}';
-};
+}
 
 function updateScribble(qid, canvas) {
   var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
   ajaxField.val(getJSON(qid, canvas));
   $('#scribing-ajax-' + qid).submit();
-};
+}
 
 function loadScribbles(c, qid) {
   var layersList = $('#scribing-layers-' + qid);
@@ -37,7 +37,7 @@ function loadScribbles(c, qid) {
   $('.scribble-' + qid).each(function (i, scribble) {
     loadScribble(c, $(scribble), layersList);
   });
-};
+}
 
 //load a single scribble
 function loadScribble(c, scribble, layersList) {
@@ -48,12 +48,19 @@ function loadScribble(c, scribble, layersList) {
   // Convert javascript objects to fabricjs objects
   var objects = JSON.parse(scribble.val()).objects;
   var fabricObjs = [];
+
+  // Declare this helper function here so it can access fabricObjs
+  // and remain outside the loop where it is used.
+  // Keeping function declarations outside loops helps with performance
+  // and stops HoundCI from complaining
+  function pushFabricObjs(img) {
+    fabricObjs.push(img);
+  }
+
   for (var i = 0; i < objects.length; i++) {
     var klass = fabric.util.getKlass(objects[i].type);
     if (klass.async) {
-      klass.fromObject(objects[i], function(img) {
-        fabricObjs.push(img);
-      });
+      klass.fromObject(objects[i], pushFabricObjs);
     } else {
       var item = klass.fromObject(objects[i]);
       fabricObjs.push(item);
@@ -91,7 +98,7 @@ function loadScribble(c, scribble, layersList) {
     // Case when scribble is to be editable
     fabricObjs.map( function(o){ c.add(o); } );
   }
-};
+}
 
 // INITIALISE CANVASES
 
