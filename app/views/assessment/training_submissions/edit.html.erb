@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1><%= @training.title %></h1>
 </div>
-<p class="well"><%= @training.description.html_safe %></p>
+<div class="well"><%= @training.description.html_safe %></div>
 
 <%= render partial: "file_uploads/download_files",
            locals: {owner: @training}%>

@@ -221,6 +221,21 @@ class Course < ActiveRecord::Base
     time_formats.first
   end
 
+  def pdf_export(type)
+    pdf_exports = self.course_preferences.join_items.item_type('Export')
+
+    if pdf_exports.respond_to? type
+      pdf_exports = pdf_exports.send type
+    else
+      raise type + " not found in assessment export preferences"
+    end
+    pdf_exports.first
+  end
+
+  def pdf_export_enabled?(type)
+    pdf_export(type).display
+  end
+
   def paging_pref(page)
     paging = paging_prefs
     paging.item_type(page.pluralize).first || paging.item_type(page).first ||(raise page + " has no paging preference")

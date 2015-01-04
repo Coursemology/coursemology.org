@@ -40,7 +40,6 @@ class SurveySubmission < ActiveRecord::Base
       self.exp_transaction.exp = survey.exp
       self.exp_transaction.rewardable = survey
       self.save
-      self.exp_transaction.update_user_data
     end
 
     self.status = 'submitted'

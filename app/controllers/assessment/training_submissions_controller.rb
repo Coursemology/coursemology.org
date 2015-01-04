@@ -10,6 +10,17 @@ class Assessment::TrainingSubmissionsController < Assessment::SubmissionsControl
   def show
     @training = @assessment.specific
     @grading = @submission.get_final_grading
+    @pdf_export = @course.pdf_export_enabled?('training')
+    respond_to do |format|
+      format.html
+      if @pdf_export
+        format.pdf do
+          load_settings_for_printing
+          render :pdf => "Training - #{@training.title}", 
+            :disposition => (params[:commit] == 'Save as PDF') ? 'attachment' : 'inline'
+        end
+      end
+    end
   end
 
   def edit

@@ -172,6 +172,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def load_settings_for_printing
+    @format_for_printing = true
+    @add_page_breaks = params[:add_page_breaks].present?
+    @hide_timestamps = params[:hide_timestamps].present?
+    @hide_wrong_attempts = params[:hide_wrong_attempts].present?
+    @hide_comments = params[:hide_comments].present?
+    @hide_annotations = params[:hide_annotations].present?
+  end
+
   def signed_in_user
     unless current_user
       redirect_to new_user_session_path, alert: "You need to sign in or sign up before continuing."

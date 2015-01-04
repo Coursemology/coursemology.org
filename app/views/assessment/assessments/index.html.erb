@@ -157,6 +157,23 @@
       <%= paginate @assessments %>
   <% end %>
 
+  <% if @summary[:pdf_export] %>
+
+      <hr/>
+
+      <h3>Download Completed <%= title %></h3>
+      <%= form_tag File.join(asts_path, 'dump_pdfs'), method: "get", class: "form-horizontal" do %>
+        <div class="control-group">
+          <label class="control-label">Export Options</label>
+          <div class="controls checkbox-text">
+            <%= render :partial => "assessment/assessments/#{model_name.downcase}_export_options" %>
+            <p><%= submit_tag "Download ZIP", class: "btn btn-primary" %></p>
+          </div>
+        </div>
+      <% end %>
+
+  <% end %>
+
 </div>
 <input type="hidden" class="json-data" value='<%= @summary.to_json %>'>
 

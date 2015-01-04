@@ -12,11 +12,13 @@ class CoursePreferencesController < ApplicationController
         @preferences = @course.assessment_columns('mission')
         @time_format =  @course.time_format('mission')
         @auto_submit = @course.auto_create_sbm_pref
+        @pdf_export = @course.pdf_export('mission')
       when 'training'
         @tab = "TrainingPreference"
         @preferences = @course.assessment_columns('training')
         @time_format =  @course.time_format('training')
         @reattempt = @course.training_reattempt
+        @pdf_export = @course.pdf_export('training')
       when 'mcq'
         @tab = "McqPreference"
         @mcq_auto_grader = @course.mcq_auto_grader

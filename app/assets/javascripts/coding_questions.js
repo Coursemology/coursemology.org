@@ -6,9 +6,6 @@ var path = function(){
     var tEval = 'eval';
     var $dataInput = null;
 
-    function addslashes(str){
-        return (str + '').replace(/[\"]/g, '&quot;');
-    }
     function _appendTest(tcDetails){
         $("#{0}_test_tbody".format(tcDetails.tType)).append($.tmpl("testcase_row",tcDetails));
         $(".eval_expression, .expected_output, .fail_hint").unbind().change(function() {path.updateTest($(this))});

@@ -107,7 +107,7 @@
             <tr>
               <td>
                 Earned
-                <select name="achievement" class="form-temp">
+                <select class="form-temp">
                   <% @course.achievements.each do |ach| %>
                       <option value="<%= ach.id %>"><%= ach.title %></option>
                   <% end %>
@@ -133,7 +133,7 @@
             <tr>
               <td>
                 Reached
-                <select name="achievement" class="form-temp">
+                <select class="form-temp">
                   <% @course.levels.each do |lvl| %>
                       <option value="<%= lvl.id %>"><%= lvl.get_title %></option>
                   <% end %>
