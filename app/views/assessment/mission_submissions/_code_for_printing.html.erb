@@ -1,0 +1,49 @@
+<% # Renders code listings with annotations in a format suitable for printing.
+
+# Hash annotations by line_start
+annotations_by_line = {}
+annotations.each do |a|
+  annotations_by_line[a.line_start] = [] unless annotations_by_line.has_key?(a.line_start) 
+  annotations_by_line[a.line_start].append(a)
+end %>
+
+<div class="row-fluid">
+  <div class="code-submission span10">
+    <div id="source-code-<%= answer.id  %>" class="cos_code">
+      <div class="static-code cm-s-molokai">
+
+        <% line_number = 1
+        answer.content.each_line do |line|
+
+          if annotations_by_line.has_key?(line_number) && !@hide_annotations %>
+            <div class="comment-box">
+              <ul class="annotate-area code-comment-box">
+                <% annotations_by_line[line_number].each do |a| 
+                  a_json = a.as_json %>
+                  <li class="comment">
+                    <div>
+                      <i>Line <%= line_number %>:</i>
+                      <a href="<%= a_json[:f] %>"><img class="small-profile-pic" src="<%= a_json[:p] %>" width="32" height="32"></a>
+                      <%= a_json[:u].html_safe %>
+                    </div>
+                    <div class="comment-text-container">
+                      <div class="comment"><%= a_json[:c] %></div>
+                      <div class="timestamp"><%= a_json[:t] %></div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <pre class="line"><%= (line_number.to_s.rjust(4, ' ') + "  " + line.rstrip).scan(/.{1,50}/).join("\n       ") %></pre>
+          <% line_number = line_number + 1
+
+        end %>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="clear: both;">&nbsp;</div>

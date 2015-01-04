@@ -1,6 +1,7 @@
 <div class="page-header">
   <h1>Grading :  <%= @assessment.title %></h1>
 </div>
+
 <% require 'digest/md5' %>
 <table class="table table-bordered" style="width: 300px">
   <tbody class="table-hover">
@@ -45,10 +46,25 @@
 
 <div class="well"><%= @assessment.description.html_safe %></div>
 
-
-
 <% if @assessment.specific.respond_to? :single_question? and @assessment.specific.single_question? %>
     <%= render :partial => 'single_question_form', locals: {mode: "view"} %>
 <% else %>
     <%= render :partial => 'multiple_question_form', locals: {mode: "view"} %>
+<% end %>
+
+<% if @pdf_export %>
+
+  <hr />
+
+  <h3>Download Completed Mission</h3>
+  <%= form_tag course_assessment_submission_grading_path(@course, @assessment, @submission, @grading, format: :pdf), method: "get", class: "form-horizontal" do %>
+    <div class="control-group">
+      <label class="control-label">Export Options</label>
+      <div class="controls checkbox-text">
+        <%= render :partial => 'assessment/assessments/mission_export_options' %>
+        <p><%= submit_tag "View as PDF", class: "btn" %> <%= submit_tag "Save as PDF", class: "btn btn-primary" %></p>
+      </div>
+    </div>
+  <% end %>
+
 <% end %>
