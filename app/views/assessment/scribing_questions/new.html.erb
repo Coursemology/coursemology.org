@@ -1,0 +1,5 @@
+<%- title = 'Question' -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => t('helpers.titles.new', :default => "New #{title}") %></h1>
+</div>
+<%= render :partial => 'form', :locals => { :mode => 'new' } %>

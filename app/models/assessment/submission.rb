@@ -20,6 +20,10 @@ class Assessment::Submission < ActiveRecord::Base
            through: :answers,
            source: :as_answer, source_type: "Assessment::GeneralAnswer"
 
+  has_many :general_answers, class_name: "Assessment::ScribingAnswer",
+           through: :answers,
+           source: :as_answer, source_type: "Assessment::ScribingAnswer"
+
   has_many :coding_answers, class_name: "Assessment::CodingAnswer",
            through: :answers,
            source: :as_answer, source_type: "Assessment::CodingAnswer"
@@ -133,6 +137,8 @@ class Assessment::Submission < ActiveRecord::Base
             ans_class = Assessment::GeneralAnswer
           when Assessment::CodingQuestion
             ans_class = Assessment::CodingAnswer
+          when Assessment::ScribingQuestion
+            ans_class = Assessment::ScribingAnswer
           when Assessment::McqQuestion
             ans_class = Assessment::McqAnswer
           else

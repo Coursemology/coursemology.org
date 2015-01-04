@@ -10,7 +10,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
       return
     end
     super
-    @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion]
+    @summary[:allowed_questions] = [Assessment::GeneralQuestion, Assessment::CodingQuestion, Assessment::ScribingQuestion]
     @summary[:type] = 'mission'
     @summary[:specific] = @mission
 
