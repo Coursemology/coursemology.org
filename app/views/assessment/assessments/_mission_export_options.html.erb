@@ -1,0 +1,7 @@
+<% # This partial defines the options available for PDF export of Missions. %>
+
+<p class="mission-export-options">
+	<%= check_box_tag(:add_page_breaks) %> <%= label_tag(:add_page_breaks, "Show questions on separate pages") %><br/>
+	<%= check_box_tag(:hide_comments) %> <%= label_tag(:hide_comments, "Hide comments") %><br/>
+	<%= check_box_tag(:hide_annotations) %> <%= label_tag(:hide_annotations, "Hide annotations for coding questions") %>
+</p>

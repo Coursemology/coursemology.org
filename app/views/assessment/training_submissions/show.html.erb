@@ -21,21 +21,13 @@
 </table>
 <hr/>
 
-<p class="well"><%= style_format(@training.description) %></p>
+<div class="well"><%= style_format(@training.description) %></div>
 <% @training.questions.includes(:as_question).each_with_index do |qn, index| %>
     <h4>Question: <%= index + 1 %> </h4>
     <% if qn.specific.class == Assessment::McqQuestion %>
-        <% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options) %>
-        <% if answers.length > 0 %>
-            <%=render partial: "assessment/mcq_questions/one", locals: {q: qn} %>
-            <%=render partial: "mcq_review", locals: {answers: answers} %>
-        <% end %>
+        <%= render partial: "assessment/training_submissions/mcq_review", locals: {qn: qn} %>
     <% elsif qn.specific.class == Assessment::CodingQuestion %>
-        <% answers = qn.answers.where(std_course_id: @submission.std_course, submission_id: @submission.id) %>
-        <% if answers.length > 0 %>
-            <span><%= style_format(qn.description) %></span>
-            <%= render partial: "coding_review", locals: {answers: answers} %>
-        <% end %>
+        <%= render partial: "assessment/training_submissions/coding_review", locals: {qn: qn} %>    
     <% end %>
 
     <% grade = qn.answer_gradings.
@@ -45,4 +37,19 @@
         <p><strong>Final Grade: </strong><%= grade.grade %> / <%= qn.max_grade %></p>
     <% end %>
     <hr />
+<% end %>
+
+<% if @pdf_export %>
+
+  <h3>Download Completed Training</h3>
+  <%= form_tag course_assessment_submission_path(@course, @assessment, @submission, format: :pdf), method: "get", class: "form-horizontal" do %>
+    <div class="control-group">
+      <label class="control-label">Export Options</label>
+      <div class="controls checkbox-text">
+        <%= render :partial => 'assessment/assessments/training_export_options' %>
+        <p><%= submit_tag "View as PDF", class: "btn" %> <%= submit_tag "Save as PDF", class: "btn btn-primary" %></p>
+      </div>
+    </div>
+  <% end %>
+
 <% end %>

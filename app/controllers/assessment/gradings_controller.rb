@@ -7,6 +7,8 @@ class Assessment::GradingsController < ApplicationController
   before_filter :load_general_course_data, only: [:new, :edit, :show]
   # note: it only handles view & grading of missions
 
+  include GradingsSummaryBuilder
+
   def new
     if @submission.gradings.count > 0
       redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @submission.gradings.first)
@@ -140,7 +142,7 @@ class Assessment::GradingsController < ApplicationController
   end
 
   def edit
-    build_summary
+    build_gradings_summary
   end
 
   def show
@@ -148,7 +150,18 @@ class Assessment::GradingsController < ApplicationController
       redirect_to edit_course_assessment_submission_grading_path(@course, @assessment, @submission, @grading)
       return
     end
-    build_summary
+    build_gradings_summary true
+    @pdf_export = @course.pdf_export_enabled?('mission')
+    respond_to do |format|
+      format.html
+      if @pdf_export
+        format.pdf do
+          load_settings_for_printing
+          render :pdf => "Mission - #{@assessment.title}", 
+            :disposition => (params[:commit] == 'Save as PDF') ? 'attachment' : 'inline'
+        end
+      end
+    end
   end
 
 
@@ -203,28 +216,4 @@ class Assessment::GradingsController < ApplicationController
     end
   end
 
-  def build_summary
-    @summary = {qn_ans: {}}
-
-    if @grading.autograding_refresh
-      @submission.eval_answer
-      @grading.update_attribute :autograding_refresh, false
-    end
-
-    @assessment.questions.each_with_index do |q,i|
-      @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
-    end
-
-    @submission.answers.each do |sa|
-      qn = sa.question
-      @summary[:qn_ans][qn.id][:ans] = sa
-      # @qadata[:aws][sa.id] = sa
-    end
-
-    #TODO, potential read row by row
-    @grading.answer_gradings.each do |ag|
-      qn = ag.answer.question
-      @summary[:qn_ans][qn.id][:grade] = ag
-    end
-  end
 end

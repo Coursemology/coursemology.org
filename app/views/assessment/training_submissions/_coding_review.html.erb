@@ -1,13 +1,31 @@
-<strong>Answer attempts</strong>
+<% # Renders a summary of attempts for this completed coding question. %>
+<% qn   # The CodingQuestion to render %>
 
-<% if answers.length > 0 %>
-    <% answers.each_with_index do |ans, index| %>
-        <div class="code-review-header <%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
-          <%= index + 1 %>
-          <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
-        </div>
-        <div style="margin-left: 10px">
-          <%= style_format('[mc]' + ans.content + '[/mc]', false) %>
-        </div>
-    <% end %>
+<% answers = qn.answers.where(std_course_id: @submission.std_course, submission_id: @submission.id)
+if answers.length > 0 %>
+
+  <div><%= style_format(qn.description) %></div>
+  
+  <br/>
+
+  <strong>Answer attempts</strong>
+
+  <% if answers.length > 0 %>
+      <% answers.each_with_index do |ans, index| %>
+        <% unless !ans.correct && @hide_wrong_attempts %>
+          <div class="code-review-header <%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
+            <%= index + 1 %>
+            <% unless @hide_timestamps %>
+              <div class="pull-right"><%= time_ago_in_words(ans.created_at) %></div>
+            <% end %>
+          </div>
+          <div style="margin-left: 10px">
+            <%= style_format('[mc]' + ans.content + '[/mc]', false) %>
+          </div>
+        <% end %>
+      <% end %>
+  <% end %>
+
+  <br/>
+
 <% end %>

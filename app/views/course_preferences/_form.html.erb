@@ -100,7 +100,7 @@
         </div>
     <% end %>
     <% if @reattempt %>
-        <h3>Re-Attempt</h3>
+        <h3>Re-Attempt:</h3>
         <p><%= @reattempt.preferable_item.description %></p>
         <div class="info-block checkbox-text">
           <input type="checkbox"
@@ -112,6 +112,17 @@
           <input class="span1" type="number" min="0" max="100"
                  name="preferences[<%= @reattempt.id %>][prefer_value]"
                  value="<%= @reattempt.prefer_value %>" >
+        </div>
+    <% end %>
+    <% if @pdf_export %>
+        <h3>PDF Exports:</h3>
+        <p><%= @pdf_export.preferable_item.description %></p>
+        <div class="info-block checkbox-text">
+          <input type="checkbox"
+                 name="preferences[<%= @pdf_export.id %>][display]"
+                 <%= "checked" if @pdf_export.display %>>
+          </input> Enabled
+          <input type="hidden" name="preferences[<%= @pdf_export.id %>][prefer_value]" value="<%= @pdf_export.prefer_value %>" >
         </div>
     <% end %>
 

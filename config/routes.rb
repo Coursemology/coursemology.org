@@ -129,6 +129,7 @@ Coursemology::Application.routes.draw do
         get 'overview' => 'missions#overview'
         get 'stats' => 'missions#stats'
         get 'submissions' => 'assessments#listall', type: 'mission'
+        get 'dump_pdfs' => 'assessments#dump_pdfs', type: 'mission'
       end
       get 'dump_code' => 'missions#dump_code'
     end
@@ -140,6 +141,7 @@ Coursemology::Application.routes.draw do
         get 'overview' => 'trainings#overview'
         get 'stats' => 'trainings#stats'
         get 'submissions' => 'assessments#listall', type: 'training'
+        get 'dump_pdfs' => 'assessments#dump_pdfs', type: 'training'
       end
     end
 

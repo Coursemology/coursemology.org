@@ -1,0 +1,7 @@
+<% # This partial defines the options available for PDF export of Trainings. %>
+
+<p class="training-export-options">
+	<%= check_box_tag(:add_page_breaks) %> <%= label_tag(:add_page_breaks, "Show questions on separate pages") %><br/>
+	<%= check_box_tag(:hide_timestamps) %> <%= label_tag(:hide_timestamps, "Hide \"Submitted At\" timestamps") %><br/>
+	<%= check_box_tag(:hide_wrong_attempts) %> <%= label_tag(:hide_wrong_attempts, "Hide wrong attempts") %>
+</p>

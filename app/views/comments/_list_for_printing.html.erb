@@ -1,0 +1,15 @@
+<% if header.size > 0 %>
+    <h3><%= header %></h3>
+<% end %>
+<ul class="code-comment-box" style="margin-left: 0px;">
+    <% comments.each do |c| %>
+        <li class="comment">
+            <a href="<%= c[:f] %>" ><img class="small-profile-pic" src="<%= c[:p] %>" width="32" height="32" /></a>
+            <div class="comment-text-container">
+                <div class="commentor"><%= c[:u].html_safe %></div>
+                <div class="comment"><%= c[:c] %></div>
+                <div class="timestamp"><%= c[:t] %></div>
+            </div>
+        </li>
+    <% end %>
+</ul>
