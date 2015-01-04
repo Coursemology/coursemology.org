@@ -11,7 +11,7 @@ css = css.length > 0 ? css.join(';') : nil
     <h3><%= header %></h3>
 <% end %>
 <% ecid = Digest::MD5.hexdigest(target.class.to_s << target.id.to_s) %>
-<ul ecid="<%= ecid %>" class="code-comment-box" <%- if css then %>style="<%= css %>;<%- end %>">
+<ul ecid="<%= ecid %>" class="code-comment-box" <%- if css then %>style="<%= css %>;"<%- end %> >
 </ul>
 
 <input type="hidden" id="<%= ecid %>_post_path" value="<%= course_comments_path(@course) %>">
