@@ -105,16 +105,9 @@ function loadScribble(c, scribble, layersList) {
 $(document).ready(function () {
   //select all canvases and scribing images
   var allCanvases = $('.scribing-canvas');
-  var allImages = $('.scribing-images');
 
-  //init associative arrays so canvases and images can be found by qid
+  //init associative arrays so canvases can be found by qid
   var fabricCanvases = {};
-  var scribingImages = {};
-
-  //collect all img elements
-  $.each(allImages, function(i, image) {
-    scribingImages[$(image).data('qid')] = image;
-  });
 
   //init and collect all canvas elements
   $.each(allCanvases, function(i, htmlCanvas) {
@@ -234,85 +227,92 @@ $(document).ready(function () {
       });
   });
 
-  //assign each canvas its image
-  $.each(scribingImages, function(qid, scribingImage) {
-    //get appropriate canvas by qid
-    var c = fabricCanvases[qid];
+  //use the imagesLoaded library to invoke a callback when images are loaded
+  imagesLoaded('.scribing-images', function() {
+    //array of LoadingImages objects
+    var loadedImages = this.images;
 
-    //calculate scaleX and scaleY to fit image into canvas
-    //before creating fabric.Image object
-    var scale = Math.min(
-      c.width / scribingImage.width,
-      c.height / scribingImage.height,
-      1);
+    $.each(loadedImages, function(index, loadingImage) {
+      var scribingImage = loadingImage.img;
+      var qid = $(scribingImage).data('qid');
 
-    //create fabric.Image object with the right scaling and
-    // set as canvas background
-    var fabricImage = new fabric.Image(
-      scribingImage,
-      {opacity: 1, scaleX: scale, scaleY: scale}
-    );
-    c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
-    c.renderAll();
+      //get appropriate canvas by qid
+      var c = fabricCanvases[qid];
 
-    loadScribbles(c, qid);
+      //calculate scaleX and scaleY to fit image into canvas
+      //before creating fabric.Image object
+      var scale = Math.min(
+        c.width / scribingImage.width,
+        c.height / scribingImage.height,
+        1);
 
-    // Initialize zoom/scrolling variable
-    var viewportLeft = 0,
-        viewportTop = 0,
-        mouseLeft,
-        mouseTop,
-        _drawSelection = c._drawSelection,
-        isDown = false;
+      //create fabric.Image object with the right scaling and
+      // set as canvas background
+      var fabricImage = new fabric.Image(
+        scribingImage,
+        {opacity: 1, scaleX: scale, scaleY: scale}
+      );
+      c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+      c.renderAll();
 
-    c.on('mouse:down', function(options) {
-      if (c.isGrabMode) {
-        isDown = true;
+      loadScribbles(c, qid);
 
-        viewportLeft = c.viewportTransform[4];
-        viewportTop = c.viewportTransform[5];
+      // Initialize zoom/scrolling variable
+      var viewportLeft = 0,
+          viewportTop = 0,
+          mouseLeft,
+          mouseTop,
+          _drawSelection = c._drawSelection,
+          isDown = false;
 
-        mouseLeft = options.e.clientX;
-        mouseTop = options.e.clientY;
+      c.on('mouse:down', function(options) {
+        if (c.isGrabMode) {
+          isDown = true;
 
-        _drawSelection = c._drawSelection;
-        c._drawSelection = function(){ };
-      }
-    });
+          viewportLeft = c.viewportTransform[4];
+          viewportTop = c.viewportTransform[5];
 
-    c.on('mouse:move', function(options) {
-      if (c.isGrabMode && isDown) {
-        var currentMouseLeft = options.e.clientX;
-        var currentMouseTop = options.e.clientY;
+          mouseLeft = options.e.clientX;
+          mouseTop = options.e.clientY;
 
-        var deltaLeft = currentMouseLeft - mouseLeft,
-            deltaTop = currentMouseTop - mouseTop;
-
-        c.viewportTransform[4] = viewportLeft + deltaLeft;
-        c.viewportTransform[5] = viewportTop + deltaTop;
-
-        c.renderAll();
-      }
-    });
-
-    c.on('mouse:up', function() {
-      // Handle panning
-      if (c.isGrabMode && isDown) {
-        c._drawSelection = _drawSelection;
-        isDown = false;
-      }
-
-      if (!c.isGrabMode) {
-        // Either keep answer ready for saving
-        var ansField = $('#answers_' + qid);
-        if (ansField.data('locked')){
-          updateScribble(qid,c);
-        } else {
-        // Or save scribbles continuously
-          ansField.val(getJSON(qid,c));
+          _drawSelection = c._drawSelection;
+          c._drawSelection = function(){ };
         }
-      }
-    });
+      });
 
+      c.on('mouse:move', function(options) {
+        if (c.isGrabMode && isDown) {
+          var currentMouseLeft = options.e.clientX;
+          var currentMouseTop = options.e.clientY;
+
+          var deltaLeft = currentMouseLeft - mouseLeft,
+              deltaTop = currentMouseTop - mouseTop;
+
+          c.viewportTransform[4] = viewportLeft + deltaLeft;
+          c.viewportTransform[5] = viewportTop + deltaTop;
+
+          c.renderAll();
+        }
+      });
+
+      c.on('mouse:up', function() {
+        // Handle panning
+        if (c.isGrabMode && isDown) {
+          c._drawSelection = _drawSelection;
+          isDown = false;
+        }
+
+        if (!c.isGrabMode) {
+          // Either keep answer ready for saving
+          var ansField = $('#answers_' + qid);
+          if (ansField.data('locked')){
+            updateScribble(qid,c);
+          } else {
+          // Or save scribbles continuously
+            ansField.val(getJSON(qid,c));
+          }
+        }
+      });
+    });
   });
 });
