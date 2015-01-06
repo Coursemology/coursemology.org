@@ -120,49 +120,10 @@ $(document).ready(function () {
   $.each(allCanvases, function(i, htmlCanvas) {
     var qid = $(htmlCanvas).data('qid');
     var buttons = $('#scribing-buttons-' + qid + ' a');
+    var isEditMode = $('#scribing-mode-' + qid).length != 0;
     var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
     c.clear();
     fabricCanvases[qid] = c;
-
-    //set brush width to value declared in scribing canvas view
-    c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
-
-    $('#scribing-mode-' + qid)
-      .click({ canvas: c, buttons: buttons }, function (event) {
-        var canvas = event.data.canvas;
-        var buttons = event.data.buttons;
-
-        canvas.isDrawingMode = true;
-        canvas.isGrabMode = false;
-        $(this).addClass('active');
-        buttons.not(this).removeClass('active');
-        $('#scribing-edit-tools-' + qid).addClass('hidden');
-        $('#scribing-drawing-tools-' + qid).removeClass('hidden');
-      });
-
-    $('#edit-mode-' + qid)
-      .click({ canvas: c, buttons: buttons }, function (event) {
-        var canvas = event.data.canvas;
-        var buttons = event.data.buttons;
-
-        canvas.isDrawingMode = false;
-        canvas.isGrabMode = false;
-        canvas.selection = false;
-        $(this).addClass('active');
-        buttons.not(this).removeClass('active');
-        $('#scribing-edit-tools-' + qid).removeClass('hidden');
-        $('#scribing-drawing-tools-' + qid).addClass('hidden');
-      });
-
-    $('#scribing-color-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.color = this.value;
-      });
-
-    $('#scribing-width-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.width = this.value;
-      });
 
     $('#grab-mode-' + qid)
       .click({ canvas: c, buttons: buttons }, function (event) {
@@ -176,31 +137,6 @@ $(document).ready(function () {
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).addClass('hidden');
         $('#scribing-drawing-tools-' + qid).addClass('hidden');
-      });
-
-    $('#scribing-delete-' + qid)
-      .click({
-        canvas: c,
-        ajaxSave: $('#answers_' + qid).data('locked'),
-        qid: qid
-      }, function (event) {
-        var canvas = event.data.canvas;
-        var ajaxSave = event.data.ajaxSave;
-        var qid = event.data.qid;
-
-        if(canvas.getActiveGroup()) {
-          canvas.getActiveGroup().forEachObject(function(o) {
-            canvas.remove(o);
-          });
-          canvas.discardActiveGroup().renderAll();
-        }
-        else {
-          canvas.remove(canvas.getActiveObject());
-        }
-
-        if (ajaxSave) {
-          updateScribble(qid,c);
-        }
       });
 
     $('#scribing-zoom-in-' + qid)
@@ -232,12 +168,81 @@ $(document).ready(function () {
             $(o).data('toggleLayer')(showLayer);
           });
       });
+
+    if (isEditMode) {
+
+      //set brush width to value declared in scribing canvas view
+      c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
+
+      $('#scribing-mode-' + qid)
+        .click({ canvas: c, buttons: buttons }, function (event) {
+          var canvas = event.data.canvas;
+          var buttons = event.data.buttons;
+
+          canvas.isDrawingMode = true;
+          canvas.isGrabMode = false;
+          $(this).addClass('active');
+          buttons.not(this).removeClass('active');
+          $('#scribing-edit-tools-' + qid).addClass('hidden');
+          $('#scribing-drawing-tools-' + qid).removeClass('hidden');
+        });
+
+      $('#edit-mode-' + qid)
+        .click({ canvas: c, buttons: buttons }, function (event) {
+          var canvas = event.data.canvas;
+          var buttons = event.data.buttons;
+
+          canvas.isDrawingMode = false;
+          canvas.isGrabMode = false;
+          canvas.selection = false;
+          $(this).addClass('active');
+          buttons.not(this).removeClass('active');
+          $('#scribing-edit-tools-' + qid).removeClass('hidden');
+          $('#scribing-drawing-tools-' + qid).addClass('hidden');
+        });
+
+      $('#scribing-color-' + qid)
+        .change({ canvas: c }, function(event) {
+          event.data.canvas.freeDrawingBrush.color = this.value;
+        });
+
+      $('#scribing-width-' + qid)
+        .change({ canvas: c }, function(event) {
+          event.data.canvas.freeDrawingBrush.width = this.value;
+        });
+
+      $('#scribing-delete-' + qid)
+        .click({
+          canvas: c,
+          ajaxSave: $('#answers_' + qid).data('locked'),
+          qid: qid
+        }, function (event) {
+          var canvas = event.data.canvas;
+          var ajaxSave = event.data.ajaxSave;
+          var qid = event.data.qid;
+
+          if(canvas.getActiveGroup()) {
+            canvas.getActiveGroup().forEachObject(function(o) {
+              canvas.remove(o);
+            });
+            canvas.discardActiveGroup().renderAll();
+          }
+          else {
+            canvas.remove(canvas.getActiveObject());
+          }
+
+          if (ajaxSave) {
+            updateScribble(qid,c);
+          }
+        });
+    }
   });
 
   //assign each canvas its image
   $.each(scribingImages, function(qid, scribingImage) {
     //get appropriate canvas by qid
     var c = fabricCanvases[qid];
+    var isEditMode = $('#scribing-mode-' + qid).length != 0;
 
     //calculate scaleX and scaleY to fit image into canvas
     //before creating fabric.Image object
@@ -256,6 +261,12 @@ $(document).ready(function () {
     c.renderAll();
 
     loadScribbles(c, qid);
+
+    if (!isEditMode) {
+      $.each(c.getObjects(), function (i, obj) {
+        obj.selectable = false;
+      });
+    }
 
     // Initialize zoom/scrolling variable
     var viewportLeft = 0,
@@ -302,7 +313,7 @@ $(document).ready(function () {
         isDown = false;
       }
 
-      if (!c.isGrabMode) {
+      if (!c.isGrabMode && isEditMode) {
         // Either keep answer ready for saving
         var ansField = $('#answers_' + qid);
         if (ansField.data('locked')){
