@@ -53,6 +53,7 @@
 //= require_self
 //= require_tree ./templates
 //= require_tree .
+//= require imagesloaded
 
 $(document).ready(function() {
     (function() {
