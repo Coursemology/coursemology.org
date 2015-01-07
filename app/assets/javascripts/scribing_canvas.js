@@ -1,5 +1,8 @@
 // TODO
 // - Add limit to panning
+// - Disallow drawing when cursor moves outside canvas
+// - Limit canvas to page height, esp for mobile phones.
+// - Resize canvas on window resize
 
 
 // HELPER FUNCITONS
@@ -100,136 +103,126 @@ function loadScribble(c, scribble, layersList) {
   }
 }
 
-// INITIALISE CANVASES
+function hookButtonsToCanvas(qid, c) {
+  var buttons = $('#scribing-buttons-' + qid + ' a');
+  var isEditMode = $('#scribing-mode-' + qid).length != 0;
 
-$(document).ready(function () {
-  //select all canvases and scribing images
-  var allCanvases = $('.scribing-canvas');
+  $('#grab-mode-' + qid)
+    .click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
 
-  //init associative arrays so canvases can be found by qid
-  var fabricCanvases = {};
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = true;
+      canvas.selection = false;
+      $(this).addClass('active');
+      buttons.not(this).removeClass('active');
+      $('#scribing-edit-tools-' + qid).addClass('hidden');
+      $('#scribing-drawing-tools-' + qid).addClass('hidden');
+    });
 
-  //init and collect all canvas elements
-  $.each(allCanvases, function(i, htmlCanvas) {
-    var qid = $(htmlCanvas).data('qid');
-    var buttons = $('#scribing-buttons-' + qid + ' a');
-    var isEditMode = $('#scribing-mode-' + qid).length != 0;
-    var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
-    c.clear();
-    fabricCanvases[qid] = c;
+  $('#scribing-zoom-in-' + qid)
+    .click({ canvas: c }, function (event) {
+        var canvas = event.data.canvas;
 
-    $('#grab-mode-' + qid)
+        var newZoom = canvas.getZoom() + 0.1;
+        canvas.zoomToPoint({
+          x: canvas.height/2,
+          y: canvas.width/2
+        },newZoom);
+    });
+
+  $('#scribing-zoom-out-' + qid)
+    .click({ canvas: c }, function(event) {
+      var canvas = event.data.canvas;
+
+      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+      canvas.zoomToPoint({
+        x: canvas.height/2,
+        y: canvas.width/2
+      }, newZoom);
+    });
+
+  $('#scribing-layers-' + qid)
+    .change(function () {
+        $(this).find('option').each(function (i, o) {
+          var showLayer = $(o).attr('selected') == 'selected';
+          $(o).data('toggleLayer')(showLayer);
+        });
+    });
+
+  if (isEditMode) {
+
+    //set brush width to value declared in scribing canvas view
+    c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
+
+    $('#scribing-mode-' + qid)
+      .click({ canvas: c, buttons: buttons }, function (event) {
+        var canvas = event.data.canvas;
+        var buttons = event.data.buttons;
+
+        canvas.isDrawingMode = true;
+        canvas.isGrabMode = false;
+        $(this).addClass('active');
+        buttons.not(this).removeClass('active');
+        $('#scribing-edit-tools-' + qid).addClass('hidden');
+        $('#scribing-drawing-tools-' + qid).removeClass('hidden');
+      });
+
+    $('#edit-mode-' + qid)
       .click({ canvas: c, buttons: buttons }, function (event) {
         var canvas = event.data.canvas;
         var buttons = event.data.buttons;
 
         canvas.isDrawingMode = false;
-        canvas.isGrabMode = true;
+        canvas.isGrabMode = false;
         canvas.selection = false;
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
-        $('#scribing-edit-tools-' + qid).addClass('hidden');
+        $('#scribing-edit-tools-' + qid).removeClass('hidden');
         $('#scribing-drawing-tools-' + qid).addClass('hidden');
       });
 
-    $('#scribing-zoom-in-' + qid)
-      .click({ canvas: c }, function (event) {
-          var canvas = event.data.canvas;
-
-          var newZoom = canvas.getZoom() + 0.1;
-          canvas.zoomToPoint({
-            x: canvas.height/2,
-            y: canvas.width/2
-          },newZoom);
+    $('#scribing-color-' + qid)
+      .change({ canvas: c }, function(event) {
+        event.data.canvas.freeDrawingBrush.color = this.value;
       });
 
-    $('#scribing-zoom-out-' + qid)
-      .click({ canvas: c }, function(event) {
+    $('#scribing-width-' + qid)
+      .change({ canvas: c }, function(event) {
+        event.data.canvas.freeDrawingBrush.width = this.value;
+      });
+
+    $('#scribing-delete-' + qid)
+      .click({
+        canvas: c,
+        ajaxSave: $('#answers_' + qid).data('locked'),
+        qid: qid
+      }, function (event) {
         var canvas = event.data.canvas;
+        var ajaxSave = event.data.ajaxSave;
+        var qid = event.data.qid;
 
-        var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-        canvas.zoomToPoint({
-          x: canvas.height/2,
-          y: canvas.width/2
-        }, newZoom);
-      });
-
-    $('#scribing-layers-' + qid)
-      .change(function () {
-          $(this).find('option').each(function (i, o) {
-            var showLayer = $(o).attr('selected') == 'selected';
-            $(o).data('toggleLayer')(showLayer);
+        if(canvas.getActiveGroup()) {
+          canvas.getActiveGroup().forEachObject(function(o) {
+            canvas.remove(o);
           });
+          canvas.discardActiveGroup().renderAll();
+        }
+        else {
+          canvas.remove(canvas.getActiveObject());
+        }
+
+        if (ajaxSave) {
+          updateScribble(qid,c);
+        }
       });
+  }
+}
 
-    if (isEditMode) {
+// INITIALISE CANVASES
 
-      //set brush width to value declared in scribing canvas view
-      c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
-
-      $('#scribing-mode-' + qid)
-        .click({ canvas: c, buttons: buttons }, function (event) {
-          var canvas = event.data.canvas;
-          var buttons = event.data.buttons;
-
-          canvas.isDrawingMode = true;
-          canvas.isGrabMode = false;
-          $(this).addClass('active');
-          buttons.not(this).removeClass('active');
-          $('#scribing-edit-tools-' + qid).addClass('hidden');
-          $('#scribing-drawing-tools-' + qid).removeClass('hidden');
-        });
-
-      $('#edit-mode-' + qid)
-        .click({ canvas: c, buttons: buttons }, function (event) {
-          var canvas = event.data.canvas;
-          var buttons = event.data.buttons;
-
-          canvas.isDrawingMode = false;
-          canvas.isGrabMode = false;
-          canvas.selection = false;
-          $(this).addClass('active');
-          buttons.not(this).removeClass('active');
-          $('#scribing-edit-tools-' + qid).removeClass('hidden');
-          $('#scribing-drawing-tools-' + qid).addClass('hidden');
-        });
-
-      $('#scribing-color-' + qid)
-        .change({ canvas: c }, function(event) {
-          event.data.canvas.freeDrawingBrush.color = this.value;
-        });
-
-      $('#scribing-width-' + qid)
-        .change({ canvas: c }, function(event) {
-          event.data.canvas.freeDrawingBrush.width = this.value;
-        });
-
-      $('#scribing-delete-' + qid)
-        .click({
-          canvas: c,
-          ajaxSave: $('#answers_' + qid).data('locked'),
-          qid: qid
-        }, function (event) {
-          var canvas = event.data.canvas;
-          var ajaxSave = event.data.ajaxSave;
-          var qid = event.data.qid;
-
-          if(canvas.getActiveGroup()) {
-            canvas.getActiveGroup().forEachObject(function(o) {
-              canvas.remove(o);
-            });
-            canvas.discardActiveGroup().renderAll();
-          }
-          else {
-            canvas.remove(canvas.getActiveObject());
-          }
-
-          if (ajaxSave) {
-            updateScribble(qid,c);
-          }
-        });
-    }
-  });
+$(document).ready(function () {
 
   //use the imagesLoaded library to invoke a callback when images are loaded
   imagesLoaded('.scribing-images', function() {
@@ -241,14 +234,23 @@ $(document).ready(function () {
       var qid = $(scribingImage).data('qid');
       var isEditMode = $('#scribing-mode-' + qid).length != 0;
 
-      //get appropriate canvas by qid
-      var c = fabricCanvases[qid];
+      // get appropriate canvas by qid
+      var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
+      c.clear();
+      hookButtonsToCanvas(qid, c);
+
+      c.setDimensions(
+        {
+          height: scribingImage.height,
+          width: Math.min(
+            $('#scribing-container-' + qid).width(),
+            scribingImage.width)
+        });
 
       //calculate scaleX and scaleY to fit image into canvas
       //before creating fabric.Image object
       var scale = Math.min(
         c.width / scribingImage.width,
-        c.height / scribingImage.height,
         1);
 
       //create fabric.Image object with the right scaling and
