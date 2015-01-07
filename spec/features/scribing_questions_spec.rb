@@ -5,6 +5,7 @@ feature "ScribingQuestions", :type => :feature do
   let!(:course) { FactoryGirl.create(:course, creator: lecturer) }
 
   before do
+    skip
     sign_in lecturer
     let(:title) { 'Factory mission' }
     let!(:mission) {FactoryGirl.create(:mission, title: title, course: course)}
