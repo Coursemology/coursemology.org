@@ -12,7 +12,7 @@
 <%= hidden_field('answers', qid, value: answer.content, "data-locked" => (is_ans_unlocked ? "false" : "true"), "data-scribe" => answer.std_course.name) %>
 
 <%# Create hidden form for ajax submission, if applicable %>
-<% if !is_ans_unlocked %>
+<% if !is_ans_unlocked and edit_mode %>
 	<%# undefined method `scribble_path' for #<#<Class:0x007fc8a8f0d6d8>:0x007fc8a8f02d50> in form_for %>
 	<%# when direct assignment to @scribble is tried %>
 	<% if ajax_scribble != nil %>

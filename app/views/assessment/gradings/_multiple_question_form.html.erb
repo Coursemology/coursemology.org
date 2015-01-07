@@ -2,7 +2,7 @@
         course_assessment_submission_grading_path(@course, @assessment, @submission, @grading) :
         course_assessment_submission_gradings_path(@course, @assessment, @submission)),
                     html: { class: "form-horizontal" } do |f| %>
-                    
+
     <input type="hidden" name="submission_id" value="<% @submission.id %>" />
 
     <% @summary[:qn_ans].each do |qid, qn_dic| %>
@@ -28,6 +28,13 @@
                                     annotations:  qn_dic[:annotations],
                                     submission:   @submission,
                                     mode:         "view"} %>
+            <% elsif qn_dic[:qn].class == Assessment::ScribingQuestion %>
+                <%= render partial: 'assessment/mission_submissions/scribing_canvas',
+                           locals: { question: qn_dic[:qn],
+                                     qid: qid,
+                                     answer: qn_dic[:ans],
+                                     edit_mode: false
+                                   } %>
             <% else %>
                 <div class="row-fluid">
                   <div class="submission-question-block span10">
