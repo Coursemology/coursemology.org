@@ -338,6 +338,8 @@ GEM
       ffi (~> 1.9)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rollbar (1.3.1)
+      multi_json (~> 1.3)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -493,6 +495,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 2.6.0)
   rails (= 3.2.14)
+  rollbar
   rspec-rails
   rubyzip (~> 0.9.9)
   sanitize
