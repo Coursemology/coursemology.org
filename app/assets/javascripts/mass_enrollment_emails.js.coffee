@@ -40,7 +40,7 @@ parseContacts = (contents)->
 
 
   if emailIndex == undefined
-    alert "Can't find email feild in the file"
+    alert "Can't find email field in the file"
     return false
   contacts = []
   contacts.push {name: row.split(',')[nameIndex].trim(), email: row.split(',')[emailIndex].trim()} for row in raw_list[1..(raw_list.length - 1)] when row.split(',')[emailIndex] != undefined
