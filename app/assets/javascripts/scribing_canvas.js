@@ -105,7 +105,7 @@ function loadScribble(c, scribble, layersList) {
 
 function hookButtonsToCanvas(qid, c) {
   var buttons = $('#scribing-buttons-' + qid + ' a');
-  var isEditMode = $('#scribing-mode-' + qid).length != 0;
+  var isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
   $('#grab-mode-' + qid)
     .click({ canvas: c, buttons: buttons }, function (event) {
@@ -232,7 +232,7 @@ $(document).ready(function () {
     $.each(loadedImages, function(index, loadingImage) {
       var scribingImage = loadingImage.img;
       var qid = $(scribingImage).data('qid');
-      var isEditMode = $('#scribing-mode-' + qid).length != 0;
+      var isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
       // get appropriate canvas by qid
       var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
