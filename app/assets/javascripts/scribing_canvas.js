@@ -261,19 +261,16 @@ $(document).ready(function () {
         return false;
       });
 
-      c.setDimensions(
-        {
-          height: scribingImage.height,
-          width: Math.min(
-            $('#scribing-container-' + qid).width(),
-            scribingImage.width)
-        });
+      c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
 
       //calculate scaleX and scaleY to fit image into canvas
       //before creating fabric.Image object
       var scale = Math.min(
         c.width / scribingImage.width,
         1);
+
+      //work out the correct height after getting the right scale from the width
+      c.setHeight(scale * scribingImage.height);
 
       //create fabric.Image object with the right scaling and
       // set as canvas background
