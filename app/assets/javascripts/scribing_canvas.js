@@ -183,14 +183,20 @@ function hookButtonsToCanvas(qid, c) {
         $('#scribing-drawing-tools-' + qid).addClass('hidden');
       });
 
-    $('#scribing-color-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.color = this.value;
+    //use iris colorpicker
+    //see documentation at http://automattic.github.io/Iris/
+    $('#scribing-color-' + qid).iris({
+        change: function(event, ui) {
+                  c.freeDrawingBrush.color = ui.color.toString();
+                  // make input textbox change colour accordingly
+                  $(event.target).css('background-color', ui.color.toString());
+                  $(event.target).css('color', ui.color.toString());
+                }
       });
 
     $('#scribing-width-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.width = this.value;
+      .change(function(event) {
+        c.freeDrawingBrush.width = this.value;
       });
 
     $('#scribing-delete-' + qid)
@@ -238,6 +244,22 @@ $(document).ready(function () {
       var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
       c.clear();
       hookButtonsToCanvas(qid, c);
+
+      //event handlers to hide iris color pickers when they lose focus
+      //adapted from
+      //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
+      $(document).click(function(e) {
+        if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
+          $('.scribing-color-val').iris('hide');
+          return false;
+        }
+      });
+      //this bit is needed so iris will come up and stay upwhen the textbox is clicked
+      $('.scribing-color-val').click(function(event) {
+        $('.scribing-color-val').iris('hide');
+        $(this).iris('show');
+        return false;
+      });
 
       c.setDimensions(
         {
