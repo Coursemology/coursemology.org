@@ -251,7 +251,6 @@ $(document).ready(function () {
       $(document).click(function(e) {
         if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
           $('.scribing-color-val').iris('hide');
-          return false;
         }
       });
       //this bit is needed so iris will come up and stay upwhen the textbox is clicked
