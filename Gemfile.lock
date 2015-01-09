@@ -32,6 +32,7 @@ GIT
 
 GEM
   remote: https://rubygems.org/
+  remote: https://rails-assets.org/
   specs:
     actionmailer (3.2.14)
       actionpack (= 3.2.14)
@@ -317,6 +318,7 @@ GEM
       activesupport (= 3.2.14)
       bundler (~> 1.0)
       railties (= 3.2.14)
+    rails-assets-fabric (1.4.13)
     railties (3.2.14)
       actionpack (= 3.2.14)
       activesupport (= 3.2.14)
@@ -495,6 +497,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 2.6.0)
   rails (= 3.2.14)
+  rails-assets-fabric
   rollbar
   rspec-rails
   rubyzip (~> 0.9.9)
