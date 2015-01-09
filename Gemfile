@@ -97,6 +97,7 @@ gem "newrelic_rpm"
 gem 'dotenv-rails'
 gem "wkhtmltopdf_binary_provider"
 gem "wicked_pdf"
+gem 'imagesLoaded_rails'
 gem 'rollbar'
 
 # To use ActiveModel has_secure_password

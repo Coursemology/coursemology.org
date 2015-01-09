@@ -226,31 +226,31 @@ class ApplicationController < ActionController::Base
         url = main_app.course_announcements_path(@course)
         icon = 'icon-bullhorn'
       when 'missions'
-        url = main_app.course_assessment_missions_url(@course)
+        url = main_app.course_assessment_missions_path(@course)
         icon = 'icon-fighter-jet'
       when 'trainings'
-        url = main_app.course_assessment_trainings_url(@course)
+        url = main_app.course_assessment_trainings_path(@course)
         icon = 'icon-upload-alt'
       when 'submissions'
         url = main_app.submissions_course_assessment_missions_path(@course)
         icon = 'icon-envelope-alt'
       when 'achievements'
-        url = main_app.course_achievements_url(@course)
+        url = main_app.course_achievements_path(@course)
         icon = 'icon-trophy'
       when 'leaderboard'
-        url =  main_app.course_leaderboards_url(@course)
+        url =  main_app.course_leaderboards_path(@course)
         icon = 'icon-star-empty'
       when 'students'
-        url = main_app.course_students_url(@course)
+        url = main_app.course_students_path(@course)
         icon = 'icon-group'
       when 'comments'
-        url = main_app.course_comments_url(@course)
+        url = main_app.course_comments_path(@course)
         icon = 'icon-comments'
       when 'surveys'
         url = main_app.course_surveys_path(@course)
         icon = 'icon-edit'
       when 'forums'
-        url = main_app.course_forums_url(@course)
+        url = main_app.course_forums_path(@course)
         icon = 'icon-th-list'
       when 'lesson_plan'
         url = main_app.course_lesson_plan_path(@course)
