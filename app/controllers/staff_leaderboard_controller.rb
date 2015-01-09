@@ -38,14 +38,12 @@ class StaffLeaderboardController < ApplicationController
 
     @summaries = {}
     @tutors.each do |tutor|
-      summary = {count: 0, avg: Float::INFINITY, std_dev: Float::INFINITY }
-      @summaries[tutor.id] = summary
       gradings = tutor.gradings.includes(:submission).order(:created_at)
+      summary = { count: gradings.length, avg: Float::INFINITY, std_dev: Float::INFINITY }
+      @summaries[tutor.id] = summary
       @summaries[tutor.id][:std_count] = tutor.std_courses.where(is_phantom: false).count
-      if gradings.count == 0
-        next
-      end
       time_diff = gradings.reduce([]) { |acc, g| (g.created_at - g.submission.submitted_at > 0) ? (acc << g.created_at - g.submission.submitted_at) : acc }
+      next if time_diff.empty?
       avg = time_diff.mean
       std_dev = time_diff.standard_deviation
       summary[:count] = gradings.length
