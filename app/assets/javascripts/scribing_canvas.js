@@ -1,5 +1,8 @@
 // TODO
 // - Add limit to panning
+// - Disallow drawing when cursor moves outside canvas
+// - Limit canvas to page height, esp for mobile phones.
+// - Resize canvas on window resize
 
 
 // HELPER FUNCITONS
@@ -100,29 +103,55 @@ function loadScribble(c, scribble, layersList) {
   }
 }
 
-// INITIALISE CANVASES
+function hookButtonsToCanvas(qid, c) {
+  var buttons = $('#scribing-buttons-' + qid + ' a');
+  var isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
-$(document).ready(function () {
-  //select all canvases and scribing images
-  var allCanvases = $('.scribing-canvas');
-  var allImages = $('.scribing-images');
+  $('#grab-mode-' + qid)
+    .click({ canvas: c, buttons: buttons }, function (event) {
+      var canvas = event.data.canvas;
+      var buttons = event.data.buttons;
 
-  //init associative arrays so canvases and images can be found by qid
-  var fabricCanvases = {};
-  var scribingImages = {};
+      canvas.isDrawingMode = false;
+      canvas.isGrabMode = true;
+      canvas.selection = false;
+      $(this).addClass('active');
+      buttons.not(this).removeClass('active');
+      $('#scribing-edit-tools-' + qid).addClass('hidden');
+      $('#scribing-drawing-tools-' + qid).addClass('hidden');
+    });
 
-  //collect all img elements
-  $.each(allImages, function(i, image) {
-    scribingImages[$(image).data('qid')] = image;
-  });
+  $('#scribing-zoom-in-' + qid)
+    .click({ canvas: c }, function (event) {
+        var canvas = event.data.canvas;
 
-  //init and collect all canvas elements
-  $.each(allCanvases, function(i, htmlCanvas) {
-    var qid = $(htmlCanvas).data('qid');
-    var buttons = $('#scribing-buttons-' + qid + ' a');
-    var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
-    c.clear();
-    fabricCanvases[qid] = c;
+        var newZoom = canvas.getZoom() + 0.1;
+        canvas.zoomToPoint({
+          x: canvas.height/2,
+          y: canvas.width/2
+        },newZoom);
+    });
+
+  $('#scribing-zoom-out-' + qid)
+    .click({ canvas: c }, function(event) {
+      var canvas = event.data.canvas;
+
+      var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
+      canvas.zoomToPoint({
+        x: canvas.height/2,
+        y: canvas.width/2
+      }, newZoom);
+    });
+
+  $('#scribing-layers-' + qid)
+    .change(function () {
+        $(this).find('option').each(function (i, o) {
+          var showLayer = $(o).attr('selected') == 'selected';
+          $(o).data('toggleLayer')(showLayer);
+        });
+    });
+
+  if (isEditMode) {
 
     //set brush width to value declared in scribing canvas view
     c.freeDrawingBrush.width = $('#scribing-width-' + qid).val();
@@ -154,28 +183,20 @@ $(document).ready(function () {
         $('#scribing-drawing-tools-' + qid).addClass('hidden');
       });
 
-    $('#scribing-color-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.color = this.value;
+    //use iris colorpicker
+    //see documentation at http://automattic.github.io/Iris/
+    $('#scribing-color-' + qid).iris({
+        change: function(event, ui) {
+                  c.freeDrawingBrush.color = ui.color.toString();
+                  // make input textbox change colour accordingly
+                  $(event.target).css('background-color', ui.color.toString());
+                  $(event.target).css('color', ui.color.toString());
+                }
       });
 
     $('#scribing-width-' + qid)
-      .change({ canvas: c }, function(event) {
-        event.data.canvas.freeDrawingBrush.width = this.value;
-      });
-
-    $('#grab-mode-' + qid)
-      .click({ canvas: c, buttons: buttons }, function (event) {
-        var canvas = event.data.canvas;
-        var buttons = event.data.buttons;
-
-        canvas.isDrawingMode = false;
-        canvas.isGrabMode = true;
-        canvas.selection = false;
-        $(this).addClass('active');
-        buttons.not(this).removeClass('active');
-        $('#scribing-edit-tools-' + qid).addClass('hidden');
-        $('#scribing-drawing-tools-' + qid).addClass('hidden');
+      .change(function(event) {
+        c.freeDrawingBrush.width = this.value;
       });
 
     $('#scribing-delete-' + qid)
@@ -202,117 +223,127 @@ $(document).ready(function () {
           updateScribble(qid,c);
         }
       });
+  }
+}
 
-    $('#scribing-zoom-in-' + qid)
-      .click({ canvas: c }, function (event) {
-          var canvas = event.data.canvas;
+// INITIALISE CANVASES
 
-          var newZoom = canvas.getZoom() + 0.1;
-          canvas.zoomToPoint({
-            x: canvas.height/2,
-            y: canvas.width/2
-          },newZoom);
-      });
+$(document).ready(function () {
 
-    $('#scribing-zoom-out-' + qid)
-      .click({ canvas: c }, function(event) {
-        var canvas = event.data.canvas;
+  //use the imagesLoaded library to invoke a callback when images are loaded
+  imagesLoaded('.scribing-images', function() {
+    //array of LoadingImages objects
+    var loadedImages = this.images;
 
-        var newZoom = Math.max(canvas.getZoom() - 0.1, 1);
-        canvas.zoomToPoint({
-          x: canvas.height/2,
-          y: canvas.width/2
-        }, newZoom);
-      });
+    $.each(loadedImages, function(index, loadingImage) {
+      var scribingImage = loadingImage.img;
+      var qid = $(scribingImage).data('qid');
+      var isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
-    $('#scribing-layers-' + qid)
-      .change(function () {
-          $(this).find('option').each(function (i, o) {
-            var showLayer = $(o).attr('selected') == 'selected';
-            $(o).data('toggleLayer')(showLayer);
-          });
-      });
-  });
+      // get appropriate canvas by qid
+      var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
+      c.clear();
+      hookButtonsToCanvas(qid, c);
 
-  //assign each canvas its image
-  $.each(scribingImages, function(qid, scribingImage) {
-    //get appropriate canvas by qid
-    var c = fabricCanvases[qid];
-
-    //calculate scaleX and scaleY to fit image into canvas
-    //before creating fabric.Image object
-    var scale = Math.min(
-      c.width / scribingImage.width,
-      c.height / scribingImage.height,
-      1);
-
-    //create fabric.Image object with the right scaling and
-    // set as canvas background
-    var fabricImage = new fabric.Image(
-      scribingImage,
-      {opacity: 1, scaleX: scale, scaleY: scale}
-    );
-    c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
-    c.renderAll();
-
-    loadScribbles(c, qid);
-
-    // Initialize zoom/scrolling variable
-    var viewportLeft = 0,
-        viewportTop = 0,
-        mouseLeft,
-        mouseTop,
-        _drawSelection = c._drawSelection,
-        isDown = false;
-
-    c.on('mouse:down', function(options) {
-      if (c.isGrabMode) {
-        isDown = true;
-
-        viewportLeft = c.viewportTransform[4];
-        viewportTop = c.viewportTransform[5];
-
-        mouseLeft = options.e.clientX;
-        mouseTop = options.e.clientY;
-
-        _drawSelection = c._drawSelection;
-        c._drawSelection = function(){ };
-      }
-    });
-
-    c.on('mouse:move', function(options) {
-      if (c.isGrabMode && isDown) {
-        var currentMouseLeft = options.e.clientX;
-        var currentMouseTop = options.e.clientY;
-
-        var deltaLeft = currentMouseLeft - mouseLeft,
-            deltaTop = currentMouseTop - mouseTop;
-
-        c.viewportTransform[4] = viewportLeft + deltaLeft;
-        c.viewportTransform[5] = viewportTop + deltaTop;
-
-        c.renderAll();
-      }
-    });
-
-    c.on('mouse:up', function() {
-      // Handle panning
-      if (c.isGrabMode && isDown) {
-        c._drawSelection = _drawSelection;
-        isDown = false;
-      }
-
-      if (!c.isGrabMode) {
-        // Either keep answer ready for saving
-        var ansField = $('#answers_' + qid);
-        if (ansField.data('locked')){
-          updateScribble(qid,c);
-        } else {
-        // Or save scribbles continuously
-          ansField.val(getJSON(qid,c));
+      //event handlers to hide iris color pickers when they lose focus
+      //adapted from
+      //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
+      $(document).click(function(e) {
+        if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
+          $('.scribing-color-val').iris('hide');
         }
-      }
-    });
+      });
+      //this bit is needed so iris will come up and stay upwhen the textbox is clicked
+      $('.scribing-color-val').click(function(event) {
+        $('.scribing-color-val').iris('hide');
+        $(this).iris('show');
+        return false;
+      });
 
+      c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
+
+      //calculate scaleX and scaleY to fit image into canvas
+      //before creating fabric.Image object
+      var scale = Math.min(
+        c.width / scribingImage.width,
+        1);
+
+      //work out the correct height after getting the right scale from the width
+      c.setHeight(scale * scribingImage.height);
+
+      //create fabric.Image object with the right scaling and
+      // set as canvas background
+      var fabricImage = new fabric.Image(
+        scribingImage,
+        {opacity: 1, scaleX: scale, scaleY: scale}
+      );
+      c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+      c.renderAll();
+
+      loadScribbles(c, qid);
+
+      if (!isEditMode) {
+        $.each(c.getObjects(), function (i, obj) {
+          obj.selectable = false;
+        });
+      }
+
+      // Initialize zoom/scrolling variable
+      var viewportLeft = 0,
+          viewportTop = 0,
+          mouseLeft,
+          mouseTop,
+          _drawSelection = c._drawSelection,
+          isDown = false;
+
+      c.on('mouse:down', function(options) {
+        if (c.isGrabMode) {
+          isDown = true;
+
+          viewportLeft = c.viewportTransform[4];
+          viewportTop = c.viewportTransform[5];
+
+          mouseLeft = options.e.clientX;
+          mouseTop = options.e.clientY;
+
+          _drawSelection = c._drawSelection;
+          c._drawSelection = function(){ };
+        }
+      });
+
+      c.on('mouse:move', function(options) {
+        if (c.isGrabMode && isDown) {
+          var currentMouseLeft = options.e.clientX;
+          var currentMouseTop = options.e.clientY;
+
+          var deltaLeft = currentMouseLeft - mouseLeft,
+              deltaTop = currentMouseTop - mouseTop;
+
+          c.viewportTransform[4] = viewportLeft + deltaLeft;
+          c.viewportTransform[5] = viewportTop + deltaTop;
+
+          c.renderAll();
+        }
+      });
+
+      c.on('mouse:up', function() {
+        // Handle panning
+        if (c.isGrabMode && isDown) {
+          c._drawSelection = _drawSelection;
+          isDown = false;
+        }
+
+        if (!c.isGrabMode && isEditMode) {
+          // Either keep answer ready for saving
+          var ansField = $('#answers_' + qid);
+          if (ansField.data('locked')){
+            updateScribble(qid,c);
+          } else {
+          // Or save scribbles continuously
+            ansField.val(getJSON(qid,c));
+          }
+        }
+      });
+    });
   });
 });

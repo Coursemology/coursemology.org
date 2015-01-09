@@ -40,7 +40,8 @@
                     <%= render partial: 'scribing_canvas',
                                locals: { question: question,
                                          qid: q.id,
-                                         answer: answer
+                                         answer: answer,
+                                         edit_mode: true
                                        } %>
                 <% else %>
                     <%=render partial: 'do_coding',
@@ -74,7 +75,7 @@
         <% end %>
       </div>
     </div>
-    
+
     <br />
 
     <div id="uploaded_files_div"></div>
