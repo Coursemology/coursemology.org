@@ -104,7 +104,7 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def duplicate_qn
-    asm_qn = Assessment::Question.where(as_question_type:params[:qtype], as_question_id: params[:qid]).first
+    asm_qn = Assessment::Question.where(as_question_type:params[:qtype].gsub('__', '::'), as_question_id: params[:qid]).first
     to_asm = Assessment::Training.find(params[:to])
 
     clone = asm_qn.dup
