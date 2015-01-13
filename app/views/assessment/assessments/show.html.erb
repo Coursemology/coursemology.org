@@ -116,9 +116,11 @@
             <% if can? :manage, Assessment::Training %>
                 <td class="action-there-icons">
                   <div class="btn-group">
+                    <!--
                     <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s.underscore.gsub('/', '_') %>" qn-id="<%= q.id %>">
                       <i class="icon-copy"></i>
                     </a>
+                    -->
 
                     <%= link_to polymorphic_path([@course, @assessment, q], action: :edit), class: 'btn' do %>
                         <i class="icon-edit"></i>
