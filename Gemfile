@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 gem 'rails', '3.2.14'
 
@@ -48,6 +49,7 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'coffee-rails'
+  gem 'rails-assets-fabric'
 end
 
 #gem 'pg'

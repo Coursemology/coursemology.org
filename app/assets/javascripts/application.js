@@ -49,6 +49,7 @@
 //= require codemirror/addons/edit/matchbrackets
 //= require moment
 //= require cocoon
+//= require fabric
 //
 //= require_self
 //= require_tree ./templates

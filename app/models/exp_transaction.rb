@@ -16,7 +16,6 @@ class ExpTransaction < ActiveRecord::Base
   #TODO:
   #BUG: achievement rewarding is based on grade for mission, not exp
   def update_user_data
-    puts "Update user data"
     self.user_course.update_exp_and_level_async
   end
 

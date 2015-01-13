@@ -104,25 +104,19 @@ class Assessment::TrainingsController < Assessment::AssessmentsController
   end
 
   def duplicate_qn
-    asm_qn = AsmQn.where(qn_type:params[:qtype], qn_id: params[:qid]).first
-    to_asm = Training.find(params[:to])
-    is_move = params[:move] == 'true'
+    asm_qn = Assessment::Question.where(as_question_type:params[:qtype].gsub('__', '::'), as_question_id: params[:qid]).first
+    to_asm = Assessment::Training.find(params[:to])
 
-    clone = Duplication.duplicate_qn_no_log(asm_qn.qn)
-    new_link = asm_qn.dup
-    new_link.qn = clone
-    new_link.asm = to_asm
-    new_link.pos = to_asm.asm_qns.count
+    clone = asm_qn.dup
+    qa = to_asm.assessment.question_assessments.new
+    qa.question = clone
+    qa.position = to_asm.questions.count
 
     clone.save
-    new_link.save
-    to_asm.update_grade
+    qa.save
 
-    if is_move
-      asm = asm_qn.asm
+    if params[:move] == 'true'
       asm_qn.destroy
-      asm.update_grade
-      asm.update_qns_pos
     end
 
     render nothing: true
