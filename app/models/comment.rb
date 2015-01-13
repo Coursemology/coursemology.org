@@ -12,7 +12,6 @@ class Comment < ActiveRecord::Base
 
   def notify_user
     # notify everyone except the ones who made the comment
-    puts "notify comments",user_course.course.email_notify_enabled?(PreferableItem.new_comment), comment_topic.can_access?
     if user_course.course.email_notify_enabled?(PreferableItem.new_comment) and comment_topic.can_access?
       user_courses = comment_topic.user_courses - [user_course]
       user_courses.each do |uc|
