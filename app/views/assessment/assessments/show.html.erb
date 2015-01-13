@@ -116,8 +116,7 @@
             <% if can? :manage, Assessment::Training %>
                 <td class="action-there-icons">
                   <div class="btn-group">
-                    <!--
-                    <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s.underscore.gsub('/', '_') %>" qn-id="<%= q.id %>">
+                    <a class="btn copy-btn" rel="tooltip" title="Copy" qn-type="<%= q.class.to_s.gsub('::', '__') %>" qn-id="<%= q.id %>">
                       <i class="icon-copy"></i>
                     </a>
                     -->
