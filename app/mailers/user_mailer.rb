@@ -132,6 +132,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def enrollment_invitation(std_email, std_name, lecturer, course_title, redirect_url)
+    @email = std_email
     @user_name = std_name
     @lecturer = lecturer
     @course_title = course_title
