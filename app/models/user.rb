@@ -34,6 +34,8 @@ class User < ActiveRecord::Base
 
   belongs_to :system_role, class_name: "Role"
 
+  DEFAULT_PROFILE_PIC_URL = 'http://coursemology.s3.amazonaws.com/public/default_profile_pic.png'
+
   def is_admin?
     self.system_role && self.system_role.name == 'superuser'
   end
@@ -115,8 +117,7 @@ class User < ActiveRecord::Base
   end
 
   def use_default_photo_pic?
-    self.profile_photo_url ==
-        'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
+    self.profile_photo_url == DEFAULT_PROFILE_PIC_URL
   end
 
   def self.search(search, role = nil)
@@ -198,8 +199,7 @@ class User < ActiveRecord::Base
 
   def set_default_profile_pic
     unless self.profile_photo_url
-      self.profile_photo_url =
-          'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash4/c178.0.604.604/s160x160/252231_1002029915278_1941483569_n.jpg'
+      self.profile_photo_url = DEFAULT_PROFILE_PIC_URL
     end
   end
 
