@@ -8,7 +8,8 @@
 // HELPER FUNCITONS
 
 function normaliseScribble(s, canvas, isDenormalise) {
-  var STANDARD = 1000;
+  var STANDARD = 1000,
+      factor;
 
   if (isDenormalise) {
     factor = canvas.getWidth() / STANDARD;
@@ -84,7 +85,6 @@ function loadScribble(c, scribble, layersList) {
   // Convert javascript objects to fabricjs objects
   var objects = JSON.parse(scribble.val()).objects;
   var fabricObjs = [];
-  var scaleFactor = 1000 / c.getWidth();
 
   function addDenormalisedFabricObj(item) {
     normaliseScribble(item, c, true);
@@ -113,7 +113,7 @@ function loadScribble(c, scribble, layersList) {
       .attr('selected','selected');
     layersList.append(newLayerEntry);
 
-    function toggleLayer(showLayer) {
+    var toggleLayer = function(showLayer) {
       var thisGroup = scribbleGroup;
       if (showLayer && !c.contains(thisGroup)) {
         c.add(thisGroup);
@@ -372,7 +372,8 @@ $(document).ready(function () {
         }
 
         if (!c.isGrabMode && isEditMode && isMoved) {
-          // Feature not bug: if user puts a single dot, it is not saved immediately.
+          // Feature not bug: if user puts a single dot,
+          // it is not saved immediately.
 
           // Either keep answer ready for saving
           var ansField = $('#answers_' + qid);
