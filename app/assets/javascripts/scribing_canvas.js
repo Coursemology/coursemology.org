@@ -7,6 +7,25 @@
 
 // HELPER FUNCITONS
 
+function normaliseScribble(s, canvas, isDenormalise) {
+  var STANDARD = 1000;
+
+  if (isDenormalise) {
+    factor = canvas.getWidth() / STANDARD;
+  } else {
+    factor = STANDARD / canvas.getWidth();
+  }
+
+  s.set({
+    scaleX: s.scaleX * factor,
+    scaleY: s.scaleY * factor,
+    left: s.left  * factor,
+    top: s.top  * factor
+  });
+
+  return s;
+}
+
 function getJSON(qid, canvas) {
   // remove all locked layers
   var layersList = $('#scribing-layers-' + qid);
@@ -14,8 +33,18 @@ function getJSON(qid, canvas) {
     $(o).data('toggleLayer')(false);
   });
 
+  // Normalise scribbles for saving (cloning is more expensive)
+  $.each(canvas._objects, function (i, o) {
+    normaliseScribble(o, canvas, false);
+  });
+
   // get json output for current user
   var output = JSON.stringify(canvas._objects);
+
+  // Denormalise
+  $.each(canvas._objects, function (i, o) {
+    normaliseScribble(o, canvas, true);
+  });
 
   // restore locked layers and return
   layersList.change();
@@ -51,22 +80,20 @@ function loadScribble(c, scribble, layersList) {
   // Convert javascript objects to fabricjs objects
   var objects = JSON.parse(scribble.val()).objects;
   var fabricObjs = [];
+  var scaleFactor = 1000 / c.getWidth();
 
-  // Declare this helper function here so it can access fabricObjs
-  // and remain outside the loop where it is used.
-  // Keeping function declarations outside loops helps with performance
-  // and stops HoundCI from complaining
-  function pushFabricObjs(img) {
-    fabricObjs.push(img);
+  function addDenormalisedFabricObj(item) {
+    normaliseScribble(item, c, true);
+    fabricObjs.push(item);
   }
 
   for (var i = 0; i < objects.length; i++) {
     var klass = fabric.util.getKlass(objects[i].type);
     if (klass.async) {
-      klass.fromObject(objects[i], pushFabricObjs);
+      klass.fromObject(objects[i], addDenormalisedFabricObj);
     } else {
       var item = klass.fromObject(objects[i]);
-      fabricObjs.push(item);
+      addDenormalisedFabricObj(item);
     }
   }
 
@@ -82,7 +109,7 @@ function loadScribble(c, scribble, layersList) {
       .attr('selected','selected');
     layersList.append(newLayerEntry);
 
-    var toggleLayer = function (showLayer) {
+    function toggleLayer(showLayer) {
       var thisGroup = scribbleGroup;
       if (showLayer && !c.contains(thisGroup)) {
         c.add(thisGroup);
