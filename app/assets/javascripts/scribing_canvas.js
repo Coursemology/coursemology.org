@@ -53,8 +53,12 @@ function getJSON(qid, canvas) {
 
 function updateScribble(qid, canvas) {
   var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
-  ajaxField.val(getJSON(qid, canvas));
-  $('#scribing-ajax-' + qid).submit();
+  var newJSON = getJSON(qid, canvas);
+  var oldJSON = ajaxField.val();
+  if (newJSON !== oldJSON) {
+    ajaxField.val(newJSON);
+    $('#scribing-ajax-' + qid).submit();
+  }
 }
 
 function loadScribbles(c, qid) {
@@ -321,11 +325,14 @@ $(document).ready(function () {
           mouseLeft,
           mouseTop,
           _drawSelection = c._drawSelection,
-          isDown = false;
+          isDown = false,
+          isMoved = false;
 
       c.on('mouse:down', function(options) {
+        isDown = true;
+        isMoved = false;
+
         if (c.isGrabMode) {
-          isDown = true;
 
           viewportLeft = c.viewportTransform[4];
           viewportTop = c.viewportTransform[5];
@@ -339,6 +346,10 @@ $(document).ready(function () {
       });
 
       c.on('mouse:move', function(options) {
+        if (isDown) {
+          isMoved = true;
+        }
+
         if (c.isGrabMode && isDown) {
           var currentMouseLeft = options.e.clientX;
           var currentMouseTop = options.e.clientY;
@@ -360,7 +371,9 @@ $(document).ready(function () {
           isDown = false;
         }
 
-        if (!c.isGrabMode && isEditMode) {
+        if (!c.isGrabMode && isEditMode && isMoved) {
+          // Feature not bug: if user puts a single dot, it is not saved immediately.
+
           // Either keep answer ready for saving
           var ansField = $('#answers_' + qid);
           if (ansField.data('locked')){
