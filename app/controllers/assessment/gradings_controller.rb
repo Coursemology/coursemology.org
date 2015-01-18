@@ -21,6 +21,8 @@ class Assessment::GradingsController < ApplicationController
       @summary[:qn_ans][q.id] = { qn: q.specific, i: i + 1 }
     end
 
+    @submission.build_initial_answers if @submission.assessment.questions.count != @submission.answers.count
+
     @submission.eval_answer
 
     @submission.answers.each do |ans|
