@@ -20,7 +20,7 @@ class Assessment::Submission < ActiveRecord::Base
            through: :answers,
            source: :as_answer, source_type: "Assessment::GeneralAnswer"
 
-  has_many :general_answers, class_name: "Assessment::ScribingAnswer",
+  has_many :scribing_answers, class_name: "Assessment::ScribingAnswer",
            through: :answers,
            source: :as_answer, source_type: "Assessment::ScribingAnswer"
 
