@@ -155,9 +155,6 @@ GEM
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
     erubis (2.7.0)
-    exception_notification (4.0.1)
-      actionmailer (>= 3.0.4)
-      activesupport (>= 3.0.4)
     execjs (2.2.1)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -465,7 +462,6 @@ DEPENDENCIES
   delayed_job_active_record
   devise (= 3.0)
   dotenv-rails
-  exception_notification
   factory_girl_rails
   faker
   font-awesome-sass-rails

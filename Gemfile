@@ -15,7 +15,6 @@ end
 
 group :production do
   gem 'puma', "~> 2.6.0"
-  gem 'exception_notification'
   gem 'dalli'
   gem 'connection_pool'
 end
