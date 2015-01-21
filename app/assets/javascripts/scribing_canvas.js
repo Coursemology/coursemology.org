@@ -325,15 +325,12 @@ $(document).ready(function () {
           mouseLeft,
           mouseTop,
           _drawSelection = c._drawSelection,
-          isDown = false,
-          isMoved = false;
+          isDown = false;
 
       c.on('mouse:down', function(options) {
-        isDown = true;
-        isMoved = false;
 
         if (c.isGrabMode) {
-
+          isDown = true;
           viewportLeft = c.viewportTransform[4];
           viewportTop = c.viewportTransform[5];
 
@@ -346,10 +343,6 @@ $(document).ready(function () {
       });
 
       c.on('mouse:move', function(options) {
-        if (isDown) {
-          isMoved = true;
-        }
-
         if (c.isGrabMode && isDown) {
           var currentMouseLeft = options.e.clientX;
           var currentMouseTop = options.e.clientY;
@@ -371,7 +364,7 @@ $(document).ready(function () {
           isDown = false;
         }
 
-        if (!c.isGrabMode && isEditMode && isMoved) {
+        if (!c.isGrabMode && isEditMode) {
           // Feature not bug: if user puts a single dot,
           // it is not saved immediately.
 
