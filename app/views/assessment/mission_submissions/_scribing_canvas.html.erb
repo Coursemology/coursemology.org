@@ -4,32 +4,28 @@
 <% answer.scribbles.each do |scribble| %>
 	<% is_scribble_unlocked = (scribble.std_course == curr_user_course) %>
 	<% ajax_scribble = scribble if is_scribble_unlocked %>
-	<%= hidden_field('scribbles', scribble.id, class: 'scribble-' + qid.to_s, value: scribble.content, "data-locked" => (is_scribble_unlocked ? "false" : "true"), "data-scribe" => scribble.std_course.name) %>
+	<%= hidden_field('scribbles', scribble.id,
+			class: 'scribble-' + qid.to_s,
+			value: scribble.content,
+			"data-locked" => (is_scribble_unlocked ? "false" : "true"),
+			"data-scribe" => scribble.std_course.name) %>
 <% end %>
 
 <%# Create hidden fields for answer scribble %>
 <% is_ans_unlocked = (answer.std_course == curr_user_course) %>
-<%= hidden_field('answers', qid, value: answer.content, "data-locked" => (is_ans_unlocked ? "false" : "true"), "data-scribe" => answer.std_course.name) %>
+<%= hidden_field('answers', qid, value: answer.content,
+		"data-locked" => (is_ans_unlocked ? "false" : "true"),
+		"data-scribe" => answer.std_course.name) %>
 
-<%# Create hidden form for ajax submission, if applicable %>
+<%# Ajax submission data%>
 <% if !is_ans_unlocked and edit_mode %>
-	<%# undefined method `scribble_path' for #<#<Class:0x007fc8a8f0d6d8>:0x007fc8a8f02d50> in form_for %>
-	<%# when direct assignment to @scribble is tried %>
-	<% if ajax_scribble != nil %>
-		<%# @scribble = ajax_scribble %>
-		<% @scribble.id = ajax_scribble.id %>
-		<% @scribble.content = ajax_scribble.content %>
-	<% end %>
-	<% @scribble.std_course_id = curr_user_course.id %>
-	<% @scribble.scribing_answer_id = answer.as_answer_id %>
-
-	<%= form_for @scribble, :html => {:id => "scribing-ajax-" + qid.to_s}, remote: true do |f| %>
-		<%= f.hidden_field :content, class: "scribble-content" %>
-		<%= f.hidden_field :std_course_id %>
-		<%= f.hidden_field :scribing_answer_id %>
-		<%= f.hidden_field :id %>
-	<% end %>
+	<div id='scribing-ajax-<%= qid %>'
+		data-std-course-id = '<%= curr_user_course.id %>'
+		data-scribing-answer-id = '<%=  answer.as_answer_id %>'
+		data-id = '<%= ajax_scribble.id if ajax_scribble %>'
+		data-content = '<%= ajax_scribble.content if ajax_scribble %>'></div>
 <% end %>
+
 <div class="container-fluid" id="scribing-container-<%= qid %>">
 	<div class="row-fluid">
 		<div class="span12">

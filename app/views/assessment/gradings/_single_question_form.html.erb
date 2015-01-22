@@ -10,7 +10,7 @@
     <hr/>
 
     <h3>Answer:</h3>
-    
+
     <% if qn_dic[:ans] %>
         <% if @assessment.specific.file_submission_only? %>
             <p style="font-style: italic">Answer is contained in the submission file(s).</p>
@@ -21,6 +21,13 @@
                                 annotations:  qn_dic[:annotations],
                                 submission:   @submission,
                                 mode:         "view"} %>
+       <% elsif qn_dic[:qn].class == Assessment::ScribingQuestion %>
+            <%= render partial: 'assessment/mission_submissions/scribing_canvas',
+                       locals: { question: qn_dic[:qn],
+                                 qid: qid,
+                                 answer: qn_dic[:ans],
+                                 edit_mode: (mode.to_s == 'edit') ? true : false
+                               } %>
         <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">

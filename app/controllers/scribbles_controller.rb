@@ -25,6 +25,6 @@ class ScribblesController < ApplicationController
 
   def scribble_params
     params[:scribble].slice :content, :std_course_id, :scribing_answer_id, :id
-  end 
+  end
 
 end

@@ -53,12 +53,26 @@ function getJSON(qid, canvas) {
 }
 
 function updateScribble(qid, canvas) {
-  var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
+  var ajaxField = $('#scribing-ajax-' + qid);
   var newJSON = getJSON(qid, canvas);
-  var oldJSON = ajaxField.val();
+  var oldJSON = ajaxField.data('content');
   if (newJSON !== oldJSON) {
-    ajaxField.val(newJSON);
-    $('#scribing-ajax-' + qid).submit();
+    ajaxField.data('content', newJSON);
+    $.ajax({
+        type: "POST",
+        url: "/scribbles",
+        data: {
+          scribble: {
+            std_course_id: ajaxField.data('std-course-id'),
+            scribing_answer_id: ajaxField.data('scribing-answer-id'),
+            id: ajaxField.data('id'),
+            content: ajaxField.data('content'),
+          },
+        },
+        failure: function(msg) {
+            console.log("Scribble update failed. " + msg);
+        }
+    });
   }
 }
 

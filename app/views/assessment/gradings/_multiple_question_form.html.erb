@@ -33,7 +33,7 @@
                            locals: { question: qn_dic[:qn],
                                      qid: qid,
                                      answer: qn_dic[:ans],
-                                     edit_mode: false
+                                     edit_mode: (mode.to_s == 'edit') ? true : false
                                    } %>
             <% else %>
                 <div class="row-fluid">
