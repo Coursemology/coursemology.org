@@ -7,8 +7,8 @@
 // HELPER FUNCITONS
 
 function normaliseScribble(s, canvas, isDenormalise) {
-  var STANDARD = 1000,
-      factor;
+  var STANDARD = 1000;
+  var factor;
 
   if (isDenormalise) {
     factor = canvas.getWidth() / STANDARD;
@@ -58,19 +58,19 @@ function updateScribble(qid, canvas) {
   if (newJSON !== oldJSON) {
     ajaxField.data('content', newJSON);
     $.ajax({
-        type: "POST",
-        url: "/scribbles",
+        type: 'POST',
+        url: '/scribbles',
         data: {
           scribble: {
-            std_course_id: ajaxField.data('std-course-id'),
-            scribing_answer_id: ajaxField.data('scribing-answer-id'),
-            id: ajaxField.data('id'),
-            content: ajaxField.data('content'),
+            'std_course_id': ajaxField.data('std-course-id'),
+            'scribing_answer_id': ajaxField.data('scribing-answer-id'),
+            'id': ajaxField.data('id'),
+            'content': ajaxField.data('content'),
           },
         },
-        failure: function(msg) {
-            console.log("Scribble update failed. " + msg);
-        }
+        // failure: function(msg) {
+        //     console.log("Scribble update failed. " + msg);
+        // }
     });
   }
 }
@@ -277,7 +277,10 @@ function hookButtonsToCanvas(qid, c) {
 
 function renderCanvas(c, scribingImage, isEditMode, qid) {
   c.clear();
-  c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
+  c.setWidth(Math.min(
+    $('#scribing-container-' + qid).width(),
+    scribingImage.width
+  ));
 
   //calculate scaleX and scaleY to fit image into canvas
   //before creating fabric.Image object
@@ -308,6 +311,7 @@ function renderCanvas(c, scribingImage, isEditMode, qid) {
 // INITIALISE CANVASES
 
 $(document).ready(function () {
+  var isEditMode;
 
   //use the imagesLoaded library to invoke a callback when images are loaded
   imagesLoaded('.scribing-images', function() {
@@ -317,7 +321,7 @@ $(document).ready(function () {
     $.each(loadedImages, function(index, loadingImage) {
       var scribingImage = loadingImage.img;
       var qid = $(scribingImage).data('qid');
-      var isEditMode = $('#scribing-mode-' + qid).length !== 0;
+      isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
       // get appropriate canvas by qid
       var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
@@ -402,8 +406,10 @@ $(document).ready(function () {
   //adapted from
   //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
   $(document).click(function(e) {
-    if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
-      $('.scribing-color-val').iris('hide');
+    if (!$(e.target).is('.scribing-color-val .iris-picker .iris-picker-inner')) {
+      if (isEditMode) {
+        $('.scribing-color-val').iris('hide');
+      }
     }
   });
 
