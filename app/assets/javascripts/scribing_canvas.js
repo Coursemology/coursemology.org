@@ -4,7 +4,6 @@
 // - Limit canvas to page height, esp for mobile phones.
 // - Resize canvas on window resize
 
-
 // HELPER FUNCITONS
 
 function normaliseScribble(s, canvas, isDenormalise) {
@@ -78,6 +77,7 @@ function updateScribble(qid, canvas) {
 
 function loadScribbles(c, qid) {
   var layersList = $('#scribing-layers-' + qid);
+  layersList.empty();
   layersList.selectpicker('hide'); // remains hidden if there are no layers
 
   // load answer scribbling
@@ -208,6 +208,7 @@ function hookButtonsToCanvas(qid, c) {
 
         canvas.isDrawingMode = true;
         canvas.isGrabMode = false;
+        canvas.selection = true;
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).addClass('hidden');
@@ -266,9 +267,42 @@ function hookButtonsToCanvas(qid, c) {
 
         if (ajaxSave) {
           updateScribble(qid,c);
+        } else {
+          var ansField = $('#answers_' + qid);
+          ansField.val(getJSON(qid,canvas));
         }
       });
   }
+}
+
+function renderCanvas(c, scribingImage, isEditMode, qid) {
+  c.clear();
+  c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
+
+  //calculate scaleX and scaleY to fit image into canvas
+  //before creating fabric.Image object
+  var scale = Math.min(
+    c.width / scribingImage.width,
+    1);
+
+  //work out the correct height after getting the right scale from the width
+  c.setHeight(scale * scribingImage.height);
+
+  //create fabric.Image object with the right scaling and
+  // set as canvas background
+  var fabricImage = new fabric.Image(
+    scribingImage,
+    {opacity: 1, scaleX: scale, scaleY: scale}
+  );
+  c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+  loadScribbles(c, qid);
+
+  if (!isEditMode) {
+    $.each(c.getObjects(), function (i, obj) {
+      obj.selectable = false;
+    });
+  }
+  c.renderAll();
 }
 
 // INITIALISE CANVASES
@@ -287,51 +321,15 @@ $(document).ready(function () {
 
       // get appropriate canvas by qid
       var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
-      c.clear();
       hookButtonsToCanvas(qid, c);
+      renderCanvas(c, scribingImage, isEditMode, qid);
 
-      //event handlers to hide iris color pickers when they lose focus
-      //adapted from
-      //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
-      $(document).click(function(e) {
-        if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
-          $('.scribing-color-val').iris('hide');
-        }
-      });
-      //this bit is needed so iris will come up and stay upwhen the textbox is clicked
-      $('.scribing-color-val').click(function(event) {
-        $('.scribing-color-val').iris('hide');
-        $(this).iris('show');
-        return false;
-      });
-
-      c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
-
-      //calculate scaleX and scaleY to fit image into canvas
-      //before creating fabric.Image object
-      var scale = Math.min(
-        c.width / scribingImage.width,
-        1);
-
-      //work out the correct height after getting the right scale from the width
-      c.setHeight(scale * scribingImage.height);
-
-      //create fabric.Image object with the right scaling and
-      // set as canvas background
-      var fabricImage = new fabric.Image(
-        scribingImage,
-        {opacity: 1, scaleX: scale, scaleY: scale}
-      );
-      c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
-      c.renderAll();
-
-      loadScribbles(c, qid);
-
-      if (!isEditMode) {
-        $.each(c.getObjects(), function (i, obj) {
-          obj.selectable = false;
+      // Ensures that canvas shows correctly in tabbed mission view
+      // Otherwise, canvas is size zero.
+      $('a[data-toggle="tab"][data-qid="'+ qid +'"]')
+        .on('shown', function (e) {
+          renderCanvas(c, scribingImage, isEditMode, qid);
         });
-      }
 
       // Initialize zoom/scrolling variable
       var viewportLeft = 0,
@@ -379,9 +377,6 @@ $(document).ready(function () {
         }
 
         if (!c.isGrabMode && isEditMode) {
-          // Feature not bug: if user puts a single dot,
-          // it is not saved immediately.
-
           // Either keep answer ready for saving
           var ansField = $('#answers_' + qid);
           if (ansField.data('locked')){
@@ -394,4 +389,21 @@ $(document).ready(function () {
       });
     });
   });
+
+  //event handlers to hide iris color pickers when they lose focus
+  //adapted from
+  //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
+  $(document).click(function(e) {
+    if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
+      $('.scribing-color-val').iris('hide');
+    }
+  });
+
+  //this bit is needed so iris will come up and stay upwhen the textbox is clicked
+  $('.scribing-color-val').click(function(event) {
+    $('.scribing-color-val').iris('hide');
+    $(this).iris('show');
+    return false;
+  });
+
 });
