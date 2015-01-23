@@ -1,5 +1,4 @@
 // TODO
-// - Add limit to panning
 // - Disallow drawing when cursor moves outside canvas
 // - Limit canvas to page height, esp for mobile phones.
 // - Resize canvas on window resize
@@ -186,6 +185,7 @@ function hookButtonsToCanvas(qid, c) {
         x: canvas.height/2,
         y: canvas.width/2
       }, newZoom);
+      canvas.trigger('mouse:move', {'isForced': true});
     });
 
   $('#scribing-layers-' + qid)
@@ -359,18 +359,11 @@ $(document).ready(function () {
       });
 
       c.on('mouse:move', function(options) {
-        if (c.isGrabMode && isDown) {
-          var currentMouseLeft = options.e.clientX;
-          var currentMouseTop = options.e.clientY;
-          var deltaLeft = currentMouseLeft - mouseLeft,
-              deltaTop = currentMouseTop - mouseTop,
-              finalLeft, finalTop;
 
+        var tryPan = function (finalLeft, finalTop) {
           // limit panning
-          finalLeft = viewportLeft + deltaLeft;
           finalLeft = Math.min(finalLeft, 0);
           finalLeft = Math.max(finalLeft, (c.getZoom()-1) * c.getWidth() * -1 );
-          finalTop = viewportTop + deltaTop;
           finalTop = Math.min(finalTop, 0);
           finalTop = Math.max(finalTop, (c.getZoom()-1) * c.getHeight() * -1 );
 
@@ -378,7 +371,20 @@ $(document).ready(function () {
           c.viewportTransform[4] = finalLeft;
           c.viewportTransform[5] = finalTop;
           c.renderAll();
+        };
+
+        if (c.isGrabMode && isDown) {
+          var currentMouseLeft = options.e.clientX;
+          var currentMouseTop = options.e.clientY;
+          var deltaLeft = currentMouseLeft - mouseLeft;
+          var deltaTop = currentMouseTop - mouseTop;
+          var newLeft = viewportLeft + deltaLeft;
+          var newTop = viewportTop + deltaTop;
+          tryPan(newLeft, newTop);
+        } else if (options['isForced']) {
+          tryPan(c.viewportTransform[4], c.viewportTransform[5]);
         }
+
       });
 
       c.on('mouse:up', function() {
