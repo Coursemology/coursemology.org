@@ -147,6 +147,22 @@ function loadScribble(c, scribble, layersList) {
   }
 }
 
+// Makes current user's scribbles (un)selectable
+function toggleSelectable (qid, c, isSelectable) {
+  var layersList = $('#scribing-layers-' + qid);
+  // Hide scibbles by other users
+  layersList.find('option').each(function (i, o) {
+    $(o).data('toggleLayer')(false);
+  });
+  // Make own scribbles un/selectable
+  $.each(c.getObjects(), function (i, obj) {
+    obj.selectable = isSelectable;
+  });
+  // Restore scibbles by other users
+  layersList.change();
+  c.renderAll();
+}
+
 function hookButtonsToCanvas(qid, c) {
   var buttons = $('#scribing-buttons-' + qid + ' a');
   var isEditMode = $('#scribing-mode-' + qid).length !== 0;
@@ -159,6 +175,9 @@ function hookButtonsToCanvas(qid, c) {
       canvas.isDrawingMode = false;
       canvas.isGrabMode = true;
       canvas.selection = false;
+      toggleSelectable(qid, canvas, false);
+
+      // Change to appropriate button config
       $(this).addClass('active');
       buttons.not(this).removeClass('active');
       $('#scribing-edit-tools-' + qid).addClass('hidden');
@@ -190,10 +209,11 @@ function hookButtonsToCanvas(qid, c) {
 
   $('#scribing-layers-' + qid)
     .change(function () {
-        $(this).find('option').each(function (i, o) {
-          var showLayer = $(o).attr('selected') == 'selected';
-          $(o).data('toggleLayer')(showLayer);
-        });
+      // ensures that layers are show/hid according to checklist
+      $(this).find('option').each(function (i, o) {
+        var showLayer = $(o).attr('selected') == 'selected';
+        $(o).data('toggleLayer')(showLayer);
+      });
     });
 
   if (isEditMode) {
@@ -209,6 +229,8 @@ function hookButtonsToCanvas(qid, c) {
         canvas.isDrawingMode = true;
         canvas.isGrabMode = false;
         canvas.selection = true;
+
+        // Change to appropriate button config
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).addClass('hidden');
@@ -223,6 +245,9 @@ function hookButtonsToCanvas(qid, c) {
         canvas.isDrawingMode = false;
         canvas.isGrabMode = false;
         canvas.selection = false;
+        toggleSelectable(qid, canvas, true);
+
+        // Change to appropriate button config
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).removeClass('hidden');
@@ -425,5 +450,4 @@ $(document).ready(function () {
     $(this).iris('show');
     return false;
   });
-
 });
