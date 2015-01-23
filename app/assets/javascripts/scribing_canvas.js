@@ -358,13 +358,21 @@ $(document).ready(function () {
         if (c.isGrabMode && isDown) {
           var currentMouseLeft = options.e.clientX;
           var currentMouseTop = options.e.clientY;
-
           var deltaLeft = currentMouseLeft - mouseLeft,
-              deltaTop = currentMouseTop - mouseTop;
+              deltaTop = currentMouseTop - mouseTop,
+              finalLeft, finalTop;
 
-          c.viewportTransform[4] = viewportLeft + deltaLeft;
-          c.viewportTransform[5] = viewportTop + deltaTop;
+          // limit panning
+          finalLeft = viewportLeft + deltaLeft;
+          finalLeft = Math.min(finalLeft, 0);
+          finalLeft = Math.max(finalLeft, (c.getZoom()-1) * c.getWidth() * -1 );
+          finalTop = viewportTop + deltaTop;
+          finalTop = Math.min(finalTop, 0);
+          finalTop = Math.max(finalTop, (c.getZoom()-1) * c.getHeight() * -1 );
 
+          // apply calculated pan transforms
+          c.viewportTransform[4] = finalLeft;
+          c.viewportTransform[5] = finalTop;
           c.renderAll();
         }
       });
