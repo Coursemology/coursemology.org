@@ -96,10 +96,4 @@ Coursemology::Application.configure do
           secret_access_key:  ENV['AWS_SECRET_ACCESS_KEY']
       }
   }
-  config.middleware.use ExceptionNotification::Rack,
-                        :email => {
-                            :email_prefix => "[ERROR]",
-                            :sender_address => %{"Coursemology Exception" <exception.notifier@coursemology.com>},
-                            :exception_recipients => "coursemology@gmail.com"
-                        }
 end
