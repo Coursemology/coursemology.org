@@ -82,6 +82,11 @@ class Course < ActiveRecord::Base
     self.user_courses.student
   end
 
+  # Return course students sorted by name irrespective of upper or lowercase
+  def student_courses_sorted_by_name
+    self.user_courses.student.sort_by! { |student| student.name.capitalize }
+  end
+
   def pending_gradings(curr_user_course)
     if curr_user_course.is_lecturer?
       submissions.mission_submissions.where(status:"submitted").order(:submitted_at)
