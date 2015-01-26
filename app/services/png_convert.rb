@@ -21,6 +21,9 @@ class PngConvert
 
     # return list of png files from conversion
     @png_files = Dir[ "#{@basename}*.png" ]
+
+    # sort files by name and return
+    @png_files.sort
   end
 
   # call this when you are done processing the PNG files
