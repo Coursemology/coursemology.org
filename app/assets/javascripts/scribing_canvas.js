@@ -1,11 +1,29 @@
 // TODO
-// - Add limit to panning
 // - Disallow drawing when cursor moves outside canvas
 // - Limit canvas to page height, esp for mobile phones.
 // - Resize canvas on window resize
 
-
 // HELPER FUNCITONS
+
+function normaliseScribble(s, canvas, isDenormalise) {
+  var STANDARD = 1000;
+  var factor;
+
+  if (isDenormalise) {
+    factor = canvas.getWidth() / STANDARD;
+  } else {
+    factor = STANDARD / canvas.getWidth();
+  }
+
+  s.set({
+    scaleX: s.scaleX * factor,
+    scaleY: s.scaleY * factor,
+    left: s.left  * factor,
+    top: s.top  * factor
+  });
+
+  return s;
+}
 
 function getJSON(qid, canvas) {
   // remove all locked layers
@@ -14,8 +32,18 @@ function getJSON(qid, canvas) {
     $(o).data('toggleLayer')(false);
   });
 
+  // Normalise scribbles for saving (cloning is more expensive)
+  $.each(canvas._objects, function (i, o) {
+    normaliseScribble(o, canvas, false);
+  });
+
   // get json output for current user
   var output = JSON.stringify(canvas._objects);
+
+  // Denormalise
+  $.each(canvas._objects, function (i, o) {
+    normaliseScribble(o, canvas, true);
+  });
 
   // restore locked layers and return
   layersList.change();
@@ -23,13 +51,32 @@ function getJSON(qid, canvas) {
 }
 
 function updateScribble(qid, canvas) {
-  var ajaxField = $('#scribing-ajax-' + qid + ' .scribble-content');
-  ajaxField.val(getJSON(qid, canvas));
-  $('#scribing-ajax-' + qid).submit();
+  var ajaxField = $('#scribing-ajax-' + qid);
+  var newJSON = getJSON(qid, canvas);
+  var oldJSON = ajaxField.data('content');
+  if (newJSON !== oldJSON) {
+    ajaxField.data('content', newJSON);
+    $.ajax({
+        type: 'POST',
+        url: '/scribbles',
+        data: {
+          scribble: {
+            'std_course_id': ajaxField.data('std-course-id'),
+            'scribing_answer_id': ajaxField.data('scribing-answer-id'),
+            'id': ajaxField.data('id'),
+            'content': ajaxField.data('content'),
+          },
+        },
+        // failure: function(msg) {
+        //     console.log("Scribble update failed. " + msg);
+        // }
+    });
+  }
 }
 
 function loadScribbles(c, qid) {
   var layersList = $('#scribing-layers-' + qid);
+  layersList.empty();
   layersList.selectpicker('hide'); // remains hidden if there are no layers
 
   // load answer scribbling
@@ -52,21 +99,18 @@ function loadScribble(c, scribble, layersList) {
   var objects = JSON.parse(scribble.val()).objects;
   var fabricObjs = [];
 
-  // Declare this helper function here so it can access fabricObjs
-  // and remain outside the loop where it is used.
-  // Keeping function declarations outside loops helps with performance
-  // and stops HoundCI from complaining
-  function pushFabricObjs(img) {
-    fabricObjs.push(img);
+  function addDenormalisedFabricObj(item) {
+    normaliseScribble(item, c, true);
+    fabricObjs.push(item);
   }
 
   for (var i = 0; i < objects.length; i++) {
     var klass = fabric.util.getKlass(objects[i].type);
     if (klass.async) {
-      klass.fromObject(objects[i], pushFabricObjs);
+      klass.fromObject(objects[i], addDenormalisedFabricObj);
     } else {
       var item = klass.fromObject(objects[i]);
-      fabricObjs.push(item);
+      addDenormalisedFabricObj(item);
     }
   }
 
@@ -82,7 +126,7 @@ function loadScribble(c, scribble, layersList) {
       .attr('selected','selected');
     layersList.append(newLayerEntry);
 
-    var toggleLayer = function (showLayer) {
+    var toggleLayer = function(showLayer) {
       var thisGroup = scribbleGroup;
       if (showLayer && !c.contains(thisGroup)) {
         c.add(thisGroup);
@@ -103,6 +147,22 @@ function loadScribble(c, scribble, layersList) {
   }
 }
 
+// Makes current user's scribbles (un)selectable
+function toggleSelectable (qid, c, isSelectable) {
+  var layersList = $('#scribing-layers-' + qid);
+  // Hide scibbles by other users
+  layersList.find('option').each(function (i, o) {
+    $(o).data('toggleLayer')(false);
+  });
+  // Make own scribbles un/selectable
+  $.each(c.getObjects(), function (i, obj) {
+    obj.selectable = isSelectable;
+  });
+  // Restore scibbles by other users
+  layersList.change();
+  c.renderAll();
+}
+
 function hookButtonsToCanvas(qid, c) {
   var buttons = $('#scribing-buttons-' + qid + ' a');
   var isEditMode = $('#scribing-mode-' + qid).length !== 0;
@@ -115,6 +175,9 @@ function hookButtonsToCanvas(qid, c) {
       canvas.isDrawingMode = false;
       canvas.isGrabMode = true;
       canvas.selection = false;
+      toggleSelectable(qid, canvas, false);
+
+      // Change to appropriate button config
       $(this).addClass('active');
       buttons.not(this).removeClass('active');
       $('#scribing-edit-tools-' + qid).addClass('hidden');
@@ -141,14 +204,16 @@ function hookButtonsToCanvas(qid, c) {
         x: canvas.height/2,
         y: canvas.width/2
       }, newZoom);
+      canvas.trigger('mouse:move', {'isForced': true});
     });
 
   $('#scribing-layers-' + qid)
     .change(function () {
-        $(this).find('option').each(function (i, o) {
-          var showLayer = $(o).attr('selected') == 'selected';
-          $(o).data('toggleLayer')(showLayer);
-        });
+      // ensures that layers are show/hid according to checklist
+      $(this).find('option').each(function (i, o) {
+        var showLayer = $(o).attr('selected') == 'selected';
+        $(o).data('toggleLayer')(showLayer);
+      });
     });
 
   if (isEditMode) {
@@ -163,6 +228,9 @@ function hookButtonsToCanvas(qid, c) {
 
         canvas.isDrawingMode = true;
         canvas.isGrabMode = false;
+        canvas.selection = true;
+
+        // Change to appropriate button config
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).addClass('hidden');
@@ -177,6 +245,9 @@ function hookButtonsToCanvas(qid, c) {
         canvas.isDrawingMode = false;
         canvas.isGrabMode = false;
         canvas.selection = false;
+        toggleSelectable(qid, canvas, true);
+
+        // Change to appropriate button config
         $(this).addClass('active');
         buttons.not(this).removeClass('active');
         $('#scribing-edit-tools-' + qid).removeClass('hidden');
@@ -221,14 +292,51 @@ function hookButtonsToCanvas(qid, c) {
 
         if (ajaxSave) {
           updateScribble(qid,c);
+        } else {
+          var ansField = $('#answers_' + qid);
+          ansField.val(getJSON(qid,canvas));
         }
       });
   }
 }
 
+function renderCanvas(c, scribingImage, isEditMode, qid) {
+  c.clear();
+  c.setWidth(Math.min(
+    $('#scribing-container-' + qid).width(),
+    scribingImage.width
+  ));
+
+  //calculate scaleX and scaleY to fit image into canvas
+  //before creating fabric.Image object
+  var scale = Math.min(
+    c.width / scribingImage.width,
+    1);
+
+  //work out the correct height after getting the right scale from the width
+  c.setHeight(scale * scribingImage.height);
+
+  //create fabric.Image object with the right scaling and
+  // set as canvas background
+  var fabricImage = new fabric.Image(
+    scribingImage,
+    {opacity: 1, scaleX: scale, scaleY: scale}
+  );
+  c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
+  loadScribbles(c, qid);
+
+  if (!isEditMode) {
+    $.each(c.getObjects(), function (i, obj) {
+      obj.selectable = false;
+    });
+  }
+  c.renderAll();
+}
+
 // INITIALISE CANVASES
 
 $(document).ready(function () {
+  var isEditMode;
 
   //use the imagesLoaded library to invoke a callback when images are loaded
   imagesLoaded('.scribing-images', function() {
@@ -238,55 +346,19 @@ $(document).ready(function () {
     $.each(loadedImages, function(index, loadingImage) {
       var scribingImage = loadingImage.img;
       var qid = $(scribingImage).data('qid');
-      var isEditMode = $('#scribing-mode-' + qid).length !== 0;
+      isEditMode = $('#scribing-mode-' + qid).length !== 0;
 
       // get appropriate canvas by qid
       var c = new fabric.Canvas('scribing-canvas-' + qid); // js object
-      c.clear();
       hookButtonsToCanvas(qid, c);
+      renderCanvas(c, scribingImage, isEditMode, qid);
 
-      //event handlers to hide iris color pickers when they lose focus
-      //adapted from
-      //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
-      $(document).click(function(e) {
-        if (!$(e.target).is(".scribing-color-val .iris-picker .iris-picker-inner")) {
-          $('.scribing-color-val').iris('hide');
-        }
-      });
-      //this bit is needed so iris will come up and stay upwhen the textbox is clicked
-      $('.scribing-color-val').click(function(event) {
-        $('.scribing-color-val').iris('hide');
-        $(this).iris('show');
-        return false;
-      });
-
-      c.setWidth(Math.min($('#scribing-container-' + qid).width(), scribingImage.width));
-
-      //calculate scaleX and scaleY to fit image into canvas
-      //before creating fabric.Image object
-      var scale = Math.min(
-        c.width / scribingImage.width,
-        1);
-
-      //work out the correct height after getting the right scale from the width
-      c.setHeight(scale * scribingImage.height);
-
-      //create fabric.Image object with the right scaling and
-      // set as canvas background
-      var fabricImage = new fabric.Image(
-        scribingImage,
-        {opacity: 1, scaleX: scale, scaleY: scale}
-      );
-      c.setBackgroundImage(fabricImage, c.renderAll.bind(c));
-      c.renderAll();
-
-      loadScribbles(c, qid);
-
-      if (!isEditMode) {
-        $.each(c.getObjects(), function (i, obj) {
-          obj.selectable = false;
+      // Ensures that canvas shows correctly in tabbed mission view
+      // Otherwise, canvas is size zero.
+      $('a[data-toggle="tab"][data-qid="'+ qid +'"]')
+        .on('shown', function (e) {
+          renderCanvas(c, scribingImage, isEditMode, qid);
         });
-      }
 
       // Initialize zoom/scrolling variable
       var viewportLeft = 0,
@@ -297,9 +369,9 @@ $(document).ready(function () {
           isDown = false;
 
       c.on('mouse:down', function(options) {
+
         if (c.isGrabMode) {
           isDown = true;
-
           viewportLeft = c.viewportTransform[4];
           viewportTop = c.viewportTransform[5];
 
@@ -312,18 +384,32 @@ $(document).ready(function () {
       });
 
       c.on('mouse:move', function(options) {
+
+        var tryPan = function (finalLeft, finalTop) {
+          // limit panning
+          finalLeft = Math.min(finalLeft, 0);
+          finalLeft = Math.max(finalLeft, (c.getZoom()-1) * c.getWidth() * -1 );
+          finalTop = Math.min(finalTop, 0);
+          finalTop = Math.max(finalTop, (c.getZoom()-1) * c.getHeight() * -1 );
+
+          // apply calculated pan transforms
+          c.viewportTransform[4] = finalLeft;
+          c.viewportTransform[5] = finalTop;
+          c.renderAll();
+        };
+
         if (c.isGrabMode && isDown) {
           var currentMouseLeft = options.e.clientX;
           var currentMouseTop = options.e.clientY;
-
-          var deltaLeft = currentMouseLeft - mouseLeft,
-              deltaTop = currentMouseTop - mouseTop;
-
-          c.viewportTransform[4] = viewportLeft + deltaLeft;
-          c.viewportTransform[5] = viewportTop + deltaTop;
-
-          c.renderAll();
+          var deltaLeft = currentMouseLeft - mouseLeft;
+          var deltaTop = currentMouseTop - mouseTop;
+          var newLeft = viewportLeft + deltaLeft;
+          var newTop = viewportTop + deltaTop;
+          tryPan(newLeft, newTop);
+        } else if (options['isForced']) {
+          tryPan(c.viewportTransform[4], c.viewportTransform[5]);
         }
+
       });
 
       c.on('mouse:up', function() {
@@ -345,5 +431,23 @@ $(document).ready(function () {
         }
       });
     });
+  });
+
+  //event handlers to hide iris color pickers when they lose focus
+  //adapted from
+  //http://stackoverflow.com/questions/19682706/how-do-you-close-the-iris-colour-picker-when-you-click-away-from-it
+  $(document).click(function(e) {
+    if (!$(e.target).is('.scribing-color-val .iris-picker .iris-picker-inner')) {
+      if (isEditMode) {
+        $('.scribing-color-val').iris('hide');
+      }
+    }
+  });
+
+  //this bit is needed so iris will come up and stay upwhen the textbox is clicked
+  $('.scribing-color-val').click(function(event) {
+    $('.scribing-color-val').iris('hide');
+    $(this).iris('show');
+    return false;
   });
 });

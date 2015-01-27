@@ -34,7 +34,7 @@
                              qid: q.id,
                              answer: answer,
                              curr_user_course: curr_user_course,
-                             edit_mode: true
+                             edit_mode: (answer.std_course != curr_user_course)
                            } %>
     <% end %>
 

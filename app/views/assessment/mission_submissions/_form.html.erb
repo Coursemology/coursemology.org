@@ -3,7 +3,11 @@
       <% if @mission.display_mode == AssignmentDisplayMode.tab_mode && !@mission.single_question? %>
           <ul class="nav nav-tabs" id="assign-qn-tabs">
             <% @questions.each_with_index do |q, i| %>
-                <li class="<%= 'active' if i == 0 %>"><a href="#tab<%= i %>" data-toggle="tab"><%=  q.get_title %></a></li>
+                <li class="<%= 'active' if i == 0 %>">
+                  <a href="#tab<%= i %>" data-toggle="tab" data-qid="<%= q.id %>">
+                    <%=  q.get_title %>
+                  </a>
+                </li>
             <% end %>
           </ul>
       <% else %>
@@ -15,7 +19,7 @@
                 <div class="tab-pane <%= 'active' if i == 0%>" id="tab<%= i %>">
             <% end %>
             <% unless @mission.single_question? %>
-                <h3><%=  q.get_title %></h3>
+                <h3><%= q.get_title %></h3>
             <% end %>
             <div class="row">
               <div class="span8">

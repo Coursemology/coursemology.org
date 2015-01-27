@@ -159,7 +159,7 @@ class Assessment::GradingsController < ApplicationController
       if @pdf_export
         format.pdf do
           load_settings_for_printing
-          render :pdf => "Mission - #{@assessment.title}", 
+          render :pdf => "Mission - #{@assessment.title}",
             :disposition => (params[:commit] == 'Save as PDF') ? 'attachment' : 'inline'
         end
       end
