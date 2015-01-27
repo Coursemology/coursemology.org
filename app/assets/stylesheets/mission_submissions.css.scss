@@ -78,6 +78,15 @@ input.scribing-color-val {
   margin: 0px;
 }
 
+div.panel {
+  padding: 1px;
+  margin-bottom: 0px;
+  background-color: #f2f2f2;
+  border: 2px solid #dddddd;
+  border-radius: 0px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
 
 //hr { border: 1px solid #353535; border-width: 1px 0 0 0; }
 

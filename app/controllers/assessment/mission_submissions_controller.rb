@@ -23,8 +23,6 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
 
     #show running results for staff when the mission is not submitted
     @submission.eval_answer if curr_user_course.is_staff?
-
-    @scribble = Scribble.new
   end
 
 
@@ -36,7 +34,6 @@ class Assessment::MissionSubmissionsController < Assessment::SubmissionsControll
     @mission = @assessment.as_assessment
     @questions = @assessment.questions
     @submission.build_initial_answers
-    @scribble = Scribble.new
   end
 
   def update

@@ -2,91 +2,99 @@
 
 <%# Create hidden fields for each non-answer scribble %>
 <% answer.scribbles.each do |scribble| %>
-	<% is_scribble_unlocked = (scribble.std_course == curr_user_course) %>
-	<% ajax_scribble = scribble if is_scribble_unlocked %>
-	<%= hidden_field('scribbles', scribble.id, class: 'scribble-' + qid.to_s, value: scribble.content, "data-locked" => (is_scribble_unlocked ? "false" : "true"), "data-scribe" => scribble.std_course.name) %>
+  <% is_scribble_unlocked = (scribble.std_course == curr_user_course) %>
+  <% ajax_scribble = scribble if is_scribble_unlocked %>
+  <%= hidden_field('scribbles', scribble.id,
+      class: 'scribble-' + qid.to_s,
+      value: scribble.content,
+      "data-locked" => (is_scribble_unlocked ? "false" : "true"),
+      "data-scribe" => scribble.std_course.name) %>
 <% end %>
 
 <%# Create hidden fields for answer scribble %>
 <% is_ans_unlocked = (answer.std_course == curr_user_course) %>
-<%= hidden_field('answers', qid, value: answer.content, "data-locked" => (is_ans_unlocked ? "false" : "true"), "data-scribe" => answer.std_course.name) %>
+<%= hidden_field('answers', qid, value: answer.content,
+    "data-locked" => (is_ans_unlocked ? "false" : "true"),
+    "data-scribe" => answer.std_course.name) %>
 
-<%# Create hidden form for ajax submission, if applicable %>
+<%# Ajax submission data%>
 <% if !is_ans_unlocked and edit_mode %>
-	<%# undefined method `scribble_path' for #<#<Class:0x007fc8a8f0d6d8>:0x007fc8a8f02d50> in form_for %>
-	<%# when direct assignment to @scribble is tried %>
-	<% if ajax_scribble != nil %>
-		<%# @scribble = ajax_scribble %>
-		<% @scribble.id = ajax_scribble.id %>
-		<% @scribble.content = ajax_scribble.content %>
-	<% end %>
-	<% @scribble.std_course_id = curr_user_course.id %>
-	<% @scribble.scribing_answer_id = answer.as_answer_id %>
-
-	<%= form_for @scribble, :html => {:id => "scribing-ajax-" + qid.to_s}, remote: true do |f| %>
-		<%= f.hidden_field :content, class: "scribble-content" %>
-		<%= f.hidden_field :std_course_id %>
-		<%= f.hidden_field :scribing_answer_id %>
-		<%= f.hidden_field :id %>
-	<% end %>
+  <div id='scribing-ajax-<%= qid %>'
+    data-std-course-id = '<%= curr_user_course.id %>'
+    data-scribing-answer-id = '<%=  answer.as_answer_id %>'
+    data-id = '<%= ajax_scribble.id if ajax_scribble %>'
+    data-content = '<%= ajax_scribble.content if ajax_scribble %>'></div>
 <% end %>
+
 <div class="container-fluid" id="scribing-container-<%= qid %>">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="btn-toolbar">
-				<div class="btn-group" id="scribing-buttons-<%= qid %>">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="btn-toolbar">
+        <div class="btn-group" id="scribing-buttons-<%= qid %>">
 
-					<% if edit_mode %>
-						<a class="btn active" title="Enter Edit Mode" id="edit-mode-<%= qid %>">
-							<i class="icon-magnet"></i>
-						</a>
-						<a class="btn" title="Enter Scribing Mode" id="scribing-mode-<%= qid %>">
-							<i class="icon-pencil"></i>
-						</a>
-					<% end %>
+          <% if edit_mode %>
+            <a class="btn active" title="Enter Edit Mode" id="edit-mode-<%= qid %>">
+              <i class="icon-hand-up"></i>
+            </a>
+            <a class="btn" title="Enter Scribing Mode" id="scribing-mode-<%= qid %>">
+              <i class="icon-pencil"></i>
+            </a>
+          <% end %>
 
-					<a class="btn" title="Enter Grab Mode" id="grab-mode-<%= qid %>">
-						<i class="icon-search"></i>
-					</a>
-				</div>
-				<div class="btn-group">
-					<a class="btn" title="Zoom in" id="scribing-zoom-in-<%= qid %>">
-						<i class="icon-zoom-in"></i>
-					</a>
-					<a class="btn" title="Zoom out" id="scribing-zoom-out-<%= qid %>">
-						<i class="icon-zoom-out"></i>
-					</a>
-				</div>
-				<div class="btn-group">
-				  <select class="selectpicker show-tick dropdown-trigger-on-hover" multiple="multiple" title="Layers" data-selected-text-format="count" data-width="auto" id="scribing-layers-<%= qid %>" data-header="Show / hide layers">
-				  </select>
-				</div>
-				<div class="btn-group <%= edit_mode ? '' : 'hidden' %>" id="scribing-edit-tools-<%= qid %>">
-					<a class="btn" title="Delete Selection" id="scribing-delete-<%= qid %>">
-						<i class="icon-trash"></i>
-					</a>
-				</div>
-				<div class="btn-group hidden" id="scribing-drawing-tools-<%= qid %>">
-          <input type="text" class="scribing-color-val" id="scribing-color-<%= qid %>"></input>
-			    <input type="range" id="scribing-width-<%= qid %>" value="2" min="0" max="30" style="width: 100px"></input>
-				</div>
-			</div>
-			<canvas class="scribing-canvas"
-			        id="scribing-canvas-<%= qid %>"
-							style="border:1px solid black;"
-							width=900
-							height=1272
-							data-qid="<%= qid %>"
-							></canvas>
-			<% if question.document %>
-			  <img style="display: none;" class="scribing-images"
-			        src="<%= question.document.file.to_s %>"
-			        data-qid="<%= qid %>"
-			        ></img>
-
-			<% end %>
-		</div>
-	</div>
+          <a class="btn" title="Enter Grab Mode" id="grab-mode-<%= qid %>">
+            <i class="icon-move"></i>
+          </a>
+        </div>
+        <div class="btn-group">
+          <a class="btn" title="Zoom in" id="scribing-zoom-in-<%= qid %>">
+            <i class="icon-zoom-in"></i>
+          </a>
+          <a class="btn" title="Zoom out" id="scribing-zoom-out-<%= qid %>">
+            <i class="icon-zoom-out"></i>
+          </a>
+        </div>
+        <div class="btn-group">
+          <select class="selectpicker show-tick dropdown-trigger-on-hover"
+            multiple="multiple"
+            title="Layers"
+            data-selected-text-format="count"
+            data-width="auto"
+            id="scribing-layers-<%= qid %>"
+            data-header="Show / hide layers">
+          </select>
+        </div>
+        <div class="btn-group <%= edit_mode ? '' : 'hidden' %>" id="scribing-edit-tools-<%= qid %>">
+          <a class="btn" title="Delete Selection" id="scribing-delete-<%= qid %>">
+            <i class="icon-trash"></i>
+          </a>
+        </div>
+        <div class="btn-group hidden" id="scribing-drawing-tools-<%= qid %>">
+          <div class="panel">
+            <input type="text" class="scribing-color-val"
+              id="scribing-color-<%= qid %>">
+            </input>
+            <input id="scribing-width-<%= qid %>"
+              type="range" style="width: 100px"
+              value="2" min="0" max="30" >
+            </input>
+          </div>
+        </div>
+      </div>
+      <canvas class="scribing-canvas"
+        id="scribing-canvas-<%= qid %>"
+        style="border:1px solid black;"
+        width=900
+        height=1272
+        data-qid="<%= qid %>">
+      </canvas>
+      <% if question.document %>
+        <img style="display: none;" class="scribing-images"
+          src="<%= question.document.file.to_s %>"
+          data-qid="<%= qid %>">
+        </img>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 
