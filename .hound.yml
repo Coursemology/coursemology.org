@@ -6,3 +6,6 @@ LineLength:
 
 java_script:
   enabled: true
+
+scss:
+  enabled: true
