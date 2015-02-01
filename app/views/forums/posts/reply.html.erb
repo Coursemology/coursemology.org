@@ -6,7 +6,7 @@
     <div class="user">
       <% if @post.author %>
         <h5 class="username">
-          <%= link_to @post.author.user, course_user_course_path(@course, @post.author) %>
+          <%= link_to @post.author.name, course_user_course_path(@course, @post.author) %>
         </h5>
         <div class="icon pull-right">
           <img class="user-profile-pic" src="<%= @post.author.user.get_profile_photo_url %>"/>
@@ -21,7 +21,7 @@
 
       <% if @post.parent %>
         <div class="in-reply-to">
-          <%= link_to "In reply to #{@post.parent.author ? @post.parent.author.user : '(unknown)'}", "#post-#{@post.parent.id}" %>
+          <%= link_to "In reply to #{@post.parent.author ? @post.parent.author.name : '(unknown)'}", "#post-#{@post.parent.id}" %>
         </div>
       <% end %>
 
