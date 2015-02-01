@@ -163,7 +163,9 @@ class User < ActiveRecord::Base
   end
 
   def update_user_course
-    self.user_courses.each do |uc|
+    self.user_courses.includes(:course).each do |uc|
+      next unless uc.course.allow_name_change?
+
       uc.name = self.name
       uc.save
     end
