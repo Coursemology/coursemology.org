@@ -65,7 +65,9 @@ We love contributors!
 5. `git push origin awesome-feature`
 6. Create a pull request on github.
 
-Have an idea? Share it with us at the [Coursemology](https://groups.google.com/forum/#!forum/coursemology) mailing list.
+## Contact Us
+
+Have an idea? Pop by the [gitter](https://gitter.im/Coursemology/coursemology.org) chat room. If you prefer emails, join us at the [Coursemology-Dev](https://groups.google.com/forum/#!forum/coursemology-dev) mailing list. We will respond to you in less than 24 hours unless there's a zombie apocalypse.
 
 ## Found Boogs?
 
