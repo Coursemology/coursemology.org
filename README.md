@@ -18,7 +18,7 @@ There are two ways to setup a local development instance of Coursemology. You ca
 2. [Vagrant](https://www.vagrantup.com/)
 3. [Ansible](http://docs.ansible.com/intro_installation.html)
 
-#### Setting up 
+#### Setting up
 
     cd coursemology.org
     vagrant up
