@@ -3,7 +3,7 @@
   <div class="user">
     <% if post.author %>
       <h5 class="username">
-        <%= link_to post.author.user, course_user_course_path(@course, post.author) %>
+        <%= link_to post.author.name, course_user_course_path(@course, post.author) %>
       </h5>
       <div class="icon pull-right">
         <a href="<%= get_social_media_url(post.author) %>">

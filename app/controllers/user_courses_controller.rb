@@ -26,6 +26,7 @@ class UserCoursesController < ApplicationController
     end
     if params[:name]
       @user_course.user.name = params[:name].strip
+      @user_course.name = params[:name].strip
     end
     if params[:email]
       @user_course.user.email = params[:email].strip

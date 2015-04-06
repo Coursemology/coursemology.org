@@ -89,6 +89,20 @@
       </div>
     </div>
 
+    <% if @user_course_pref %>
+        <h3>Users</h3>
+        <p> Preference settings for users in course.</p>
+        <div class="info-block">
+          <div style="padding-left:5em" class="checkbox-text">
+            <input name="preferences[<%= @user_course_pref.id%>][prefer_value]"
+                   value="<%= @user_course_pref.prefer_value %>" type="hidden">
+            <input name="preferences[<%= @user_course_pref.id%>][display]"
+                   type="checkbox" <% if @user_course_pref.display? %> checked <% end %>>
+            <%= @user_course_pref.preferable_item.description %>
+          </div>
+        </div>
+    <% end %>
+
     <div class="center">
       <button class="btn btn-large btn-primary">Update</button>
     </div>

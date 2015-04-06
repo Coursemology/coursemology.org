@@ -622,6 +622,15 @@ if PreferableItem.count == 64
 
 end
 
+if PreferableItem.count == 66
+  PreferableItem.create! item:             "UserCourse",
+                         item_type:        "ChangeName",
+                         name:             "ChangeName",
+                         default_value:    "",
+                         description:      "Allow students to change their names in course",
+                         default_display:  true
+end
+
 if NavbarLinkType.count == 0
   NavbarLinkType.create! link_type: 'module'
   NavbarLinkType.create! link_type: 'admin'
