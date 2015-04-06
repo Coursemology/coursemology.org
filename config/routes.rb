@@ -319,7 +319,9 @@ Coursemology::Application.routes.draw do
     match "forum_participation" => "forum_participation#manage", as: :forum_participation
     match "forum_participation/user/:poster_id" => "forum_participation#individual", as: :forum_participation_individual
 
-    resources :tabs, module: :tabs
+    resources :tabs, module: :tabs do
+      put :sort, on: :collection
+    end
   end
 
   match "courses/:id/students" => "courses#students", as: :course_students

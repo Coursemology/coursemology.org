@@ -78,6 +78,13 @@ class Tabs::TabsController < ApplicationController
     end
   end
 
+  def sort
+    params[:order].each do |_, tab|
+      Tab.find(tab[:id]).update_column(:pos, tab[:position])
+    end
+    render nothing: true
+  end
+
   # DELETE /tab/tabs/1
   # DELETE /tab/tabs/1.json
   def destroy
