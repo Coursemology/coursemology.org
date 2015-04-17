@@ -25,7 +25,14 @@ $(document).ready(function() {
                             klass = 'btn-success';
                             break;
                     }
-                    $div.html('<a href="' + actions_map[mid].url + '" class="btn ' + klass + '" >' + actions_map[mid].action + '</a>')
+                    var link = $('<a>', {
+                        'href': actions_map[mid].url,
+                        'class': 'btn ' + klass,
+                        'text': actions_map[mid].action
+                    }).appendTo($div);
+                    if ( actions_map[mid].action == 'Attempt' ){
+                        link.attr('data-disable-with', 'Attempting...');
+                    }
                 }
                 var $title = $("#title-"+mid);
                 if ($title.length > 0) {
