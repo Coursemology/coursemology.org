@@ -164,12 +164,11 @@ class Forums::TopicsController < ApplicationController
 
 private
   def load_forum
-    @forum = ForumForum.find_using_slug(params[:forum_id])
-    raise ActiveRecord::RecordNotFound unless @forum
+    @forum = @course.forums.find_using_slug!(params[:forum_id])
   end
 
   def load_topic
-    @topic = ForumTopic.find_using_slug(params[:id] || params[:topic_id])
+    @topic = @forum.topics.find_using_slug(params[:id] || params[:topic_id])
     if %w(new create).include?(params[:action])
       @topic = ForumTopic.new
       # No implicit assignment of attributes to the @post property. We need to create the post first before
