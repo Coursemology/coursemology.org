@@ -41,7 +41,7 @@ class UserCourse < ActiveRecord::Base
   has_many :comment_subscriptions, dependent: :destroy
   has_many :comment_topics, through: :comment_subscriptions
 
-  has_one :guild_user
+  has_one :guild_user, dependent: :destroy
 
   #TODO
   # has_many :submissions, foreign_key: "std_course_id", dependent: :destroy

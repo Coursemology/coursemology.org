@@ -278,6 +278,16 @@ class Course < ActiveRecord::Base
     self.course_preferences.join_items.item("Achievements").item_type('Icon').name('locked').first
   end
 
+  def user_course_change_name_pref
+    self.course_preferences.join_items.item("UserCourse").item_type('ChangeName').name('ChangeName').first
+  end
+
+  def allow_name_change?
+    # return true when there is no preference
+    pref = user_course_change_name_pref
+    pref.nil? || pref.display?
+  end
+
   def auto_create_sbm_pref
     self.course_preferences.join_items.item('Mission').item_type('Submission').name('auto').first
   end

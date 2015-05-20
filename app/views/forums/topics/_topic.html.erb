@@ -22,7 +22,7 @@
     <div class="subject">
       <%= link_to topic.title, course_forum_topic_path(@course, @forum, topic) %>
     </div>
-    <div class="started-by">Started by <%= topic.author ? topic.author.user : '(unknown)' %></div>
+    <div class="started-by">Started by <%= topic.author ? topic.author.name : '(unknown)' %></div>
   </td>
   <td class="votes-count text-center"><%= topic.votes_count %></td>
   <td class="posts-count text-center"><%= topic.posts.count %></td>
@@ -30,7 +30,7 @@
   <td class="latest-post">
     <%  last_post = topic.posts.last %>
     <%  if last_post.author %>
-      <%= link_to last_post.author.user, course_user_course_path(@course, last_post.author) %><br />
+      <%= link_to last_post.author.name, course_user_course_path(@course, last_post.author) %><br />
     <% else %>
       (unknown)
     <% end %>

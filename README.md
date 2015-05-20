@@ -1,6 +1,5 @@
-# Coursemology [![Build Status](https://travis-ci.org/Coursemology/coursemology.org.svg?branch=development)](https://travis-ci.org/Coursemology/coursemology.org) [![Coverage Status](https://coveralls.io/repos/Coursemology/coursemology.org/badge.png)](https://coveralls.io/r/Coursemology/coursemology.org)
+# Coursemology [![Build Status](https://travis-ci.org/Coursemology/coursemology.org.svg?branch=development)](https://travis-ci.org/Coursemology/coursemology.org) [![Coverage Status](https://coveralls.io/repos/Coursemology/coursemology.org/badge.png)](https://coveralls.io/r/Coursemology/coursemology.org) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Coursemology/coursemology.org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Coursemology/coursemology.org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 <a href="http://coursemology.org"><img src="https://raw.githubusercontent.com/Coursemology/coursemology.org/development/public/images/coursemology_logo_landscape_100.png"
  alt="Coursemology logo" title="Coursemology" align="right" /></a>
@@ -19,7 +18,7 @@ There are two ways to setup a local development instance of Coursemology. You ca
 2. [Vagrant](https://www.vagrantup.com/)
 3. [Ansible](http://docs.ansible.com/intro_installation.html)
 
-#### Setting up 
+#### Setting up
 
     cd coursemology.org
     vagrant up
@@ -66,7 +65,9 @@ We love contributors!
 5. `git push origin awesome-feature`
 6. Create a pull request on github.
 
-Have an idea? Share it with us at the [Coursemology](https://groups.google.com/forum/#!forum/coursemology) mailing list.
+## Contact Us
+
+Have an idea? Pop by the [gitter](https://gitter.im/Coursemology/coursemology.org) chat room. If you prefer emails, join us at the [Coursemology-Dev](https://groups.google.com/forum/#!forum/coursemology-dev) mailing list. We will respond to you in less than 24 hours unless there's a zombie apocalypse.
 
 ## Found Boogs?
 

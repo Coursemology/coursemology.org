@@ -169,9 +169,21 @@
             });
 
     $(document).ready(function() {
-        $(".ui-sortable").sortable({
-            update: function(e, ui){
-                console.log(ui);
+        $('.ui-sortable').sortable({
+            update: function(e, ui) {
+                updated_order = [];
+
+                $('tr.tab.ng-scope').each(function (i) {
+                    updated_order.push({id: $(this).data("id"), position: i + 1});
+                });
+
+                course_id = get_course_id(window.location.href);
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/courses/' + course_id + '/tabs/sort',
+                    data: { order: updated_order }
+                });
             }
         });
     });
@@ -188,7 +200,7 @@
     </tr>
     </thead>
     <tbody id="dump" class="tabs" >
-    <tr ng-repeat="tab in tabs" class="tab" >
+    <tr ng-repeat="tab in tabs" class="tab" data-id="{{tab.id}}">
       <td>{{$index + 1}}</td>
       <td>{{tab.title}}</td>
       <td>{{tab.description}}</td>
