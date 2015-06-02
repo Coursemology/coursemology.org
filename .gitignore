@@ -27,8 +27,6 @@
 /config/initializers/devise.rb
 /config/facebook.yml
 /.idea/
-/config/deploy.rb
-/Capfile
 
 /config/newrelic.yml
 
@@ -37,7 +35,6 @@
 .ruby-version
 .ruby-env
 
-/config/database.yml
 /config/puma.rb
 
 # Ignore 1337 secrets
