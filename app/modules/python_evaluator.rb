@@ -61,6 +61,8 @@ class PythonEvaluator
 
     #user could print to stdout, use unique hash to filter out test results
     hash = Digest::MD5.hexdigest(rand().to_s)
+    # Hash used for marking exceptions in private tests
+    error_hash = Digest::MD5.hexdigest(rand().to_s)
 
     for time in 0..times
       for i in 0..range
@@ -97,7 +99,14 @@ class PythonEvaluator
         else
           test_cases.each do |test|
             exp = "#{test["expression"]} == #{test["expected"]}"
-            test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
+            if test_type == :private
+              test_code << "\ntry:\n"
+              test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
+              test_code << "except Exception as e:\n"
+              test_code << "    print('#{hash} #{error_hash}')\n"
+            else
+              test_code << "\nprint('#{hash} {0}'.format(#{exp}))\n"
+            end
           end
         end
 
@@ -131,6 +140,10 @@ class PythonEvaluator
 
         if exec_fail
           errors = "You might have an infinite loop or your recursion level is too deep."
+        end
+
+        if errors == "" && @stdout && @stdout.include?(error_hash)
+          errors = 'You answer raised an exception when running private test cases'
         end
 
         summary[need_std_answer ? result_type : test_type] = results
