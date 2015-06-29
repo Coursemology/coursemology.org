@@ -1,8 +1,8 @@
 
 $(function () {
-    $('input[name=assessment_general_question\\[auto_grading_type\\]]:radio').change(function () {
+    $('input[name=assessment_general_question\\[auto_grading_type\\]]').change(function () {
         $('.auto-grading').removeClass('in');
-        var index = $(this).val();
-        $('#auto-grading-' + index).addClass('in');
+        var autoGradingType = $(this).val();
+        $('#auto-grading-' + autoGradingType).addClass('in');
     });
 });
