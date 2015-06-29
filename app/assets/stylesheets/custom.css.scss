@@ -1109,6 +1109,15 @@ a.mission-box {
   content: "Grade Summary";
 }
 
+.auto-grading-exact {
+  @extend  .grading-block;
+}
+
+.auto-grading-exact:after {
+  @extend  .grading-block:after;
+  content: "Auto-grading: exact match";
+}
+
 a:hover, .leaderboard-achivement {
   text-decoration: none;
 }

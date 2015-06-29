@@ -61,6 +61,12 @@
             <!--show condition: new grading, review grading, update grading -->
             <div class="row-fluid">
               <div class="span10">
+                <% qn = qn_dic[:qn] %>
+                <% if qn.is_a? Assessment::GeneralQuestion %>
+                  <% if qn.auto_grading_type == :exact %>
+                    <%= render partial: 'assessment/gradings/auto_grading_exact_options', locals: {qn: qn} %>
+                  <% end %>
+                <% end %>
                 <div class="grading-block">
                   <% max_grade = qn_dic[:qn].max_grade  %>
                   <% grade = qn_dic[:grade] %>

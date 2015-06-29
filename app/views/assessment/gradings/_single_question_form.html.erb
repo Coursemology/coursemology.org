@@ -1,5 +1,6 @@
 <% qid = @summary[:qn_ans].keys.first %>
 <% qn_dic = @summary[:qn_ans][qid] %>
+<% qn = @summary[:qn_ans][qid][:qn] %>
 <%= simple_form_for @grading, url: (@grading.persisted? ?
         course_assessment_submission_grading_path(@course, @assessment, @submission, @grading) :
         course_assessment_submission_gradings_path(@course, @assessment, @submission)),
@@ -45,6 +46,11 @@
         <hr>
         <div class="row-fluid">
           <div class="span10">
+            <% if qn.is_a? Assessment::GeneralQuestion %>
+              <% if qn.auto_grading_type == :exact %>
+                <%= render partial: 'assessment/gradings/auto_grading_exact_options', locals: {qn: qn} %>
+              <% end %>
+            <% end %>
             <div class="grade-summary">
               <h4>Total Grade:</h4>
               <% if mode == 'view' %>

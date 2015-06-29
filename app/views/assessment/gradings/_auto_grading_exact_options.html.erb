@@ -1,0 +1,18 @@
+<div class="auto-grading-exact">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <th>Correct</th>
+      <th>Answer</th>
+      <th>Explanation</th>
+    </thead>
+    <tbody>
+      <% qn.auto_grading_exact_options.each do |option| %>
+        <tr>
+          <td><%= option.correct ? 'Yes' : 'No' %></td>
+          <td><%= option.answer %></td>
+          <td><%= option.explanation %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
