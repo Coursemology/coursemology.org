@@ -79,6 +79,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   end
 
   def mission_reminder(course, asm)
+    return unless asm && asm.published?
     submitted_std = asm.submissions.map {|sub| sub.std_course.user }
     all_std = course.user_courses.student.where(is_phantom: false).map {|uc| uc.user }
 
