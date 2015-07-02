@@ -9,7 +9,10 @@ class Assessment::GeneralQuestion < ActiveRecord::Base
   as_enum :auto_grading_type, none: 0, exact: 1, keyword: 2
 
   has_many :auto_grading_exact_options, dependent: :destroy, class_name: Assessment::AutoGradingExactOption.name
-
   attr_accessible :auto_grading_exact_options_attributes
   accepts_nested_attributes_for :auto_grading_exact_options, allow_destroy: true
+
+  has_many :auto_grading_keyword_options, dependent: :destroy, class_name: Assessment::AutoGradingKeywordOption.name
+  attr_accessible :auto_grading_keyword_options_attributes
+  accepts_nested_attributes_for :auto_grading_keyword_options, allow_destroy: true
 end

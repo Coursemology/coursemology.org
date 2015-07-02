@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150625085254) do
+ActiveRecord::Schema.define(:version => 20150702085119) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -204,6 +204,12 @@ ActiveRecord::Schema.define(:version => 20150625085254) do
     t.boolean "correct"
     t.text    "answer"
     t.text    "explanation"
+  end
+
+  create_table "assessment_auto_grading_keyword_options", :force => true do |t|
+    t.integer "general_question_id"
+    t.string  "keyword"
+    t.integer "score"
   end
 
   create_table "assessment_coding_answers", :force => true do |t|
