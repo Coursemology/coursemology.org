@@ -63,8 +63,8 @@
               <div class="span10">
                 <% qn = qn_dic[:qn] %>
                 <% if qn.is_a? Assessment::GeneralQuestion %>
-                  <% if qn.auto_grading_type == :exact %>
-                    <%= render partial: 'assessment/gradings/auto_grading_exact_options', locals: {qn: qn} %>
+                  <% if qn.auto_grading_type != :none %>
+                    <%= render partial: "assessment/gradings/auto_grading_#{qn.auto_grading_type}_options", locals: {qn: qn} %>
                   <% end %>
                 <% end %>
                 <div class="grading-block">
