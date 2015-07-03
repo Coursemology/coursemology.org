@@ -29,6 +29,15 @@
         </div>
 
         <div id="auto-grading-keyword" class="auto-grading collapse <%= @question.auto_grading_type == :keyword ? 'in' : '' %>">
+            <% if @question.auto_grading_keyword_options.any? %>
+                <%= f.simple_fields_for :auto_grading_keyword_options do |option| %>
+                  <%= render partial: "auto_grading_keyword_option_fields",
+                             locals: { f: option } %>
+                <% end %>
+            <% end %>
+            <div class="links controls">
+              <%= link_to_add_association '<i class="icon-plus-sign"></i> Add Keyword Option'.html_safe, f, :auto_grading_keyword_options, html_options: { class: "btn btn-info" } %>
+            </div>
         </div>
     </div>
 
