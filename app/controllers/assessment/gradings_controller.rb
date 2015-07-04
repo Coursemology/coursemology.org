@@ -27,20 +27,31 @@ class Assessment::GradingsController < ApplicationController
 
     @submission.answers.each do |ans|
       qn = ans.question
+      @summary[:qn_ans][qn.id][:qn] = qn
       @summary[:qn_ans][qn.id][:ans] = ans
 
       #suggest grading for auto grading question
-      if qn.is_a?(Assessment::CodingQuestion) && qn.auto_graded?
-        results = ans.result_hash["eval"]
-        evals = results ? results.select {|r| r}.length : 0
-        tests = qn.data_hash["eval"].length
-        tests = tests == 0 ? 1 : tests
-        grade = (qn.max_grade * evals / tests).to_i
-        ag = ans.build_answer_grading
-        ag.grade = grade
-
-        @summary[:qn_ans][qn.question.id][:grade] = ag
+      if qn.auto_graded?
+        if qn.is_a?(Assessment::CodingQuestion)
+          results = ans.result_hash["eval"]
+          evals = results ? results.select { |r| r }.length : 0
+          tests = qn.data_hash["eval"].length
+          tests = tests == 0 ? 1 : tests
+          grade = (qn.max_grade * evals / tests).to_i
+        elsif qn.is_a?(Assessment::GeneralQuestion)
+          # Check saved auto-grading options and suggest a grade
+          grade = 0
+          case qn.auto_grading_type
+          when :exact
+            grade = auto_grading_exact_grade(qn, ans.content)
+          when :keyword
+            # not yet implemented
+          end
+        end
       end
+      ag = ans.build_answer_grading
+      ag.grade = grade
+      @summary[:qn_ans][qn.question.id][:grade] = ag
     end
   end
 
@@ -182,6 +193,37 @@ class Assessment::GradingsController < ApplicationController
   end
 
   private
+
+  # Compare answers against attempts, modulo case and punctuation
+  def auto_grading_equal(answer, attempt)
+    answer = answer.gsub(/[^\w\d\s]/, '')
+    attempt = attempt.gsub(/[^\w\d\s]/, '')
+    attempt.casecmp(answer).zero?
+  end
+
+  # Given a question (and its auto-grading options) and an answer,
+  # computes the suggested grade that the answer should get based
+  # on the options.
+  def auto_grading_exact_grade(question, answer)
+    correct = question.auto_grading_exact_options.
+              select(&:correct?).map(&:answer)
+    correct.each do |c|
+      if auto_grading_equal(answer, c)
+        return question.max_grade
+      end
+    end
+
+    wrong = question.auto_grading_exact_options.
+            reject(&:correct?).map(&:answer)
+    wrong.each do |c|
+      if auto_grading_equal(answer, c)
+        return 0
+      end
+    end
+
+    # Suggest 0 by default
+    0
+  end
 
   def validate_gradings(ag_record, ag)
     grade = ag[:grade].strip

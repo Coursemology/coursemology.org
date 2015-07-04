@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150117163547) do
+ActiveRecord::Schema.define(:version => 20150625085254) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -199,6 +199,13 @@ ActiveRecord::Schema.define(:version => 20150117163547) do
   add_index "assessment_answers", ["question_id"], :name => "index_assessment_answers_on_question_id"
   add_index "assessment_answers", ["submission_id", "question_id"], :name => "index_on_answer_submission_question"
 
+  create_table "assessment_auto_grading_exact_options", :force => true do |t|
+    t.integer "general_question_id"
+    t.boolean "correct"
+    t.text    "answer"
+    t.text    "explanation"
+  end
+
   create_table "assessment_coding_answers", :force => true do |t|
     t.text     "result"
     t.datetime "deleted_at"
@@ -233,8 +240,10 @@ ActiveRecord::Schema.define(:version => 20150117163547) do
 
   create_table "assessment_general_questions", :force => true do |t|
     t.datetime "deleted_at"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "auto_graded"
+    t.integer  "auto_grading_type_cd", :default => 0
   end
 
   create_table "assessment_grading_logs", :force => true do |t|
