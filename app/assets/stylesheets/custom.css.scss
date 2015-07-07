@@ -1118,6 +1118,15 @@ a.mission-box {
   content: "Auto-grading: exact match";
 }
 
+.auto-grading-keyword {
+  @extend  .grading-block;
+}
+
+.auto-grading-keyword:after {
+  @extend  .grading-block:after;
+  content: "Auto-grading: keywords";
+}
+
 a:hover, .leaderboard-achivement {
   text-decoration: none;
 }

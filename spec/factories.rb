@@ -157,6 +157,20 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_auto_graded_keyword_general_questions do
+      ignore do
+        creator { create(:lecturer) }
+        general_question_count 2
+      end
+      after(:build) do |mission, evaluator|
+        evaluator.general_question_count.times do
+          mission.questions << create(:general_question,
+                                      :auto_grading_keyword,
+                                      creator: evaluator.creator).question
+        end
+      end
+    end
+
     trait :with_coding_questions do
       ignore do
         creator { create(:lecturer) }
@@ -309,12 +323,30 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :auto_grading_keyword do
+      auto_graded true
+      auto_grading_type :keyword
+      ignore do
+        option_count 2
+      end
+      after(:build) do |question, evaluator|
+        evaluator.option_count.times do
+          question.auto_grading_keyword_options << build(:auto_grading_keyword_option)
+        end
+      end
+    end
   end
 
   factory :auto_grading_exact_option, class: Assessment::AutoGradingExactOption do
     correct true
     answer 'Some answer'
     explanation 'Some explanation'
+  end
+
+  factory :auto_grading_keyword_option, class: Assessment::AutoGradingKeywordOption do
+    keyword 'keyword1'
+    score 2
   end
 
   factory :coding_question, class: Assessment::CodingQuestion do

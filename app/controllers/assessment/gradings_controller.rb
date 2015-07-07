@@ -45,7 +45,7 @@ class Assessment::GradingsController < ApplicationController
           when :exact
             grade = auto_grading_exact_grade(qn, ans.content)
           when :keyword
-            # not yet implemented
+            grade = auto_grading_keyword_grade(qn, ans.content)
           end
         end
       end
@@ -201,9 +201,9 @@ class Assessment::GradingsController < ApplicationController
     attempt.casecmp(answer).zero?
   end
 
-  # Given a question (and its auto-grading options) and an answer,
-  # computes the suggested grade that the answer should get based
-  # on the options.
+  # Given a question (and its exact auto-grading options) and an answer,
+  # compares the given solution against the answers and computes a
+  # suggested grade.
   def auto_grading_exact_grade(question, answer)
     correct = question.auto_grading_exact_options.
               select(&:correct?).map(&:answer)
@@ -223,6 +223,20 @@ class Assessment::GradingsController < ApplicationController
 
     # Suggest 0 by default
     0
+  end
+
+  # Given a question (and its keyowrd auto-grading options) and an answer,
+  # chceks the given solution for the presence of the keywords and computes
+  # a suggested grade.
+  def auto_grading_keyword_grade(question, answer)
+    score = question.auto_grading_keyword_options.map do |option|
+      if answer.match(Regexp.new(option.keyword))
+        option.score
+      else
+        0
+      end
+    end.reduce(:+)
+    [score, question.max_grade].min
   end
 
   def validate_gradings(ag_record, ag)
