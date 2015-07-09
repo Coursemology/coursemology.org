@@ -30,10 +30,8 @@
                                  edit_mode: (mode.to_s == 'edit') ? true : false
                                } %>
         <% else %>
-          <% if qn.is_a?(Assessment::GeneralQuestion) %>
-            <% if qn.auto_grading_type == :keyword %>
-              <%= highlight_keywords(qn_dic[:ans].content || "", qn.auto_grading_keyword_options.map(&:keyword)).html_safe %>
-            <% end %>
+          <% if qn.is_a?(Assessment::GeneralQuestion) && qn.auto_graded? && qn.auto_grading_type == :keyword %>
+            <%= highlight_keywords(qn_dic[:ans].content || "", qn.auto_grading_keyword_options.map(&:keyword)).html_safe %>
           <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">
