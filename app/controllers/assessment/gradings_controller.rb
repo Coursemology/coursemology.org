@@ -27,7 +27,6 @@ class Assessment::GradingsController < ApplicationController
 
     @submission.answers.each do |ans|
       qn = ans.question
-      @summary[:qn_ans][qn.id][:qn] = qn
       @summary[:qn_ans][qn.id][:ans] = ans
 
       #suggest grading for auto grading question
