@@ -1,8 +1,8 @@
 <% # Renders a summary of attempts for this completed MCQ question. %>
 <% qn   # The McqQuestion to render %>
 
-<% answers = qn.specific.mcq_answers(std_course_id: @submission.std_course, submission_id: @submission.id).group_by_options.includes(:options)
-if answers.length > 0 %>
+<% answers_with_attempts = qn.specific.mcq_answer_with_attempts(@submission) %>
+<% if answers_with_attempts.length > 0 %>
   <%=render partial: "assessment/mcq_questions/one", locals: {q: qn} %>
   <strong>Answer attempts</strong>
   <table class="table">
@@ -17,24 +17,26 @@ if answers.length > 0 %>
     </tr>
     </thead>
     <tbody>
-    <% answers.each_with_index do |ans, index| %>
-      <% unless !ans.correct && @hide_wrong_attempts %>
-        <tr class="<%= ans.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
+    <% answers_with_attempts.each_with_index do |answer_attempt, index| %>
+      <% answer = answer_attempt[:answer] %>
+      <% attempt = answer_attempt[:attempt] %>
+      <% unless !answer.correct && @hide_wrong_attempts %>
+        <tr class="<%= answer.correct ? "mcq-ans-correct" : "mcq-ans-incorrect" %>">
           <td><%= index + 1 %></td>
           <td>
-            <% if ans.options.length == 1 %>
-                <%= ans.options.first.text %>
+            <% if answer.options.length == 1 %>
+                <%= answer.options.first.text %>
             <% else %>
                 <ul>
-                  <% ans.options.each do |opt| %>
+                  <% answer.options.each do |opt| %>
                       <li><%= opt.text %></li>
                   <% end %>
                 </ul>
             <% end %>
           </td>
-          <td><%= ans.count %></td>
+          <td><%= attempt %></td>
           <% unless @hide_timestamps %>
-            <td><%= time_ago_in_words(ans.created_at) + " ago"  %></td>
+            <td><%= time_ago_in_words(answer.created_at) + " ago"  %></td>
           <% end %>
         </tr>
       <% end %>

@@ -25,4 +25,29 @@ class Assessment::McqQuestion < ActiveRecord::Base
         where("assessment_answers.std_course_id = ? AND assessment_answers.submission_id = ?",
               filters[:std_course_id], filters[:submission_id])
   end
+
+  # Returns all answers and their attempt times in an array
+  # Example return value:
+  #   [ { answer: answer_1, attempt: 1 }, { answer: answer_2, attempt: 3 } ]
+  def mcq_answer_with_attempts(submission)
+    answers = mcq_answers(std_course_id: submission.std_course,
+                          submission_id: submission).includes(:options)
+    options_hash = {}
+    answers.each do |answer|
+      update_attempt_times(options_hash, answer)
+    end
+    options_hash.values
+  end
+
+  private
+
+  def update_attempt_times(hash, answer)
+    key = answer.options.pluck(:id)
+    if hash[key] && hash[key][:answer]
+      hash[key][:answer] = answer
+      hash[key][:attempt] += 1
+    else
+      hash[key] = { answer: answer, attempt: 1 }
+    end
+  end
 end
