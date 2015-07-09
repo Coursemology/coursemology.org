@@ -1,0 +1,16 @@
+<div class="auto-grading-keyword">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <th>Keyword</th>
+      <th>Score</th>
+    </thead>
+    <tbody>
+      <% qn.auto_grading_keyword_options.each do |option| %>
+        <tr>
+          <td><%= option.keyword %></td>
+          <td><%= option.score %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

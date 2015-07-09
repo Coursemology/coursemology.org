@@ -5,6 +5,42 @@
     <%= f.input :max_grade, as: :integer, input_html: {class: "number_field input-mini"}, min: 0  %>
     <%= f.input :tags, as: :tag, url: course_tags_path, input_html: {class: "span7"}  %>
 
+    <%= f.input :auto_graded,
+        input_html: {"data-toggle" => "collapse", "data-target" => "#auto-grading-type"} %>
+
+    <div id="auto-grading-type" class="collapse <%= @question.auto_graded? ? "in" : "out" %>">
+
+        <%= f.input :auto_grading_type,
+            as: :radio_buttons,
+            label: 'Auto-grading type',
+            collection: [ ['None', 'none'], ['Exact match', 'exact'], ['Keywords', 'keyword']],
+            checked: @question.auto_grading_type %>
+
+        <div id="auto-grading-exact" class="auto-grading collapse <%= @question.auto_grading_type == :exact ? 'in' : '' %>">
+            <% if @question.auto_grading_exact_options.any? %>
+                <%= f.simple_fields_for :auto_grading_exact_options do |option| %>
+                  <%= render partial: "auto_grading_exact_option_fields",
+                             locals: { f: option } %>
+                <% end %>
+            <% end %>
+            <div class="links controls">
+              <%= link_to_add_association '<i class="icon-plus-sign"></i> Add Exact Option'.html_safe, f, :auto_grading_exact_options, html_options: { class: "btn btn-info" } %>
+            </div>
+        </div>
+
+        <div id="auto-grading-keyword" class="auto-grading collapse <%= @question.auto_grading_type == :keyword ? 'in' : '' %>">
+            <% if @question.auto_grading_keyword_options.any? %>
+                <%= f.simple_fields_for :auto_grading_keyword_options do |option| %>
+                  <%= render partial: "auto_grading_keyword_option_fields",
+                             locals: { f: option } %>
+                <% end %>
+            <% end %>
+            <div class="links controls">
+              <%= link_to_add_association '<i class="icon-plus-sign"></i> Add Keyword Option'.html_safe, f, :auto_grading_keyword_options, class: "btn btn-info" %>
+            </div>
+        </div>
+    </div>
+
     <%= f.button :form_submit, cancel: :back %>
   <%= render :partial => "layouts/html_editor" %>
 <% end %>

@@ -167,7 +167,7 @@ class UserCourse < ActiveRecord::Base
     end
     self.level = new_level
 
-    self.exp_updated_at = Time.now
+    self.exp_updated_at = Time.now if exp_changed?
     self.save
     ActionController::Base.new.expire_fragment("sidebar/#{course.id}/uc/#{self.id}")
   end

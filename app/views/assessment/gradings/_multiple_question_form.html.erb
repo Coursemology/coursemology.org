@@ -19,6 +19,7 @@
         </div>
         <h3>Answer:</h3>
         <% if qn_dic[:ans] %>
+          <% qn = qn_dic[:qn] %>
             <% if @assessment.specific.file_submission_only? %>
                 <p style="font-style: italic">Answer is contained in the submission file(s).</p>
             <% elsif qn_dic[:qn].class == Assessment::CodingQuestion %>
@@ -36,11 +37,17 @@
                                      edit_mode: (mode.to_s == 'edit') ? true : false
                                    } %>
             <% else %>
+              <% if qn.is_a?(Assessment::GeneralQuestion) %>
+                <% if qn.auto_grading_type == :keyword %>
+                  <%= highlight_keywords(qn_dic[:ans].content || "", qn.auto_grading_keyword_options.map(&:keyword)).html_safe %>
+                <% end %>
+              <% else %>
                 <div class="row-fluid">
                   <div class="submission-question-block span10">
                     <%= (qn_dic[:ans].content || "").html_safe %>
                   </div>
                 </div>
+              <% end %>
             <% end %>
             <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][answer_id]" value="<%= qn_dic[:ans].id %>">
             <% if @assessment.specific.comment_per_qn? && !@hide_comments%>
@@ -61,6 +68,12 @@
             <!--show condition: new grading, review grading, update grading -->
             <div class="row-fluid">
               <div class="span10">
+                <% qn = qn_dic[:qn] %>
+                <% if qn.is_a? Assessment::GeneralQuestion %>
+                  <% if qn.auto_grading_type != :none %>
+                    <%= render partial: "assessment/gradings/auto_grading_#{qn.auto_grading_type}_options", locals: {qn: qn} %>
+                  <% end %>
+                <% end %>
                 <div class="grading-block">
                   <% max_grade = qn_dic[:qn].max_grade  %>
                   <% grade = qn_dic[:grade] %>

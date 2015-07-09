@@ -1,0 +1,10 @@
+<div class="nested-fields">
+    <%= f.input :keyword, input_html: {rows: 4} %>
+    <%= f.input :score, input_html: {rows: 4, type: 'number', min: 1, onchange: 'setAutoGradingKeywordMaxScore()' } %>
+
+    <div class="controls">
+        <%= link_to_remove_association '<i class="icon-remove-sign"></i> Remove'.html_safe, f, class: "btn btn-warning btn-small", style: "display: inline" %>
+    </div>
+    <br />
+</div>
+

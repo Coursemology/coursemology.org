@@ -1,5 +1,6 @@
 <% qid = @summary[:qn_ans].keys.first %>
 <% qn_dic = @summary[:qn_ans][qid] %>
+<% qn = @summary[:qn_ans][qid][:qn] %>
 <%= simple_form_for @grading, url: (@grading.persisted? ?
         course_assessment_submission_grading_path(@course, @assessment, @submission, @grading) :
         course_assessment_submission_gradings_path(@course, @assessment, @submission)),
@@ -21,7 +22,7 @@
                                 annotations:  qn_dic[:annotations],
                                 submission:   @submission,
                                 mode:         "view"} %>
-       <% elsif qn_dic[:qn].class == Assessment::ScribingQuestion %>
+        <% elsif qn_dic[:qn].class == Assessment::ScribingQuestion %>
             <%= render partial: 'assessment/mission_submissions/scribing_canvas',
                        locals: { question: qn_dic[:qn],
                                  qid: qid,
@@ -29,11 +30,17 @@
                                  edit_mode: (mode.to_s == 'edit') ? true : false
                                } %>
         <% else %>
+          <% if qn.is_a?(Assessment::GeneralQuestion) %>
+            <% if qn.auto_grading_type == :keyword %>
+              <%= highlight_keywords(qn_dic[:ans].content || "", qn.auto_grading_keyword_options.map(&:keyword)).html_safe %>
+            <% end %>
+          <% else %>
             <div class="row-fluid">
               <div class="submission-question-block span10">
                 <%= (qn_dic[:ans].content || "").html_safe %>
               </div>
             </div>
+          <% end %>
         <% end %>
         <input type="hidden" name="ags[<%= qn_dic[:grade].id if qn_dic[:grade] %>][answer_id]" value="<%= qn_dic[:ans].id %>">
         <!--show condition: new grading, review grading, update grading -->
@@ -45,6 +52,11 @@
         <hr>
         <div class="row-fluid">
           <div class="span10">
+            <% if qn.is_a? Assessment::GeneralQuestion %>
+              <% if qn.auto_grading_type != :none %>
+                <%= render partial: "assessment/gradings/auto_grading_#{qn.auto_grading_type}_options", locals: {qn: qn} %>
+              <% end %>
+            <% end %>
             <div class="grade-summary">
               <h4>Total Grade:</h4>
               <% if mode == 'view' %>

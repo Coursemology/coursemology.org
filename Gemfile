@@ -100,6 +100,7 @@ gem "wkhtmltopdf_binary_provider"
 gem "wicked_pdf"
 gem 'imagesLoaded_rails'
 gem 'rollbar'
+gem 'simple_enum', '~> 1.6.9'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

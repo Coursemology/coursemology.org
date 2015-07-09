@@ -1,0 +1,11 @@
+<div class="nested-fields">
+    <%= f.input :correct %>
+    <%= f.input :answer, input_html: {rows: 4} %>
+    <%= f.input :explanation, input_html: {rows: 4} %>
+
+    <div class="controls">
+        <%= link_to_remove_association '<i class="icon-remove-sign"></i> Remove'.html_safe, f, class: "btn btn-warning btn-small", style: "display: inline" %>
+    </div>
+    <br />
+</div>
+
