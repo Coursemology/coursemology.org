@@ -29,7 +29,6 @@ class Assessment::GradingsController < ApplicationController
       qn = ans.question
       @summary[:qn_ans][qn.id][:ans] = ans
 
-      grade = 0
       #suggest grading for auto grading question
       if qn.is_a?(Assessment::CodingQuestion) && qn.auto_graded?
         results = ans.result_hash["eval"]
@@ -37,6 +36,9 @@ class Assessment::GradingsController < ApplicationController
         tests = qn.data_hash["eval"].length
         tests = tests == 0 ? 1 : tests
         grade = (qn.max_grade * evals / tests).to_i
+        ag = ans.build_answer_grading
+        ag.grade = grade
+        @summary[:qn_ans][qn.question.id][:grade] = ag
       elsif qn.is_a?(Assessment::GeneralQuestion) && qn.auto_graded?
         # Check saved auto-grading options and suggest a grade
         case qn.auto_grading_type
@@ -44,11 +46,13 @@ class Assessment::GradingsController < ApplicationController
           grade = auto_grading_exact_grade(qn, ans.content)
         when :keyword
           grade = auto_grading_keyword_grade(qn, ans.content)
+        else
+          grade = 0
         end
+        ag = ans.build_answer_grading
+        ag.grade = grade
+        @summary[:qn_ans][qn.question.id][:grade] = ag
       end
-      ag = ans.build_answer_grading
-      ag.grade = grade
-      @summary[:qn_ans][qn.question.id][:grade] = ag
     end
   end
 
