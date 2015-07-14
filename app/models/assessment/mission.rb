@@ -12,9 +12,7 @@ class Assessment::Mission < ActiveRecord::Base
 
   validates_presence_of :title, :exp, :open_at, :close_at
 
-
-  #TODO
-  validates_with DateValidator, fields: [:open_at, :close_at]
+  validate :close_time_must_be_after_open_time
 
   def full_title
     "#{I18n.t('Assessment.Mission')} : #{self.title}"
@@ -38,6 +36,14 @@ class Assessment::Mission < ActiveRecord::Base
 
   def current_exp
     exp
+  end
+
+  private
+
+  def close_time_must_be_after_open_time
+    return unless close_at && open_at
+
+    errors[:close_at] << "must be after open at" if close_at < open_at
   end
 
 end
