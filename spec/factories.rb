@@ -67,6 +67,7 @@ FactoryGirl.define do
     title "Danger Room"
     description "Fight sentinels."
     exp 200
+    bonus_exp 0
     open_at Time.now
     bonus_cutoff_at Time.now
     published true
