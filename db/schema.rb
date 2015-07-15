@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150702085119) do
+ActiveRecord::Schema.define(:version => 20150714051531) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -360,8 +360,8 @@ ActiveRecord::Schema.define(:version => 20150702085119) do
   end
 
   create_table "assessments", :force => true do |t|
-    t.integer  "as_assessment_id"
-    t.string   "as_assessment_type"
+    t.integer  "as_assessment_id",                     :null => false
+    t.string   "as_assessment_type",                   :null => false
     t.integer  "course_id"
     t.integer  "creator_id"
     t.integer  "tab_id"
