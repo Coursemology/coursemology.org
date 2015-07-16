@@ -195,11 +195,14 @@ class Assessment::GradingsController < ApplicationController
 
   private
 
-  # Compare answers against attempts, modulo case and punctuation
+  def normalise(answer)
+    answer.downcase.gsub(/[^\w\d\s]+/, ' ').gsub(/\s+/, ' ').strip
+  end
+
+  # Compare answers against attempts, modulo case, punctuation, and
+  # differences in spacing.
   def auto_grading_equal(answer, attempt)
-    answer = answer.gsub(/[^\w\d\s]/, '')
-    attempt = attempt.gsub(/[^\w\d\s]/, '')
-    attempt.casecmp(answer).zero?
+    normalise(answer) == normalise(attempt)
   end
 
   # Given a question (and its exact auto-grading options) and an answer,
