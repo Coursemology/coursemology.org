@@ -231,7 +231,7 @@ class Assessment::GradingsController < ApplicationController
   # a suggested grade.
   def auto_grading_keyword_grade(question, answer)
     score = question.auto_grading_keyword_options.map do |option|
-      if answer.match(Regexp.new(option.keyword))
+      if answer.match(keyword_regex(option.keyword))
         option.score
       else
         0
@@ -239,6 +239,16 @@ class Assessment::GradingsController < ApplicationController
     end.reduce(:+)
     [score, question.max_grade].min
   end
+
+  # Given a keyword, returns a sanitised regex which matches it. Keywords are assumed
+  # to be single alphanumeric words.
+  # This is used in auto-grading and ensures that the same matching strategy is used
+  # everywhere keyword matches are required.
+  def keyword_regex(keyword)
+    keyword = keyword.gsub(/[^\d\w]/, '')
+    Regexp.new("\\b#{keyword}\\b")
+  end
+  helper_method :keyword_regex
 
   def validate_gradings(ag_record, ag)
     grade = ag[:grade].strip
