@@ -195,11 +195,14 @@ class Assessment::GradingsController < ApplicationController
 
   private
 
-  # Compare answers against attempts, modulo case and punctuation
+  def normalise(answer)
+    answer.downcase.gsub(/[^\w\d\s]+/, ' ').gsub(/\s+/, ' ').strip
+  end
+
+  # Compare answers against attempts, modulo case, punctuation, and
+  # differences in spacing.
   def auto_grading_equal(answer, attempt)
-    answer = answer.gsub(/[^\w\d\s]/, '')
-    attempt = attempt.gsub(/[^\w\d\s]/, '')
-    attempt.casecmp(answer).zero?
+    normalise(answer) == normalise(attempt)
   end
 
   # Given a question (and its exact auto-grading options) and an answer,
@@ -231,7 +234,7 @@ class Assessment::GradingsController < ApplicationController
   # a suggested grade.
   def auto_grading_keyword_grade(question, answer)
     score = question.auto_grading_keyword_options.map do |option|
-      if answer.match(Regexp.new(option.keyword))
+      if answer.match(keyword_regex(option.keyword))
         option.score
       else
         0
@@ -239,6 +242,16 @@ class Assessment::GradingsController < ApplicationController
     end.reduce(:+)
     [score, question.max_grade].min
   end
+
+  # Given a keyword, returns a sanitised regex which matches it. Keywords are assumed
+  # to be single alphanumeric words.
+  # This is used in auto-grading and ensures that the same matching strategy is used
+  # everywhere keyword matches are required.
+  def keyword_regex(keyword)
+    keyword = keyword.gsub(/[^\d\w]/, '')
+    Regexp.new("\\b#{keyword}\\b")
+  end
+  helper_method :keyword_regex
 
   def validate_gradings(ag_record, ag)
     grade = ag[:grade].strip
