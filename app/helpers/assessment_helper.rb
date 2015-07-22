@@ -4,9 +4,8 @@ module AssessmentHelper
   def highlight_keywords(original, keywords)
     highlighted = original.dup
     keywords.each do |keyword|
-      highlighted.gsub!(Regexp.new("\\b#{keyword}\\b"), content_tag(:mark, '\0').html_safe)
+      highlighted.gsub!(keyword_regex(keyword), content_tag(:mark, '\0').html_safe)
     end
     highlighted
   end
 end
-
