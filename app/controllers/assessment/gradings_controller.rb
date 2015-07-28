@@ -240,7 +240,8 @@ class Assessment::GradingsController < ApplicationController
         0
       end
     end.reduce(:+)
-    [score, question.max_grade].min
+
+    [score || 0, question.max_grade].min
   end
 
   # Given a keyword, returns a sanitised regex which matches it. Keywords are assumed
