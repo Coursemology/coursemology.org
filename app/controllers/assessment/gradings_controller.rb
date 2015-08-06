@@ -229,8 +229,8 @@ class Assessment::GradingsController < ApplicationController
     0
   end
 
-  # Given a question (and its keyowrd auto-grading options) and an answer,
-  # chceks the given solution for the presence of the keywords and computes
+  # Given a question (and its keyword auto-grading options) and an answer,
+  # checks the given solution for the presence of the keywords and computes
   # a suggested grade.
   def auto_grading_keyword_grade(question, answer)
     score = question.auto_grading_keyword_options.map do |option|
@@ -249,8 +249,8 @@ class Assessment::GradingsController < ApplicationController
   # This is used in auto-grading and ensures that the same matching strategy is used
   # everywhere keyword matches are required.
   def keyword_regex(keyword)
-    keyword = keyword.gsub(/[^\d\w]/, '')
-    Regexp.new("\\b#{keyword}\\b")
+    keyword = keyword.strip.gsub(/[^\d\w ]/, '')
+    Regexp.new("\\b#{keyword}\\b|\\b#{keyword.pluralize}\\b|\\b#{keyword.singularize}\\b", 'i')
   end
   helper_method :keyword_regex
 
