@@ -5,7 +5,7 @@ namespace :db do
       (course.missions + course.trainings + course.surveys).each do |item|
         if item.open_at > Time.now
           delayed_job = Delayed::Job.enqueue(
-              BackgroundJob.new(course.id, PendingAction.to_s, item.class.to_s, item.id),
+              BackgroundJob.new(course.id, :pending_action, item.class.to_s, item.id),
               run_at: item.open_at)
           item.queued_jobs.create(delayed_job_id: delayed_job.id)
         else

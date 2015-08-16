@@ -29,7 +29,7 @@ class Survey < ActiveRecord::Base
     QueuedJob.destroy(self.queued_jobs)
 
     #enqueue pending action job
-    delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, PendingAction.to_s, Survey.to_s, self.id), run_at: self.open_at)
+    delayed_job = Delayed::Job.enqueue(BackgroundJob.new(course_id, :pending_action, Survey.to_s, self.id), run_at: self.open_at)
     self.queued_jobs.create(delayed_job_id: delayed_job.id)
   end
 
