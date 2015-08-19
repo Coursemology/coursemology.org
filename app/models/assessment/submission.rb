@@ -155,6 +155,10 @@ class Assessment::Submission < ActiveRecord::Base
     end
   end
 
+  def build_initial_answers_when_necessary
+    build_initial_answers if assessment.questions.count != answers.pluck('DISTINCT question_id').count
+  end
+
   def fetch_params_answers(params)
     answers =  params[:answers] || []
 
