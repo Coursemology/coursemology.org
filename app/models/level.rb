@@ -10,6 +10,7 @@ class Level < ActiveRecord::Base
   belongs_to :course
 
   has_many :user_courses
+  has_many :requirements, as: :req, dependent: :destroy
 
   def get_title
     "Level #{level}"
