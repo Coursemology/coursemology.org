@@ -36,38 +36,31 @@ class LevelsController < ApplicationController
 
   def mass_update
     exp_levels = params[:exps].map(&:to_i).select { |num| num > 0 }
-    new_level_count = exp_levels.count
 
-    # delete extra levels
-    @course.levels.each do |lvl|
-      if lvl.level > new_level_count
-        lvl.destroy
+    # Update existing levels
+    existing_levels = @course.levels.select { |l| l.level > 0 }
+    existing_levels.each_with_index do |level, index|
+      if exp_levels.any?
+        level.exp_threshold = exp_levels.shift
+        level.level =  index + 1
+        level.save
+      else
+        level.destroy
       end
+    end
+
+    # Create new levels
+    max_level = @course.levels.pluck(:level).max
+    exp_levels.each do |exp|
+      @course.levels.build(level: max_level + 1, exp_threshold: exp)
+      max_level += 1
     end
 
     # always have 1 level: level 0
-    if @course.levels.count == 0 || @course.levels.first.level != 0
+    if @course.levels.first.try(:level) != 0
       @course.levels.build(level: 0, exp_threshold: 0)
-      @course.save
-    end
-
-    # create new levels if necessary
-    curr_level_count = @course.levels.count
-    if curr_level_count <= new_level_count
-      (curr_level_count..new_level_count).each do |level|
-        @course.levels.build(level: level)
-      end
     end
     @course.save
-
-    # update exp threshold
-    @course.levels.each do |lvl|
-      # avoid accessing deleted levels
-      if lvl.level <= new_level_count && lvl.level > 0
-        lvl.exp_threshold = exp_levels[lvl.level-1]
-        lvl.save
-      end
-    end
 
     # update students level
     Thread.new {
