@@ -4,6 +4,7 @@ class Assessment::GeneralQuestion < ActiveRecord::Base
 
   attr_accessible :creator_id, :dependent_id
   attr_accessible :title, :description, :max_grade, :attempt_limit, :staff_comments
+  attr_accessible :sample_answer
   attr_accessible :auto_graded, :auto_grading_type
 
   as_enum :auto_grading_type, none: 0, exact: 1, keyword: 2

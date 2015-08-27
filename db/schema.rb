@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150714051531) do
+ActiveRecord::Schema.define(:version => 20150827111659) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -250,6 +250,7 @@ ActiveRecord::Schema.define(:version => 20150714051531) do
     t.datetime "updated_at",                          :null => false
     t.boolean  "auto_graded"
     t.integer  "auto_grading_type_cd", :default => 0
+    t.text     "sample_answer"
   end
 
   create_table "assessment_grading_logs", :force => true do |t|

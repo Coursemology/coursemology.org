@@ -29,6 +29,8 @@
         </div>
 
         <div id="auto-grading-keyword" class="auto-grading collapse <%= @question.auto_grading_type == :keyword ? 'in' : '' %>">
+            <%= f.input :sample_answer, as: :text, placeholder: '(Can be blank)', input_html: {rows: 10} %>
+
             <% if @question.auto_grading_keyword_options.any? %>
                 <%= f.simple_fields_for :auto_grading_keyword_options do |option| %>
                   <%= render partial: "auto_grading_keyword_option_fields",
