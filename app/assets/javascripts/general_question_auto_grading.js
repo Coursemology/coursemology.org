@@ -17,7 +17,7 @@ $(function () {
 
     var $editField = $('#assessment_general_question_sample_answer');
 
-    var $highlightUI = $('#keyword-ui')
+    var $highlightUI = $('#keyword-ui');
     var $highlightText = $('#keyword-ui-text');
     var $popoverContent = $('#keyword-ui-popover-content');
 
@@ -59,7 +59,23 @@ $(function () {
     function keywordsTab() {
         $editField.hide();
         $highlightUI.show();
-        $highlightText.html($editField.val());
+        highlightKeywords();
+    }
+
+    function highlightKeywords() {
+        function getValue(element) {
+            return $(element).val();
+        }
+        var keywords = $('#auto-grading-keyword input[id$="keyword"]')
+            .get().map(getValue);
+        $highlightText.html(coloriseText($editField.val(), keywords));
+    }
+
+    function coloriseText(text, keywords) {
+        return keywords.reduce(function(text, keyword) {
+            var groupedKeyword = new RegExp('(' + keyword +')', 'g');
+            return text.replace(groupedKeyword, '<mark>$1</mark>');
+        }, text);
     }
 
     // Tracks whether or not the popover was just hidden on mousedown;
@@ -74,15 +90,15 @@ $(function () {
     // data-content attribute.
     $popoverProxy.attr('data-content', $popoverContent.html());
 
-    $highlightText.mousedown(function(e){
-        if (currentPopover().is(":visible")) {
+    $highlightText.mousedown(function(){
+        if (currentPopover().is(':visible')) {
             $popoverProxy.popover('destroy');
             currentPopover().remove();
             justHidden = true;
         }
     });
 
-    $highlightText.mouseup(function(e){
+    $highlightText.mouseup(function(){
         var selection = getSelectedText();
         previousSelection = selection;
 
@@ -91,25 +107,29 @@ $(function () {
             return;
         }
 
-        if (selection && !currentPopover().is(":visible")) {
+        if (selection && !currentPopover().is(':visible')) {
             $popoverProxy.popover('show');
             $('.popover h3.popover-title').html('Add Keyword: ' + selection);
         }
     });
 
-    $(document).on("click", ".keyword-ui-cancel", function() {
+    $(document).on('click', '.keyword-ui-cancel', function() {
         $popoverProxy.popover('hide');
     });
 
-    $(document).on("click", ".keyword-ui-add", function() {
+    $(document).on('click', '.keyword-ui-add', function() {
         $popoverProxy.popover('hide');
         $('[data-association="auto_grading_keyword_option"]').click();
 
-        var $keywordField = $('#auto-grading-keyword > :nth-last-child(2) input[id$="keyword"]');
-        var $scoreField = $('#auto-grading-keyword > :nth-last-child(2) input[id$="score"]');
+        var $keywordField = $('#auto-grading-keyword' +
+            '> :nth-last-child(2) input[id$="keyword"]');
+        var $scoreField = $('#auto-grading-keyword' +
+            '> :nth-last-child(2) input[id$="score"]');
 
         $keywordField.val(previousSelection);
         $scoreField.val($('.popover input.numeric').val());
+
+        highlightKeywords();
     });
 
     function getSelectedText() {
