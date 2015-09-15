@@ -1,16 +1,35 @@
 <div class="auto-grading-keyword">
-  <table class="table table-striped table-bordered">
-    <thead>
-      <th>Keyword</th>
-      <th>Score</th>
-    </thead>
-    <tbody>
-      <% qn.auto_grading_keyword_options.each do |option| %>
+
+  <% if qn.sample_answer && !qn.sample_answer.empty? %>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <th>Sample Answer</th>
+      </thead>
+      <tbody>
         <tr>
-          <td><%= option.keyword %></td>
-          <td><%= option.score %></td>
+          <td><%= highlight_keywords(qn.sample_answer || "",
+                                     qn.auto_grading_keyword_options.map(&:keyword)).html_safe %>
+          </td>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  <% end %>
+
+  <% if qn.auto_grading_keyword_options.any? %>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <th>Keyword</th>
+        <th>Score</th>
+      </thead>
+      <tbody>
+        <% qn.auto_grading_keyword_options.each do |option| %>
+          <tr>
+            <td><%= option.keyword %></td>
+            <td><%= option.score %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
 </div>

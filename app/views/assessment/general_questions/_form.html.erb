@@ -29,6 +29,35 @@
         </div>
 
         <div id="auto-grading-keyword" class="auto-grading collapse <%= @question.auto_grading_type == :keyword ? 'in' : '' %>">
+
+            <div class="controls">
+              <ul id="auto-grading-tabs" class="nav nav-pills">
+                <li id="auto-grading-tab-edit" class="active"><a href="#">Edit</a></li>
+                <li id="auto-grading-tab-keywords"><a href="#">Highlight Keywords</a></li>
+              </ul>
+            </div>
+
+            <%= f.input :sample_answer, as: :text, placeholder: '(Can be blank)', wrapper_html: {id: "sample-answer-wrapper"}, input_html: {rows: 3} %>
+
+            <div id="keyword-ui" class="rounded-box" style="display:none;">
+              <p id="keyword-ui-text"
+                 style="display:inline-block;"></p>
+              <div id="keyword-ui-popover-proxy"
+                    style="display:inline-block;"
+                    data-container="body"
+                    data-toggle="popover"
+                    data-placement="right"
+                    data-title=""
+                    data-content=""></div>
+            </div>
+
+            <div id="keyword-ui-popover-content" style="display: none;">
+              <input class="numeric integer input-mini" type="number" step="1" value="1" maxlength="3"/>
+              <br />
+              <a class="keyword-ui-add btn btn-primary">Add</a>
+              <a class="keyword-ui-cancel btn btn-primary">Cancel</a>
+            </div>
+
             <% if @question.auto_grading_keyword_options.any? %>
                 <%= f.simple_fields_for :auto_grading_keyword_options do |option| %>
                   <%= render partial: "auto_grading_keyword_option_fields",

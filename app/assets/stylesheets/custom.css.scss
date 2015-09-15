@@ -1,5 +1,6 @@
 $baseFontSize:          13px !default;
 $baseLineHeight:        18px !default;
+$sampleAnswerBorder:    #ddd;
 
 @import "bootstrap";
 @import "font-awesome";
@@ -893,6 +894,15 @@ $grayMediumLight: #eaeaea;
   vertical-align: middle;
   width: 0;
   /*float: right;*/
+}
+
+.rounded-box {
+  border: 1px solid $sampleAnswerBorder;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 10px;
+  position: relative;
 }
 
 .grading-block {
