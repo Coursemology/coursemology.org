@@ -71,7 +71,7 @@ USER_ALLOWED_MODULE_IMPORTS = (('urllib.request', {}, {}, ['urlopen']),
 # whitelist of module imports
 ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
 													'functools', 'itertools', 'operator', 'string',
-													'collections', 're', 'json', 'csv','copy','copyreg',
+													'collections', 're', 'json', 'csv','copy','copyreg', 'autograde-runes',
 													'engine','hungry_games_classes','hungry_games','simulation',
 													'heapq', 'bisect','inspect','__future__', 'generic_arith_min', 'encodings.idna', 'encodings', 'urllib', 'urllib.error', 'buses', 'uuid')
 
