@@ -21,7 +21,16 @@ readSingleFile = (evt)->
 parseContacts = (contents)->
   error_msg = "File content format not valid!"
   raw_list = []
-  raw_list.push row.trim() for row in contents.split('\n')
+  if contents.indexOf('\r\n') > -1
+    lines = contents.split('\r\n')
+  else if contents.indexOf('\r') > -1
+    lines = contents.split('\r')
+  else if contents.indexOf('\n') > -1
+    lines = contents.split('\n')
+  else
+    lines = []
+
+  raw_list.push row.trim() for row in lines
   if raw_list.length == 0
     alert error_msg
     return false
