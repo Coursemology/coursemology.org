@@ -69,7 +69,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
       user = uc.user
       case item.class.name.to_sym
         when :Assessment
-          UserMailer.delay.new_assessment(user, item, course)
+          UserMailer.delay.new_assessment(user, item, course) if item.published?
         when :Announcement
           UserMailer.delay.new_announcement(user, item, course)
         else
