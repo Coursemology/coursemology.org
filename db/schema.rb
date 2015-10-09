@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150827111659) do
+ActiveRecord::Schema.define(:version => 20151009084141) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -277,6 +277,8 @@ ActiveRecord::Schema.define(:version => 20150827111659) do
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
   end
+
+  add_index "assessment_gradings", ["submission_id"], :name => "index_assessment_gradings_on_submission_id", :unique => true
 
   create_table "assessment_mcq_answers", :force => true do |t|
     t.datetime "deleted_at"

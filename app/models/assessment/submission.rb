@@ -37,6 +37,8 @@ class Assessment::Submission < ActiveRecord::Base
   has_many :gradings, class_name: Assessment::Grading, dependent: :destroy
   has_one :comment_topic, as: :topic
 
+  validates :gradings, length: { maximum: 1 }
+
   after_create :set_attempting
   after_save   :status_change_tasks, if: :status_changed?
 

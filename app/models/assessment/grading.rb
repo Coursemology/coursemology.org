@@ -1,6 +1,4 @@
 class Assessment::Grading < ActiveRecord::Base
-  acts_as_paranoid
-
   attr_accessible :grade, :std_course_id, :exp
   belongs_to :grader, class_name: User
   belongs_to :grader_course, class_name: UserCourse
