@@ -38,6 +38,7 @@ class Assessment::Submission < ActiveRecord::Base
   has_one :comment_topic, as: :topic
 
   validates :gradings, length: { maximum: 1 }
+  validates :std_course_id, uniqueness: { scope: :assessment_id }
 
   after_create :set_attempting
   after_save   :status_change_tasks, if: :status_changed?

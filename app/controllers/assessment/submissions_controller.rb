@@ -24,9 +24,9 @@ class Assessment::SubmissionsController < ApplicationController
     end
 
     if @submission.save
-      respond_to do |format|
-        format.html { redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)}
-      end
+      redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)
+    else
+      redirect_to_index
     end
   end
 
@@ -51,6 +51,14 @@ class Assessment::SubmissionsController < ApplicationController
       @submissions = @assessment.submissions.accessible_by(current_ability)
     else
       @submission = @assessment.submissions.new
+    end
+  end
+
+  def redirect_to_index
+    if @assessment.is_a?(Assessment::Training)
+      redirect_to course_assessment_trainings_path(@course)
+    else
+      redirect_to course_assessment_missions_path(@course)
     end
   end
 end
