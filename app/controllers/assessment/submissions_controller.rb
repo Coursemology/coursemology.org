@@ -23,21 +23,6 @@ class Assessment::SubmissionsController < ApplicationController
       end
     end
 
-    if @assessment.is_a?(Assessment::Training)
-      @reattempt = @course.training_reattempt
-      #continue unfinished training, or go to finished training of can't reattempt
-      if sbm && (!sbm.graded? ||  !@reattempt || !@reattempt.display)
-        redirect_to edit_course_assessment_submission_path(@course, @assessment, sbm)
-        return
-      end
-      sbm_count = @assessment.submissions.where(std_course_id: curr_user_course).count
-      if sbm_count > 0
-        @submission.multiplier = @reattempt.prefer_value.to_f / 100
-      end
-      @submission.save
-      @submission.gradings.create({grade: 0, std_course_id: curr_user_course.id})
-    end
-
     if @submission.save
       respond_to do |format|
         format.html { redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)}
