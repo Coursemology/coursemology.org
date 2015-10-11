@@ -23,7 +23,7 @@ class Assessment::SubmissionsController < ApplicationController
       end
     end
 
-    if @assessment.is_a?(Assessment::Training)
+    if @assessment.is_a?(Assessment::Training) && @submission.gradings.empty?
       @submission.gradings.build(grade: 0, std_course_id: curr_user_course.id)
     end
 
