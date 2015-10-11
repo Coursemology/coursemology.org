@@ -23,6 +23,10 @@ class Assessment::SubmissionsController < ApplicationController
       end
     end
 
+    if @assessment.is_a?(Assessment::Training)
+      @submission.gradings.build(grade: 0, std_course_id: curr_user_course.id)
+    end
+
     if @submission.save
       redirect_to edit_course_assessment_submission_path(@course, @assessment, @submission)
     else
