@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151009084141) do
+ActiveRecord::Schema.define(:version => 20151011115753) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -354,6 +354,8 @@ ActiveRecord::Schema.define(:version => 20151009084141) do
     t.datetime "updated_at",    :null => false
     t.datetime "saved_at"
   end
+
+  add_index "assessment_submissions", ["assessment_id", "std_course_id"], :name => "index_assessment_submissions_on_assessment_id_and_std_course_id", :unique => true
 
   create_table "assessment_trainings", :force => true do |t|
     t.boolean  "skippable"
