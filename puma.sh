@@ -52,7 +52,7 @@ puma_high_memo() {
   fi
 }
 
-rvm use ruby-2.1.2
+rvm use ruby-2.2.2
 
 if [ $# -gt 0 ]; then
   #clean memory

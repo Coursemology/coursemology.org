@@ -14,7 +14,7 @@ group :development do
 end
 
 group :production do
-  gem 'puma', "~> 2.6.0"
+  gem 'puma', "~> 2.14.0"
   gem 'dalli'
   gem 'connection_pool'
 end
