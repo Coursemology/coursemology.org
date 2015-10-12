@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://rails-assets.org'
 
-gem 'rails', '3.2.14'
+gem 'rails', '3.2.22'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -28,6 +28,7 @@ group :development, :test do
   gem 'capybara'
   gem 'launchy'
   gem 'coveralls', require: false
+  gem 'test-unit'
 end
 
 # Gems used only for assets and not required
