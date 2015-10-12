@@ -1,6 +1,4 @@
 class Assessment::Submission < ActiveRecord::Base
-  acts_as_paranoid
-
   include Rails.application.routes.url_helpers
   scope :mission_submissions, -> {
     joins("left join assessments on assessment_submissions.assessment_id = assessments.id ").
