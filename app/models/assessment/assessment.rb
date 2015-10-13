@@ -204,7 +204,7 @@ class Assessment < ActiveRecord::Base
     end
     unfinished_assessment = []
     dependent_on.each do |asm|
-      sbm = assessment.submissions.where(assessment_id: asm.id, std_course_id: curr_user_course).first
+      sbm = asm.submissions.where(std_course_id: curr_user_course).first
       unfinished_assessment << asm if !sbm || sbm.attempting?
     end
     (unfinished_assessment.count > 0) ? unfinished_assessment : nil
