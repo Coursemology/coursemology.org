@@ -22,10 +22,13 @@ class User < ActiveRecord::Base
   attr_accessible :display_name, :name, :profile_photo_url
   attr_accessible :provider, :uid
   attr_accessible :use_uploaded_picture
+  attr_accessible :time_zone
 
   protected_attributes :system_role_id
 
   validates :name, presence: true
+  validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
+
   before_update :send_out_notification_email, :if => :email_changed?
   after_update :update_user_course, :if => :name_changed?
 

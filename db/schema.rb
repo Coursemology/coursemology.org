@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151011115753) do
+ActiveRecord::Schema.define(:version => 20151014153816) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1663,6 +1663,7 @@ ActiveRecord::Schema.define(:version => 20151011115753) do
     t.boolean  "is_pending_deletion",                           :default => false
     t.boolean  "use_uploaded_picture",                          :default => false
     t.integer  "fb_publish_actions_request_count", :limit => 1, :default => 0,     :null => false
+    t.string   "time_zone"
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
