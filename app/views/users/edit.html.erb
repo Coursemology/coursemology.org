@@ -17,6 +17,7 @@
 
 <%= simple_form_for current_user, url: users_update_path, html: {class: "form-horizontal"} do |f| %>
     <%= f.input :name %>
+    <%= f.input :time_zone %>
     <%= f.input :use_uploaded_picture, as: :boolean %>
 
     <div class="control-group">

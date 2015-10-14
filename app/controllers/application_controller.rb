@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   helper_method :sort_direction, :sort_column
   before_filter :init_gon
   skip_before_filter  :verify_authenticity_token
+  around_filter :set_time_zone, if: :current_user
 
   rescue_from CanCan::AccessDenied do |exception|
     unless current_user
@@ -275,4 +276,8 @@ class ApplicationController < ActionController::Base
   helper_method :masquerading?
   helper_method :curr_user_course
   #helper_method :fb_liked?
+
+  def set_time_zone(&block)
+    Time.use_zone(current_user.try(:time_zone), &block)
+  end
 end
