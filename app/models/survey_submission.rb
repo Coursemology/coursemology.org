@@ -56,8 +56,8 @@ class SurveySubmission < ActiveRecord::Base
   end
 
   def answer_count
-    self.survey_mrq_answers.select(:question_id).uniq.count +
-    self.survey_essay_answers.select(:question_id).uniq.count
+    answered_question_ids = survey_mrq_answers.pluck(:question_id) + survey_essay_answers.pluck(:question_id)
+    SurveyQuestion.where(id: answered_question_ids).count
   end
 
   def done?
