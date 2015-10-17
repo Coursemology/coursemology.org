@@ -89,7 +89,7 @@ class PythonEvaluator
         test_code = ''
         if eval
           test_cases.each do |test|
-            exp =  need_std_answer ? "#{test["expression"]}" : "#{test["expression"]} == #{test["expected"]}"
+            exp =  need_std_answer ? "#{test["expression"]}" : "(#{test["expression"]}) == (#{test["expected"]})"
             exp_excep = need_std_answer ? "e" : "False"
             test_code << "\ntry:\n"
             test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
