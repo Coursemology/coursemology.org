@@ -153,9 +153,15 @@ def sandbox():
 
 	def open_wrapper(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
 		if file in ['impossible.txt', 'fail.txt']:
-			return a_method_that_should_not_be_seen(file, mode, buffering, encoding, errors, newline, closefd, opener)
-		return a_method_that_should_not_be_seen(file, 'r', buffering, encoding, errors, newline, closefd, opener)
+			if is_python3:
+				return a_method_that_should_not_be_seen(file, mode, buffering, encoding, errors, newline, closefd, opener)
+			else:
+				return a_method_that_should_not_be_seen(file, mode, buffering)
 
+		if is_python3:
+			return a_method_that_should_not_be_seen(file, 'r', buffering, encoding, errors, newline, closefd, opener)
+		else:
+			return a_method_that_should_not_be_seen(file, 'r', buffering)
 
 	BANNED_BUILTINS = ['reload', 'compile',
 										'file', 'eval', 'exec', 'execfile',
