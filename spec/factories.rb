@@ -6,6 +6,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "user#{n}@test.com" }
     password "foobar"
     password_confirmation "foobar"
+    time_zone "Singapore"
     after(:build) do |user|
       user.confirmed_at = Time.now.to_s[0..-7]
     end
