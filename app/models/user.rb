@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   protected_attributes :system_role_id
 
   validates :name, presence: true
-  validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
+  validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name), if: :time_zone
 
   before_update :send_out_notification_email, :if => :email_changed?
   after_update :update_user_course, :if => :name_changed?
