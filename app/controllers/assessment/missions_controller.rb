@@ -146,20 +146,17 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     end
 
     sbms = @mission.submissions.
-        where("std_course_id IN (?) and status = 'graded'", std_courses.select("user_courses.id")).includes(:coding_answers)
+        where("std_course_id IN (?) and (status = 'graded' OR status = 'submitted')", std_courses.select("user_courses.id")).
+        includes(:coding_answers, :files)
 
     result = nil
 
     Dir.mktmpdir("mission-dump-temp-#{Time.now}") { |dir|
       sbms.each do |sbm|
         ans = sbm.coding_answers.first
-        unless ans
-          next
-        end
-
         path = dir
 
-        if sbm.files.count > 0
+        if sbm.files.length > 0
           title = sbm.std_course.name.gsub(/\//,"_")
           dir_path = File.join(dir, title)
           Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
@@ -170,10 +167,12 @@ class Assessment::MissionsController < Assessment::AssessmentsController
           path = dir_path
         end
 
-        title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
-        file = File.open(File.join(path, title), 'w+')
-        file.write(ans.content)
-        file.close
+        if ans
+          title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
+          file = File.open(File.join(path, title), 'w+')
+          file.write(ans.content)
+          file.close
+        end
       end
 
       zip_name = File.join(File.dirname(dir),
