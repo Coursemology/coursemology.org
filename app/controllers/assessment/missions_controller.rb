@@ -168,8 +168,8 @@ class Assessment::MissionsController < Assessment::AssessmentsController
           end
         end
 
-        answers.each do |answer|
-          file_title = "#{sanitize_file_name(answer.question.title)}.py"
+        answers.each_with_index do |answer, index|
+          file_title = "#{sanitize_file_name(answer.question.title || 'Question_' + (index + 1).to_s)}.py"
           file = File.open(File.join(current_path, file_title), 'w+')
           file.write(answer.content)
           file.close
