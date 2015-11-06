@@ -62,7 +62,7 @@ class StatsController < ApplicationController
     @students = is_all ? @course.student_courses : curr_user_course.std_courses
     @summary[:student_courses] = @students
 
-    submissions =  @training.submissions.where(std_course_id: @students)
+    submissions =  @training.submissions.where(std_course_id: @students).includes(:std_course, :gradings, :assessment)
     submitted = submissions.map { |sbm| sbm.std_course }
 
     @not_started = @students - submitted

@@ -79,7 +79,7 @@
 
 <div id="ruler">&nbsp;</div>
 <h3>Question stats</h3>
-<% @training.questions.each_with_index do |qn, i| %>
+<% @training.questions.includes(:as_question).each_with_index do |qn, i| %>
     <section id="question_<%= i + 1%>" style="padding-top: 40px">
       <div class="grey_background" style="margin: 10px">
         <strong><%= i + 1 %>. </strong>
@@ -107,7 +107,7 @@
             <% end %>
           </table>
       <% else %>
-          <% answers = qn.answers_of_students(@students).order(:std_course_id) %>
+          <% answers = qn.answers_of_students(@students).order(:std_course_id).includes(:std_course) %>
           <div style="margin: 10px; margin-left: 50px;">
             Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(correct:false).length %> </strong> / <%= answers.length %>
             <a class="btn" data-toggle="collapse"  href="#code<%= i + 1%>">Click To Expand / Collapse Code</a>
