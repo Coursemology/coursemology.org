@@ -56,17 +56,16 @@ class StatsController < ApplicationController
 
     @summary = {}
     is_all = ((params[:mode] != nil) && params[:mode] == "all") || (curr_user_course.std_courses.count == 0)
-    puts is_all
 
     #TODO: may want to deal with phantom students here
     @summary[:all] = is_all
-    std_courses = is_all ? @course.student_courses : curr_user_course.std_courses
-    @summary[:student_courses] = std_courses
+    @students = is_all ? @course.student_courses : curr_user_course.std_courses
+    @summary[:student_courses] = @students
 
-    submissions =  @training.submissions.where(std_course_id: std_courses)
+    submissions =  @training.submissions.where(std_course_id: @students)
     submitted = submissions.map { |sbm| sbm.std_course }
 
-    @not_started = std_courses - submitted
+    @not_started = @students - submitted
     @summary[:not_started] = @not_started
 
     sbms_by_grade = submissions.group_by { |sbm| sbm.get_final_grading.grade }

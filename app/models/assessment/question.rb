@@ -26,6 +26,14 @@ class Assessment::Question < ActiveRecord::Base
     title && !title.empty? ? title : "Question #{question_assessments.first.position + 1}"
   end
 
+  def answers_of_students(students)
+    answers.where(std_course_id: students)
+  end
+
+  def wrong_answers_of_students(students)
+    answers_of_students(students).where(correct: false)
+  end
+
   #callback methods
 
   def clean_up_description

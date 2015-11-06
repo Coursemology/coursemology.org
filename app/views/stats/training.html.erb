@@ -69,7 +69,8 @@
       <tr>
         <td style="text-align: center"><a href="#question_<%= i + 1%>"> <%= i + 1 %></a></td>
         <td style="text-align: center">
-          <strong style="color: red"> <%= qn.answers.where(correct: false).count %> </strong> / <%= qn.answers.count %>
+          <strong style="color: red">
+            <%= qn.wrong_answers_of_students(@students).count %> </strong> / <%= qn.answers_of_students(@students).count %>
         </td>
       </tr>
   <% end %>
@@ -92,7 +93,7 @@
               <col width="5%"/>
             </colgroup>
             <% qn.options.each do |opt| %>
-                <% uniq_stds = opt.uniq_std(@course).uniq %>
+                <% uniq_stds = opt.uniq_std(@course).uniq & @students %>
                 <tr>
                   <td><input type="checkbox" disabled <%= "checked" if opt.correct %> /></td>
                   <td><%= opt.text %></td>
@@ -106,7 +107,7 @@
             <% end %>
           </table>
       <% else %>
-          <% answers = qn.answers.where(std_course_id: @summary[:student_courses]).order(:std_course_id) %>
+          <% answers = qn.answers_of_students(@students).order(:std_course_id) %>
           <div style="margin: 10px; margin-left: 50px;">
             Wrong / Total Attempts: <strong style="color: red"> <%= answers.where(correct:false).length %> </strong> / <%= answers.length %>
             <a class="btn" data-toggle="collapse"  href="#code<%= i + 1%>">Click To Expand / Collapse Code</a>
