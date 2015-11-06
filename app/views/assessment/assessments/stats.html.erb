@@ -6,7 +6,7 @@
     <% if stds.size > 0 or key != 'My Students'%>
         <h3><%= key %></h3>
         <br>
-        <% if @assessment.is_mission? && ((@assessment.single_question? and @assessment.questions.coding.first) || @assessment.specific.file_submission_only?)  %>
+        <% if @assessment.is_mission? && (@assessment.questions.coding.any? || @assessment.specific.file_submission_only?)  %>
             <%= link_to "Download Submissions",
                         "#{course_assessment_mission_dump_code_path(@course, @assessment.specific, format: 'zip')}?_type=#{key.split(" ").first}",
                         class: "btn"

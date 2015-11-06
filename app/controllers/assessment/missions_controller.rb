@@ -145,38 +145,40 @@ class Assessment::MissionsController < Assessment::AssessmentsController
         std_courses = @course.user_courses.student.where(is_phantom: false)
     end
 
-    sbms = @mission.submissions.
+    submissions = @mission.submissions.
         where("std_course_id IN (?) and (status = 'graded' OR status = 'submitted')", std_courses.select("user_courses.id")).
-        includes(:coding_answers, :files)
+        includes({ coding_answers: { answer: :question } }, :files, :std_course)
 
     result = nil
 
     Dir.mktmpdir("mission-dump-temp-#{Time.now}") { |dir|
-      sbms.each do |sbm|
-        ans = sbm.coding_answers.first
-        path = dir
+      submissions.each do |submission|
+        answers = submission.coding_answers
+        next if answers.empty? && submission.files.empty?
 
-        if sbm.files.length > 0
-          title = sbm.std_course.name.gsub(/\//,"_")
-          dir_path = File.join(dir, title)
-          Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
-          sbm.files.each do |file|
+        dir_title = sanitize_file_name(submission.std_course.name)
+        dir_path = File.join(dir, dir_title)
+        Dir.mkdir(dir_path) unless Dir.exists?(dir_path)
+        current_path = dir_path
+
+        if submission.files.any?
+          submission.files.each do |file|
             temp_path = File.join(dir_path, file.original_name.gsub(/\//,"_"))
             file.file.copy_to_local_file :original, temp_path
           end
-          path = dir_path
         end
 
-        if ans
-          title = "#{sbm.std_course.name.gsub(/\//,"_") }.py"
-          file = File.open(File.join(path, title), 'w+')
-          file.write(ans.content)
+        answers.each do |answer|
+          file_title = "#{sanitize_file_name(answer.question.title)}.py"
+          file = File.open(File.join(current_path, file_title), 'w+')
+          file.write(answer.content)
           file.close
         end
       end
 
+      folder_title = sanitize_file_name(@mission.title)
       zip_name = File.join(File.dirname(dir),
-                           Dir::Tmpname.make_tmpname([@mission.title, ".zip"], nil))
+                           Dir::Tmpname.make_tmpname([folder_title, ".zip"], nil))
       Zip::ZipFile.open(zip_name, Zip::ZipFile::CREATE) { |zipfile|
         # Add every file in the directory to the zip file, preserving structure.
         Dir[File.join(dir, '**', '**')].each {|file|
@@ -193,7 +195,7 @@ class Assessment::MissionsController < Assessment::AssessmentsController
         send_file(result, {
             :type => "application/zip, application/octet-stream",
             :disposition => "attachment",
-            :filename => @mission.title + ".zip"
+            :filename => sanitize_file_name(@mission.title) + ".zip"
         }
         )
       }
@@ -204,6 +206,10 @@ class Assessment::MissionsController < Assessment::AssessmentsController
     respond_to   do |format|
       format.html # show.html.erb
     end
+  end
+
+  def sanitize_file_name(name)
+    name.gsub(/[^0-9A-Za-z]/, ' ').squish.gsub(' ', '_')
   end
 
 end
