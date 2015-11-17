@@ -103,6 +103,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
         this.append($ab);
 
         $ta.focus();
+        var $annotateButton = $("#annotateButton")
         $("#annotateButton").on('click',function(){
             var $ab = $("#annotate-box");
             if ($ab.attr('disabled') == 'disabled') return false;
@@ -112,18 +113,30 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                 $ab.focus();
             }else{
                 $ab.attr('disabled','disabled');
-                $.post(self.annotation_url, {
-                    origin: document.URL,
-                    submission_id: self.sub_id,
-                    annotation:{
-                        annotable_id: self.code_id,
-                        annotable_type: "Assessment::Answer",
-                        text: t,
-                        line_start: s,
-                        line_end: e
-                    }}, function(s){
-                    $ab.attr('disabled',false).val('');
+                $annotateButton.attr('disabled','disabled');
+                $.ajax({
+                    type: "POST",
+                    url: self.annotation_url,
+                    data: {
+                        origin: document.URL,
+                        submission_id: self.sub_id,
+                        annotation: {
+                            annotable_id: self.code_id,
+                            annotable_type: "Assessment::Answer",
+                            text: t,
+                            line_start: s,
+                            line_end: e
+                        }
+                    }
+                })
+                .done(function(s) {
+                    $ab.attr('disabled', false).val('');
+                    $annotateButton.html('Annotate').attr('class', 'btn').attr('disabled', false);
                     parseComments(s);
+                })
+                .fail(function() {
+                    $ab.attr('disabled', false);
+                    $annotateButton.html('Failed, Click to retry').attr('class', 'btn btn-danger').attr('disabled', false);
                 });
             }
         });
@@ -463,7 +476,7 @@ function CodeViewer($wrapper, source, theme, code_id, sub_id, _vt, language){
                 annotable_type: "Assessment::Answer"
             }}, function(s){
             parseComments(s);
-            setTimeout(refreshComments, 4000);
+            setTimeout(refreshComments, 6000);
         });
     }
     var line_obj = [];
