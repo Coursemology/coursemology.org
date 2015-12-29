@@ -169,10 +169,9 @@ class DuplicateController < ApplicationController
     Assessment.set_callback(:save, :after, :update_closing_tasks)
     Assessment.set_callback(:save, :after, :create_or_destroy_tasks)
 
-    shift_dates(clone.lesson_plan_milestones + clone.lesson_plan_entries, options[:course_diff],
-                start_column: :start_at, end_column: :end_at)
-    shift_dates(clone.assessments, options[:course_diff])
-    shift_dates(clone.surveys, options[:course_diff], end_column: :expire_at)
+    shift_dates(clone.lesson_plan_milestones + clone.lesson_plan_entries, options[:course_diff], [:start_at, :end_at])
+    shift_dates(clone.assessments, options[:course_diff], [:open_at, :close_at, :bonus_cutoff_at])
+    shift_dates(clone.surveys, options[:course_diff], [:open_at, :expire_at])
     shift_dates(clone.material_folders, options[:course_diff])
 
     respond_to do |format|
@@ -260,15 +259,13 @@ class DuplicateController < ApplicationController
     end
   end
 
-  def shift_dates(time_records, date_shift, options = {})
+  def shift_dates(time_records, date_shift, date_columns = [:open_at, :close_at])
     return if !date_shift || date_shift == 0
 
-    start_column = options[:start_column] || :open_at
-    end_column = options[:end_column] || :close_at
-
     Array(time_records).each do |record|
-      record.update_column(start_column, record.send(start_column) + date_shift) if record.send(start_column)
-      record.update_column(end_column, record.send(end_column) + date_shift) if record.send(end_column)
+      Array(date_columns).each do |column|
+        record.update_column(column, record.send(column) + date_shift) if record.send(column)
+      end
     end
   end
 end
