@@ -174,6 +174,10 @@ class DuplicateController < ApplicationController
     shift_dates(clone.surveys, options[:course_diff], [:open_at, :expire_at])
     shift_dates(clone.material_folders, options[:course_diff])
 
+    clone.assessments.each do |assessment|
+      assessment.create_or_destroy_tasks
+    end
+
     respond_to do |format|
       flash[:notice] = "The course '#{@course.title}' has been duplicated."
       format.html { redirect_to course_preferences_path(clone) }
