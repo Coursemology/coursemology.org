@@ -771,3 +771,8 @@ ProgrammingLanguage.find_or_create_by!(name: "Python",
                                        codemirror_mode: "python",
                                        version:  "2.7",
                                        cmd: "python2.7")
+
+ProgrammingLanguage.find_or_create_by!(name: "Python",
+                                       codemirror_mode: "python",
+                                       version:  "3.5",
+                                       cmd: "python3.5")
