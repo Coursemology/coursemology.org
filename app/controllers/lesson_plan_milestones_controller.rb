@@ -38,7 +38,7 @@ class LessonPlanMilestonesController < ApplicationController
       rescue Exception => e
         @lesson_plan_milestone = milestones[0]
         format.html { render action: "new" }
-        format.json { render json: { status: 'Error', message: e.message, :status => 400 }}
+        format.json { render json: { message: e.message, status: 400 }}
       else
         path = course_lesson_plan_path(@course, :anchor => 'milestone-' + milestones[0].id.to_s)
         format.html {
