@@ -282,6 +282,14 @@ class Course < ActiveRecord::Base
     self.course_preferences.join_items.item("UserCourse").item_type('ChangeName').name('ChangeName').first
   end
 
+  def assessment_ignore_start_at_pref
+    course_preferences.join_items.item("Assessment").item_type('StartAt').first
+  end
+
+  def ignore_assessment_start_at?
+    assessment_ignore_start_at_pref.try(:display) || false
+  end
+
   def allow_name_change?
     # return true when there is no preference
     pref = user_course_change_name_pref

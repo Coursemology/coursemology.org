@@ -631,6 +631,13 @@ if PreferableItem.count == 66
                          default_display:  true
 end
 
+PreferableItem.find_or_create_by! item:             "Assessment",
+                                  item_type:        "StartAt",
+                                  name:             "IgnoreStartAt",
+                                  default_value:    "",
+                                  description:      "Allow students to attempt the assessments that start at a future time provided they have fulfilled the prerequisites",
+                                  default_display:  false
+
 if NavbarLinkType.count == 0
   NavbarLinkType.create! link_type: 'module'
   NavbarLinkType.create! link_type: 'admin'

@@ -56,6 +56,8 @@ class Assessment::AssessmentsController < ApplicationController
 
     #TODO:bug fix for training action, it's rather complicated
     action_map = {}
+    ignore_start_at = @course.ignore_assessment_start_at?
+
     @assessments.each do |ast|
       if sub_ids.include? ast.id
         attempting = sub_map[ast.id].attempting?
@@ -68,9 +70,9 @@ class Assessment::AssessmentsController < ApplicationController
 
         #potential bug
         #1, can mange, 2, opened and fulfil the dependency requirements
-        if (ast.opened? and # assessment is open
-              (dep_id.nil? or # i) assessment has no dependent assessments
-                ((dep_id - sub_ids).empty? and !(dep_sub.include? true)))) or # ii) dep asm have submissions which are completed
+        if ((ast.opened? || ignore_start_at) && # assessment is open or start at is ignored
+              (dep_id.nil? || # i) assessment has no dependent assessments
+                ((dep_id - sub_ids).empty? && !(dep_sub.include? true)))) || # ii) dep asm have submissions which are completed
             can?(:manage, ast) # user is admin
           action_map[ast.id] = {action: "Attempt",
                               url: new_course_assessment_submission_path(@course, ast)}

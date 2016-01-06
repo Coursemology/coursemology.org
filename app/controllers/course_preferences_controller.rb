@@ -31,6 +31,7 @@ class CoursePreferencesController < ApplicationController
         @no_preferences = @course.course_home_events_no_pref << @course.leaderboard_no_pef
         @achievement_pref = @course.achievements_locked_display
         @user_course_pref = @course.user_course_change_name_pref
+        @assessment_pref = @course.assessment_ignore_start_at_pref
       when 'paging'
         @tab = 'PagingPreference'
         @preferences = @course.paging_prefs

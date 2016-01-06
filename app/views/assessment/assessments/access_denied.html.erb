@@ -5,7 +5,7 @@
 <p class="mission-not-opened"> You have no access to this assessment :|</p>
 
 <% dep_asm = @assessment.get_dependent_assessment(curr_user_course) %>
-<% if dep_asm %>
+<% if dep_asm.any? %>
   <p class="mission-not-opened">
     Please complete the following assessments before attempting this:
     <% dep_asm.each do |unfinished_assessment| %>

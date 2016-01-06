@@ -103,6 +103,19 @@
         </div>
     <% end %>
 
+    <% if @assessment_pref %>
+        <h3>Self Directed Learning</h3>
+        <div class="info-block">
+          <div style="padding-left:5em" class="checkbox-text">
+            <input name="preferences[<%= @assessment_pref.id%>][prefer_value]"
+                   value="<%= @assessment_pref.prefer_value %>" type="hidden">
+            <input name="preferences[<%= @assessment_pref.id%>][display]"
+                   type="checkbox" <% if @assessment_pref.display? %> checked <% end %>>
+            <%= @assessment_pref.preferable_item.description %>
+          </div>
+        </div>
+    <% end %>
+
     <div class="center">
       <button class="btn btn-large btn-primary">Update</button>
     </div>
