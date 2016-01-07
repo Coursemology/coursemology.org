@@ -98,7 +98,7 @@ class PythonEvaluator
           end
         else
           test_cases.each do |test|
-            exp = "#{test["expression"]} == #{test["expected"]}"
+            exp = "(#{test["expression"]}) == (#{test["expected"]})"
             if test_type == :private
               test_code << "\ntry:\n"
               test_code << "    print('#{hash} {0}'.format(#{exp}))\n"
