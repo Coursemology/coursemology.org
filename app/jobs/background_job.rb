@@ -72,6 +72,14 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
   end
 
   def new_notification(course, item)
+    notification_enabled = true
+    if item.is_a?(Assessment)
+      notification_enabled = course.email_notify_enabled?(PreferableItem.new_assessment(item.as_assessment_type.constantize))
+    elsif item.is_a?(Announcement)
+      notification_enabled = course.email_notify_enabled?(PreferableItem.new_announcement)
+    end
+    return unless notification_enabled
+
     course.user_courses.each do |uc|
       user = uc.user
       case item.class.name.to_sym
