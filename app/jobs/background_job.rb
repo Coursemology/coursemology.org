@@ -12,7 +12,7 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
 
     case name
       when :pending_action
-        create_pending_actions(course, item_type, item_id)
+        create_pending_actions(course, item)
       when :mission_due
         mission_reminder(course, item)
       when :notification
@@ -33,15 +33,22 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
     end
   end
 
-  def create_pending_actions(course, item_type, item_id)
-    course.user_courses.student.each do |sc|
-      exist = sc.pending_actions.where(item_type: item_type, item_id: item_id).first
-      next if exist
-      pa = sc.pending_actions.build
-      pa.course = course
-      pa.item_type = item_type
-      pa.item_id = item_id
-      pa.save
+  def create_pending_actions(course, item)
+    students = course.user_courses.student
+    if item.is_a?(Assessment)
+      submitted_students = item.submissions.submitted_or_graded.includes(:std_course).map(&:std_course)
+      students -= submitted_students
+    end
+
+    students.each do |student|
+      exists = student.pending_actions.where(item_type: item.class.name, item_id: item.id)
+      next if exists.any?
+
+      pending_action = student.pending_actions.build
+      pending_action.course = course
+      pending_action.item_type = item_type
+      pending_action.item_id = item_id
+      pending_action.save
     end
   end
 
