@@ -46,8 +46,8 @@ class BackgroundJob < Struct.new(:course_id, :name, :item_type, :item_id)
 
       pending_action = student.pending_actions.build
       pending_action.course = course
-      pending_action.item_type = item_type
-      pending_action.item_id = item_id
+      pending_action.item_type = item.class.name
+      pending_action.item_id = item.id
       pending_action.save
     end
   end
