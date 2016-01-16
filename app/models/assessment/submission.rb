@@ -9,6 +9,7 @@ class Assessment::Submission < ActiveRecord::Base
         where("assessments.as_assessment_type = 'Assessment::Training'") }
 
   scope :graded, -> { where(status: 'graded') }
+  scope :submitted_or_graded, -> { where(status: ['submitted', 'graded']) }
 
   belongs_to :assessment
   belongs_to :std_course, class_name: "UserCourse"
