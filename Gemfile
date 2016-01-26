@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://rails-assets.org'
 
-gem 'rails', '3.2.22'
+gem 'rails', '~> 3.2.22'
 
 group :development do
   gem 'pry-rails'
