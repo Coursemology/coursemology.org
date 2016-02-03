@@ -75,7 +75,7 @@ ALLOWED_STDLIB_MODULE_IMPORTS = ('math', 'random', 'datetime',
 													'engine','hungry_games_classes','hungry_games','simulation',
 													'heapq', 'bisect','inspect','__future__', 'generic_arith_min',
 													'encodings.idna', 'encodings', 'urllib', 'urllib.error', 'buses', 'uuid',
-													'autograde_hi_graph')
+													'autograde_hi_graph', 'hi_graph')
 
 # whitelist of custom modules to import into OPT
 # (TODO: support modules in a subdirectory, but there are various
