@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160319023818) do
+ActiveRecord::Schema.define(:version => 20160319042230) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1159,7 +1159,6 @@ ActiveRecord::Schema.define(:version => 20160319023818) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.integer  "level_id"
-    t.time     "deleted_at"
     t.boolean  "is_phantom",       :default => false
     t.datetime "exp_updated_at"
     t.string   "name"
@@ -1169,6 +1168,7 @@ ActiveRecord::Schema.define(:version => 20160319023818) do
   add_index "user_courses", ["course_id"], :name => "index_user_courses_on_course_id"
   add_index "user_courses", ["level_id"], :name => "index_user_courses_on_level_id"
   add_index "user_courses", ["role_id"], :name => "index_user_courses_on_role_id"
+  add_index "user_courses", ["user_id", "course_id"], :name => "index_user_courses_on_user_id_and_course_id", :unique => true
   add_index "user_courses", ["user_id"], :name => "index_user_courses_on_user_id"
 
   create_table "users", :force => true do |t|

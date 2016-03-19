@@ -1,6 +1,4 @@
 class UserCourse < ActiveRecord::Base
-  acts_as_paranoid
-
   include Rails.application.routes.url_helpers
   default_scope includes(:role)
 
