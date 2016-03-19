@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160319042230) do
+ActiveRecord::Schema.define(:version => 20160319072038) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1188,7 +1188,6 @@ ActiveRecord::Schema.define(:version => 20160319042230) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.integer  "system_role_id"
-    t.time     "deleted_at"
     t.string   "provider"
     t.string   "uid"
     t.string   "unconfirmed_email"
