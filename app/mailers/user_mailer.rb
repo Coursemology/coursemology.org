@@ -156,4 +156,10 @@ class UserMailer < ActionMailer::Base
     @body = body
     mail(to: email, subject: "[Coursemology] #{subject}")
   end
+  
+  def survey_reminder(email, survey)
+    @survey = survey
+    mail(to: email, subject: "[Coursemology] Survey Reminder")
+  end
+  
 end

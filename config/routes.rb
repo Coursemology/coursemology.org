@@ -274,6 +274,8 @@ Coursemology::Application.routes.draw do
     match "surveys/:id/stats" => "surveys#stats", as: :survey_stats
     match "surveys/:id/summary" => "surveys#summary", as: :survey_summary
     match "surveys/:id/summary_with_format" => "surveys#summary_with_format", as: :survey_summary_with_format
+    post "surveys/:id/reminder" => "surveys#reminder", as: :survey_stats_reminder
+    post "surveys/:id/reminder_all" => "surveys#reminder_all", as: :survey_stats_reminder_all
 
     get "lesson_plan" => 'lesson_plan_entries#index', as: :lesson_plan
     get "lesson_plan/overview" => 'lesson_plan_entries#overview', as: :lesson_plan_overview
