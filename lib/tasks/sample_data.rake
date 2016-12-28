@@ -206,6 +206,7 @@ namespace :db do
                                   creator_id: user.id,
                                   course_id: course.id,
                                   exp: rand(100) * 1000,
+                                  bonus_exp: 0,
                                   open_at: open_at,
                                   bonus_cutoff_at: bonus_cutoff_at}, :without_protection => true)
   end
