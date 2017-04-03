@@ -127,13 +127,14 @@ module ApplicationHelper
   end
 
   def logged_out
-    @facebook_uid ||= Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s).get_user_from_cookies(cookies)
+    @facebook_uid ||= begin
+      Koala::Facebook::OAuth.new.get_user_info_from_cookies(cookies)
+    rescue Exception => e
+      logger.error(e)
+    end
+
     @user = User.where(:provider => "facebook", :uid => @facebook_uid).first
-    #if @user
-    # !@user.is_logged_in?
-    #else
-    #  true
-    #end
+
     @user and !@user.is_logged_in?
   end
 

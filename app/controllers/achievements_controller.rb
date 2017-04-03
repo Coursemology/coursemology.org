@@ -56,9 +56,11 @@ class AchievementsController < ApplicationController
     @achievement.position = @course.achievements.count
     @achievement.update_requirement(params[:reqids], params[:new_reqs])
 
-    @app_namespace = @graph.get_connection("app", "")["namespace"]
-    facebook_obj_id = @graph.put_connections("app", "objects/#{@app_namespace}:badge", :object => JSON.generate(@badge))
-    @achievement.facebook_obj_id = facebook_obj_id["id"]
+    if @graph
+      @app_namespace = @graph.get_connection("app", "")["namespace"]
+      facebook_obj_id = @graph.put_connections("app", "objects/#{@app_namespace}:badge", :object => JSON.generate(@badge))
+      @achievement.facebook_obj_id = facebook_obj_id["id"]
+    end
 
     respond_to do |format|
       if @achievement.save
@@ -67,7 +69,7 @@ class AchievementsController < ApplicationController
                                   notice: "The achievement '#{@achievement.title}' has been created." }
       else
         # delete badge if achievement cannot be saved
-        @graph.graph_call("", {id: facebook_obj_id}, "delete")
+        @graph.graph_call("", {id: facebook_obj_id}, "delete") if @graph
         format.html { render action: "new" }
       end
     end
@@ -96,7 +98,7 @@ class AchievementsController < ApplicationController
   def destroy
     # delete badge from Facebook, catch the exception if the id doesn't exist
     begin
-      @graph.graph_call("", {id: @achievement.facebook_obj_id}, "delete")
+      @graph.graph_call("", {id: @achievement.facebook_obj_id}, "delete") if @graph
     rescue Koala::Facebook::APIError => e
       logger.error e.fb_error_message
     end
@@ -120,7 +122,7 @@ class AchievementsController < ApplicationController
       oauth = Koala::Facebook::OAuth.new
       app_token = oauth.get_app_access_token
 
-      @graph = Koala::Facebook::API.new(app_token)
+      @graph = Koala::Facebook::API.new(app_token) if app_token
     end
 
     # initialize the @badge instance variable with the necessary contents from @achievement

@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
   end
 
   #def fb_liked?
-  #  @oauth = Koala::Facebook::OAuth.new(Facebook::APP_ID.to_s, Facebook::SECRET.to_s)
+  #  @oauth = Koala::Facebook::OAuth.new
   #  @oauth.get_app_access_token
   #  likes = @oauth.get_connections("me", "likes")
   #
