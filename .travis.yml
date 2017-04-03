@@ -2,8 +2,7 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.1.2
-  - ruby-head
+  - 2.2.2
 matrix:
   allow_failures:
     - rvm: ruby-head
