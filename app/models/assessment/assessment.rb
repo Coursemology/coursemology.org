@@ -53,7 +53,7 @@ class Assessment < ActiveRecord::Base
   has_many  :as_asm_reqs, class_name: "AsmReq", as: :asm, dependent: :destroy
   has_many  :as_requirements, through: :as_asm_reqs, source: :as_requirements
 
-  has_many  :question_assessments
+  has_many  :question_assessments, dependent: :destroy
   has_many  :questions, through: :question_assessments do
     def coding
       where(as_question_type: Assessment::CodingQuestion)
