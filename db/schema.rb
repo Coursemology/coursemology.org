@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160319082011) do
+ActiveRecord::Schema.define(:version => 20170426054216) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -855,8 +855,8 @@ ActiveRecord::Schema.define(:version => 20160319082011) do
   end
 
   create_table "question_assessments", :force => true do |t|
-    t.integer  "question_id"
-    t.integer  "assessment_id"
+    t.integer  "question_id",   :null => false
+    t.integer  "assessment_id", :null => false
     t.integer  "position"
     t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
