@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170426054216) do
+ActiveRecord::Schema.define(:version => 20170531072006) do
 
   create_table "achievements", :force => true do |t|
     t.string   "icon_url"
@@ -1066,7 +1066,7 @@ ActiveRecord::Schema.define(:version => 20170426054216) do
   create_table "system_wide_announcements", :force => true do |t|
     t.integer  "creator_id"
     t.string   "subject"
-    t.string   "body"
+    t.text     "body"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
