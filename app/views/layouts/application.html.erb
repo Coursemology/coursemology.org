@@ -73,6 +73,13 @@
     </div>
 <% else %>
     <div class="container-fluid">
+      <% if flash[:error] %>
+          <br>
+          <br>
+          <div class="alert alert-error">
+            <%= flash[:error] %>
+          </div>
+      <% end %>
       <%= yield %>
     </div>
 <% end %>

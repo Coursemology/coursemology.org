@@ -2,13 +2,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     # If a user is signed in then he is trying to link a new account
     if user_signed_in?
-      auth = request.env["omniauth.auth"]
-      if current_user && current_user.persisted? && current_user.update_external_account(auth)
-        flash[:success] = "Your facebook account has been linked to this user account successfully."
-      else
-        flash[:error] = "The Facebook account has been linked with another user."
-      end
-      redirect_to edit_user_path(current_user)
+      # auth = request.env["omniauth.auth"]
+      # if current_user && current_user.persisted? && current_user.update_external_account(auth)
+      #   flash[:success] = "Your facebook account has been linked to this user account successfully."
+      # else
+      #   flash[:error] = "The Facebook account has been linked with another user."
+      # end
+      # redirect_to edit_user_path(current_user)
+      path = edit_user_path(current_user)
+      flash[:error] = "Updating of users in current system has been disabled, please log in with your current account at https://beta.coursemology.org and update there."
+      redirect_to path
     else
       @user = User.find_for_facebook_oauth(request.env["omniauth.auth"], current_user)
       if @user.persisted?

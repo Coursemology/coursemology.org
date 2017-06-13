@@ -28,16 +28,16 @@ class UserCoursesController < ApplicationController
       @user_course.user.name = params[:name].strip
       @user_course.name = params[:name].strip
     end
-    if params[:email]
-      @user_course.user.email = params[:email].strip
-    end
+    # if params[:email]
+    #   @user_course.user.email = params[:email].strip
+    # end
 
     @user_course.is_phantom =  params[:is_phantom] || false
 
     tut_group_assign
 
     respond_to do |format|
-      if @user_course.save && @user_course.user.save
+      if @user_course.save
         format.json { render json: { status: 'OK' }}
         format.html { redirect_to params[:redirect_back_url], notice: 'Updated successfully.' }
       else
