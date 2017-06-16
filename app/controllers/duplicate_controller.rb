@@ -131,6 +131,14 @@ class DuplicateController < ApplicationController
     authorize! :duplicate, @course
     authorize! :create, Course
 
+    respond_to do |format|
+      flash[:error] = "Course creation is disabled in current system, please login to https://beta.coursemology.org to create new courses."
+
+      format.html { redirect_to course_path(@course) }
+      format.json {render json: {url: course_preferences_path(@course)} }
+    end
+    return
+
     require 'duplication'
     begin
       course_diff = Time.parse(params[:to_date]) -  Time.parse(params[:from_date])

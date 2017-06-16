@@ -7,23 +7,26 @@ class CoursesController < ApplicationController
   end
 
   def create
-    @course = Course.new(params[:course])
-    @course.creator = current_user
-    @course.levels.build({ level: 0, exp_threshold: 0  })
-
-    user_course = @course.user_courses.build
-    user_course.course = @course
-    user_course.user = current_user
-    user_course.role = Role.find_by_name(:lecturer)
-
-    respond_to do |format|
-      if @course.save  && user_course.save
-        format.html { redirect_to course_preferences_path(@course),
-                                  notice: "The course '#{@course.title}' has been created." }
-      else
-        format.html { render action: "new" }
-      end
-    end
+    flash[:error] = "Course creation is disabled in current system, please login to https://beta.coursemology.org to create new courses."
+    render action: "new"
+    #
+    # @course = Course.new(params[:course])
+    # @course.creator = current_user
+    # @course.levels.build({ level: 0, exp_threshold: 0  })
+    #
+    # user_course = @course.user_courses.build
+    # user_course.course = @course
+    # user_course.user = current_user
+    # user_course.role = Role.find_by_name(:lecturer)
+    #
+    # respond_to do |format|
+    #   if @course.save  && user_course.save
+    #     format.html { redirect_to course_preferences_path(@course),
+    #                               notice: "The course '#{@course.title}' has been created." }
+    #   else
+    #     format.html { render action: "new" }
+    #   end
+    # end
   end
 
   respond_to :html, :json
