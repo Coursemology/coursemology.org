@@ -5,7 +5,7 @@ class Course < ActiveRecord::Base
   # default_scope -> { where("courses.is_pending_deletion = 0 ") }
 
   attr_accessible :creator_id, :description, :logo_url, :title, :start_at, :end_at
-  attr_accessible :is_publish, :is_active, :is_open
+  attr_accessible :is_publish, :is_active, :is_open, :status
   attr_accessible :course_navbar_preferences_attributes,
                   :missions_attributes,
                   :trainings_attributes
@@ -446,5 +446,13 @@ class Course < ActiveRecord::Base
       url = '/images/coursemology_logo_square.png'
     end
     url
+  end
+
+  def migrating?
+    status == 'migrating'
+  end
+
+  def migration_done?
+    status == 'done'
   end
 end

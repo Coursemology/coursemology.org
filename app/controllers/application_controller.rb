@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :init_gon
   skip_before_filter  :verify_authenticity_token
   around_filter :set_time_zone, if: :current_user
+  before_filter :check_migration
 
   rescue_from CanCan::AccessDenied do |exception|
     unless current_user
@@ -279,5 +280,20 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone(&block)
     Time.use_zone(current_user.try(:time_zone), &block)
+  end
+
+  def check_migration
+    if params["course_id"] || (params["controller"] == "courses" && params["id"])
+      id = params["course_id"] || params["id"]
+      course = Course.find_by(id: id)
+
+      if course && course.migrating?
+        flash[:error] = "Your course is being migrated to the new system now. It will take 1 - 2 days. You will be redirected to the new site once it's done."
+        redirect_to welcome_path
+      elsif course && course.migration_done?
+        new_id = course.id >= 110 ? course.id : course.id + 800
+        redirect_to "https://beta.coursemology.org/courses/#{new_id}"
+      end
+    end
   end
 end
