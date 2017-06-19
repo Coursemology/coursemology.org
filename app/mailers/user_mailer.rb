@@ -156,4 +156,18 @@ class UserMailer < ActionMailer::Base
     @body = body
     mail(to: email, subject: "[Coursemology] #{subject}")
   end
+
+  def course_migration_started(course, user)
+    @course = course
+    @user = user
+
+    mail(to: user.email, subject: "[Coursemology] We will start to migrate your course #{course.title} soon")
+  end
+
+  def course_migration_ended(course, user)
+    @course = course
+    @user = user
+
+    mail(to: user.email, subject: "[Coursemology] Your course #{course.title} has been successfully migrated")
+  end
 end

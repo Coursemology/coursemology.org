@@ -1,0 +1,16 @@
+<p>Hello, <%= @user.name %>!</p>
+
+<p>Your course: <strong><%= @course.title %></strong> has been successfully migrated to beta.coursemology.org.</p>
+
+<p><%= link_to 'Click here', "https://beta.coursemology.org/courses/#{@course.get_v2_id}" %> to view.</p>
+
+<p>Your course participants will be able to access this course with the same credentials.</p>
+
+<p>Feel free to email us at coursemology@gmail.com if you face any issues.</p>
+
+<p>Thank you for your patience and have a good day!</p>
+
+<p>
+  Best Regards,<br />
+  The Coursemology Team
+</p>

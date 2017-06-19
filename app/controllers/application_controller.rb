@@ -291,7 +291,7 @@ class ApplicationController < ActionController::Base
         flash[:error] = "Your course is being migrated to the new system now. It will take 1 - 2 days. You will be redirected to the new site once it's done."
         redirect_to welcome_path
       elsif course && course.migration_done?
-        new_id = course.id >= 110 ? course.id : course.id + 800
+        new_id = course.get_v2_id
         redirect_to "https://beta.coursemology.org/courses/#{new_id}"
       end
     end
