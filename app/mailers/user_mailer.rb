@@ -2,7 +2,7 @@ class UserMailer < ActionMailer::Base
   include TruncateHtmlHelper
   helper_method :truncate_html
 
-  default from: "noreply@coursemology.com",
+  default from: "noreply@coursemology.org",
           'Content-Transfer-Encoding' => '7bit'
 
   def new_comment(user, comment, redirect_url)

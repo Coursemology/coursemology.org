@@ -470,7 +470,7 @@ class Course < ActiveRecord::Base
   def migration_ended_email
     users = user_courses.where(role_id: 3, is_phantom: false).map(&:user).compact
     users.each do |u|
-      UserMailer.delay.migration_ended(self, u)
+      UserMailer.delay.course_migration_ended(self, u)
     end
   end
 end
