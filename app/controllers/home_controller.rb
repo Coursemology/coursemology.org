@@ -10,7 +10,7 @@ class HomeController < ApplicationController
     redirect_course = @courses.count == 1 ? @courses.first :
         current_user.user_courses.order("last_active_time desc").first.course
 
-    if !redirect_course.migrating?
+    if redirect_course.status == nil
       redirect_to course_path(redirect_course)
     else
       redirect_to my_courses_path
