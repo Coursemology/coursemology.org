@@ -1,3 +1,8 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
+Coursemology v1 has been superseded by [Coursemology v2](https://github.com/Coursemology/coursemology2).
+If you would like to contribute, do so on v2.
+
 # Coursemology [![Build Status](https://travis-ci.org/Coursemology/coursemology.org.svg?branch=development)](https://travis-ci.org/Coursemology/coursemology.org) [![Coverage Status](https://coveralls.io/repos/Coursemology/coursemology.org/badge.png)](https://coveralls.io/r/Coursemology/coursemology.org) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Coursemology/coursemology.org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
