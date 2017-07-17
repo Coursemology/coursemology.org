@@ -170,4 +170,10 @@ class UserMailer < ActionMailer::Base
 
     mail(to: user.email, subject: "[Coursemology] Your course #{course.title} has been successfully migrated")
   end
+
+  def general_email(user, title)
+    @user = user
+
+    mail(to: user.email, subject: title)
+  end
 end
